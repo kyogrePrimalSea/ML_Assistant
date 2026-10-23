@@ -14,6 +14,9 @@ Run date: 2026-10-24. Interpreter: `.venv/bin/python` (3.14.7). Each snippet is 
 | pipeline | scikit-learn | PASS |
 | smote | imbalanced-learn | PASS |
 | standardscaler | scikit-learn | PASS |
+| train-test-split | scikit-learn | PASS (T026) |
+| onehotencoder | scikit-learn | PASS (T026) |
+| r2-score | scikit-learn | PASS (T026) |
 | max-depth | scikit-learn | PASS |
 | max-depth | xgboost | PASS |
 | max-depth | lightgbm | PASS |

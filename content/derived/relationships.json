@@ -5713,9 +5713,21 @@
   },
   {
     "source": "onehotencoder",
+    "target": "pipeline",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "onehotencoder",
     "target": "targetencoder",
     "type": "alternative_to",
     "via": "transform/Categorical encoding"
+  },
+  {
+    "source": "onehotencoder",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
   },
   {
     "source": "onesidedselection",
@@ -5912,6 +5924,12 @@
   {
     "source": "pipeline",
     "target": "standardscaler",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "pipeline",
+    "target": "train-test-split",
     "type": "pairs_with",
     "via": "pairs_with"
   },

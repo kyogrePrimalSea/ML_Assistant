@@ -1,0 +1,77 @@
+id: onehotencoder
+plain_name: One-hot encoder
+code_name: OneHotEncoder
+aliases: [dummy variables, one hot, get_dummies, categorical encoding]
+stage: transform
+family: Categorical encoding
+tracks: [standard]
+archetype: transformer
+question_tags: [text categories, messy]
+targets: [sklearn.preprocessing.OneHotEncoder]
+pairs_with: [pipeline]
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OneHotEncoder.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: expands}
+slots:
+  header: {}
+  solves:
+    hero: {kind: transformer, dataset: ames, columns: [Street, LotArea], changed: [Street]}
+    line: Turns each text category into its own 0/1 column.
+  quick_facts:
+    facts:
+      - {label: Output, value: "one 0/1 column per category"}
+      - {label: Learns from data, value: "yes: fit on train only"}
+  use_avoid:
+    use_when: [text categories, linear models, no order in categories]
+    avoid_when: [many unique values, ordered categories]
+  prep:
+    - step: {page: train-test-split}
+      status: required
+      why: Learn the categories from training rows only.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.preprocessing.OneHotEncoder
+      why_this_library: Fits inside a Pipeline and remembers its categories.
+      snippet: |
+        # scikit-learn 1.9.1
+        import pandas as pd
+        from sklearn.preprocessing import OneHotEncoder
+
+        train = pd.DataFrame({"Street": ["Pave", "Grvl", "Pave", "Pave"]})
+        test = pd.DataFrame({"Street": ["Pave", "Alley"]})
+
+        encoder = OneHotEncoder(handle_unknown="ignore", sparse_output=False)
+        train_encoded = encoder.fit_transform(train)  # learn categories here
+        test_encoded = encoder.transform(test)        # unseen "Alley" becomes all zeros
+
+        print(encoder.get_feature_names_out())
+        print(test_encoded)
+  catch_outs:
+    - Fit on training rows only; never fit on the test set.
+    - Unseen categories raise an error unless handle_unknown is ignore.
+    - Output is sparse by default; set sparse_output=False for a dense array.
+    - Columns with many unique values make very wide output.
+  key_settings:
+    tier1:
+      - {name: handle_unknown, page: null}
+      - {name: drop, page: null}
+    tier2:
+      - {name: sparse_output, page: null}
+      - {name: min_frequency, page: null}
+    tier3:
+      - {name: max_categories, page: null}
+      - {name: categories, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    text: Give each category its own switch; exactly one switch is on per row.
+  next: []

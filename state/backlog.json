@@ -377,7 +377,7 @@
     "T026": {
       "title": "Short journey (globe) and notebook output",
       "file": "tasks/T026-short-journey-and-notebook.md",
-      "status": "In progress",
+      "status": "Done",
       "dependencies": [
         "T022"
       ],

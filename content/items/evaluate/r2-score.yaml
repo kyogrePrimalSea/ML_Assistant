@@ -1,0 +1,69 @@
+id: r2-score
+plain_name: R-squared
+code_name: r2_score
+aliases: [r2, coefficient of determination, explained variance, how much is explained]
+stage: evaluate
+family: Regression metrics
+tracks: [standard]
+archetype: metric
+question_tags: [how good is it, regression]
+targets: [sklearn.metrics.r2_score]
+pairs_with: []
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.metrics.r2_score.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: ames, highlight: [residual]}
+    line: Share of the target's spread that the model explains.
+  quick_facts:
+    facts:
+      - {label: Best score, value: "1.0"}
+      - {label: Can go below zero, value: "yes: worse than guessing the mean"}
+  use_avoid:
+    use_when: [regression, comparing models on one target]
+    avoid_when: [classification, comparing different targets]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.r2_score
+      why_this_library: One call, true values first and predictions second.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import make_regression
+        from sklearn.linear_model import LinearRegression
+        from sklearn.metrics import r2_score
+        from sklearn.model_selection import train_test_split
+
+        X, y = make_regression(n_samples=200, n_features=3, noise=10, random_state=0)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = LinearRegression().fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+
+        print(r2_score(y_test, y_pred))
+  catch_outs:
+    - Argument order matters; y_true goes first, then y_pred.
+    - Score on the test set, not the training set.
+    - A constant target gives an undefined score; force_finite handles it.
+    - Says nothing about the size of errors; check RMSE too.
+  key_settings:
+    tier1:
+      - {name: multioutput, page: null}
+    tier2:
+      - {name: sample_weight, page: null}
+    tier3:
+      - {name: force_finite, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    text: Compare your errors with the errors of always guessing the average.
+  next: []

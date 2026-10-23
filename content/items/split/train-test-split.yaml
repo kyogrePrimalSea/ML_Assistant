@@ -1,0 +1,70 @@
+id: train-test-split
+plain_name: Train/test split
+code_name: train_test_split
+aliases: [holdout, hold-out split, random split, train test]
+stage: split
+family: Splitters
+tracks: [standard]
+archetype: splitter
+question_tags: [how good is it, overfitting]
+targets: [sklearn.model_selection.train_test_split]
+pairs_with: [pipeline]
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: []
+  blocked_when:
+    - when: {time_ordered: true}
+      reason: Random shuffling puts future rows in training.
+  fits_on_data: false
+  shape_effect: {rows: shrinks, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: splitter, rows: 20, folds: 2, ordered: false}
+    line: Holds back rows the model never sees while learning.
+  quick_facts:
+    facts:
+      - {label: Default test share, value: "25%"}
+      - {label: Shuffled by default, value: "yes"}
+  use_avoid:
+    use_when: [one quick holdout, rows in any order]
+    avoid_when: [time-ordered data, tiny data]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.model_selection.train_test_split
+      why_this_library: One call returns the train and test pieces.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import make_regression
+        from sklearn.model_selection import train_test_split
+
+        X, y = make_regression(n_samples=200, n_features=3, random_state=0)
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=0.25, random_state=0
+        )
+
+        print(X_train.shape, X_test.shape)
+  catch_outs:
+    - Fit scalers and encoders after the split, on training rows only.
+    - Set random_state, or the split changes every run.
+    - Shuffling mixes time order. Use TimeSeriesSplit for time data.
+    - Pass stratify to keep class shares equal in both pieces.
+  key_settings:
+    tier1:
+      - {name: test_size, page: null}
+      - {name: random_state, page: null}
+    tier2:
+      - {name: stratify, page: null}
+      - {name: shuffle, page: null}
+    tier3:
+      - {name: train_size, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    text: Shuffle the rows, then cut them into a learning pile and an exam pile.
+  next: []

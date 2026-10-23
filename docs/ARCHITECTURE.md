@@ -151,3 +151,10 @@ to functions. Missing sections are empty lists, never omitted.
 - Tests: Vitest + Testing Library (unit/component); Playwright + axe for
   end-to-end, screenshots (1440 and 1024 wide, light and dark) and accessibility.
 - Commands (from `app/`): `npm run dev`, `npm run build`, `npm test`, `npm run e2e`.
+- Build path (T026, `app/src/build/`): `validate.ts` implements the spec §8 rules from record
+  fields only (E08 reuses it); `shape.ts` follows `rules.shape_effect` for journey tickets;
+  `journey.ts` holds stops, legs and the fixed globe positions (zigzag route, constants, no runtime
+  layout); `notebook.ts` makes the cells from fixed per-page templates and writes nbformat 4.5 with
+  positional cell ids (byte-identical output). `app/scripts/export-demo-notebook.mjs` writes the
+  demo notebook for `tests/test_notebook_demo.py`. Stops are sorted into stage order, so a fitted
+  encoder (Transform) sits before the split and raises the leakage Warn the spec describes.

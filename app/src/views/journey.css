@@ -1,0 +1,40 @@
+/* Journey globe markers (spec 7.3, 10.3, 10.7). Colour always travels with an icon and a label. */
+.jg-host { cursor: grab; }
+.jg-host canvas { outline: none; }
+.jg-region, .jg-passport, .jg-stop, .jg-leg { transform: translate(-50%, -50%); font-family: var(--font-body); }
+.jg-region, .jg-passport {
+  display: inline-flex; align-items: center; gap: 4px; pointer-events: none; white-space: nowrap;
+  font-size: 12px; font-weight: 700; color: var(--text);
+  text-shadow: 0 0 4px var(--canvas), 0 0 4px var(--canvas), 0 0 8px var(--canvas);
+}
+.jg-region svg { width: 14px; height: 14px; color: var(--jg-stage); }
+.jg-region[data-skipped="true"] { color: var(--text-muted); font-weight: 400; }
+.jg-passport svg { width: 16px; height: 16px; color: var(--accent); }
+.jg-leg {
+  display: grid; place-items: center; width: 20px; height: 20px; border-radius: 999px; pointer-events: auto;
+  background: var(--surface-1); border: 1.5px solid currentColor;
+}
+.jg-leg svg { width: 13px; height: 13px; }
+.jg-leg[data-status="valid"] { color: var(--valid-text); }
+.jg-leg[data-status="warn"] { color: var(--warn-text); }
+.jg-leg[data-status="block"] { color: var(--block-text); }
+.jg-stop {
+  position: relative; display: inline-flex; align-items: center; gap: 4px; height: 30px; padding: 0 8px 0 4px;
+  border-radius: 999px; background: var(--surface-1); color: var(--text); cursor: pointer; pointer-events: auto;
+  border: 2px solid var(--jg-stage); font-weight: 700; font-size: 13px;
+  transition: box-shadow var(--dur-hover) var(--ease);
+}
+.jg-stop svg { width: 16px; height: 16px; }
+.jg-stop[data-status="valid"] svg, .jg-stop[data-status="tip"] svg { color: var(--valid-text); }
+.jg-stop[data-status="warn"] svg { color: var(--warn-text); }
+.jg-stop[data-status="block"] svg { color: var(--block-text); }
+.jg-stop-n {
+  display: grid; place-items: center; width: 20px; height: 20px; border-radius: 999px;
+  background: var(--surface-2); font-size: 12px;
+}
+.jg-stop:hover { box-shadow: var(--glow-focus); }
+.jg-stop:focus-visible { outline: 2px solid var(--accent-strong); outline-offset: 2px; }
+.jg-stop[data-selected="true"] { box-shadow: 0 0 0 3px var(--accent), var(--glow-focus); }
+/* Stop names appear only when zoomed in, or for the selected stop (spec 7.3). */
+.jg-stop-label { display: none; white-space: nowrap; }
+.jg-host[data-zoomed="true"] .jg-stop-label, .jg-stop[data-selected="true"] .jg-stop-label { display: inline; }
