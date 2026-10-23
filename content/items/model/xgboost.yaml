@@ -82,13 +82,14 @@ slots:
   catch_outs:
     - Without early_stopping_rounds, n_estimators alone will overfit.
     - Pass a validation set to fit, or early stopping does nothing.
-    - Category columns must use the pandas category dtype.
+    - Text columns fail. Use pandas category dtype or encode them.
+    - enable_categorical already defaults to True here.
   key_settings:
     tier1:
-      - {name: n_estimators, page: null}
-      - {name: learning_rate, page: null}
+      - {name: n_estimators, page: n-estimators}
+      - {name: learning_rate, page: learning-rate}
       - {name: max_depth, page: max-depth}
-      - {name: early_stopping_rounds, page: null}
+      - {name: early_stopping_rounds, page: early-stopping}
     tier2:
       - {name: subsample, page: null}
       - {name: colsample_bytree, page: null}
@@ -107,8 +108,9 @@ slots:
     good_at: [tabular data, non-linear effects, missing values]
     bad_at: [extrapolation, tiny data, raw text]
     vs_siblings:
-      - {page: gradient-boosting, note: Same idea; XGBoost is faster and has more settings.}
-      - {page: lightgbm, note: LightGBM grows leaf-wise; often faster on large data.}
+      - {page: gradient-boosting, note: "Same idea. XGBoost adds reg_alpha, reg_lambda, gamma."}
+      - {page: hist-gradient-boosting, note: "In scikit-learn, no extra install. Fewer settings."}
+      - {page: lightgbm, note: "XGBoost caps depth (max_depth 6). LightGBM caps leaves."}
     read_more:
       - Start with a constant prediction.
       - Fit a small tree to the current errors.

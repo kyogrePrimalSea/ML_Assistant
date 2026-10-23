@@ -1,0 +1,95 @@
+id: n-estimators
+plain_name: Number of trees
+code_name: n_estimators
+aliases: [boosting rounds, max_iter, num_boost_round, number of trees]
+family: Boosting rounds
+question_tags: [underfitting, overfitting, too slow]
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingRegressor.html
+  - https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html
+  - https://xgboost.readthedocs.io/en/stable/python/python_api.html
+  - https://lightgbm.readthedocs.io/en/stable/pythonapi/lightgbm.LGBMRegressor.html
+stage: tune
+tracks: [standard]
+archetype: hyperparameter
+targets: []
+applies_to: [gradient-boosting, hist-gradient-boosting, xgboost, lightgbm]
+pairs_with: []
+clashes: []
+library_versions:
+  scikit-learn: "1.9.1"
+  xgboost: "3.4.1"
+  lightgbm: "4.7.0"
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: hyperparameter, dataset: ames, sweep: [10, 50, 100, 200]}
+    line: How many small trees get added, one after another.
+  quick_facts:
+    values:
+      - {page: gradient-boosting, default: "100", typical_range: 100 to 1000}
+      - {page: hist-gradient-boosting, default: 100 (called max_iter), typical_range: 100 to 1000}
+      - {page: xgboost, default: "100", typical_range: 100 to 1000}
+      - {page: lightgbm, default: "100", typical_range: 100 to 1000}
+  use_avoid:
+    use_when: [underfitting, with early stopping]
+    avoid_when: [no validation set, overfitting]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.ensemble.GradientBoostingRegressor
+      why_this_library: Histogram version calls it max_iter.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import make_regression
+        from sklearn.ensemble import GradientBoostingRegressor, HistGradientBoostingRegressor
+
+        X, y = make_regression(n_samples=300, n_features=5, noise=20, random_state=0)
+
+        gb = GradientBoostingRegressor(n_estimators=50, random_state=0).fit(X, y)
+        hgb = HistGradientBoostingRegressor(max_iter=50, random_state=0).fit(X, y)
+        print(gb.n_estimators_, hgb.n_iter_)
+    - library: xgboost
+      target: xgboost.XGBRegressor
+      why_this_library: Same name, same sklearn-style fit.
+      snippet: |
+        # xgboost 3.4.1
+        from sklearn.datasets import make_regression
+        from xgboost import XGBRegressor
+
+        X, y = make_regression(n_samples=300, n_features=5, noise=20, random_state=0)
+
+        model = XGBRegressor(n_estimators=50).fit(X, y)
+        print(model.get_num_boosting_rounds())
+    - library: lightgbm
+      target: lightgbm.LGBMRegressor
+      why_this_library: Same name. Fitted count is n_estimators_.
+      snippet: |
+        # lightgbm 4.7.0
+        from lightgbm import LGBMRegressor
+        from sklearn.datasets import make_regression
+
+        X, y = make_regression(n_samples=300, n_features=5, noise=20, random_state=0)
+
+        model = LGBMRegressor(n_estimators=50, verbose=-1).fit(X, y)
+        print(model.n_estimators_)
+  catch_outs:
+    - In HistGradientBoosting the name is max_iter.
+    - More trees without early stopping can overfit.
+    - Lower learning_rate usually needs more trees.
+  key_settings:
+    tier1: []
+    tier2: []
+    tier3: []
+  watch_it_work:
+    dataset: ames
+    control: {name: n_estimators, min: 1, max: 200, step: 1, default: 50}
+  intuition:
+    text: Each tree fixes some error. Too many fit the noise.
+  next: [model-overfitting]

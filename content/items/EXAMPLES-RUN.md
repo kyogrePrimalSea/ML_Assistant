@@ -18,6 +18,18 @@ Run date: 2026-10-24. Interpreter: `.venv/bin/python` (3.14.7). Each snippet is 
 | max-depth | xgboost | PASS |
 | max-depth | lightgbm | PASS |
 | randomizedsearchcv | scikit-learn | PASS |
+| gradient-boosting | scikit-learn | PASS |
+| hist-gradient-boosting | scikit-learn | PASS |
+| lightgbm | lightgbm | PASS |
+| n-estimators | scikit-learn | PASS |
+| n-estimators | xgboost | PASS |
+| n-estimators | lightgbm | PASS |
+| learning-rate | scikit-learn | PASS |
+| learning-rate | xgboost | PASS |
+| learning-rate | lightgbm | PASS |
+| early-stopping | scikit-learn | PASS |
+| early-stopping | xgboost | PASS |
+| early-stopping | lightgbm | PASS |
 
 Failures: 0
 
@@ -111,4 +123,84 @@ after Counter({np.int64(0): 897, np.int64(1): 897})
 ```text
 {'max_depth': 10, 'min_samples_leaf': 2}
 0.72
+```
+
+## gradient-boosting / scikit-learn
+
+```text
+203
+0.8874156441098768
+```
+
+## hist-gradient-boosting / scikit-learn
+
+```text
+290
+0.8818508462404138
+```
+
+## lightgbm / lightgbm
+
+```text
+300
+```
+
+## n-estimators / scikit-learn
+
+```text
+50 50
+```
+
+## n-estimators / xgboost
+
+```text
+50
+```
+
+## n-estimators / lightgbm
+
+```text
+50
+```
+
+## learning-rate / scikit-learn
+
+```text
+0.01 0.438
+0.1 0.86
+0.5 0.79
+```
+
+## learning-rate / xgboost
+
+```text
+0.01 0.507
+0.1 0.801
+0.5 0.715
+```
+
+## learning-rate / lightgbm
+
+```text
+0.01 0.513
+0.1 0.883
+0.5 0.848
+```
+
+## early-stopping / scikit-learn
+
+```text
+334 237
+```
+
+## early-stopping / xgboost
+
+```text
+57
+```
+
+## early-stopping / lightgbm
+
+```text
+152
 ```

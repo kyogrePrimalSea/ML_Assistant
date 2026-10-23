@@ -1,0 +1,115 @@
+id: early-stopping
+plain_name: Early stopping
+code_name: early_stopping_rounds / n_iter_no_change
+aliases: [stop early, early_stopping_rounds, n_iter_no_change, early_stopping callback]
+family: Boosting stopping rule
+question_tags: [overfitting, too slow]
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingRegressor.html
+  - https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html
+  - https://xgboost.readthedocs.io/en/stable/python/python_api.html
+  - https://lightgbm.readthedocs.io/en/stable/pythonapi/lightgbm.LGBMRegressor.html
+stage: tune
+tracks: [standard]
+archetype: hyperparameter
+targets: []
+applies_to: [gradient-boosting, hist-gradient-boosting, xgboost, lightgbm]
+pairs_with: []
+clashes: []
+library_versions:
+  scikit-learn: "1.9.1"
+  xgboost: "3.4.1"
+  lightgbm: "4.7.0"
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: hyperparameter, dataset: ames, sweep: [5, 10, 20, 50]}
+    line: Stops adding trees when the validation score stops improving.
+  quick_facts:
+    values:
+      - {page: gradient-boosting, default: "Off (n_iter_no_change is None)", typical_range: 5 to 50}
+      - {page: hist-gradient-boosting, default: "Auto (on above 10,000 rows)", typical_range: 5 to 50}
+      - {page: xgboost, default: "Off (early_stopping_rounds is None)", typical_range: 10 to 50}
+      - {page: lightgbm, default: "Off (callback needed)", typical_range: 10 to 50}
+  use_avoid:
+    use_when: [many trees, overfitting, slow training]
+    avoid_when: [no validation data, tiny data]
+  prep:
+    - step: {page: train-test-split}
+      status: recommended
+      why: Needs held-out rows to watch the score.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.ensemble.GradientBoostingRegressor
+      why_this_library: Holds out validation_fraction itself. No eval_set.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import make_regression
+        from sklearn.ensemble import GradientBoostingRegressor, HistGradientBoostingRegressor
+
+        X, y = make_regression(n_samples=500, n_features=8, noise=10, random_state=0)
+
+        gb = GradientBoostingRegressor(n_estimators=500, n_iter_no_change=10, random_state=0)
+        gb.fit(X, y)
+        hgb = HistGradientBoostingRegressor(max_iter=500, early_stopping=True, n_iter_no_change=10, random_state=0)
+        hgb.fit(X, y)
+        print(gb.n_estimators_, hgb.n_iter_)
+    - library: xgboost
+      target: xgboost.XGBRegressor
+      why_this_library: Set in the constructor. Pass eval_set to fit.
+      snippet: |
+        # xgboost 3.4.1
+        from sklearn.datasets import make_regression
+        from sklearn.model_selection import train_test_split
+        from xgboost import XGBRegressor
+
+        X, y = make_regression(n_samples=500, n_features=8, noise=10, random_state=0)
+        X_train, X_val, y_train, y_val = train_test_split(X, y, random_state=0)
+
+        model = XGBRegressor(n_estimators=500, early_stopping_rounds=10)
+        model.fit(X_train, y_train, eval_set=[(X_val, y_val)], verbose=False)
+        print(model.best_iteration)
+    - library: lightgbm
+      target: lightgbm.LGBMRegressor
+      why_this_library: A callback passed to fit, not a constructor setting.
+      snippet: |
+        # lightgbm 4.7.0
+        import lightgbm as lgb
+        from sklearn.datasets import make_regression
+        from sklearn.model_selection import train_test_split
+
+        X, y = make_regression(n_samples=500, n_features=8, noise=10, random_state=0)
+        X_train, X_val, y_train, y_val = train_test_split(X, y, random_state=0)
+
+        model = lgb.LGBMRegressor(n_estimators=500, verbose=-1)
+        model.fit(
+            X_train, y_train,
+            eval_X=X_val,
+            eval_y=y_val,
+            callbacks=[lgb.early_stopping(10, verbose=False)],
+        )
+        print(model.best_iteration_)
+  catch_outs:
+    - XGBoost needs eval_set in fit. LightGBM needs eval_X and eval_y.
+    - With several eval sets, XGBoost watches the last one.
+    - scikit-learn holds out validation_fraction (10%) of your training rows.
+    - XGBoost best_iteration counts from 0.
+    - Never use the final test set as the eval_set.
+  key_settings:
+    tier1: []
+    tier2: []
+    tier3: []
+  watch_it_work:
+    dataset: ames
+    control: {name: early_stopping_rounds, min: 1, max: 50, step: 1, default: 10}
+  intuition:
+    text: Watch the held-out score. When it stops improving, stop adding trees.
+  next: [model-overfitting]

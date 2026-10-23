@@ -2046,6 +2046,12 @@
     "via": "model/Baselines"
   },
   {
+    "source": "early-stopping",
+    "target": "train-test-split",
+    "type": "recommended",
+    "via": "prep"
+  },
+  {
     "source": "easyensembleclassifier",
     "target": "rusboostclassifier",
     "type": "alternative_to",
@@ -2940,6 +2946,96 @@
     "via": "model/Boosting (scikit-learn)"
   },
   {
+    "source": "gradient-boosting",
+    "target": "iterativeimputer",
+    "type": "needs",
+    "via": "prep:clean/Imputation"
+  },
+  {
+    "source": "gradient-boosting",
+    "target": "kernelcenterer",
+    "type": "clashes",
+    "via": "prep:transform/Scaling"
+  },
+  {
+    "source": "gradient-boosting",
+    "target": "knnimputer",
+    "type": "needs",
+    "via": "prep:clean/Imputation"
+  },
+  {
+    "source": "gradient-boosting",
+    "target": "maxabsscaler",
+    "type": "clashes",
+    "via": "prep:transform/Scaling"
+  },
+  {
+    "source": "gradient-boosting",
+    "target": "minmaxscaler",
+    "type": "clashes",
+    "via": "prep:transform/Scaling"
+  },
+  {
+    "source": "gradient-boosting",
+    "target": "missingindicator",
+    "type": "needs",
+    "via": "prep:clean/Imputation"
+  },
+  {
+    "source": "gradient-boosting",
+    "target": "normalizer",
+    "type": "clashes",
+    "via": "prep:transform/Scaling"
+  },
+  {
+    "source": "gradient-boosting",
+    "target": "onehotencoder",
+    "type": "needs",
+    "via": "prep:transform/Categorical encoding"
+  },
+  {
+    "source": "gradient-boosting",
+    "target": "ordinalencoder",
+    "type": "needs",
+    "via": "prep:transform/Categorical encoding"
+  },
+  {
+    "source": "gradient-boosting",
+    "target": "robustscaler",
+    "type": "clashes",
+    "via": "prep:transform/Scaling"
+  },
+  {
+    "source": "gradient-boosting",
+    "target": "simpleimputer",
+    "type": "needs",
+    "via": "prep:clean/Imputation"
+  },
+  {
+    "source": "gradient-boosting",
+    "target": "standardscaler",
+    "type": "clashes",
+    "via": "prep:transform/Scaling"
+  },
+  {
+    "source": "gradient-boosting",
+    "target": "targetencoder",
+    "type": "needs",
+    "via": "prep:transform/Categorical encoding"
+  },
+  {
+    "source": "gradient-boosting",
+    "target": "train-test-split",
+    "type": "recommended",
+    "via": "prep"
+  },
+  {
+    "source": "gradient-boosting",
+    "target": "treeexplainer",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
     "source": "gridsampler",
     "target": "nsgaiiisampler",
     "type": "alternative_to",
@@ -3346,6 +3442,102 @@
     "target": "zero-one-loss",
     "type": "alternative_to",
     "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "hist-gradient-boosting",
+    "target": "compute-class-weight",
+    "type": "recommended",
+    "via": "prep:model/Class weighting"
+  },
+  {
+    "source": "hist-gradient-boosting",
+    "target": "iterativeimputer",
+    "type": "clashes",
+    "via": "prep:clean/Imputation"
+  },
+  {
+    "source": "hist-gradient-boosting",
+    "target": "kernelcenterer",
+    "type": "clashes",
+    "via": "prep:transform/Scaling"
+  },
+  {
+    "source": "hist-gradient-boosting",
+    "target": "knnimputer",
+    "type": "clashes",
+    "via": "prep:clean/Imputation"
+  },
+  {
+    "source": "hist-gradient-boosting",
+    "target": "maxabsscaler",
+    "type": "clashes",
+    "via": "prep:transform/Scaling"
+  },
+  {
+    "source": "hist-gradient-boosting",
+    "target": "minmaxscaler",
+    "type": "clashes",
+    "via": "prep:transform/Scaling"
+  },
+  {
+    "source": "hist-gradient-boosting",
+    "target": "missingindicator",
+    "type": "clashes",
+    "via": "prep:clean/Imputation"
+  },
+  {
+    "source": "hist-gradient-boosting",
+    "target": "normalizer",
+    "type": "clashes",
+    "via": "prep:transform/Scaling"
+  },
+  {
+    "source": "hist-gradient-boosting",
+    "target": "onehotencoder",
+    "type": "recommended",
+    "via": "prep:transform/Categorical encoding"
+  },
+  {
+    "source": "hist-gradient-boosting",
+    "target": "ordinalencoder",
+    "type": "recommended",
+    "via": "prep:transform/Categorical encoding"
+  },
+  {
+    "source": "hist-gradient-boosting",
+    "target": "robustscaler",
+    "type": "clashes",
+    "via": "prep:transform/Scaling"
+  },
+  {
+    "source": "hist-gradient-boosting",
+    "target": "simpleimputer",
+    "type": "clashes",
+    "via": "prep:clean/Imputation"
+  },
+  {
+    "source": "hist-gradient-boosting",
+    "target": "standardscaler",
+    "type": "clashes",
+    "via": "prep:transform/Scaling"
+  },
+  {
+    "source": "hist-gradient-boosting",
+    "target": "targetencoder",
+    "type": "recommended",
+    "via": "prep:transform/Categorical encoding"
+  },
+  {
+    "source": "hist-gradient-boosting",
+    "target": "train-test-split",
+    "type": "recommended",
+    "via": "prep"
+  },
+  {
+    "source": "hist-gradient-boosting",
+    "target": "treeexplainer",
+    "type": "pairs_with",
+    "via": "pairs_with"
   },
   {
     "source": "huber-regressor",
@@ -4282,6 +4474,102 @@
     "target": "train-test-split",
     "type": "alternative_to",
     "via": "split/Splitters"
+  },
+  {
+    "source": "lightgbm",
+    "target": "compute-class-weight",
+    "type": "recommended",
+    "via": "prep:model/Class weighting"
+  },
+  {
+    "source": "lightgbm",
+    "target": "iterativeimputer",
+    "type": "clashes",
+    "via": "prep:clean/Imputation"
+  },
+  {
+    "source": "lightgbm",
+    "target": "kernelcenterer",
+    "type": "clashes",
+    "via": "prep:transform/Scaling"
+  },
+  {
+    "source": "lightgbm",
+    "target": "knnimputer",
+    "type": "clashes",
+    "via": "prep:clean/Imputation"
+  },
+  {
+    "source": "lightgbm",
+    "target": "maxabsscaler",
+    "type": "clashes",
+    "via": "prep:transform/Scaling"
+  },
+  {
+    "source": "lightgbm",
+    "target": "minmaxscaler",
+    "type": "clashes",
+    "via": "prep:transform/Scaling"
+  },
+  {
+    "source": "lightgbm",
+    "target": "missingindicator",
+    "type": "clashes",
+    "via": "prep:clean/Imputation"
+  },
+  {
+    "source": "lightgbm",
+    "target": "normalizer",
+    "type": "clashes",
+    "via": "prep:transform/Scaling"
+  },
+  {
+    "source": "lightgbm",
+    "target": "onehotencoder",
+    "type": "recommended",
+    "via": "prep:transform/Categorical encoding"
+  },
+  {
+    "source": "lightgbm",
+    "target": "ordinalencoder",
+    "type": "recommended",
+    "via": "prep:transform/Categorical encoding"
+  },
+  {
+    "source": "lightgbm",
+    "target": "robustscaler",
+    "type": "clashes",
+    "via": "prep:transform/Scaling"
+  },
+  {
+    "source": "lightgbm",
+    "target": "simpleimputer",
+    "type": "clashes",
+    "via": "prep:clean/Imputation"
+  },
+  {
+    "source": "lightgbm",
+    "target": "standardscaler",
+    "type": "clashes",
+    "via": "prep:transform/Scaling"
+  },
+  {
+    "source": "lightgbm",
+    "target": "targetencoder",
+    "type": "recommended",
+    "via": "prep:transform/Categorical encoding"
+  },
+  {
+    "source": "lightgbm",
+    "target": "train-test-split",
+    "type": "recommended",
+    "via": "prep"
+  },
+  {
+    "source": "lightgbm",
+    "target": "treeexplainer",
+    "type": "pairs_with",
+    "via": "pairs_with"
   },
   {
     "source": "linear-discriminant-analysis",

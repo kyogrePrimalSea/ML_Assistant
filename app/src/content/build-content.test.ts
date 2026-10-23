@@ -1,7 +1,7 @@
 // @vitest-environment node
 /// <reference types="node" />
 import { execFileSync } from 'node:child_process'
-import { readFileSync } from 'node:fs'
+import { readdirSync, readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { beforeAll, describe, expect, it } from 'vitest'
@@ -9,6 +9,9 @@ import type { ContentIndex, PageData } from './types'
 
 const appDir = join(dirname(fileURLToPath(import.meta.url)), '..', '..')
 const data = join(appDir, 'public', 'data')
+// Source counts come from the content folder, so adding records never breaks these tests.
+const contentDir = join(appDir, '..', 'content')
+const recordCount = (readdirSync(join(contentDir, 'items'), { recursive: true }) as string[]).filter((f) => f.endsWith('.yaml')).length
 const read = <T,>(p: string) => JSON.parse(readFileSync(join(data, p), 'utf8')) as T
 
 let index: ContentIndex
@@ -19,9 +22,10 @@ beforeAll(() => {
 })
 
 describe('build-content output', () => {
-  it('has 11 records and 3 questions', () => {
-    expect(index.pages.filter((p) => p.has_record)).toHaveLength(11)
-    expect(index.questions).toHaveLength(3)
+  it('has one indexed record per content file, and the questions', () => {
+    expect(recordCount).toBeGreaterThan(0)
+    expect(index.pages.filter((p) => p.has_record)).toHaveLength(recordCount)
+    expect(index.questions.length).toBeGreaterThan(0)
   })
 
   it('indexes every inventory page, with or without a record', () => {

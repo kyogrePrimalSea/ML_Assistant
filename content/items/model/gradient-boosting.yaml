@@ -1,0 +1,115 @@
+id: gradient-boosting
+plain_name: Gradient boosting
+code_name: GradientBoostingRegressor / GradientBoostingClassifier
+aliases: [gbm, gbdt, gbrt, sklearn gradient boosting]
+stage: model
+family: Boosting (scikit-learn)
+tracks: [standard]
+archetype: model
+question_tags: [underperforming, tabular data, overfitting]
+targets: [sklearn.ensemble.GradientBoostingRegressor, sklearn.ensemble.GradientBoostingClassifier]
+pairs_with: [treeexplainer]
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingRegressor.html
+  - https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingClassifier.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: ames, shape: fit_line}
+    line: Many small trees, each fixing the last one's mistakes.
+  quick_facts:
+    data_size: Small to medium tables
+  use_avoid:
+    use_when: [tabular data, non-linear effects, complete data]
+    avoid_when: [missing values, images or text, need a simple formula]
+  prep:
+    - step: {family: Scaling, stage: transform}
+      status: not_needed
+      why: Trees split on order, not size.
+      condition: null
+      unless: null
+    - step: {family: Imputation, stage: clean}
+      status: required
+      why: Fit stops on NaN. Fill gaps first.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: Categorical encoding, stage: transform}
+      status: required
+      why: Text categories must become numbers.
+      condition: {has_categoricals: true}
+      unless: null
+    - step: {page: train-test-split}
+      status: recommended
+      why: Hold out rows to score honestly.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.ensemble.GradientBoostingRegressor
+      why_this_library: No extra install. Early stopping via n_iter_no_change.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import make_regression
+        from sklearn.ensemble import GradientBoostingRegressor
+        from sklearn.model_selection import train_test_split
+
+        X, y = make_regression(n_samples=500, n_features=8, noise=10, random_state=0)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = GradientBoostingRegressor(
+            n_estimators=500,
+            learning_rate=0.1,
+            max_depth=3,
+            n_iter_no_change=10,
+            random_state=0,
+        )
+        model.fit(X_train, y_train)
+        print(model.n_estimators_)
+        print(model.score(X_test, y_test))
+  catch_outs:
+    - NaN in X raises an error. Impute first.
+    - Early stopping is off until n_iter_no_change is set.
+    - Early stopping holds out validation_fraction (10%) of the training rows.
+    - Category columns need encoding first. No native support.
+  key_settings:
+    tier1:
+      - {name: n_estimators, page: n-estimators}
+      - {name: learning_rate, page: learning-rate}
+      - {name: max_depth, page: max-depth}
+      - {name: n_iter_no_change, page: early-stopping}
+    tier2:
+      - {name: subsample, page: null}
+      - {name: max_features, page: null}
+      - {name: min_samples_leaf, page: null}
+    tier3:
+      - {name: loss, page: null}
+      - {name: ccp_alpha, page: null}
+      - {name: max_leaf_nodes, page: null}
+  watch_it_work:
+    dataset: ames
+    control: {name: n_estimators, min: 1, max: 200, step: 1, default: 50}
+  intuition:
+    idea: Build small trees one after another, each fixing the mistakes of the last.
+    analogy: A team correcting an essay, each person only fixing what is still wrong.
+    animation: model/boosting-sequence
+    good_at: [tabular data, non-linear effects, complete data]
+    bad_at: [missing values, extrapolation, raw text]
+    vs_siblings:
+      - {page: hist-gradient-boosting, note: "Same idea, binned for speed. Takes NaN."}
+      - {page: xgboost, note: "Adds reg_alpha, reg_lambda and gamma. Takes NaN."}
+      - {page: lightgbm, note: Caps leaves with num_leaves. Takes NaN.}
+    read_more:
+      - Start with a constant prediction.
+      - Fit a small tree to the current errors.
+      - Add it, scaled by learning_rate.
+      - Repeat for n_estimators rounds, or until early stopping.
+  next: [model-overfitting, know-feature-importance]

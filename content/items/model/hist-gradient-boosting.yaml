@@ -1,0 +1,121 @@
+id: hist-gradient-boosting
+plain_name: Histogram gradient boosting
+code_name: HistGradientBoostingRegressor / HistGradientBoostingClassifier
+aliases: [hgb, histgbm, hist gbm]
+stage: model
+family: Boosting (scikit-learn)
+tracks: [standard]
+archetype: model
+question_tags: [underperforming, tabular data, overfitting, too slow]
+targets: [sklearn.ensemble.HistGradientBoostingRegressor, sklearn.ensemble.HistGradientBoostingClassifier]
+pairs_with: [treeexplainer]
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html
+  - https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.HistGradientBoostingClassifier.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: ames, shape: fit_line}
+    line: Gradient boosting on binned columns. Fast, takes NaN.
+  quick_facts:
+    data_size: Medium to large tables
+  use_avoid:
+    use_when: [tabular data, missing values, larger data]
+    avoid_when: [tiny data, images or text, need a simple formula]
+  prep:
+    - step: {family: Scaling, stage: transform}
+      status: not_needed
+      why: Trees split on order, not size.
+      condition: null
+      unless: null
+    - step: {family: Imputation, stage: clean}
+      status: not_needed
+      why: Missing values are handled natively.
+      condition: null
+      unless: null
+    - step: {family: Categorical encoding, stage: transform}
+      status: recommended
+      why: Category dtype works as is. Text needs encoding.
+      condition: {has_categoricals: true}
+      unless: null
+    - step: {family: Class weighting, stage: model}
+      status: recommended
+      why: Use class_weight when classes are lopsided.
+      condition: {imbalanced: true, task_type: [classification]}
+      unless: null
+    - step: {page: train-test-split}
+      status: recommended
+      why: Hold out rows to score honestly.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.ensemble.HistGradientBoostingRegressor
+      why_this_library: No extra install. Early stopping is built in.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import make_regression
+        from sklearn.ensemble import HistGradientBoostingRegressor
+        from sklearn.model_selection import train_test_split
+
+        X, y = make_regression(n_samples=500, n_features=8, noise=10, random_state=0)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = HistGradientBoostingRegressor(
+            max_iter=500,
+            learning_rate=0.05,
+            early_stopping=True,
+            n_iter_no_change=20,
+            random_state=0,
+        )
+        model.fit(X_train, y_train)
+        print(model.n_iter_)
+        print(model.score(X_test, y_test))
+  catch_outs:
+    - The tree count is max_iter, not n_estimators.
+    - Early stopping is automatic only above 10,000 rows.
+    - Tree size is capped by max_leaf_nodes (31) first.
+    - Text columns fail. Use category dtype or encode them.
+  key_settings:
+    tier1:
+      - {name: max_iter, page: n-estimators}
+      - {name: learning_rate, page: learning-rate}
+      - {name: max_leaf_nodes, page: null}
+      - {name: n_iter_no_change, page: early-stopping}
+    tier2:
+      - {name: max_depth, page: max-depth}
+      - {name: min_samples_leaf, page: null}
+      - {name: l2_regularization, page: null}
+    tier3:
+      - {name: early_stopping, page: early-stopping}
+      - {name: max_features, page: null}
+      - {name: max_bins, page: null}
+  watch_it_work:
+    dataset: ames
+    control: {name: max_iter, min: 1, max: 200, step: 1, default: 50}
+  intuition:
+    idea: Bin each column into 255 steps, then boost small trees on the bins.
+    analogy: Sorting heights into shoe-size buckets before comparing people.
+    animation: model/boosting-sequence
+    good_at: [missing values, larger data, tabular data]
+    bad_at: [tiny data, extrapolation, raw text]
+    vs_siblings:
+      - {page: gradient-boosting, note: "Same idea, exact splits. Does not take NaN."}
+      - {page: xgboost, note: "More settings (gamma, reg_alpha). Needs a separate install."}
+      - {page: lightgbm, note: Same binning idea. Caps leaves with num_leaves.}
+    read_more:
+      - Bin every column into at most max_bins steps.
+      - Start with a constant prediction.
+      - Fit a small tree to the current errors, using the bins.
+      - Add it, scaled by learning_rate.
+      - Repeat for max_iter rounds, or until early stopping.
+  next: [model-overfitting, know-feature-importance]

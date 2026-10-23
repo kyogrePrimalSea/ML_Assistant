@@ -1,0 +1,123 @@
+id: lightgbm
+plain_name: LightGBM
+code_name: LGBMRegressor / LGBMClassifier
+aliases: [lgbm, light gbm, lgb]
+stage: model
+family: Boosting (LightGBM)
+tracks: [standard]
+archetype: model
+question_tags: [underperforming, tabular data, overfitting, too slow]
+targets: [lightgbm.LGBMRegressor, lightgbm.LGBMClassifier]
+pairs_with: [treeexplainer]
+clashes: []
+source_urls:
+  - https://lightgbm.readthedocs.io/en/stable/pythonapi/lightgbm.LGBMRegressor.html
+  - https://lightgbm.readthedocs.io/en/stable/pythonapi/lightgbm.LGBMClassifier.html
+library_versions:
+  lightgbm: "4.7.0"
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: ames, shape: fit_line}
+    line: Many small trees, each fixing the last one's mistakes.
+  quick_facts:
+    data_size: Medium to large tables
+  use_avoid:
+    use_when: [tabular data, larger data, missing values]
+    avoid_when: [tiny data, images or text, need a simple formula]
+  prep:
+    - step: {family: Scaling, stage: transform}
+      status: not_needed
+      why: Trees split on order, not size.
+      condition: null
+      unless: null
+    - step: {family: Imputation, stage: clean}
+      status: not_needed
+      why: Missing values are handled natively.
+      condition: null
+      unless: null
+    - step: {family: Categorical encoding, stage: transform}
+      status: recommended
+      why: Category dtype works as is. Text needs encoding.
+      condition: {has_categoricals: true}
+      unless: null
+    - step: {family: Class weighting, stage: model}
+      status: recommended
+      why: Use scale_pos_weight or is_unbalance when lopsided.
+      condition: {imbalanced: true, task_type: [classification]}
+      unless: null
+    - step: {page: train-test-split}
+      status: recommended
+      why: A validation set enables early stopping.
+      condition: null
+      unless: null
+  code:
+    - library: lightgbm
+      target: lightgbm.LGBMRegressor
+      why_this_library: Early stopping is a callback passed to fit.
+      snippet: |
+        # lightgbm 4.7.0
+        import lightgbm as lgb
+        from sklearn.datasets import make_regression
+        from sklearn.model_selection import train_test_split
+
+        X, y = make_regression(n_samples=500, n_features=8, noise=10, random_state=0)
+        X_train, X_val, y_train, y_val = train_test_split(X, y, random_state=0)
+
+        model = lgb.LGBMRegressor(
+            n_estimators=500,
+            learning_rate=0.05,
+            num_leaves=31,
+            verbose=-1,
+        )
+        model.fit(
+            X_train, y_train,
+            eval_X=X_val,
+            eval_y=y_val,
+            callbacks=[lgb.early_stopping(20, verbose=False)],
+        )
+        print(model.best_iteration_)
+  catch_outs:
+    - Early stopping needs eval_X, eval_y and the early_stopping callback.
+    - num_leaves (31) limits the tree before max_depth (-1) does.
+    - subsample does nothing until subsample_freq is above 0.
+    - Text columns fail. Use category dtype or encode them.
+  key_settings:
+    tier1:
+      - {name: n_estimators, page: n-estimators}
+      - {name: learning_rate, page: learning-rate}
+      - {name: num_leaves, page: null}
+      - {name: max_depth, page: max-depth}
+    tier2:
+      - {name: min_child_samples, page: null}
+      - {name: subsample, page: null}
+      - {name: colsample_bytree, page: null}
+    tier3:
+      - {name: reg_lambda, page: null}
+      - {name: reg_alpha, page: null}
+      - {name: min_split_gain, page: null}
+  watch_it_work:
+    dataset: ames
+    control: {name: n_estimators, min: 1, max: 200, step: 1, default: 50}
+  intuition:
+    idea: Build small trees one after another, each fixing the mistakes of the last.
+    analogy: A team correcting an essay, each person only fixing what is still wrong.
+    animation: model/boosting-sequence
+    good_at: [tabular data, larger data, missing values]
+    bad_at: [tiny data, extrapolation, raw text]
+    vs_siblings:
+      - {page: xgboost, note: XGBoost caps depth (max_depth 6). LightGBM caps leaves.}
+      - {page: hist-gradient-boosting, note: "In scikit-learn, no extra install. Fewer settings."}
+      - {page: gradient-boosting, note: Exact splits. Does not take NaN.}
+    read_more:
+      - Start with a constant prediction.
+      - Fit a small tree to the current errors.
+      - Add it, scaled by learning_rate.
+      - Repeat until n_estimators, or early stopping.
+  next: [model-overfitting, know-feature-importance]

@@ -341,7 +341,7 @@
     "T022": {
       "title": "Boosting family content records",
       "file": "tasks/T022-boosting-content.md",
-      "status": "In progress",
+      "status": "Done",
       "dependencies": [
         "T020"
       ],
@@ -377,7 +377,7 @@
     "T026": {
       "title": "Short journey (globe) and notebook output",
       "file": "tasks/T026-short-journey-and-notebook.md",
-      "status": "Backlog",
+      "status": "In progress",
       "dependencies": [
         "T022"
       ],

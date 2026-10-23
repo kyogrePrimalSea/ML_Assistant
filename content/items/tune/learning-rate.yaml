@@ -1,0 +1,106 @@
+id: learning-rate
+plain_name: Learning rate
+code_name: learning_rate
+aliases: [eta, shrinkage, step size]
+family: Boosting step size
+question_tags: [overfitting, underfitting]
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingRegressor.html
+  - https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html
+  - https://xgboost.readthedocs.io/en/stable/python/python_api.html
+  - https://lightgbm.readthedocs.io/en/stable/pythonapi/lightgbm.LGBMRegressor.html
+stage: tune
+tracks: [standard]
+archetype: hyperparameter
+targets: []
+applies_to: [gradient-boosting, hist-gradient-boosting, xgboost, lightgbm]
+pairs_with: []
+clashes: []
+library_versions:
+  scikit-learn: "1.9.1"
+  xgboost: "3.4.1"
+  lightgbm: "4.7.0"
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: hyperparameter, dataset: ames, sweep: [0.01, 0.05, 0.1, 0.3]}
+    line: How much each new tree is allowed to change the answer.
+  quick_facts:
+    values:
+      - {page: gradient-boosting, default: "0.1", typical_range: 0.01 to 0.3}
+      - {page: hist-gradient-boosting, default: "0.1", typical_range: 0.01 to 0.3}
+      - {page: xgboost, default: "0.3", typical_range: 0.01 to 0.3}
+      - {page: lightgbm, default: "0.1", typical_range: 0.01 to 0.3}
+  use_avoid:
+    use_when: [overfitting, many trees affordable]
+    avoid_when: [few trees, underfitting]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.ensemble.GradientBoostingRegressor
+      why_this_library: Default 0.1. Same name in the histogram version.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import make_regression
+        from sklearn.ensemble import GradientBoostingRegressor
+        from sklearn.model_selection import train_test_split
+
+        X, y = make_regression(n_samples=500, n_features=8, noise=10, random_state=0)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        for lr in [0.01, 0.1, 0.5]:
+            model = GradientBoostingRegressor(learning_rate=lr, n_estimators=100, random_state=0)
+            model.fit(X_train, y_train)
+            print(lr, round(model.score(X_test, y_test), 3))
+    - library: xgboost
+      target: xgboost.XGBRegressor
+      why_this_library: Default 0.3 (its eta). Higher than the others.
+      snippet: |
+        # xgboost 3.4.1
+        from sklearn.datasets import make_regression
+        from sklearn.model_selection import train_test_split
+        from xgboost import XGBRegressor
+
+        X, y = make_regression(n_samples=500, n_features=8, noise=10, random_state=0)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        for lr in [0.01, 0.1, 0.5]:
+            model = XGBRegressor(learning_rate=lr, n_estimators=100)
+            model.fit(X_train, y_train)
+            print(lr, round(model.score(X_test, y_test), 3))
+    - library: lightgbm
+      target: lightgbm.LGBMRegressor
+      why_this_library: Default 0.1.
+      snippet: |
+        # lightgbm 4.7.0
+        from lightgbm import LGBMRegressor
+        from sklearn.datasets import make_regression
+        from sklearn.model_selection import train_test_split
+
+        X, y = make_regression(n_samples=500, n_features=8, noise=10, random_state=0)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        for lr in [0.01, 0.1, 0.5]:
+            model = LGBMRegressor(learning_rate=lr, n_estimators=100, verbose=-1)
+            model.fit(X_train, y_train)
+            print(lr, round(model.score(X_test, y_test), 3))
+  catch_outs:
+    - XGBoost defaults to 0.3. The others default to 0.1.
+    - Lower learning_rate needs more trees (n_estimators).
+    - A fixed tree count with a tiny rate underfits.
+  key_settings:
+    tier1: []
+    tier2: []
+    tier3: []
+  watch_it_work:
+    dataset: ames
+    control: {name: learning_rate, min: 0.01, max: 1, step: 0.01, default: 0.1}
+  intuition:
+    text: Small steps learn slowly but overfit less. Big steps risk overshooting.
+  next: [model-overfitting]
