@@ -1,0 +1,144 @@
+{
+  "attributes": [
+    {
+      "description": "Whether to deseasonalize the data",
+      "name": "deseasonalize",
+      "type_doc": ""
+    },
+    {
+      "description": "Whether the data is differenced in the seasonality test",
+      "name": "difference",
+      "type_doc": ""
+    },
+    {
+      "description": "The method used to deseasonalize the data",
+      "name": "method",
+      "type_doc": ""
+    },
+    {
+      "description": "The period of the seasonality",
+      "name": "period",
+      "type_doc": ""
+    },
+    {
+      "description": "Whether to test the data for seasonality",
+      "name": "use_test",
+      "type_doc": ""
+    }
+  ],
+  "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.tsa.forecasting.theta.ThetaModel.html",
+  "extractor_version": "1",
+  "id": "statsmodels.tsa.forecasting.theta.ThetaModel",
+  "import_path": "statsmodels.tsa.forecasting.theta.ThetaModel",
+  "kind": "class",
+  "library": "statsmodels",
+  "library_version": "0.15.0",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(use_mle: 'bool' = False, disp: 'bool' = False) -> 'ThetaModelResults'",
+      "summary": "Estimate model parameters"
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The data to forecast, 1-d.",
+      "effective_default": null,
+      "name": "endog",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array_like"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The period of the data that is used in the seasonality test and\nadjustment. If None, the period is determined from y's index, if\navailable.",
+      "effective_default": null,
+      "name": "period",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "Whether to deseasonalize the data. If True and use_test is True,\nthe data is only deseasonalized if the null of no seasonal\ncomponent is rejected.",
+      "effective_default": null,
+      "name": "deseasonalize",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "Whether to test the period-th autocorrelation. If this test\nrejects using a size of 10%, then decomposition is used. Set to\nFalse to skip the test.",
+      "effective_default": null,
+      "name": "use_test",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "auto",
+          "additive",
+          "multiplicative"
+        ],
+        "source": "docstring",
+        "types": []
+      },
+      "default": "'auto'",
+      "description": "The model used for the seasonal decomposition. \"auto\" uses a\nmultiplicative decomposition if y is non-negative and all\nestimated seasonal components are positive. If either of these\nconditions is False, then it uses an additive decomposition.",
+      "effective_default": null,
+      "name": "method",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{\"auto\", \"additive\", \"multiplicative\"}, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "Whether to difference the data before testing for seasonality.",
+      "effective_default": null,
+      "name": "difference",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, optional"
+    }
+  ],
+  "returns": [],
+  "signature": "ThetaModel(endog, *, period: 'int | None' = None, deseasonalize: 'bool' = True, use_test: 'bool' = True, method: 'str' = 'auto', difference: 'bool' = False) -> 'None'",
+  "summary": "The Theta forecasting model of Assimakopoulos and Nikolopoulos (2000)",
+  "warnings": []
+}

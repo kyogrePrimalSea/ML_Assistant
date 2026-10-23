@@ -1,0 +1,125 @@
+{
+  "attributes": [
+    {
+      "description": "The link function of the Binomial instance",
+      "name": "Binomial.link",
+      "type_doc": "a link instance"
+    },
+    {
+      "description": "``variance`` is an instance of\nstatsmodels.genmod.families.varfuncs.binary",
+      "name": "Binomial.variance",
+      "type_doc": "varfunc instance"
+    },
+    {
+      "description": "Link function for family",
+      "name": "link",
+      "type_doc": ""
+    }
+  ],
+  "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.genmod.families.family.Binomial.html",
+  "extractor_version": "1",
+  "id": "statsmodels.genmod.families.family.Binomial",
+  "import_path": "statsmodels.genmod.families.family.Binomial",
+  "kind": "class",
+  "library": "statsmodels",
+  "library_version": "0.15.0",
+  "methods": [
+    {
+      "name": "deviance",
+      "signature": "deviance(endog, mu, var_weights=1.0, freq_weights=1.0, scale=1.0)",
+      "summary": "The deviance function evaluated at (endog, mu, var_weights,"
+    },
+    {
+      "name": "fitted",
+      "signature": "fitted(lin_pred)",
+      "summary": "Fitted values based on linear predictors lin_pred."
+    },
+    {
+      "name": "get_distribution",
+      "signature": "get_distribution(mu, scale=1.0, var_weights=1.0, n_trials=1)",
+      "summary": "Frozen Binomial distribution instance for given parameters"
+    },
+    {
+      "name": "initialize",
+      "signature": "initialize(endog, freq_weights)",
+      "summary": "Initialize the response variable."
+    },
+    {
+      "name": "loglike",
+      "signature": "loglike(endog, mu, var_weights=1.0, freq_weights=1.0, scale=1.0)",
+      "summary": "The log-likelihood function in terms of the fitted mean response."
+    },
+    {
+      "name": "loglike_obs",
+      "signature": "loglike_obs(endog, mu, var_weights=1.0, scale=1.0)",
+      "summary": "The log-likelihood function for each observation in terms of the fitted"
+    },
+    {
+      "name": "predict",
+      "signature": "predict(mu)",
+      "summary": "Linear predictors based on given mu values."
+    },
+    {
+      "name": "resid_anscombe",
+      "signature": "resid_anscombe(endog, mu, var_weights=1.0, scale=1.0)",
+      "summary": "The Anscombe residuals"
+    },
+    {
+      "name": "resid_dev",
+      "signature": "resid_dev(endog, mu, var_weights=1.0, scale=1.0)",
+      "summary": "The deviance residuals"
+    },
+    {
+      "name": "starting_mu",
+      "signature": "starting_mu(y)",
+      "summary": "The starting values for the IRLS algorithm for the Binomial family."
+    },
+    {
+      "name": "variance",
+      "signature": "variance(mu)",
+      "summary": "The binomial variance function for n = 1"
+    },
+    {
+      "name": "weights",
+      "signature": "weights(mu)",
+      "summary": "Weights for IRLS steps"
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The default link for the Binomial family is the logit link.\nAvailable links are logit, probit, cauchy, log, loglog, and cloglog.\nSee statsmodels.genmod.families.links for more information.",
+      "effective_default": null,
+      "name": "link",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "a link instance, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "If True (default), then an exception is raised if the link is invalid\nfor the family.\nIf False, then the link is not checked.",
+      "effective_default": null,
+      "name": "check_link",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool, optional"
+    }
+  ],
+  "returns": [],
+  "signature": "Binomial(link=None, check_link=True)",
+  "summary": "Binomial exponential family distribution.",
+  "warnings": []
+}

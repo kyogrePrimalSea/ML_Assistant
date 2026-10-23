@@ -1,0 +1,507 @@
+{
+  "attributes": [
+    {
+      "description": "Names of endogenous variables",
+      "name": "endog_names",
+      "type_doc": ""
+    },
+    {
+      "description": "The names of the exogenous variables.",
+      "name": "exog_names",
+      "type_doc": ""
+    },
+    {
+      "description": "Initial design matrix",
+      "name": "initial_design",
+      "type_doc": ""
+    },
+    {
+      "description": "Initial selection matrix",
+      "name": "initial_selection",
+      "type_doc": ""
+    },
+    {
+      "description": "Initial state intercept vector",
+      "name": "initial_state_intercept",
+      "type_doc": ""
+    },
+    {
+      "description": "Initial transition matrix",
+      "name": "initial_transition",
+      "type_doc": ""
+    },
+    {
+      "description": "The latex names of all possible model parameters",
+      "name": "model_latex_names",
+      "type_doc": ""
+    },
+    {
+      "description": "The plain text names of all possible model parameters",
+      "name": "model_names",
+      "type_doc": ""
+    },
+    {
+      "description": "The orders of each of the polynomials in the model",
+      "name": "model_orders",
+      "type_doc": ""
+    },
+    {
+      "description": "List of human readable parameter names (for parameters actually",
+      "name": "param_names",
+      "type_doc": ""
+    },
+    {
+      "description": "List of parameters actually included in the model, in sorted order",
+      "name": "param_terms",
+      "type_doc": ""
+    },
+    {
+      "description": "Starting parameters for maximum likelihood estimation",
+      "name": "start_params",
+      "type_doc": ""
+    },
+    {
+      "description": "(list of str) List of human readable names for unobserved states",
+      "name": "state_names",
+      "type_doc": ""
+    },
+    {
+      "description": "",
+      "name": "initial_variance",
+      "type_doc": ""
+    },
+    {
+      "description": "",
+      "name": "initialization",
+      "type_doc": ""
+    },
+    {
+      "description": "",
+      "name": "loglikelihood_burn",
+      "type_doc": ""
+    },
+    {
+      "description": "",
+      "name": "tolerance",
+      "type_doc": ""
+    }
+  ],
+  "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.tsa.arima.model.ARIMA.html",
+  "extractor_version": "1",
+  "id": "statsmodels.tsa.arima.model.ARIMA",
+  "import_path": "statsmodels.tsa.arima.model.ARIMA",
+  "kind": "class",
+  "library": "statsmodels",
+  "library_version": "0.15.0",
+  "methods": [
+    {
+      "name": "clone",
+      "signature": "clone(endog, exog=None, **kwargs)",
+      "summary": "Clone state space model with new data and optionally new specification"
+    },
+    {
+      "name": "filter",
+      "signature": "filter(params, transformed=True, includes_fixed=False, complex_step=False, cov_type=None, cov_kwds=None, return_ssm=False, results_class=None, results_wrapper_class=None, low_memory=False, **kwargs)",
+      "summary": "Kalman filtering"
+    },
+    {
+      "name": "fit",
+      "signature": "fit(start_params=None, transformed=True, includes_fixed=False, method=None, method_kwargs=None, gls=None, gls_kwargs=None, cov_type=None, cov_kwds=None, return_params=False, low_memory=False)",
+      "summary": "Fit (estimate) the parameters of the model"
+    },
+    {
+      "name": "fit_constrained",
+      "signature": "fit_constrained(constraints, start_params=None, **fit_kwds)",
+      "summary": "Fit the model with some parameters subject to equality constraints."
+    },
+    {
+      "name": "fix_params",
+      "signature": "fix_params(params)",
+      "summary": "Fix parameters to specific values (context manager)"
+    },
+    {
+      "name": "from_formula",
+      "signature": "from_formula(formula, data, subset=None)",
+      "summary": "Not implemented for state space models"
+    },
+    {
+      "name": "handle_params",
+      "signature": "handle_params(params, transformed=True, includes_fixed=False, return_jacobian=False)",
+      "summary": "Ensure model parameters satisfy shape and other requirements"
+    },
+    {
+      "name": "hessian",
+      "signature": "hessian(params, *args, **kwargs)",
+      "summary": "Hessian matrix of the likelihood function, evaluated at the given"
+    },
+    {
+      "name": "impulse_responses",
+      "signature": "impulse_responses(params, steps=1, impulse=0, orthogonalized=False, cumulative=False, anchor=None, exog=None, extend_model=None, extend_kwargs=None, transformed=True, includes_fixed=False, **kwargs)",
+      "summary": "Impulse response function"
+    },
+    {
+      "name": "information",
+      "signature": "information(params)",
+      "summary": "Fisher information matrix of model"
+    },
+    {
+      "name": "initialize",
+      "signature": "initialize()",
+      "summary": "Initialize the SARIMAX model"
+    },
+    {
+      "name": "initialize_approximate_diffuse",
+      "signature": "initialize_approximate_diffuse(variance=None)",
+      "summary": "Initialize approximate diffuse"
+    },
+    {
+      "name": "initialize_default",
+      "signature": "initialize_default(approximate_diffuse_variance=None)",
+      "summary": "Initialize default"
+    },
+    {
+      "name": "initialize_known",
+      "signature": "initialize_known(initial_state, initial_state_cov)",
+      "summary": "Initialize known"
+    },
+    {
+      "name": "initialize_statespace",
+      "signature": "initialize_statespace(**kwargs)",
+      "summary": "Initialize the state space representation"
+    },
+    {
+      "name": "initialize_stationary",
+      "signature": "initialize_stationary()",
+      "summary": "Initialize stationary"
+    },
+    {
+      "name": "loglike",
+      "signature": "loglike(params, *args, **kwargs)",
+      "summary": "Loglikelihood evaluation"
+    },
+    {
+      "name": "loglikeobs",
+      "signature": "loglikeobs(params, transformed=True, includes_fixed=False, complex_step=False, **kwargs)",
+      "summary": "Loglikelihood evaluation"
+    },
+    {
+      "name": "observed_information_matrix",
+      "signature": "observed_information_matrix(params, transformed=True, includes_fixed=False, approx_complex_step=None, approx_centered=False, **kwargs)",
+      "summary": "Observed information matrix"
+    },
+    {
+      "name": "opg_information_matrix",
+      "signature": "opg_information_matrix(params, transformed=True, includes_fixed=False, approx_complex_step=None, **kwargs)",
+      "summary": "Outer product of gradients information matrix"
+    },
+    {
+      "name": "predict",
+      "signature": "predict(params, exog=None, *args, **kwargs)",
+      "summary": "After a model has been fit, predict returns the fitted values"
+    },
+    {
+      "name": "prepare_data",
+      "signature": "prepare_data()",
+      "summary": "Prepare data for use in the state space representation"
+    },
+    {
+      "name": "score",
+      "signature": "score(params, *args, **kwargs)",
+      "summary": "Compute the score function at params"
+    },
+    {
+      "name": "score_obs",
+      "signature": "score_obs(params, method='approx', transformed=True, includes_fixed=False, approx_complex_step=None, approx_centered=False, **kwargs)",
+      "summary": "Compute the score per observation, evaluated at params"
+    },
+    {
+      "name": "set_conserve_memory",
+      "signature": "set_conserve_memory(conserve_memory=None, **kwargs)",
+      "summary": "Set the memory conservation method"
+    },
+    {
+      "name": "set_filter_method",
+      "signature": "set_filter_method(filter_method=None, **kwargs)",
+      "summary": "Set the filtering method"
+    },
+    {
+      "name": "set_inversion_method",
+      "signature": "set_inversion_method(inversion_method=None, **kwargs)",
+      "summary": "Set the inversion method"
+    },
+    {
+      "name": "set_smoother_output",
+      "signature": "set_smoother_output(smoother_output=None, **kwargs)",
+      "summary": "Set the smoother output"
+    },
+    {
+      "name": "set_stability_method",
+      "signature": "set_stability_method(stability_method=None, **kwargs)",
+      "summary": "Set the numerical stability method"
+    },
+    {
+      "name": "simulate",
+      "signature": "simulate(params, nsimulations, measurement_shocks=None, state_shocks=None, initial_state=None, anchor=None, repetitions=None, exog=None, extend_model=None, extend_kwargs=None, transformed=True, includes_fixed=False, pretransformed_measurement_shocks=True, pretransformed_state_shocks=True, pretransformed_initial_state=True, rng=None, **kwargs)",
+      "summary": "Simulate a new time series following the state space model"
+    },
+    {
+      "name": "simulation_smoother",
+      "signature": "simulation_smoother(simulation_output=None, **kwargs)",
+      "summary": "Retrieve a simulation smoother for the state space model."
+    },
+    {
+      "name": "smooth",
+      "signature": "smooth(params, transformed=True, includes_fixed=False, complex_step=False, cov_type=None, cov_kwds=None, return_ssm=False, results_class=None, results_wrapper_class=None, **kwargs)",
+      "summary": "Kalman smoothing"
+    },
+    {
+      "name": "transform_jacobian",
+      "signature": "transform_jacobian(unconstrained, approx_centered=False)",
+      "summary": "Jacobian matrix for the parameter transformation function"
+    },
+    {
+      "name": "transform_params",
+      "signature": "transform_params(unconstrained)",
+      "summary": "Transform unconstrained parameters used by the optimizer to constrained"
+    },
+    {
+      "name": "untransform_params",
+      "signature": "untransform_params(constrained)",
+      "summary": "Transform constrained parameters used in likelihood evaluation"
+    },
+    {
+      "name": "update",
+      "signature": "update(params, transformed=True, includes_fixed=False, complex_step=False)",
+      "summary": "Update the parameters of the model"
+    }
+  ],
+  "overrides_applied": [
+    {
+      "path": "attributes",
+      "reason": "Documented attributes/properties listed on the official page (Attributes/Properties sections) were not captured by the extractor (not in the numpydoc Attributes block; descriptions from the page Properties table, blank where the page gives none).",
+      "source_url": "https://www.statsmodels.org/stable/generated/statsmodels.tsa.arima.model.ARIMA.html"
+    }
+  ],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The observed time-series process :math:`y`.",
+      "effective_default": null,
+      "name": "endog",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array_like"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Array of exogenous regressors.",
+      "effective_default": null,
+      "name": "exog",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "array_like, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "(0, 0, 0)",
+      "description": "The (p,d,q) order of the model for the autoregressive, differences, and\nmoving average components. d is always an integer, while p and q may\neither be integers or lists of integers specifying exactly which lag\norders are included. The order of differences is to achieve\nstationarity in the context of a stochastic trend or seasonality.\nThe default is (0, 0, 0).",
+      "effective_default": null,
+      "name": "order",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "tuple, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "(0, 0, 0, 0)",
+      "description": "The (P,D,Q,s) order of the seasonal component of the model for the\nAR parameters, differences, MA parameters, and periodicity. D is a non-\nnegative integer, and s is an integer strictly greater than one. P and\nQ may either be integers or lists of positive integers specifying\nexactly which lag orders are included. The default is (0, 0, 0, 0).",
+      "effective_default": null,
+      "name": "seasonal_order",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "tuple, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "n",
+          "c",
+          "t",
+          "ct",
+          "ctt"
+        ],
+        "source": "docstring",
+        "types": []
+      },
+      "default": "None",
+      "description": "Parameter controlling the deterministic trend. Can be specified as a\nstring where 'n' indicates no trend, 'c' indicates a constant term,\n't' indicates a linear trend in time, 'ct' includes both, and 'ctt'\nincludes a constant, linear trend, and squared time trend. Can also\nbe specified as an array_like defining a polynomial, as in\n`numpy.poly1d`, where `[1,1,0,1]` would denote :math:`a + bt + ct^3`.\nDefault is 'c' for models without integration, and no trend for\nmodels with integration. Note that all trend terms are included in\nthe model as exogenous regressors, which differs from how trends are\nincluded in ``SARIMAX`` models.  See the Notes section for a precise\ndefinition of the treatment of trend terms.",
+      "effective_default": null,
+      "name": "trend",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "{'n', 'c', 't', 'ct', 'ctt'} or array_like, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "Whether or not to require the autoregressive parameters to correspond\nto a stationarity process. Default is True.",
+      "effective_default": null,
+      "name": "enforce_stationarity",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "Whether or not to require the moving average parameters to correspond\nto an invertible process. Default is True.",
+      "effective_default": null,
+      "name": "enforce_invertibility",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "Whether or not to concentrate the scale (variance of the error term)\nout of the likelihood. This reduces the number of parameters by one.\nThis is only applicable when considering estimation by numerical\nmaximum likelihood. Default is False.",
+      "effective_default": null,
+      "name": "concentrate_scale",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "1",
+      "description": "The offset at which to start time trend values. Default is 1, so that\nif `trend='t'` the trend is equal to 1, 2, ..., nobs. Typically is only\nset when the model created by extending a previous dataset.",
+      "effective_default": null,
+      "name": "trend_offset",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "If no index is given by `endog` or `exog`, an array-like object of\ndatetime objects can be provided.",
+      "effective_default": null,
+      "name": "dates",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "array_like of datetime, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "If no index is given by `endog` or `exog`, the frequency of the\ntime-series may be specified here as a Pandas offset or offset string.",
+      "effective_default": null,
+      "name": "freq",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "str, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'none'",
+      "description": "Available options are 'none', 'drop', and 'raise'. If 'none', no nan\nchecking is done. If 'drop', any observations with nans are dropped.\nIf 'raise', an error is raised. Default is 'none'.",
+      "effective_default": null,
+      "name": "missing",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "str, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "Whether or not to validate the model specification. Default is True.",
+      "effective_default": null,
+      "name": "validate_specification",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "Whether or not to check that `exog` does not duplicate a constant trend\nwith a constant column. Has no effect unless `validate_specification`\nis True. Default is True.",
+      "effective_default": null,
+      "name": "validate_exog",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool, optional"
+    }
+  ],
+  "returns": [],
+  "signature": "ARIMA(endog, exog=None, order=(0, 0, 0), seasonal_order=(0, 0, 0, 0), trend=None, enforce_stationarity=True, enforce_invertibility=True, concentrate_scale=False, trend_offset=1, dates=None, freq=None, missing='none', validate_specification=True, validate_exog=True)",
+  "summary": "Autoregressive Integrated Moving Average (ARIMA) model, and extensions",
+  "warnings": []
+}

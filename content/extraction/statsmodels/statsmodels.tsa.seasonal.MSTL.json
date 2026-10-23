@@ -1,0 +1,114 @@
+{
+  "attributes": [],
+  "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.tsa.seasonal.MSTL.html",
+  "extractor_version": "1",
+  "id": "statsmodels.tsa.seasonal.MSTL",
+  "import_path": "statsmodels.tsa.seasonal.MSTL",
+  "kind": "class",
+  "library": "statsmodels",
+  "library_version": "0.15.0",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit()",
+      "summary": "Estimate a trend component, multiple seasonal components, and a"
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Data to be decomposed. Must be squeezable to 1-d.",
+      "effective_default": null,
+      "name": "endog",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array_like"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Periodicity of the seasonal components. If None and endog is a pandas\nSeries or DataFrame, attempts to determine from endog. If endog is a\nndarray, periods must be provided.",
+      "effective_default": null,
+      "name": "periods",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, sequence of int, or None, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Length of the seasonal smoothers for each corresponding period.\nMust be an odd integer, and should normally be >= 7 (default). If None\nthen default values determined using 7 + 4 * np.arange(1, n + 1, 1)\nwhere n is number of seasonal components.",
+      "effective_default": null,
+      "name": "windows",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, sequence of int, or None, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The lambda parameter for the Box-Cox transform to be applied to `endog`\nprior to decomposition. If None, no transform is applied. If \"auto\", a\nvalue will be estimated that maximizes the log-likelihood function.",
+      "effective_default": null,
+      "name": "lmbda",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, \"auto\", or None, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "2",
+      "description": "Number of iterations to use to refine the seasonal component.",
+      "effective_default": null,
+      "name": "iterate",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Arguments to pass to STL.",
+      "effective_default": null,
+      "name": "stl_kwargs",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "dict, optional"
+    }
+  ],
+  "returns": [],
+  "signature": "MSTL(endog: 'ArrayLike1D', *, periods: 'int | Sequence[int] | None' = None, windows: 'int | Sequence[int] | None' = None, lmbda: 'float | str | None' = None, iterate: 'int' = 2, stl_kwargs: 'dict[str, int | bool | None] | None' = None)",
+  "summary": "Season-Trend decomposition using LOESS for multiple seasonalities",
+  "warnings": []
+}

@@ -1,0 +1,150 @@
+{
+  "attributes": [
+    {
+      "description": "The link function of the Tweedie instance",
+      "name": "Tweedie.link",
+      "type_doc": "a link instance"
+    },
+    {
+      "description": "``variance`` is an instance of\nstatsmodels.genmod.families.varfuncs.Power",
+      "name": "Tweedie.variance",
+      "type_doc": "varfunc instance"
+    },
+    {
+      "description": "The power parameter of the variance function.",
+      "name": "Tweedie.var_power",
+      "type_doc": "float"
+    },
+    {
+      "description": "Link function for family",
+      "name": "link",
+      "type_doc": ""
+    }
+  ],
+  "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.genmod.families.family.Tweedie.html",
+  "extractor_version": "1",
+  "id": "statsmodels.genmod.families.family.Tweedie",
+  "import_path": "statsmodels.genmod.families.family.Tweedie",
+  "kind": "class",
+  "library": "statsmodels",
+  "library_version": "0.15.0",
+  "methods": [
+    {
+      "name": "deviance",
+      "signature": "deviance(endog, mu, var_weights=1.0, freq_weights=1.0, scale=1.0)",
+      "summary": "The deviance function evaluated at (endog, mu, var_weights,"
+    },
+    {
+      "name": "fitted",
+      "signature": "fitted(lin_pred)",
+      "summary": "Fitted values based on linear predictors lin_pred."
+    },
+    {
+      "name": "loglike",
+      "signature": "loglike(endog, mu, var_weights=1.0, freq_weights=1.0, scale=1.0)",
+      "summary": "The log-likelihood function in terms of the fitted mean response."
+    },
+    {
+      "name": "loglike_obs",
+      "signature": "loglike_obs(endog, mu, var_weights=1.0, scale=1.0)",
+      "summary": "The log-likelihood function for each observation in terms of the fitted"
+    },
+    {
+      "name": "predict",
+      "signature": "predict(mu)",
+      "summary": "Linear predictors based on given mu values."
+    },
+    {
+      "name": "resid_anscombe",
+      "signature": "resid_anscombe(endog, mu, var_weights=1.0, scale=1.0)",
+      "summary": "The Anscombe residuals"
+    },
+    {
+      "name": "resid_dev",
+      "signature": "resid_dev(endog, mu, var_weights=1.0, scale=1.0)",
+      "summary": "The deviance residuals"
+    },
+    {
+      "name": "starting_mu",
+      "signature": "starting_mu(y)",
+      "summary": "Starting value for mu in the IRLS algorithm."
+    },
+    {
+      "name": "variance",
+      "signature": "variance(mu)",
+      "summary": "Power variance function"
+    },
+    {
+      "name": "weights",
+      "signature": "weights(mu)",
+      "summary": "Weights for IRLS steps"
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The default link for the Tweedie family is the log link.\nAvailable links are log, Power and any aliases of power.\nSee statsmodels.genmod.families.links for more information.",
+      "effective_default": null,
+      "name": "link",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "a link instance, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "1.0",
+      "description": "The variance power. The default is 1.",
+      "effective_default": null,
+      "name": "var_power",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "float, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "If True, the Extended Quasi-Likelihood is used, else the\nlikelihood is used.\nIn both cases, for likelihood computations the var_power\nmust be between 1 and 2.",
+      "effective_default": null,
+      "name": "eql",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "If True (default), then an exception is raised if the link is invalid\nfor the family.\nIf False, then the link is not checked.",
+      "effective_default": null,
+      "name": "check_link",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool, optional"
+    }
+  ],
+  "returns": [],
+  "signature": "Tweedie(link=None, var_power=1.0, eql=False, check_link=True)",
+  "summary": "Tweedie family.",
+  "warnings": []
+}

@@ -1,0 +1,93 @@
+{
+  "attributes": [],
+  "doc_url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.normaltest.html",
+  "extractor_version": "1",
+  "id": "scipy.stats.normaltest",
+  "import_path": "scipy.stats.normaltest",
+  "kind": "function",
+  "library": "scipy",
+  "library_version": "1.18.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The array containing the sample to be tested. Must contain\nat least eight observations.",
+      "effective_default": null,
+      "name": "a",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array_like"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0",
+      "description": "If an int, the axis of the input along which to compute the statistic.\nThe statistic of each axis-slice (e.g. row) of the input will appear in a\ncorresponding element of the output.\nIf ``None``, the input will be raveled before computing the statistic.",
+      "effective_default": null,
+      "name": "axis",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int or None, default: 0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "propagate",
+          "omit",
+          "raise"
+        ],
+        "source": "docstring",
+        "types": []
+      },
+      "default": "'propagate'",
+      "description": "Defines how to handle input NaNs.\n\n- ``propagate``: if a NaN is present in the axis slice (e.g. row) along\n  which the  statistic is computed, the corresponding entry of the output\n  will be NaN.\n- ``omit``: NaNs will be omitted when performing the calculation.\n  If insufficient data remains in the axis slice along which the\n  statistic is computed, the corresponding entry of the output will be\n  NaN.\n- ``raise``: if a NaN is present, a ``ValueError`` will be raised.",
+      "effective_default": null,
+      "name": "nan_policy",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "{'propagate', 'omit', 'raise'}"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "If this is set to True, the axes which are reduced are left\nin the result as dimensions with size one. With this option,\nthe result will broadcast correctly against the input array.",
+      "effective_default": null,
+      "name": "keepdims",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default: False"
+    }
+  ],
+  "returns": [
+    {
+      "description": "``s^2 + k^2``, where ``s`` is the z-score returned by `skewtest` and\n``k`` is the z-score returned by `kurtosistest`.",
+      "name": "statistic",
+      "type_doc": "float or array"
+    },
+    {
+      "description": "A 2-sided chi squared probability for the hypothesis test.",
+      "name": "pvalue",
+      "type_doc": "float or array"
+    }
+  ],
+  "signature": "normaltest(a, axis=0, nan_policy='propagate', *, keepdims=False)",
+  "summary": "Test whether a sample differs from a normal distribution.",
+  "warnings": []
+}

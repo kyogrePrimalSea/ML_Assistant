@@ -1,0 +1,135 @@
+{
+  "attributes": [],
+  "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.tsa.stattools.kpss.html",
+  "extractor_version": "1",
+  "id": "statsmodels.tsa.stattools.kpss",
+  "import_path": "statsmodels.tsa.stattools.kpss",
+  "kind": "function",
+  "library": "statsmodels",
+  "library_version": "0.15.0",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The data series to test.",
+      "effective_default": null,
+      "name": "x",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array_like, 1d"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "c",
+          "ct"
+        ],
+        "source": "docstring",
+        "types": []
+      },
+      "default": "'c'",
+      "description": "The null hypothesis for the KPSS test.\n\n* \"c\" : The data is stationary around a constant (default).\n* \"ct\" : The data is stationary around a trend.",
+      "effective_default": null,
+      "name": "regression",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "{\"c\", \"ct\"}, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "auto",
+          "legacy"
+        ],
+        "source": "docstring",
+        "types": []
+      },
+      "default": "'auto'",
+      "description": "Indicates the number of lags to be used. If \"auto\" (default), lags\nis calculated using the data-dependent method of Hobijn et al. (1998).\nSee also Andrews (1991), Newey & West (1994), and Schwert (1989). If\nset to \"legacy\", uses int(12 * (n / 100)**(1 / 4)), as outlined in\nSchwert (1989).",
+      "effective_default": null,
+      "name": "nlags",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "{\"auto\", \"legacy\"} or int, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "If True, then a result instance is returned additionally to\nthe KPSS statistic (default is False).",
+      "effective_default": null,
+      "name": "store",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Flag indicating whether to return the results as a ``KPSSResult``\ninstead of a plain tuple. If ``None`` (the default), the\ncurrent tuple-returning behavior is used and a ``FutureWarning`` is\nissued.\n\n.. deprecated:: 0.15.0\n\n    In release 0.16.0 or after July 2027, whichever is later, the\n    default will change to always return a ``KPSSResult``. Set\n    ``result_object=True`` to opt in now, or\n    ``result_object=False`` to silence the warning and keep the\n    current return type.",
+      "effective_default": null,
+      "name": "result_object",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, optional"
+    }
+  ],
+  "returns": [
+    {
+      "description": "If ``result_object=True``, a result object with fields ``statistic``,\n``pvalue``, ``lags``, ``critical_values``, and ``resstore``\n(``resstore`` is ``None`` when not computed). See\n:class:`~statsmodels.tsa.stattools.KPSSResult`.",
+      "name": "",
+      "type_doc": "KPSSResult"
+    },
+    {
+      "description": "",
+      "name": "",
+      "type_doc": "Otherwise (the deprecated default), a plain tuple made up of:"
+    },
+    {
+      "description": "The KPSS test statistic.",
+      "name": "statistic",
+      "type_doc": "float"
+    },
+    {
+      "description": "The p-value of the test. The p-value is interpolated from\nTable 1 in Kwiatkowski et al. (1992), and a boundary point\nis returned if the test statistic is outside the table of\ncritical values, that is, if the p-value is outside the\ninterval (0.01, 0.1).",
+      "name": "pvalue",
+      "type_doc": "float"
+    },
+    {
+      "description": "The truncation lag parameter. Only returned when ``store=False``;\nwhen ``store=True`` the lag is instead available as\n``resstore.lags``.",
+      "name": "lags",
+      "type_doc": "int"
+    },
+    {
+      "description": "The critical values at 10%, 5%, 2.5% and 1%. Based on\nKwiatkowski et al. (1992).",
+      "name": "crit",
+      "type_doc": "dict"
+    },
+    {
+      "description": "Only returned when ``store=True`` (and, in that case, in place of\n``lags``). An instance of a dummy class with results attached as\nattributes.",
+      "name": "resstore",
+      "type_doc": "instance of ResultsStore"
+    }
+  ],
+  "signature": "kpss(x, regression: \"Literal['c', 'ct']\" = 'c', nlags: \"Literal['auto', 'legacy'] | int\" = 'auto', store: 'bool' = False, *, result_object: 'bool | None' = None) -> 'tuple[float, float, int, dict[str, float]] | tuple[float, float, dict[str, float], ResultsStore] | KPSSResult'",
+  "summary": "Kwiatkowski-Phillips-Schmidt-Shin test for stationarity",
+  "warnings": []
+}

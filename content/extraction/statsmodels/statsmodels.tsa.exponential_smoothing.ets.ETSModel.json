@@ -1,0 +1,394 @@
+{
+  "attributes": [
+    {
+      "description": "Names of endogenous variables",
+      "name": "endog_names",
+      "type_doc": ""
+    },
+    {
+      "description": "The names of the exogenous variables.",
+      "name": "exog_names",
+      "type_doc": ""
+    },
+    {
+      "description": "The number of parameters in the model",
+      "name": "k_params",
+      "type_doc": ""
+    },
+    {
+      "description": "List of human readable parameter names (for parameters actually included in the model)",
+      "name": "param_names",
+      "type_doc": ""
+    },
+    {
+      "description": "Starting parameters for maximum likelihood estimation",
+      "name": "start_params",
+      "type_doc": ""
+    },
+    {
+      "description": "",
+      "name": "initial_state_names",
+      "type_doc": ""
+    },
+    {
+      "description": "",
+      "name": "k_endog",
+      "type_doc": ""
+    },
+    {
+      "description": "",
+      "name": "nobs_effective",
+      "type_doc": ""
+    },
+    {
+      "description": "",
+      "name": "short_name",
+      "type_doc": ""
+    },
+    {
+      "description": "",
+      "name": "state_names",
+      "type_doc": ""
+    }
+  ],
+  "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.tsa.exponential_smoothing.ets.ETSModel.html",
+  "extractor_version": "1",
+  "id": "statsmodels.tsa.exponential_smoothing.ets.ETSModel",
+  "import_path": "statsmodels.tsa.exponential_smoothing.ets.ETSModel",
+  "kind": "class",
+  "library": "statsmodels",
+  "library_version": "0.15.0",
+  "methods": [
+    {
+      "name": "clone",
+      "signature": "clone(endog, exog=None, **kwargs)",
+      "summary": ""
+    },
+    {
+      "name": "fit",
+      "signature": "fit(start_params=None, maxiter=1000, full_output=True, disp=True, callback=None, return_params=False, **kwargs)",
+      "summary": "Fit an ETS model by maximizing log-likelihood"
+    },
+    {
+      "name": "fit_constrained",
+      "signature": "fit_constrained(constraints, start_params=None, **fit_kwds)",
+      "summary": "Fit the model with some parameters subject to equality constraints"
+    },
+    {
+      "name": "fix_params",
+      "signature": "fix_params(params)",
+      "summary": "Fix parameters to specific values (context manager)"
+    },
+    {
+      "name": "from_formula",
+      "signature": "from_formula(formula, data, subset=None, drop_cols=None, *args, **kwargs)",
+      "summary": "Not implemented for state space models"
+    },
+    {
+      "name": "hessian",
+      "signature": "hessian(params, approx_centered=False, approx_complex_step=True, **kwargs)",
+      "summary": "Hessian matrix of the likelihood function, evaluated at the given"
+    },
+    {
+      "name": "information",
+      "signature": "information(params)",
+      "summary": "Fisher information matrix of model"
+    },
+    {
+      "name": "initialize",
+      "signature": "initialize()",
+      "summary": "Initialize (possibly re-initialize) a Model instance"
+    },
+    {
+      "name": "loglike",
+      "signature": "loglike(params, **kwargs)",
+      "summary": "Log-likelihood of model"
+    },
+    {
+      "name": "predict",
+      "signature": "predict(params, exog=None, *args, **kwargs)",
+      "summary": "After a model has been fit, predict returns the fitted values"
+    },
+    {
+      "name": "prepare_data",
+      "signature": "prepare_data(data)",
+      "summary": "Prepare data for use in the state space representation"
+    },
+    {
+      "name": "score",
+      "signature": "score(params, approx_centered=False, approx_complex_step=True, **kwargs)",
+      "summary": "Score vector of the likelihood function, evaluated at the given"
+    },
+    {
+      "name": "set_bounds",
+      "signature": "set_bounds(bounds)",
+      "summary": "Set bounds for parameter estimation"
+    },
+    {
+      "name": "set_initialization_method",
+      "signature": "set_initialization_method(initialization_method, initial_level=None, initial_trend=None, initial_seasonal=None)",
+      "summary": "Sets a new initialization method for the state space model"
+    },
+    {
+      "name": "smooth",
+      "signature": "smooth(params, return_raw=False)",
+      "summary": "Exponential smoothing with given parameters"
+    },
+    {
+      "name": "update",
+      "signature": "update(params, *args, **kwargs)",
+      "summary": ""
+    },
+    {
+      "name": "use_internal_loglike",
+      "signature": "use_internal_loglike()",
+      "summary": ""
+    }
+  ],
+  "overrides_applied": [
+    {
+      "path": "attributes",
+      "reason": "Documented attributes/properties listed on the official page (Attributes/Properties sections) were not captured by the extractor (not in the numpydoc Attributes block; descriptions from the page Properties table, blank where the page gives none).",
+      "source_url": "https://www.statsmodels.org/stable/generated/statsmodels.tsa.exponential_smoothing.ets.ETSModel.html"
+    }
+  ],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The observed time-series process :math:`y`",
+      "effective_default": null,
+      "name": "endog",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array_like"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "add",
+          "additive",
+          "mul",
+          "multiplicative"
+        ],
+        "source": "docstring",
+        "types": []
+      },
+      "default": "'add'",
+      "description": "The error model. \"add\" (default) or \"mul\". \"additive\" and\n\"multiplicative\" are accepted as aliases for \"add\" and \"mul\".",
+      "effective_default": null,
+      "name": "error",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "{\"add\", \"additive\", \"mul\", \"multiplicative\"}, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "add",
+          "additive",
+          "mul",
+          "multiplicative"
+        ],
+        "source": "docstring",
+        "types": []
+      },
+      "default": "None",
+      "description": "The trend component model. \"add\", \"mul\", or None (default).\n\"additive\" and \"multiplicative\" are accepted as aliases for \"add\"\nand \"mul\".",
+      "effective_default": null,
+      "name": "trend",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "{\"add\", \"additive\", \"mul\", \"multiplicative\"} or None, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "Whether or not an included trend component is damped. Default is\nFalse.",
+      "effective_default": null,
+      "name": "damped_trend",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "add",
+          "additive",
+          "mul",
+          "multiplicative"
+        ],
+        "source": "docstring",
+        "types": []
+      },
+      "default": "None",
+      "description": "The seasonality model. \"add\", \"mul\", or None (default).\n\"additive\" and \"multiplicative\" are accepted as aliases for \"add\"\nand \"mul\".",
+      "effective_default": null,
+      "name": "seasonal",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "{\"add\", \"additive\", \"mul\", \"multiplicative\"} or None, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The number of periods in a complete seasonal cycle for seasonal\n(Holt-Winters) models. For example, 4 for quarterly data with an\nannual cycle or 7 for daily data with a weekly cycle. Required if\n`seasonal` is not None.",
+      "effective_default": null,
+      "name": "seasonal_periods",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "estimated",
+          "heuristic",
+          "known"
+        ],
+        "source": "docstring",
+        "types": []
+      },
+      "default": "'estimated'",
+      "description": "Method for initialization of the state space model. One of:\n\n* 'estimated' (default)\n* 'heuristic'\n* 'known'\n\nIf 'known' initialization is used, then `initial_level` must be\npassed, as well as `initial_trend` and `initial_seasonal` if\napplicable.\n'heuristic' uses a heuristic based on the data to estimate initial\nlevel, trend, and seasonal state. 'estimated' uses the same heuristic\nas initial guesses, but then estimates the initial states as part of\nthe fitting process.  Default is 'estimated'.",
+      "effective_default": null,
+      "name": "initialization_method",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "{\"estimated\", \"heuristic\", \"known\"}, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The initial level component. Only used if initialization is 'known'.",
+      "effective_default": null,
+      "name": "initial_level",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "float, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The initial trend component. Only used if initialization is 'known'.",
+      "effective_default": null,
+      "name": "initial_trend",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "float, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The initial seasonal component. An array of length `seasonal_periods`.\nOnly used if initialization is 'known'.",
+      "effective_default": null,
+      "name": "initial_seasonal",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "array_like, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "A dictionary with parameter names as keys and the respective bounds\nintervals as values (lists/tuples/arrays).\nThe available parameter names are, depending on the model and\ninitialization method:\n\n* \"smoothing_level\"\n* \"smoothing_trend\"\n* \"smoothing_seasonal\"\n* \"damping_trend\"\n* \"initial_level\"\n* \"initial_trend\"\n* \"initial_seasonal.0\", ..., \"initial_seasonal.<m-1>\"\n\nThe default option is ``None``, in which case the traditional\n(nonlinear) bounds as described in [1]_ are used.",
+      "effective_default": null,
+      "name": "bounds",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "dict or None, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "dates",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "freq",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'none'",
+      "description": "",
+      "effective_default": null,
+      "name": "missing",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [],
+  "signature": "ETSModel(endog, error='add', trend=None, damped_trend=False, seasonal=None, seasonal_periods=None, initialization_method='estimated', initial_level=None, initial_trend=None, initial_seasonal=None, bounds=None, dates=None, freq=None, missing='none')",
+  "summary": "ETS models",
+  "warnings": [
+    "parameter dates: not documented in docstring",
+    "parameter freq: not documented in docstring",
+    "parameter missing: not documented in docstring"
+  ]
+}

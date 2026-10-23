@@ -1,0 +1,136 @@
+{
+  "attributes": [],
+  "doc_url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.theilslopes.html",
+  "extractor_version": "1",
+  "id": "scipy.stats.theilslopes",
+  "import_path": "scipy.stats.theilslopes",
+  "kind": "function",
+  "library": "scipy",
+  "library_version": "1.18.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Dependent variable.",
+      "effective_default": null,
+      "name": "y",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array_like"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Independent variable. If None, use ``arange(len(y))`` instead.",
+      "effective_default": null,
+      "name": "x",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "array_like or None, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0.95",
+      "description": "Confidence degree between 0 and 1. Default is 95% confidence.\nNote that `alpha` is symmetric around 0.5, i.e. both 0.1 and 0.9 are\ninterpreted as \"find the 90% confidence interval\".",
+      "effective_default": null,
+      "name": "alpha",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "float, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "joint",
+          "separate"
+        ],
+        "source": "docstring",
+        "types": []
+      },
+      "default": "'separate'",
+      "description": "Method to be used for computing estimate for intercept.\nFollowing methods are supported,\n\n* 'joint': Uses ``np.median(y - slope * x)`` as intercept.\n* 'separate': Uses ``np.median(y) - slope * np.median(x)``\n              as intercept.\n\nThe default is 'separate'.\n\n.. versionadded:: 1.8.0",
+      "effective_default": null,
+      "name": "method",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "{'joint', 'separate'}, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "If an int, the axis of the input along which to compute the statistic.\nThe statistic of each axis-slice (e.g. row) of the input will appear in a\ncorresponding element of the output.\nIf ``None``, the input will be raveled before computing the statistic.",
+      "effective_default": null,
+      "name": "axis",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or None, default: None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "propagate",
+          "omit",
+          "raise"
+        ],
+        "source": "docstring",
+        "types": []
+      },
+      "default": "'propagate'",
+      "description": "Defines how to handle input NaNs.\n\n- ``propagate``: if a NaN is present in the axis slice (e.g. row) along\n  which the  statistic is computed, the corresponding entry of the output\n  will be NaN.\n- ``omit``: NaNs will be omitted when performing the calculation.\n  If insufficient data remains in the axis slice along which the\n  statistic is computed, the corresponding entry of the output will be\n  NaN.\n- ``raise``: if a NaN is present, a ``ValueError`` will be raised.",
+      "effective_default": null,
+      "name": "nan_policy",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'propagate', 'omit', 'raise'}"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "If this is set to True, the axes which are reduced are left\nin the result as dimensions with size one. With this option,\nthe result will broadcast correctly against the input array.",
+      "effective_default": null,
+      "name": "keepdims",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default: False"
+    }
+  ],
+  "returns": [
+    {
+      "description": "The return value is an object with the following attributes:\n\nslope : float\n    Theil slope.\nintercept : float\n    Intercept of the Theil line.\nlow_slope : float\n    Lower bound of the confidence interval on `slope`.\nhigh_slope : float\n    Upper bound of the confidence interval on `slope`.",
+      "name": "result",
+      "type_doc": "``TheilslopesResult`` instance"
+    }
+  ],
+  "signature": "theilslopes(y, x=None, alpha=0.95, method='separate', *, axis=None, nan_policy='propagate', keepdims=False)",
+  "summary": "Computes the Theil-Sen estimator for a set of points (x, y).",
+  "warnings": []
+}

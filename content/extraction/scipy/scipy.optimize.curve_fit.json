@@ -1,0 +1,247 @@
+{
+  "attributes": [],
+  "doc_url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.curve_fit.html",
+  "extractor_version": "1",
+  "id": "scipy.optimize.curve_fit",
+  "import_path": "scipy.optimize.curve_fit",
+  "kind": "function",
+  "library": "scipy",
+  "library_version": "1.18.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The model function, f(x, ...). It must take the independent\nvariable as the first argument and the parameters to fit as\nseparate remaining arguments.",
+      "effective_default": null,
+      "name": "f",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "callable"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The independent variable where the data is measured.\nShould usually be an M-length sequence or an (k,M)-shaped array for\nfunctions with k predictors, and each element should be float\nconvertible if it is an array like object.",
+      "effective_default": null,
+      "name": "xdata",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array_like"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The dependent data, a length M array - nominally ``f(xdata, ...)``.",
+      "effective_default": null,
+      "name": "ydata",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array_like"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Initial guess for the parameters (length N). If None, then the\ninitial values will all be 1 (if the number of parameters for the\nfunction can be determined using introspection, otherwise a\nValueError is raised).",
+      "effective_default": null,
+      "name": "p0",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "array_like, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Determines the uncertainty in `ydata`. If we define residuals as\n``r = ydata - f(xdata, *popt)``, then the interpretation of `sigma`\ndepends on its number of dimensions:\n\n- A scalar or 1-D `sigma` should contain values of standard deviations of\n  errors in `ydata`. In this case, the optimized function is\n  ``chisq = sum((r / sigma) ** 2)``.\n\n- A 2-D `sigma` should contain the covariance matrix of\n  errors in `ydata`. In this case, the optimized function is\n  ``chisq = r.T @ inv(sigma) @ r``.\n\n  .. versionadded:: 0.19\n\nNone (default) is equivalent of 1-D `sigma` filled with ones.",
+      "effective_default": null,
+      "name": "sigma",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "None or scalar or M-length sequence or MxM array, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "If True, `sigma` is used in an absolute sense and the estimated parameter\ncovariance `pcov` reflects these absolute values.\n\nIf False (default), only the relative magnitudes of the `sigma` values matter.\nThe returned parameter covariance matrix `pcov` is based on scaling\n`sigma` by a constant factor. This constant is set by demanding that the\nreduced `chisq` for the optimal parameters `popt` when using the\n*scaled* `sigma` equals unity. In other words, `sigma` is scaled to\nmatch the sample variance of the residuals after the fit. Default is False.\nMathematically,\n``pcov(absolute_sigma=False) = pcov(absolute_sigma=True) * chisq(popt)/(M-N)``",
+      "effective_default": null,
+      "name": "absolute_sigma",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "If True, check that the input arrays do not contain nans of infs,\nand raise a ValueError if they do. Setting this parameter to\nFalse may silently produce nonsensical results if the input arrays\ndo contain nans. Default is True if `nan_policy` is not specified\nexplicitly and False otherwise.",
+      "effective_default": null,
+      "name": "check_finite",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "(-inf, inf)",
+      "description": "Lower and upper bounds on parameters. Defaults to no bounds.\nThere are two ways to specify the bounds:\n\n- Instance of `Bounds` class.\n\n- 2-tuple of array_like: Each element of the tuple must be either\n  an array with the length equal to the number of parameters, or a\n  scalar (in which case the bound is taken to be the same for all\n  parameters). Use ``np.inf`` with an appropriate sign to disable\n  bounds on all or some parameters.",
+      "effective_default": null,
+      "name": "bounds",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "2-tuple of array_like or `Bounds`, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "lm",
+          "trf",
+          "dogbox"
+        ],
+        "source": "docstring",
+        "types": []
+      },
+      "default": "None",
+      "description": "Method to use for optimization. See `least_squares` for more details.\nDefault is 'lm' for unconstrained problems and 'trf' if `bounds` are\nprovided. The method 'lm' won't work when the number of observations\nis less than the number of variables, use 'trf' or 'dogbox' in this\ncase.\n\n.. versionadded:: 0.17",
+      "effective_default": null,
+      "name": "method",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "{'lm', 'trf', 'dogbox'}, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Function with signature ``jac(x, ...)`` which computes the Jacobian\nmatrix of the model function with respect to parameters as a dense\narray_like structure. It will be scaled according to provided `sigma`.\nIf None (default), the Jacobian will be estimated numerically.\nString keywords for 'trf' and 'dogbox' methods can be used to select\na finite difference scheme, see `least_squares`.\n\n.. versionadded:: 0.18",
+      "effective_default": null,
+      "name": "jac",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "callable, str or None, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "If True, this function returns additional information: `infodict`,\n`mesg`, and `ier`.\n\n.. versionadded:: 1.9",
+      "effective_default": null,
+      "name": "full_output",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "raise",
+          "omit",
+          "None"
+        ],
+        "source": "docstring",
+        "types": []
+      },
+      "default": "None",
+      "description": "Defines how to handle when input contains nan.\nThe following options are available (default is None):\n\n* 'raise': throws an error\n* 'omit': performs the calculations ignoring nan values\n* None: no special handling of NaNs is performed\n  (except what is done by check_finite); the behavior when NaNs\n  are present is implementation-dependent and may change.\n\nNote that if this value is specified explicitly (not None),\n`check_finite` will be set as False.\n\n.. versionadded:: 1.11",
+      "effective_default": null,
+      "name": "nan_policy",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'raise', 'omit', None}, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Keyword arguments passed to `leastsq` for ``method='lm'`` or\n`least_squares` otherwise.",
+      "effective_default": null,
+      "name": "kwargs",
+      "param_kind": "var_keyword",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [
+    {
+      "description": "Optimal values for the parameters so that the sum of the squared\nresiduals of ``f(xdata, *popt) - ydata`` is minimized.",
+      "name": "popt",
+      "type_doc": "array"
+    },
+    {
+      "description": "The estimated approximate covariance of popt. The diagonals provide\nthe variance of the parameter estimate. To compute one standard\ndeviation errors on the parameters, use\n``perr = np.sqrt(np.diag(pcov))``. Note that the relationship between\n`cov` and parameter error estimates is derived based on a linear\napproximation to the model function around the optimum [1]_.\nWhen this approximation becomes inaccurate, `cov` may not provide an\naccurate measure of uncertainty.\n\nHow the `sigma` parameter affects the estimated covariance\ndepends on `absolute_sigma` argument, as described above.\n\nIf the Jacobian matrix at the solution doesn't have a full rank, then\n'lm' method returns a matrix filled with ``np.inf``, on the other hand\n'trf'  and 'dogbox' methods use Moore-Penrose pseudoinverse to compute\nthe covariance matrix. Covariance matrices with large condition numbers\n(e.g. computed with `numpy.linalg.cond`) may indicate that results are\nunreliable.",
+      "name": "pcov",
+      "type_doc": "2-D array"
+    },
+    {
+      "description": "a dictionary of optional outputs with the keys:\n\n``nfev``\n    The number of function calls. Methods 'trf' and 'dogbox' do not\n    count function calls for numerical Jacobian approximation,\n    as opposed to 'lm' method.\n``fvec``\n    The residual values evaluated at the solution, for a 1-D `sigma`\n    this is ``(f(x, *popt) - ydata)/sigma``.\n``fjac``\n    A permutation of the R matrix of a QR\n    factorization of the final approximate\n    Jacobian matrix, stored column wise.\n    Together with ipvt, the covariance of the\n    estimate can be approximated.\n    Method 'lm' only provides this information.\n``ipvt``\n    An integer array of length N which defines\n    a permutation matrix, p, such that\n    fjac*p = q*r, where r is upper triangular\n    with diagonal elements of nonincreasing\n    magnitude. Column j of p is column ipvt(j)\n    of the identity matrix.\n    Method 'lm' only provides this information.\n``qtf``\n    The vector (transpose(q) * fvec).\n    Method 'lm' only provides this information.\n\n.. versionadded:: 1.9",
+      "name": "infodict",
+      "type_doc": "dict (returned only if `full_output` is True)"
+    },
+    {
+      "description": "A string message giving information about the solution.\n\n.. versionadded:: 1.9",
+      "name": "mesg",
+      "type_doc": "str (returned only if `full_output` is True)"
+    },
+    {
+      "description": "An integer flag. If it is equal to 1, 2, 3 or 4, the solution was\nfound. Otherwise, the solution was not found. In either case, the\noptional output variable `mesg` gives more information.\n\n.. versionadded:: 1.9",
+      "name": "ier",
+      "type_doc": "int (returned only if `full_output` is True)"
+    }
+  ],
+  "signature": "curve_fit(f, xdata, ydata, p0=None, sigma=None, absolute_sigma=False, check_finite=None, bounds=(-inf, inf), method=None, jac=None, *, full_output=False, nan_policy=None, **kwargs)",
+  "summary": "Use non-linear least squares to fit a function, f, to data.",
+  "warnings": []
+}

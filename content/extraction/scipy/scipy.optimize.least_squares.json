@@ -1,0 +1,347 @@
+{
+  "attributes": [],
+  "doc_url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.least_squares.html",
+  "extractor_version": "1",
+  "id": "scipy.optimize.least_squares",
+  "import_path": "scipy.optimize.least_squares",
+  "kind": "function",
+  "library": "scipy",
+  "library_version": "1.18.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Function which computes the vector of residuals, with the signature\n``fun(x, *args, **kwargs)``, i.e., the minimization proceeds with\nrespect to its first argument. The argument ``x`` passed to this\nfunction is an ndarray of shape (n,) (never a scalar, even for n=1).\nIt must allocate and return a 1-D array_like of shape (m,) or a scalar.\nIf the argument ``x`` is complex or the function ``fun`` returns\ncomplex residuals, it must be wrapped in a real function of real\narguments, as shown at the end of the Examples section.",
+      "effective_default": null,
+      "name": "fun",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "callable"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Initial guess on independent variables. If float, it will be treated\nas a 1-D array with one element. When `method` is 'trf', the initial\nguess might be slightly adjusted to lie sufficiently within the given\n`bounds`.",
+      "effective_default": null,
+      "name": "x0",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array_like with shape (n,) or float"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'2-point'",
+      "description": "Method of computing the Jacobian matrix (an m-by-n matrix, where\nelement (i, j) is the partial derivative of f[i] with respect to\nx[j]). The keywords select a finite difference scheme for numerical\nestimation. The scheme '3-point' is more accurate, but requires\ntwice as many operations as '2-point' (default). The scheme 'cs'\nuses complex steps, and while potentially the most accurate, it is\napplicable only when `fun` correctly handles complex inputs and\ncan be analytically continued to the complex plane. If callable, it is used as\n``jac(x, *args, **kwargs)`` and should return a good approximation\n(or the exact value) for the Jacobian as an array_like (np.atleast_2d\nis applied), a sparse array (csr_array preferred for performance) or\na `scipy.sparse.linalg.LinearOperator`.\n\n.. versionchanged:: 1.16.0\n    An ability to use the '3-point', 'cs' keywords with the 'lm' method.\n    Previously 'lm' was limited to '2-point' and callable.",
+      "effective_default": null,
+      "name": "jac",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "{'2-point', '3-point', 'cs', callable}, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "(-inf, inf)",
+      "description": "There are two ways to specify bounds:\n\n1. Instance of `Bounds` class\n2. Lower and upper bounds on independent variables. Defaults to no\n   bounds. Each array must match the size of `x0` or be a scalar,\n   in the latter case a bound will be the same for all variables.\n   Use ``np.inf`` with an appropriate sign to disable bounds on all\n   or some variables.",
+      "effective_default": null,
+      "name": "bounds",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "2-tuple of array_like or `Bounds`, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "trf",
+          "dogbox",
+          "lm"
+        ],
+        "source": "docstring",
+        "types": []
+      },
+      "default": "'trf'",
+      "description": "Algorithm to perform minimization.\n\n* 'trf' : Trust Region Reflective algorithm, particularly suitable\n  for large sparse problems with bounds. Generally robust method.\n* 'dogbox' : dogleg algorithm with rectangular trust regions,\n  typical use case is small problems with bounds. Not recommended\n  for problems with rank-deficient Jacobian.\n* 'lm' : Levenberg-Marquardt algorithm as implemented in MINPACK.\n  Doesn't handle bounds and sparse Jacobians. Usually the most\n  efficient method for small unconstrained problems.\n\nDefault is 'trf'. See Notes for more information.",
+      "effective_default": null,
+      "name": "method",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "{'trf', 'dogbox', 'lm'}, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "1e-08",
+      "description": "Tolerance for termination by the change of the cost function. Default\nis 1e-8. The optimization process is stopped when ``dF < ftol * F``,\nand there was an adequate agreement between a local quadratic model and\nthe true model in the last step.\n\nIf None and 'method' is not 'lm', the termination by this condition is\ndisabled. If 'method' is 'lm', this tolerance must be higher than\nmachine epsilon.",
+      "effective_default": null,
+      "name": "ftol",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "float or None, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "1e-08",
+      "description": "Tolerance for termination by the change of the independent variables.\nDefault is 1e-8. The exact condition depends on the `method` used:\n\n* For 'trf' and 'dogbox' : ``norm(dx) < xtol * (xtol + norm(x))``.\n* For 'lm' : ``Delta < xtol * norm(xs)``, where ``Delta`` is\n  a trust-region radius and ``xs`` is the value of ``x``\n  scaled according to `x_scale` parameter (see below).\n\nIf None and 'method' is not 'lm', the termination by this condition is\ndisabled. If 'method' is 'lm', this tolerance must be higher than\nmachine epsilon.",
+      "effective_default": null,
+      "name": "xtol",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "float or None, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "1e-08",
+      "description": "Tolerance for termination by the norm of the gradient. Default is 1e-8.\nThe exact condition depends on a `method` used:\n\n* For 'trf' : ``norm(g_scaled, ord=np.inf) < gtol``, where\n  ``g_scaled`` is the value of the gradient scaled to account for\n  the presence of the bounds [STIR]_.\n* For 'dogbox' : ``norm(g_free, ord=np.inf) < gtol``, where\n  ``g_free`` is the gradient with respect to the variables which\n  are not in the optimal state on the boundary.\n* For 'lm' : the maximum absolute value of the cosine of angles\n  between columns of the Jacobian and the residual vector is less\n  than `gtol`, or the residual vector is zero.\n\nIf None and 'method' is not 'lm', the termination by this condition is\ndisabled. If 'method' is 'lm', this tolerance must be higher than\nmachine epsilon.",
+      "effective_default": null,
+      "name": "gtol",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "float or None, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Characteristic scale of each variable. Setting `x_scale` is equivalent\nto reformulating the problem in scaled variables ``xs = x / x_scale``.\nAn alternative view is that the size of a trust region along jth\ndimension is proportional to ``x_scale[j]``. Improved convergence may\nbe achieved by setting `x_scale` such that a step of a given size\nalong any of the scaled variables has a similar effect on the cost\nfunction. If set to 'jac', the scale is iteratively updated using the\ninverse norms of the columns of the Jacobian matrix (as described in\n[JJMore]_). The default scaling for each method (i.e.\nif ``x_scale is None``) is as follows:\n\n* For 'trf'    : ``x_scale == 1``\n* For 'dogbox' : ``x_scale == 1``\n* For 'lm'     : ``x_scale == 'jac'``\n\n.. versionchanged:: 1.16.0\n    The default keyword value is changed from 1 to None to indicate that\n    a default approach to scaling is used.\n    For the 'lm' method the default scaling is changed from 1 to 'jac'.\n    This has been found to give better performance, and is the same\n    scaling as performed by ``leastsq``.",
+      "effective_default": null,
+      "name": "x_scale",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "{None, array_like, 'jac'}, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'linear'",
+      "description": "Determines the loss function. The following keyword values are allowed:\n\n* 'linear' (default) : ``rho(z) = z``. Gives a standard\n  least-squares problem.\n* 'soft_l1' : ``rho(z) = 2 * ((1 + z)**0.5 - 1)``. The smooth\n  approximation of l1 (absolute value) loss. Usually a good\n  choice for robust least squares.\n* 'huber' : ``rho(z) = z if z <= 1 else 2*z**0.5 - 1``. Works\n  similarly to 'soft_l1'.\n* 'cauchy' : ``rho(z) = ln(1 + z)``. Severely weakens outliers\n  influence, but may cause difficulties in optimization process.\n* 'arctan' : ``rho(z) = arctan(z)``. Limits a maximum loss on\n  a single residual, has properties similar to 'cauchy'.\n\nIf callable, it must take a 1-D ndarray ``z=f**2`` and return an\narray_like with shape (3, m) where row 0 contains function values,\nrow 1 contains first derivatives and row 2 contains second\nderivatives. Method 'lm' supports only 'linear' loss.",
+      "effective_default": null,
+      "name": "loss",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "str or callable, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "1.0",
+      "description": "Value of soft margin between inlier and outlier residuals, default\nis 1.0. The loss function is evaluated as follows\n``rho_(f**2) = C**2 * rho(f**2 / C**2)``, where ``C`` is `f_scale`,\nand ``rho`` is determined by `loss` parameter. This parameter has\nno effect with ``loss='linear'``, but for other `loss` values it is\nof crucial importance.",
+      "effective_default": null,
+      "name": "f_scale",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "float, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Determines the relative step size for the finite difference\napproximation of the Jacobian. The actual step is computed as\n``x * diff_step``. If None (default), then `diff_step` is taken to be\na conventional \"optimal\" power of machine epsilon for the finite\ndifference scheme used [NR]_.",
+      "effective_default": null,
+      "name": "diff_step",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "None or array_like, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "None",
+          "exact",
+          "lsmr"
+        ],
+        "source": "docstring",
+        "types": []
+      },
+      "default": "None",
+      "description": "Method for solving trust-region subproblems, relevant only for 'trf'\nand 'dogbox' methods.\n\n* 'exact' is suitable for not very large problems with dense\n  Jacobian matrices. The computational complexity per iteration is\n  comparable to a singular value decomposition of the Jacobian\n  matrix.\n* 'lsmr' is suitable for problems with sparse and large Jacobian\n  matrices. It uses the iterative procedure\n  `scipy.sparse.linalg.lsmr` for finding a solution of a linear\n  least-squares problem and only requires matrix-vector product\n  evaluations.\n\nIf None (default), the solver is chosen based on the type of Jacobian\nreturned on the first iteration.",
+      "effective_default": null,
+      "name": "tr_solver",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "{None, 'exact', 'lsmr'}, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Keyword options passed to trust-region solver.\n\n* ``tr_solver='exact'``: `tr_options` are ignored.\n* ``tr_solver='lsmr'``: options for `scipy.sparse.linalg.lsmr`.\n  Additionally,  ``method='trf'`` supports  'regularize' option\n  (bool, default is True), which adds a regularization term to the\n  normal equation, which improves convergence if the Jacobian is\n  rank-deficient [Byrd]_ (eq. 3.4).",
+      "effective_default": null,
+      "name": "tr_options",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "dict, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Defines the sparsity structure of the Jacobian matrix for finite\ndifference estimation, its shape must be (m, n). If the Jacobian has\nonly few non-zero elements in *each* row, providing the sparsity\nstructure will greatly speed up the computations [Curtis]_. A zero\nentry means that a corresponding element in the Jacobian is identically\nzero. If provided, forces the use of 'lsmr' trust-region solver.\nIf None (default), then dense differencing will be used. Has no effect\nfor 'lm' method.",
+      "effective_default": null,
+      "name": "jac_sparsity",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "{None, array_like, sparse array}, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "For all methods this parameter controls the maximum number of function\nevaluations used by each method, separate to those used in numerical\napproximation of the jacobian.\nIf None (default), the value is chosen automatically as 100 * n.\n\n.. versionchanged:: 1.16.0\n    The default for the 'lm' method is changed to 100 * n, for both a callable\n    and a numerically estimated jacobian. Previously the default when using an\n    estimated jacobian was 100 * n * (n + 1), because the method included\n    evaluations used in the estimation.",
+      "effective_default": null,
+      "name": "max_nfev",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "None or int, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0",
+      "description": "Level of algorithm's verbosity:\n\n* 0 (default) : work silently.\n* 1 : display a termination report.\n* 2 : display progress during iterations (not supported by 'lm'\n  method).",
+      "effective_default": null,
+      "name": "verbose",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "{0, 1, 2}, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "()",
+      "description": "Additional arguments passed to `fun` and `jac`. Both empty by default.\nThe calling signature is ``fun(x, *args, **kwargs)`` and the same for\n`jac`.",
+      "effective_default": null,
+      "name": "args",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "tuple and dict, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Additional arguments passed to `fun` and `jac`. Both empty by default.\nThe calling signature is ``fun(x, *args, **kwargs)`` and the same for\n`jac`.",
+      "effective_default": null,
+      "name": "kwargs",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "tuple and dict, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Callback function that is called by the algorithm on each iteration.\nThis can be used to print or plot the optimization results at each\nstep, and to stop the optimization algorithm based on some user-defined\ncondition.  Only implemented for the `trf` and `dogbox` methods.\n\nThe signature is ``callback(intermediate_result: OptimizeResult)``\n\n`intermediate_result is a `scipy.optimize.OptimizeResult`\nwhich contains the intermediate results of the optimization at the\ncurrent iteration.\n\nThe callback also supports a signature like: ``callback(x)``\n\nIntrospection is used to determine which of the signatures is invoked.\n\nIf the `callback` function raises `StopIteration` the optimization algorithm\nwill stop and return with status code -2.\n\n.. versionadded:: 1.16.0",
+      "effective_default": null,
+      "name": "callback",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "None or callable, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "A map-like callable, such as `multiprocessing.Pool.map` for evaluating\nany numerical differentiation in parallel.\nThis evaluation is carried out as ``workers(fun, iterable)``.\n\n.. versionadded:: 1.16.0",
+      "effective_default": null,
+      "name": "workers",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "map-like callable, optional"
+    }
+  ],
+  "returns": [
+    {
+      "description": "`OptimizeResult` with the following fields defined:\n\nx : ndarray, shape (n,)\n    Solution found.\ncost : float\n    Value of the cost function at the solution.\nfun : ndarray, shape (m,)\n    Vector of residuals at the solution.\njac : ndarray, sparse array or LinearOperator, shape (m, n)\n    Modified Jacobian matrix at the solution, in the sense that J^T J\n    is a Gauss-Newton approximation of the Hessian of the cost function.\n    The type is the same as the one used by the algorithm.\ngrad : ndarray, shape (m,)\n    Gradient of the cost function at the solution.\noptimality : float\n    First-order optimality measure. In unconstrained problems, it is\n    always the uniform norm of the gradient. In constrained problems,\n    it is the quantity which was compared with `gtol` during iterations.\nactive_mask : ndarray of int, shape (n,)\n    Each component shows whether a corresponding constraint is active\n    (that is, whether a variable is at the bound):\n\n    *  0 : a constraint is not active.\n    * -1 : a lower bound is active.\n    *  1 : an upper bound is active.\n\n    Might be somewhat arbitrary for 'trf' method as it generates a\n    sequence of strictly feasible iterates and `active_mask` is\n    determined within a tolerance threshold.\nnfev : int\n    Number of function evaluations done. This number does not include\n    the function calls used for numerical Jacobian approximation.\n\n    .. versionchanged:: 1.16.0\n        For the 'lm' method the number of function calls used in numerical\n        Jacobian approximation is no longer included. This is to bring all\n        methods into line.\n\nnjev : int or None\n    Number of Jacobian evaluations done. If numerical Jacobian\n    approximation is used in 'lm' method, it is set to None.\nstatus : int\n    The reason for algorithm termination:\n\n    * -2 : terminated because callback raised StopIteration.\n    * -1 : improper input parameters status returned from MINPACK.\n    *  0 : the maximum number of function evaluations is exceeded.\n    *  1 : `gtol` termination condition is satisfied.\n    *  2 : `ftol` termination condition is satisfied.\n    *  3 : `xtol` termination condition is satisfied.\n    *  4 : Both `ftol` and `xtol` termination conditions are satisfied.\n\nmessage : str\n    Verbal description of the termination reason.\nsuccess : bool\n    True if one of the convergence criteria is satisfied (`status` > 0).",
+      "name": "result",
+      "type_doc": "OptimizeResult"
+    }
+  ],
+  "signature": "least_squares(fun, x0, jac='2-point', bounds=(-inf, inf), method='trf', ftol=1e-08, xtol=1e-08, gtol=1e-08, x_scale=None, loss='linear', f_scale=1.0, diff_step=None, tr_solver=None, tr_options=None, jac_sparsity=None, max_nfev=None, verbose=0, args=(), kwargs=None, callback=None, workers=None)",
+  "summary": "Solve a nonlinear least-squares problem with bounds on the variables.",
+  "warnings": []
+}

@@ -172,7 +172,7 @@
     "T007": {
       "title": "Extract and verify: statsmodels and SciPy",
       "file": "tasks/T007-extract-verify-statsmodels-scipy.md",
-      "status": "In progress",
+      "status": "Done",
       "dependencies": [
         "T002",
         "T003",

@@ -1,0 +1,64 @@
+source_url: https://www.statsmodels.org/stable/generated/statsmodels.stats.outliers_influence.OLSInfluence.html
+reason: Documented attributes/properties listed on the official page (Attributes/Properties sections)
+  were not captured by the extractor (not in the numpydoc Attributes block; descriptions from the page
+  Properties table, blank where the page gives none).
+patches:
+- path: attributes
+  value:
+  - description: determinant of cov_params of all LOOO regressions
+    name: det_cov_params_not_obsi
+    type_doc: ''
+  - description: parameter estimates for all LOOO regressions
+    name: params_not_obsi
+    type_doc: ''
+  - name: cooks_distance
+    type_doc: ''
+    description: Cook's distance
+  - name: cov_ratio
+    type_doc: ''
+    description: covariance ratio between LOOO and original
+  - name: dfbeta
+    type_doc: ''
+    description: dfbeta
+  - name: dfbetas
+    type_doc: ''
+    description: dfbetas
+  - name: dffits
+    type_doc: ''
+    description: dffits measure for influence of an observation
+  - name: dffits_internal
+    type_doc: ''
+    description: dffits measure for influence of an observation
+  - name: ess_press
+    type_doc: ''
+    description: Error sum of squares of PRESS residuals
+  - name: hat_diag_factor
+    type_doc: ''
+    description: Factor of diagonal of hat_matrix used in influence
+  - name: hat_matrix_diag
+    type_doc: ''
+    description: Diagonal of the hat_matrix for OLS
+  - name: influence
+    type_doc: ''
+    description: Influence measure
+  - name: resid_press
+    type_doc: ''
+    description: PRESS residuals
+  - name: resid_std
+    type_doc: ''
+    description: estimate of standard deviation of the residuals
+  - name: resid_studentized
+    type_doc: ''
+    description: Studentized residuals using variance from OLS
+  - name: resid_studentized_external
+    type_doc: ''
+    description: Studentized residuals using LOOO variance
+  - name: resid_studentized_internal
+    type_doc: ''
+    description: Studentized residuals using variance from OLS
+  - name: resid_var
+    type_doc: ''
+    description: estimate of variance of the residuals
+  - name: sigma2_not_obsi
+    type_doc: ''
+    description: error variance for all LOOO regressions

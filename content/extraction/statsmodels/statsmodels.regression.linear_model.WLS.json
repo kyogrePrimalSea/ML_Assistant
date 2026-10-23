@@ -1,0 +1,195 @@
+{
+  "attributes": [
+    {
+      "description": "The stored weights supplied as an argument.",
+      "name": "weights",
+      "type_doc": "ndarray"
+    },
+    {
+      "description": "The model degree of freedom.",
+      "name": "df_model",
+      "type_doc": ""
+    },
+    {
+      "description": "The residual degree of freedom.",
+      "name": "df_resid",
+      "type_doc": ""
+    },
+    {
+      "description": "Names of endogenous variables",
+      "name": "endog_names",
+      "type_doc": ""
+    },
+    {
+      "description": "Names of exogenous variables",
+      "name": "exog_names",
+      "type_doc": ""
+    }
+  ],
+  "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.WLS.html",
+  "extractor_version": "1",
+  "id": "statsmodels.regression.linear_model.WLS",
+  "import_path": "statsmodels.regression.linear_model.WLS",
+  "kind": "class",
+  "library": "statsmodels",
+  "library_version": "0.15.0",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(method: \"Literal['pinv', 'qr']\" = 'pinv', cov_type: \"Literal['nonrobust', 'fixed scale', 'HC0', 'HC1', 'HC2', 'HC3', 'HAC', 'hac-panel', 'hac-groupsum', 'cluster', 'cluster-jk', 'cluster-crv3']\" = 'nonrobust', cov_kwds=None, use_t: 'bool | None' = None, **kwargs)",
+      "summary": "Full fit of the model."
+    },
+    {
+      "name": "fit_regularized",
+      "signature": "fit_regularized(method='elastic_net', alpha=0.0, L1_wt=1.0, start_params=None, profile_scale=False, refit=False, **kwargs)",
+      "summary": "Return a regularized fit to a linear regression model"
+    },
+    {
+      "name": "from_formula",
+      "signature": "from_formula(formula, data, subset=None, drop_cols=None, *args, **kwargs)",
+      "summary": "Create a Model from a formula and dataframe"
+    },
+    {
+      "name": "get_distribution",
+      "signature": "get_distribution(params, scale, exog=None, dist_class=None)",
+      "summary": "Construct a random number generator for the predictive distribution."
+    },
+    {
+      "name": "hessian",
+      "signature": "hessian(params)",
+      "summary": "The Hessian matrix of the model"
+    },
+    {
+      "name": "hessian_factor",
+      "signature": "hessian_factor(params, scale=None, observed=True)",
+      "summary": "Compute the weights for calculating the Hessian."
+    },
+    {
+      "name": "information",
+      "signature": "information(params)",
+      "summary": "Fisher information matrix of model"
+    },
+    {
+      "name": "initialize",
+      "signature": "initialize()",
+      "summary": "Initialize model components"
+    },
+    {
+      "name": "loglike",
+      "signature": "loglike(params)",
+      "summary": "Compute the value of the gaussian log-likelihood function at params."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(params, exog=None)",
+      "summary": "Return linear predicted values from a design matrix."
+    },
+    {
+      "name": "score",
+      "signature": "score(params)",
+      "summary": "Score vector of model"
+    },
+    {
+      "name": "whiten",
+      "signature": "whiten(x)",
+      "summary": "Whitener for WLS model, multiplies each column by sqrt(self.weights)."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "A 1-d endogenous response variable. The dependent variable.",
+      "effective_default": null,
+      "name": "endog",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array_like"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "A nobs x k array where `nobs` is the number of observations and `k`\nis the number of regressors. An intercept is not included by default\nand should be added by the user. See\n:func:`statsmodels.tools.add_constant`.",
+      "effective_default": null,
+      "name": "exog",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array_like, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "1.0",
+      "description": "A 1d array of weights.  If you supply 1/W then the variables are\npre- multiplied by 1/sqrt(W).  If no weights are supplied the\ndefault value is 1 and WLS results are the same as OLS.",
+      "effective_default": null,
+      "name": "weights",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "array_like, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'none'",
+      "description": "Available options are 'none', 'drop', and 'raise'. If 'none', no nan\nchecking is done. If 'drop', any observations with nans are dropped.\nIf 'raise', an error is raised. Default is 'none'.",
+      "effective_default": null,
+      "name": "missing",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "str, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Indicates whether the RHS includes a user-supplied constant. If True,\na constant is not checked for and k_constant is set to 1 and all\nresult statistics are calculated as if a constant is present. If\nFalse, a constant is not checked for and k_constant is set to 0.",
+      "effective_default": null,
+      "name": "hasconst",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "None or bool, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Extra arguments that are used to set model properties when using the\nformula interface.",
+      "effective_default": null,
+      "name": "kwargs",
+      "param_kind": "var_keyword",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [],
+  "signature": "WLS(endog, exog, weights=1.0, missing='none', hasconst=None, **kwargs)",
+  "summary": "Weighted Least Squares",
+  "warnings": []
+}

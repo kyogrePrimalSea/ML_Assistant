@@ -1,0 +1,122 @@
+{
+  "attributes": [],
+  "doc_url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.linregress.html",
+  "extractor_version": "1",
+  "id": "scipy.stats.linregress",
+  "import_path": "scipy.stats.linregress",
+  "kind": "function",
+  "library": "scipy",
+  "library_version": "1.18.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Two sets of measurements.  Both arrays should have the same length N.",
+      "effective_default": null,
+      "name": "x",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array_like"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Two sets of measurements.  Both arrays should have the same length N.",
+      "effective_default": null,
+      "name": "y",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array_like"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "two-sided",
+          "less",
+          "greater"
+        ],
+        "source": "docstring",
+        "types": []
+      },
+      "default": "'two-sided'",
+      "description": "Defines the alternative hypothesis. Default is 'two-sided'.\nThe following options are available:\n\n* 'two-sided': the slope of the regression line is nonzero\n* 'less': the slope of the regression line is less than zero\n* 'greater':  the slope of the regression line is greater than zero\n\n.. versionadded:: 1.7.0",
+      "effective_default": null,
+      "name": "alternative",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "{'two-sided', 'less', 'greater'}, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0",
+      "description": "If an int, the axis of the input along which to compute the statistic.\nThe statistic of each axis-slice (e.g. row) of the input will appear in a\ncorresponding element of the output.\nIf ``None``, the input will be raveled before computing the statistic.",
+      "effective_default": null,
+      "name": "axis",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or None, default: 0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "propagate",
+          "omit",
+          "raise"
+        ],
+        "source": "docstring",
+        "types": []
+      },
+      "default": "'propagate'",
+      "description": "Defines how to handle input NaNs.\n\n- ``propagate``: if a NaN is present in the axis slice (e.g. row) along\n  which the  statistic is computed, the corresponding entry of the output\n  will be NaN.\n- ``omit``: NaNs will be omitted when performing the calculation.\n  If insufficient data remains in the axis slice along which the\n  statistic is computed, the corresponding entry of the output will be\n  NaN.\n- ``raise``: if a NaN is present, a ``ValueError`` will be raised.",
+      "effective_default": null,
+      "name": "nan_policy",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'propagate', 'omit', 'raise'}"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "If this is set to True, the axes which are reduced are left\nin the result as dimensions with size one. With this option,\nthe result will broadcast correctly against the input array.",
+      "effective_default": null,
+      "name": "keepdims",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default: False"
+    }
+  ],
+  "returns": [
+    {
+      "description": "The return value is an object with the following attributes:\n\nslope : float\n    Slope of the regression line.\nintercept : float\n    Intercept of the regression line.\nrvalue : float\n    The Pearson correlation coefficient. The square of ``rvalue``\n    is equal to the coefficient of determination.\npvalue : float\n    The p-value for a hypothesis test whose null hypothesis is\n    that the slope is zero, using Wald Test with t-distribution of\n    the test statistic. See `alternative` above for alternative\n    hypotheses.\nstderr : float\n    Standard error of the estimated slope (gradient), under the\n    assumption of residual normality.\nintercept_stderr : float\n    Standard error of the estimated intercept, under the assumption\n    of residual normality.",
+      "name": "result",
+      "type_doc": "``LinregressResult`` instance"
+    }
+  ],
+  "signature": "linregress(x, y, alternative='two-sided', *, axis=0, nan_policy='propagate', keepdims=False)",
+  "summary": "Calculate a linear least-squares regression for two sets of measurements.",
+  "warnings": []
+}

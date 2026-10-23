@@ -1,0 +1,174 @@
+{
+  "attributes": [],
+  "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.graphics.tsaplots.plot_pacf.html",
+  "extractor_version": "1",
+  "id": "statsmodels.graphics.tsaplots.plot_pacf",
+  "import_path": "statsmodels.graphics.tsaplots.plot_pacf",
+  "kind": "function",
+  "library": "statsmodels",
+  "library_version": "0.15.0",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Array of time-series values",
+      "effective_default": null,
+      "name": "x",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array_like"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "If given, this subplot is used to plot in instead of a new figure being\ncreated.",
+      "effective_default": null,
+      "name": "ax",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "AxesSubplot, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "An int or array of lag values, used on horizontal axis. Uses\nnp.arange(lags) when lags is an int.  If not provided,\n``lags=np.arange(len(corr))`` is used.",
+      "effective_default": null,
+      "name": "lags",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int or array_like, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0.05",
+      "description": "If a number is given, the confidence intervals for the given level are\nreturned. For instance if alpha=.05, 95 % confidence intervals are\nreturned where the standard deviation is computed according to\n1/sqrt(len(x)). If None, no confidence intervals are plotted.",
+      "effective_default": null,
+      "name": "alpha",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "float or None, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'ywm'",
+      "description": "Specifies which method for the calculations to use:\n\n- \"ywm\" or \"ywmle\" : Yule-Walker without adjustment. Default.\n- \"yw\" or \"ywadjusted\" : Yule-Walker with sample-size adjustment in\n  denominator for acovf.\n- \"ols\" : regression of time series on lags of it and on constant.\n- \"ols-inefficient\" : regression of time series on lags using a single\n  common sample to estimate all pacf coefficients.\n- \"ols-adjusted\" : regression of time series on lags with a bias\n  adjustment.\n- \"ld\" or \"ldadjusted\" : Levinson-Durbin recursion with bias\n  correction.\n- \"ldb\" or \"ldbiased\" : Levinson-Durbin recursion without bias\n  correction.\n- \"burg\" : Burg's partial autocorrelation estimator.",
+      "effective_default": null,
+      "name": "method",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "str, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "If True, vertical lines and markers are plotted.\nIf False, only markers are plotted.  The default marker is 'o'; it can\nbe overridden with a ``marker`` kwarg.",
+      "effective_default": null,
+      "name": "use_vlines",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'Partial Autocorrelation'",
+      "description": "Title to place on plot.  Default is 'Partial Autocorrelation'",
+      "effective_default": null,
+      "name": "title",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "str, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "Flag indicating whether to include the 0-lag autocorrelation.\nDefault is True.",
+      "effective_default": null,
+      "name": "zero",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Optional dictionary of keyword arguments that are passed to vlines.",
+      "effective_default": null,
+      "name": "vlines_kwargs",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "dict, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Optional keyword arguments that are directly passed on to the\nMatplotlib ``plot`` and ``axhline`` functions.",
+      "effective_default": null,
+      "name": "kwargs",
+      "param_kind": "var_keyword",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [
+    {
+      "description": "If `ax` is None, the created figure.  Otherwise the figure to which\n`ax` is connected.",
+      "name": "",
+      "type_doc": "Figure"
+    }
+  ],
+  "signature": "plot_pacf(x, ax=None, lags=None, alpha=0.05, method='ywm', use_vlines=True, title='Partial Autocorrelation', zero=True, vlines_kwargs=None, **kwargs)",
+  "summary": "Plot the partial autocorrelation function",
+  "warnings": []
+}

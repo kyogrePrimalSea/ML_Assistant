@@ -1,0 +1,69 @@
+{
+  "attributes": [],
+  "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.stats.outliers_influence.variance_inflation_factor.html",
+  "extractor_version": "1",
+  "id": "statsmodels.stats.outliers_influence.variance_inflation_factor",
+  "import_path": "statsmodels.stats.outliers_influence.variance_inflation_factor",
+  "kind": "function",
+  "library": "statsmodels",
+  "library_version": "0.15.0",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "design matrix with all explanatory variables, as for example used in\nregression",
+      "effective_default": null,
+      "name": "exog",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array_like"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "index of the exogenous variable in the columns of exog",
+      "effective_default": null,
+      "name": "exog_idx",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "int"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "If True, standardizes the design matrix columns to mean 0 and standard\ndeviation 1 before computing VIF. This ensures numerical stability\nfor non-linear transformations or micro-scale data. Default is True.",
+      "effective_default": null,
+      "name": "standardize",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, optional"
+    }
+  ],
+  "returns": [
+    {
+      "description": "variance inflation factor",
+      "name": "",
+      "type_doc": "float"
+    }
+  ],
+  "signature": "variance_inflation_factor(exog, exog_idx, *, standardize=True)",
+  "summary": "Variance inflation factor, VIF, for one exogenous variable",
+  "warnings": []
+}

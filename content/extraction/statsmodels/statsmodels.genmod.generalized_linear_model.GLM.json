@@ -1,0 +1,355 @@
+{
+  "attributes": [
+    {
+      "description": "Model degrees of freedom is equal to p - 1, where p is the number\nof regressors.  Note that the intercept is not reported as a\ndegree of freedom.",
+      "name": "df_model",
+      "type_doc": "float"
+    },
+    {
+      "description": "Residual degrees of freedom is equal to the number of observation n\nminus the number of regressors p.",
+      "name": "df_resid",
+      "type_doc": "float"
+    },
+    {
+      "description": "See Notes.  Note that `endog` is a reference to the data so that if\ndata is already an array and it is changed, then `endog` changes\nas well.",
+      "name": "endog",
+      "type_doc": "ndarray"
+    },
+    {
+      "description": "Include ln(exposure) in model with coefficient constrained to 1. Can\nonly be used if the link is the logarithm function.",
+      "name": "exposure",
+      "type_doc": "ndarray or None"
+    },
+    {
+      "description": "See Notes.  Note that `exog` is a reference to the data so that if\ndata is already an array and it is changed, then `exog` changes\nas well.",
+      "name": "exog",
+      "type_doc": "ndarray"
+    },
+    {
+      "description": "See Notes. Note that `freq_weights` is a reference to the data so that\nif data is already an array and it is changed, then `freq_weights`\nchanges as well.",
+      "name": "freq_weights",
+      "type_doc": "ndarray"
+    },
+    {
+      "description": "See Notes. Note that `var_weights` is a reference to the data so that\nif data is already an array and it is changed, then `var_weights`\nchanges as well.",
+      "name": "var_weights",
+      "type_doc": "ndarray"
+    },
+    {
+      "description": "The number of iterations that fit has run.  Initialized at 0.",
+      "name": "iteration",
+      "type_doc": "int"
+    },
+    {
+      "description": "The distribution family of the model. Can be any family in\nsm.families.  Default is Gaussian.",
+      "name": "family",
+      "type_doc": "family class instance"
+    },
+    {
+      "description": "The mean response of the transformed variable.  `mu` is the value of\nthe inverse of the link function at lin_pred, where lin_pred is the\nlinear predicted value of the WLS fit of the transformed variable.\n`mu` is only available after fit is called.  See\nsm.families.family.fitted of the distribution family for more\ninformation.",
+      "name": "mu",
+      "type_doc": "ndarray"
+    },
+    {
+      "description": "See Notes. Note that `n_trials` is a reference to the data so that if\ndata is already an array and it is changed, then `n_trials` changes\nas well. `n_trials` is the number of binomial trials and only available\nwith that distribution. See sm.families.Binomial for more\ninformation.",
+      "name": "n_trials",
+      "type_doc": "ndarray"
+    },
+    {
+      "description": "The p x p normalized covariance of the design / exogenous data.\nThis is approximately equal to (X.T X)^(-1)",
+      "name": "normalized_cov_params",
+      "type_doc": "ndarray"
+    },
+    {
+      "description": "Include offset in model with coefficient constrained to 1.",
+      "name": "offset",
+      "type_doc": "ndarray or None"
+    },
+    {
+      "description": "The estimate of the scale / dispersion of the model fit.  Only\navailable after fit is called.  See GLM.fit and GLM.estimate_scale\nfor more information.",
+      "name": "scale",
+      "type_doc": "float"
+    },
+    {
+      "description": "The scaling used for fitting the model.  This is only available after\nfit is called.  The default is None.  See GLM.fit for more information.",
+      "name": "scaletype",
+      "type_doc": "str, float, or None"
+    },
+    {
+      "description": "The value of the weights after the last iteration of fit.  Only\navailable after fit is called.  See sm.families.family for\nthe specific distribution weighting functions.",
+      "name": "weights",
+      "type_doc": "ndarray"
+    },
+    {
+      "description": "Names of endogenous variables",
+      "name": "endog_names",
+      "type_doc": ""
+    },
+    {
+      "description": "Names of exogenous variables",
+      "name": "exog_names",
+      "type_doc": ""
+    },
+    {
+      "description": "Name of the exposure variable if available. If exposure is not a Series,",
+      "name": "exposure_name",
+      "type_doc": ""
+    },
+    {
+      "description": "Name of the freq weights variable if available. If freq_weights is not a",
+      "name": "freq_weights_name",
+      "type_doc": ""
+    },
+    {
+      "description": "Name of the offset variable if available. If offset is not a Series,",
+      "name": "offset_name",
+      "type_doc": ""
+    },
+    {
+      "description": "Name of var weights variable if available. If var_weights is not a Series,",
+      "name": "var_weights_name",
+      "type_doc": ""
+    }
+  ],
+  "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.genmod.generalized_linear_model.GLM.html",
+  "extractor_version": "1",
+  "id": "statsmodels.genmod.generalized_linear_model.GLM",
+  "import_path": "statsmodels.genmod.generalized_linear_model.GLM",
+  "kind": "class",
+  "library": "statsmodels",
+  "library_version": "0.15.0",
+  "methods": [
+    {
+      "name": "estimate_scale",
+      "signature": "estimate_scale(mu)",
+      "summary": "Estimate the dispersion/scale."
+    },
+    {
+      "name": "estimate_tweedie_power",
+      "signature": "estimate_tweedie_power(mu, method='brentq', low=1.01, high=5.0)",
+      "summary": "Tweedie specific function to estimate scale and the variance parameter."
+    },
+    {
+      "name": "fit",
+      "signature": "fit(start_params=None, maxiter=100, method='IRLS', tol=1e-08, scale=None, cov_type='nonrobust', cov_kwds=None, use_t=None, full_output=True, disp=False, max_start_irls=3, **kwargs)",
+      "summary": "Fits a generalized linear model for a given family."
+    },
+    {
+      "name": "fit_constrained",
+      "signature": "fit_constrained(constraints, start_params=None, **fit_kwds)",
+      "summary": "Fit the model subject to linear equality constraints"
+    },
+    {
+      "name": "fit_regularized",
+      "signature": "fit_regularized(method='elastic_net', alpha=0.0, start_params=None, refit=False, opt_method='bfgs', **kwargs)",
+      "summary": "Return a regularized fit to a linear regression model."
+    },
+    {
+      "name": "from_formula",
+      "signature": "from_formula(formula, data, subset=None, drop_cols=None, *args, **kwargs)",
+      "summary": "Create a Model from a formula and dataframe"
+    },
+    {
+      "name": "get_distribution",
+      "signature": "get_distribution(params, scale=None, exog=None, exposure=None, offset=None, var_weights=1.0, n_trials=1.0)",
+      "summary": "Return a instance of the predictive distribution."
+    },
+    {
+      "name": "hessian",
+      "signature": "hessian(params, scale=None, observed=None)",
+      "summary": "Hessian, second derivative of log-likelihood function"
+    },
+    {
+      "name": "hessian_factor",
+      "signature": "hessian_factor(params, scale=None, observed=True)",
+      "summary": "Weights for calculating Hessian"
+    },
+    {
+      "name": "information",
+      "signature": "information(params, scale=None)",
+      "summary": "Fisher information matrix."
+    },
+    {
+      "name": "initialize",
+      "signature": "initialize()",
+      "summary": "Initialize a generalized linear model."
+    },
+    {
+      "name": "loglike",
+      "signature": "loglike(params, scale=None)",
+      "summary": "Evaluate the log-likelihood for a generalized linear model."
+    },
+    {
+      "name": "loglike_mu",
+      "signature": "loglike_mu(mu, scale=1.0)",
+      "summary": "Evaluate the log-likelihood for a generalized linear model."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(params, exog=None, exposure=None, offset=None, which='mean')",
+      "summary": "Return predicted values for a design matrix"
+    },
+    {
+      "name": "score",
+      "signature": "score(params, scale=None)",
+      "summary": "Score, first derivative of the log-likelihood function"
+    },
+    {
+      "name": "score_factor",
+      "signature": "score_factor(params, scale=None)",
+      "summary": "Weights for score for each observation"
+    },
+    {
+      "name": "score_obs",
+      "signature": "score_obs(params, scale=None)",
+      "summary": "Score first derivative of the log-likelihood for each observation"
+    },
+    {
+      "name": "score_test",
+      "signature": "score_test(params_constrained, k_constraints=None, exog_extra=None, observed=True)",
+      "summary": "Score test for restrictions or for omitted variables"
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "1d array of endogenous response variable.  This array can be 1d or 2d.\nBinomial family models accept a 2d array with two columns. If\nsupplied, each observation is expected to be [success, failure].",
+      "effective_default": null,
+      "name": "endog",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array_like"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "A nobs x k array where `nobs` is the number of observations and `k`\nis the number of regressors. An intercept is not included by default\nand should be added by the user (models specified using a formula\ninclude an intercept by default). See `statsmodels.tools.add_constant`.",
+      "effective_default": null,
+      "name": "exog",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array_like"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The default is Gaussian.  To specify the binomial distribution, use\nfamily = sm.families.Binomial().\nEach family can take a link instance as an argument.  See\nsm.families.family for more information.",
+      "effective_default": null,
+      "name": "family",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "family class instance, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "An offset to be included in the model.  If provided, must be\nan array whose length is the number of rows in exog.",
+      "effective_default": null,
+      "name": "offset",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "array_like, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Log(exposure) will be added to the linear prediction in the model.\nExposure is only valid if the log link is used. If provided, it must be\nan array with the same length as endog.",
+      "effective_default": null,
+      "name": "exposure",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "array_like, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "1d array of frequency weights. The default is None. If None is selected\nor a blank value, then the algorithm will replace with an array of 1's\nwith length equal to the endog.\nWARNING: Using weights is not verified yet for all possible options\nand results, see Notes.",
+      "effective_default": null,
+      "name": "freq_weights",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "array_like, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "1d array of variance (analytic) weights. The default is None. If None\nis selected or a blank value, then the algorithm will replace with an\narray of 1's with length equal to the endog.\nWARNING: Using weights is not verified yet for all possible options\nand results, see Notes.",
+      "effective_default": null,
+      "name": "var_weights",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "array_like, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'none'",
+      "description": "Available options are 'none', 'drop', and 'raise'. If 'none', no nan\nchecking is done. If 'drop', any observations with nans are dropped.\nIf 'raise', an error is raised. Default is 'none'.",
+      "effective_default": null,
+      "name": "missing",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "str, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "",
+      "effective_default": null,
+      "name": "kwargs",
+      "param_kind": "var_keyword",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [],
+  "signature": "GLM(endog, exog, family=None, offset=None, exposure=None, freq_weights=None, var_weights=None, missing='none', **kwargs)",
+  "summary": "Generalized Linear Models",
+  "warnings": []
+}

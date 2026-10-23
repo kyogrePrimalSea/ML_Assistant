@@ -1,0 +1,206 @@
+{
+  "attributes": [],
+  "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.tsa.seasonal.STL.html",
+  "extractor_version": "1",
+  "id": "statsmodels.tsa.seasonal.STL",
+  "import_path": "statsmodels.tsa.seasonal.STL",
+  "kind": "class",
+  "library": "statsmodels",
+  "library_version": "0.15.0",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(inner_iter=None, outer_iter=None)",
+      "summary": "fit(inner_iter=None, outer_iter=None)"
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Data to be decomposed. Must be squeezable to 1-d.",
+      "effective_default": null,
+      "name": "endog",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array_like"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Periodicity of the sequence. If None and endog is a pandas Series or\nDataFrame, attempts to determine from endog. If endog is a ndarray,\nperiod must be provided.",
+      "effective_default": null,
+      "name": "period",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "{int, None}, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "7",
+      "description": "Length of the seasonal smoother. Must be an odd integer, and should\nnormally be >= 7 (default).",
+      "effective_default": null,
+      "name": "seasonal",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Length of the trend smoother. Must be an odd integer. If not provided\nuses the smallest odd integer greater than\n1.5 * period / (1 - 1.5 / seasonal), following the suggestion in\nthe original implementation.",
+      "effective_default": null,
+      "name": "trend",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "{int, None}, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Length of the low-pass filter. Must be an odd integer >=3. If not\nprovided, uses the smallest odd integer > period.",
+      "effective_default": null,
+      "name": "low_pass",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "{int, None}, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "1",
+      "description": "Degree of seasonal LOESS. 0 (constant) or 1 (constant and trend).",
+      "effective_default": null,
+      "name": "seasonal_deg",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "1",
+      "description": "Degree of trend LOESS. 0 (constant) or 1 (constant and trend).",
+      "effective_default": null,
+      "name": "trend_deg",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "1",
+      "description": "Degree of low pass LOESS. 0 (constant) or 1 (constant and trend).",
+      "effective_default": null,
+      "name": "low_pass_deg",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "Flag indicating whether to use a weighted version that is robust to\nsome forms of outliers.",
+      "effective_default": null,
+      "name": "robust",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "1",
+      "description": "Positive integer determining the linear interpolation step. If larger\nthan 1, the LOESS is used every seasonal_jump points and linear\ninterpolation is between fitted points. Higher values reduce\nestimation time.",
+      "effective_default": null,
+      "name": "seasonal_jump",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "1",
+      "description": "Positive integer determining the linear interpolation step. If larger\nthan 1, the LOESS is used every trend_jump points and values between\nthe two are linearly interpolated. Higher values reduce estimation\ntime.",
+      "effective_default": null,
+      "name": "trend_jump",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "1",
+      "description": "Positive integer determining the linear interpolation step. If larger\nthan 1, the LOESS is used every low_pass_jump points and values between\nthe two are linearly interpolated. Higher values reduce estimation\ntime.",
+      "effective_default": null,
+      "name": "low_pass_jump",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int, optional"
+    }
+  ],
+  "returns": [],
+  "signature": "STL(endog, period=None, seasonal=7, trend=None, low_pass=None, seasonal_deg=1, trend_deg=1, low_pass_deg=1, robust=False, seasonal_jump=1, trend_jump=1, low_pass_jump=1)",
+  "summary": "Season-Trend decomposition using LOESS.",
+  "warnings": [
+    "signature: inspect.signature failed; used signature line from docstring"
+  ]
+}

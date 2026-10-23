@@ -1,0 +1,37 @@
+source_url: https://www.statsmodels.org/stable/generated/statsmodels.tsa.exponential_smoothing.ets.ETSModel.html
+reason: Documented attributes/properties listed on the official page (Attributes/Properties sections)
+  were not captured by the extractor (not in the numpydoc Attributes block; descriptions from the page
+  Properties table, blank where the page gives none).
+patches:
+- path: attributes
+  value:
+  - description: Names of endogenous variables
+    name: endog_names
+    type_doc: ''
+  - description: The names of the exogenous variables.
+    name: exog_names
+    type_doc: ''
+  - description: The number of parameters in the model
+    name: k_params
+    type_doc: ''
+  - description: List of human readable parameter names (for parameters actually included in the model)
+    name: param_names
+    type_doc: ''
+  - description: Starting parameters for maximum likelihood estimation
+    name: start_params
+    type_doc: ''
+  - name: initial_state_names
+    type_doc: ''
+    description: ''
+  - name: k_endog
+    type_doc: ''
+    description: ''
+  - name: nobs_effective
+    type_doc: ''
+    description: ''
+  - name: short_name
+    type_doc: ''
+    description: ''
+  - name: state_names
+    type_doc: ''
+    description: ''

@@ -1,0 +1,167 @@
+{
+  "attributes": [],
+  "doc_url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_ind.html",
+  "extractor_version": "1",
+  "id": "scipy.stats.ttest_ind",
+  "import_path": "scipy.stats.ttest_ind",
+  "kind": "function",
+  "library": "scipy",
+  "library_version": "1.18.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The arrays must have the same shape, except in the dimension\ncorresponding to `axis` (the first, by default).",
+      "effective_default": null,
+      "name": "a",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array_like"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The arrays must have the same shape, except in the dimension\ncorresponding to `axis` (the first, by default).",
+      "effective_default": null,
+      "name": "b",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array_like"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0",
+      "description": "If an int, the axis of the input along which to compute the statistic.\nThe statistic of each axis-slice (e.g. row) of the input will appear in a\ncorresponding element of the output.\nIf ``None``, the input will be raveled before computing the statistic.",
+      "effective_default": null,
+      "name": "axis",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or None, default: 0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "If True (default), perform a standard independent 2 sample test\nthat assumes equal population variances [1]_.\nIf False, perform Welch's t-test, which does not assume equal\npopulation variance [2]_.\n\n.. versionadded:: 0.11.0",
+      "effective_default": null,
+      "name": "equal_var",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "propagate",
+          "omit",
+          "raise"
+        ],
+        "source": "docstring",
+        "types": []
+      },
+      "default": "'propagate'",
+      "description": "Defines how to handle input NaNs.\n\n- ``propagate``: if a NaN is present in the axis slice (e.g. row) along\n  which the  statistic is computed, the corresponding entry of the output\n  will be NaN.\n- ``omit``: NaNs will be omitted when performing the calculation.\n  If insufficient data remains in the axis slice along which the\n  statistic is computed, the corresponding entry of the output will be\n  NaN.\n- ``raise``: if a NaN is present, a ``ValueError`` will be raised.",
+      "effective_default": null,
+      "name": "nan_policy",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'propagate', 'omit', 'raise'}"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "two-sided",
+          "less",
+          "greater"
+        ],
+        "source": "docstring",
+        "types": []
+      },
+      "default": "'two-sided'",
+      "description": "Defines the alternative hypothesis.\nThe following options are available (default is 'two-sided'):\n\n* 'two-sided': the means of the distributions underlying the samples\n  are unequal.\n* 'less': the mean of the distribution underlying the first sample\n  is less than the mean of the distribution underlying the second\n  sample.\n* 'greater': the mean of the distribution underlying the first\n  sample is greater than the mean of the distribution underlying\n  the second sample.",
+      "effective_default": null,
+      "name": "alternative",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'two-sided', 'less', 'greater'}, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0",
+      "description": "If nonzero, performs a trimmed (Yuen's) t-test.\nDefines the fraction of elements to be trimmed from each end of the\ninput samples. If 0 (default), no elements will be trimmed from either\nside. The number of trimmed elements from each tail is the floor of the\ntrim times the number of elements. Valid range is [0, .5).",
+      "effective_default": null,
+      "name": "trim",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Defines the method used to compute the p-value. If `method` is an\ninstance of `PermutationMethod`/`MonteCarloMethod`, the p-value is\ncomputed using\n`scipy.stats.permutation_test`/`scipy.stats.monte_carlo_test` with the\nprovided configuration options and other appropriate settings.\nOtherwise, the p-value is computed by comparing the test statistic\nagainst a theoretical t-distribution.\n\n.. versionadded:: 1.15.0",
+      "effective_default": null,
+      "name": "method",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "ResamplingMethod, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "If this is set to True, the axes which are reduced are left\nin the result as dimensions with size one. With this option,\nthe result will broadcast correctly against the input array.",
+      "effective_default": null,
+      "name": "keepdims",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default: False"
+    }
+  ],
+  "returns": [
+    {
+      "description": "An object with the following attributes:\n\nstatistic : float or ndarray\n    The t-statistic.\npvalue : float or ndarray\n    The p-value associated with the given alternative.\ndf : float or ndarray\n    The number of degrees of freedom used in calculation of the\n    t-statistic.\n\n    .. versionadded:: 1.11.0\n\nThe object also has the following method:\n\nconfidence_interval(confidence_level=0.95)\n    Computes a confidence interval around the difference in\n    population means for the given confidence level.\n    The confidence interval is returned in a ``namedtuple`` with\n    fields ``low`` and ``high``.\n\n    .. versionadded:: 1.11.0",
+      "name": "result",
+      "type_doc": "`~scipy.stats._result_classes.TtestResult`"
+    }
+  ],
+  "signature": "ttest_ind(a, b, *, axis=0, equal_var=True, nan_policy='propagate', alternative='two-sided', trim=0, method=None, keepdims=False)",
+  "summary": "Calculate the T-test for the means of *two independent* samples of scores.",
+  "warnings": []
+}

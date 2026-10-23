@@ -1,0 +1,117 @@
+{
+  "attributes": [],
+  "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.tsa.seasonal.seasonal_decompose.html",
+  "extractor_version": "1",
+  "id": "statsmodels.tsa.seasonal.seasonal_decompose",
+  "import_path": "statsmodels.tsa.seasonal.seasonal_decompose",
+  "kind": "function",
+  "library": "statsmodels",
+  "library_version": "0.15.0",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Time series. If 2d, individual series are in columns. x must contain 2\ncomplete cycles.",
+      "effective_default": null,
+      "name": "x",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array_like"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "additive",
+          "multiplicative"
+        ],
+        "source": "docstring",
+        "types": []
+      },
+      "default": "'additive'",
+      "description": "Type of seasonal component. The abbreviations \"add\" and \"mul\" are accepted.",
+      "effective_default": null,
+      "name": "model",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "{\"additive\", \"multiplicative\"}, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The filter coefficients for filtering out the seasonal component.\nThe concrete moving average method used in filtering is determined by\ntwo_sided.",
+      "effective_default": null,
+      "name": "filt",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "array_like, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Period of the series (eg, 1 for annual, 4 for quarterly, etc). Must be\nused if x is not a pandas object or if the index of x does not have a\nfrequency. Overrides default periodicity of x if x is a pandas object\nwith a timeseries index.",
+      "effective_default": null,
+      "name": "period",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "The moving average method used in filtering.\nIf True (default), a centered moving average is computed using the\nfilt. If False, the filter coefficients are for past values only.",
+      "effective_default": null,
+      "name": "two_sided",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0",
+      "description": "If set to > 0, the trend resulting from the convolution is\nlinear least-squares extrapolated on both ends (or the single one\nif two_sided is False) considering this many (+1) closest points.\nIf set to 'period', use `period` closest points. Setting this parameter\nresults in no NaN values in trend or resid components. The default is 0.\n\n.. deprecated: 0.14\n    `extrapolate_trend=\"freq\"` is deprecated and will be removed,\n    use `extrapolate_trend=period` instead.",
+      "effective_default": null,
+      "name": "extrapolate_trend",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int or 'period', optional"
+    }
+  ],
+  "returns": [
+    {
+      "description": "An object with seasonal, trend, and resid attributes.",
+      "name": "",
+      "type_doc": "DecomposeResult"
+    }
+  ],
+  "signature": "seasonal_decompose(x, model='additive', filt=None, period=None, two_sided=True, extrapolate_trend=0)",
+  "summary": "Seasonal decomposition using moving averages.",
+  "warnings": []
+}

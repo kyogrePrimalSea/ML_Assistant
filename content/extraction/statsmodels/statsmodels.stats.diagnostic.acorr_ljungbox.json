@@ -1,0 +1,129 @@
+{
+  "attributes": [],
+  "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.stats.diagnostic.acorr_ljungbox.html",
+  "extractor_version": "1",
+  "id": "statsmodels.stats.diagnostic.acorr_ljungbox",
+  "import_path": "statsmodels.stats.diagnostic.acorr_ljungbox",
+  "kind": "function",
+  "library": "statsmodels",
+  "library_version": "0.15.0",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The data series. The data is demeaned before the test statistic is\ncomputed.",
+      "effective_default": null,
+      "name": "x",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array_like"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "If lags is an integer then this is taken to be the largest lag\nthat is included, the test result is reported for all smaller lag\nlength. If lags is a list or array, then all lags are included up to\nthe largest lag in the list, however only the tests for the lags in\nthe list are reported. If lags is None, then the default maxlag is\nmin(10, nobs // 5). The default number of lags changes if period\nis set.",
+      "effective_default": null,
+      "name": "lags",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "{int, array_like}, default None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "If true, then additional to the results of the Ljung-Box test also the\nBox-Pierce test results are returned.",
+      "effective_default": null,
+      "name": "boxpierce",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool, default False"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0",
+      "description": "Number of degrees of freedom consumed by the model. In an ARMA model,\nthis value is usually p+q where p is the AR order and q is the MA\norder. This value is subtracted from the degrees-of-freedom used in\nthe test so that the adjusted dof for the statistics are\nlags - model_df. If lags - model_df <= 0, then NaN is returned.",
+      "effective_default": null,
+      "name": "model_df",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int, default 0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The period of a Seasonal time series.  Used to compute the max lag\nfor seasonal data which uses min(2*period, nobs // 5) if set. If None,\nthen the default rule is used to set the number of lags. When set, must\nbe >= 2.",
+      "effective_default": null,
+      "name": "period",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int, default None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "Flag indicating whether to return the results as a DataFrame. This\nparameter is retained for backward compatibility; a DataFrame is\nalways returned.",
+      "effective_default": null,
+      "name": "return_df",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool, default True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "Flag indicating whether to automatically determine the optimal lag\nlength based on threshold of maximum correlation value.",
+      "effective_default": null,
+      "name": "auto_lag",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool, default False"
+    }
+  ],
+  "returns": [
+    {
+      "description": "Frame with columns:\n\n* lb_stat - The Ljung-Box test statistic.\n* lb_pvalue - The p-value based on chi-square distribution. The\n  p-value is computed as 1 - chi2.cdf(lb_stat, dof) where dof is\n  lag - model_df. If lag - model_df <= 0, then NaN is returned for\n  the pvalue.\n* bp_stat - The Box-Pierce test statistic.\n* bp_pvalue - The p-value based for Box-Pierce test on chi-square\n  distribution. The p-value is computed as 1 - chi2.cdf(bp_stat, dof)\n  where dof is lag - model_df. If lag - model_df <= 0, then NaN is\n  returned for the pvalue.",
+      "name": "",
+      "type_doc": "DataFrame"
+    }
+  ],
+  "signature": "acorr_ljungbox(x, lags=None, boxpierce=False, model_df=0, period=None, return_df=True, auto_lag=False)",
+  "summary": "Ljung-Box test of autocorrelation in residuals",
+  "warnings": []
+}

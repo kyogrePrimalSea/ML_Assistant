@@ -1,0 +1,152 @@
+{
+  "attributes": [],
+  "doc_url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.periodogram.html",
+  "extractor_version": "1",
+  "id": "scipy.signal.periodogram",
+  "import_path": "scipy.signal.periodogram",
+  "kind": "function",
+  "library": "scipy",
+  "library_version": "1.18.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Time series of measurement values",
+      "effective_default": null,
+      "name": "x",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array_like"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "1.0",
+      "description": "Sampling frequency of the `x` time series. Defaults to 1.0.",
+      "effective_default": null,
+      "name": "fs",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "float, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'boxcar'",
+      "description": "Desired window to use. If `window` is a string or tuple, it is\npassed to `get_window` to generate the window values, which are\nDFT-even by default. See `get_window` for a list of windows and\nrequired parameters. If `window` is array_like it will be used\ndirectly as the window and its length must be equal to the length\nof the axis over which the periodogram is computed. Defaults\nto 'boxcar'.",
+      "effective_default": null,
+      "name": "window",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "str or tuple or array_like, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Length of the FFT used. If `None` the length of `x` will be\nused.",
+      "effective_default": null,
+      "name": "nfft",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'constant'",
+      "description": "Specifies how to detrend each segment. If `detrend` is a\nstring, it is passed as the `type` argument to the `detrend`\nfunction. If it is a function, it takes a segment and returns a\ndetrended segment. If `detrend` is `False`, no detrending is\ndone. Defaults to 'constant'.",
+      "effective_default": null,
+      "name": "detrend",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "str or function or `False`, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "If `True`, return a one-sided spectrum for real data. If\n`False` return a two-sided spectrum. Defaults to `True`, but for\ncomplex data, a two-sided spectrum is always returned.",
+      "effective_default": null,
+      "name": "return_onesided",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "density",
+          "spectrum"
+        ],
+        "source": "docstring",
+        "types": []
+      },
+      "default": "'density'",
+      "description": "Selects between computing the power spectral density ('density')\nwhere `Pxx` has units of V²/Hz and computing the squared magnitude\nspectrum ('spectrum') where `Pxx` has units of V², if `x`\nis measured in V and `fs` is measured in Hz. Defaults to\n'density'",
+      "effective_default": null,
+      "name": "scaling",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "{ 'density', 'spectrum' }, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "-1",
+      "description": "Axis along which the periodogram is computed; the default is\nover the last axis (i.e. ``axis=-1``).",
+      "effective_default": null,
+      "name": "axis",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int, optional"
+    }
+  ],
+  "returns": [
+    {
+      "description": "Array of sample frequencies.",
+      "name": "f",
+      "type_doc": "ndarray"
+    },
+    {
+      "description": "Power spectral density or power spectrum of `x`.",
+      "name": "Pxx",
+      "type_doc": "ndarray"
+    }
+  ],
+  "signature": "periodogram(x, fs=1.0, window='boxcar', nfft=None, detrend='constant', return_onesided=True, scaling='density', axis=-1)",
+  "summary": "Estimate power spectral density using a periodogram.",
+  "warnings": []
+}

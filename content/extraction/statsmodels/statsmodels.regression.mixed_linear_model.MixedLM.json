@@ -1,0 +1,229 @@
+{
+  "attributes": [
+    {
+      "description": "Names of endogenous variables",
+      "name": "endog_names",
+      "type_doc": ""
+    },
+    {
+      "description": "Names of exogenous variables",
+      "name": "exog_names",
+      "type_doc": ""
+    }
+  ],
+  "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.regression.mixed_linear_model.MixedLM.html",
+  "extractor_version": "1",
+  "id": "statsmodels.regression.mixed_linear_model.MixedLM",
+  "import_path": "statsmodels.regression.mixed_linear_model.MixedLM",
+  "kind": "class",
+  "library": "statsmodels",
+  "library_version": "0.15.0",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(start_params=None, reml=True, niter_sa=0, do_cg=True, fe_pen=None, cov_pen=None, free=None, full_output=False, method=None, **fit_kwargs)",
+      "summary": "Fit a linear mixed model to the data"
+    },
+    {
+      "name": "fit_regularized",
+      "signature": "fit_regularized(start_params=None, method='l1', alpha=0, ceps=0.0001, ptol=1e-06, maxit=200, **fit_kwargs)",
+      "summary": "Fit a model in which the fixed effects parameters are"
+    },
+    {
+      "name": "from_formula",
+      "signature": "from_formula(formula, data, re_formula=None, vc_formula=None, subset=None, use_sparse=False, missing='none', *args, **kwargs)",
+      "summary": "Create a Model from a formula and dataframe"
+    },
+    {
+      "name": "get_distribution",
+      "signature": "get_distribution(params, scale, exog)",
+      "summary": "Return a random number generator for the model's distribution"
+    },
+    {
+      "name": "get_fe_params",
+      "signature": "get_fe_params(cov_re, vcomp, tol=1e-10)",
+      "summary": "Use GLS to update the fixed effects parameter estimates"
+    },
+    {
+      "name": "get_scale",
+      "signature": "get_scale(fe_params, cov_re, vcomp)",
+      "summary": "Return the estimated error variance based on given estimates"
+    },
+    {
+      "name": "group_list",
+      "signature": "group_list(array)",
+      "summary": "Return `array` split into subarrays corresponding to the"
+    },
+    {
+      "name": "hessian",
+      "signature": "hessian(params)",
+      "summary": "Return the model's Hessian matrix"
+    },
+    {
+      "name": "information",
+      "signature": "information(params)",
+      "summary": "Fisher information matrix of model"
+    },
+    {
+      "name": "initialize",
+      "signature": "initialize()",
+      "summary": "Initialize (possibly re-initialize) a Model instance"
+    },
+    {
+      "name": "loglike",
+      "signature": "loglike(params, profile_fe=True)",
+      "summary": "Evaluate the (profile) log-likelihood of the linear mixed"
+    },
+    {
+      "name": "predict",
+      "signature": "predict(params, exog=None)",
+      "summary": "Return predicted values from a design matrix"
+    },
+    {
+      "name": "score",
+      "signature": "score(params, profile_fe=True)",
+      "summary": "Return the score vector of the profile log-likelihood"
+    },
+    {
+      "name": "score_full",
+      "signature": "score_full(params, calc_fe)",
+      "summary": "Return the score with respect to untransformed parameters"
+    },
+    {
+      "name": "score_sqrt",
+      "signature": "score_sqrt(params, calc_fe=True)",
+      "summary": "Return the score with respect to transformed parameters"
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The dependent variable",
+      "effective_default": null,
+      "name": "endog",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "1d array_like"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "A matrix of covariates used to determine the\nmean structure (the \"fixed effects\" covariates).",
+      "effective_default": null,
+      "name": "exog",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "2d array_like"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "A vector of labels determining the groups -- data from\ndifferent groups are independent",
+      "effective_default": null,
+      "name": "groups",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "1d array_like"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "A matrix of covariates used to determine the variance and\ncovariance structure (the \"random effects\" covariates).  If\nNone, defaults to a random intercept for each group.",
+      "effective_default": null,
+      "name": "exog_re",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "2d array_like, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "A VCSPec instance defines the structure of the variance\ncomponents in the model.  Alternatively, see notes below\nfor a dictionary-based format.  The dictionary format is\ndeprecated and may be removed at some point in the future.",
+      "effective_default": null,
+      "name": "exog_vc",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "VCSpec instance or dict-like (deprecated), optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "If True, optimization is carried out using the lower\ntriangle of the square root of the random effects\ncovariance matrix, otherwise it is carried out using the\nlower triangle of the random effects covariance matrix.",
+      "effective_default": null,
+      "name": "use_sqrt",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "none",
+          "drop",
+          "raise"
+        ],
+        "source": "docstring",
+        "types": []
+      },
+      "default": "'none'",
+      "description": "The approach to missing data handling",
+      "effective_default": null,
+      "name": "missing",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "{\"none\", \"drop\", \"raise\"}, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "",
+      "effective_default": null,
+      "name": "kwargs",
+      "param_kind": "var_keyword",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [],
+  "signature": "MixedLM(endog, exog, groups, exog_re=None, exog_vc=None, use_sqrt=True, missing='none', **kwargs)",
+  "summary": "Linear Mixed Effects Model",
+  "warnings": []
+}

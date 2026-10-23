@@ -1,0 +1,234 @@
+{
+  "attributes": [
+    {
+      "description": "A reference to the endogenous response variable",
+      "name": "endog",
+      "type_doc": "ndarray"
+    },
+    {
+      "description": "A reference to the exogenous design.",
+      "name": "exog",
+      "type_doc": "ndarray"
+    },
+    {
+      "description": "Names of endogenous variables",
+      "name": "endog_names",
+      "type_doc": ""
+    },
+    {
+      "description": "Names of exogenous variables",
+      "name": "exog_names",
+      "type_doc": ""
+    }
+  ],
+  "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.discrete.discrete_model.NegativeBinomial.html",
+  "extractor_version": "1",
+  "id": "statsmodels.discrete.discrete_model.NegativeBinomial",
+  "import_path": "statsmodels.discrete.discrete_model.NegativeBinomial",
+  "kind": "class",
+  "library": "statsmodels",
+  "library_version": "0.15.0",
+  "methods": [
+    {
+      "name": "cdf",
+      "signature": "cdf(X)",
+      "summary": "The cumulative distribution function of the model."
+    },
+    {
+      "name": "cov_params_func_l1",
+      "signature": "cov_params_func_l1(likelihood_model, xopt, retvals)",
+      "summary": "Computes cov_params on a reduced parameter space"
+    },
+    {
+      "name": "fit",
+      "signature": "fit(start_params=None, method='bfgs', maxiter=35, full_output=1, disp=1, callback=None, cov_type='nonrobust', cov_kwds=None, use_t=None, optim_kwds_prelim=None, **kwargs)",
+      "summary": "Fit the model using maximum likelihood."
+    },
+    {
+      "name": "fit_regularized",
+      "signature": "fit_regularized(start_params=None, method='l1', maxiter='defined_by_method', full_output=1, disp=1, callback=None, alpha=0, trim_mode='auto', auto_trim_tol=0.01, size_trim_tol=0.0001, qc_tol=0.03, **kwargs)",
+      "summary": "Fit the model using a regularized maximum likelihood."
+    },
+    {
+      "name": "from_formula",
+      "signature": "from_formula(formula, data, subset=None, drop_cols=None, *args, **kwargs)",
+      "summary": "Create a Model from a formula and dataframe"
+    },
+    {
+      "name": "get_distribution",
+      "signature": "get_distribution(params, exog=None, exposure=None, offset=None)",
+      "summary": "Get a frozen instance of distribution"
+    },
+    {
+      "name": "hessian",
+      "signature": "hessian(params)",
+      "summary": "The Hessian matrix of the model"
+    },
+    {
+      "name": "information",
+      "signature": "information(params)",
+      "summary": "Fisher information matrix of model"
+    },
+    {
+      "name": "initialize",
+      "signature": "initialize()",
+      "summary": "Initialize is called by"
+    },
+    {
+      "name": "loglike",
+      "signature": "loglike(params)",
+      "summary": "Log-likelihood for negative binomial model."
+    },
+    {
+      "name": "pdf",
+      "signature": "pdf(X)",
+      "summary": "The probability density (mass) function of the model."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(params, exog=None, exposure=None, offset=None, which='mean', y_values=None)",
+      "summary": "Predict response variable of a model given exogenous variables."
+    },
+    {
+      "name": "score",
+      "signature": "score(params)",
+      "summary": "Score vector of model"
+    },
+    {
+      "name": "score_obs",
+      "signature": "score_obs(params)",
+      "summary": ""
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "A 1-d endogenous response variable. The dependent variable.",
+      "effective_default": null,
+      "name": "endog",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array_like"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "A nobs x k array where `nobs` is the number of observations and `k`\nis the number of regressors. An intercept is not included by default\nand should be added by the user. See\n:func:`statsmodels.tools.add_constant`.",
+      "effective_default": null,
+      "name": "exog",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array_like, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "nb2",
+          "nb1",
+          "geometric"
+        ],
+        "source": "docstring",
+        "types": []
+      },
+      "default": "'nb2'",
+      "description": "Log-likelihood type.\nFitted value :math:`\\mu`\nHeterogeneity parameter :math:`\\alpha`\n\n- nb2: Variance equal to :math:`\\mu + \\alpha\\mu^2` (most common)\n- nb1: Variance equal to :math:`\\mu + \\alpha\\mu`\n- geometric: Variance equal to :math:`\\mu + \\mu^2`",
+      "effective_default": null,
+      "name": "loglike_method",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "{'nb2', 'nb1', 'geometric'}, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Offset is added to the linear prediction with coefficient equal to 1.",
+      "effective_default": null,
+      "name": "offset",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "array_like, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Log(exposure) is added to the linear prediction with coefficient\nequal to 1.",
+      "effective_default": null,
+      "name": "exposure",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "array_like, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'none'",
+      "description": "Available options are 'none', 'drop', and 'raise'. If 'none', no nan\nchecking is done. If 'drop', any observations with nans are dropped.\nIf 'raise', an error is raised. Default is 'none'.",
+      "effective_default": null,
+      "name": "missing",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "str, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "Check exog rank to determine model degrees of freedom. Default is\nTrue. Setting to False reduces model initialization time when\nexog.shape[1] is large.",
+      "effective_default": null,
+      "name": "check_rank",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "",
+      "effective_default": null,
+      "name": "kwargs",
+      "param_kind": "var_keyword",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [],
+  "signature": "NegativeBinomial(endog, exog, loglike_method='nb2', offset=None, exposure=None, missing='none', check_rank=True, **kwargs)",
+  "summary": "Negative Binomial Model",
+  "warnings": []
+}

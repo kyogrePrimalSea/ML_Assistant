@@ -1,0 +1,69 @@
+{
+  "attributes": [],
+  "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.stats.stattools.jarque_bera.html",
+  "extractor_version": "1",
+  "id": "statsmodels.stats.stattools.jarque_bera",
+  "import_path": "statsmodels.stats.stattools.jarque_bera",
+  "kind": "function",
+  "library": "statsmodels",
+  "library_version": "0.15.0",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Data to test for normality. Usually regression model residuals that\nare mean 0.",
+      "effective_default": null,
+      "name": "resids",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array_like"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0",
+      "description": "Axis to use if data has more than 1 dimension. Default is 0.",
+      "effective_default": null,
+      "name": "axis",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int, optional"
+    }
+  ],
+  "returns": [
+    {
+      "description": "The Jarque-Bera test statistic.",
+      "name": "JB",
+      "type_doc": "float or ndarray"
+    },
+    {
+      "description": "The pvalue of the test statistic.",
+      "name": "JBpv",
+      "type_doc": "float or ndarray"
+    },
+    {
+      "description": "Estimated skewness of the data.",
+      "name": "skew",
+      "type_doc": "float or ndarray"
+    },
+    {
+      "description": "Estimated kurtosis of the data.",
+      "name": "kurtosis",
+      "type_doc": "float or ndarray"
+    }
+  ],
+  "signature": "jarque_bera(resids, axis=0)",
+  "summary": "The Jarque-Bera test of normality",
+  "warnings": []
+}

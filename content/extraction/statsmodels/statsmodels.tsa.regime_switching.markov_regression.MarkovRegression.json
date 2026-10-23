@@ -1,0 +1,325 @@
+{
+  "attributes": [
+    {
+      "description": "Names of endogenous variables",
+      "name": "endog_names",
+      "type_doc": ""
+    },
+    {
+      "description": "The names of the exogenous variables.",
+      "name": "exog_names",
+      "type_doc": ""
+    },
+    {
+      "description": "(int) Number of parameters in the model",
+      "name": "k_params",
+      "type_doc": ""
+    },
+    {
+      "description": "(list of str) List of human readable parameter names (for parameters actually included in the model)",
+      "name": "param_names",
+      "type_doc": ""
+    },
+    {
+      "description": "Starting parameters for maximum likelihood estimation",
+      "name": "start_params",
+      "type_doc": ""
+    }
+  ],
+  "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.tsa.regime_switching.markov_regression.MarkovRegression.html",
+  "extractor_version": "1",
+  "id": "statsmodels.tsa.regime_switching.markov_regression.MarkovRegression",
+  "import_path": "statsmodels.tsa.regime_switching.markov_regression.MarkovRegression",
+  "kind": "class",
+  "library": "statsmodels",
+  "library_version": "0.15.0",
+  "methods": [
+    {
+      "name": "filter",
+      "signature": "filter(params, transformed=True, cov_type=None, cov_kwds=None, return_raw=False, results_class=None, results_wrapper_class=None)",
+      "summary": "Apply the Hamilton filter"
+    },
+    {
+      "name": "fit",
+      "signature": "fit(start_params=None, transformed=True, cov_type='approx', cov_kwds=None, method='bfgs', maxiter=100, full_output=1, disp=0, callback=None, return_params=False, em_iter=5, search_reps=0, search_iter=5, search_scale=1.0, rng=None, **kwargs)",
+      "summary": "Fits the model by maximum likelihood via Hamilton filter"
+    },
+    {
+      "name": "from_formula",
+      "signature": "from_formula(formula, data, subset=None, drop_cols=None, *args, **kwargs)",
+      "summary": "Create a Model from a formula and dataframe"
+    },
+    {
+      "name": "hessian",
+      "signature": "hessian(params, transformed=True)",
+      "summary": "Hessian matrix of the likelihood function, evaluated at the given"
+    },
+    {
+      "name": "information",
+      "signature": "information(params)",
+      "summary": "Fisher information matrix of model"
+    },
+    {
+      "name": "initial_probabilities",
+      "signature": "initial_probabilities(params, regime_transition=None)",
+      "summary": "Retrieve initial probabilities"
+    },
+    {
+      "name": "initialize",
+      "signature": "initialize()",
+      "summary": "Initialize (possibly re-initialize) a Model instance"
+    },
+    {
+      "name": "initialize_known",
+      "signature": "initialize_known(probabilities, tol=1e-08)",
+      "summary": "Set initialization of regime probabilities to use known values"
+    },
+    {
+      "name": "initialize_steady_state",
+      "signature": "initialize_steady_state()",
+      "summary": "Set initialization of regime probabilities to be steady-state values"
+    },
+    {
+      "name": "loglike",
+      "signature": "loglike(params, transformed=True)",
+      "summary": "Loglikelihood evaluation"
+    },
+    {
+      "name": "loglikeobs",
+      "signature": "loglikeobs(params, transformed=True)",
+      "summary": "Loglikelihood evaluation for each period"
+    },
+    {
+      "name": "predict",
+      "signature": "predict(params, start=None, end=None, probabilities=None, conditional=False)",
+      "summary": "In-sample prediction and out-of-sample forecasting"
+    },
+    {
+      "name": "predict_conditional",
+      "signature": "predict_conditional(params)",
+      "summary": "In-sample prediction, conditional on the current regime"
+    },
+    {
+      "name": "regime_transition_matrix",
+      "signature": "regime_transition_matrix(params, exog_tvtp=None)",
+      "summary": "Construct the left-stochastic transition matrix"
+    },
+    {
+      "name": "score",
+      "signature": "score(params, transformed=True)",
+      "summary": "Compute the score function at params"
+    },
+    {
+      "name": "score_obs",
+      "signature": "score_obs(params, transformed=True)",
+      "summary": "Compute the score per observation, evaluated at params"
+    },
+    {
+      "name": "smooth",
+      "signature": "smooth(params, transformed=True, cov_type=None, cov_kwds=None, return_raw=False, results_class=None, results_wrapper_class=None)",
+      "summary": "Apply the Kim smoother and Hamilton filter"
+    },
+    {
+      "name": "transform_params",
+      "signature": "transform_params(unconstrained)",
+      "summary": "Transform unconstrained parameters used by the optimizer to constrained"
+    },
+    {
+      "name": "untransform_params",
+      "signature": "untransform_params(constrained)",
+      "summary": "Transform constrained parameters used in likelihood evaluation"
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The endogenous variable.",
+      "effective_default": null,
+      "name": "endog",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array_like"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The number of regimes.",
+      "effective_default": null,
+      "name": "k_regimes",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "int"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "n",
+          "c",
+          "t",
+          "ct"
+        ],
+        "source": "docstring",
+        "types": []
+      },
+      "default": "'c'",
+      "description": "Whether or not to include a trend. To include an intercept, time trend,\nor both, set `trend='c'`, `trend='t'`, or `trend='ct'`. For no trend,\nset `trend='n'`. Default is an intercept.",
+      "effective_default": null,
+      "name": "trend",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "{'n', 'c', 't', 'ct'}, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Array of exogenous regressors, shaped nobs x k.",
+      "effective_default": null,
+      "name": "exog",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "array_like, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0",
+      "description": "The order of the model describes the dependence of the likelihood on\nprevious regimes. This depends on the model in question and should be\nset appropriately by subclasses.",
+      "effective_default": null,
+      "name": "order",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Array of exogenous or lagged variables to use in calculating\ntime-varying transition probabilities (TVTP). TVTP is only used if this\nvariable is provided. If an intercept is desired, a column of ones must\nbe explicitly included in this array.",
+      "effective_default": null,
+      "name": "exog_tvtp",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "array_like, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "If a boolean, sets whether or not all trend coefficients are\nswitching across regimes. If a sequence, should be of length equal\nto the number of trend variables, where each element is\na boolean describing whether the corresponding coefficient is\nswitching. Default is True.",
+      "effective_default": null,
+      "name": "switching_trend",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool or sequence of bool, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "If a boolean, sets whether or not all regression coefficients are\nswitching across regimes. If a sequence, should be of length equal\nto the number of exogenous variables, where each element is\na boolean describing whether the corresponding coefficient is\nswitching. Default is True.",
+      "effective_default": null,
+      "name": "switching_exog",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool or sequence of bool, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "Whether or not there is regime-specific heteroskedasticity, i.e.\nwhether or not the error term has a switching variance. Default is\nFalse.",
+      "effective_default": null,
+      "name": "switching_variance",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "An array-like object of datetime objects. If a pandas object is given\nfor endog or exog, it is assumed to have a DateIndex.",
+      "effective_default": null,
+      "name": "dates",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "array_like, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The frequency of the time-series. A Pandas offset or 'B', 'D', 'W',\n'M', 'A', or 'Q'. This is optional if dates are given.",
+      "effective_default": null,
+      "name": "freq",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "str, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'none'",
+      "description": "Available options are 'none', 'drop', and 'raise'. If 'none', no nan\nchecking is done. If 'drop', any observations with nans are dropped.\nIf 'raise', an error is raised. Default is 'none'.",
+      "effective_default": null,
+      "name": "missing",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "str, optional"
+    }
+  ],
+  "returns": [],
+  "signature": "MarkovRegression(endog, k_regimes, trend='c', exog=None, order=0, exog_tvtp=None, switching_trend=True, switching_exog=True, switching_variance=False, dates=None, freq=None, missing='none')",
+  "summary": "First-order k-regime Markov switching regression model",
+  "warnings": []
+}

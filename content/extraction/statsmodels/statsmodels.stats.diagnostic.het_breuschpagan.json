@@ -1,0 +1,84 @@
+{
+  "attributes": [],
+  "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.stats.diagnostic.het_breuschpagan.html",
+  "extractor_version": "1",
+  "id": "statsmodels.stats.diagnostic.het_breuschpagan",
+  "import_path": "statsmodels.stats.diagnostic.het_breuschpagan",
+  "kind": "function",
+  "library": "statsmodels",
+  "library_version": "0.15.0",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "For the Breusch-Pagan test, this should be an array of residuals\nfrom a fitted regression model.",
+      "effective_default": null,
+      "name": "resid",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array_like"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "This contains variables suspected of being related to\nheteroscedasticity in resid.",
+      "effective_default": null,
+      "name": "exog_het",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array_like"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "Flag indicating whether to use the Koenker version of the\ntest (default) which assumes independent and identically distributed\nerror terms, or the original Breusch-Pagan version which assumes\nresiduals are normally distributed.",
+      "effective_default": null,
+      "name": "robust",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool, default True"
+    }
+  ],
+  "returns": [
+    {
+      "description": "lagrange multiplier statistic",
+      "name": "lm",
+      "type_doc": "float"
+    },
+    {
+      "description": "p-value of lagrange multiplier test",
+      "name": "lm_pvalue",
+      "type_doc": "float"
+    },
+    {
+      "description": "f-statistic of the hypothesis that the error variance does not depend\non x",
+      "name": "fvalue",
+      "type_doc": "float"
+    },
+    {
+      "description": "p-value for the f-statistic",
+      "name": "f_pvalue",
+      "type_doc": "float"
+    }
+  ],
+  "signature": "het_breuschpagan(resid, exog_het, robust=True)",
+  "summary": "Breusch-Pagan Lagrange Multiplier test for heteroscedasticity",
+  "warnings": []
+}

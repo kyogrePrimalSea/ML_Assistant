@@ -1,0 +1,150 @@
+{
+  "attributes": [
+    {
+      "description": "Names of endogenous variables",
+      "name": "endog_names",
+      "type_doc": ""
+    },
+    {
+      "description": "The names of the exogenous variables.",
+      "name": "exog_names",
+      "type_doc": ""
+    }
+  ],
+  "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.tsa.vector_ar.var_model.VAR.html",
+  "extractor_version": "1",
+  "id": "statsmodels.tsa.vector_ar.var_model.VAR",
+  "import_path": "statsmodels.tsa.vector_ar.var_model.VAR",
+  "kind": "class",
+  "library": "statsmodels",
+  "library_version": "0.15.0",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(maxlags: 'int | None' = None, method='ols', ic=None, trend='c', verbose=False)",
+      "summary": "Fit the VAR model"
+    },
+    {
+      "name": "from_formula",
+      "signature": "from_formula(formula, data, subset=None, drop_cols=None, *args, **kwargs)",
+      "summary": "Not implemented. Formulas are not supported for VAR models"
+    },
+    {
+      "name": "hessian",
+      "signature": "hessian(params)",
+      "summary": "The Hessian matrix of the model"
+    },
+    {
+      "name": "information",
+      "signature": "information(params)",
+      "summary": "Fisher information matrix of model"
+    },
+    {
+      "name": "initialize",
+      "signature": "initialize()",
+      "summary": "Initialize (possibly re-initialize) a Model instance"
+    },
+    {
+      "name": "loglike",
+      "signature": "loglike(params)",
+      "summary": "Log-likelihood of model"
+    },
+    {
+      "name": "predict",
+      "signature": "predict(params, start=None, end=None, lags=1, trend='c')",
+      "summary": "Returns in-sample predictions or forecasts"
+    },
+    {
+      "name": "score",
+      "signature": "score(params)",
+      "summary": "Score vector of model"
+    },
+    {
+      "name": "select_order",
+      "signature": "select_order(maxlags=None, trend='c')",
+      "summary": "Compute lag order selections based on each of the available information"
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "2-d endogenous response variable. The independent variable.",
+      "effective_default": null,
+      "name": "endog",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array_like"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "2-d exogenous variable.",
+      "effective_default": null,
+      "name": "exog",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "array_like, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "must match number of rows of endog",
+      "effective_default": null,
+      "name": "dates",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "array_like, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "See :class:`statsmodels.tsa.base.tsa_model.TimeSeriesModel` for more\ninformation.",
+      "effective_default": null,
+      "name": "freq",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "str, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'none'",
+      "description": "See :class:`statsmodels.base.model.Model` for more information.",
+      "effective_default": null,
+      "name": "missing",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "str, optional"
+    }
+  ],
+  "returns": [],
+  "signature": "VAR(endog, exog=None, dates=None, freq=None, missing='none')",
+  "summary": "Fit VAR(p) process and do lag order selection",
+  "warnings": []
+}

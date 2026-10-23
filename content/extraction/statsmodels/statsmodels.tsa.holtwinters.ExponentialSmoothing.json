@@ -1,0 +1,300 @@
+{
+  "attributes": [
+    {
+      "description": "Names of endogenous variables",
+      "name": "endog_names",
+      "type_doc": ""
+    },
+    {
+      "description": "The names of the exogenous variables.",
+      "name": "exog_names",
+      "type_doc": ""
+    }
+  ],
+  "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.tsa.holtwinters.ExponentialSmoothing.html",
+  "extractor_version": "1",
+  "id": "statsmodels.tsa.holtwinters.ExponentialSmoothing",
+  "import_path": "statsmodels.tsa.holtwinters.ExponentialSmoothing",
+  "kind": "class",
+  "library": "statsmodels",
+  "library_version": "0.15.0",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(smoothing_level=None, smoothing_trend=None, smoothing_seasonal=None, damping_trend=None, *, optimized=True, remove_bias=False, start_params=None, method=None, minimize_kwargs=None, use_brute=True)",
+      "summary": "Fit the model"
+    },
+    {
+      "name": "fix_params",
+      "signature": "fix_params(values)",
+      "summary": "Temporarily fix parameters for estimation"
+    },
+    {
+      "name": "from_formula",
+      "signature": "from_formula(formula, data, subset=None, drop_cols=None, *args, **kwargs)",
+      "summary": "Create a Model from a formula and dataframe"
+    },
+    {
+      "name": "hessian",
+      "signature": "hessian(params)",
+      "summary": "The Hessian matrix of the model"
+    },
+    {
+      "name": "information",
+      "signature": "information(params)",
+      "summary": "Fisher information matrix of model"
+    },
+    {
+      "name": "initial_values",
+      "signature": "initial_values(initial_level=None, initial_trend=None, force=False)",
+      "summary": "Compute initial values used in the exponential smoothing recursions"
+    },
+    {
+      "name": "initialize",
+      "signature": "initialize()",
+      "summary": "Initialize (possibly re-initialize) a Model instance"
+    },
+    {
+      "name": "loglike",
+      "signature": "loglike(params)",
+      "summary": "Log-likelihood of model"
+    },
+    {
+      "name": "predict",
+      "signature": "predict(params, start=None, end=None)",
+      "summary": "In-sample and out-of-sample prediction"
+    },
+    {
+      "name": "score",
+      "signature": "score(params)",
+      "summary": "Score vector of model"
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The time series to model.",
+      "effective_default": null,
+      "name": "endog",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array_like"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "add",
+          "mul",
+          "additive",
+          "multiplicative"
+        ],
+        "source": "docstring",
+        "types": []
+      },
+      "default": "None",
+      "description": "Type of trend component.",
+      "effective_default": null,
+      "name": "trend",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "{\"add\", \"mul\", \"additive\", \"multiplicative\"} or None, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "Should the trend component be damped.",
+      "effective_default": null,
+      "name": "damped_trend",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "add",
+          "mul",
+          "additive",
+          "multiplicative"
+        ],
+        "source": "docstring",
+        "types": []
+      },
+      "default": "None",
+      "description": "Type of seasonal component.",
+      "effective_default": null,
+      "name": "seasonal",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "{\"add\", \"mul\", \"additive\", \"multiplicative\"} or None, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The number of periods in a complete seasonal cycle, e.g., 4 for\nquarterly data or 7 for daily data with a weekly cycle.",
+      "effective_default": null,
+      "name": "seasonal_periods",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'estimated'",
+      "description": "Method for initialize the recursions. One of:\n\n* None\n* 'estimated'\n* 'heuristic'\n* 'legacy-heuristic'\n* 'known'\n\nNone defaults to the pre-0.12 behavior where initial values\nare passed as part of ``fit``. If any of the other values are\npassed, then the initial values must also be set when constructing\nthe model. If 'known' initialization is used, then `initial_level`\nmust be passed, as well as `initial_trend` and `initial_seasonal` if\napplicable. Default is 'estimated'. \"legacy-heuristic\" uses the same\nvalues that were used in statsmodels 0.11 and earlier.",
+      "effective_default": null,
+      "name": "initialization_method",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The initial level component. Required if estimation method is \"known\".\nIf set using either \"estimated\" or \"heuristic\" this value is used.\nThis allows one or more of the initial values to be set while\ndeferring to the heuristic for others or estimating the unset\nparameters.",
+      "effective_default": null,
+      "name": "initial_level",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The initial trend component. Required if estimation method is \"known\".\nIf set using either \"estimated\" or \"heuristic\" this value is used.\nThis allows one or more of the initial values to be set while\ndeferring to the heuristic for others or estimating the unset\nparameters.",
+      "effective_default": null,
+      "name": "initial_trend",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The initial seasonal component. An array of length `seasonal`\nor length `seasonal - 1` (in which case the last initial value\nis computed to make the average effect zero). Only used if\ninitialization is 'known'. Required if estimation method is \"known\".\nIf set using either \"estimated\" or \"heuristic\" this value is used.\nThis allows one or more of the initial values to be set while\ndeferring to the heuristic for others or estimating the unset\nparameters.",
+      "effective_default": null,
+      "name": "initial_seasonal",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array_like, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "Should the Box-Cox transform be applied to the data first? If 'log'\nthen apply the log. If float then use the value as lambda.",
+      "effective_default": null,
+      "name": "use_boxcox",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{True, False, 'log', float}, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "A dictionary containing bounds for the parameters in the model,\nexcluding the initial values if estimated. The keys of the dictionary\nare the variable names, e.g., smoothing_level or initial_slope.\nThe initial seasonal variables are labeled initial_seasonal.<j>\nfor j=0,...,m-1 where m is the number of period in a full season.\nUse None to indicate a non-binding constraint, e.g., (0, None)\nconstrains a parameter to be non-negative.",
+      "effective_default": null,
+      "name": "bounds",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "dict of str to tuple of float, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "An array-like object of datetime objects. If a Pandas object is given\nfor endog, it is assumed to have a DateIndex.",
+      "effective_default": null,
+      "name": "dates",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array_like of datetime, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The frequency of the time-series. A Pandas offset or 'B', 'D', 'W',\n'M', 'A', or 'Q'. This is optional if dates are given.",
+      "effective_default": null,
+      "name": "freq",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'none'",
+      "description": "Available options are 'none', 'drop', and 'raise'. If 'none', no nan\nchecking is done. If 'drop', any observations with nans are dropped.\nIf 'raise', an error is raised. Default is 'none'.",
+      "effective_default": null,
+      "name": "missing",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str, optional"
+    }
+  ],
+  "returns": [],
+  "signature": "ExponentialSmoothing(endog, trend=None, damped_trend=False, seasonal=None, *, seasonal_periods=None, initialization_method='estimated', initial_level=None, initial_trend=None, initial_seasonal=None, use_boxcox=False, bounds=None, dates=None, freq=None, missing='none')",
+  "summary": "Holt Winters' Exponential Smoothing",
+  "warnings": []
+}

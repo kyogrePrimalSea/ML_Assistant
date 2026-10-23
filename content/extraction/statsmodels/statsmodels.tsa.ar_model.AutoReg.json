@@ -1,0 +1,246 @@
+{
+  "attributes": [
+    {
+      "description": "The autoregressive lags included in the model",
+      "name": "ar_lags",
+      "type_doc": ""
+    },
+    {
+      "description": "The deterministic used to construct the model",
+      "name": "deterministic",
+      "type_doc": ""
+    },
+    {
+      "description": "The model degrees of freedom",
+      "name": "df_model",
+      "type_doc": ""
+    },
+    {
+      "description": "Names of endogenous variables",
+      "name": "endog_names",
+      "type_doc": ""
+    },
+    {
+      "description": "Names of exogenous variables included in model",
+      "name": "exog_names",
+      "type_doc": ""
+    },
+    {
+      "description": "The number of initial obs. excluded from the estimation sample",
+      "name": "hold_back",
+      "type_doc": ""
+    },
+    {
+      "description": "The period of the seasonal component",
+      "name": "period",
+      "type_doc": ""
+    },
+    {
+      "description": "Flag indicating that the model contains a seasonal component",
+      "name": "seasonal",
+      "type_doc": ""
+    },
+    {
+      "description": "The trend used in the model",
+      "name": "trend",
+      "type_doc": ""
+    }
+  ],
+  "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.tsa.ar_model.AutoReg.html",
+  "extractor_version": "1",
+  "id": "statsmodels.tsa.ar_model.AutoReg",
+  "import_path": "statsmodels.tsa.ar_model.AutoReg",
+  "kind": "class",
+  "library": "statsmodels",
+  "library_version": "0.15.0",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(cov_type: 'str' = 'nonrobust', cov_kwds: 'dict[str, Any] | None' = None, use_t: 'bool' = False) -> 'AutoRegResultsWrapper'",
+      "summary": "Estimate the model parameters"
+    },
+    {
+      "name": "from_formula",
+      "signature": "from_formula(formula, data, subset=None, drop_cols=None, *args, **kwargs)",
+      "summary": "Create a Model from a formula and dataframe"
+    },
+    {
+      "name": "hessian",
+      "signature": "hessian(params: 'ArrayLike') -> 'np.ndarray'",
+      "summary": "The Hessian matrix of the model"
+    },
+    {
+      "name": "information",
+      "signature": "information(params: 'ArrayLike') -> 'np.ndarray'",
+      "summary": "Fisher information matrix of model"
+    },
+    {
+      "name": "initialize",
+      "signature": "initialize() -> 'None'",
+      "summary": "Initialize the model (no-op)"
+    },
+    {
+      "name": "loglike",
+      "signature": "loglike(params: 'ArrayLike') -> 'float'",
+      "summary": "Log-likelihood of model"
+    },
+    {
+      "name": "predict",
+      "signature": "predict(params: 'ArrayLike', start: 'int | str | datetime.datetime | pd.Timestamp | None' = None, end: 'int | str | datetime.datetime | pd.Timestamp | None' = None, dynamic: 'bool | int' = False, exog: 'ArrayLike2D | None' = None, exog_oos: 'ArrayLike2D | None' = None) -> 'pd.Series'",
+      "summary": "In-sample prediction and out-of-sample forecasting"
+    },
+    {
+      "name": "score",
+      "signature": "score(params: 'ArrayLike') -> 'np.ndarray'",
+      "summary": "Score vector of model"
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "A 1-d endogenous response variable. The dependent variable.",
+      "effective_default": null,
+      "name": "endog",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array_like"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The number of lags to include in the model if an integer or the\nlist of lag indices to include.  For example, [1, 4] will only\ninclude lags 1 and 4 while lags=4 will include lags 1, 2, 3, and 4.\nNone excludes all AR lags, and behaves identically to 0.",
+      "effective_default": null,
+      "name": "lags",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "int, sequence of int, or None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "n",
+          "c",
+          "t",
+          "ct",
+          "ctt"
+        ],
+        "source": "docstring",
+        "types": []
+      },
+      "default": "'c'",
+      "description": "The trend to include in the model:\n\n* 'n' - No trend.\n* 'c' - Constant only.\n* 't' - Time trend only.\n* 'ct' - Constant and linear time trend.\n* 'ctt' - Constant and linear and quadratic time trends.",
+      "effective_default": null,
+      "name": "trend",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "{'n', 'c', 't', 'ct', 'ctt'}, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "Flag indicating whether to include seasonal dummies in the model. If\nseasonal is True and trend includes 'c', then the first period\nis excluded from the seasonal terms.",
+      "effective_default": null,
+      "name": "seasonal",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Exogenous variables to include in the model. Must have the same number\nof observations as endog and should be aligned so that endog[i] is\nregressed on exog[i].",
+      "effective_default": null,
+      "name": "exog",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "array_like, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Initial observations to exclude from the estimation sample.  If None,\nthen hold_back is equal to the maximum lag in the model.  Set to a\nnon-zero value to produce comparable models with different lag\nlength.  For example, to compare the fit of a model with lags=3 and\nlags=1, set hold_back=3 which ensures that both models are estimated\nusing observations 3,...,nobs. hold_back must be >= the maximum lag in\nthe model.",
+      "effective_default": null,
+      "name": "hold_back",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The period of the data. Only used if seasonal is True. This parameter\ncan be omitted if using a pandas object for endog that contains a\nrecognized frequency.",
+      "effective_default": null,
+      "name": "period",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'none'",
+      "description": "Available options are 'none', 'drop', and 'raise'. If 'none', no nan\nchecking is done. If 'drop', any observations with nans are dropped.\nIf 'raise', an error is raised. Default is 'none'.",
+      "effective_default": null,
+      "name": "missing",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "str, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "A deterministic process.  If provided, trend and seasonal are ignored.\nA warning is raised if trend is not \"n\" or seasonal is not False.",
+      "effective_default": null,
+      "name": "deterministic",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "DeterministicProcess, optional"
+    }
+  ],
+  "returns": [],
+  "signature": "AutoReg(endog: 'ArrayLike1D', lags: 'int | Sequence[int] | None', trend: \"Literal['n', 'c', 't', 'ct', 'ctt']\" = 'c', seasonal: 'bool' = False, exog: 'ArrayLike2D | None' = None, hold_back: 'int | None' = None, period: 'int | None' = None, missing: 'str' = 'none', *, deterministic: 'DeterministicProcess | None' = None)",
+  "summary": "Autoregressive AR-X(p) model",
+  "warnings": []
+}

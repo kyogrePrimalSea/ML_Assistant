@@ -1,0 +1,135 @@
+{
+  "attributes": [
+    {
+      "description": "The model degree of freedom.",
+      "name": "df_model",
+      "type_doc": ""
+    },
+    {
+      "description": "The residual degree of freedom.",
+      "name": "df_resid",
+      "type_doc": ""
+    },
+    {
+      "description": "Names of endogenous variables",
+      "name": "endog_names",
+      "type_doc": ""
+    },
+    {
+      "description": "Names of exogenous variables",
+      "name": "exog_names",
+      "type_doc": ""
+    }
+  ],
+  "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.regression.quantile_regression.QuantReg.html",
+  "extractor_version": "1",
+  "id": "statsmodels.regression.quantile_regression.QuantReg",
+  "import_path": "statsmodels.regression.quantile_regression.QuantReg",
+  "kind": "class",
+  "library": "statsmodels",
+  "library_version": "0.15.0",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(q=0.5, vcov='robust', kernel='epa', bandwidth='hsheather', max_iter=1000, p_tol=1e-06, **kwargs)",
+      "summary": "Solve by Iterative Weighted Least Squares"
+    },
+    {
+      "name": "from_formula",
+      "signature": "from_formula(formula, data, subset=None, drop_cols=None, *args, **kwargs)",
+      "summary": "Create a Model from a formula and dataframe"
+    },
+    {
+      "name": "get_distribution",
+      "signature": "get_distribution(params, scale, exog=None, dist_class=None)",
+      "summary": "Construct a random number generator for the predictive distribution."
+    },
+    {
+      "name": "hessian",
+      "signature": "hessian(params)",
+      "summary": "The Hessian matrix of the model"
+    },
+    {
+      "name": "information",
+      "signature": "information(params)",
+      "summary": "Fisher information matrix of model"
+    },
+    {
+      "name": "initialize",
+      "signature": "initialize()",
+      "summary": "Initialize model components"
+    },
+    {
+      "name": "loglike",
+      "signature": "loglike(params)",
+      "summary": "Log-likelihood of model"
+    },
+    {
+      "name": "predict",
+      "signature": "predict(params, exog=None)",
+      "summary": "Return linear predicted values from a design matrix."
+    },
+    {
+      "name": "score",
+      "signature": "score(params)",
+      "summary": "Score vector of model"
+    },
+    {
+      "name": "whiten",
+      "signature": "whiten(data)",
+      "summary": "QuantReg model whitener does nothing: returns data"
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Endogenous/response variable.",
+      "effective_default": null,
+      "name": "endog",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array_like"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Exogenous/explanatory variable(s).",
+      "effective_default": null,
+      "name": "exog",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array_like"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "",
+      "effective_default": null,
+      "name": "kwargs",
+      "param_kind": "var_keyword",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [],
+  "signature": "QuantReg(endog, exog, **kwargs)",
+  "summary": "Quantile Regression",
+  "warnings": []
+}

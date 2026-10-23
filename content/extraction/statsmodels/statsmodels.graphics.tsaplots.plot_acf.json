@@ -1,0 +1,234 @@
+{
+  "attributes": [],
+  "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.graphics.tsaplots.plot_acf.html",
+  "extractor_version": "1",
+  "id": "statsmodels.graphics.tsaplots.plot_acf",
+  "import_path": "statsmodels.graphics.tsaplots.plot_acf",
+  "kind": "function",
+  "library": "statsmodels",
+  "library_version": "0.15.0",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Array of time-series values",
+      "effective_default": null,
+      "name": "x",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array_like"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "If given, this subplot is used to plot in instead of a new figure being\ncreated.",
+      "effective_default": null,
+      "name": "ax",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "AxesSubplot, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "An int or array of lag values, used on horizontal axis. Uses\nnp.arange(lags) when lags is an int.  If not provided,\n``lags=np.arange(len(corr))`` is used.",
+      "effective_default": null,
+      "name": "lags",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int or array_like, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0.05",
+      "description": "If a number is given, the confidence intervals for the given level are\nreturned. For instance if alpha=.05, 95 % confidence intervals are\nreturned where the standard deviation is computed according to\nBartlett's formula. The confidence intervals centered at 0 to simplify\ndetecting which estimated autocorrelations are significantly\ndifferent from 0. If None, no confidence intervals are plotted.",
+      "effective_default": null,
+      "name": "alpha",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float or None, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "If True, vertical lines and markers are plotted.\nIf False, only markers are plotted.  The default marker is 'o'; it can\nbe overridden with a ``marker`` kwarg.",
+      "effective_default": null,
+      "name": "use_vlines",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "If True, then denominators for autocovariance are n-k, otherwise n",
+      "effective_default": null,
+      "name": "adjusted",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "If True, computes the ACF via FFT.",
+      "effective_default": null,
+      "name": "fft",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'none'",
+      "description": "A string in ['none', 'raise', 'conservative', 'drop'] specifying how\nthe NaNs are to be treated.",
+      "effective_default": null,
+      "name": "missing",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'Autocorrelation'",
+      "description": "Title to place on plot.  Default is 'Autocorrelation'",
+      "effective_default": null,
+      "name": "title",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "Flag indicating whether to include the 0-lag autocorrelation.\nDefault is True.",
+      "effective_default": null,
+      "name": "zero",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "If True, adjusts automatically the y-axis limits to ACF values.",
+      "effective_default": null,
+      "name": "auto_ylims",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "Confidence intervals for ACF values are generally placed at 2\nstandard errors around r_k. The formula used for standard error\ndepends upon the situation. If the autocorrelations are being used\nto test for randomness of residuals as part of the ARIMA routine,\nthe standard errors are determined assuming the residuals are white\nnoise. The approximate formula for any lag is that standard error\nof each r_k = 1/sqrt(N). See section 9.4 of [1]_ for more details on\nthe 1/sqrt(N) result. For more elementary discussion, see section\n5.3.2 in [2]_.\nFor the ACF of raw data, the standard error at a lag k is\nfound as if the right model was an MA(k-1). This allows the\npossible interpretation that if all autocorrelations past a\ncertain lag are within the limits, the model might be an MA of\norder defined by the last significant autocorrelation. In this\ncase, a moving average model is assumed for the data and the\nstandard errors for the confidence intervals should be\ngenerated using Bartlett's formula. For more details on\nBartlett formula result, see section 7.2 in [1]_.",
+      "effective_default": null,
+      "name": "bartlett_confint",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Optional dictionary of keyword arguments that are passed to vlines.",
+      "effective_default": null,
+      "name": "vlines_kwargs",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "dict, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Optional keyword arguments that are directly passed on to the\nMatplotlib ``plot`` and ``axhline`` functions.",
+      "effective_default": null,
+      "name": "kwargs",
+      "param_kind": "var_keyword",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [
+    {
+      "description": "If `ax` is None, the created figure.  Otherwise the figure to which\n`ax` is connected.",
+      "name": "",
+      "type_doc": "Figure"
+    }
+  ],
+  "signature": "plot_acf(x, ax=None, lags=None, *, alpha=0.05, use_vlines=True, adjusted=False, fft=False, missing='none', title='Autocorrelation', zero=True, auto_ylims=False, bartlett_confint=True, vlines_kwargs=None, **kwargs)",
+  "summary": "Plot the autocorrelation function",
+  "warnings": []
+}

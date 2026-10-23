@@ -1,0 +1,34 @@
+source_url: https://www.statsmodels.org/stable/generated/statsmodels.tsa.statespace.structural.UnobservedComponents.html
+reason: Documented attributes/properties listed on the official page (Attributes/Properties sections)
+  were not captured by the extractor (not in the numpydoc Attributes block; descriptions from the page
+  Properties table, blank where the page gives none).
+patches:
+- path: attributes
+  value:
+  - description: Names of endogenous variables
+    name: endog_names
+    type_doc: ''
+  - description: The names of the exogenous variables.
+    name: exog_names
+    type_doc: ''
+  - description: (list of str) List of human readable parameter names (for parameters
+    name: param_names
+    type_doc: ''
+  - description: (array) Starting parameters for maximum likelihood estimation
+    name: start_params
+    type_doc: ''
+  - description: (list of str) List of human readable names for unobserved states
+    name: state_names
+    type_doc: ''
+  - name: initial_variance
+    type_doc: ''
+    description: ''
+  - name: initialization
+    type_doc: ''
+    description: ''
+  - name: loglikelihood_burn
+    type_doc: ''
+    description: ''
+  - name: tolerance
+    type_doc: ''
+    description: ''

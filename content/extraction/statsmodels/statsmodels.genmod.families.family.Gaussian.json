@@ -1,0 +1,120 @@
+{
+  "attributes": [
+    {
+      "description": "The link function of the Gaussian instance",
+      "name": "Gaussian.link",
+      "type_doc": "a link instance"
+    },
+    {
+      "description": "``variance`` is an instance of\nstatsmodels.genmod.families.varfuncs.constant",
+      "name": "Gaussian.variance",
+      "type_doc": "varfunc instance"
+    },
+    {
+      "description": "Link function for family",
+      "name": "link",
+      "type_doc": ""
+    }
+  ],
+  "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.genmod.families.family.Gaussian.html",
+  "extractor_version": "1",
+  "id": "statsmodels.genmod.families.family.Gaussian",
+  "import_path": "statsmodels.genmod.families.family.Gaussian",
+  "kind": "class",
+  "library": "statsmodels",
+  "library_version": "0.15.0",
+  "methods": [
+    {
+      "name": "deviance",
+      "signature": "deviance(endog, mu, var_weights=1.0, freq_weights=1.0, scale=1.0)",
+      "summary": "The deviance function evaluated at (endog, mu, var_weights,"
+    },
+    {
+      "name": "fitted",
+      "signature": "fitted(lin_pred)",
+      "summary": "Fitted values based on linear predictors lin_pred."
+    },
+    {
+      "name": "get_distribution",
+      "signature": "get_distribution(mu, scale, var_weights=1.0)",
+      "summary": "Frozen Gaussian distribution instance for given parameters"
+    },
+    {
+      "name": "loglike",
+      "signature": "loglike(endog, mu, var_weights=1.0, freq_weights=1.0, scale=1.0)",
+      "summary": "The log-likelihood function in terms of the fitted mean response."
+    },
+    {
+      "name": "loglike_obs",
+      "signature": "loglike_obs(endog, mu, var_weights=1.0, scale=1.0)",
+      "summary": "The log-likelihood function for each observation in terms of the fitted"
+    },
+    {
+      "name": "predict",
+      "signature": "predict(mu)",
+      "summary": "Linear predictors based on given mu values."
+    },
+    {
+      "name": "resid_anscombe",
+      "signature": "resid_anscombe(endog, mu, var_weights=1.0, scale=1.0)",
+      "summary": "The Anscombe residuals"
+    },
+    {
+      "name": "resid_dev",
+      "signature": "resid_dev(endog, mu, var_weights=1.0, scale=1.0)",
+      "summary": "The deviance residuals"
+    },
+    {
+      "name": "starting_mu",
+      "signature": "starting_mu(y)",
+      "summary": "Starting value for mu in the IRLS algorithm."
+    },
+    {
+      "name": "variance",
+      "signature": "variance(mu)",
+      "summary": "The call method of constant returns a constant variance, i.e., a vector of"
+    },
+    {
+      "name": "weights",
+      "signature": "weights(mu)",
+      "summary": "Weights for IRLS steps"
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The default link for the Gaussian family is the identity link.\nAvailable links are log, identity, and inverse.\nSee statsmodels.genmod.families.links for more information.",
+      "effective_default": null,
+      "name": "link",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "a link instance, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "If True (default), then an exception is raised if the link is invalid\nfor the family.\nIf False, then the link is not checked.",
+      "effective_default": null,
+      "name": "check_link",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool, optional"
+    }
+  ],
+  "returns": [],
+  "signature": "Gaussian(link=None, check_link=True)",
+  "summary": "Gaussian exponential family distribution.",
+  "warnings": []
+}

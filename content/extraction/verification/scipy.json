@@ -1,0 +1,132 @@
+[
+  {
+    "id": "scipy.optimize.curve_fit",
+    "doc_url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.curve_fit.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "scipy.optimize.least_squares",
+    "doc_url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.least_squares.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "scipy.signal.periodogram",
+    "doc_url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.periodogram.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "scipy.stats.linregress",
+    "doc_url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.linregress.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "scipy.stats.normaltest",
+    "doc_url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.normaltest.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "scipy.stats.shapiro",
+    "doc_url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.shapiro.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "scipy.stats.theilslopes",
+    "doc_url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.theilslopes.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "scipy.stats.ttest_1samp",
+    "doc_url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_1samp.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "scipy.stats.ttest_ind",
+    "doc_url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_ind.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "scipy.stats.ttest_rel",
+    "doc_url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_rel.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  }
+]
