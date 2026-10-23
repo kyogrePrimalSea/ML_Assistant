@@ -1,0 +1,16 @@
+# Pinned v1 library versions (spec §12). Snippets are stamped with these.
+scikit-learn==1.9.1
+statsmodels==0.15.0
+scipy==1.18.1
+xgboost==3.4.1
+lightgbm==4.7.0
+imbalanced-learn==0.14.2
+optuna==5.0.0
+shap==0.54.1
+numpy==2.5.4
+pandas==3.1.0
+# Tooling
+numpydoc==1.11.0
+PyYAML==6.0.3
+jsonschema==4.26.0
+pytest==9.1.1

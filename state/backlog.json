@@ -1,0 +1,234 @@
+{
+  "current_sprint": "Sprint 1 (E01-E02)",
+  "notes": [
+    "Epic order follows spec \u00a713. E05-E10 can run in parallel once their dependencies are done, subject to write-scope conflicts. Tasks are created per epic by the architect skill.",
+    "Sprint 1 parallelism: T002, T003, T004, T005 write disjoint files and may run together. T002 owns tests/test_inventory.py. T006, T007, T008 may run together (per-library outputs; overrides are per-item files)."
+  ],
+  "epics": {
+    "E01": {
+      "title": "Inventory and source extraction",
+      "goal": "List every Wave 1 catalogue item and extract signature, parameters (defaults, allowed values), attributes, methods, documented library version and source URL from official docs. Pin one version per library.",
+      "spec": "\u00a76, \u00a712, \u00a713.1",
+      "status": "In progress",
+      "dependencies": []
+    },
+    "E02": {
+      "title": "Content schema",
+      "goal": "Define the record form per archetype from the 11 slots, plus metadata fields and relationship fields. Relationships and validation inputs derive from schema fields. Includes schema validation tooling.",
+      "spec": "\u00a74, \u00a75, \u00a713.2",
+      "status": "Backlog",
+      "dependencies": [
+        "E01"
+      ]
+    },
+    "E03": {
+      "title": "App foundation and Observatory design system",
+      "goal": "Static React PWA scaffold, colour and type tokens (light/dark, token-swappable modes), fonts, shadcn/ui restyle, desktop layout shell with panel and bottom sheet, 11-slot item page renderer, code blocks, data-frame diff style, auto-deploy to a free static host.",
+      "spec": "\u00a77.4, \u00a710, \u00a712",
+      "status": "Backlog",
+      "dependencies": [
+        "E02"
+      ]
+    },
+    "E04": {
+      "title": "First slice: Model \u203a Boosting end to end",
+      "goal": "GradientBoosting, HistGradientBoosting, XGBoost and LightGBM: schema filled, radial tree, one cutscene, relationship lines, a short journey and notebook output. Proves every system early.",
+      "spec": "\u00a713.3",
+      "status": "Backlog",
+      "dependencies": [
+        "E01",
+        "E02",
+        "E03"
+      ]
+    },
+    "E05": {
+      "title": "Content fill by stage",
+      "goal": "Orchestrated parallel drafting of all Wave 1 pages from E01 extractions, stage by stage, with the reviewed flag and user batch review per stage.",
+      "spec": "\u00a75, \u00a76, \u00a713.4",
+      "status": "Backlog",
+      "dependencies": [
+        "E04"
+      ]
+    },
+    "E06": {
+      "title": "Lookup: radial tree, question door and search",
+      "goal": "Full radial tree (accordion, zoom to fit, horizontal labels, semantic zoom, relationship lines on demand, track filtering), the by-question door with chaining, and global fuzzy search.",
+      "spec": "\u00a73, \u00a77.1",
+      "status": "Backlog",
+      "dependencies": [
+        "E04"
+      ]
+    },
+    "E07": {
+      "title": "Constellation view",
+      "goal": "Fixed-position star map with stage clusters, pipeline path, semantic zoom, and relationship / focus / scope filters that dim and never move.",
+      "spec": "\u00a77.2",
+      "status": "Backlog",
+      "dependencies": [
+        "E04"
+      ]
+    },
+    "E08": {
+      "title": "Pipeline builder and globe journey",
+      "goal": "Data profile passport, picking per stage, live validation rules derived from schema, overrides, globe journey with legs, tickets, itinerary editing and play journey, then deterministic notebook view and .ipynb download.",
+      "spec": "\u00a77.3, \u00a78",
+      "status": "Backlog",
+      "dependencies": [
+        "E04"
+      ]
+    },
+    "E09": {
+      "title": "Cutscenes and toy data",
+      "goal": "Shared toy datasets (Ames, Titanic or breast cancer, airline passengers), an archetype-specific hero cutscene for each of the 11 archetypes, and Watch-it-work slider examples, all following the motion rules.",
+      "spec": "\u00a74, \u00a79, \u00a710.7",
+      "status": "Backlog",
+      "dependencies": [
+        "E04"
+      ]
+    },
+    "E10": {
+      "title": "Accessibility settings and hardening",
+      "goal": "Font choice incl. dyslexia option, text size and line spacing settings, full keyboard navigation of all views, screen-reader labels on canvas nodes, reduced motion everywhere, WCAG AA contrast verification of every token pair.",
+      "spec": "\u00a710.4, \u00a711",
+      "status": "Backlog",
+      "dependencies": [
+        "E03"
+      ]
+    }
+  },
+  "sprints": {
+    "Sprint 1 (E01-E02)": [
+      "T001",
+      "T002",
+      "T003",
+      "T004",
+      "T005",
+      "T006",
+      "T007",
+      "T008",
+      "T009",
+      "T010",
+      "T011",
+      "T012"
+    ]
+  },
+  "tasks": {
+    "T001": {
+      "title": "Python environment and pinned library versions",
+      "file": "tasks/T001-python-env-and-pins.md",
+      "status": "Done",
+      "dependencies": [],
+      "epic": "E01"
+    },
+    "T002": {
+      "title": "Inventory: Wave 1 catalogue items",
+      "file": "tasks/T002-inventory-catalogue.md",
+      "status": "Ready",
+      "dependencies": [
+        "T001"
+      ],
+      "epic": "E01"
+    },
+    "T003": {
+      "title": "Inventory: supporting cast",
+      "file": "tasks/T003-inventory-supporting-cast.md",
+      "status": "Ready",
+      "dependencies": [
+        "T001"
+      ],
+      "epic": "E01"
+    },
+    "T004": {
+      "title": "Extraction tool",
+      "file": "tasks/T004-extraction-tool.md",
+      "status": "Ready",
+      "dependencies": [
+        "T001"
+      ],
+      "epic": "E01"
+    },
+    "T005": {
+      "title": "Official docs cross-check tool",
+      "file": "tasks/T005-docs-crosscheck-tool.md",
+      "status": "Ready",
+      "dependencies": [
+        "T001"
+      ],
+      "epic": "E01"
+    },
+    "T006": {
+      "title": "Extract and verify: scikit-learn",
+      "file": "tasks/T006-extract-verify-sklearn.md",
+      "status": "Backlog",
+      "dependencies": [
+        "T002",
+        "T003",
+        "T004",
+        "T005"
+      ],
+      "epic": "E01"
+    },
+    "T007": {
+      "title": "Extract and verify: statsmodels and SciPy",
+      "file": "tasks/T007-extract-verify-statsmodels-scipy.md",
+      "status": "Backlog",
+      "dependencies": [
+        "T002",
+        "T003",
+        "T004",
+        "T005"
+      ],
+      "epic": "E01"
+    },
+    "T008": {
+      "title": "Extract and verify: XGBoost, LightGBM, imbalanced-learn, Optuna, SHAP",
+      "file": "tasks/T008-extract-verify-boosting-and-supporting-libs.md",
+      "status": "Backlog",
+      "dependencies": [
+        "T002",
+        "T003",
+        "T004",
+        "T005"
+      ],
+      "epic": "E01"
+    },
+    "T009": {
+      "title": "E01 acceptance audit",
+      "file": "tasks/T009-e01-acceptance-audit.md",
+      "status": "Backlog",
+      "dependencies": [
+        "T006",
+        "T007",
+        "T008"
+      ],
+      "epic": "E01"
+    },
+    "T010": {
+      "title": "Content schema and vocabulary",
+      "file": "tasks/T010-content-schema.md",
+      "status": "Backlog",
+      "dependencies": [
+        "T009"
+      ],
+      "epic": "E02"
+    },
+    "T011": {
+      "title": "Content validator and relationship derivation",
+      "file": "tasks/T011-validator-and-derivation.md",
+      "status": "Backlog",
+      "dependencies": [
+        "T010"
+      ],
+      "epic": "E02"
+    },
+    "T012": {
+      "title": "Example content records (one per archetype)",
+      "file": "tasks/T012-example-records.md",
+      "status": "Backlog",
+      "dependencies": [
+        "T011"
+      ],
+      "epic": "E02"
+    }
+  }
+}
