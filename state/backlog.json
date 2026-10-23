@@ -4,7 +4,8 @@
     "Epic order follows spec \u00a713. E05-E10 can run in parallel once their dependencies are done, subject to write-scope conflicts. Tasks are created per epic by the architect skill.",
     "Sprint 1 parallelism: T002, T003, T004, T005 write disjoint files and may run together. T002 owns tests/test_inventory.py. T006, T007, T008 may run together (per-library outputs; overrides are per-item files).",
     "T010 dependency relaxed from T009 to T002/T003/T014 by the coordinator: the schema needs the finished inventory, not the audit report; T009 is read-only so they run in parallel.",
-    "Sprint 2: T015 installs every npm dependency so parallel tasks never touch package.json. T016+T017 parallel; T018+T019 parallel; T020 then T021 (coordinator pushes and checks the live deploy)."
+    "Sprint 2: T015 installs every npm dependency so parallel tasks never touch package.json. T016+T017 parallel; T018+T019 parallel; T020 then T021 (coordinator pushes and checks the live deploy).",
+    "E04 parallelism: after T021, T022 (content/), T023 (views/RadialTree + layout script), T025 (cutscenes/) run together; T024 after T023; T026 after T022. T023 and T024 both touch the tree view - sequential."
   ],
   "epics": {
     "E01": {
@@ -122,7 +123,13 @@
       "T018",
       "T019",
       "T020",
-      "T021"
+      "T021",
+      "T022",
+      "T023",
+      "T024",
+      "T025",
+      "T026",
+      "T027"
     ]
   },
   "tasks": {
@@ -330,6 +337,64 @@
         "T020"
       ],
       "epic": "E03"
+    },
+    "T022": {
+      "title": "Boosting family content records",
+      "file": "tasks/T022-boosting-content.md",
+      "status": "Backlog",
+      "dependencies": [
+        "T020"
+      ],
+      "epic": "E04"
+    },
+    "T023": {
+      "title": "Radial tree view (Lookup)",
+      "file": "tasks/T023-radial-tree.md",
+      "status": "Backlog",
+      "dependencies": [
+        "T020"
+      ],
+      "epic": "E04"
+    },
+    "T024": {
+      "title": "Relationship lines on demand (radial tree)",
+      "file": "tasks/T024-relationship-lines.md",
+      "status": "Backlog",
+      "dependencies": [
+        "T023"
+      ],
+      "epic": "E04"
+    },
+    "T025": {
+      "title": "Cutscene engine and the boosting cutscene",
+      "file": "tasks/T025-cutscene-engine.md",
+      "status": "Backlog",
+      "dependencies": [
+        "T020"
+      ],
+      "epic": "E04"
+    },
+    "T026": {
+      "title": "Short journey (globe) and notebook output",
+      "file": "tasks/T026-short-journey-and-notebook.md",
+      "status": "Backlog",
+      "dependencies": [
+        "T022"
+      ],
+      "epic": "E04"
+    },
+    "T027": {
+      "title": "E04 acceptance and deploy",
+      "file": "tasks/T027-e04-acceptance-and-deploy.md",
+      "status": "Backlog",
+      "dependencies": [
+        "T022",
+        "T023",
+        "T024",
+        "T025",
+        "T026"
+      ],
+      "epic": "E04"
     }
   }
 }
