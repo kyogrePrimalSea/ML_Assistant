@@ -1,0 +1,87 @@
+id: randomizedsearchcv
+plain_name: Random search
+code_name: RandomizedSearchCV
+aliases: [random search, hyperparameter search, randomised search]
+stage: tune
+family: Search
+tracks: [standard]
+archetype: tuning
+question_tags: [underperforming, too many settings]
+targets: [sklearn.model_selection.RandomizedSearchCV]
+pairs_with: [pipeline]
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: tuning, dims: 2, trials: 30}
+    line: Tries random settings and keeps the best one.
+  quick_facts:
+    facts:
+      - {label: Default trials, value: "10 (n_iter)"}
+      - {label: Scores with, value: cross-validation}
+  use_avoid:
+    use_when: [many settings, limited time]
+    avoid_when: [one or two settings, need exhaustive]
+  prep:
+    - step: {page: train-test-split}
+      status: recommended
+      why: Keep a final test set the search never sees.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.model_selection.RandomizedSearchCV
+      why_this_library: Works with any scikit-learn model or Pipeline.
+      snippet: |
+        # scikit-learn 1.9.1
+        from scipy.stats import randint
+        from sklearn.datasets import make_regression
+        from sklearn.ensemble import RandomForestRegressor
+        from sklearn.model_selection import RandomizedSearchCV
+
+        X, y = make_regression(n_samples=300, n_features=8, noise=15, random_state=0)
+
+        search = RandomizedSearchCV(
+            RandomForestRegressor(n_estimators=30, random_state=0),
+            param_distributions={
+                "max_depth": randint(2, 12),
+                "min_samples_leaf": randint(1, 10),
+            },
+            n_iter=8,
+            cv=3,
+            random_state=0,
+        )
+        search.fit(X, y)
+        print(search.best_params_)
+        print(round(search.best_score_, 3))
+  catch_outs:
+    - Set random_state or results change every run.
+    - The best score is from cross-validation, not a test set.
+    - Trials grow with n_iter times the number of folds.
+  key_settings:
+    tier1:
+      - {name: param_distributions, page: null}
+      - {name: n_iter, page: null}
+      - {name: cv, page: null}
+    tier2:
+      - {name: scoring, page: null}
+      - {name: random_state, page: null}
+    tier3:
+      - {name: n_jobs, page: null}
+      - {name: refit, page: null}
+  watch_it_work:
+    dataset: ames
+    control: {name: n_iter, min: 1, max: 50, step: 1, default: 10}
+  intuition:
+    text: Throw darts at the settings grid; keep the best landing.
+  next: []

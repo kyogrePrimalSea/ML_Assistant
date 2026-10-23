@@ -1,0 +1,7376 @@
+[
+  {
+    "source": "accuracy-score",
+    "target": "auc",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "accuracy-score",
+    "target": "average-precision-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "accuracy-score",
+    "target": "balanced-accuracy-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "accuracy-score",
+    "target": "class-likelihood-ratios",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "accuracy-score",
+    "target": "classification-report",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "accuracy-score",
+    "target": "cohen-kappa-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "accuracy-score",
+    "target": "confusion-matrix",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "accuracy-score",
+    "target": "f1-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "accuracy-score",
+    "target": "fbeta-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "accuracy-score",
+    "target": "hamming-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "accuracy-score",
+    "target": "hinge-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "accuracy-score",
+    "target": "jaccard-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "accuracy-score",
+    "target": "matthews-corrcoef",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "accuracy-score",
+    "target": "multilabel-confusion-matrix",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "accuracy-score",
+    "target": "precision-recall-fscore-support",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "accuracy-score",
+    "target": "precision-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "accuracy-score",
+    "target": "recall-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "accuracy-score",
+    "target": "roc-auc-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "accuracy-score",
+    "target": "top-k-accuracy-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "accuracy-score",
+    "target": "zero-one-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "acf-pacf-plots",
+    "target": "adf",
+    "type": "alternative_to",
+    "via": "explore/Stationarity checks"
+  },
+  {
+    "source": "acf-pacf-plots",
+    "target": "kpss",
+    "type": "alternative_to",
+    "via": "explore/Stationarity checks"
+  },
+  {
+    "source": "acf-pacf-plots",
+    "target": "ljung-box",
+    "type": "alternative_to",
+    "via": "explore/Stationarity checks"
+  },
+  {
+    "source": "ada-boost",
+    "target": "gradient-boosting",
+    "type": "alternative_to",
+    "via": "model/Boosting (scikit-learn)"
+  },
+  {
+    "source": "ada-boost",
+    "target": "hist-gradient-boosting",
+    "type": "alternative_to",
+    "via": "model/Boosting (scikit-learn)"
+  },
+  {
+    "source": "adasyn",
+    "target": "borderlinesmote",
+    "type": "alternative_to",
+    "via": "transform/Over-sampling"
+  },
+  {
+    "source": "adasyn",
+    "target": "kmeanssmote",
+    "type": "alternative_to",
+    "via": "transform/Over-sampling"
+  },
+  {
+    "source": "adasyn",
+    "target": "randomoversampler",
+    "type": "alternative_to",
+    "via": "transform/Over-sampling"
+  },
+  {
+    "source": "adasyn",
+    "target": "smote",
+    "type": "alternative_to",
+    "via": "transform/Over-sampling"
+  },
+  {
+    "source": "adasyn",
+    "target": "smoten",
+    "type": "alternative_to",
+    "via": "transform/Over-sampling"
+  },
+  {
+    "source": "adasyn",
+    "target": "smotenc",
+    "type": "alternative_to",
+    "via": "transform/Over-sampling"
+  },
+  {
+    "source": "adasyn",
+    "target": "svmsmote",
+    "type": "alternative_to",
+    "via": "transform/Over-sampling"
+  },
+  {
+    "source": "add-dummy-feature",
+    "target": "polynomialfeatures",
+    "type": "alternative_to",
+    "via": "transform/Feature expansion"
+  },
+  {
+    "source": "add-dummy-feature",
+    "target": "splinetransformer",
+    "type": "alternative_to",
+    "via": "transform/Feature expansion"
+  },
+  {
+    "source": "additiveexplainer",
+    "target": "exactexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "additiveexplainer",
+    "target": "explainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "additiveexplainer",
+    "target": "explanation",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "additiveexplainer",
+    "target": "kernelexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "additiveexplainer",
+    "target": "linearexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "additiveexplainer",
+    "target": "partitionexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "additiveexplainer",
+    "target": "permutationexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "additiveexplainer",
+    "target": "samplingexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "additiveexplainer",
+    "target": "treeexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "adf",
+    "target": "kpss",
+    "type": "alternative_to",
+    "via": "explore/Stationarity checks"
+  },
+  {
+    "source": "adf",
+    "target": "ljung-box",
+    "type": "alternative_to",
+    "via": "explore/Stationarity checks"
+  },
+  {
+    "source": "allknn",
+    "target": "clustercentroids",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "allknn",
+    "target": "condensednearestneighbour",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "allknn",
+    "target": "editednearestneighbours",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "allknn",
+    "target": "instancehardnessthreshold",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "allknn",
+    "target": "nearmiss",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "allknn",
+    "target": "neighbourhoodcleaningrule",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "allknn",
+    "target": "onesidedselection",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "allknn",
+    "target": "randomundersampler",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "allknn",
+    "target": "repeatededitednearestneighbours",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "allknn",
+    "target": "tomeklinks",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "ard-regression",
+    "target": "bayesian-ridge",
+    "type": "alternative_to",
+    "via": "model/Bayesian"
+  },
+  {
+    "source": "arima",
+    "target": "auto-reg",
+    "type": "alternative_to",
+    "via": "model/Autoregressive"
+  },
+  {
+    "source": "arima",
+    "target": "sarimax",
+    "type": "alternative_to",
+    "via": "model/Autoregressive"
+  },
+  {
+    "source": "auc",
+    "target": "average-precision-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "auc",
+    "target": "balanced-accuracy-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "auc",
+    "target": "class-likelihood-ratios",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "auc",
+    "target": "classification-report",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "auc",
+    "target": "cohen-kappa-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "auc",
+    "target": "confusion-matrix",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "auc",
+    "target": "f1-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "auc",
+    "target": "fbeta-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "auc",
+    "target": "hamming-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "auc",
+    "target": "hinge-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "auc",
+    "target": "jaccard-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "auc",
+    "target": "matthews-corrcoef",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "auc",
+    "target": "multilabel-confusion-matrix",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "auc",
+    "target": "precision-recall-fscore-support",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "auc",
+    "target": "precision-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "auc",
+    "target": "recall-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "auc",
+    "target": "roc-auc-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "auc",
+    "target": "top-k-accuracy-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "auc",
+    "target": "zero-one-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "auto-reg",
+    "target": "sarimax",
+    "type": "alternative_to",
+    "via": "model/Autoregressive"
+  },
+  {
+    "source": "average-precision-score",
+    "target": "balanced-accuracy-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "average-precision-score",
+    "target": "class-likelihood-ratios",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "average-precision-score",
+    "target": "classification-report",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "average-precision-score",
+    "target": "cohen-kappa-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "average-precision-score",
+    "target": "confusion-matrix",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "average-precision-score",
+    "target": "f1-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "average-precision-score",
+    "target": "fbeta-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "average-precision-score",
+    "target": "hamming-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "average-precision-score",
+    "target": "hinge-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "average-precision-score",
+    "target": "jaccard-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "average-precision-score",
+    "target": "matthews-corrcoef",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "average-precision-score",
+    "target": "multilabel-confusion-matrix",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "average-precision-score",
+    "target": "precision-recall-fscore-support",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "average-precision-score",
+    "target": "precision-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "average-precision-score",
+    "target": "recall-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "average-precision-score",
+    "target": "roc-auc-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "average-precision-score",
+    "target": "top-k-accuracy-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "average-precision-score",
+    "target": "zero-one-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "bagging",
+    "target": "extra-trees",
+    "type": "alternative_to",
+    "via": "model/Bagging"
+  },
+  {
+    "source": "bagging",
+    "target": "random-forest",
+    "type": "alternative_to",
+    "via": "model/Bagging"
+  },
+  {
+    "source": "balanced-accuracy-score",
+    "target": "class-likelihood-ratios",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "balanced-accuracy-score",
+    "target": "classification-report",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "balanced-accuracy-score",
+    "target": "cohen-kappa-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "balanced-accuracy-score",
+    "target": "confusion-matrix",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "balanced-accuracy-score",
+    "target": "f1-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "balanced-accuracy-score",
+    "target": "fbeta-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "balanced-accuracy-score",
+    "target": "hamming-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "balanced-accuracy-score",
+    "target": "hinge-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "balanced-accuracy-score",
+    "target": "jaccard-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "balanced-accuracy-score",
+    "target": "matthews-corrcoef",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "balanced-accuracy-score",
+    "target": "multilabel-confusion-matrix",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "balanced-accuracy-score",
+    "target": "precision-recall-fscore-support",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "balanced-accuracy-score",
+    "target": "precision-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "balanced-accuracy-score",
+    "target": "recall-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "balanced-accuracy-score",
+    "target": "roc-auc-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "balanced-accuracy-score",
+    "target": "top-k-accuracy-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "balanced-accuracy-score",
+    "target": "zero-one-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "balancedbaggingclassifier",
+    "target": "balancedrandomforestclassifier",
+    "type": "alternative_to",
+    "via": "model/Balanced ensembles"
+  },
+  {
+    "source": "balancedbaggingclassifier",
+    "target": "easyensembleclassifier",
+    "type": "alternative_to",
+    "via": "model/Balanced ensembles"
+  },
+  {
+    "source": "balancedbaggingclassifier",
+    "target": "rusboostclassifier",
+    "type": "alternative_to",
+    "via": "model/Balanced ensembles"
+  },
+  {
+    "source": "balancedrandomforestclassifier",
+    "target": "easyensembleclassifier",
+    "type": "alternative_to",
+    "via": "model/Balanced ensembles"
+  },
+  {
+    "source": "balancedrandomforestclassifier",
+    "target": "rusboostclassifier",
+    "type": "alternative_to",
+    "via": "model/Balanced ensembles"
+  },
+  {
+    "source": "bernoulli-nb",
+    "target": "categorical-nb",
+    "type": "alternative_to",
+    "via": "model/Probabilistic classifiers"
+  },
+  {
+    "source": "bernoulli-nb",
+    "target": "complement-nb",
+    "type": "alternative_to",
+    "via": "model/Probabilistic classifiers"
+  },
+  {
+    "source": "bernoulli-nb",
+    "target": "gaussian-nb",
+    "type": "alternative_to",
+    "via": "model/Probabilistic classifiers"
+  },
+  {
+    "source": "bernoulli-nb",
+    "target": "linear-discriminant-analysis",
+    "type": "alternative_to",
+    "via": "model/Probabilistic classifiers"
+  },
+  {
+    "source": "bernoulli-nb",
+    "target": "multinomial-nb",
+    "type": "alternative_to",
+    "via": "model/Probabilistic classifiers"
+  },
+  {
+    "source": "bernoulli-nb",
+    "target": "quadratic-discriminant-analysis",
+    "type": "alternative_to",
+    "via": "model/Probabilistic classifiers"
+  },
+  {
+    "source": "binarizer",
+    "target": "kbinsdiscretizer",
+    "type": "alternative_to",
+    "via": "transform/Discretisation"
+  },
+  {
+    "source": "borderlinesmote",
+    "target": "kmeanssmote",
+    "type": "alternative_to",
+    "via": "transform/Over-sampling"
+  },
+  {
+    "source": "borderlinesmote",
+    "target": "randomoversampler",
+    "type": "alternative_to",
+    "via": "transform/Over-sampling"
+  },
+  {
+    "source": "borderlinesmote",
+    "target": "smote",
+    "type": "alternative_to",
+    "via": "transform/Over-sampling"
+  },
+  {
+    "source": "borderlinesmote",
+    "target": "smoten",
+    "type": "alternative_to",
+    "via": "transform/Over-sampling"
+  },
+  {
+    "source": "borderlinesmote",
+    "target": "smotenc",
+    "type": "alternative_to",
+    "via": "transform/Over-sampling"
+  },
+  {
+    "source": "borderlinesmote",
+    "target": "svmsmote",
+    "type": "alternative_to",
+    "via": "transform/Over-sampling"
+  },
+  {
+    "source": "breusch-pagan",
+    "target": "influence",
+    "type": "alternative_to",
+    "via": "evaluate/Diagnostics"
+  },
+  {
+    "source": "breusch-pagan",
+    "target": "residual-normality",
+    "type": "alternative_to",
+    "via": "evaluate/Diagnostics"
+  },
+  {
+    "source": "breusch-pagan",
+    "target": "vif",
+    "type": "alternative_to",
+    "via": "evaluate/Diagnostics"
+  },
+  {
+    "source": "brier-score-loss",
+    "target": "d2-brier-score",
+    "type": "alternative_to",
+    "via": "evaluate/Probabilistic scoring"
+  },
+  {
+    "source": "brier-score-loss",
+    "target": "d2-log-loss-score",
+    "type": "alternative_to",
+    "via": "evaluate/Probabilistic scoring"
+  },
+  {
+    "source": "brier-score-loss",
+    "target": "log-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Probabilistic scoring"
+  },
+  {
+    "source": "bruteforcesampler",
+    "target": "cmaessampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "bruteforcesampler",
+    "target": "gpsampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "bruteforcesampler",
+    "target": "gridsampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "bruteforcesampler",
+    "target": "nsgaiiisampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "bruteforcesampler",
+    "target": "nsgaiisampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "bruteforcesampler",
+    "target": "partialfixedsampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "bruteforcesampler",
+    "target": "qmcsampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "bruteforcesampler",
+    "target": "randomsampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "bruteforcesampler",
+    "target": "tpesampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "calibratedclassifiercv",
+    "target": "calibration-curve",
+    "type": "alternative_to",
+    "via": "evaluate/Calibration"
+  },
+  {
+    "source": "categorical-nb",
+    "target": "complement-nb",
+    "type": "alternative_to",
+    "via": "model/Probabilistic classifiers"
+  },
+  {
+    "source": "categorical-nb",
+    "target": "gaussian-nb",
+    "type": "alternative_to",
+    "via": "model/Probabilistic classifiers"
+  },
+  {
+    "source": "categorical-nb",
+    "target": "linear-discriminant-analysis",
+    "type": "alternative_to",
+    "via": "model/Probabilistic classifiers"
+  },
+  {
+    "source": "categorical-nb",
+    "target": "multinomial-nb",
+    "type": "alternative_to",
+    "via": "model/Probabilistic classifiers"
+  },
+  {
+    "source": "categorical-nb",
+    "target": "quadratic-discriminant-analysis",
+    "type": "alternative_to",
+    "via": "model/Probabilistic classifiers"
+  },
+  {
+    "source": "check-scoring",
+    "target": "get-scorer",
+    "type": "alternative_to",
+    "via": "evaluate/Scoring utilities"
+  },
+  {
+    "source": "check-scoring",
+    "target": "get-scorer-names",
+    "type": "alternative_to",
+    "via": "evaluate/Scoring utilities"
+  },
+  {
+    "source": "check-scoring",
+    "target": "make-scorer",
+    "type": "alternative_to",
+    "via": "evaluate/Scoring utilities"
+  },
+  {
+    "source": "chi2",
+    "target": "f-classif",
+    "type": "alternative_to",
+    "via": "select/Univariate scoring functions"
+  },
+  {
+    "source": "chi2",
+    "target": "f-regression",
+    "type": "alternative_to",
+    "via": "select/Univariate scoring functions"
+  },
+  {
+    "source": "chi2",
+    "target": "mutual-info-classif",
+    "type": "alternative_to",
+    "via": "select/Univariate scoring functions"
+  },
+  {
+    "source": "chi2",
+    "target": "mutual-info-regression",
+    "type": "alternative_to",
+    "via": "select/Univariate scoring functions"
+  },
+  {
+    "source": "chi2",
+    "target": "r-regression",
+    "type": "alternative_to",
+    "via": "select/Univariate scoring functions"
+  },
+  {
+    "source": "class-likelihood-ratios",
+    "target": "classification-report",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "class-likelihood-ratios",
+    "target": "cohen-kappa-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "class-likelihood-ratios",
+    "target": "confusion-matrix",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "class-likelihood-ratios",
+    "target": "f1-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "class-likelihood-ratios",
+    "target": "fbeta-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "class-likelihood-ratios",
+    "target": "hamming-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "class-likelihood-ratios",
+    "target": "hinge-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "class-likelihood-ratios",
+    "target": "jaccard-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "class-likelihood-ratios",
+    "target": "matthews-corrcoef",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "class-likelihood-ratios",
+    "target": "multilabel-confusion-matrix",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "class-likelihood-ratios",
+    "target": "precision-recall-fscore-support",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "class-likelihood-ratios",
+    "target": "precision-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "class-likelihood-ratios",
+    "target": "recall-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "class-likelihood-ratios",
+    "target": "roc-auc-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "class-likelihood-ratios",
+    "target": "top-k-accuracy-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "class-likelihood-ratios",
+    "target": "zero-one-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "classification-report",
+    "target": "cohen-kappa-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "classification-report",
+    "target": "confusion-matrix",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "classification-report",
+    "target": "f1-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "classification-report",
+    "target": "fbeta-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "classification-report",
+    "target": "hamming-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "classification-report",
+    "target": "hinge-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "classification-report",
+    "target": "jaccard-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "classification-report",
+    "target": "matthews-corrcoef",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "classification-report",
+    "target": "multilabel-confusion-matrix",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "classification-report",
+    "target": "precision-recall-fscore-support",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "classification-report",
+    "target": "precision-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "classification-report",
+    "target": "recall-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "classification-report",
+    "target": "roc-auc-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "classification-report",
+    "target": "top-k-accuracy-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "classification-report",
+    "target": "zero-one-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "classification-report-imbalanced",
+    "target": "geometric-mean-score",
+    "type": "alternative_to",
+    "via": "evaluate/Imbalanced-data metrics"
+  },
+  {
+    "source": "classification-report-imbalanced",
+    "target": "macro-averaged-mean-absolute-error",
+    "type": "alternative_to",
+    "via": "evaluate/Imbalanced-data metrics"
+  },
+  {
+    "source": "classification-report-imbalanced",
+    "target": "make-index-balanced-accuracy",
+    "type": "alternative_to",
+    "via": "evaluate/Imbalanced-data metrics"
+  },
+  {
+    "source": "classification-report-imbalanced",
+    "target": "sensitivity-score",
+    "type": "alternative_to",
+    "via": "evaluate/Imbalanced-data metrics"
+  },
+  {
+    "source": "classification-report-imbalanced",
+    "target": "sensitivity-specificity-support",
+    "type": "alternative_to",
+    "via": "evaluate/Imbalanced-data metrics"
+  },
+  {
+    "source": "classification-report-imbalanced",
+    "target": "specificity-score",
+    "type": "alternative_to",
+    "via": "evaluate/Imbalanced-data metrics"
+  },
+  {
+    "source": "clustercentroids",
+    "target": "condensednearestneighbour",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "clustercentroids",
+    "target": "editednearestneighbours",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "clustercentroids",
+    "target": "instancehardnessthreshold",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "clustercentroids",
+    "target": "nearmiss",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "clustercentroids",
+    "target": "neighbourhoodcleaningrule",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "clustercentroids",
+    "target": "onesidedselection",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "clustercentroids",
+    "target": "randomundersampler",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "clustercentroids",
+    "target": "repeatededitednearestneighbours",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "clustercentroids",
+    "target": "tomeklinks",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "cmaessampler",
+    "target": "gpsampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "cmaessampler",
+    "target": "gridsampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "cmaessampler",
+    "target": "nsgaiiisampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "cmaessampler",
+    "target": "nsgaiisampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "cmaessampler",
+    "target": "partialfixedsampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "cmaessampler",
+    "target": "qmcsampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "cmaessampler",
+    "target": "randomsampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "cmaessampler",
+    "target": "tpesampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "cohen-kappa-score",
+    "target": "confusion-matrix",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "cohen-kappa-score",
+    "target": "f1-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "cohen-kappa-score",
+    "target": "fbeta-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "cohen-kappa-score",
+    "target": "hamming-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "cohen-kappa-score",
+    "target": "hinge-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "cohen-kappa-score",
+    "target": "jaccard-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "cohen-kappa-score",
+    "target": "matthews-corrcoef",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "cohen-kappa-score",
+    "target": "multilabel-confusion-matrix",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "cohen-kappa-score",
+    "target": "precision-recall-fscore-support",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "cohen-kappa-score",
+    "target": "precision-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "cohen-kappa-score",
+    "target": "recall-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "cohen-kappa-score",
+    "target": "roc-auc-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "cohen-kappa-score",
+    "target": "top-k-accuracy-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "cohen-kappa-score",
+    "target": "zero-one-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "column-transformer",
+    "target": "columntransformer",
+    "type": "alternative_to",
+    "via": "transform/Composition"
+  },
+  {
+    "source": "column-transformer",
+    "target": "feature-union",
+    "type": "alternative_to",
+    "via": "transform/Composition"
+  },
+  {
+    "source": "column-transformer",
+    "target": "featureunion",
+    "type": "alternative_to",
+    "via": "transform/Composition"
+  },
+  {
+    "source": "column-transformer",
+    "target": "imblearn-pipeline",
+    "type": "alternative_to",
+    "via": "transform/Composition"
+  },
+  {
+    "source": "column-transformer",
+    "target": "make-column-selector",
+    "type": "alternative_to",
+    "via": "transform/Composition"
+  },
+  {
+    "source": "column-transformer",
+    "target": "pipeline",
+    "type": "alternative_to",
+    "via": "transform/Composition"
+  },
+  {
+    "source": "column-transformer",
+    "target": "transformedtargetregressor",
+    "type": "alternative_to",
+    "via": "transform/Composition"
+  },
+  {
+    "source": "columntransformer",
+    "target": "feature-union",
+    "type": "alternative_to",
+    "via": "transform/Composition"
+  },
+  {
+    "source": "columntransformer",
+    "target": "featureunion",
+    "type": "alternative_to",
+    "via": "transform/Composition"
+  },
+  {
+    "source": "columntransformer",
+    "target": "imblearn-pipeline",
+    "type": "alternative_to",
+    "via": "transform/Composition"
+  },
+  {
+    "source": "columntransformer",
+    "target": "make-column-selector",
+    "type": "alternative_to",
+    "via": "transform/Composition"
+  },
+  {
+    "source": "columntransformer",
+    "target": "pipeline",
+    "type": "alternative_to",
+    "via": "transform/Composition"
+  },
+  {
+    "source": "columntransformer",
+    "target": "transformedtargetregressor",
+    "type": "alternative_to",
+    "via": "transform/Composition"
+  },
+  {
+    "source": "complement-nb",
+    "target": "gaussian-nb",
+    "type": "alternative_to",
+    "via": "model/Probabilistic classifiers"
+  },
+  {
+    "source": "complement-nb",
+    "target": "linear-discriminant-analysis",
+    "type": "alternative_to",
+    "via": "model/Probabilistic classifiers"
+  },
+  {
+    "source": "complement-nb",
+    "target": "multinomial-nb",
+    "type": "alternative_to",
+    "via": "model/Probabilistic classifiers"
+  },
+  {
+    "source": "complement-nb",
+    "target": "quadratic-discriminant-analysis",
+    "type": "alternative_to",
+    "via": "model/Probabilistic classifiers"
+  },
+  {
+    "source": "condensednearestneighbour",
+    "target": "editednearestneighbours",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "condensednearestneighbour",
+    "target": "instancehardnessthreshold",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "condensednearestneighbour",
+    "target": "nearmiss",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "condensednearestneighbour",
+    "target": "neighbourhoodcleaningrule",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "condensednearestneighbour",
+    "target": "onesidedselection",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "condensednearestneighbour",
+    "target": "randomundersampler",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "condensednearestneighbour",
+    "target": "repeatededitednearestneighbours",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "condensednearestneighbour",
+    "target": "tomeklinks",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "confusion-matrix",
+    "target": "f1-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "confusion-matrix",
+    "target": "fbeta-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "confusion-matrix",
+    "target": "hamming-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "confusion-matrix",
+    "target": "hinge-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "confusion-matrix",
+    "target": "jaccard-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "confusion-matrix",
+    "target": "matthews-corrcoef",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "confusion-matrix",
+    "target": "multilabel-confusion-matrix",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "confusion-matrix",
+    "target": "precision-recall-fscore-support",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "confusion-matrix",
+    "target": "precision-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "confusion-matrix",
+    "target": "recall-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "confusion-matrix",
+    "target": "roc-auc-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "confusion-matrix",
+    "target": "top-k-accuracy-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "confusion-matrix",
+    "target": "zero-one-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "confusion-matrix-at-thresholds",
+    "target": "det-curve",
+    "type": "alternative_to",
+    "via": "evaluate/Classification curves"
+  },
+  {
+    "source": "confusion-matrix-at-thresholds",
+    "target": "metric-at-thresholds",
+    "type": "alternative_to",
+    "via": "evaluate/Classification curves"
+  },
+  {
+    "source": "confusion-matrix-at-thresholds",
+    "target": "precision-recall-curve",
+    "type": "alternative_to",
+    "via": "evaluate/Classification curves"
+  },
+  {
+    "source": "confusion-matrix-at-thresholds",
+    "target": "roc-curve",
+    "type": "alternative_to",
+    "via": "evaluate/Classification curves"
+  },
+  {
+    "source": "coverage-error",
+    "target": "dcg-score",
+    "type": "alternative_to",
+    "via": "evaluate/Ranking metrics"
+  },
+  {
+    "source": "coverage-error",
+    "target": "label-ranking-average-precision-score",
+    "type": "alternative_to",
+    "via": "evaluate/Ranking metrics"
+  },
+  {
+    "source": "coverage-error",
+    "target": "label-ranking-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Ranking metrics"
+  },
+  {
+    "source": "coverage-error",
+    "target": "ndcg-score",
+    "type": "alternative_to",
+    "via": "evaluate/Ranking metrics"
+  },
+  {
+    "source": "cross-val-predict",
+    "target": "cross-val-score",
+    "type": "alternative_to",
+    "via": "split/Cross-validation runners"
+  },
+  {
+    "source": "cross-val-predict",
+    "target": "cross-validate",
+    "type": "alternative_to",
+    "via": "split/Cross-validation runners"
+  },
+  {
+    "source": "cross-val-score",
+    "target": "cross-validate",
+    "type": "alternative_to",
+    "via": "split/Cross-validation runners"
+  },
+  {
+    "source": "curve-fit",
+    "target": "least-squares",
+    "type": "alternative_to",
+    "via": "model/Custom curves"
+  },
+  {
+    "source": "d2-absolute-error-score",
+    "target": "d2-pinball-score",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-absolute-error-score",
+    "target": "d2-tweedie-score",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-absolute-error-score",
+    "target": "explained-variance-score",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-absolute-error-score",
+    "target": "max-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-absolute-error-score",
+    "target": "mean-absolute-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-absolute-error-score",
+    "target": "mean-absolute-percentage-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-absolute-error-score",
+    "target": "mean-gamma-deviance",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-absolute-error-score",
+    "target": "mean-pinball-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-absolute-error-score",
+    "target": "mean-poisson-deviance",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-absolute-error-score",
+    "target": "mean-squared-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-absolute-error-score",
+    "target": "mean-squared-log-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-absolute-error-score",
+    "target": "mean-tweedie-deviance",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-absolute-error-score",
+    "target": "median-absolute-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-absolute-error-score",
+    "target": "predictionerrordisplay",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-absolute-error-score",
+    "target": "r2-score",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-absolute-error-score",
+    "target": "root-mean-squared-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-absolute-error-score",
+    "target": "root-mean-squared-log-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-brier-score",
+    "target": "d2-log-loss-score",
+    "type": "alternative_to",
+    "via": "evaluate/Probabilistic scoring"
+  },
+  {
+    "source": "d2-brier-score",
+    "target": "log-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Probabilistic scoring"
+  },
+  {
+    "source": "d2-log-loss-score",
+    "target": "log-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Probabilistic scoring"
+  },
+  {
+    "source": "d2-pinball-score",
+    "target": "d2-tweedie-score",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-pinball-score",
+    "target": "explained-variance-score",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-pinball-score",
+    "target": "max-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-pinball-score",
+    "target": "mean-absolute-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-pinball-score",
+    "target": "mean-absolute-percentage-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-pinball-score",
+    "target": "mean-gamma-deviance",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-pinball-score",
+    "target": "mean-pinball-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-pinball-score",
+    "target": "mean-poisson-deviance",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-pinball-score",
+    "target": "mean-squared-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-pinball-score",
+    "target": "mean-squared-log-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-pinball-score",
+    "target": "mean-tweedie-deviance",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-pinball-score",
+    "target": "median-absolute-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-pinball-score",
+    "target": "predictionerrordisplay",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-pinball-score",
+    "target": "r2-score",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-pinball-score",
+    "target": "root-mean-squared-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-pinball-score",
+    "target": "root-mean-squared-log-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-tweedie-score",
+    "target": "explained-variance-score",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-tweedie-score",
+    "target": "max-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-tweedie-score",
+    "target": "mean-absolute-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-tweedie-score",
+    "target": "mean-absolute-percentage-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-tweedie-score",
+    "target": "mean-gamma-deviance",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-tweedie-score",
+    "target": "mean-pinball-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-tweedie-score",
+    "target": "mean-poisson-deviance",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-tweedie-score",
+    "target": "mean-squared-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-tweedie-score",
+    "target": "mean-squared-log-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-tweedie-score",
+    "target": "mean-tweedie-deviance",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-tweedie-score",
+    "target": "median-absolute-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-tweedie-score",
+    "target": "predictionerrordisplay",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-tweedie-score",
+    "target": "r2-score",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-tweedie-score",
+    "target": "root-mean-squared-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "d2-tweedie-score",
+    "target": "root-mean-squared-log-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "dcg-score",
+    "target": "label-ranking-average-precision-score",
+    "type": "alternative_to",
+    "via": "evaluate/Ranking metrics"
+  },
+  {
+    "source": "dcg-score",
+    "target": "label-ranking-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Ranking metrics"
+  },
+  {
+    "source": "dcg-score",
+    "target": "ndcg-score",
+    "type": "alternative_to",
+    "via": "evaluate/Ranking metrics"
+  },
+  {
+    "source": "decision-tree-classifier",
+    "target": "decision-tree-regressor",
+    "type": "alternative_to",
+    "via": "model/Single tree"
+  },
+  {
+    "source": "decision-tree-classifier",
+    "target": "extra-tree-regressor",
+    "type": "alternative_to",
+    "via": "model/Single tree"
+  },
+  {
+    "source": "decision-tree-regressor",
+    "target": "extra-tree-regressor",
+    "type": "alternative_to",
+    "via": "model/Single tree"
+  },
+  {
+    "source": "det-curve",
+    "target": "metric-at-thresholds",
+    "type": "alternative_to",
+    "via": "evaluate/Classification curves"
+  },
+  {
+    "source": "det-curve",
+    "target": "precision-recall-curve",
+    "type": "alternative_to",
+    "via": "evaluate/Classification curves"
+  },
+  {
+    "source": "det-curve",
+    "target": "roc-curve",
+    "type": "alternative_to",
+    "via": "evaluate/Classification curves"
+  },
+  {
+    "source": "dummyclassifier",
+    "target": "dummyregressor",
+    "type": "alternative_to",
+    "via": "model/Baselines"
+  },
+  {
+    "source": "easyensembleclassifier",
+    "target": "rusboostclassifier",
+    "type": "alternative_to",
+    "via": "model/Balanced ensembles"
+  },
+  {
+    "source": "editednearestneighbours",
+    "target": "instancehardnessthreshold",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "editednearestneighbours",
+    "target": "nearmiss",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "editednearestneighbours",
+    "target": "neighbourhoodcleaningrule",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "editednearestneighbours",
+    "target": "onesidedselection",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "editednearestneighbours",
+    "target": "randomundersampler",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "editednearestneighbours",
+    "target": "repeatededitednearestneighbours",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "editednearestneighbours",
+    "target": "tomeklinks",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "elastic-net",
+    "target": "elastic-net-cv",
+    "type": "alternative_to",
+    "via": "model/Regularised"
+  },
+  {
+    "source": "elastic-net",
+    "target": "lars",
+    "type": "alternative_to",
+    "via": "model/Regularised"
+  },
+  {
+    "source": "elastic-net",
+    "target": "lasso",
+    "type": "alternative_to",
+    "via": "model/Regularised"
+  },
+  {
+    "source": "elastic-net",
+    "target": "lasso-cv",
+    "type": "alternative_to",
+    "via": "model/Regularised"
+  },
+  {
+    "source": "elastic-net",
+    "target": "lasso-lars",
+    "type": "alternative_to",
+    "via": "model/Regularised"
+  },
+  {
+    "source": "elastic-net",
+    "target": "orthogonal-matching-pursuit",
+    "type": "alternative_to",
+    "via": "model/Regularised"
+  },
+  {
+    "source": "elastic-net",
+    "target": "ridge",
+    "type": "alternative_to",
+    "via": "model/Regularised"
+  },
+  {
+    "source": "elastic-net",
+    "target": "ridge-cv",
+    "type": "alternative_to",
+    "via": "model/Regularised"
+  },
+  {
+    "source": "elastic-net-cv",
+    "target": "lars",
+    "type": "alternative_to",
+    "via": "model/Regularised"
+  },
+  {
+    "source": "elastic-net-cv",
+    "target": "lasso",
+    "type": "alternative_to",
+    "via": "model/Regularised"
+  },
+  {
+    "source": "elastic-net-cv",
+    "target": "lasso-cv",
+    "type": "alternative_to",
+    "via": "model/Regularised"
+  },
+  {
+    "source": "elastic-net-cv",
+    "target": "lasso-lars",
+    "type": "alternative_to",
+    "via": "model/Regularised"
+  },
+  {
+    "source": "elastic-net-cv",
+    "target": "orthogonal-matching-pursuit",
+    "type": "alternative_to",
+    "via": "model/Regularised"
+  },
+  {
+    "source": "elastic-net-cv",
+    "target": "ridge",
+    "type": "alternative_to",
+    "via": "model/Regularised"
+  },
+  {
+    "source": "elastic-net-cv",
+    "target": "ridge-cv",
+    "type": "alternative_to",
+    "via": "model/Regularised"
+  },
+  {
+    "source": "ets-model",
+    "target": "exponential-smoothing",
+    "type": "alternative_to",
+    "via": "model/Smoothing"
+  },
+  {
+    "source": "ets-model",
+    "target": "theta-model",
+    "type": "alternative_to",
+    "via": "model/Smoothing"
+  },
+  {
+    "source": "exactexplainer",
+    "target": "explainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "exactexplainer",
+    "target": "explanation",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "exactexplainer",
+    "target": "kernelexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "exactexplainer",
+    "target": "linearexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "exactexplainer",
+    "target": "partitionexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "exactexplainer",
+    "target": "permutationexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "exactexplainer",
+    "target": "samplingexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "exactexplainer",
+    "target": "treeexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "explained-variance-score",
+    "target": "max-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "explained-variance-score",
+    "target": "mean-absolute-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "explained-variance-score",
+    "target": "mean-absolute-percentage-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "explained-variance-score",
+    "target": "mean-gamma-deviance",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "explained-variance-score",
+    "target": "mean-pinball-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "explained-variance-score",
+    "target": "mean-poisson-deviance",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "explained-variance-score",
+    "target": "mean-squared-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "explained-variance-score",
+    "target": "mean-squared-log-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "explained-variance-score",
+    "target": "mean-tweedie-deviance",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "explained-variance-score",
+    "target": "median-absolute-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "explained-variance-score",
+    "target": "predictionerrordisplay",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "explained-variance-score",
+    "target": "r2-score",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "explained-variance-score",
+    "target": "root-mean-squared-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "explained-variance-score",
+    "target": "root-mean-squared-log-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "explainer",
+    "target": "explanation",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "explainer",
+    "target": "kernelexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "explainer",
+    "target": "linearexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "explainer",
+    "target": "partitionexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "explainer",
+    "target": "permutationexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "explainer",
+    "target": "samplingexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "explainer",
+    "target": "treeexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "explanation",
+    "target": "kernelexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "explanation",
+    "target": "linearexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "explanation",
+    "target": "partitionexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "explanation",
+    "target": "permutationexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "explanation",
+    "target": "samplingexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "explanation",
+    "target": "treeexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "exponential-smoothing",
+    "target": "theta-model",
+    "type": "alternative_to",
+    "via": "model/Smoothing"
+  },
+  {
+    "source": "extra-trees",
+    "target": "random-forest",
+    "type": "alternative_to",
+    "via": "model/Bagging"
+  },
+  {
+    "source": "f-classif",
+    "target": "f-regression",
+    "type": "alternative_to",
+    "via": "select/Univariate scoring functions"
+  },
+  {
+    "source": "f-classif",
+    "target": "mutual-info-classif",
+    "type": "alternative_to",
+    "via": "select/Univariate scoring functions"
+  },
+  {
+    "source": "f-classif",
+    "target": "mutual-info-regression",
+    "type": "alternative_to",
+    "via": "select/Univariate scoring functions"
+  },
+  {
+    "source": "f-classif",
+    "target": "r-regression",
+    "type": "alternative_to",
+    "via": "select/Univariate scoring functions"
+  },
+  {
+    "source": "f-regression",
+    "target": "mutual-info-classif",
+    "type": "alternative_to",
+    "via": "select/Univariate scoring functions"
+  },
+  {
+    "source": "f-regression",
+    "target": "mutual-info-regression",
+    "type": "alternative_to",
+    "via": "select/Univariate scoring functions"
+  },
+  {
+    "source": "f-regression",
+    "target": "r-regression",
+    "type": "alternative_to",
+    "via": "select/Univariate scoring functions"
+  },
+  {
+    "source": "f1-score",
+    "target": "fbeta-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "f1-score",
+    "target": "hamming-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "f1-score",
+    "target": "hinge-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "f1-score",
+    "target": "jaccard-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "f1-score",
+    "target": "matthews-corrcoef",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "f1-score",
+    "target": "multilabel-confusion-matrix",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "f1-score",
+    "target": "precision-recall-fscore-support",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "f1-score",
+    "target": "precision-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "f1-score",
+    "target": "recall-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "f1-score",
+    "target": "roc-auc-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "f1-score",
+    "target": "top-k-accuracy-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "f1-score",
+    "target": "zero-one-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "fbeta-score",
+    "target": "hamming-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "fbeta-score",
+    "target": "hinge-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "fbeta-score",
+    "target": "jaccard-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "fbeta-score",
+    "target": "matthews-corrcoef",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "fbeta-score",
+    "target": "multilabel-confusion-matrix",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "fbeta-score",
+    "target": "precision-recall-fscore-support",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "fbeta-score",
+    "target": "precision-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "fbeta-score",
+    "target": "recall-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "fbeta-score",
+    "target": "roc-auc-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "fbeta-score",
+    "target": "top-k-accuracy-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "fbeta-score",
+    "target": "zero-one-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "feature-importances",
+    "target": "treeexplainer",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "feature-union",
+    "target": "featureunion",
+    "type": "alternative_to",
+    "via": "transform/Composition"
+  },
+  {
+    "source": "feature-union",
+    "target": "imblearn-pipeline",
+    "type": "alternative_to",
+    "via": "transform/Composition"
+  },
+  {
+    "source": "feature-union",
+    "target": "make-column-selector",
+    "type": "alternative_to",
+    "via": "transform/Composition"
+  },
+  {
+    "source": "feature-union",
+    "target": "pipeline",
+    "type": "alternative_to",
+    "via": "transform/Composition"
+  },
+  {
+    "source": "feature-union",
+    "target": "transformedtargetregressor",
+    "type": "alternative_to",
+    "via": "transform/Composition"
+  },
+  {
+    "source": "featureunion",
+    "target": "imblearn-pipeline",
+    "type": "alternative_to",
+    "via": "transform/Composition"
+  },
+  {
+    "source": "featureunion",
+    "target": "make-column-selector",
+    "type": "alternative_to",
+    "via": "transform/Composition"
+  },
+  {
+    "source": "featureunion",
+    "target": "pipeline",
+    "type": "alternative_to",
+    "via": "transform/Composition"
+  },
+  {
+    "source": "featureunion",
+    "target": "transformedtargetregressor",
+    "type": "alternative_to",
+    "via": "transform/Composition"
+  },
+  {
+    "source": "fixedthresholdclassifier",
+    "target": "tunedthresholdclassifiercv",
+    "type": "alternative_to",
+    "via": "tune/Decision threshold"
+  },
+  {
+    "source": "frozentrial",
+    "target": "optuna-trial",
+    "type": "alternative_to",
+    "via": "tune/Trial"
+  },
+  {
+    "source": "frozentrial",
+    "target": "trialpruned",
+    "type": "alternative_to",
+    "via": "tune/Trial"
+  },
+  {
+    "source": "gamma-regressor",
+    "target": "tweedie-regressor",
+    "type": "alternative_to",
+    "via": "model/Generalised (GLM)"
+  },
+  {
+    "source": "gaussian-nb",
+    "target": "linear-discriminant-analysis",
+    "type": "alternative_to",
+    "via": "model/Probabilistic classifiers"
+  },
+  {
+    "source": "gaussian-nb",
+    "target": "multinomial-nb",
+    "type": "alternative_to",
+    "via": "model/Probabilistic classifiers"
+  },
+  {
+    "source": "gaussian-nb",
+    "target": "quadratic-discriminant-analysis",
+    "type": "alternative_to",
+    "via": "model/Probabilistic classifiers"
+  },
+  {
+    "source": "gaussian-process-classifier",
+    "target": "gaussian-process-regressor",
+    "type": "alternative_to",
+    "via": "model/Gaussian process"
+  },
+  {
+    "source": "genericunivariateselect",
+    "target": "rfe",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "genericunivariateselect",
+    "target": "rfecv",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "genericunivariateselect",
+    "target": "selectfdr",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "genericunivariateselect",
+    "target": "selectfpr",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "genericunivariateselect",
+    "target": "selectfrommodel",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "genericunivariateselect",
+    "target": "selectfwe",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "genericunivariateselect",
+    "target": "selectkbest",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "genericunivariateselect",
+    "target": "selectpercentile",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "genericunivariateselect",
+    "target": "sequentialfeatureselector",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "genericunivariateselect",
+    "target": "variancethreshold",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "geometric-mean-score",
+    "target": "macro-averaged-mean-absolute-error",
+    "type": "alternative_to",
+    "via": "evaluate/Imbalanced-data metrics"
+  },
+  {
+    "source": "geometric-mean-score",
+    "target": "make-index-balanced-accuracy",
+    "type": "alternative_to",
+    "via": "evaluate/Imbalanced-data metrics"
+  },
+  {
+    "source": "geometric-mean-score",
+    "target": "sensitivity-score",
+    "type": "alternative_to",
+    "via": "evaluate/Imbalanced-data metrics"
+  },
+  {
+    "source": "geometric-mean-score",
+    "target": "sensitivity-specificity-support",
+    "type": "alternative_to",
+    "via": "evaluate/Imbalanced-data metrics"
+  },
+  {
+    "source": "geometric-mean-score",
+    "target": "specificity-score",
+    "type": "alternative_to",
+    "via": "evaluate/Imbalanced-data metrics"
+  },
+  {
+    "source": "get-param-importances",
+    "target": "plot-contour",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "get-param-importances",
+    "target": "plot-edf",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "get-param-importances",
+    "target": "plot-hypervolume-history",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "get-param-importances",
+    "target": "plot-intermediate-values",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "get-param-importances",
+    "target": "plot-optimization-history",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "get-param-importances",
+    "target": "plot-parallel-coordinate",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "get-param-importances",
+    "target": "plot-param-importances",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "get-param-importances",
+    "target": "plot-pareto-front",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "get-param-importances",
+    "target": "plot-rank",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "get-param-importances",
+    "target": "plot-slice",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "get-param-importances",
+    "target": "plot-terminator-improvement",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "get-param-importances",
+    "target": "plot-timeline",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "get-scorer",
+    "target": "get-scorer-names",
+    "type": "alternative_to",
+    "via": "evaluate/Scoring utilities"
+  },
+  {
+    "source": "get-scorer",
+    "target": "make-scorer",
+    "type": "alternative_to",
+    "via": "evaluate/Scoring utilities"
+  },
+  {
+    "source": "get-scorer-names",
+    "target": "make-scorer",
+    "type": "alternative_to",
+    "via": "evaluate/Scoring utilities"
+  },
+  {
+    "source": "gls",
+    "target": "wls",
+    "type": "alternative_to",
+    "via": "model/Linear"
+  },
+  {
+    "source": "gpsampler",
+    "target": "gridsampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "gpsampler",
+    "target": "nsgaiiisampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "gpsampler",
+    "target": "nsgaiisampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "gpsampler",
+    "target": "partialfixedsampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "gpsampler",
+    "target": "qmcsampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "gpsampler",
+    "target": "randomsampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "gpsampler",
+    "target": "tpesampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "gradient-boosting",
+    "target": "hist-gradient-boosting",
+    "type": "alternative_to",
+    "via": "model/Boosting (scikit-learn)"
+  },
+  {
+    "source": "gridsampler",
+    "target": "nsgaiiisampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "gridsampler",
+    "target": "nsgaiisampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "gridsampler",
+    "target": "partialfixedsampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "gridsampler",
+    "target": "qmcsampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "gridsampler",
+    "target": "randomsampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "gridsampler",
+    "target": "tpesampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "gridsearchcv",
+    "target": "halvinggridsearchcv",
+    "type": "alternative_to",
+    "via": "tune/Search"
+  },
+  {
+    "source": "gridsearchcv",
+    "target": "halvingrandomsearchcv",
+    "type": "alternative_to",
+    "via": "tune/Search"
+  },
+  {
+    "source": "gridsearchcv",
+    "target": "parametergrid",
+    "type": "alternative_to",
+    "via": "tune/Search"
+  },
+  {
+    "source": "gridsearchcv",
+    "target": "parametersampler",
+    "type": "alternative_to",
+    "via": "tune/Search"
+  },
+  {
+    "source": "gridsearchcv",
+    "target": "randomizedsearchcv",
+    "type": "alternative_to",
+    "via": "tune/Search"
+  },
+  {
+    "source": "groupkfold",
+    "target": "groupshufflesplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "groupkfold",
+    "target": "instancehardnesscv",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "groupkfold",
+    "target": "kfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "groupkfold",
+    "target": "leaveonegroupout",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "groupkfold",
+    "target": "leaveoneout",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "groupkfold",
+    "target": "leavepgroupsout",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "groupkfold",
+    "target": "leavepout",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "groupkfold",
+    "target": "predefinedsplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "groupkfold",
+    "target": "repeatedkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "groupkfold",
+    "target": "repeatedstratifiedkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "groupkfold",
+    "target": "shufflesplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "groupkfold",
+    "target": "stratifiedgroupkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "groupkfold",
+    "target": "stratifiedkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "groupkfold",
+    "target": "stratifiedshufflesplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "groupkfold",
+    "target": "timeseriessplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "groupkfold",
+    "target": "train-test-split",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "groupshufflesplit",
+    "target": "instancehardnesscv",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "groupshufflesplit",
+    "target": "kfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "groupshufflesplit",
+    "target": "leaveonegroupout",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "groupshufflesplit",
+    "target": "leaveoneout",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "groupshufflesplit",
+    "target": "leavepgroupsout",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "groupshufflesplit",
+    "target": "leavepout",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "groupshufflesplit",
+    "target": "predefinedsplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "groupshufflesplit",
+    "target": "repeatedkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "groupshufflesplit",
+    "target": "repeatedstratifiedkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "groupshufflesplit",
+    "target": "shufflesplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "groupshufflesplit",
+    "target": "stratifiedgroupkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "groupshufflesplit",
+    "target": "stratifiedkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "groupshufflesplit",
+    "target": "stratifiedshufflesplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "groupshufflesplit",
+    "target": "timeseriessplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "groupshufflesplit",
+    "target": "train-test-split",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "halvinggridsearchcv",
+    "target": "halvingrandomsearchcv",
+    "type": "alternative_to",
+    "via": "tune/Search"
+  },
+  {
+    "source": "halvinggridsearchcv",
+    "target": "parametergrid",
+    "type": "alternative_to",
+    "via": "tune/Search"
+  },
+  {
+    "source": "halvinggridsearchcv",
+    "target": "parametersampler",
+    "type": "alternative_to",
+    "via": "tune/Search"
+  },
+  {
+    "source": "halvinggridsearchcv",
+    "target": "randomizedsearchcv",
+    "type": "alternative_to",
+    "via": "tune/Search"
+  },
+  {
+    "source": "halvingrandomsearchcv",
+    "target": "parametergrid",
+    "type": "alternative_to",
+    "via": "tune/Search"
+  },
+  {
+    "source": "halvingrandomsearchcv",
+    "target": "parametersampler",
+    "type": "alternative_to",
+    "via": "tune/Search"
+  },
+  {
+    "source": "halvingrandomsearchcv",
+    "target": "randomizedsearchcv",
+    "type": "alternative_to",
+    "via": "tune/Search"
+  },
+  {
+    "source": "hamming-loss",
+    "target": "hinge-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "hamming-loss",
+    "target": "jaccard-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "hamming-loss",
+    "target": "matthews-corrcoef",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "hamming-loss",
+    "target": "multilabel-confusion-matrix",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "hamming-loss",
+    "target": "precision-recall-fscore-support",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "hamming-loss",
+    "target": "precision-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "hamming-loss",
+    "target": "recall-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "hamming-loss",
+    "target": "roc-auc-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "hamming-loss",
+    "target": "top-k-accuracy-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "hamming-loss",
+    "target": "zero-one-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "hinge-loss",
+    "target": "jaccard-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "hinge-loss",
+    "target": "matthews-corrcoef",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "hinge-loss",
+    "target": "multilabel-confusion-matrix",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "hinge-loss",
+    "target": "precision-recall-fscore-support",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "hinge-loss",
+    "target": "precision-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "hinge-loss",
+    "target": "recall-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "hinge-loss",
+    "target": "roc-auc-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "hinge-loss",
+    "target": "top-k-accuracy-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "hinge-loss",
+    "target": "zero-one-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "huber-regressor",
+    "target": "ransac-regressor",
+    "type": "alternative_to",
+    "via": "model/Robust to outliers"
+  },
+  {
+    "source": "hyperbandpruner",
+    "target": "medianpruner",
+    "type": "alternative_to",
+    "via": "tune/Pruners"
+  },
+  {
+    "source": "hyperbandpruner",
+    "target": "noppruner",
+    "type": "alternative_to",
+    "via": "tune/Pruners"
+  },
+  {
+    "source": "hyperbandpruner",
+    "target": "patientpruner",
+    "type": "alternative_to",
+    "via": "tune/Pruners"
+  },
+  {
+    "source": "hyperbandpruner",
+    "target": "percentilepruner",
+    "type": "alternative_to",
+    "via": "tune/Pruners"
+  },
+  {
+    "source": "hyperbandpruner",
+    "target": "successivehalvingpruner",
+    "type": "alternative_to",
+    "via": "tune/Pruners"
+  },
+  {
+    "source": "hyperbandpruner",
+    "target": "thresholdpruner",
+    "type": "alternative_to",
+    "via": "tune/Pruners"
+  },
+  {
+    "source": "hyperbandpruner",
+    "target": "wilcoxonpruner",
+    "type": "alternative_to",
+    "via": "tune/Pruners"
+  },
+  {
+    "source": "imblearn-pipeline",
+    "target": "make-column-selector",
+    "type": "alternative_to",
+    "via": "transform/Composition"
+  },
+  {
+    "source": "imblearn-pipeline",
+    "target": "pipeline",
+    "type": "alternative_to",
+    "via": "transform/Composition"
+  },
+  {
+    "source": "imblearn-pipeline",
+    "target": "smote",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "imblearn-pipeline",
+    "target": "transformedtargetregressor",
+    "type": "alternative_to",
+    "via": "transform/Composition"
+  },
+  {
+    "source": "influence",
+    "target": "residual-normality",
+    "type": "alternative_to",
+    "via": "evaluate/Diagnostics"
+  },
+  {
+    "source": "influence",
+    "target": "vif",
+    "type": "alternative_to",
+    "via": "evaluate/Diagnostics"
+  },
+  {
+    "source": "instancehardnesscv",
+    "target": "kfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "instancehardnesscv",
+    "target": "leaveonegroupout",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "instancehardnesscv",
+    "target": "leaveoneout",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "instancehardnesscv",
+    "target": "leavepgroupsout",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "instancehardnesscv",
+    "target": "leavepout",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "instancehardnesscv",
+    "target": "predefinedsplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "instancehardnesscv",
+    "target": "repeatedkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "instancehardnesscv",
+    "target": "repeatedstratifiedkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "instancehardnesscv",
+    "target": "shufflesplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "instancehardnesscv",
+    "target": "stratifiedgroupkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "instancehardnesscv",
+    "target": "stratifiedkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "instancehardnesscv",
+    "target": "stratifiedshufflesplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "instancehardnesscv",
+    "target": "timeseriessplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "instancehardnesscv",
+    "target": "train-test-split",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "instancehardnessthreshold",
+    "target": "nearmiss",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "instancehardnessthreshold",
+    "target": "neighbourhoodcleaningrule",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "instancehardnessthreshold",
+    "target": "onesidedselection",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "instancehardnessthreshold",
+    "target": "randomundersampler",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "instancehardnessthreshold",
+    "target": "repeatededitednearestneighbours",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "instancehardnessthreshold",
+    "target": "tomeklinks",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "isotonic-regression",
+    "target": "pls-regression",
+    "type": "alternative_to",
+    "via": "model/Latent / shape-constrained"
+  },
+  {
+    "source": "iterativeimputer",
+    "target": "knnimputer",
+    "type": "alternative_to",
+    "via": "clean/Imputation"
+  },
+  {
+    "source": "iterativeimputer",
+    "target": "missingindicator",
+    "type": "alternative_to",
+    "via": "clean/Imputation"
+  },
+  {
+    "source": "iterativeimputer",
+    "target": "simpleimputer",
+    "type": "alternative_to",
+    "via": "clean/Imputation"
+  },
+  {
+    "source": "jaccard-score",
+    "target": "matthews-corrcoef",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "jaccard-score",
+    "target": "multilabel-confusion-matrix",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "jaccard-score",
+    "target": "precision-recall-fscore-support",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "jaccard-score",
+    "target": "precision-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "jaccard-score",
+    "target": "recall-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "jaccard-score",
+    "target": "roc-auc-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "jaccard-score",
+    "target": "top-k-accuracy-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "jaccard-score",
+    "target": "zero-one-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "k-neighbors-classifier",
+    "target": "k-neighbors-regressor",
+    "type": "alternative_to",
+    "via": "model/Neighbours"
+  },
+  {
+    "source": "k-neighbors-classifier",
+    "target": "radius-neighbors-regressor",
+    "type": "alternative_to",
+    "via": "model/Neighbours"
+  },
+  {
+    "source": "k-neighbors-regressor",
+    "target": "radius-neighbors-regressor",
+    "type": "alternative_to",
+    "via": "model/Neighbours"
+  },
+  {
+    "source": "kernel-ridge",
+    "target": "linear-svc",
+    "type": "alternative_to",
+    "via": "model/Kernel"
+  },
+  {
+    "source": "kernel-ridge",
+    "target": "linear-svr",
+    "type": "alternative_to",
+    "via": "model/Kernel"
+  },
+  {
+    "source": "kernel-ridge",
+    "target": "nu-svr",
+    "type": "alternative_to",
+    "via": "model/Kernel"
+  },
+  {
+    "source": "kernel-ridge",
+    "target": "svc",
+    "type": "alternative_to",
+    "via": "model/Kernel"
+  },
+  {
+    "source": "kernel-ridge",
+    "target": "svr",
+    "type": "alternative_to",
+    "via": "model/Kernel"
+  },
+  {
+    "source": "kernelcenterer",
+    "target": "maxabsscaler",
+    "type": "alternative_to",
+    "via": "transform/Scaling"
+  },
+  {
+    "source": "kernelcenterer",
+    "target": "minmaxscaler",
+    "type": "alternative_to",
+    "via": "transform/Scaling"
+  },
+  {
+    "source": "kernelcenterer",
+    "target": "normalizer",
+    "type": "alternative_to",
+    "via": "transform/Scaling"
+  },
+  {
+    "source": "kernelcenterer",
+    "target": "robustscaler",
+    "type": "alternative_to",
+    "via": "transform/Scaling"
+  },
+  {
+    "source": "kernelcenterer",
+    "target": "standardscaler",
+    "type": "alternative_to",
+    "via": "transform/Scaling"
+  },
+  {
+    "source": "kernelexplainer",
+    "target": "linearexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "kernelexplainer",
+    "target": "partitionexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "kernelexplainer",
+    "target": "permutationexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "kernelexplainer",
+    "target": "samplingexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "kernelexplainer",
+    "target": "treeexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "kfold",
+    "target": "leaveonegroupout",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "kfold",
+    "target": "leaveoneout",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "kfold",
+    "target": "leavepgroupsout",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "kfold",
+    "target": "leavepout",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "kfold",
+    "target": "predefinedsplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "kfold",
+    "target": "repeatedkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "kfold",
+    "target": "repeatedstratifiedkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "kfold",
+    "target": "shufflesplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "kfold",
+    "target": "stratifiedgroupkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "kfold",
+    "target": "stratifiedkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "kfold",
+    "target": "stratifiedshufflesplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "kfold",
+    "target": "timeseriessplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "kfold",
+    "target": "train-test-split",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "kmeanssmote",
+    "target": "randomoversampler",
+    "type": "alternative_to",
+    "via": "transform/Over-sampling"
+  },
+  {
+    "source": "kmeanssmote",
+    "target": "smote",
+    "type": "alternative_to",
+    "via": "transform/Over-sampling"
+  },
+  {
+    "source": "kmeanssmote",
+    "target": "smoten",
+    "type": "alternative_to",
+    "via": "transform/Over-sampling"
+  },
+  {
+    "source": "kmeanssmote",
+    "target": "smotenc",
+    "type": "alternative_to",
+    "via": "transform/Over-sampling"
+  },
+  {
+    "source": "kmeanssmote",
+    "target": "svmsmote",
+    "type": "alternative_to",
+    "via": "transform/Over-sampling"
+  },
+  {
+    "source": "knnimputer",
+    "target": "missingindicator",
+    "type": "alternative_to",
+    "via": "clean/Imputation"
+  },
+  {
+    "source": "knnimputer",
+    "target": "simpleimputer",
+    "type": "alternative_to",
+    "via": "clean/Imputation"
+  },
+  {
+    "source": "kpss",
+    "target": "ljung-box",
+    "type": "alternative_to",
+    "via": "explore/Stationarity checks"
+  },
+  {
+    "source": "label-binarizer",
+    "target": "labelbinarizer",
+    "type": "alternative_to",
+    "via": "transform/Label encoding"
+  },
+  {
+    "source": "label-binarizer",
+    "target": "labelencoder",
+    "type": "alternative_to",
+    "via": "transform/Label encoding"
+  },
+  {
+    "source": "label-binarizer",
+    "target": "multilabelbinarizer",
+    "type": "alternative_to",
+    "via": "transform/Label encoding"
+  },
+  {
+    "source": "label-ranking-average-precision-score",
+    "target": "label-ranking-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Ranking metrics"
+  },
+  {
+    "source": "label-ranking-average-precision-score",
+    "target": "ndcg-score",
+    "type": "alternative_to",
+    "via": "evaluate/Ranking metrics"
+  },
+  {
+    "source": "label-ranking-loss",
+    "target": "ndcg-score",
+    "type": "alternative_to",
+    "via": "evaluate/Ranking metrics"
+  },
+  {
+    "source": "labelbinarizer",
+    "target": "labelencoder",
+    "type": "alternative_to",
+    "via": "transform/Label encoding"
+  },
+  {
+    "source": "labelbinarizer",
+    "target": "multilabelbinarizer",
+    "type": "alternative_to",
+    "via": "transform/Label encoding"
+  },
+  {
+    "source": "labelencoder",
+    "target": "multilabelbinarizer",
+    "type": "alternative_to",
+    "via": "transform/Label encoding"
+  },
+  {
+    "source": "lars",
+    "target": "lasso",
+    "type": "alternative_to",
+    "via": "model/Regularised"
+  },
+  {
+    "source": "lars",
+    "target": "lasso-cv",
+    "type": "alternative_to",
+    "via": "model/Regularised"
+  },
+  {
+    "source": "lars",
+    "target": "lasso-lars",
+    "type": "alternative_to",
+    "via": "model/Regularised"
+  },
+  {
+    "source": "lars",
+    "target": "orthogonal-matching-pursuit",
+    "type": "alternative_to",
+    "via": "model/Regularised"
+  },
+  {
+    "source": "lars",
+    "target": "ridge",
+    "type": "alternative_to",
+    "via": "model/Regularised"
+  },
+  {
+    "source": "lars",
+    "target": "ridge-cv",
+    "type": "alternative_to",
+    "via": "model/Regularised"
+  },
+  {
+    "source": "lasso",
+    "target": "lasso-cv",
+    "type": "alternative_to",
+    "via": "model/Regularised"
+  },
+  {
+    "source": "lasso",
+    "target": "lasso-lars",
+    "type": "alternative_to",
+    "via": "model/Regularised"
+  },
+  {
+    "source": "lasso",
+    "target": "orthogonal-matching-pursuit",
+    "type": "alternative_to",
+    "via": "model/Regularised"
+  },
+  {
+    "source": "lasso",
+    "target": "ridge",
+    "type": "alternative_to",
+    "via": "model/Regularised"
+  },
+  {
+    "source": "lasso",
+    "target": "ridge-cv",
+    "type": "alternative_to",
+    "via": "model/Regularised"
+  },
+  {
+    "source": "lasso-cv",
+    "target": "lasso-lars",
+    "type": "alternative_to",
+    "via": "model/Regularised"
+  },
+  {
+    "source": "lasso-cv",
+    "target": "orthogonal-matching-pursuit",
+    "type": "alternative_to",
+    "via": "model/Regularised"
+  },
+  {
+    "source": "lasso-cv",
+    "target": "ridge",
+    "type": "alternative_to",
+    "via": "model/Regularised"
+  },
+  {
+    "source": "lasso-cv",
+    "target": "ridge-cv",
+    "type": "alternative_to",
+    "via": "model/Regularised"
+  },
+  {
+    "source": "lasso-lars",
+    "target": "orthogonal-matching-pursuit",
+    "type": "alternative_to",
+    "via": "model/Regularised"
+  },
+  {
+    "source": "lasso-lars",
+    "target": "ridge",
+    "type": "alternative_to",
+    "via": "model/Regularised"
+  },
+  {
+    "source": "lasso-lars",
+    "target": "ridge-cv",
+    "type": "alternative_to",
+    "via": "model/Regularised"
+  },
+  {
+    "source": "learning-curve",
+    "target": "permutation-test-score",
+    "type": "alternative_to",
+    "via": "evaluate/Validation curves"
+  },
+  {
+    "source": "learning-curve",
+    "target": "validation-curve",
+    "type": "alternative_to",
+    "via": "evaluate/Validation curves"
+  },
+  {
+    "source": "leaveonegroupout",
+    "target": "leaveoneout",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leaveonegroupout",
+    "target": "leavepgroupsout",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leaveonegroupout",
+    "target": "leavepout",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leaveonegroupout",
+    "target": "predefinedsplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leaveonegroupout",
+    "target": "repeatedkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leaveonegroupout",
+    "target": "repeatedstratifiedkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leaveonegroupout",
+    "target": "shufflesplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leaveonegroupout",
+    "target": "stratifiedgroupkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leaveonegroupout",
+    "target": "stratifiedkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leaveonegroupout",
+    "target": "stratifiedshufflesplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leaveonegroupout",
+    "target": "timeseriessplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leaveonegroupout",
+    "target": "train-test-split",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leaveoneout",
+    "target": "leavepgroupsout",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leaveoneout",
+    "target": "leavepout",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leaveoneout",
+    "target": "predefinedsplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leaveoneout",
+    "target": "repeatedkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leaveoneout",
+    "target": "repeatedstratifiedkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leaveoneout",
+    "target": "shufflesplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leaveoneout",
+    "target": "stratifiedgroupkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leaveoneout",
+    "target": "stratifiedkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leaveoneout",
+    "target": "stratifiedshufflesplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leaveoneout",
+    "target": "timeseriessplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leaveoneout",
+    "target": "train-test-split",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leavepgroupsout",
+    "target": "leavepout",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leavepgroupsout",
+    "target": "predefinedsplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leavepgroupsout",
+    "target": "repeatedkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leavepgroupsout",
+    "target": "repeatedstratifiedkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leavepgroupsout",
+    "target": "shufflesplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leavepgroupsout",
+    "target": "stratifiedgroupkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leavepgroupsout",
+    "target": "stratifiedkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leavepgroupsout",
+    "target": "stratifiedshufflesplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leavepgroupsout",
+    "target": "timeseriessplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leavepgroupsout",
+    "target": "train-test-split",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leavepout",
+    "target": "predefinedsplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leavepout",
+    "target": "repeatedkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leavepout",
+    "target": "repeatedstratifiedkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leavepout",
+    "target": "shufflesplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leavepout",
+    "target": "stratifiedgroupkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leavepout",
+    "target": "stratifiedkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leavepout",
+    "target": "stratifiedshufflesplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leavepout",
+    "target": "timeseriessplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "leavepout",
+    "target": "train-test-split",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "linear-discriminant-analysis",
+    "target": "multinomial-nb",
+    "type": "alternative_to",
+    "via": "model/Probabilistic classifiers"
+  },
+  {
+    "source": "linear-discriminant-analysis",
+    "target": "quadratic-discriminant-analysis",
+    "type": "alternative_to",
+    "via": "model/Probabilistic classifiers"
+  },
+  {
+    "source": "linear-regression",
+    "target": "theil-sen-regression",
+    "type": "alternative_to",
+    "via": "model/Quick fits"
+  },
+  {
+    "source": "linear-svc",
+    "target": "linear-svr",
+    "type": "alternative_to",
+    "via": "model/Kernel"
+  },
+  {
+    "source": "linear-svc",
+    "target": "nu-svr",
+    "type": "alternative_to",
+    "via": "model/Kernel"
+  },
+  {
+    "source": "linear-svc",
+    "target": "svc",
+    "type": "alternative_to",
+    "via": "model/Kernel"
+  },
+  {
+    "source": "linear-svc",
+    "target": "svr",
+    "type": "alternative_to",
+    "via": "model/Kernel"
+  },
+  {
+    "source": "linear-svr",
+    "target": "nu-svr",
+    "type": "alternative_to",
+    "via": "model/Kernel"
+  },
+  {
+    "source": "linear-svr",
+    "target": "svc",
+    "type": "alternative_to",
+    "via": "model/Kernel"
+  },
+  {
+    "source": "linear-svr",
+    "target": "svr",
+    "type": "alternative_to",
+    "via": "model/Kernel"
+  },
+  {
+    "source": "linearexplainer",
+    "target": "partitionexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "linearexplainer",
+    "target": "permutationexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "linearexplainer",
+    "target": "samplingexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "linearexplainer",
+    "target": "treeexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "logistic-regression",
+    "target": "mn-logit",
+    "type": "alternative_to",
+    "via": "model/Discrete outcomes"
+  },
+  {
+    "source": "logistic-regression",
+    "target": "negative-binomial-regression",
+    "type": "alternative_to",
+    "via": "model/Discrete outcomes"
+  },
+  {
+    "source": "logistic-regression",
+    "target": "poisson-regression",
+    "type": "alternative_to",
+    "via": "model/Discrete outcomes"
+  },
+  {
+    "source": "logistic-regression",
+    "target": "probit",
+    "type": "alternative_to",
+    "via": "model/Discrete outcomes"
+  },
+  {
+    "source": "logistic-regression-cv",
+    "target": "perceptron",
+    "type": "alternative_to",
+    "via": "model/Classification"
+  },
+  {
+    "source": "logistic-regression-cv",
+    "target": "ridge-classifier",
+    "type": "alternative_to",
+    "via": "model/Classification"
+  },
+  {
+    "source": "logistic-regression-cv",
+    "target": "sgd-classifier",
+    "type": "alternative_to",
+    "via": "model/Classification"
+  },
+  {
+    "source": "macro-averaged-mean-absolute-error",
+    "target": "make-index-balanced-accuracy",
+    "type": "alternative_to",
+    "via": "evaluate/Imbalanced-data metrics"
+  },
+  {
+    "source": "macro-averaged-mean-absolute-error",
+    "target": "sensitivity-score",
+    "type": "alternative_to",
+    "via": "evaluate/Imbalanced-data metrics"
+  },
+  {
+    "source": "macro-averaged-mean-absolute-error",
+    "target": "sensitivity-specificity-support",
+    "type": "alternative_to",
+    "via": "evaluate/Imbalanced-data metrics"
+  },
+  {
+    "source": "macro-averaged-mean-absolute-error",
+    "target": "specificity-score",
+    "type": "alternative_to",
+    "via": "evaluate/Imbalanced-data metrics"
+  },
+  {
+    "source": "make-column-selector",
+    "target": "pipeline",
+    "type": "alternative_to",
+    "via": "transform/Composition"
+  },
+  {
+    "source": "make-column-selector",
+    "target": "transformedtargetregressor",
+    "type": "alternative_to",
+    "via": "transform/Composition"
+  },
+  {
+    "source": "make-index-balanced-accuracy",
+    "target": "sensitivity-score",
+    "type": "alternative_to",
+    "via": "evaluate/Imbalanced-data metrics"
+  },
+  {
+    "source": "make-index-balanced-accuracy",
+    "target": "sensitivity-specificity-support",
+    "type": "alternative_to",
+    "via": "evaluate/Imbalanced-data metrics"
+  },
+  {
+    "source": "make-index-balanced-accuracy",
+    "target": "specificity-score",
+    "type": "alternative_to",
+    "via": "evaluate/Imbalanced-data metrics"
+  },
+  {
+    "source": "markov-regression",
+    "target": "unobserved-components",
+    "type": "alternative_to",
+    "via": "model/State space / regime"
+  },
+  {
+    "source": "matthews-corrcoef",
+    "target": "multilabel-confusion-matrix",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "matthews-corrcoef",
+    "target": "precision-recall-fscore-support",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "matthews-corrcoef",
+    "target": "precision-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "matthews-corrcoef",
+    "target": "recall-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "matthews-corrcoef",
+    "target": "roc-auc-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "matthews-corrcoef",
+    "target": "top-k-accuracy-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "matthews-corrcoef",
+    "target": "zero-one-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "max-error",
+    "target": "mean-absolute-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "max-error",
+    "target": "mean-absolute-percentage-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "max-error",
+    "target": "mean-gamma-deviance",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "max-error",
+    "target": "mean-pinball-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "max-error",
+    "target": "mean-poisson-deviance",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "max-error",
+    "target": "mean-squared-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "max-error",
+    "target": "mean-squared-log-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "max-error",
+    "target": "mean-tweedie-deviance",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "max-error",
+    "target": "median-absolute-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "max-error",
+    "target": "predictionerrordisplay",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "max-error",
+    "target": "r2-score",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "max-error",
+    "target": "root-mean-squared-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "max-error",
+    "target": "root-mean-squared-log-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "maxabsscaler",
+    "target": "minmaxscaler",
+    "type": "alternative_to",
+    "via": "transform/Scaling"
+  },
+  {
+    "source": "maxabsscaler",
+    "target": "normalizer",
+    "type": "alternative_to",
+    "via": "transform/Scaling"
+  },
+  {
+    "source": "maxabsscaler",
+    "target": "robustscaler",
+    "type": "alternative_to",
+    "via": "transform/Scaling"
+  },
+  {
+    "source": "maxabsscaler",
+    "target": "standardscaler",
+    "type": "alternative_to",
+    "via": "transform/Scaling"
+  },
+  {
+    "source": "maxtrialscallback",
+    "target": "optuna-study",
+    "type": "alternative_to",
+    "via": "tune/Study"
+  },
+  {
+    "source": "mean-absolute-error",
+    "target": "mean-absolute-percentage-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-absolute-error",
+    "target": "mean-gamma-deviance",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-absolute-error",
+    "target": "mean-pinball-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-absolute-error",
+    "target": "mean-poisson-deviance",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-absolute-error",
+    "target": "mean-squared-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-absolute-error",
+    "target": "mean-squared-log-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-absolute-error",
+    "target": "mean-tweedie-deviance",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-absolute-error",
+    "target": "median-absolute-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-absolute-error",
+    "target": "predictionerrordisplay",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-absolute-error",
+    "target": "r2-score",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-absolute-error",
+    "target": "root-mean-squared-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-absolute-error",
+    "target": "root-mean-squared-log-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-absolute-percentage-error",
+    "target": "mean-gamma-deviance",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-absolute-percentage-error",
+    "target": "mean-pinball-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-absolute-percentage-error",
+    "target": "mean-poisson-deviance",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-absolute-percentage-error",
+    "target": "mean-squared-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-absolute-percentage-error",
+    "target": "mean-squared-log-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-absolute-percentage-error",
+    "target": "mean-tweedie-deviance",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-absolute-percentage-error",
+    "target": "median-absolute-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-absolute-percentage-error",
+    "target": "predictionerrordisplay",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-absolute-percentage-error",
+    "target": "r2-score",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-absolute-percentage-error",
+    "target": "root-mean-squared-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-absolute-percentage-error",
+    "target": "root-mean-squared-log-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-gamma-deviance",
+    "target": "mean-pinball-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-gamma-deviance",
+    "target": "mean-poisson-deviance",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-gamma-deviance",
+    "target": "mean-squared-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-gamma-deviance",
+    "target": "mean-squared-log-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-gamma-deviance",
+    "target": "mean-tweedie-deviance",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-gamma-deviance",
+    "target": "median-absolute-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-gamma-deviance",
+    "target": "predictionerrordisplay",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-gamma-deviance",
+    "target": "r2-score",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-gamma-deviance",
+    "target": "root-mean-squared-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-gamma-deviance",
+    "target": "root-mean-squared-log-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-pinball-loss",
+    "target": "mean-poisson-deviance",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-pinball-loss",
+    "target": "mean-squared-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-pinball-loss",
+    "target": "mean-squared-log-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-pinball-loss",
+    "target": "mean-tweedie-deviance",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-pinball-loss",
+    "target": "median-absolute-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-pinball-loss",
+    "target": "predictionerrordisplay",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-pinball-loss",
+    "target": "r2-score",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-pinball-loss",
+    "target": "root-mean-squared-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-pinball-loss",
+    "target": "root-mean-squared-log-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-poisson-deviance",
+    "target": "mean-squared-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-poisson-deviance",
+    "target": "mean-squared-log-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-poisson-deviance",
+    "target": "mean-tweedie-deviance",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-poisson-deviance",
+    "target": "median-absolute-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-poisson-deviance",
+    "target": "predictionerrordisplay",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-poisson-deviance",
+    "target": "r2-score",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-poisson-deviance",
+    "target": "root-mean-squared-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-poisson-deviance",
+    "target": "root-mean-squared-log-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-squared-error",
+    "target": "mean-squared-log-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-squared-error",
+    "target": "mean-tweedie-deviance",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-squared-error",
+    "target": "median-absolute-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-squared-error",
+    "target": "predictionerrordisplay",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-squared-error",
+    "target": "r2-score",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-squared-error",
+    "target": "root-mean-squared-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-squared-error",
+    "target": "root-mean-squared-log-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-squared-log-error",
+    "target": "mean-tweedie-deviance",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-squared-log-error",
+    "target": "median-absolute-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-squared-log-error",
+    "target": "predictionerrordisplay",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-squared-log-error",
+    "target": "r2-score",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-squared-log-error",
+    "target": "root-mean-squared-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-squared-log-error",
+    "target": "root-mean-squared-log-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-tweedie-deviance",
+    "target": "median-absolute-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-tweedie-deviance",
+    "target": "predictionerrordisplay",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-tweedie-deviance",
+    "target": "r2-score",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-tweedie-deviance",
+    "target": "root-mean-squared-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "mean-tweedie-deviance",
+    "target": "root-mean-squared-log-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "median-absolute-error",
+    "target": "predictionerrordisplay",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "median-absolute-error",
+    "target": "r2-score",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "median-absolute-error",
+    "target": "root-mean-squared-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "median-absolute-error",
+    "target": "root-mean-squared-log-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "medianpruner",
+    "target": "noppruner",
+    "type": "alternative_to",
+    "via": "tune/Pruners"
+  },
+  {
+    "source": "medianpruner",
+    "target": "patientpruner",
+    "type": "alternative_to",
+    "via": "tune/Pruners"
+  },
+  {
+    "source": "medianpruner",
+    "target": "percentilepruner",
+    "type": "alternative_to",
+    "via": "tune/Pruners"
+  },
+  {
+    "source": "medianpruner",
+    "target": "successivehalvingpruner",
+    "type": "alternative_to",
+    "via": "tune/Pruners"
+  },
+  {
+    "source": "medianpruner",
+    "target": "thresholdpruner",
+    "type": "alternative_to",
+    "via": "tune/Pruners"
+  },
+  {
+    "source": "medianpruner",
+    "target": "wilcoxonpruner",
+    "type": "alternative_to",
+    "via": "tune/Pruners"
+  },
+  {
+    "source": "metric-at-thresholds",
+    "target": "precision-recall-curve",
+    "type": "alternative_to",
+    "via": "evaluate/Classification curves"
+  },
+  {
+    "source": "metric-at-thresholds",
+    "target": "roc-curve",
+    "type": "alternative_to",
+    "via": "evaluate/Classification curves"
+  },
+  {
+    "source": "minmaxscaler",
+    "target": "normalizer",
+    "type": "alternative_to",
+    "via": "transform/Scaling"
+  },
+  {
+    "source": "minmaxscaler",
+    "target": "robustscaler",
+    "type": "alternative_to",
+    "via": "transform/Scaling"
+  },
+  {
+    "source": "minmaxscaler",
+    "target": "standardscaler",
+    "type": "alternative_to",
+    "via": "transform/Scaling"
+  },
+  {
+    "source": "missingindicator",
+    "target": "simpleimputer",
+    "type": "alternative_to",
+    "via": "clean/Imputation"
+  },
+  {
+    "source": "mlp-classifier",
+    "target": "mlp-regressor",
+    "type": "alternative_to",
+    "via": "model/Neural nets"
+  },
+  {
+    "source": "mn-logit",
+    "target": "negative-binomial-regression",
+    "type": "alternative_to",
+    "via": "model/Discrete outcomes"
+  },
+  {
+    "source": "mn-logit",
+    "target": "poisson-regression",
+    "type": "alternative_to",
+    "via": "model/Discrete outcomes"
+  },
+  {
+    "source": "mn-logit",
+    "target": "probit",
+    "type": "alternative_to",
+    "via": "model/Discrete outcomes"
+  },
+  {
+    "source": "mstl",
+    "target": "seasonal-decompose",
+    "type": "alternative_to",
+    "via": "explore/Decomposition and seasonality"
+  },
+  {
+    "source": "mstl",
+    "target": "stl",
+    "type": "alternative_to",
+    "via": "explore/Decomposition and seasonality"
+  },
+  {
+    "source": "multilabel-confusion-matrix",
+    "target": "precision-recall-fscore-support",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "multilabel-confusion-matrix",
+    "target": "precision-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "multilabel-confusion-matrix",
+    "target": "recall-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "multilabel-confusion-matrix",
+    "target": "roc-auc-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "multilabel-confusion-matrix",
+    "target": "top-k-accuracy-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "multilabel-confusion-matrix",
+    "target": "zero-one-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "multinomial-nb",
+    "target": "quadratic-discriminant-analysis",
+    "type": "alternative_to",
+    "via": "model/Probabilistic classifiers"
+  },
+  {
+    "source": "mutual-info-classif",
+    "target": "mutual-info-regression",
+    "type": "alternative_to",
+    "via": "select/Univariate scoring functions"
+  },
+  {
+    "source": "mutual-info-classif",
+    "target": "r-regression",
+    "type": "alternative_to",
+    "via": "select/Univariate scoring functions"
+  },
+  {
+    "source": "mutual-info-regression",
+    "target": "r-regression",
+    "type": "alternative_to",
+    "via": "select/Univariate scoring functions"
+  },
+  {
+    "source": "nearmiss",
+    "target": "neighbourhoodcleaningrule",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "nearmiss",
+    "target": "onesidedselection",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "nearmiss",
+    "target": "randomundersampler",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "nearmiss",
+    "target": "repeatededitednearestneighbours",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "nearmiss",
+    "target": "tomeklinks",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "negative-binomial-regression",
+    "target": "poisson-regression",
+    "type": "alternative_to",
+    "via": "model/Discrete outcomes"
+  },
+  {
+    "source": "negative-binomial-regression",
+    "target": "probit",
+    "type": "alternative_to",
+    "via": "model/Discrete outcomes"
+  },
+  {
+    "source": "neighbourhoodcleaningrule",
+    "target": "onesidedselection",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "neighbourhoodcleaningrule",
+    "target": "randomundersampler",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "neighbourhoodcleaningrule",
+    "target": "repeatededitednearestneighbours",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "neighbourhoodcleaningrule",
+    "target": "tomeklinks",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "noppruner",
+    "target": "patientpruner",
+    "type": "alternative_to",
+    "via": "tune/Pruners"
+  },
+  {
+    "source": "noppruner",
+    "target": "percentilepruner",
+    "type": "alternative_to",
+    "via": "tune/Pruners"
+  },
+  {
+    "source": "noppruner",
+    "target": "successivehalvingpruner",
+    "type": "alternative_to",
+    "via": "tune/Pruners"
+  },
+  {
+    "source": "noppruner",
+    "target": "thresholdpruner",
+    "type": "alternative_to",
+    "via": "tune/Pruners"
+  },
+  {
+    "source": "noppruner",
+    "target": "wilcoxonpruner",
+    "type": "alternative_to",
+    "via": "tune/Pruners"
+  },
+  {
+    "source": "normality-tests",
+    "target": "shapiro-wilk",
+    "type": "alternative_to",
+    "via": "explore/Assumption tests"
+  },
+  {
+    "source": "normality-tests",
+    "target": "ttest-1samp",
+    "type": "alternative_to",
+    "via": "explore/Assumption tests"
+  },
+  {
+    "source": "normality-tests",
+    "target": "ttest-ind",
+    "type": "alternative_to",
+    "via": "explore/Assumption tests"
+  },
+  {
+    "source": "normality-tests",
+    "target": "ttest-rel",
+    "type": "alternative_to",
+    "via": "explore/Assumption tests"
+  },
+  {
+    "source": "normalizer",
+    "target": "robustscaler",
+    "type": "alternative_to",
+    "via": "transform/Scaling"
+  },
+  {
+    "source": "normalizer",
+    "target": "standardscaler",
+    "type": "alternative_to",
+    "via": "transform/Scaling"
+  },
+  {
+    "source": "nsgaiiisampler",
+    "target": "nsgaiisampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "nsgaiiisampler",
+    "target": "partialfixedsampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "nsgaiiisampler",
+    "target": "qmcsampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "nsgaiiisampler",
+    "target": "randomsampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "nsgaiiisampler",
+    "target": "tpesampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "nsgaiisampler",
+    "target": "partialfixedsampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "nsgaiisampler",
+    "target": "qmcsampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "nsgaiisampler",
+    "target": "randomsampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "nsgaiisampler",
+    "target": "tpesampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "nu-svr",
+    "target": "svc",
+    "type": "alternative_to",
+    "via": "model/Kernel"
+  },
+  {
+    "source": "nu-svr",
+    "target": "svr",
+    "type": "alternative_to",
+    "via": "model/Kernel"
+  },
+  {
+    "source": "onehotencoder",
+    "target": "ordinalencoder",
+    "type": "alternative_to",
+    "via": "transform/Categorical encoding"
+  },
+  {
+    "source": "onehotencoder",
+    "target": "targetencoder",
+    "type": "alternative_to",
+    "via": "transform/Categorical encoding"
+  },
+  {
+    "source": "onesidedselection",
+    "target": "randomundersampler",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "onesidedselection",
+    "target": "repeatededitednearestneighbours",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "onesidedselection",
+    "target": "tomeklinks",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "optuna-trial",
+    "target": "trialpruned",
+    "type": "alternative_to",
+    "via": "tune/Trial"
+  },
+  {
+    "source": "ordinalencoder",
+    "target": "targetencoder",
+    "type": "alternative_to",
+    "via": "transform/Categorical encoding"
+  },
+  {
+    "source": "orthogonal-matching-pursuit",
+    "target": "ridge",
+    "type": "alternative_to",
+    "via": "model/Regularised"
+  },
+  {
+    "source": "orthogonal-matching-pursuit",
+    "target": "ridge-cv",
+    "type": "alternative_to",
+    "via": "model/Regularised"
+  },
+  {
+    "source": "parametergrid",
+    "target": "parametersampler",
+    "type": "alternative_to",
+    "via": "tune/Search"
+  },
+  {
+    "source": "parametergrid",
+    "target": "randomizedsearchcv",
+    "type": "alternative_to",
+    "via": "tune/Search"
+  },
+  {
+    "source": "parametersampler",
+    "target": "randomizedsearchcv",
+    "type": "alternative_to",
+    "via": "tune/Search"
+  },
+  {
+    "source": "partialfixedsampler",
+    "target": "qmcsampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "partialfixedsampler",
+    "target": "randomsampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "partialfixedsampler",
+    "target": "tpesampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "partitionexplainer",
+    "target": "permutationexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "partitionexplainer",
+    "target": "samplingexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "partitionexplainer",
+    "target": "treeexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "passive-aggressive-regressor",
+    "target": "sgd-regressor",
+    "type": "alternative_to",
+    "via": "model/Online / large data"
+  },
+  {
+    "source": "patientpruner",
+    "target": "percentilepruner",
+    "type": "alternative_to",
+    "via": "tune/Pruners"
+  },
+  {
+    "source": "patientpruner",
+    "target": "successivehalvingpruner",
+    "type": "alternative_to",
+    "via": "tune/Pruners"
+  },
+  {
+    "source": "patientpruner",
+    "target": "thresholdpruner",
+    "type": "alternative_to",
+    "via": "tune/Pruners"
+  },
+  {
+    "source": "patientpruner",
+    "target": "wilcoxonpruner",
+    "type": "alternative_to",
+    "via": "tune/Pruners"
+  },
+  {
+    "source": "pca",
+    "target": "truncatedsvd",
+    "type": "alternative_to",
+    "via": "select/Dimensionality reduction"
+  },
+  {
+    "source": "percentilepruner",
+    "target": "successivehalvingpruner",
+    "type": "alternative_to",
+    "via": "tune/Pruners"
+  },
+  {
+    "source": "percentilepruner",
+    "target": "thresholdpruner",
+    "type": "alternative_to",
+    "via": "tune/Pruners"
+  },
+  {
+    "source": "percentilepruner",
+    "target": "wilcoxonpruner",
+    "type": "alternative_to",
+    "via": "tune/Pruners"
+  },
+  {
+    "source": "perceptron",
+    "target": "ridge-classifier",
+    "type": "alternative_to",
+    "via": "model/Classification"
+  },
+  {
+    "source": "perceptron",
+    "target": "sgd-classifier",
+    "type": "alternative_to",
+    "via": "model/Classification"
+  },
+  {
+    "source": "permutation-test-score",
+    "target": "validation-curve",
+    "type": "alternative_to",
+    "via": "evaluate/Validation curves"
+  },
+  {
+    "source": "permutationexplainer",
+    "target": "samplingexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "permutationexplainer",
+    "target": "treeexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "pipeline",
+    "target": "randomizedsearchcv",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "pipeline",
+    "target": "selectkbest",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "pipeline",
+    "target": "standardscaler",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "pipeline",
+    "target": "transformedtargetregressor",
+    "type": "alternative_to",
+    "via": "transform/Composition"
+  },
+  {
+    "source": "plot-contour",
+    "target": "plot-edf",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-contour",
+    "target": "plot-hypervolume-history",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-contour",
+    "target": "plot-intermediate-values",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-contour",
+    "target": "plot-optimization-history",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-contour",
+    "target": "plot-parallel-coordinate",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-contour",
+    "target": "plot-param-importances",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-contour",
+    "target": "plot-pareto-front",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-contour",
+    "target": "plot-rank",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-contour",
+    "target": "plot-slice",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-contour",
+    "target": "plot-terminator-improvement",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-contour",
+    "target": "plot-timeline",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-edf",
+    "target": "plot-hypervolume-history",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-edf",
+    "target": "plot-intermediate-values",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-edf",
+    "target": "plot-optimization-history",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-edf",
+    "target": "plot-parallel-coordinate",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-edf",
+    "target": "plot-param-importances",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-edf",
+    "target": "plot-pareto-front",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-edf",
+    "target": "plot-rank",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-edf",
+    "target": "plot-slice",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-edf",
+    "target": "plot-terminator-improvement",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-edf",
+    "target": "plot-timeline",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-hypervolume-history",
+    "target": "plot-intermediate-values",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-hypervolume-history",
+    "target": "plot-optimization-history",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-hypervolume-history",
+    "target": "plot-parallel-coordinate",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-hypervolume-history",
+    "target": "plot-param-importances",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-hypervolume-history",
+    "target": "plot-pareto-front",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-hypervolume-history",
+    "target": "plot-rank",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-hypervolume-history",
+    "target": "plot-slice",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-hypervolume-history",
+    "target": "plot-terminator-improvement",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-hypervolume-history",
+    "target": "plot-timeline",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-intermediate-values",
+    "target": "plot-optimization-history",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-intermediate-values",
+    "target": "plot-parallel-coordinate",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-intermediate-values",
+    "target": "plot-param-importances",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-intermediate-values",
+    "target": "plot-pareto-front",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-intermediate-values",
+    "target": "plot-rank",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-intermediate-values",
+    "target": "plot-slice",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-intermediate-values",
+    "target": "plot-terminator-improvement",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-intermediate-values",
+    "target": "plot-timeline",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-optimization-history",
+    "target": "plot-parallel-coordinate",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-optimization-history",
+    "target": "plot-param-importances",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-optimization-history",
+    "target": "plot-pareto-front",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-optimization-history",
+    "target": "plot-rank",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-optimization-history",
+    "target": "plot-slice",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-optimization-history",
+    "target": "plot-terminator-improvement",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-optimization-history",
+    "target": "plot-timeline",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-parallel-coordinate",
+    "target": "plot-param-importances",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-parallel-coordinate",
+    "target": "plot-pareto-front",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-parallel-coordinate",
+    "target": "plot-rank",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-parallel-coordinate",
+    "target": "plot-slice",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-parallel-coordinate",
+    "target": "plot-terminator-improvement",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-parallel-coordinate",
+    "target": "plot-timeline",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-param-importances",
+    "target": "plot-pareto-front",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-param-importances",
+    "target": "plot-rank",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-param-importances",
+    "target": "plot-slice",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-param-importances",
+    "target": "plot-terminator-improvement",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-param-importances",
+    "target": "plot-timeline",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-pareto-front",
+    "target": "plot-rank",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-pareto-front",
+    "target": "plot-slice",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-pareto-front",
+    "target": "plot-terminator-improvement",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-pareto-front",
+    "target": "plot-timeline",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-rank",
+    "target": "plot-slice",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-rank",
+    "target": "plot-terminator-improvement",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-rank",
+    "target": "plot-timeline",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-slice",
+    "target": "plot-terminator-improvement",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-slice",
+    "target": "plot-timeline",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "plot-terminator-improvement",
+    "target": "plot-timeline",
+    "type": "alternative_to",
+    "via": "tune/Study plots"
+  },
+  {
+    "source": "poisson-regression",
+    "target": "probit",
+    "type": "alternative_to",
+    "via": "model/Discrete outcomes"
+  },
+  {
+    "source": "polynomialfeatures",
+    "target": "splinetransformer",
+    "type": "alternative_to",
+    "via": "transform/Feature expansion"
+  },
+  {
+    "source": "powertransformer",
+    "target": "quantiletransformer",
+    "type": "alternative_to",
+    "via": "transform/Distribution shaping"
+  },
+  {
+    "source": "precision-recall-curve",
+    "target": "roc-curve",
+    "type": "alternative_to",
+    "via": "evaluate/Classification curves"
+  },
+  {
+    "source": "precision-recall-fscore-support",
+    "target": "precision-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "precision-recall-fscore-support",
+    "target": "recall-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "precision-recall-fscore-support",
+    "target": "roc-auc-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "precision-recall-fscore-support",
+    "target": "top-k-accuracy-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "precision-recall-fscore-support",
+    "target": "zero-one-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "precision-score",
+    "target": "recall-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "precision-score",
+    "target": "roc-auc-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "precision-score",
+    "target": "top-k-accuracy-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "precision-score",
+    "target": "zero-one-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "predefinedsplit",
+    "target": "repeatedkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "predefinedsplit",
+    "target": "repeatedstratifiedkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "predefinedsplit",
+    "target": "shufflesplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "predefinedsplit",
+    "target": "stratifiedgroupkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "predefinedsplit",
+    "target": "stratifiedkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "predefinedsplit",
+    "target": "stratifiedshufflesplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "predefinedsplit",
+    "target": "timeseriessplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "predefinedsplit",
+    "target": "train-test-split",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "predictionerrordisplay",
+    "target": "r2-score",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "predictionerrordisplay",
+    "target": "root-mean-squared-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "predictionerrordisplay",
+    "target": "root-mean-squared-log-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "qmcsampler",
+    "target": "randomsampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "qmcsampler",
+    "target": "tpesampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "quantile-regression",
+    "target": "rlm",
+    "type": "alternative_to",
+    "via": "model/Robust / quantile"
+  },
+  {
+    "source": "r2-score",
+    "target": "root-mean-squared-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "r2-score",
+    "target": "root-mean-squared-log-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "randomizedsearchcv",
+    "target": "train-test-split",
+    "type": "recommended",
+    "via": "prep"
+  },
+  {
+    "source": "randomoversampler",
+    "target": "smote",
+    "type": "alternative_to",
+    "via": "transform/Over-sampling"
+  },
+  {
+    "source": "randomoversampler",
+    "target": "smoten",
+    "type": "alternative_to",
+    "via": "transform/Over-sampling"
+  },
+  {
+    "source": "randomoversampler",
+    "target": "smotenc",
+    "type": "alternative_to",
+    "via": "transform/Over-sampling"
+  },
+  {
+    "source": "randomoversampler",
+    "target": "svmsmote",
+    "type": "alternative_to",
+    "via": "transform/Over-sampling"
+  },
+  {
+    "source": "randomsampler",
+    "target": "tpesampler",
+    "type": "alternative_to",
+    "via": "tune/Samplers"
+  },
+  {
+    "source": "randomundersampler",
+    "target": "repeatededitednearestneighbours",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "randomundersampler",
+    "target": "tomeklinks",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "recall-score",
+    "target": "roc-auc-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "recall-score",
+    "target": "top-k-accuracy-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "recall-score",
+    "target": "zero-one-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "repeatededitednearestneighbours",
+    "target": "tomeklinks",
+    "type": "alternative_to",
+    "via": "transform/Under-sampling"
+  },
+  {
+    "source": "repeatedkfold",
+    "target": "repeatedstratifiedkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "repeatedkfold",
+    "target": "shufflesplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "repeatedkfold",
+    "target": "stratifiedgroupkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "repeatedkfold",
+    "target": "stratifiedkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "repeatedkfold",
+    "target": "stratifiedshufflesplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "repeatedkfold",
+    "target": "timeseriessplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "repeatedkfold",
+    "target": "train-test-split",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "repeatedstratifiedkfold",
+    "target": "shufflesplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "repeatedstratifiedkfold",
+    "target": "stratifiedgroupkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "repeatedstratifiedkfold",
+    "target": "stratifiedkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "repeatedstratifiedkfold",
+    "target": "stratifiedshufflesplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "repeatedstratifiedkfold",
+    "target": "timeseriessplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "repeatedstratifiedkfold",
+    "target": "train-test-split",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "residual-normality",
+    "target": "vif",
+    "type": "alternative_to",
+    "via": "evaluate/Diagnostics"
+  },
+  {
+    "source": "rfe",
+    "target": "rfecv",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "rfe",
+    "target": "selectfdr",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "rfe",
+    "target": "selectfpr",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "rfe",
+    "target": "selectfrommodel",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "rfe",
+    "target": "selectfwe",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "rfe",
+    "target": "selectkbest",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "rfe",
+    "target": "selectpercentile",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "rfe",
+    "target": "sequentialfeatureselector",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "rfe",
+    "target": "variancethreshold",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "rfecv",
+    "target": "selectfdr",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "rfecv",
+    "target": "selectfpr",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "rfecv",
+    "target": "selectfrommodel",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "rfecv",
+    "target": "selectfwe",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "rfecv",
+    "target": "selectkbest",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "rfecv",
+    "target": "selectpercentile",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "rfecv",
+    "target": "sequentialfeatureselector",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "rfecv",
+    "target": "variancethreshold",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "ridge",
+    "target": "ridge-cv",
+    "type": "alternative_to",
+    "via": "model/Regularised"
+  },
+  {
+    "source": "ridge-classifier",
+    "target": "sgd-classifier",
+    "type": "alternative_to",
+    "via": "model/Classification"
+  },
+  {
+    "source": "robustscaler",
+    "target": "standardscaler",
+    "type": "alternative_to",
+    "via": "transform/Scaling"
+  },
+  {
+    "source": "roc-auc-score",
+    "target": "top-k-accuracy-score",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "roc-auc-score",
+    "target": "zero-one-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "root-mean-squared-error",
+    "target": "root-mean-squared-log-error",
+    "type": "alternative_to",
+    "via": "evaluate/Regression metrics"
+  },
+  {
+    "source": "samplingexplainer",
+    "target": "treeexplainer",
+    "type": "alternative_to",
+    "via": "interpret/Explainers"
+  },
+  {
+    "source": "seasonal-decompose",
+    "target": "stl",
+    "type": "alternative_to",
+    "via": "explore/Decomposition and seasonality"
+  },
+  {
+    "source": "selectfdr",
+    "target": "selectfpr",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "selectfdr",
+    "target": "selectfrommodel",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "selectfdr",
+    "target": "selectfwe",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "selectfdr",
+    "target": "selectkbest",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "selectfdr",
+    "target": "selectpercentile",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "selectfdr",
+    "target": "sequentialfeatureselector",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "selectfdr",
+    "target": "variancethreshold",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "selectfpr",
+    "target": "selectfrommodel",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "selectfpr",
+    "target": "selectfwe",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "selectfpr",
+    "target": "selectkbest",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "selectfpr",
+    "target": "selectpercentile",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "selectfpr",
+    "target": "sequentialfeatureselector",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "selectfpr",
+    "target": "variancethreshold",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "selectfrommodel",
+    "target": "selectfwe",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "selectfrommodel",
+    "target": "selectkbest",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "selectfrommodel",
+    "target": "selectpercentile",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "selectfrommodel",
+    "target": "sequentialfeatureselector",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "selectfrommodel",
+    "target": "variancethreshold",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "selectfwe",
+    "target": "selectkbest",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "selectfwe",
+    "target": "selectpercentile",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "selectfwe",
+    "target": "sequentialfeatureselector",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "selectfwe",
+    "target": "variancethreshold",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "selectkbest",
+    "target": "selectpercentile",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "selectkbest",
+    "target": "sequentialfeatureselector",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "selectkbest",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
+    "source": "selectkbest",
+    "target": "variancethreshold",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "selectpercentile",
+    "target": "sequentialfeatureselector",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "selectpercentile",
+    "target": "variancethreshold",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "sensitivity-score",
+    "target": "sensitivity-specificity-support",
+    "type": "alternative_to",
+    "via": "evaluate/Imbalanced-data metrics"
+  },
+  {
+    "source": "sensitivity-score",
+    "target": "specificity-score",
+    "type": "alternative_to",
+    "via": "evaluate/Imbalanced-data metrics"
+  },
+  {
+    "source": "sensitivity-specificity-support",
+    "target": "specificity-score",
+    "type": "alternative_to",
+    "via": "evaluate/Imbalanced-data metrics"
+  },
+  {
+    "source": "sequentialfeatureselector",
+    "target": "variancethreshold",
+    "type": "alternative_to",
+    "via": "select/Feature selection"
+  },
+  {
+    "source": "shap-bar",
+    "target": "shap-beeswarm",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-bar",
+    "target": "shap-decision",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-bar",
+    "target": "shap-force",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-bar",
+    "target": "shap-group-difference",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-bar",
+    "target": "shap-heatmap",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-bar",
+    "target": "shap-monitoring",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-bar",
+    "target": "shap-partial-dependence",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-bar",
+    "target": "shap-scatter",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-bar",
+    "target": "shap-violin",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-bar",
+    "target": "shap-waterfall",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-beeswarm",
+    "target": "shap-decision",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-beeswarm",
+    "target": "shap-force",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-beeswarm",
+    "target": "shap-group-difference",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-beeswarm",
+    "target": "shap-heatmap",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-beeswarm",
+    "target": "shap-monitoring",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-beeswarm",
+    "target": "shap-partial-dependence",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-beeswarm",
+    "target": "shap-scatter",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-beeswarm",
+    "target": "shap-violin",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-beeswarm",
+    "target": "shap-waterfall",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-decision",
+    "target": "shap-force",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-decision",
+    "target": "shap-group-difference",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-decision",
+    "target": "shap-heatmap",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-decision",
+    "target": "shap-monitoring",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-decision",
+    "target": "shap-partial-dependence",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-decision",
+    "target": "shap-scatter",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-decision",
+    "target": "shap-violin",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-decision",
+    "target": "shap-waterfall",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-force",
+    "target": "shap-group-difference",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-force",
+    "target": "shap-heatmap",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-force",
+    "target": "shap-monitoring",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-force",
+    "target": "shap-partial-dependence",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-force",
+    "target": "shap-scatter",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-force",
+    "target": "shap-violin",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-force",
+    "target": "shap-waterfall",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-group-difference",
+    "target": "shap-heatmap",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-group-difference",
+    "target": "shap-monitoring",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-group-difference",
+    "target": "shap-partial-dependence",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-group-difference",
+    "target": "shap-scatter",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-group-difference",
+    "target": "shap-violin",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-group-difference",
+    "target": "shap-waterfall",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-heatmap",
+    "target": "shap-monitoring",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-heatmap",
+    "target": "shap-partial-dependence",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-heatmap",
+    "target": "shap-scatter",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-heatmap",
+    "target": "shap-violin",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-heatmap",
+    "target": "shap-waterfall",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-monitoring",
+    "target": "shap-partial-dependence",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-monitoring",
+    "target": "shap-scatter",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-monitoring",
+    "target": "shap-violin",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-monitoring",
+    "target": "shap-waterfall",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-partial-dependence",
+    "target": "shap-scatter",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-partial-dependence",
+    "target": "shap-violin",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-partial-dependence",
+    "target": "shap-waterfall",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-scatter",
+    "target": "shap-violin",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-scatter",
+    "target": "shap-waterfall",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shap-violin",
+    "target": "shap-waterfall",
+    "type": "alternative_to",
+    "via": "interpret/SHAP plots"
+  },
+  {
+    "source": "shapiro-wilk",
+    "target": "ttest-1samp",
+    "type": "alternative_to",
+    "via": "explore/Assumption tests"
+  },
+  {
+    "source": "shapiro-wilk",
+    "target": "ttest-ind",
+    "type": "alternative_to",
+    "via": "explore/Assumption tests"
+  },
+  {
+    "source": "shapiro-wilk",
+    "target": "ttest-rel",
+    "type": "alternative_to",
+    "via": "explore/Assumption tests"
+  },
+  {
+    "source": "shufflesplit",
+    "target": "stratifiedgroupkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "shufflesplit",
+    "target": "stratifiedkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "shufflesplit",
+    "target": "stratifiedshufflesplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "shufflesplit",
+    "target": "timeseriessplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "shufflesplit",
+    "target": "train-test-split",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "smote",
+    "target": "onehotencoder",
+    "type": "needs",
+    "via": "prep:transform/Categorical encoding"
+  },
+  {
+    "source": "smote",
+    "target": "ordinalencoder",
+    "type": "needs",
+    "via": "prep:transform/Categorical encoding"
+  },
+  {
+    "source": "smote",
+    "target": "smoten",
+    "type": "alternative_to",
+    "via": "transform/Over-sampling"
+  },
+  {
+    "source": "smote",
+    "target": "smotenc",
+    "type": "alternative_to",
+    "via": "transform/Over-sampling"
+  },
+  {
+    "source": "smote",
+    "target": "svmsmote",
+    "type": "alternative_to",
+    "via": "transform/Over-sampling"
+  },
+  {
+    "source": "smote",
+    "target": "targetencoder",
+    "type": "needs",
+    "via": "prep:transform/Categorical encoding"
+  },
+  {
+    "source": "smote",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
+    "source": "smoteenn",
+    "target": "smotetomek",
+    "type": "alternative_to",
+    "via": "transform/Combined sampling"
+  },
+  {
+    "source": "smoten",
+    "target": "smotenc",
+    "type": "alternative_to",
+    "via": "transform/Over-sampling"
+  },
+  {
+    "source": "smoten",
+    "target": "svmsmote",
+    "type": "alternative_to",
+    "via": "transform/Over-sampling"
+  },
+  {
+    "source": "smotenc",
+    "target": "svmsmote",
+    "type": "alternative_to",
+    "via": "transform/Over-sampling"
+  },
+  {
+    "source": "stacking",
+    "target": "voting",
+    "type": "alternative_to",
+    "via": "model/Combining models"
+  },
+  {
+    "source": "standardscaler",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
+    "source": "stratifiedgroupkfold",
+    "target": "stratifiedkfold",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "stratifiedgroupkfold",
+    "target": "stratifiedshufflesplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "stratifiedgroupkfold",
+    "target": "timeseriessplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "stratifiedgroupkfold",
+    "target": "train-test-split",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "stratifiedkfold",
+    "target": "stratifiedshufflesplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "stratifiedkfold",
+    "target": "timeseriessplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "stratifiedkfold",
+    "target": "train-test-split",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "stratifiedshufflesplit",
+    "target": "timeseriessplit",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "stratifiedshufflesplit",
+    "target": "train-test-split",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "successivehalvingpruner",
+    "target": "thresholdpruner",
+    "type": "alternative_to",
+    "via": "tune/Pruners"
+  },
+  {
+    "source": "successivehalvingpruner",
+    "target": "wilcoxonpruner",
+    "type": "alternative_to",
+    "via": "tune/Pruners"
+  },
+  {
+    "source": "svc",
+    "target": "svr",
+    "type": "alternative_to",
+    "via": "model/Kernel"
+  },
+  {
+    "source": "terminator",
+    "target": "terminatorcallback",
+    "type": "alternative_to",
+    "via": "tune/Early stopping"
+  },
+  {
+    "source": "thresholdpruner",
+    "target": "wilcoxonpruner",
+    "type": "alternative_to",
+    "via": "tune/Pruners"
+  },
+  {
+    "source": "timeseriessplit",
+    "target": "train-test-split",
+    "type": "alternative_to",
+    "via": "split/Splitters"
+  },
+  {
+    "source": "top-k-accuracy-score",
+    "target": "zero-one-loss",
+    "type": "alternative_to",
+    "via": "evaluate/Classification metrics"
+  },
+  {
+    "source": "treeexplainer",
+    "target": "xgboost",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "ttest-1samp",
+    "target": "ttest-ind",
+    "type": "alternative_to",
+    "via": "explore/Assumption tests"
+  },
+  {
+    "source": "ttest-1samp",
+    "target": "ttest-rel",
+    "type": "alternative_to",
+    "via": "explore/Assumption tests"
+  },
+  {
+    "source": "ttest-ind",
+    "target": "ttest-rel",
+    "type": "alternative_to",
+    "via": "explore/Assumption tests"
+  },
+  {
+    "source": "var",
+    "target": "varmax",
+    "type": "alternative_to",
+    "via": "model/Multivariate"
+  },
+  {
+    "source": "xgboost",
+    "target": "compute-class-weight",
+    "type": "recommended",
+    "via": "prep:model/Class weighting"
+  },
+  {
+    "source": "xgboost",
+    "target": "iterativeimputer",
+    "type": "clashes",
+    "via": "prep:clean/Imputation"
+  },
+  {
+    "source": "xgboost",
+    "target": "kernelcenterer",
+    "type": "clashes",
+    "via": "prep:transform/Scaling"
+  },
+  {
+    "source": "xgboost",
+    "target": "knnimputer",
+    "type": "clashes",
+    "via": "prep:clean/Imputation"
+  },
+  {
+    "source": "xgboost",
+    "target": "maxabsscaler",
+    "type": "clashes",
+    "via": "prep:transform/Scaling"
+  },
+  {
+    "source": "xgboost",
+    "target": "minmaxscaler",
+    "type": "clashes",
+    "via": "prep:transform/Scaling"
+  },
+  {
+    "source": "xgboost",
+    "target": "missingindicator",
+    "type": "clashes",
+    "via": "prep:clean/Imputation"
+  },
+  {
+    "source": "xgboost",
+    "target": "normalizer",
+    "type": "clashes",
+    "via": "prep:transform/Scaling"
+  },
+  {
+    "source": "xgboost",
+    "target": "onehotencoder",
+    "type": "needs",
+    "via": "prep:transform/Categorical encoding"
+  },
+  {
+    "source": "xgboost",
+    "target": "ordinalencoder",
+    "type": "needs",
+    "via": "prep:transform/Categorical encoding"
+  },
+  {
+    "source": "xgboost",
+    "target": "robustscaler",
+    "type": "clashes",
+    "via": "prep:transform/Scaling"
+  },
+  {
+    "source": "xgboost",
+    "target": "simpleimputer",
+    "type": "clashes",
+    "via": "prep:clean/Imputation"
+  },
+  {
+    "source": "xgboost",
+    "target": "standardscaler",
+    "type": "clashes",
+    "via": "prep:transform/Scaling"
+  },
+  {
+    "source": "xgboost",
+    "target": "targetencoder",
+    "type": "needs",
+    "via": "prep:transform/Categorical encoding"
+  },
+  {
+    "source": "xgboost",
+    "target": "train-test-split",
+    "type": "recommended",
+    "via": "prep"
+  }
+]

@@ -1,0 +1,67 @@
+id: timeseriessplit
+plain_name: Time series split
+code_name: TimeSeriesSplit
+aliases: [walk-forward, rolling origin, forward chaining]
+stage: split
+family: Splitters
+tracks: [time-series]
+archetype: splitter
+question_tags: [time-ordered, forecasting]
+targets: [sklearn.model_selection.TimeSeriesSplit]
+pairs_with: []
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: splitter, rows: 20, folds: 5, ordered: true}
+    line: Tests on rows that come after the training rows.
+  quick_facts:
+    facts:
+      - {label: Default folds, value: "5"}
+      - {label: Order kept, value: "yes"}
+  use_avoid:
+    use_when: [time-ordered data, forecasting]
+    avoid_when: [shuffled rows, no time order]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.model_selection.TimeSeriesSplit
+      why_this_library: Built for ordered data, with an optional gap.
+      snippet: |
+        # scikit-learn 1.9.1
+        import numpy as np
+        from sklearn.model_selection import TimeSeriesSplit
+
+        X = np.arange(12).reshape(-1, 1)  # 12 rows, oldest first
+
+        tscv = TimeSeriesSplit(n_splits=3)
+        for fold, (train_idx, test_idx) in enumerate(tscv.split(X)):
+            print(fold, "train", train_idx, "test", test_idx)
+  catch_outs:
+    - Rows must already be sorted oldest to newest.
+    - Early folds train on little data.
+    - Use gap to skip rows that leak into the test window.
+  key_settings:
+    tier1:
+      - {name: n_splits, page: null}
+    tier2:
+      - {name: test_size, page: null}
+      - {name: gap, page: null}
+    tier3:
+      - {name: max_train_size, page: null}
+  watch_it_work:
+    dataset: airline-passengers
+    control: {name: n_splits, min: 2, max: 8, step: 1, default: 5}
+  intuition:
+    text: Train on the past, test on the next slice, then move forward.
+  next: []

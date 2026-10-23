@@ -1,0 +1,69 @@
+id: pipeline
+plain_name: Pipeline
+code_name: Pipeline
+aliases: [chain steps, make_pipeline, workflow]
+stage: transform
+family: Composition
+tracks: [standard]
+archetype: composer
+question_tags: [not reproducible, data leakage]
+targets: [sklearn.pipeline.Pipeline]
+pairs_with: [standardscaler, randomizedsearchcv]
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: composer, boxes: [Imputer, Encoder, Scaler, Model]}
+    line: Chains steps into one object that fits as a unit.
+  quick_facts:
+    facts:
+      - {label: Last step, value: model or transformer}
+      - {label: Step names, value: your choice}
+  use_avoid:
+    use_when: [avoid leakage, cross-validation, reproducible runs]
+    avoid_when: [resampling steps]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.pipeline.Pipeline
+      why_this_library: Keeps scaling inside each cross-validation fold.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import make_regression
+        from sklearn.linear_model import Ridge
+        from sklearn.model_selection import cross_val_score
+        from sklearn.pipeline import Pipeline
+        from sklearn.preprocessing import StandardScaler
+
+        X, y = make_regression(n_samples=200, n_features=5, noise=10, random_state=0)
+
+        pipe = Pipeline([
+            ("scale", StandardScaler()),
+            ("model", Ridge()),
+        ])
+        print(cross_val_score(pipe, X, y, cv=5).round(3))
+  catch_outs:
+    - Samplers like SMOTE need imblearn's Pipeline instead.
+    - Tune step settings as stepname__setting.
+    - Last step can be a model; earlier ones must transform.
+  key_settings:
+    tier1:
+      - {name: steps, page: null}
+    tier2:
+      - {name: memory, page: null}
+    tier3:
+      - {name: verbose, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    text: Each step feeds the next; fit and predict run through all.
+  next: []

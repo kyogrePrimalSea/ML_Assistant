@@ -1,0 +1,73 @@
+id: selectkbest
+plain_name: Keep top K columns
+code_name: SelectKBest
+aliases: [univariate selection, filter selection, k best]
+stage: select
+family: Feature selection
+tracks: [standard]
+archetype: selector
+question_tags: [too many columns, high-dimensional]
+targets: [sklearn.feature_selection.SelectKBest]
+pairs_with: [pipeline]
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SelectKBest.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: shrinks}
+slots:
+  header: {}
+  solves:
+    hero: {kind: selector, dataset: breast-cancer, columns: [mean radius, mean texture, mean area, mean smoothness], kept: [mean radius, mean area]}
+    line: Keeps the K columns that score highest.
+  quick_facts:
+    facts:
+      - {label: Default k, value: "10"}
+      - {label: Default score, value: f_classif}
+  use_avoid:
+    use_when: [many columns, quick filter]
+    avoid_when: [feature interactions, regression with default score]
+  prep:
+    - step: {page: train-test-split}
+      status: required
+      why: Score columns on training rows only.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.feature_selection.SelectKBest
+      why_this_library: Simple filter that fits inside a Pipeline.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.feature_selection import SelectKBest, f_classif
+
+        data = load_breast_cancer()
+        X, y = data.data, data.target
+
+        selector = SelectKBest(score_func=f_classif, k=5)
+        X_small = selector.fit_transform(X, y)
+
+        print(X.shape, "->", X_small.shape)
+        print(data.feature_names[selector.get_support()].tolist())
+  catch_outs:
+    - Default score_func f_classif only works for classification.
+    - For regression, pass f_regression.
+    - Fit on training rows only, or scores leak.
+  key_settings:
+    tier1:
+      - {name: k, page: null}
+      - {name: score_func, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work:
+    dataset: breast-cancer
+    control: {name: k, min: 1, max: 30, step: 1, default: 10}
+  intuition:
+    text: Score each column against the target, keep the top K.
+  next: []

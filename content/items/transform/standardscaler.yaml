@@ -1,0 +1,75 @@
+id: standardscaler
+plain_name: Standard scaler
+code_name: StandardScaler
+aliases: [z-score, standardise, standardize, normalise]
+stage: transform
+family: Scaling
+tracks: [standard]
+archetype: transformer
+question_tags: [features on different scales, messy]
+targets: [sklearn.preprocessing.StandardScaler]
+pairs_with: [pipeline]
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: transformer, dataset: ames, columns: [LotArea, YearBuilt], changed: [LotArea, YearBuilt]}
+    line: Puts every number column on one scale.
+  quick_facts:
+    facts:
+      - {label: Result, value: "mean 0, spread 1"}
+      - {label: Learns from data, value: "yes: fit on train only"}
+  use_avoid:
+    use_when: [linear models, distance-based models, mixed scales]
+    avoid_when: [tree models, heavy outliers]
+  prep:
+    - step: {page: train-test-split}
+      status: required
+      why: Fit the scaler on training rows only.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.preprocessing.StandardScaler
+      why_this_library: Fits inside a Pipeline, so no leakage.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import make_regression
+        from sklearn.model_selection import train_test_split
+        from sklearn.preprocessing import StandardScaler
+
+        X, y = make_regression(n_samples=200, n_features=3, random_state=0)
+        X[:, 0] *= 1000  # one column on a much bigger scale
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        scaler = StandardScaler()
+        X_train_s = scaler.fit_transform(X_train)  # learn mean and spread here
+        X_test_s = scaler.transform(X_test)        # reuse them, never refit
+
+        print(X_train_s.mean(axis=0).round(2))
+        print(X_train_s.std(axis=0).round(2))
+  catch_outs:
+    - Fit on training rows only; never fit on the test set.
+    - Outliers shift the mean and spread.
+    - Output is a NumPy array unless you call set_output.
+  key_settings:
+    tier1:
+      - {name: with_mean, page: null}
+      - {name: with_std, page: null}
+    tier2: []
+    tier3:
+      - {name: copy, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    text: Subtract the column mean, then divide by its spread.
+  next: []

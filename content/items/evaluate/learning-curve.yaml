@@ -1,0 +1,73 @@
+id: learning-curve
+plain_name: Learning curve
+code_name: learning_curve
+aliases: [more data curve, train vs validation score, bias variance plot]
+stage: evaluate
+family: Validation curves
+tracks: [standard]
+archetype: diagnostic
+question_tags: [overfitting, need more data, how good is it]
+targets: [sklearn.model_selection.learning_curve]
+pairs_with: []
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.learning_curve.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: ames, chart: train vs validation score by training rows}
+    line: Shows if more data or a simpler model would help.
+  quick_facts:
+    facts:
+      - {label: Default folds, value: 5-fold}
+      - {label: Default sizes, value: 10% to 100%}
+  use_avoid:
+    use_when: [overfitting, deciding to collect data]
+    avoid_when: [no time for many fits, huge data]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.model_selection.learning_curve
+      why_this_library: Returns the numbers; you choose the plot.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import make_regression
+        from sklearn.linear_model import Ridge
+        from sklearn.model_selection import learning_curve
+
+        X, y = make_regression(n_samples=300, n_features=10, noise=25, random_state=0)
+
+        sizes, train_scores, val_scores = learning_curve(
+            Ridge(), X, y, train_sizes=[0.2, 0.5, 1.0], cv=5
+        )
+        print(sizes)
+        print(train_scores.mean(axis=1).round(2))
+        print(val_scores.mean(axis=1).round(2))
+  catch_outs:
+    - Fits the model once per size per fold.
+    - Gap between lines means overfitting.
+    - Rows are not shuffled unless shuffle is True.
+  key_settings:
+    tier1:
+      - {name: train_sizes, page: null}
+      - {name: cv, page: null}
+      - {name: scoring, page: null}
+    tier2:
+      - {name: shuffle, page: null}
+      - {name: random_state, page: null}
+    tier3:
+      - {name: n_jobs, page: null}
+  watch_it_work:
+    dataset: ames
+    control: {name: training rows, min: 20, max: 1000, step: 20, default: 200}
+  intuition:
+    text: Train on more and more rows and watch both scores.
+  next: [model-overfitting]

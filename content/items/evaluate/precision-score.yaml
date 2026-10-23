@@ -1,0 +1,73 @@
+id: precision-score
+plain_name: Precision
+code_name: precision_score
+aliases: [positive predictive value, ppv, how many flagged are right]
+stage: evaluate
+family: Classification metrics
+tracks: [standard]
+archetype: metric
+question_tags: [how good is it, false alarms]
+targets: [sklearn.metrics.precision_score]
+pairs_with: []
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.metrics.precision_score.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: titanic, highlight: [TP, FP]}
+    line: Of the rows flagged positive, how many really are.
+  quick_facts:
+    facts:
+      - {label: Formula, value: TP / (TP + FP)}
+      - {label: Range, value: 0 to 1}
+      - {label: Default average, value: binary}
+  use_avoid:
+    use_when: [false alarms are costly, imbalanced classes]
+    avoid_when: [regression, missed cases are costly]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.precision_score
+      why_this_library: One call; handles binary and multiclass.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.metrics import precision_score
+        from sklearn.model_selection import train_test_split
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = LogisticRegression(max_iter=5000).fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+
+        print(precision_score(y_test, y_pred))
+  catch_outs:
+    - Ignores missed positives; check recall too.
+    - Multiclass needs average set (not binary).
+    - No predicted positives gives 0 and a warning; set zero_division.
+  key_settings:
+    tier1:
+      - {name: average, page: null}
+      - {name: pos_label, page: null}
+    tier2:
+      - {name: zero_division, page: null}
+    tier3:
+      - {name: sample_weight, page: null}
+      - {name: labels, page: null}
+  watch_it_work:
+    dataset: titanic
+    control: {name: threshold, min: 0, max: 1, step: 0.05, default: 0.5}
+  intuition:
+    text: Count the right flags, divide by all flags.
+  next: []

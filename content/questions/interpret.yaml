@@ -1,0 +1,11 @@
+stage: interpret
+questions:
+  - id: know-feature-importance
+    stem: i_want_to_know
+    text: Which features matter
+    stage: interpret
+    tracks: [standard]
+    answers:
+      - {page: feature-importances}
+      - {page: treeexplainer}
+    next: []

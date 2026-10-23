@@ -1,0 +1,11 @@
+stage: evaluate
+questions:
+  - id: evaluate-how-good
+    stem: i_want_to_know
+    text: How good is it now?
+    stage: evaluate
+    tracks: [standard]
+    answers:
+      - {page: precision-score}
+      - {page: learning-curve}
+    next: [know-feature-importance]

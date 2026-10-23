@@ -1,0 +1,76 @@
+id: feature-importances
+plain_name: Feature importances
+code_name: feature_importances_
+aliases: [variable importance, feature importance, gini importance]
+stage: interpret
+family: Model attributes
+tracks: [standard]
+archetype: output
+question_tags: [which features matter]
+targets: []
+applies_to: [decision-tree-regressor, random-forest, gradient-boosting, xgboost, lightgbm]
+pairs_with: [treeexplainer]
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html
+  - https://xgboost.readthedocs.io/en/stable/python/python_api.html
+  - https://lightgbm.readthedocs.io/en/stable/pythonapi/lightgbm.LGBMRegressor.html
+library_versions:
+  scikit-learn: "1.9.1"
+  xgboost: "3.4.1"
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: output, dataset: ames, plot: bar}
+    line: One score per column, showing how much the model used it.
+  quick_facts:
+    facts:
+      - {label: Shape, value: one value per column}
+      - {label: Exists after, value: fit}
+  use_avoid:
+    use_when: [quick look at tree models, ranking columns]
+    avoid_when: [many-valued columns, causal claims]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.ensemble.RandomForestRegressor
+      why_this_library: Impurity-based; scikit-learn flags its bias.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import make_regression
+        from sklearn.ensemble import RandomForestRegressor
+
+        X, y = make_regression(n_samples=300, n_features=5, n_informative=3, noise=20, random_state=0)
+
+        model = RandomForestRegressor(n_estimators=50, random_state=0).fit(X, y)
+        print(model.feature_importances_.round(2))
+    - library: xgboost
+      target: xgboost.XGBRegressor
+      why_this_library: Value depends on the importance_type setting.
+      snippet: |
+        # xgboost 3.4.1
+        from sklearn.datasets import make_regression
+        from xgboost import XGBRegressor
+
+        X, y = make_regression(n_samples=300, n_features=5, n_informative=3, noise=20, random_state=0)
+
+        model = XGBRegressor(n_estimators=50).fit(X, y)
+        print(model.feature_importances_.round(2))
+  catch_outs:
+    - Impurity importances can mislead for many-valued columns.
+    - Try permutation_importance as a cross-check.
+    - Only exists after fit.
+  key_settings:
+    tier1: []
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: Tally how much each column helped the trees split.
+  next: []
