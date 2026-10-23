@@ -54,6 +54,26 @@
       "description": "(list of str) List of human readable names for unobserved states",
       "name": "state_names",
       "type_doc": ""
+    },
+    {
+      "description": "",
+      "name": "initial_variance",
+      "type_doc": ""
+    },
+    {
+      "description": "",
+      "name": "initialization",
+      "type_doc": ""
+    },
+    {
+      "description": "",
+      "name": "loglikelihood_burn",
+      "type_doc": ""
+    },
+    {
+      "description": "",
+      "name": "tolerance",
+      "type_doc": ""
     }
   ],
   "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.tsa.statespace.varmax.VARMAX.html",
@@ -240,7 +260,14 @@
       "summary": "Update the parameters of the model"
     }
   ],
-  "overrides_applied": [],
+  "overrides_applied": [
+    {
+      "op": "append",
+      "path": "attributes",
+      "reason": "Properties listed in the Properties table of the official page that the extractor did not capture (not in the numpydoc Attributes block, or undocumented properties). Descriptions are from the page table, blank where the page gives none.",
+      "source_url": "https://www.statsmodels.org/stable/generated/statsmodels.tsa.statespace.varmax.VARMAX.html"
+    }
+  ],
   "parameters": [
     {
       "allowed": {

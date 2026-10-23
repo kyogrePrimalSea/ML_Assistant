@@ -39,29 +39,25 @@
   {
     "id": "sklearn.compose.ColumnTransformer",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.compose.ColumnTransformer.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "named_transformers_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "sklearn.compose.TransformedTargetRegressor",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.compose.TransformedTargetRegressor.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "n_features_in_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
@@ -177,229 +173,193 @@
   {
     "id": "sklearn.ensemble.AdaBoostClassifier",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostClassifier.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "feature_importances_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "sklearn.ensemble.AdaBoostRegressor",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostRegressor.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "feature_importances_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "sklearn.ensemble.BaggingClassifier",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.BaggingClassifier.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "estimators_samples_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "sklearn.ensemble.BaggingRegressor",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.BaggingRegressor.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "estimators_samples_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "sklearn.ensemble.ExtraTreesClassifier",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.ExtraTreesClassifier.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "feature_importances_",
-        "estimators_samples_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "sklearn.ensemble.ExtraTreesRegressor",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.ExtraTreesRegressor.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "feature_importances_",
-        "estimators_samples_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "sklearn.ensemble.GradientBoostingClassifier",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingClassifier.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "feature_importances_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "sklearn.ensemble.GradientBoostingRegressor",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingRegressor.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "feature_importances_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "sklearn.ensemble.HistGradientBoostingClassifier",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.HistGradientBoostingClassifier.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "n_iter_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "sklearn.ensemble.HistGradientBoostingRegressor",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "n_iter_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "sklearn.ensemble.RandomForestClassifier",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "feature_importances_",
-        "estimators_samples_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "sklearn.ensemble.RandomForestRegressor",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "feature_importances_",
-        "estimators_samples_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "sklearn.ensemble.StackingClassifier",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.StackingClassifier.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "n_features_in_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "sklearn.ensemble.StackingRegressor",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.StackingRegressor.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "n_features_in_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "sklearn.ensemble.VotingClassifier",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.VotingClassifier.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "n_features_in_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "sklearn.ensemble.VotingRegressor",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.VotingRegressor.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "n_features_in_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
@@ -417,29 +377,25 @@
   {
     "id": "sklearn.feature_selection.RFE",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.RFE.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "classes_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "sklearn.feature_selection.RFECV",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.RFECV.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "classes_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
@@ -469,16 +425,13 @@
   {
     "id": "sklearn.feature_selection.SelectFromModel",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SelectFromModel.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "n_features_in_",
-        "threshold_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
@@ -622,15 +575,13 @@
   {
     "id": "sklearn.gaussian_process.GaussianProcessClassifier",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.gaussian_process.GaussianProcessClassifier.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "kernel_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
@@ -794,15 +745,13 @@
   {
     "id": "sklearn.linear_model.ElasticNet",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.ElasticNet.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "sparse_coef_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
@@ -856,15 +805,13 @@
   {
     "id": "sklearn.linear_model.Lasso",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Lasso.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "sparse_coef_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
@@ -1874,30 +1821,25 @@
   {
     "id": "sklearn.model_selection.FixedThresholdClassifier",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.FixedThresholdClassifier.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "classes_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "sklearn.model_selection.GridSearchCV",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "classes_",
-        "n_features_in_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
@@ -1929,31 +1871,25 @@
   {
     "id": "sklearn.model_selection.HalvingGridSearchCV",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.HalvingGridSearchCV.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "classes_",
-        "n_features_in_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "sklearn.model_selection.HalvingRandomSearchCV",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.HalvingRandomSearchCV.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "classes_",
-        "n_features_in_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
@@ -1984,22 +1920,28 @@
   {
     "id": "sklearn.model_selection.LeaveOneGroupOut",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.LeaveOneGroupOut.html",
-    "status": "unparsed",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
-    "attribute_diff": {},
-    "error": "page layout not recognised"
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
   },
   {
     "id": "sklearn.model_selection.LeaveOneOut",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.LeaveOneOut.html",
-    "status": "unparsed",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
-    "attribute_diff": {},
-    "error": "page layout not recognised"
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
   },
   {
     "id": "sklearn.model_selection.LeavePGroupsOut",
@@ -2069,16 +2011,13 @@
   {
     "id": "sklearn.model_selection.RandomizedSearchCV",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "classes_",
-        "n_features_in_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
@@ -2175,15 +2114,13 @@
   {
     "id": "sklearn.model_selection.TunedThresholdClassifierCV",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TunedThresholdClassifierCV.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "classes_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
@@ -2418,32 +2355,25 @@
   {
     "id": "sklearn.pipeline.FeatureUnion",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.FeatureUnion.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "n_features_in_",
-        "feature_names_in_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "sklearn.pipeline.Pipeline",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "classes_",
-        "n_features_in_",
-        "feature_names_in_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
@@ -2511,12 +2441,14 @@
   {
     "id": "sklearn.preprocessing.KernelCenterer",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.KernelCenterer.html",
-    "status": "unparsed",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
-    "attribute_diff": {},
-    "error": "page layout not recognised"
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": []
+    }
   },
   {
     "id": "sklearn.preprocessing.LabelBinarizer",
@@ -2533,12 +2465,14 @@
   {
     "id": "sklearn.preprocessing.LabelEncoder",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.LabelEncoder.html",
-    "status": "unparsed",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
-    "attribute_diff": {},
-    "error": "page layout not recognised"
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": []
+    }
   },
   {
     "id": "sklearn.preprocessing.MaxAbsScaler",
@@ -2591,43 +2525,37 @@
   {
     "id": "sklearn.preprocessing.OneHotEncoder",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OneHotEncoder.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "infrequent_categories_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "sklearn.preprocessing.OrdinalEncoder",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OrdinalEncoder.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "infrequent_categories_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "sklearn.preprocessing.PolynomialFeatures",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.PolynomialFeatures.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "powers_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
@@ -2693,15 +2621,13 @@
   {
     "id": "sklearn.preprocessing.TargetEncoder",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.TargetEncoder.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "infrequent_categories_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
@@ -2861,90 +2787,73 @@
   {
     "id": "sklearn.svm.NuSVR",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.svm.NuSVR.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "coef_",
-        "n_support_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "sklearn.svm.SVC",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "coef_",
-        "n_support_",
-        "probA_",
-        "probB_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "sklearn.svm.SVR",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "coef_",
-        "n_support_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "sklearn.tree.DecisionTreeClassifier",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "feature_importances_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "sklearn.tree.DecisionTreeRegressor",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeRegressor.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "feature_importances_"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "sklearn.tree.ExtraTreeRegressor",
     "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.tree.ExtraTreeRegressor.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "feature_importances_"
-      ]
+      "missing_in_docs": []
     }
   },
   {

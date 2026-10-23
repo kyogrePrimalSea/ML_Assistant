@@ -34,11 +34,6 @@
       "description": "If `target_type_` is 'binary' or 'multiclass', holds the label for each class,\notherwise `None`.",
       "name": "classes_",
       "type_doc": "ndarray or None"
-    },
-    {
-      "description": "Infrequent categories for each feature.",
-      "name": "infrequent_categories_",
-      "type_doc": ""
     }
   ],
   "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.TargetEncoder.html",
@@ -90,7 +85,14 @@
       "summary": "Transform X with the target encoding."
     }
   ],
-  "overrides_applied": [],
+  "overrides_applied": [
+    {
+      "op": "remove",
+      "path": "attributes[name=infrequent_categories_]",
+      "reason": "The installed class exposes an infrequent_categories_ property (inherited from a private base class) that the official TargetEncoder page does not document (the page lists encodings_, categories_, target_type_, target_mean_, n_features_in_, feature_names_in_, classes_). Removed so the record matches the documented attributes.",
+      "source_url": "https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.TargetEncoder.html"
+    }
+  ],
   "parameters": [
     {
       "allowed": {

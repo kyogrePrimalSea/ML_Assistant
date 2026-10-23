@@ -54,6 +54,12 @@ Sphinx/numpydoc from the library's own docstrings and signatures. So:
 3. Discrepancies are resolved by hand in `content/extraction/overrides/<id>.yaml`
    (each override carries `source_url` and `reason`); the extractor merges
    overrides so regeneration is reproducible.
+   Each patch has a `path` and an optional `op`: `set` (default; replaces the value
+   at `path`), `append` (`path` names a list and `value` is a list of entries to add;
+   an entry whose `name` already exists is an error) or `remove` (`path` selects a
+   list entry such as `attributes[name=x]`, no `value`; absent entry is an error).
+   Setting a parameter's `default` also drops that parameter's memory-address
+   default-repr warning.
 
 ## Inventory entry contract
 

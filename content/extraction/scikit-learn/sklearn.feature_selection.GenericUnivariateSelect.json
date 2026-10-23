@@ -152,9 +152,7 @@
     }
   ],
   "returns": [],
-  "signature": "GenericUnivariateSelect(score_func=<function f_classif at 0x7fa25d921590>, *, mode='percentile', param=1e-05)",
+  "signature": "GenericUnivariateSelect(score_func=<function f_classif at 0x7ff49af32140>, *, mode='percentile', param=1e-05)",
   "summary": "Univariate feature selector with configurable strategy.",
-  "warnings": [
-    "parameter score_func: default repr contains a memory address"
-  ]
+  "warnings": []
 }

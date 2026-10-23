@@ -1,0 +1,103 @@
+<!doctype html><html><body>
+<dl class="py function">
+<dt class="sig sig-object py" id="shap.plots.decision">
+<span class="sig-prename descclassname"><span class="pre">shap.plots.</span></span><span class="sig-name descname"><span class="pre">decision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shap_values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Series</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'importance'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_display_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">highlight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'identity'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plot_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#333333'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_demarc_color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#333333'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_bar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_size_plot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_objects</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_warnings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_base_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legend_labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">legend_location</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'best'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DecisionPlotResult</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#shap.plots.decision" title="Link to this definition"></a></dt>
+<dd><p>Visualize model decisions using cumulative SHAP values.</p>
+<p>Each plotted line explains a single model prediction. If a single prediction is plotted, feature values will be
+printed in the plot (if supplied). If multiple predictions are plotted together, feature values will not be printed.
+Plotting too many predictions together will make the plot unintelligible.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>base_value</strong><span class="classifier">float or numpy.ndarray</span></dt><dd><p>This is the reference value that the feature contributions start from. Usually, this is
+<code class="docutils literal notranslate"><span class="pre">explainer.expected_value</span></code>.</p>
+</dd>
+<dt><strong>shap_values</strong><span class="classifier">numpy.ndarray</span></dt><dd><p>Matrix of SHAP values (# features) or (# samples x # features) from
+<code class="docutils literal notranslate"><span class="pre">explainer.shap_values()</span></code>. Or cube of SHAP interaction values (# samples x
+# features x # features) from <code class="docutils literal notranslate"><span class="pre">explainer.shap_interaction_values()</span></code>.</p>
+</dd>
+<dt><strong>features</strong><span class="classifier">numpy.array or pandas.Series or pandas.DataFrame or numpy.ndarray or list</span></dt><dd><p>Matrix of feature values (# features) or (# samples x # features). This provides the values of all the
+features and, optionally, the feature names.</p>
+</dd>
+<dt><strong>feature_names</strong><span class="classifier">list or numpy.ndarray</span></dt><dd><p>List of feature names (# features). If <code class="docutils literal notranslate"><span class="pre">None</span></code>, names may be derived from the
+<code class="docutils literal notranslate"><span class="pre">features</span></code> argument if a Pandas object is provided. Otherwise, numeric feature
+names will be generated.</p>
+</dd>
+<dt><strong>feature_order</strong><span class="classifier">str or None or list or numpy.ndarray</span></dt><dd><p>Any of “importance” (the default), “hclust” (hierarchical clustering), <code class="docutils literal notranslate"><span class="pre">None</span></code>,
+or a list/array of indices.</p>
+</dd>
+<dt><strong>feature_display_range: slice or range</strong></dt><dd><p>The slice or range of features to plot after ordering features by <code class="docutils literal notranslate"><span class="pre">feature_order</span></code>. A step of 1 or <code class="docutils literal notranslate"><span class="pre">None</span></code>
+will display the features in ascending order. A step of -1 will display the features in descending order. If
+<code class="docutils literal notranslate"><span class="pre">feature_display_range=None</span></code>, <code class="docutils literal notranslate"><span class="pre">slice(-1,</span> <span class="pre">-21,</span> <span class="pre">-1)</span></code> is used (i.e. show the last 20 features in descending order).
+If <code class="docutils literal notranslate"><span class="pre">shap_values</span></code> contains interaction values, the number of features is automatically expanded to include all
+possible interactions: N(N + 1)/2 where N = <code class="docutils literal notranslate"><span class="pre">shap_values.shape[1]</span></code>.</p>
+</dd>
+<dt><strong>highlight</strong><span class="classifier">Any</span></dt><dd><p>Specify which observations to draw in a different line style. All numpy indexing methods are supported. For
+example, list of integer indices, or a bool array.</p>
+</dd>
+<dt><strong>link</strong><span class="classifier">str</span></dt><dd><p>Use “identity” or “logit” to specify the transformation used for the x-axis. The “logit” link transforms
+log-odds into probabilities.</p>
+</dd>
+<dt><strong>plot_color</strong><span class="classifier">str or matplotlib.colors.ColorMap</span></dt><dd><p>Color spectrum used to draw the plot lines. If <code class="docutils literal notranslate"><span class="pre">str</span></code>, a registered matplotlib color name is assumed.</p>
+</dd>
+<dt><strong>axis_color</strong><span class="classifier">str or int</span></dt><dd><p>Color used to draw plot axes.</p>
+</dd>
+<dt><strong>y_demarc_color</strong><span class="classifier">str or int</span></dt><dd><p>Color used to draw feature demarcation lines on the y-axis.</p>
+</dd>
+<dt><strong>alpha</strong><span class="classifier">float</span></dt><dd><p>Alpha blending value in [0, 1] used to draw plot lines.</p>
+</dd>
+<dt><strong>color_bar</strong><span class="classifier">bool</span></dt><dd><p>Whether to draw the color bar (legend).</p>
+</dd>
+<dt><strong>auto_size_plot</strong><span class="classifier">bool</span></dt><dd><p>Whether to automatically size the matplotlib plot to fit the number of features
+displayed. If <code class="docutils literal notranslate"><span class="pre">False</span></code>, specify the plot size using matplotlib before calling
+this function.</p>
+</dd>
+<dt><strong>title</strong><span class="classifier">str</span></dt><dd><p>Title of the plot.</p>
+</dd>
+<dt><strong>xlim: tuple[float, float]</strong></dt><dd><p>The extents of the x-axis (e.g. <code class="docutils literal notranslate"><span class="pre">(-1.0,</span> <span class="pre">1.0)</span></code>). If not specified, the limits
+are determined by the maximum/minimum predictions centered around base_value
+when <code class="docutils literal notranslate"><span class="pre">link=&quot;identity&quot;</span></code>. When <code class="docutils literal notranslate"><span class="pre">link=&quot;logit&quot;</span></code>, the x-axis extents are <code class="docutils literal notranslate"><span class="pre">(0,</span>
+<span class="pre">1)</span></code> centered at 0.5. <code class="docutils literal notranslate"><span class="pre">xlim</span></code> values are not transformed by the <code class="docutils literal notranslate"><span class="pre">link</span></code>
+function. This argument is provided to simplify producing multiple plots on the
+same scale for comparison.</p>
+</dd>
+<dt><strong>show</strong><span class="classifier">bool</span></dt><dd><p>Whether <a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="(in Matplotlib v3.11.2)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.show()</span></code></a> is called before returning.
+Setting this to <code class="docutils literal notranslate"><span class="pre">False</span></code> allows the plot
+to be customized further after it has been created.</p>
+</dd>
+<dt><strong>return_objects</strong><span class="classifier">bool</span></dt><dd><p>Whether to return a <code class="xref py py-obj docutils literal notranslate"><span class="pre">DecisionPlotResult</span></code> object containing various plotting
+features. This can be used to generate multiple decision plots using the same
+feature ordering and scale.</p>
+</dd>
+<dt><strong>ignore_warnings</strong><span class="classifier">bool</span></dt><dd><p>Plotting many data points or too many features at a time may be slow, or may create very large plots. Set
+this argument to <code class="docutils literal notranslate"><span class="pre">True</span></code> to override hard-coded limits that prevent plotting large amounts of data.</p>
+</dd>
+<dt><strong>new_base_value</strong><span class="classifier">float</span></dt><dd><p>SHAP values are relative to a base value. By default, this base value is the
+expected value of the model’s raw predictions. Use <code class="docutils literal notranslate"><span class="pre">new_base_value</span></code> to shift
+the base value to an arbitrary value (e.g. the cutoff point for a binary
+classification task).</p>
+</dd>
+<dt><strong>legend_labels</strong><span class="classifier">list of str</span></dt><dd><p>List of legend labels. If <code class="docutils literal notranslate"><span class="pre">None</span></code>, legend will not be shown.</p>
+</dd>
+<dt><strong>legend_location</strong><span class="classifier">str</span></dt><dd><p>Legend location. Any of “best”, “upper right”, “upper left”, “lower left”, “lower right”, “right”,
+“center left”, “center right”, “lower center”, “upper center”, “center”.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt>DecisionPlotResult or None</dt><dd><p>Returns a <code class="xref py py-obj docutils literal notranslate"><span class="pre">DecisionPlotResult</span></code> object if <code class="docutils literal notranslate"><span class="pre">return_objects=True</span></code>. Returns <code class="docutils literal notranslate"><span class="pre">None</span></code> otherwise (the default).</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>Plot two decision plots using the same feature order and x-axis.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">range1</span><span class="p">,</span> <span class="n">range2</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">decision_plot</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">shap_values</span><span class="p">[</span><span class="n">range1</span><span class="p">],</span> <span class="n">features</span><span class="p">[</span><span class="n">range1</span><span class="p">],</span> <span class="n">return_objects</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">decision_plot</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">shap_values</span><span class="p">[</span><span class="n">range2</span><span class="p">],</span> <span class="n">features</span><span class="p">[</span><span class="n">range2</span><span class="p">],</span> <span class="n">feature_order</span><span class="o">=</span><span class="n">r</span><span class="o">.</span><span class="n">feature_idx</span><span class="p">,</span> <span class="n">xlim</span><span class="o">=</span><span class="n">r</span><span class="o">.</span><span class="n">xlim</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See more <a class="reference external" href="https://shap.readthedocs.io/en/latest/example_notebooks/api_examples/plots/decision_plot.html">decision plot examples here</a>.</p>
+</dd></dl>
+</body></html>

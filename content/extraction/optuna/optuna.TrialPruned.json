@@ -1,0 +1,30 @@
+{
+  "attributes": [],
+  "doc_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.TrialPruned.html",
+  "extractor_version": "1",
+  "id": "optuna.TrialPruned",
+  "import_path": "optuna.TrialPruned",
+  "kind": "class",
+  "library": "optuna",
+  "library_version": "5.0.0",
+  "methods": [
+    {
+      "name": "add_note",
+      "signature": "add_note(note, /)",
+      "summary": "Add a note to the exception"
+    },
+    {
+      "name": "with_traceback",
+      "signature": "with_traceback(tb, /)",
+      "summary": "Set self.__traceback__ to tb and return self."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [],
+  "returns": [],
+  "signature": "TrialPruned()",
+  "summary": "Exception for pruned trials.",
+  "warnings": [
+    "no signature retrievable (no signature found for builtin type <class 'optuna.exceptions.TrialPruned'>); recorded with empty parameters"
+  ]
+}

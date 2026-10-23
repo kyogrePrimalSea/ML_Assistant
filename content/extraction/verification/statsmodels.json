@@ -2,179 +2,145 @@
   {
     "id": "statsmodels.discrete.discrete_model.Logit",
     "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.discrete.discrete_model.Logit.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "endog_names",
-        "exog_names"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "statsmodels.discrete.discrete_model.MNLogit",
     "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.discrete.discrete_model.MNLogit.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "endog_names",
-        "exog_names"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "statsmodels.discrete.discrete_model.NegativeBinomial",
     "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.discrete.discrete_model.NegativeBinomial.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "endog_names",
-        "exog_names"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "statsmodels.discrete.discrete_model.Poisson",
     "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.discrete.discrete_model.Poisson.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "endog_names",
-        "exog_names"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "statsmodels.discrete.discrete_model.Probit",
     "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.discrete.discrete_model.Probit.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "endog_names",
-        "exog_names"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "statsmodels.genmod.families.family.Binomial",
     "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.genmod.families.family.Binomial.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "link"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "statsmodels.genmod.families.family.Gamma",
     "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.genmod.families.family.Gamma.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "link"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "statsmodels.genmod.families.family.Gaussian",
     "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.genmod.families.family.Gaussian.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "link"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "statsmodels.genmod.families.family.NegativeBinomial",
     "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.genmod.families.family.NegativeBinomial.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "link"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "statsmodels.genmod.families.family.Poisson",
     "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.genmod.families.family.Poisson.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "link"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "statsmodels.genmod.families.family.Tweedie",
     "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.genmod.families.family.Tweedie.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "link"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "statsmodels.genmod.generalized_linear_model.GLM",
     "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.genmod.generalized_linear_model.GLM.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "endog_names",
-        "exog_names",
-        "exposure_name",
-        "freq_weights_name",
-        "offset_name",
-        "var_weights_name"
-      ]
+      "missing_in_docs": []
     }
   },
   {
@@ -206,52 +172,37 @@
   {
     "id": "statsmodels.regression.linear_model.GLS",
     "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.GLS.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "df_model",
-        "df_resid",
-        "endog_names",
-        "exog_names"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "statsmodels.regression.linear_model.OLS",
     "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.OLS.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "df_model",
-        "df_resid",
-        "endog_names",
-        "exog_names"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "statsmodels.regression.linear_model.WLS",
     "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.WLS.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "df_model",
-        "df_resid",
-        "endog_names",
-        "exog_names"
-      ]
+      "missing_in_docs": []
     }
   },
   {
@@ -263,8 +214,7 @@
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [],
-      "note": "page lists no attributes; not compared"
+      "missing_in_docs": []
     }
   },
   {
@@ -276,23 +226,19 @@
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [],
-      "note": "page lists no attributes; not compared"
+      "missing_in_docs": []
     }
   },
   {
     "id": "statsmodels.robust.robust_linear_model.RLM",
     "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.robust.robust_linear_model.RLM.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "endog_names",
-        "exog_names"
-      ]
+      "missing_in_docs": []
     }
   },
   {
@@ -324,16 +270,13 @@
   {
     "id": "statsmodels.stats.outliers_influence.OLSInfluence",
     "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.stats.outliers_influence.OLSInfluence.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "det_cov_params_not_obsi",
-        "params_not_obsi"
-      ]
+      "missing_in_docs": []
     }
   },
   {
@@ -384,52 +327,31 @@
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [],
-      "note": "page lists no attributes; not compared"
+      "missing_in_docs": []
     }
   },
   {
     "id": "statsmodels.tsa.arima.model.ARIMA",
     "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.tsa.arima.model.ARIMA.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "endog_names",
-        "exog_names",
-        "initial_design",
-        "initial_selection",
-        "initial_state_intercept",
-        "initial_transition",
-        "model_latex_names",
-        "model_names",
-        "model_orders",
-        "param_names",
-        "param_terms",
-        "start_params",
-        "state_names"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "statsmodels.tsa.exponential_smoothing.ets.ETSModel",
     "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.tsa.exponential_smoothing.ets.ETSModel.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "endog_names",
-        "exog_names",
-        "k_params",
-        "param_names",
-        "start_params"
-      ]
+      "missing_in_docs": []
     }
   },
   {
@@ -441,8 +363,7 @@
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [],
-      "note": "page lists no attributes; not compared"
+      "missing_in_docs": []
     }
   },
   {
@@ -454,8 +375,7 @@
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [],
-      "note": "page lists no attributes; not compared"
+      "missing_in_docs": []
     }
   },
   {
@@ -467,8 +387,7 @@
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [],
-      "note": "page lists no attributes; not compared"
+      "missing_in_docs": []
     }
   },
   {
@@ -493,8 +412,7 @@
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [],
-      "note": "page lists no attributes; not compared"
+      "missing_in_docs": []
     }
   },
   {
@@ -513,63 +431,37 @@
   {
     "id": "statsmodels.tsa.statespace.sarimax.SARIMAX",
     "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.tsa.statespace.sarimax.SARIMAX.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "endog_names",
-        "exog_names",
-        "initial_design",
-        "initial_selection",
-        "initial_state_intercept",
-        "initial_transition",
-        "model_latex_names",
-        "model_names",
-        "model_orders",
-        "param_names",
-        "param_terms",
-        "start_params",
-        "state_names"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "statsmodels.tsa.statespace.structural.UnobservedComponents",
     "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.tsa.statespace.structural.UnobservedComponents.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "endog_names",
-        "exog_names",
-        "param_names",
-        "start_params",
-        "state_names"
-      ]
+      "missing_in_docs": []
     }
   },
   {
     "id": "statsmodels.tsa.statespace.varmax.VARMAX",
     "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.tsa.statespace.varmax.VARMAX.html",
-    "status": "mismatch",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [
-        "endog_names",
-        "exog_names",
-        "param_names",
-        "start_params",
-        "state_names"
-      ]
+      "missing_in_docs": []
     }
   },
   {
@@ -607,8 +499,7 @@
     "default_mismatches": [],
     "attribute_diff": {
       "missing_in_extraction": [],
-      "missing_in_docs": [],
-      "note": "page lists no attributes; not compared"
+      "missing_in_docs": []
     }
   }
 ]

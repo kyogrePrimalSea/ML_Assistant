@@ -11,3 +11,10 @@ Non-matches and resolution
 
 Spot-check by hand: TPESampler, create_study, Study, MedianPruner, plot_optimization_history. No gaps.
 Overrides: optuna.trial.FrozenTrial, optuna.study.MaxTrialsCallback.
+
+
+## T014 re-run
+
+After the T014 verifier/extractor fixes and full regeneration: 40 match / 0 mismatch / 0 unparsed / 0 fetch_error / 0 no record (of 40 items).
+
+NopPruner and TrialPruned (no-parenthesis headers; TrialPruned has no retrievable signature and is now recorded with empty parameters and a warning) and the attribute differences on NSGAIISampler, NSGAIIISampler and Trial now match. No remaining non-matches.

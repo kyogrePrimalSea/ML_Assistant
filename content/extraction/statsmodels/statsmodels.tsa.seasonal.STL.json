@@ -1,5 +1,16 @@
 {
-  "attributes": [],
+  "attributes": [
+    {
+      "description": "The parameters used in the model.",
+      "name": "config",
+      "type_doc": ""
+    },
+    {
+      "description": "The period length of the time series",
+      "name": "period",
+      "type_doc": ""
+    }
+  ],
   "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.tsa.seasonal.STL.html",
   "extractor_version": "1",
   "id": "statsmodels.tsa.seasonal.STL",
@@ -14,7 +25,14 @@
       "summary": "fit(inner_iter=None, outer_iter=None)"
     }
   ],
-  "overrides_applied": [],
+  "overrides_applied": [
+    {
+      "op": "append",
+      "path": "attributes",
+      "reason": "Properties listed in the Properties table of the official page that the extractor did not capture (not in the numpydoc Attributes block, or undocumented properties). Descriptions are from the page table, blank where the page gives none.",
+      "source_url": "https://www.statsmodels.org/stable/generated/statsmodels.tsa.seasonal.STL.html"
+    }
+  ],
   "parameters": [
     {
       "allowed": {

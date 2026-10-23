@@ -17,3 +17,10 @@ Overrides: 0.
 ## Spot check (3 of 9 matches)
 
 least_squares (jac, method, loss defaults), normaltest (nan_policy), ttest_1samp (alternative, nan_policy): names and defaults agree with the page (differences were only backslash/quote escaping in rendered text). Combined with statsmodels, 16 of 41 matches were checked (more than 10%).
+
+
+## T014 re-run
+
+After the T014 verifier/extractor fixes and full regeneration: 10 match / 0 mismatch / 0 unparsed / 0 fetch_error / 0 no record (of 10 items).
+
+No change from earlier runs.

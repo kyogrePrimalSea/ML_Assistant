@@ -198,7 +198,7 @@
     "T009": {
       "title": "E01 acceptance audit",
       "file": "tasks/T009-e01-acceptance-audit.md",
-      "status": "Backlog",
+      "status": "In progress",
       "dependencies": [
         "T006",
         "T007",
@@ -246,7 +246,7 @@
     "T014": {
       "title": "Verifier and override fixes; regenerate all extractions",
       "file": "tasks/T014-tool-fixes-and-regeneration.md",
-      "status": "In progress",
+      "status": "Done",
       "dependencies": [
         "T006",
         "T007",

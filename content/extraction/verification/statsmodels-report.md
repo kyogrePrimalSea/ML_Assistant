@@ -36,3 +36,10 @@ OLSInfluence (17 attrs), ARIMA (4: initial_variance, initialization, loglikeliho
 ## Spot check (13 of 32 matches)
 
 Independent script compared each record's parameter names and defaults, methods and attributes against the cached official page text, then hand-checked the unresolved cases (quoting differences only): Logit, Probit, Gaussian, Tweedie, MixedLM, acorr_ljungbox, variance_inflation_factor, AutoReg, ThetaModel, MSTL, kpss; scipy ones are listed in the SciPy report. All consistent.
+
+
+## T014 re-run
+
+After the T014 verifier/extractor fixes and full regeneration: 41 match / 0 mismatch / 0 unparsed / 0 fetch_error / 0 no record (of 41 items).
+
+The page lists properties in an autosummary "Properties" table; these now count as documented attributes. This removed the `missing_in_docs` mismatches (endog_names, exog_names, df_model, df_resid, ...) and exposed documented properties the extractor had missed. The 4 earlier full-list overrides (OLSInfluence, ARIMA, ETSModel, UnobservedComponents) were converted to `op: append` of only the missing attributes (ARIMA also gains `params_complete`), and `append` overrides were added for Logit, Poisson, Probit, the 6 GLM families, STL, SARIMAX and VARMAX (page-table descriptions, blank where the page gives none). No remaining non-matches.

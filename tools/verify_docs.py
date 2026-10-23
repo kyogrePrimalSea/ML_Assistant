@@ -163,6 +163,9 @@ def parse_signature(dt: Node):
     # Prefer the text between sig-paren spans; the "[source]" link follows.
     spans = dt.find_all("span", "sig-paren")
     if len(spans) < 2:
+        # No parentheses at all (``class X[source]``): empty parameter set.
+        if not spans and dt.find_all("span", "sig-name"):
+            return []
         return None
     # Collect text strictly between first "(" span and last ")" span.
     first, last = spans[0], spans[-1]
@@ -234,7 +237,7 @@ def find_section(root: Node, anchor: str | None):
             return None
     else:
         for dl in root.find_all("dl"):
-            if dl.classes & {"class", "function"} and "py" in dl.classes:
+            if dl.classes & {"class", "function", "exception"} and "py" in dl.classes:
                 for c in dl.elems():
                     if c.tag == "dt" and "sig" in c.classes:
                         target = c
@@ -258,9 +261,24 @@ def _field_list_items(dl: Node, field_name: str):
         if k.tag == "dt" and k.text().strip().rstrip(":").strip() == field_name:
             if i + 1 < len(kids) and kids[i + 1].tag == "dd":
                 dd = kids[i + 1]
-                for s in dd.find_all("strong"):
-                    names.append(s.text().strip())
+                for dl2 in dd.elems():
+                    if dl2.tag != "dl":
+                        continue
+                    for dt in dl2.elems():
+                        if dt.tag == "dt":
+                            nm = _entry_name(dt)
+                            if nm:
+                                names.append(nm)
     return names
+
+
+def _entry_name(dt: Node):
+    """Name of a field-list ``dt``: ``<strong>name</strong>`` or, for
+    property-backed attributes, ``<code class="xref">name</code>``."""
+    for n in dt.find_all():
+        if n.tag == "strong" or (n.tag == "code" and "xref" in n.classes):
+            return n.text().strip()
+    return None
 
 
 _LITERAL = (r"'[^']*'|\"[^\"]*\"|-?\d[\w.+-]*|None|True|False|np\.\w+")
@@ -313,7 +331,10 @@ def parse_parameter_section(dd: Node | None):
                 for node, text in items:
                     strong = next((x for x in node.find_all("strong")), None)
                     if strong is not None:
-                        for nm in strong.text().split(","):
+                        stext = strong.text()
+                        if ":" in stext:  # malformed "name:type" (no space before colon)
+                            stext = stext.split(":", 1)[0]
+                        for nm in stext.split(","):
                             nm = nm.strip().lstrip("*").strip()
                             if nm:
                                 found.setdefault(nm, text)
@@ -325,13 +346,23 @@ def parse_attributes(dd: Node | None):
     names = []
     if dd is None:
         return names
-    for c in dd.elems():
+    kids = dd.elems()
+    for i, c in enumerate(kids):
         if c.tag == "dl" and "field-list" in c.classes:
             names.extend(_field_list_items(c, "Attributes"))
         if c.tag == "dl" and "py" in c.classes and c.classes & {"attribute", "property"}:
             for dt in c.elems():
                 if dt.tag == "dt" and dt.attrs.get("id"):
                     names.append(dt.attrs["id"].rsplit(".", 1)[-1])
+        # autosummary table under a "Properties" rubric (statsmodels)
+        if (c.tag == "p" and "rubric" in c.classes
+                and c.text().strip() == "Properties"):
+            for t in kids[i + 1:i + 2]:
+                for row in t.find_all("tr"):
+                    td = next((x for x in row.elems() if x.tag == "td"), None)
+                    code = next(iter(td.find_all("code")), None) if td else None
+                    if code is not None and code.text().strip():
+                        names.append(code.text().strip())
     seen = []
     for n in names:
         if n not in seen:

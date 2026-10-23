@@ -13,3 +13,10 @@ No concrete default (left null; page gives none or a rule): base_score (estimate
 Spot-check (by hand against official page, all params/defaults/attributes/methods): XGBRegressor, XGBClassifier (all classes). No gaps.
 
 Parser issues: none for these items.
+
+
+## T014 re-run
+
+After the T014 verifier/extractor fixes and full regeneration: 2 match / 0 mismatch / 0 unparsed / 0 fetch_error / 0 no record (of 2 items).
+
+No change from earlier runs.

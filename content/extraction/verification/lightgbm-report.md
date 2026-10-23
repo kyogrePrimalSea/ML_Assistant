@@ -10,3 +10,10 @@ Overrides (lightgbm.LGBMClassifier.yaml, lightgbm.LGBMRegressor.yaml): `effectiv
 Spot-check: LGBMRegressor, LGBMClassifier (all classes), every parameter, default, attribute and method name. No gaps.
 
 Parser issues: numpydoc warning "Unknown section Note" in __init__ docstring (harmless).
+
+
+## T014 re-run
+
+After the T014 verifier/extractor fixes and full regeneration: 2 match / 0 mismatch / 0 unparsed / 0 fetch_error / 0 no record (of 2 items).
+
+No change from earlier runs.

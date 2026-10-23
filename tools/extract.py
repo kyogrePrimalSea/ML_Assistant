@@ -269,7 +269,8 @@ def build_parameters(obj, kind, nd, warns):
         sig = fallback_signature(obj, warns)
         if sig is None:
             if nd is None or not nd["Parameters"]:
-                raise ExtractError(f"no signature: {e}")
+                warns.append(f"no signature retrievable ({e}); recorded with empty parameters")
+                return "()", []
             warns.append("signature: inspect.signature failed; no text signature; "
                          "parameters taken from numpydoc Parameters section (documented_only)")
             sig = inspect.Signature([])
@@ -451,7 +452,10 @@ def split_path(path):
     return parts
 
 
-def apply_patch(record, path, value):
+def apply_patch(record, path, value, op="set"):
+    """Apply one override patch. ``op``: set (default), append, remove."""
+    if op not in ("set", "append", "remove"):
+        raise ExtractError(f"invalid override op {op!r} for {path!r}")
     segs = split_path(path)
     node = record
     for i, seg in enumerate(segs):
@@ -468,15 +472,38 @@ def apply_patch(record, path, value):
                 raise ExtractError(f"invalid override path {path!r}: {key!r} is not a list")
             hits = [x for x in lst if isinstance(x, dict) and str(x.get(ffield)) == fval]
             if len(hits) != 1:
+                if last and op == "remove" and not hits:
+                    raise ExtractError(f"cannot remove {path!r}: no such list entry")
                 raise ExtractError(
                     f"invalid override path {path!r}: {seg!r} matches {len(hits)} entries")
             if last:
-                raise ExtractError(f"invalid override path {path!r}: must end in a field")
+                if op != "remove":
+                    raise ExtractError(f"invalid override path {path!r}: must end in a field")
+                lst.remove(hits[0])
+                return
             node = hits[0]
         elif last:
-            node[key] = value
+            if op == "remove":
+                raise ExtractError(
+                    f"invalid override path {path!r}: remove needs a list-entry selector")
+            if op == "append":
+                lst = node[key]
+                if not isinstance(lst, list) or not isinstance(value, list):
+                    raise ExtractError(
+                        f"cannot append to {path!r}: path and value must both be lists")
+                have = {x.get("name") for x in lst if isinstance(x, dict)}
+                for v in value:
+                    nm = v.get("name") if isinstance(v, dict) else None
+                    if nm is not None and nm in have:
+                        raise ExtractError(f"cannot append to {path!r}: {nm!r} already exists")
+                    have.add(nm)
+                lst.extend(value)
+            else:
+                node[key] = value
         else:
             node = node[key]
+    if op == "remove":  # path had no segments matched as a selector
+        raise ExtractError(f"invalid override path {path!r}")
 
 
 def apply_overrides(record, overrides_dir):
@@ -488,11 +515,19 @@ def apply_overrides(record, overrides_dir):
         if not data.get(k):
             raise ExtractError(f"override {f} missing {k!r}")
     for p in data["patches"]:
-        if not isinstance(p, dict) or "path" not in p or "value" not in p:
+        op = p.get("op", "set") if isinstance(p, dict) else "set"
+        if not isinstance(p, dict) or "path" not in p or (op != "remove" and "value" not in p):
             raise ExtractError(f"override {f}: each patch needs path and value")
-        apply_patch(record, p["path"], p["value"])
-        record["overrides_applied"].append(
-            {"path": p["path"], "source_url": data["source_url"], "reason": data["reason"]})
+        apply_patch(record, p["path"], p.get("value"), op)
+        entry = {"path": p["path"], "source_url": data["source_url"], "reason": data["reason"]}
+        if op != "set":
+            entry["op"] = op
+        record["overrides_applied"].append(entry)
+        # fix 7: an overridden default makes the memory-address warning moot
+        m = re.fullmatch(r"parameters\[name=(\w+)\]\.default", p["path"])
+        if m and op == "set":
+            drop = f"parameter {m.group(1)}: default repr contains a memory address"
+            record["warnings"] = [w for w in record["warnings"] if w != drop]
 
 
 # ----------------------------------------------------------------------- main

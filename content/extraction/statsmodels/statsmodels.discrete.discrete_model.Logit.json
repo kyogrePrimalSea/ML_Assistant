@@ -19,6 +19,16 @@
       "description": "Names of exogenous variables",
       "name": "exog_names",
       "type_doc": ""
+    },
+    {
+      "description": "",
+      "name": "family",
+      "type_doc": ""
+    },
+    {
+      "description": "",
+      "name": "link",
+      "type_doc": ""
     }
   ],
   "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.discrete.discrete_model.Logit.html",
@@ -120,7 +130,14 @@
       "summary": "Logit model Jacobian of the log-likelihood for each observation"
     }
   ],
-  "overrides_applied": [],
+  "overrides_applied": [
+    {
+      "op": "append",
+      "path": "attributes",
+      "reason": "Properties listed in the Properties table of the official page that the extractor did not capture (not in the numpydoc Attributes block, or undocumented properties). Descriptions are from the page table, blank where the page gives none.",
+      "source_url": "https://www.statsmodels.org/stable/generated/statsmodels.discrete.discrete_model.Logit.html"
+    }
+  ],
   "parameters": [
     {
       "allowed": {

@@ -13,3 +13,12 @@ Remaining non-matches, recorded (docs page and installed version legitimately di
 Spot-check by hand: TreeExplainer, KernelExplainer, plots.waterfall (plus plots.bar, beeswarm, decision, scatter, PartitionExplainer read against the page for the non-matches). No other gaps.
 
 Parser issue: verify_docs treats the malformed docs parameter names above as missing_in_extraction.
+
+
+## T014 re-run
+
+After the T014 verifier/extractor fixes and full regeneration: 20 match / 1 mismatch / 0 unparsed / 0 fetch_error / 0 no record (of 21 items).
+
+The malformed `name:type` docs names (plots.bar, beeswarm, decision, scatter) are now split, so those four match. No override needed.
+
+Remaining non-match (1): `shap.PartitionExplainer` `partition_tree` is documented in the docstring and on the page but absent from the signature (stale upstream docstring); the extraction keeps it as documented_only.

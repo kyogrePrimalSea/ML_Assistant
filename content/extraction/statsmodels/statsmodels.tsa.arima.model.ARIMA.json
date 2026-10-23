@@ -84,6 +84,11 @@
       "description": "",
       "name": "tolerance",
       "type_doc": ""
+    },
+    {
+      "description": "",
+      "name": "params_complete",
+      "type_doc": ""
     }
   ],
   "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.tsa.arima.model.ARIMA.html",
@@ -277,8 +282,15 @@
   ],
   "overrides_applied": [
     {
+      "op": "append",
       "path": "attributes",
-      "reason": "Documented attributes/properties listed on the official page (Attributes/Properties sections) were not captured by the extractor (not in the numpydoc Attributes block; descriptions from the page Properties table, blank where the page gives none).",
+      "reason": "Documented attributes/properties listed on the official page (Attributes/Properties sections) were not captured by the extractor (not in the numpydoc Attributes block; descriptions from the page Properties table, blank where the page gives none). Converted in T014 from a full-list set to an append of only the attributes the extractor misses.",
+      "source_url": "https://www.statsmodels.org/stable/generated/statsmodels.tsa.arima.model.ARIMA.html"
+    },
+    {
+      "op": "append",
+      "path": "attributes",
+      "reason": "Documented attributes/properties listed on the official page (Attributes/Properties sections) were not captured by the extractor (not in the numpydoc Attributes block; descriptions from the page Properties table, blank where the page gives none). Converted in T014 from a full-list set to an append of only the attributes the extractor misses.",
       "source_url": "https://www.statsmodels.org/stable/generated/statsmodels.tsa.arima.model.ARIMA.html"
     }
   ],

@@ -14,6 +14,26 @@
       "description": "Link function for family",
       "name": "link",
       "type_doc": ""
+    },
+    {
+      "description": "",
+      "name": "links",
+      "type_doc": ""
+    },
+    {
+      "description": "",
+      "name": "safe_links",
+      "type_doc": ""
+    },
+    {
+      "description": "",
+      "name": "valid",
+      "type_doc": ""
+    },
+    {
+      "description": "",
+      "name": "variance",
+      "type_doc": ""
     }
   ],
   "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.genmod.families.family.Gamma.html",
@@ -80,7 +100,14 @@
       "summary": "Weights for IRLS steps"
     }
   ],
-  "overrides_applied": [],
+  "overrides_applied": [
+    {
+      "op": "append",
+      "path": "attributes",
+      "reason": "Properties listed in the Properties table of the official page that the extractor did not capture (not in the numpydoc Attributes block, or undocumented properties). Descriptions are from the page table, blank where the page gives none.",
+      "source_url": "https://www.statsmodels.org/stable/generated/statsmodels.genmod.families.family.Gamma.html"
+    }
+  ],
   "parameters": [
     {
       "allowed": {

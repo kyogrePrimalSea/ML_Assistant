@@ -1,5 +1,18 @@
 [
   {
+    "id": "optuna.TrialPruned",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.TrialPruned.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
     "id": "optuna.create_study",
     "doc_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.create_study.html",
     "status": "match",
@@ -67,12 +80,15 @@
   {
     "id": "optuna.pruners.NopPruner",
     "doc_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.NopPruner.html",
-    "status": "unparsed",
+    "status": "match",
     "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
-    "attribute_diff": {},
-    "error": "page layout not recognised"
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
   },
   {
     "id": "optuna.pruners.PatientPruner",

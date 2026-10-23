@@ -262,3 +262,64 @@ def test_t013_property_attributes():
     documented = [n for n in props if inspect.getdoc(getattr(
         __import__("statsmodels.regression.linear_model", fromlist=["OLS"]).OLS, n))]
     assert documented and set(documented) <= set(names)
+
+
+# ---- T014 fixes ----------------------------------------------------------
+
+def test_t014_no_signature_object_gives_empty_parameters():
+    r = extract.extract_item({"id": "optuna.TrialPruned", "import_path": "optuna.TrialPruned",
+                              "library": "optuna", "kind": "class", "doc_url": ""})
+    assert r["parameters"] == [] and r["signature"] == "TrialPruned()"
+    assert any("no signature" in w for w in r["warnings"])
+
+
+def _write_override(tmp_path, patches):
+    import yaml
+    (tmp_path / "x.yaml").write_text(yaml.safe_dump(
+        {"source_url": "https://e/x", "reason": "r", "patches": patches}))
+
+
+def _base():
+    return {"id": "x", "overrides_applied": [], "warnings": [],
+            "attributes": [{"name": "a", "type_doc": "", "description": ""},
+                           {"name": "b", "type_doc": "", "description": ""}]}
+
+
+def test_t014_override_append_and_remove(tmp_path):
+    rec = _base()
+    _write_override(tmp_path, [
+        {"path": "attributes", "op": "append",
+         "value": [{"name": "c", "type_doc": "", "description": "new"}]},
+        {"path": "attributes[name=a]", "op": "remove"}])
+    extract.apply_overrides(rec, tmp_path)
+    assert [a["name"] for a in rec["attributes"]] == ["b", "c"]
+    assert [o.get("op") for o in rec["overrides_applied"]] == ["append", "remove"]
+
+
+def test_t014_override_append_duplicate_and_remove_absent_error(tmp_path):
+    _write_override(tmp_path, [{"path": "attributes", "op": "append",
+                                "value": [{"name": "a", "type_doc": "", "description": ""}]}])
+    with pytest.raises(extract.ExtractError, match="already exists"):
+        extract.apply_overrides(_base(), tmp_path)
+    _write_override(tmp_path, [{"path": "attributes[name=zzz]", "op": "remove"}])
+    with pytest.raises(extract.ExtractError, match="no such list entry"):
+        extract.apply_overrides(_base(), tmp_path)
+
+
+def test_t014_override_set_is_default_op(tmp_path):
+    rec = _base()
+    rec["summary"] = "old"
+    _write_override(tmp_path, [{"path": "summary", "value": "new"}])
+    extract.apply_overrides(rec, tmp_path)
+    assert rec["summary"] == "new" and "op" not in rec["overrides_applied"][0]
+
+
+def test_t014_default_override_drops_memory_address_warning(tmp_path):
+    rec = _base()
+    rec["parameters"] = [{"name": "link", "default": "<function f at 0x1>"},
+                         {"name": "other", "default": "<function g at 0x2>"}]
+    rec["warnings"] = ["parameter link: default repr contains a memory address",
+                       "parameter other: default repr contains a memory address"]
+    _write_override(tmp_path, [{"path": "parameters[name=link].default", "value": "<function f>"}])
+    extract.apply_overrides(rec, tmp_path)
+    assert rec["warnings"] == ["parameter other: default repr contains a memory address"]

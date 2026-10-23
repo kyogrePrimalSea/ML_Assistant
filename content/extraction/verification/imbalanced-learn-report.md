@@ -6,3 +6,10 @@ Counts: first run 33 match / 3 mismatch (BalancedBaggingClassifier, EasyEnsemble
 Spot-check by hand (params, defaults, attributes, methods vs page): SMOTE, RandomUnderSampler, BalancedRandomForestClassifier, Pipeline, geometric_mean_score. No gaps. (BalancedBaggingClassifier, EasyEnsembleClassifier, BalancedRandomForestClassifier were additionally read for the formerly mismatched attributes.)
 
 Parser issues: none outstanding.
+
+
+## T014 re-run
+
+After the T014 verifier/extractor fixes and full regeneration: 36 match / 0 mismatch / 0 unparsed / 0 fetch_error / 0 no record (of 36 items).
+
+No change from earlier runs.

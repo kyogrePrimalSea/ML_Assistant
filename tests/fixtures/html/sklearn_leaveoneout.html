@@ -1,0 +1,117 @@
+<!doctype html><html><body>
+<dl class="py class">
+<dt class="sig sig-object py" id="sklearn.model_selection.LeaveOneOut">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">sklearn.model_selection.</span></span><span class="sig-name descname"><span class="pre">LeaveOneOut</span></span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/afe5bcd80/sklearn/model_selection/_split.py#L171"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.model_selection.LeaveOneOut" title="Link to this definition">#</a></dt>
+<dd><p>Leave-One-Out cross-validator.</p>
+<p>Provides train/test indices to split data in train/test sets. Each
+sample is used once as a test set (singleton) while the remaining
+samples form the training set.</p>
+<p>Note: <code class="docutils literal notranslate"><span class="pre">LeaveOneOut()</span></code> is equivalent to <code class="docutils literal notranslate"><span class="pre">KFold(n_splits=n)</span></code> and
+<code class="docutils literal notranslate"><span class="pre">LeavePOut(p=1)</span></code> where <code class="docutils literal notranslate"><span class="pre">n</span></code> is the number of samples.</p>
+<p>Due to the high number of test sets (which is the same as the
+number of samples) this cross-validation method can be very costly.
+For large datasets one should favor <a class="reference internal" href="sklearn.model_selection.KFold.html#sklearn.model_selection.KFold" title="sklearn.model_selection.KFold"><code class="xref py py-class docutils literal notranslate"><span class="pre">KFold</span></code></a>, <a class="reference internal" href="sklearn.model_selection.ShuffleSplit.html#sklearn.model_selection.ShuffleSplit" title="sklearn.model_selection.ShuffleSplit"><code class="xref py py-class docutils literal notranslate"><span class="pre">ShuffleSplit</span></code></a>
+or <a class="reference internal" href="sklearn.model_selection.StratifiedKFold.html#sklearn.model_selection.StratifiedKFold" title="sklearn.model_selection.StratifiedKFold"><code class="xref py py-class docutils literal notranslate"><span class="pre">StratifiedKFold</span></code></a>.</p>
+<p>Read more in the <a class="reference internal" href="../cross_validation.html#leave-one-out"><span class="std std-ref">User Guide</span></a>.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="sklearn.model_selection.LeaveOneGroupOut.html#sklearn.model_selection.LeaveOneGroupOut" title="sklearn.model_selection.LeaveOneGroupOut"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LeaveOneGroupOut</span></code></a></dt><dd><p>For splitting the data according to explicit, domain-specific grouping of the dataset.</p>
+</dd>
+<dt><a class="reference internal" href="sklearn.model_selection.GroupKFold.html#sklearn.model_selection.GroupKFold" title="sklearn.model_selection.GroupKFold"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GroupKFold</span></code></a></dt><dd><p>K-fold iterator variant with non-overlapping groups.</p>
+</dd>
+</dl>
+</div>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.model_selection</span><span class="w"> </span><span class="kn">import</span> <span class="n">LeaveOneOut</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">loo</span> <span class="o">=</span> <span class="n">LeaveOneOut</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">loo</span><span class="o">.</span><span class="n">get_n_splits</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">loo</span><span class="p">)</span>
+<span class="go">LeaveOneOut()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">train_index</span><span class="p">,</span> <span class="n">test_index</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">loo</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">)):</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Fold </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">:"</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Train: index=</span><span class="si">{</span><span class="n">train_index</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  Test:  index=</span><span class="si">{</span><span class="n">test_index</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="go">Fold 0:</span>
+<span class="go">  Train: index=[1]</span>
+<span class="go">  Test:  index=[0]</span>
+<span class="go">Fold 1:</span>
+<span class="go">  Train: index=[0]</span>
+<span class="go">  Test:  index=[1]</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="sklearn.model_selection.LeaveOneOut.get_metadata_routing">
+<span class="sig-name descname"><span class="pre">get_metadata_routing</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/afe5bcd80/sklearn/utils/_metadata_requests.py#L1743"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.model_selection.LeaveOneOut.get_metadata_routing" title="Link to this definition">#</a></dt>
+<dd><p>Get metadata routing of this object.</p>
+<p>Please check <a class="reference internal" href="../../metadata_routing.html#metadata-routing"><span class="std std-ref">User Guide</span></a> on how the routing
+mechanism works.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>routing</strong><span class="classifier">MetadataRequest</span></dt><dd><p>A <a class="reference internal" href="sklearn.utils.metadata_routing.MetadataRequest.html#sklearn.utils.metadata_routing.MetadataRequest" title="sklearn.utils.metadata_routing.MetadataRequest"><code class="xref py py-class docutils literal notranslate"><span class="pre">MetadataRequest</span></code></a> encapsulating
+routing information.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sklearn.model_selection.LeaveOneOut.get_n_splits">
+<span class="sig-name descname"><span class="pre">get_n_splits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/afe5bcd80/sklearn/model_selection/_split.py#L225"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.model_selection.LeaveOneOut.get_n_splits" title="Link to this definition">#</a></dt>
+<dd><p>Returns the number of splitting iterations in the cross-validator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array-like of shape (n_samples, n_features)</span></dt><dd><p>Training data, where <code class="docutils literal notranslate"><span class="pre">n_samples</span></code> is the number of samples
+and <code class="docutils literal notranslate"><span class="pre">n_features</span></code> is the number of features.</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">array-like of shape (n_samples,), default=None</span></dt><dd><p>Always ignored, exists for API compatibility.</p>
+</dd>
+<dt><strong>groups</strong><span class="classifier">array-like of shape (n_samples,), default=None</span></dt><dd><p>Always ignored, exists for API compatibility.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>n_splits</strong><span class="classifier">int</span></dt><dd><p>Returns the number of splitting iterations in the cross-validator.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="sklearn.model_selection.LeaveOneOut.split">
+<span class="sig-name descname"><span class="pre">split</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference external" href="https://github.com/scikit-learn/scikit-learn/blob/afe5bcd80/sklearn/model_selection/_split.py#L62"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sklearn.model_selection.LeaveOneOut.split" title="Link to this definition">#</a></dt>
+<dd><p>Generate indices to split data into training and test set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">array-like of shape (n_samples, n_features)</span></dt><dd><p>Training data, where <code class="docutils literal notranslate"><span class="pre">n_samples</span></code> is the number of samples
+and <code class="docutils literal notranslate"><span class="pre">n_features</span></code> is the number of features.</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">array-like of shape (n_samples,), default=None</span></dt><dd><p>The target variable for supervised learning problems.</p>
+</dd>
+<dt><strong>groups</strong><span class="classifier">array-like of shape (n_samples,), default=None</span></dt><dd><p>Always ignored, exists for API compatibility.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Yields<span class="colon">:</span></dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>train</strong><span class="classifier">ndarray</span></dt><dd><p>The training set indices for that split.</p>
+</dd>
+<dt><strong>test</strong><span class="classifier">ndarray</span></dt><dd><p>The testing set indices for that split.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+</body></html>

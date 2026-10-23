@@ -131,9 +131,7 @@
     }
   ],
   "returns": [],
-  "signature": "SelectKBest(score_func=<function f_classif at 0x7fa25d921590>, *, k=10)",
+  "signature": "SelectKBest(score_func=<function f_classif at 0x7ff49af32140>, *, k=10)",
   "summary": "Select features according to the k highest scores.",
-  "warnings": [
-    "parameter score_func: default repr contains a memory address"
-  ]
+  "warnings": []
 }

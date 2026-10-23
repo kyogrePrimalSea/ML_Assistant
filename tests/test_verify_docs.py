@@ -188,3 +188,38 @@ def test_var_kwargs_not_flagged():
     html, rec = load("xgboost_python_api")
     assert vd.verify_record(rec, html)["missing_in_extraction"] == []
     assert vd.verify_record(rec, html)["missing_in_docs"] == []
+
+
+# ---- T014 fixes ----------------------------------------------------------
+
+def _parse(name, url):
+    html = (HTML / f"{name}.html").read_text(encoding="utf-8")
+    return vd.parse_page(html, url)
+
+
+def test_attribute_dt_with_code_xref_is_parsed():
+    p = _parse("sklearn_pipeline", "https://scikit-learn.org/stable/x/sklearn.pipeline.Pipeline.html")
+    assert {"classes_", "n_features_in_", "feature_names_in_"} <= set(p["attributes"])
+
+
+def test_properties_table_counts_as_documented_attributes():
+    p = _parse("statsmodels_gaussian",
+               "https://www.statsmodels.org/stable/generated/statsmodels.genmod.families.family.Gaussian.html")
+    assert {"link", "links", "safe_links", "valid"} <= set(p["attributes"])
+
+
+def test_class_without_parentheses_has_empty_parameters():
+    p = _parse("sklearn_leaveoneout",
+               "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.LeaveOneOut.html")
+    assert p is not None and p["parameters"] == {}
+
+
+def test_exception_without_parentheses_parses():
+    p = _parse("optuna_trialpruned", "https://optuna.readthedocs.io/x/optuna.TrialPruned.html")
+    assert p is not None and p["parameters"] == {}
+
+
+def test_malformed_name_colon_type_is_split():
+    p = _parse("shap_plots_decision", "https://shap.readthedocs.io/en/latest/generated/shap.plots.decision.html")
+    assert "xlim" in p["parameters"] and "feature_display_range" in p["parameters"]
+    assert not any(":" in n or "]" in n for n in p["parameters"])

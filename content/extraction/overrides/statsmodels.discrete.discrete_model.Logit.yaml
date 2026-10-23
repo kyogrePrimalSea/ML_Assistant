@@ -1,0 +1,14 @@
+source_url: https://www.statsmodels.org/stable/generated/statsmodels.discrete.discrete_model.Logit.html
+reason: Properties listed in the Properties table of the official page that the extractor did not capture
+  (not in the numpydoc Attributes block, or undocumented properties). Descriptions are from the page table,
+  blank where the page gives none.
+patches:
+- path: attributes
+  op: append
+  value:
+  - name: family
+    type_doc: ''
+    description: ''
+  - name: link
+    type_doc: ''
+    description: ''

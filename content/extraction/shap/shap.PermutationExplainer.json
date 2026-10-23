@@ -149,10 +149,9 @@
     }
   ],
   "returns": [],
-  "signature": "PermutationExplainer(model: 'Any', masker: 'Any', link: 'Any' = <function identity at 0x7f78eb172770>, feature_names: 'list[str] | None' = None, linearize_link: 'bool' = True, seed: 'int | None' = None, **call_args: 'Any') -> 'None'",
+  "signature": "PermutationExplainer(model: 'Any', masker: 'Any', link: 'Any' = <function identity at 0x7ff4981e7ed0>, feature_names: 'list[str] | None' = None, linearize_link: 'bool' = True, seed: 'int | None' = None, **call_args: 'Any') -> 'None'",
   "summary": "Build an explainers.Permutation object for the given model using the given masker object.",
   "warnings": [
-    "parameter link: default repr contains a memory address",
     "parameter link: not documented in docstring",
     "parameter feature_names: not documented in docstring",
     "parameter linearize_link: not documented in docstring"

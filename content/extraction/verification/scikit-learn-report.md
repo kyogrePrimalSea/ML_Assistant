@@ -35,3 +35,12 @@ CalibratedClassifierCV, CalibrationDisplay, make_column_selector, make_column_tr
 - `verify_docs.py`: misses xref-form attribute entries (item 1); fails on classes with no constructor parameters (item 4).
 - `extract.py`: crashed on functions with `**kwargs` (make_scorer; seen elsewhere with curve_fit, plot_acf); fixed in the working tree during this task. Overrides cannot remove list entries (item 2). Warning "default repr contains a memory address" is still emitted for the 6 overridden items (extractor warns before applying overrides).
 - Inventory errors: none found.
+
+
+## T014 re-run
+
+After the T014 verifier/extractor fixes and full regeneration: 230 match / 1 mismatch / 0 unparsed / 0 fetch_error / 0 no record (of 231 items).
+
+The attribute `<dt>` entries rendered as `<code class="xref">` (43 mismatches) and the parenthesis-less headers (LeaveOneOut, LeaveOneGroupOut, KernelCenterer, LabelEncoder) now parse. TargetEncoder: a `remove` override drops `infrequent_categories_` (undocumented on its page, inherited from a private base class).
+
+Remaining non-match (1): `sklearn.model_selection.learning_curve` `train_sizes` default: the page prints a rounded array (`array([0.1, 0.33, 0.55, 0.78, 1.])`), the installed signature repr is `array([0.1  , 0.325, 0.55 , 0.775, 1.   ])`. Same value; docs-side rounding. No override.

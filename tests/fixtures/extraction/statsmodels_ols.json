@@ -89,6 +89,26 @@
    "name": "weights",
    "type_doc": "",
    "description": ""
+  },
+  {
+   "name": "df_model",
+   "type_doc": "",
+   "description": ""
+  },
+  {
+   "name": "df_resid",
+   "type_doc": "",
+   "description": ""
+  },
+  {
+   "name": "endog_names",
+   "type_doc": "",
+   "description": ""
+  },
+  {
+   "name": "exog_names",
+   "type_doc": "",
+   "description": ""
   }
  ],
  "methods": [],

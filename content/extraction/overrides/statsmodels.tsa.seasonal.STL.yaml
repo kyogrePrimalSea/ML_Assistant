@@ -1,0 +1,14 @@
+source_url: https://www.statsmodels.org/stable/generated/statsmodels.tsa.seasonal.STL.html
+reason: Properties listed in the Properties table of the official page that the extractor did not capture
+  (not in the numpydoc Attributes block, or undocumented properties). Descriptions are from the page table,
+  blank where the page gives none.
+patches:
+- path: attributes
+  op: append
+  value:
+  - name: config
+    type_doc: ''
+    description: The parameters used in the model.
+  - name: period
+    type_doc: ''
+    description: The period length of the time series

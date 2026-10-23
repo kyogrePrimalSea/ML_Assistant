@@ -133,13 +133,8 @@
   {
     "id": "shap.plots.bar",
     "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.plots.bar.html",
-    "status": "mismatch",
-    "missing_in_extraction": [
-      "clustering: np.ndarray or None",
-      "clustering_cutoff: float",
-      "show_data: bool or str",
-      "ax: matplotlib Axes"
-    ],
+    "status": "match",
+    "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
@@ -151,11 +146,8 @@
   {
     "id": "shap.plots.beeswarm",
     "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.plots.beeswarm.html",
-    "status": "mismatch",
-    "missing_in_extraction": [
-      "ax: matplotlib Axes",
-      "group_remaining_features: bool"
-    ],
+    "status": "match",
+    "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
@@ -167,12 +159,8 @@
   {
     "id": "shap.plots.decision",
     "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.plots.decision.html",
-    "status": "mismatch",
-    "missing_in_extraction": [
-      "feature_display_range: slice or range",
-      "xlim: tuple[float",
-      "float]"
-    ],
+    "status": "match",
+    "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {
@@ -249,12 +237,8 @@
   {
     "id": "shap.plots.scatter",
     "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.plots.scatter.html",
-    "status": "mismatch",
-    "missing_in_extraction": [
-      "title: str",
-      "optional",
-      "overlay: dict"
-    ],
+    "status": "match",
+    "missing_in_extraction": [],
     "missing_in_docs": [],
     "default_mismatches": [],
     "attribute_diff": {

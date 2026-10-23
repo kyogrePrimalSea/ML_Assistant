@@ -1,49 +1,12 @@
 source_url: https://www.statsmodels.org/stable/generated/statsmodels.tsa.arima.model.ARIMA.html
 reason: Documented attributes/properties listed on the official page (Attributes/Properties sections)
   were not captured by the extractor (not in the numpydoc Attributes block; descriptions from the page
-  Properties table, blank where the page gives none).
+  Properties table, blank where the page gives none). Converted in T014 from a full-list set to an append
+  of only the attributes the extractor misses.
 patches:
 - path: attributes
+  op: append
   value:
-  - description: Names of endogenous variables
-    name: endog_names
-    type_doc: ''
-  - description: The names of the exogenous variables.
-    name: exog_names
-    type_doc: ''
-  - description: Initial design matrix
-    name: initial_design
-    type_doc: ''
-  - description: Initial selection matrix
-    name: initial_selection
-    type_doc: ''
-  - description: Initial state intercept vector
-    name: initial_state_intercept
-    type_doc: ''
-  - description: Initial transition matrix
-    name: initial_transition
-    type_doc: ''
-  - description: The latex names of all possible model parameters
-    name: model_latex_names
-    type_doc: ''
-  - description: The plain text names of all possible model parameters
-    name: model_names
-    type_doc: ''
-  - description: The orders of each of the polynomials in the model
-    name: model_orders
-    type_doc: ''
-  - description: List of human readable parameter names (for parameters actually
-    name: param_names
-    type_doc: ''
-  - description: List of parameters actually included in the model, in sorted order
-    name: param_terms
-    type_doc: ''
-  - description: Starting parameters for maximum likelihood estimation
-    name: start_params
-    type_doc: ''
-  - description: (list of str) List of human readable names for unobserved states
-    name: state_names
-    type_doc: ''
   - name: initial_variance
     type_doc: ''
     description: ''
@@ -54,5 +17,11 @@ patches:
     type_doc: ''
     description: ''
   - name: tolerance
+    type_doc: ''
+    description: ''
+- path: attributes
+  op: append
+  value:
+  - name: params_complete
     type_doc: ''
     description: ''
