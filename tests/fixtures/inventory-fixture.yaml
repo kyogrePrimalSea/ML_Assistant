@@ -1,0 +1,6 @@
+items:
+- {id: sklearn.ensemble.HistGradientBoostingRegressor, name: HistGradientBoostingRegressor, library: scikit-learn, import_path: sklearn.ensemble.HistGradientBoostingRegressor, kind: class, doc_url: "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html", source: catalogue}
+- {id: sklearn.linear_model.Ridge, name: Ridge, library: scikit-learn, import_path: sklearn.linear_model.Ridge, kind: class, doc_url: "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html", source: catalogue}
+- {id: xgboost.XGBRegressor, name: XGBRegressor, library: xgboost, import_path: xgboost.XGBRegressor, kind: class, doc_url: "https://xgboost.readthedocs.io/en/stable/python/python_api.html", source: catalogue}
+- {id: statsmodels.api.OLS, name: OLS, library: statsmodels, import_path: statsmodels.api.OLS, kind: class, doc_url: "https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.OLS.html", source: catalogue}
+- {id: scipy.stats.linregress, name: linregress, library: scipy, import_path: scipy.stats.linregress, kind: function, doc_url: "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.linregress.html", source: catalogue}

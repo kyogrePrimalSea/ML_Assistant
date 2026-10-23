@@ -141,7 +141,7 @@
     "T004": {
       "title": "Extraction tool",
       "file": "tasks/T004-extraction-tool.md",
-      "status": "In progress",
+      "status": "Done",
       "dependencies": [
         "T001"
       ],

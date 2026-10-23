@@ -1,0 +1,4 @@
+source_url: https://example.invalid/
+reason: Invalid path fixture.
+patches:
+  - {path: "parameters[name=nope].default", value: "1"}

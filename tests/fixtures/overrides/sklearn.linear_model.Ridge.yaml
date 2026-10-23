@@ -1,0 +1,6 @@
+source_url: https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html
+reason: Fixture override for tests.
+patches:
+  - {path: "parameters[name=alpha].default", value: "2.5"}
+  - {path: summary, value: "Patched summary"}
+  - {path: "parameters[name=alpha].effective_default", value: "2.5"}
