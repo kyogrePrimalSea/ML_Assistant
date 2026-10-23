@@ -1,0 +1,379 @@
+{
+ "id": "lightgbm.LGBMRegressor",
+ "import_path": "lightgbm.LGBMRegressor",
+ "library": "lightgbm",
+ "library_version": "x",
+ "kind": "class",
+ "doc_url": "https://lightgbm.readthedocs.io/en/stable/pythonapi/lightgbm.LGBMRegressor.html",
+ "summary": "",
+ "signature": "",
+ "parameters": [
+  {
+   "name": "boosting_type",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "'gbdt'",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "num_leaves",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "31",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "max_depth",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "-1",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "learning_rate",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "0.1",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "n_estimators",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "100",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "subsample_for_bin",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "200000",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "objective",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "None",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "class_weight",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "None",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "min_split_gain",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "0.0",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "min_child_weight",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "0.001",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "min_child_samples",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "20",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "subsample",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "1.0",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "subsample_freq",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "0",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "colsample_bytree",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "1.0",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "reg_alpha",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "0.0",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "reg_lambda",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "0.0",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "random_state",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "None",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "n_jobs",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "None",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "importance_type",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "'split'",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "kwargs",
+   "param_kind": "var_keyword",
+   "required": false,
+   "default": null,
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  }
+ ],
+ "attributes": [
+  {
+   "name": "best_iteration_",
+   "type_doc": "",
+   "description": ""
+  },
+  {
+   "name": "best_score_",
+   "type_doc": "",
+   "description": ""
+  },
+  {
+   "name": "booster_",
+   "type_doc": "",
+   "description": ""
+  },
+  {
+   "name": "evals_result_",
+   "type_doc": "",
+   "description": ""
+  },
+  {
+   "name": "feature_importances_",
+   "type_doc": "",
+   "description": ""
+  },
+  {
+   "name": "feature_name_",
+   "type_doc": "",
+   "description": ""
+  },
+  {
+   "name": "feature_names_in_",
+   "type_doc": "",
+   "description": ""
+  },
+  {
+   "name": "n_estimators_",
+   "type_doc": "",
+   "description": ""
+  },
+  {
+   "name": "n_features_",
+   "type_doc": "",
+   "description": ""
+  },
+  {
+   "name": "n_features_in_",
+   "type_doc": "",
+   "description": ""
+  },
+  {
+   "name": "n_iter_",
+   "type_doc": "",
+   "description": ""
+  },
+  {
+   "name": "objective_",
+   "type_doc": "",
+   "description": ""
+  }
+ ],
+ "methods": [],
+ "returns": [],
+ "extractor_version": "1",
+ "overrides_applied": [],
+ "warnings": []
+}

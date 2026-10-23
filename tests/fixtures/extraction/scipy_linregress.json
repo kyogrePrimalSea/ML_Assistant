@@ -1,0 +1,108 @@
+{
+ "id": "scipy.stats.linregress",
+ "import_path": "scipy.stats.linregress",
+ "library": "scipy",
+ "library_version": "x",
+ "kind": "class",
+ "doc_url": "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.linregress.html",
+ "summary": "",
+ "signature": "",
+ "parameters": [
+  {
+   "name": "x",
+   "param_kind": "positional_or_keyword",
+   "required": true,
+   "default": null,
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "y",
+   "param_kind": "positional_or_keyword",
+   "required": true,
+   "default": null,
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "alternative",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "'two-sided'",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "axis",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "0",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "nan_policy",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "'propagate'",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "keepdims",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "False",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  }
+ ],
+ "attributes": [],
+ "methods": [],
+ "returns": [],
+ "extractor_version": "1",
+ "overrides_applied": [],
+ "warnings": []
+}

@@ -1,0 +1,84 @@
+{
+ "id": "imblearn.over_sampling.SMOTE",
+ "import_path": "imblearn.over_sampling.SMOTE",
+ "library": "imbalanced-learn",
+ "library_version": "x",
+ "kind": "class",
+ "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.over_sampling.SMOTE.html",
+ "summary": "",
+ "signature": "",
+ "parameters": [
+  {
+   "name": "sampling_strategy",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "'auto'",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "random_state",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "None",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "k_neighbors",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "5",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  }
+ ],
+ "attributes": [
+  {
+   "name": "sampling_strategy_",
+   "type_doc": "",
+   "description": ""
+  },
+  {
+   "name": "nn_k_",
+   "type_doc": "",
+   "description": ""
+  },
+  {
+   "name": "n_features_in_",
+   "type_doc": "",
+   "description": ""
+  },
+  {
+   "name": "feature_names_in_",
+   "type_doc": "",
+   "description": ""
+  }
+ ],
+ "methods": [],
+ "returns": [],
+ "extractor_version": "1",
+ "overrides_applied": [],
+ "warnings": []
+}

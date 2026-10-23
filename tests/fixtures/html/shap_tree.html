@@ -1,0 +1,494 @@
+
+
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="readthedocs-addons-api-version" content="1"><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>shap.TreeExplainer &mdash; SHAP latest documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" href="../_static/css/style.css" type="text/css" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=c6e86fd7"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@^1.0.1/dist/embed-amd.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <script src="../_static/js/versions.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="shap.LinearExplainer" href="shap.LinearExplainer.html" />
+    <link rel="prev" title="shap.Explainer" href="shap.Explainer.html" /> 
+<script async type="text/javascript" src="/_/static/javascript/readthedocs-addons.js"></script><meta name="readthedocs-project-slug" content="shap" /><meta name="readthedocs-version-slug" content="latest" /><meta name="readthedocs-resolver-filename" content="/generated/shap.TreeExplainer.html" /><meta name="readthedocs-http-status" content="200" /></head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #343131" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/shap_logo_white.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="switch-menus">
+                <div class="version-switch"></div>
+                <div class="language-switch"></div>
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../overviews.html">Topical overviews</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tabular_examples.html">Tabular examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../text_examples.html">Text examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../image_examples.html">Image examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../genomic_examples.html">Genomic examples</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../api.html">API reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../api.html#explanation">Explanation</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../api.html#explainers">explainers</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="shap.Explainer.html">shap.Explainer</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">shap.TreeExplainer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shap.LinearExplainer.html">shap.LinearExplainer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shap.PermutationExplainer.html">shap.PermutationExplainer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shap.PartitionExplainer.html">shap.PartitionExplainer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shap.SamplingExplainer.html">shap.SamplingExplainer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shap.AdditiveExplainer.html">shap.AdditiveExplainer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shap.DeepExplainer.html">shap.DeepExplainer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shap.KernelExplainer.html">shap.KernelExplainer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shap.GradientExplainer.html">shap.GradientExplainer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shap.ExactExplainer.html">shap.ExactExplainer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shap.explainers.other.Coefficient.html">shap.explainers.other.Coefficient</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shap.explainers.other.Random.html">shap.explainers.other.Random</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shap.explainers.other.LimeTabular.html">shap.explainers.other.LimeTabular</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shap.explainers.other.Maple.html">shap.explainers.other.Maple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shap.explainers.other.TreeMaple.html">shap.explainers.other.TreeMaple</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shap.explainers.other.TreeGain.html">shap.explainers.other.TreeGain</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#plots">plots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#maskers">maskers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#models">models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#utils">utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api.html#datasets">datasets</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../api_examples.html">API examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../benchmarks.html">Benchmarks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../release_notes.html">Release notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing guide</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #343131" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SHAP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../api.html">API Reference</a></li>
+      <li class="breadcrumb-item active">shap.TreeExplainer</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/generated/shap.TreeExplainer.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="shap-treeexplainer">
+<h1>shap.TreeExplainer<a class="headerlink" href="#shap-treeexplainer" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="shap.TreeExplainer">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">shap.</span></span><span class="sig-name descname"><span class="pre">TreeExplainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">model:</span> <span class="pre">~typing.Any,</span> <span class="pre">data:</span> <span class="pre">~numpy.ndarray[tuple[~typing.Any,</span> <span class="pre">...],</span> <span class="pre">~numpy.dtype[~typing.Any]]</span> <span class="pre">|</span> <span class="pre">~pandas.DataFrame</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">model_output:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'raw',</span> <span class="pre">feature_perturbation:</span> <span class="pre">~typing.Literal['auto',</span> <span class="pre">'interventional',</span> <span class="pre">'tree_path_dependent']</span> <span class="pre">=</span> <span class="pre">'auto',</span> <span class="pre">feature_names:</span> <span class="pre">list[str]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">approximate:</span> <span class="pre">~typing.Any</span> <span class="pre">=</span> <span class="pre">&lt;object</span> <span class="pre">object&gt;,</span> <span class="pre">link:</span> <span class="pre">~typing.Any</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">linearize_link:</span> <span class="pre">~typing.Any</span> <span class="pre">=</span> <span class="pre">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#shap.TreeExplainer" title="Link to this definition"></a></dt>
+<dd><p>Uses Tree SHAP algorithms to explain the output of ensemble tree models.</p>
+<p>Tree SHAP is a fast and exact method to estimate SHAP values for tree models
+and ensembles of trees, under several different possible assumptions about
+feature dependence. It depends on fast C++ implementations either inside an
+external model package or in the local compiled C extension.</p>
+<p class="rubric">Examples</p>
+<p>See <a class="reference external" href="https://shap.readthedocs.io/en/latest/api_examples/explainers/Tree.html">Tree explainer examples</a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="shap.TreeExplainer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">model:</span> <span class="pre">~typing.Any,</span> <span class="pre">data:</span> <span class="pre">~numpy.ndarray[tuple[~typing.Any,</span> <span class="pre">...],</span> <span class="pre">~numpy.dtype[~typing.Any]]</span> <span class="pre">|</span> <span class="pre">~pandas.DataFrame</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">model_output:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'raw',</span> <span class="pre">feature_perturbation:</span> <span class="pre">~typing.Literal['auto',</span> <span class="pre">'interventional',</span> <span class="pre">'tree_path_dependent']</span> <span class="pre">=</span> <span class="pre">'auto',</span> <span class="pre">feature_names:</span> <span class="pre">list[str]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">approximate:</span> <span class="pre">~typing.Any</span> <span class="pre">=</span> <span class="pre">&lt;object</span> <span class="pre">object&gt;,</span> <span class="pre">link:</span> <span class="pre">~typing.Any</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">linearize_link:</span> <span class="pre">~typing.Any</span> <span class="pre">=</span> <span class="pre">None</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#shap.TreeExplainer.__init__" title="Link to this definition"></a></dt>
+<dd><p>Build a new Tree explainer for the passed model.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl>
+<dt><strong>model</strong><span class="classifier">model object</span></dt><dd><p>The tree based machine learning model that we want to explain.
+XGBoost, LightGBM, CatBoost, Pyspark and most tree-based
+scikit-learn models are supported.</p>
+</dd>
+<dt><strong>data</strong><span class="classifier">numpy.array or pandas.DataFrame</span></dt><dd><p>The background dataset to use for integrating out features.</p>
+<p>This argument is optional when
+<code class="docutils literal notranslate"><span class="pre">feature_perturbation=&quot;tree_path_dependent&quot;</span></code>, since in that case
+we can use the number of training samples that went down each tree
+path as our background dataset (this is recorded in the <code class="docutils literal notranslate"><span class="pre">model</span></code>
+object).</p>
+</dd>
+<dt><strong>feature_perturbation</strong><span class="classifier">“auto” (default), “interventional” or “tree_path_dependent”</span></dt><dd><p>Since SHAP values rely on conditional expectations, we need to
+decide how to handle correlated (or otherwise dependent) input
+features.</p>
+<ul class="simple">
+<li><p>if <code class="docutils literal notranslate"><span class="pre">&quot;interventional&quot;</span></code>, a background dataset <code class="docutils literal notranslate"><span class="pre">data</span></code> is required. The
+dependencies between features are handled according to the rules dictated
+by causal inference <a class="reference internal" href="#r8b579ab5cbed-1" id="id1">[1]</a>. The runtime scales linearly with the size of the
+background dataset you use: anywhere from 100 to 1000 random background
+samples are good sizes to use.</p></li>
+<li><p>if <code class="docutils literal notranslate"><span class="pre">&quot;tree_path_dependent&quot;</span></code>, no background dataset is required and the
+approach is to just follow the trees and use the number of training
+examples that went down each leaf to represent the background
+distribution.</p></li>
+<li><p>if <code class="docutils literal notranslate"><span class="pre">&quot;auto&quot;</span></code>, the “interventional” approach will be used when a
+background is provided, otherwise the “tree_path_dependent” approach will
+be used.</p></li>
+</ul>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 0.47: </span>The <cite>“auto”</cite> option was added.</p>
+</div>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 0.47: </span>The default behaviour will change from <cite>“interventional”</cite> to <cite>“auto”</cite> in 0.47.
+In the future, passing <cite>feature_pertubation=”interventional”</cite> without providing
+a background dataset will raise an error.</p>
+</div>
+</dd>
+<dt><strong>model_output</strong><span class="classifier">“raw”, “probability”, “log_loss”, or model method name</span></dt><dd><p>What output of the model should be explained.</p>
+<ul class="simple">
+<li><p>If “raw”, then we explain the raw output of the trees, which
+varies by model. For regression models, “raw” is the standard
+output. For binary classification in XGBoost, this is the log odds
+ratio.</p></li>
+<li><p>If “probability”, then we explain the output of the model
+transformed into probability space (note that this means the SHAP
+values now sum to the probability output of the model).</p></li>
+<li><p>If “log_loss”, then we explain the natural logarithm of the model
+loss function, so that the SHAP values sum up to the log loss of
+the model for each sample. This is helpful for breaking down model
+performance by feature.</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">model_output</span></code> is the name of a supported prediction method
+on the <code class="docutils literal notranslate"><span class="pre">model</span></code> object, then we explain the output of that model
+method name. For example, <code class="docutils literal notranslate"><span class="pre">model_output=&quot;predict_proba&quot;</span></code>
+explains the result of calling <code class="docutils literal notranslate"><span class="pre">model.predict_proba</span></code>.</p></li>
+</ul>
+<p>Currently the “probability” and “log_loss” options are only
+supported when <code class="docutils literal notranslate"><span class="pre">feature_perturbation=&quot;interventional&quot;</span></code>.</p>
+</dd>
+<dt><strong>approximate</strong><span class="classifier">bool</span></dt><dd><p>Deprecated, will be deprecated in v0.47.0 and removed in version v0.49.0.
+Please use the <code class="docutils literal notranslate"><span class="pre">approximate</span></code> argument in the <a class="reference internal" href="#shap.TreeExplainer.shap_values" title="shap.TreeExplainer.shap_values"><code class="xref py py-meth docutils literal notranslate"><span class="pre">shap_values()</span></code></a> or <code class="docutils literal notranslate"><span class="pre">__call__</span></code> methods instead.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<div role="list" class="citation-list">
+<div class="citation" id="r8b579ab5cbed-1" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>Janzing, Dominik, Lenon Minorics, and Patrick Blöbaum.
+“Feature relevance quantification in explainable AI: A causal problem.”
+International Conference on artificial intelligence and statistics. PMLR, 2020.</p>
+</div>
+</div>
+</dd></dl>
+
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#shap.TreeExplainer.__init__" title="shap.TreeExplainer.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(model, data, ...], ...)</p></td>
+<td><p>Build a new Tree explainer for the passed model.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">assert_additivity</span></code>(phi, model_output)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#shap.TreeExplainer.explain_row" title="shap.TreeExplainer.explain_row"><code class="xref py py-obj docutils literal notranslate"><span class="pre">explain_row</span></code></a>(*row_args, max_evals, ...)</p></td>
+<td><p>Explains a single row and returns the tuple (row_values, row_expected_values, row_mask_shapes, main_effects).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#shap.TreeExplainer.load" title="shap.TreeExplainer.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(in_file[, model_loader, masker_loader, ...])</p></td>
+<td><p>Load an Explainer from the given file stream.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#shap.TreeExplainer.save" title="shap.TreeExplainer.save"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save</span></code></a>(out_file[, model_saver, masker_saver])</p></td>
+<td><p>Write the explainer to the given file stream.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#shap.TreeExplainer.shap_interaction_values" title="shap.TreeExplainer.shap_interaction_values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shap_interaction_values</span></code></a>(X[, y, tree_limit])</p></td>
+<td><p>Estimate the SHAP interaction values for a set of samples.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#shap.TreeExplainer.shap_values" title="shap.TreeExplainer.shap_values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shap_values</span></code></a>(X[, y, tree_limit, approximate, ...])</p></td>
+<td><p>Estimate the SHAP values for a set of samples.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#shap.TreeExplainer.supports_model_with_masker" title="shap.TreeExplainer.supports_model_with_masker"><code class="xref py py-obj docutils literal notranslate"><span class="pre">supports_model_with_masker</span></code></a>(model, masker)</p></td>
+<td><p>Determines if this explainer can handle the given model.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">data</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">data_missing</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_perturbation</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">expected_value</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">model</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">model_output</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">data_feature_names</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">masker</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">output_names</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">feature_names</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">link</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">linearize_link</span></code></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="shap.TreeExplainer.explain_row">
+<span class="sig-name descname"><span class="pre">explain_row</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">row_args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_evals</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'auto'</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_effects</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error_bounds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">silent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#shap.TreeExplainer.explain_row" title="Link to this definition"></a></dt>
+<dd><p>Explains a single row and returns the tuple (row_values, row_expected_values, row_mask_shapes, main_effects).</p>
+<p>This is an abstract method meant to be implemented by each subclass.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt>tuple</dt><dd><p>A tuple of (row_values, row_expected_values, row_mask_shapes), where row_values is an array of the
+attribution values for each sample, row_expected_values is an array (or single value) representing
+the expected value of the model for each sample (which is the same for all samples unless there
+are fixed inputs present, like labels when explaining the loss), and row_mask_shapes is a list
+of all the input shapes (since the row_values is always flattened),</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="shap.TreeExplainer.load">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_loader</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masker_loader</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instantiate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="shap.Explainer.html#shap.Explainer" title="shap.Explainer"><span class="pre">Explainer</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#shap.TreeExplainer.load" title="Link to this definition"></a></dt>
+<dd><p>Load an Explainer from the given file stream.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>in_file</strong><span class="classifier">The file stream to load objects from.</span></dt><dd></dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="shap.TreeExplainer.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">out_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_saver</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'.save'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masker_saver</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'.save'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#shap.TreeExplainer.save" title="Link to this definition"></a></dt>
+<dd><p>Write the explainer to the given file stream.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="shap.TreeExplainer.shap_interaction_values">
+<span class="sig-name descname"><span class="pre">shap_interaction_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Series</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tree_limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#shap.TreeExplainer.shap_interaction_values" title="Link to this definition"></a></dt>
+<dd><p>Estimate the SHAP interaction values for a set of samples.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">numpy.array, pandas.DataFrame or catboost.Pool (for catboost)</span></dt><dd><p>A matrix of samples (# samples x # features) on which to explain the model’s output.</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">numpy.array</span></dt><dd><p>An array of label values for each sample. Used when explaining loss functions (not yet supported).</p>
+</dd>
+<dt><strong>tree_limit</strong><span class="classifier">None (default) or int</span></dt><dd><p>Limit the number of trees used by the model. By default, the limit of the original model
+is used (<code class="docutils literal notranslate"><span class="pre">None</span></code>). <code class="docutils literal notranslate"><span class="pre">-1</span></code> means no limit.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt>np.array</dt><dd><p>Returns a matrix. The shape depends on the number of model outputs:</p>
+<ul class="simple">
+<li><p>one output: matrix of shape (#num_samples, #features, #features).</p></li>
+<li><p>multiple outputs: matrix of shape (#num_samples, #features, #features, #num_outputs).</p></li>
+</ul>
+<p>The matrix (#num_samples, # features, # features) for each sample sums
+to the difference between the model output for that sample and the expected value of the model output
+(which is stored in the <code class="docutils literal notranslate"><span class="pre">expected_value</span></code> attribute of the explainer). Each row of this matrix sums to the
+SHAP value for that feature for that sample. The diagonal entries of the matrix represent the
+“main effect” of that feature on the prediction. The symmetric off-diagonal entries represent the
+interaction effects between all pairs of features for that sample.
+For models with vector outputs, this returns a list of tensors, one for each output.</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 0.45.0: </span>Return type for models with multiple outputs changed from list to np.ndarray.</p>
+</div>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="shap.TreeExplainer.shap_values">
+<span class="sig-name descname"><span class="pre">shap_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Series</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tree_limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">approximate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_additivity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_call</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#shap.TreeExplainer.shap_values" title="Link to this definition"></a></dt>
+<dd><p>Estimate the SHAP values for a set of samples.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><dl class="simple">
+<dt><strong>X</strong><span class="classifier">Any</span></dt><dd><p>Can be a dataframe like object, e.g. numpy.array, pandas.DataFrame or catboost.Pool (for catboost).
+A matrix of samples (# samples x # features) on which to explain the model’s output.</p>
+</dd>
+<dt><strong>y</strong><span class="classifier">numpy.array</span></dt><dd><p>An array of label values for each sample. Used when explaining loss functions.</p>
+</dd>
+<dt><strong>tree_limit</strong><span class="classifier">None (default) or int</span></dt><dd><p>Limit the number of trees used by the model. By default, the limit of the original model
+is used (<code class="docutils literal notranslate"><span class="pre">None</span></code>). <code class="docutils literal notranslate"><span class="pre">-1</span></code> means no limit.</p>
+</dd>
+<dt><strong>approximate</strong><span class="classifier">bool</span></dt><dd><p>Run fast, but only roughly approximate the Tree SHAP values. This runs a method
+previously proposed by Saabas which only considers a single feature ordering. Take care
+since this does not have the consistency guarantees of Shapley values and places too
+much weight on lower splits in the tree.</p>
+</dd>
+<dt><strong>check_additivity</strong><span class="classifier">bool</span></dt><dd><p>Run a validation check that the sum of the SHAP values equals the output of the model. This
+check takes only a small amount of time, and will catch potential unforeseen errors.
+Note that this check only runs right now when explaining the margin of the model.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><dl>
+<dt>np.array</dt><dd><p>Estimated SHAP values, usually of shape <code class="docutils literal notranslate"><span class="pre">(#</span> <span class="pre">samples</span> <span class="pre">x</span> <span class="pre">#</span> <span class="pre">features)</span></code>.</p>
+<p>For each output, the sum of the SHAP values plus the <code class="docutils literal notranslate"><span class="pre">expected_value</span></code>
+equals the model’s output (in the specified output space):</p>
+<ul class="simple">
+<li><p>Single output: <code class="docutils literal notranslate"><span class="pre">shap_values[i,</span> <span class="pre">:].sum()</span> <span class="pre">+</span> <span class="pre">expected_value</span> <span class="pre">=</span> <span class="pre">f(x)[i]</span></code></p></li>
+<li><p>Multiple outputs: <code class="docutils literal notranslate"><span class="pre">shap_values[i,</span> <span class="pre">:,</span> <span class="pre">j].sum()</span> <span class="pre">+</span> <span class="pre">expected_value[j]</span> <span class="pre">=</span> <span class="pre">f(x)[i,</span> <span class="pre">j]</span></code></p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">f(x)</span></code> value is NOT necessarily what <code class="docutils literal notranslate"><span class="pre">model.predict()</span></code>
+or <code class="docutils literal notranslate"><span class="pre">model.predict_proba()</span></code> returns. For example, for an XGBoost Classifier with the default
+<code class="docutils literal notranslate"><span class="pre">model_output=&quot;raw&quot;</span></code>, the explainer returns log-odds (margins).
+To compare this mathematically against <code class="docutils literal notranslate"><span class="pre">predict_proba()</span></code> probabilities,
+a logistic inverse-transform (e.g., <code class="docutils literal notranslate"><span class="pre">scipy.special.expit</span></code>) must be applied
+to the sum.</p>
+<p>Furthermore, the additivity formula requires SHAP values and model
+predictions to be computed on the same samples in the same order.</p>
+</div>
+<p>The shape of the returned array depends on the number of model outputs:</p>
+<ul class="simple">
+<li><p>one output: array of shape <code class="docutils literal notranslate"><span class="pre">(#num_samples,</span> <span class="pre">*X.shape[1:])</span></code>.</p></li>
+<li><p>multiple outputs: array of shape <code class="docutils literal notranslate"><span class="pre">(#num_samples,</span> <span class="pre">*X.shape[1:],</span>
+<span class="pre">#num_outputs)</span></code>.</p></li>
+</ul>
+<p><strong>Examples:</strong></p>
+<ul class="simple">
+<li><p><strong>Regression:</strong> A <code class="docutils literal notranslate"><span class="pre">RandomForestRegressor</span></code> returns SHAP values of shape
+<code class="docutils literal notranslate"><span class="pre">(#num_samples,</span> <span class="pre">#num_features)</span></code> with a scalar <code class="docutils literal notranslate"><span class="pre">expected_value</span></code>.</p></li>
+<li><p><strong>Binary classification:</strong> Output behavior varies by model:</p>
+<ul>
+<li><p><strong>Scikit-learn models</strong> (e.g., <code class="docutils literal notranslate"><span class="pre">RandomForestClassifier</span></code>) output
+probabilities for both classes, resulting in SHAP values of shape
+<code class="docutils literal notranslate"><span class="pre">(#num_samples,</span> <span class="pre">#num_features,</span> <span class="pre">2)</span></code> and <code class="docutils literal notranslate"><span class="pre">expected_value</span></code> as an
+array of length 2.</p></li>
+<li><p><strong>XGBoost and LightGBM</strong> (with default <code class="docutils literal notranslate"><span class="pre">model_output=&quot;raw&quot;</span></code>) output
+a single value (raw margin/log-odds), resulting in SHAP values of shape
+<code class="docutils literal notranslate"><span class="pre">(#num_samples,</span> <span class="pre">#num_features)</span></code> and <code class="docutils literal notranslate"><span class="pre">expected_value</span></code> as a scalar.</p></li>
+</ul>
+</li>
+</ul>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 0.45.0: </span>Return type for models with multiple outputs changed from list to np.ndarray.</p>
+</div>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="shap.TreeExplainer.supports_model_with_masker">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">supports_model_with_masker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">masker</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#shap.TreeExplainer.supports_model_with_masker" title="Link to this definition"></a></dt>
+<dd><p>Determines if this explainer can handle the given model.</p>
+<p>This is an abstract static method meant to be implemented by each subclass.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="shap.Explainer.html" class="btn btn-neutral float-left" title="shap.Explainer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="shap.LinearExplainer.html" class="btn btn-neutral float-right" title="shap.LinearExplainer" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2018, Scott Lundberg.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

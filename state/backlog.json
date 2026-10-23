@@ -150,7 +150,7 @@
     "T005": {
       "title": "Official docs cross-check tool",
       "file": "tasks/T005-docs-crosscheck-tool.md",
-      "status": "In progress",
+      "status": "Done",
       "dependencies": [
         "T001"
       ],

@@ -1,0 +1,169 @@
+{
+ "id": "sklearn.linear_model.Ridge",
+ "import_path": "sklearn.linear_model.Ridge",
+ "library": "scikit-learn",
+ "library_version": "x",
+ "kind": "class",
+ "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html",
+ "summary": "",
+ "signature": "",
+ "parameters": [
+  {
+   "name": "alpha",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "1.0",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "fit_intercept",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "True",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "copy_X",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "True",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "max_iter",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "None",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "tol",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "0.0001",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "solver",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "'auto'",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "positive",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "False",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "random_state",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "None",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  }
+ ],
+ "attributes": [
+  {
+   "name": "coef_",
+   "type_doc": "",
+   "description": ""
+  },
+  {
+   "name": "intercept_",
+   "type_doc": "",
+   "description": ""
+  },
+  {
+   "name": "n_iter_",
+   "type_doc": "",
+   "description": ""
+  },
+  {
+   "name": "n_features_in_",
+   "type_doc": "",
+   "description": ""
+  },
+  {
+   "name": "feature_names_in_",
+   "type_doc": "",
+   "description": ""
+  },
+  {
+   "name": "solver_",
+   "type_doc": "",
+   "description": ""
+  }
+ ],
+ "methods": [],
+ "returns": [],
+ "extractor_version": "1",
+ "overrides_applied": [],
+ "warnings": []
+}

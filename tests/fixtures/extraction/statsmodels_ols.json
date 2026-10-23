@@ -1,0 +1,99 @@
+{
+ "id": "statsmodels.regression.linear_model.OLS",
+ "import_path": "statsmodels.regression.linear_model.OLS",
+ "library": "statsmodels",
+ "library_version": "x",
+ "kind": "class",
+ "doc_url": "https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.OLS.html",
+ "summary": "",
+ "signature": "",
+ "parameters": [
+  {
+   "name": "endog",
+   "param_kind": "positional_or_keyword",
+   "required": true,
+   "default": null,
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "exog",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "None",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "missing",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "'none'",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "hasconst",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "None",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "kwargs",
+   "param_kind": "var_keyword",
+   "required": false,
+   "default": null,
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  }
+ ],
+ "attributes": [
+  {
+   "name": "weights",
+   "type_doc": "",
+   "description": ""
+  }
+ ],
+ "methods": [],
+ "returns": [],
+ "extractor_version": "1",
+ "overrides_applied": [],
+ "warnings": []
+}

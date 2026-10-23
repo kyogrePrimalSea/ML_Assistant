@@ -1,0 +1,123 @@
+{
+ "id": "optuna.create_study",
+ "import_path": "optuna.create_study",
+ "library": "optuna",
+ "library_version": "x",
+ "kind": "class",
+ "doc_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.create_study.html",
+ "summary": "",
+ "signature": "",
+ "parameters": [
+  {
+   "name": "storage",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "None",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "sampler",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "None",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "pruner",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "None",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "study_name",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "None",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "direction",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "None",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "load_if_exists",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "False",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "directions",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "None",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  }
+ ],
+ "attributes": [],
+ "methods": [],
+ "returns": [],
+ "extractor_version": "1",
+ "overrides_applied": [],
+ "warnings": []
+}

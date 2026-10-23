@@ -1,0 +1,669 @@
+{
+ "id": "xgboost.XGBRegressor",
+ "import_path": "xgboost.XGBRegressor",
+ "library": "xgboost",
+ "library_version": "x",
+ "kind": "class",
+ "doc_url": "https://xgboost.readthedocs.io/en/stable/python/python_api.html#xgboost.XGBRegressor",
+ "summary": "",
+ "signature": "",
+ "parameters": [
+  {
+   "name": "objective",
+   "param_kind": "positional_or_keyword",
+   "required": false,
+   "default": "'reg:squarederror'",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "kwargs",
+   "param_kind": "var_keyword",
+   "required": false,
+   "default": null,
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "effective_default": null
+  },
+  {
+   "name": "n_estimators",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  },
+  {
+   "name": "max_depth",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  },
+  {
+   "name": "max_leaves",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  },
+  {
+   "name": "max_bin",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  },
+  {
+   "name": "grow_policy",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  },
+  {
+   "name": "learning_rate",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  },
+  {
+   "name": "verbosity",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  },
+  {
+   "name": "booster",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  },
+  {
+   "name": "tree_method",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  },
+  {
+   "name": "n_jobs",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  },
+  {
+   "name": "gamma",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  },
+  {
+   "name": "min_child_weight",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  },
+  {
+   "name": "max_delta_step",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  },
+  {
+   "name": "subsample",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  },
+  {
+   "name": "sampling_method",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  },
+  {
+   "name": "colsample_bytree",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  },
+  {
+   "name": "colsample_bylevel",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  },
+  {
+   "name": "colsample_bynode",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  },
+  {
+   "name": "reg_alpha",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  },
+  {
+   "name": "reg_lambda",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  },
+  {
+   "name": "scale_pos_weight",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  },
+  {
+   "name": "base_score",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  },
+  {
+   "name": "random_state",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  },
+  {
+   "name": "missing",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  },
+  {
+   "name": "num_parallel_tree",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  },
+  {
+   "name": "monotone_constraints",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  },
+  {
+   "name": "interaction_constraints",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  },
+  {
+   "name": "importance_type",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  },
+  {
+   "name": "device",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  },
+  {
+   "name": "validate_parameters",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  },
+  {
+   "name": "enable_categorical",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  },
+  {
+   "name": "feature_types",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  },
+  {
+   "name": "feature_weights",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  },
+  {
+   "name": "max_cat_to_onehot",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  },
+  {
+   "name": "max_cat_threshold",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  },
+  {
+   "name": "multi_strategy",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  },
+  {
+   "name": "eval_metric",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  },
+  {
+   "name": "early_stopping_rounds",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  },
+  {
+   "name": "callbacks",
+   "param_kind": "positional_or_keyword",
+   "type_doc": "",
+   "description": "",
+   "allowed": {
+    "source": "none",
+    "options": [],
+    "intervals": [],
+    "types": []
+   },
+   "required": false,
+   "default": "None",
+   "effective_default": null
+  }
+ ],
+ "attributes": [
+  {
+   "name": "best_iteration",
+   "type_doc": "",
+   "description": ""
+  },
+  {
+   "name": "best_score",
+   "type_doc": "",
+   "description": ""
+  },
+  {
+   "name": "coef_",
+   "type_doc": "",
+   "description": ""
+  },
+  {
+   "name": "feature_importances_",
+   "type_doc": "",
+   "description": ""
+  },
+  {
+   "name": "feature_names_in_",
+   "type_doc": "",
+   "description": ""
+  },
+  {
+   "name": "intercept_",
+   "type_doc": "",
+   "description": ""
+  },
+  {
+   "name": "n_features_in_",
+   "type_doc": "",
+   "description": ""
+  }
+ ],
+ "methods": [],
+ "returns": [],
+ "extractor_version": "1",
+ "overrides_applied": [],
+ "warnings": []
+}
