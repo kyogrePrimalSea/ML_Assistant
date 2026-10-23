@@ -129,7 +129,7 @@
     }
   ],
   "returns": [],
-  "signature": "SelectFwe(score_func=<function f_classif at 0x7ff49af32140>, *, alpha=0.05)",
+  "signature": "SelectFwe(score_func=<function f_classif>, *, alpha=0.05)",
   "summary": "Filter: Select the p-values corresponding to Family-wise error rate.",
   "warnings": []
 }

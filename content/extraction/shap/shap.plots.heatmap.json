@@ -159,7 +159,7 @@
       "type_doc": "ax: matplotlib Axes"
     }
   ],
-  "signature": "heatmap(shap_values: shap._explanation.Explanation, instance_order=shap.Explanation.hclust, feature_values=shap.Explanation.abs.mean(0), feature_order=None, max_display=10, cmap=<matplotlib.colors.LinearSegmentedColormap object at 0x7ff498036d00>, show=True, plot_width=8, ax=None)",
+  "signature": "heatmap(shap_values: shap._explanation.Explanation, instance_order=shap.Explanation.hclust, feature_values=shap.Explanation.abs.mean(0), feature_order=None, max_display=10, cmap=<matplotlib.colors.LinearSegmentedColormap object>, show=True, plot_width=8, ax=None)",
   "summary": "Create a heatmap plot of a set of SHAP values.",
   "warnings": [
     "parameter cmap: not documented in docstring"

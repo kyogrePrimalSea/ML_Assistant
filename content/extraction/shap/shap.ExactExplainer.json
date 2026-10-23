@@ -114,7 +114,7 @@
     }
   ],
   "returns": [],
-  "signature": "ExactExplainer(model: 'Any', masker: 'Any', link: 'Any' = <function identity at 0x7ff4981e7ed0>, linearize_link: 'bool' = True, feature_names: 'Any' = None) -> 'None'",
+  "signature": "ExactExplainer(model: 'Any', masker: 'Any', link: 'Any' = <function identity>, linearize_link: 'bool' = True, feature_names: 'Any' = None) -> 'None'",
   "summary": "Build an explainers.Exact object for the given model using the given masker object.",
   "warnings": [
     "parameter feature_names: not documented in docstring"

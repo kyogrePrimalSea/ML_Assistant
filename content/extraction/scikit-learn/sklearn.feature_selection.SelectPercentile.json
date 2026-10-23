@@ -129,7 +129,7 @@
     }
   ],
   "returns": [],
-  "signature": "SelectPercentile(score_func=<function f_classif at 0x7ff49af32140>, *, percentile=10)",
+  "signature": "SelectPercentile(score_func=<function f_classif>, *, percentile=10)",
   "summary": "Select features according to a percentile of the highest scores.",
   "warnings": []
 }

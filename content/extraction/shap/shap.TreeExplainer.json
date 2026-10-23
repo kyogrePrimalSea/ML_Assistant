@@ -174,7 +174,7 @@
     }
   ],
   "returns": [],
-  "signature": "TreeExplainer(model: 'Any', data: 'npt.NDArray[Any] | pd.DataFrame | None' = None, model_output: 'str' = 'raw', feature_perturbation: \"Literal['auto', 'interventional', 'tree_path_dependent']\" = 'auto', feature_names: 'list[str] | None' = None, approximate: 'Any' = <object object at 0x7ff4991110d0>, link: 'Any' = None, linearize_link: 'Any' = None) -> 'None'",
+  "signature": "TreeExplainer(model: 'Any', data: 'npt.NDArray[Any] | pd.DataFrame | None' = None, model_output: 'str' = 'raw', feature_perturbation: \"Literal['auto', 'interventional', 'tree_path_dependent']\" = 'auto', feature_names: 'list[str] | None' = None, approximate: 'Any' = <object object>, link: 'Any' = None, linearize_link: 'Any' = None) -> 'None'",
   "summary": "Build a new Tree explainer for the passed model.",
   "warnings": [
     "parameter feature_names: not documented in docstring",

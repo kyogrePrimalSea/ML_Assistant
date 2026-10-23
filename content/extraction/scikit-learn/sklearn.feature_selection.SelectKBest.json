@@ -131,7 +131,7 @@
     }
   ],
   "returns": [],
-  "signature": "SelectKBest(score_func=<function f_classif at 0x7ff49af32140>, *, k=10)",
+  "signature": "SelectKBest(score_func=<function f_classif>, *, k=10)",
   "summary": "Select features according to the k highest scores.",
   "warnings": []
 }

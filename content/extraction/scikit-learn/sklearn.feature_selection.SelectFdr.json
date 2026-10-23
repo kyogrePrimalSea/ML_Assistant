@@ -129,7 +129,7 @@
     }
   ],
   "returns": [],
-  "signature": "SelectFdr(score_func=<function f_classif at 0x7ff49af32140>, *, alpha=0.05)",
+  "signature": "SelectFdr(score_func=<function f_classif>, *, alpha=0.05)",
   "summary": "Filter: Select the p-values for an estimated false discovery rate.",
   "warnings": []
 }

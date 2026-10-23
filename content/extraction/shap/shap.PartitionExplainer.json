@@ -169,7 +169,7 @@
     }
   ],
   "returns": [],
-  "signature": "PartitionExplainer(model: Any, masker: Any, *, output_names: list[str] | None = None, link: collections.abc.Callable[..., typing.Any] = <function identity at 0x7ff4981e7ed0>, linearize_link: bool = True, feature_names: list[str] | None = None, **call_args: Any) -> None",
+  "signature": "PartitionExplainer(model: Any, masker: Any, *, output_names: list[str] | None = None, link: collections.abc.Callable[..., typing.Any] = <function identity>, linearize_link: bool = True, feature_names: list[str] | None = None, **call_args: Any) -> None",
   "summary": "Build a PartitionExplainer for the given model with the given masker.",
   "warnings": [
     "parameter output_names: not documented in docstring",

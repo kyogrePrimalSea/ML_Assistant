@@ -174,7 +174,7 @@
     }
   ],
   "returns": [],
-  "signature": "Explainer(model: 'Any', masker: 'Any' = None, link: 'Callable[..., Any]' = <function identity at 0x7ff4981e7ed0>, algorithm: \"Literal['auto', 'permutation', 'partition', 'tree', 'linear', 'deep', 'exact', 'additive']\" = 'auto', output_names: 'list[str] | None' = None, feature_names: 'list[str] | list[list[str]] | None' = None, linearize_link: 'bool' = True, seed: 'int | None' = None, **kwargs: 'Any') -> 'None'",
+  "signature": "Explainer(model: 'Any', masker: 'Any' = None, link: 'Callable[..., Any]' = <function identity>, algorithm: \"Literal['auto', 'permutation', 'partition', 'tree', 'linear', 'deep', 'exact', 'additive']\" = 'auto', output_names: 'list[str] | None' = None, feature_names: 'list[str] | list[list[str]] | None' = None, linearize_link: 'bool' = True, seed: 'int | None' = None, **kwargs: 'Any') -> 'None'",
   "summary": "Build a new explainer for the passed model.",
   "warnings": [
     "parameter feature_names: not documented in docstring",

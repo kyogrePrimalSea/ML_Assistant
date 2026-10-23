@@ -323,3 +323,24 @@ def test_t014_default_override_drops_memory_address_warning(tmp_path):
     _write_override(tmp_path, [{"path": "parameters[name=link].default", "value": "<function f>"}])
     extract.apply_overrides(rec, tmp_path)
     assert rec["warnings"] == ["parameter other: default repr contains a memory address"]
+
+
+def test_memory_addresses_stripped_from_output(tmp_path):
+    import subprocess
+    import sys
+    inv = tmp_path / "inv.yaml"
+    inv.write_text(
+        "items:\n"
+        "- id: sklearn.feature_selection.SelectKBest\n"
+        "  import_path: sklearn.feature_selection.SelectKBest\n"
+        "  library: scikit-learn\n"
+        "  name: SelectKBest\n"
+        "  doc_url: https://example.org\n"
+    )
+    out = tmp_path / "out"
+    subprocess.run([sys.executable, "tools/extract.py", "--inventory", str(inv),
+                    "--out", str(out), "--overrides-dir", str(tmp_path / "none")],
+                   check=True, capture_output=True)
+    text = (out / "scikit-learn" / "sklearn.feature_selection.SelectKBest.json").read_text()
+    assert " at 0x" not in text
+    assert "<function f_classif>" in text

@@ -19,6 +19,10 @@ from pathlib import Path
 
 import yaml
 
+# Reprs like <function f at 0x7f...> differ per process; strip the address so
+# output is reproducible.
+MEMORY_ADDRESS = re.compile(r" at 0x[0-9a-fA-F]+>")
+
 # Experimental scikit-learn estimators (IterativeImputer, Halving*SearchCV) only
 # import after these enable modules have run.
 from sklearn.experimental import enable_halving_search_cv, enable_iterative_imputer  # noqa: F401
@@ -536,7 +540,7 @@ def write_record(record, out_root):
     d = Path(out_root) / record["library"]
     d.mkdir(parents=True, exist_ok=True)
     (d / f"{record['id']}.json").write_text(
-        json.dumps(record, indent=2, sort_keys=True, ensure_ascii=False) + "\n")
+        MEMORY_ADDRESS.sub(">", json.dumps(record, indent=2, sort_keys=True, ensure_ascii=False)) + "\n")
 
 
 def main(argv=None):

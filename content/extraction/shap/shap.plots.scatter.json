@@ -279,7 +279,7 @@
       "type_doc": "matplotlib Axes object"
     }
   ],
-  "signature": "scatter(shap_values: 'Explanation', color: 'str | Explanation | None' = '#1E88E5', hist: 'bool' = True, axis_color='#333333', cmap=<matplotlib.colors.LinearSegmentedColormap object at 0x7ff498036820>, dot_size=16, x_jitter: \"float | Literal['auto']\" = 'auto', alpha: 'float' = 1.0, title: 'str | None' = None, xmin: 'AxisLimitSpec' = None, xmax: 'AxisLimitSpec' = None, ymin: 'AxisLimitSpec' = None, ymax: 'AxisLimitSpec' = None, overlay: 'dict[str, Any] | None' = None, ax: 'plt.Axes | None' = None, ylabel: 'str' = 'SHAP value', show: 'bool' = True)",
+  "signature": "scatter(shap_values: 'Explanation', color: 'str | Explanation | None' = '#1E88E5', hist: 'bool' = True, axis_color='#333333', cmap=<matplotlib.colors.LinearSegmentedColormap object>, dot_size=16, x_jitter: \"float | Literal['auto']\" = 'auto', alpha: 'float' = 1.0, title: 'str | None' = None, xmin: 'AxisLimitSpec' = None, xmax: 'AxisLimitSpec' = None, ymin: 'AxisLimitSpec' = None, ymax: 'AxisLimitSpec' = None, overlay: 'dict[str, Any] | None' = None, ax: 'plt.Axes | None' = None, ylabel: 'str' = 'SHAP value', show: 'bool' = True)",
   "summary": "Create a SHAP dependence scatter plot, optionally colored by an interaction feature.",
   "warnings": [
     "parameter axis_color: not documented in docstring",
