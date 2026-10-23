@@ -1,8 +1,15 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-mode="observatory">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      // Apply an explicit theme choice before first paint (no flash). No choice: CSS follows the system.
+      try {
+        var t = localStorage.getItem('mlfg-theme')
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t
+      } catch (e) {}
+    </script>
     <title>ML Field Guide</title>
   </head>
   <body>

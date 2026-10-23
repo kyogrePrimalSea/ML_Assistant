@@ -1,0 +1,202 @@
+/*
+ * Observatory design tokens (spec section 10).
+ *
+ * Colour tokens are declared once per theme. A mode is one block of variables
+ * (`[data-mode="observatory"]`), so a future mode is a token-set swap.
+ * Theme selection: `data-theme="light|dark"` on <html>; with no explicit
+ * choice the system setting (prefers-color-scheme) decides.
+ *
+ * `scripts/check-contrast.mjs` reads this file: the `@theme light` and
+ * `@theme dark` markers below tell it which declarations belong to which theme.
+ * Values marked "adjusted" differ from the spec by an in-hue lightness change
+ * forced by the contrast check; each one is recorded in docs/DESIGN_ADJUSTMENTS.md.
+ */
+
+/* Non-colour tokens: shared by both themes. */
+:root,
+:root[data-mode="observatory"] {
+  /* Settings hooks (E10 drives these). Font options:
+     Atkinson Hyperlegible (default), Lexend, OpenDyslexic. */
+  --font-body: "Atkinson Hyperlegible", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Space Grotesk", "Atkinson Hyperlegible", ui-sans-serif, system-ui, sans-serif;
+  --font-code: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --font-atkinson: "Atkinson Hyperlegible", ui-sans-serif, system-ui, sans-serif;
+  --font-lexend: "Lexend", ui-sans-serif, system-ui, sans-serif;
+  --font-opendyslexic: "OpenDyslexic", ui-sans-serif, system-ui, sans-serif;
+  --text-scale: 1; /* 0.9 to 1.3 */
+  --body-line-height: 1.6; /* 1.5 to 2.0 */
+
+  /* Type scale: 12 caption, 14 UI small, 16 body, 18 h3, 22 h2, 28 h1, 36 display.
+     rem, so --text-scale scales everything. h3 never drops below 18px. */
+  --fs-caption: 0.75rem;
+  --fs-ui-small: 0.875rem;
+  --fs-body: 1rem;
+  --fs-h3: max(18px, 1.125rem);
+  --fs-h2: max(18px, 1.375rem);
+  --fs-h1: max(18px, 1.75rem);
+  --fs-display: max(18px, 2.25rem);
+  --heading-line-height: 1.25;
+  --letter-spacing-body: 0.01em;
+
+  /* Spacing (4px base). */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+
+  /* Shape. */
+  --radius-control: 6px;
+  --radius-card: 12px;
+  --radius-pill: 9999px;
+  --border-width: 1px;
+
+  /* Motion. */
+  --dur-hover: 120ms;
+  --dur-panel: 240ms;
+  --dur-camera-min: 600ms;
+  --dur-camera-max: 900ms;
+  --dur-cutscene: 1200ms;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Canvas flourish (canvases only): focused node glow. */
+  --glow-focus: 0 0 12px color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+/* @theme light */
+:root,
+:root[data-mode="observatory"] {
+  color-scheme: light;
+
+  --bg: #f7f5ef;
+  --canvas: #eceef6;
+  --surface-1: #ffffff;
+  --surface-2: #f0eee6;
+  --border: #dad8cf;
+  --border-strong: #c2bfb3;
+  --text: #151a33;
+  --text-muted: #565e80;
+  --text-subtle: #656a81; /* adjusted from #7d8299 */
+  --accent: #4e5bd6;
+  --accent-strong: #3c48b8;
+  --on-accent: #ffffff;
+  --code-bg: #efede5;
+
+  /* Severity (reserved; never stage colours). */
+  --block-text: #a32d2d;
+  --block-bg: #fcebeb;
+  --warn-text: #854f0b;
+  --warn-bg: #faeeda;
+  --tip-text: #185fa5;
+  --tip-bg: #e6f1fb;
+  --valid-text: #3b6d11;
+  --valid-bg: #eaf3de;
+
+  /* Stage colours (dots, outlines, badges; never filled callouts). */
+  --stage-explore: #5b4fc4;
+  --stage-clean: #0f6e56;
+  --stage-transform: #a3367a;
+  --stage-select: #4d7816; /* adjusted from #4e7a16 */
+  --stage-split: #0e6e80;
+  --stage-model: #9a5a1e;
+  --stage-tune: #7a4fb0;
+  --stage-evaluate: #7a6a0e;
+  --stage-interpret: #4a5a70;
+}
+
+/* @theme dark */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg: #0b1020;
+  --canvas: #070b18;
+  --surface-1: #131b36;
+  --surface-2: #1a2347;
+  --border: #28325a;
+  --border-strong: #3a4677;
+  --text: #e6e9f5;
+  --text-muted: #9aa3c7;
+  --text-subtle: #848ba9; /* adjusted from #6e7699 */
+  --accent: #8b9cff;
+  --accent-strong: #a9b6ff;
+  --on-accent: #0b1020;
+  --code-bg: #0e1530;
+
+  --block-text: #f09595;
+  --block-bg: #3a1414;
+  --warn-text: #fac775;
+  --warn-bg: #3a2a0a;
+  --tip-text: #85b7eb;
+  --tip-bg: #0c2340;
+  --valid-text: #97c459;
+  --valid-bg: #17300a;
+
+  --stage-explore: #a99cff;
+  --stage-clean: #5dcaa5;
+  --stage-transform: #f29bd0;
+  --stage-select: #b5d96b;
+  --stage-split: #6ccfe6;
+  --stage-model: #f2b880;
+  --stage-tune: #c9a0f2;
+  --stage-evaluate: #f2e27a;
+  --stage-interpret: #9fb2c9;
+}
+
+/* @theme dark (system preference, when no explicit choice) */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --bg: #0b1020;
+    --canvas: #070b18;
+    --surface-1: #131b36;
+    --surface-2: #1a2347;
+    --border: #28325a;
+    --border-strong: #3a4677;
+    --text: #e6e9f5;
+    --text-muted: #9aa3c7;
+    --text-subtle: #848ba9; /* adjusted from #6e7699 */
+    --accent: #8b9cff;
+    --accent-strong: #a9b6ff;
+    --on-accent: #0b1020;
+    --code-bg: #0e1530;
+
+    --block-text: #f09595;
+    --block-bg: #3a1414;
+    --warn-text: #fac775;
+    --warn-bg: #3a2a0a;
+    --tip-text: #85b7eb;
+    --tip-bg: #0c2340;
+    --valid-text: #97c459;
+    --valid-bg: #17300a;
+
+    --stage-explore: #a99cff;
+    --stage-clean: #5dcaa5;
+    --stage-transform: #f29bd0;
+    --stage-select: #b5d96b;
+    --stage-split: #6ccfe6;
+    --stage-model: #f2b880;
+    --stage-tune: #c9a0f2;
+    --stage-evaluate: #f2e27a;
+    --stage-interpret: #9fb2c9;
+  }
+}
+
+/* @derived */
+/* Derived tokens: the same in every theme, resolved from the tokens above. */
+:root {
+  /* Relationship lines (spec 10.5): dash pattern is the primary cue. */
+  --rel-needs: var(--accent);
+  --rel-recommended: var(--stage-clean);
+  --rel-clashes: var(--text-muted);
+  --rel-alternative: var(--stage-interpret);
+  --rel-pairs: var(--stage-tune);
+
+  /* Code syntax colours (spec 10.9). */
+  --code-keyword: var(--accent);
+  --code-string: var(--stage-clean);
+  --code-number: var(--stage-transform);
+  --code-comment: var(--text-muted);
+}

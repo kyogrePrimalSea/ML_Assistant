@@ -1,0 +1,96 @@
+/*
+ * Tailwind v4 mapping: utilities read the Observatory tokens at runtime
+ * (`inline` keeps them as var() references, so theme swaps need no rebuild).
+ * Utility names follow the spec token names: bg-surface-1, text-text-muted,
+ * border-border-strong, bg-accent, text-on-accent, text-stage-clean ...
+ * shadcn's semantic names (background, foreground, primary, muted, ...) are
+ * aliases onto the same tokens so Radix-based components pick them up.
+ */
+@theme inline {
+  --color-*: initial;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
+  --color-bg: var(--bg);
+  --color-canvas: var(--canvas);
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-text-subtle: var(--text-subtle);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-on-accent: var(--on-accent);
+  --color-code-bg: var(--code-bg);
+
+  --color-block-text: var(--block-text);
+  --color-block-bg: var(--block-bg);
+  --color-warn-text: var(--warn-text);
+  --color-warn-bg: var(--warn-bg);
+  --color-tip-text: var(--tip-text);
+  --color-tip-bg: var(--tip-bg);
+  --color-valid-text: var(--valid-text);
+  --color-valid-bg: var(--valid-bg);
+
+  --color-stage-explore: var(--stage-explore);
+  --color-stage-clean: var(--stage-clean);
+  --color-stage-transform: var(--stage-transform);
+  --color-stage-select: var(--stage-select);
+  --color-stage-split: var(--stage-split);
+  --color-stage-model: var(--stage-model);
+  --color-stage-tune: var(--stage-tune);
+  --color-stage-evaluate: var(--stage-evaluate);
+  --color-stage-interpret: var(--stage-interpret);
+
+  /* shadcn aliases. */
+  --color-background: var(--bg);
+  --color-foreground: var(--text);
+  --color-popover: var(--surface-1);
+  --color-popover-foreground: var(--text);
+  --color-card: var(--surface-1);
+  --color-card-foreground: var(--text);
+  --color-primary: var(--accent);
+  --color-primary-foreground: var(--on-accent);
+  --color-secondary: var(--surface-2);
+  --color-secondary-foreground: var(--text);
+  --color-muted: var(--surface-2);
+  --color-muted-foreground: var(--text-muted);
+  --color-input: var(--border-strong);
+  --color-ring: var(--accent);
+
+  --font-sans: var(--font-body);
+  --font-head: var(--font-heading);
+  --font-mono: var(--font-code);
+
+  /* Type scale: 12 / 14 / 16 / 18 / 22 / 28 / 36. */
+  --text-xs: var(--fs-caption);
+  --text-xs--line-height: var(--body-line-height);
+  --text-sm: var(--fs-ui-small);
+  --text-sm--line-height: var(--body-line-height);
+  --text-base: var(--fs-body);
+  --text-base--line-height: var(--body-line-height);
+  --text-lg: var(--fs-h3);
+  --text-lg--line-height: var(--heading-line-height);
+  --text-xl: var(--fs-h2);
+  --text-xl--line-height: var(--heading-line-height);
+  --text-2xl: var(--fs-h1);
+  --text-2xl--line-height: var(--heading-line-height);
+  --text-3xl: var(--fs-display);
+  --text-3xl--line-height: var(--heading-line-height);
+
+  /* Shape: 6px controls (md), 12px cards (lg), pill chips (full). */
+  --radius-xs: 4px;
+  --radius-sm: 4px;
+  --radius-md: var(--radius-control);
+  --radius-lg: var(--radius-card);
+  --radius-xl: var(--radius-card);
+
+  /* No drop shadows in panels. */
+  --shadow-*: initial;
+
+  --ease-observatory: var(--ease);
+  --default-transition-duration: var(--dur-hover);
+  --default-transition-timing-function: var(--ease);
+}

@@ -278,7 +278,7 @@
     "T016": {
       "title": "Observatory tokens, typography, theming and component restyle",
       "file": "tasks/T016-design-tokens-and-theming.md",
-      "status": "In progress",
+      "status": "Done",
       "dependencies": [
         "T015"
       ],
@@ -296,7 +296,7 @@
     "T018": {
       "title": "Desktop layout shell and navigation",
       "file": "tasks/T018-layout-shell.md",
-      "status": "Backlog",
+      "status": "In progress",
       "dependencies": [
         "T016",
         "T017"
@@ -306,7 +306,7 @@
     "T019": {
       "title": "Code block and data-frame diff components",
       "file": "tasks/T019-code-block-and-dataframe-diff.md",
-      "status": "Backlog",
+      "status": "In progress",
       "dependencies": [
         "T016"
       ],
