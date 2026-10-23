@@ -1,0 +1,160 @@
+{
+  "attributes": [],
+  "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.PermutationExplainer.html",
+  "extractor_version": "1",
+  "id": "shap.PermutationExplainer",
+  "import_path": "shap.PermutationExplainer",
+  "kind": "class",
+  "library": "shap",
+  "library_version": "0.54.1",
+  "methods": [
+    {
+      "name": "explain_row",
+      "signature": "explain_row(*row_args: 'Any', max_evals: \"int | Literal['auto']\", main_effects: 'bool', error_bounds: 'bool', batch_size: \"int | Literal['auto']\", outputs: 'Any', silent: 'bool', **kwargs: 'Any') -> 'dict[str, Any]'",
+      "summary": "Explains a single row and returns the tuple (row_values, row_expected_values, row_mask_shapes)."
+    },
+    {
+      "name": "load",
+      "signature": "load(in_file: 'Any', model_loader: 'Callable[..., Any] | None' = None, masker_loader: 'Callable[..., Any] | None' = None, instantiate: 'bool' = True) -> 'Explainer | dict[str, Any]'",
+      "summary": "Load an Explainer from the given file stream."
+    },
+    {
+      "name": "save",
+      "signature": "save(out_file: 'Any', model_saver: 'str | Callable[..., Any]' = '.save', masker_saver: 'str | Callable[..., Any]' = '.save') -> 'None'",
+      "summary": "Write the explainer to the given file stream."
+    },
+    {
+      "name": "shap_values",
+      "signature": "shap_values(X: 'Any', npermutations: 'int' = 10, main_effects: 'bool' = False, error_bounds: 'bool' = False, batch_evals: 'bool' = True, silent: 'bool' = False) -> 'Any'",
+      "summary": "Legacy interface to estimate the SHAP values for a set of samples."
+    },
+    {
+      "name": "supports_model_with_masker",
+      "signature": "supports_model_with_masker(model: 'Any', masker: 'Any') -> 'bool'",
+      "summary": "Determines if this explainer can handle the given model."
+    }
+  ],
+  "overrides_applied": [
+    {
+      "path": "parameters[name=link].default",
+      "reason": "The introspected default repr of `link` embeds a memory address (nondeterministic across runs). The docs page shows the stable form `<function identity>`; that is recorded instead. Same object, repr cosmetics only.",
+      "source_url": "https://shap.readthedocs.io/en/latest/generated/shap.PermutationExplainer.html"
+    }
+  ],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "A callable python object that executes the model given a set of input data samples.",
+      "effective_default": null,
+      "name": "model",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "function"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "A callable python object used to \"mask\" out hidden features of the form ``masker(binary_mask, x)``.\nIt takes a single input sample and a binary mask and returns a matrix of masked samples. These\nmasked samples are evaluated using the model function and the outputs are then averaged.\nAs a shortcut for the standard masking using by SHAP you can pass a background data matrix\ninstead of a function and that matrix will be used for masking. To use a clustering\ngame structure you can pass a ``shap.maskers.Tabular(data, clustering=\"correlation\")`` object.",
+      "effective_default": null,
+      "name": "masker",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "function or numpy.array or pandas.DataFrame"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "<function identity>",
+      "description": "",
+      "effective_default": null,
+      "name": "link",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "feature_names",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "",
+      "effective_default": null,
+      "name": "linearize_link",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Seed for reproducibility",
+      "effective_default": null,
+      "name": "seed",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "None or int"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "These arguments are saved and passed to the __call__ method as the new default values for these arguments.",
+      "effective_default": null,
+      "name": "call_args",
+      "param_kind": "var_keyword",
+      "required": false,
+      "type_doc": "valid argument to the __call__ method"
+    }
+  ],
+  "returns": [],
+  "signature": "PermutationExplainer(model: 'Any', masker: 'Any', link: 'Any' = <function identity at 0x7f78eb172770>, feature_names: 'list[str] | None' = None, linearize_link: 'bool' = True, seed: 'int | None' = None, **call_args: 'Any') -> 'None'",
+  "summary": "Build an explainers.Permutation object for the given model using the given masker object.",
+  "warnings": [
+    "parameter link: default repr contains a memory address",
+    "parameter link: not documented in docstring",
+    "parameter feature_names: not documented in docstring",
+    "parameter linearize_link: not documented in docstring"
+  ]
+}

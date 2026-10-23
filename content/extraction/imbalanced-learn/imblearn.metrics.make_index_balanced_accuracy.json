@@ -1,0 +1,54 @@
+{
+  "attributes": [],
+  "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.metrics.make_index_balanced_accuracy.html",
+  "extractor_version": "1",
+  "id": "imblearn.metrics.make_index_balanced_accuracy",
+  "import_path": "imblearn.metrics.make_index_balanced_accuracy",
+  "kind": "function",
+  "library": "imbalanced-learn",
+  "library_version": "0.14.2",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0.1",
+      "description": "Weighting factor.",
+      "effective_default": null,
+      "name": "alpha",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0.1"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "If ``squared`` is True, then the metric computed will be squared\nbefore to be weighted.",
+      "effective_default": null,
+      "name": "squared",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    }
+  ],
+  "returns": [
+    {
+      "description": "Returns the scoring metric decorated which will automatically compute\nthe index balanced accuracy.",
+      "name": "iba_scoring_func",
+      "type_doc": "callable,"
+    }
+  ],
+  "signature": "make_index_balanced_accuracy(*, alpha=0.1, squared=True)",
+  "summary": "Balance any scoring function using the index balanced accuracy.",
+  "warnings": []
+}

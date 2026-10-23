@@ -1,0 +1,7 @@
+source_url: https://shap.readthedocs.io/en/latest/generated/shap.Explainer.html
+reason: The introspected default repr of `link` embeds a memory address (nondeterministic across runs).
+  The docs page shows the stable form `<function identity>`; that is recorded instead. Same object, repr
+  cosmetics only.
+patches:
+- path: parameters[name=link].default
+  value: <function identity>

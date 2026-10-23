@@ -1,0 +1,52 @@
+{
+  "attributes": [],
+  "doc_url": "https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_hypervolume_history.html",
+  "extractor_version": "1",
+  "id": "optuna.visualization.plot_hypervolume_history",
+  "import_path": "optuna.visualization.plot_hypervolume_history",
+  "kind": "function",
+  "library": "optuna",
+  "library_version": "5.0.0",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "",
+      "effective_default": null,
+      "name": "study",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "",
+      "effective_default": null,
+      "name": "reference_point",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": ""
+    }
+  ],
+  "returns": [],
+  "signature": "plot_hypervolume_history(study: 'Study', reference_point: 'Sequence[float]') -> \"'go.Figure'\"",
+  "summary": "Plot hypervolume history of all trials in a study.",
+  "warnings": [
+    "parameter study: not documented in docstring",
+    "parameter reference_point: not documented in docstring",
+    "no Returns section found"
+  ]
+}

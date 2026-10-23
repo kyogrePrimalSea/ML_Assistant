@@ -1,0 +1,84 @@
+{
+  "attributes": [],
+  "doc_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.load_study.html",
+  "extractor_version": "1",
+  "id": "optuna.load_study",
+  "import_path": "optuna.load_study",
+  "kind": "function",
+  "library": "optuna",
+  "library_version": "5.0.0",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "",
+      "effective_default": null,
+      "name": "study_name",
+      "param_kind": "keyword_only",
+      "required": true,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "",
+      "effective_default": null,
+      "name": "storage",
+      "param_kind": "keyword_only",
+      "required": true,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "sampler",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "pruner",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [],
+  "signature": "load_study(*, study_name: 'str | None', storage: 'str | storages.BaseStorage', sampler: \"'samplers.BaseSampler' | None\" = None, pruner: 'pruners.BasePruner | None' = None) -> 'Study'",
+  "summary": "Load the existing :class:`~optuna.study.Study` that has the specified name.",
+  "warnings": [
+    "parameter study_name: not documented in docstring",
+    "parameter storage: not documented in docstring",
+    "parameter sampler: not documented in docstring",
+    "parameter pruner: not documented in docstring",
+    "no Returns section found"
+  ]
+}

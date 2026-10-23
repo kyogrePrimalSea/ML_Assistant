@@ -1,0 +1,26 @@
+[
+  {
+    "id": "xgboost.XGBClassifier",
+    "doc_url": "https://xgboost.readthedocs.io/en/stable/python/python_api.html#xgboost.XGBClassifier",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": []
+    }
+  },
+  {
+    "id": "xgboost.XGBRegressor",
+    "doc_url": "https://xgboost.readthedocs.io/en/stable/python/python_api.html#xgboost.XGBRegressor",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": []
+    }
+  }
+]

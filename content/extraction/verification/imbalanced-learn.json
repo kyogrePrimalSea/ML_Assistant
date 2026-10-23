@@ -1,0 +1,443 @@
+[
+  {
+    "id": "imblearn.FunctionSampler",
+    "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.FunctionSampler.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": []
+    }
+  },
+  {
+    "id": "imblearn.combine.SMOTEENN",
+    "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.combine.SMOTEENN.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": []
+    }
+  },
+  {
+    "id": "imblearn.combine.SMOTETomek",
+    "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.combine.SMOTETomek.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": []
+    }
+  },
+  {
+    "id": "imblearn.ensemble.BalancedBaggingClassifier",
+    "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.ensemble.BalancedBaggingClassifier.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": []
+    }
+  },
+  {
+    "id": "imblearn.ensemble.BalancedRandomForestClassifier",
+    "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.ensemble.BalancedRandomForestClassifier.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": []
+    }
+  },
+  {
+    "id": "imblearn.ensemble.EasyEnsembleClassifier",
+    "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.ensemble.EasyEnsembleClassifier.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": []
+    }
+  },
+  {
+    "id": "imblearn.ensemble.RUSBoostClassifier",
+    "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.ensemble.RUSBoostClassifier.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": []
+    }
+  },
+  {
+    "id": "imblearn.metrics.classification_report_imbalanced",
+    "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.metrics.classification_report_imbalanced.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "imblearn.metrics.geometric_mean_score",
+    "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.metrics.geometric_mean_score.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "imblearn.metrics.macro_averaged_mean_absolute_error",
+    "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.metrics.macro_averaged_mean_absolute_error.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "imblearn.metrics.make_index_balanced_accuracy",
+    "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.metrics.make_index_balanced_accuracy.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "imblearn.metrics.sensitivity_score",
+    "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.metrics.sensitivity_score.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "imblearn.metrics.sensitivity_specificity_support",
+    "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.metrics.sensitivity_specificity_support.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "imblearn.metrics.specificity_score",
+    "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.metrics.specificity_score.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "imblearn.model_selection.InstanceHardnessCV",
+    "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.model_selection.InstanceHardnessCV.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "imblearn.over_sampling.ADASYN",
+    "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.over_sampling.ADASYN.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": []
+    }
+  },
+  {
+    "id": "imblearn.over_sampling.BorderlineSMOTE",
+    "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.over_sampling.BorderlineSMOTE.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": []
+    }
+  },
+  {
+    "id": "imblearn.over_sampling.KMeansSMOTE",
+    "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.over_sampling.KMeansSMOTE.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": []
+    }
+  },
+  {
+    "id": "imblearn.over_sampling.RandomOverSampler",
+    "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.over_sampling.RandomOverSampler.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": []
+    }
+  },
+  {
+    "id": "imblearn.over_sampling.SMOTE",
+    "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.over_sampling.SMOTE.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": []
+    }
+  },
+  {
+    "id": "imblearn.over_sampling.SMOTEN",
+    "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.over_sampling.SMOTEN.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": []
+    }
+  },
+  {
+    "id": "imblearn.over_sampling.SMOTENC",
+    "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.over_sampling.SMOTENC.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": []
+    }
+  },
+  {
+    "id": "imblearn.over_sampling.SVMSMOTE",
+    "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.over_sampling.SVMSMOTE.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": []
+    }
+  },
+  {
+    "id": "imblearn.pipeline.Pipeline",
+    "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.pipeline.Pipeline.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": []
+    }
+  },
+  {
+    "id": "imblearn.pipeline.make_pipeline",
+    "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.pipeline.make_pipeline.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "imblearn.under_sampling.AllKNN",
+    "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.under_sampling.AllKNN.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": []
+    }
+  },
+  {
+    "id": "imblearn.under_sampling.ClusterCentroids",
+    "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.under_sampling.ClusterCentroids.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": []
+    }
+  },
+  {
+    "id": "imblearn.under_sampling.CondensedNearestNeighbour",
+    "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.under_sampling.CondensedNearestNeighbour.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": []
+    }
+  },
+  {
+    "id": "imblearn.under_sampling.EditedNearestNeighbours",
+    "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.under_sampling.EditedNearestNeighbours.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": []
+    }
+  },
+  {
+    "id": "imblearn.under_sampling.InstanceHardnessThreshold",
+    "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.under_sampling.InstanceHardnessThreshold.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": []
+    }
+  },
+  {
+    "id": "imblearn.under_sampling.NearMiss",
+    "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.under_sampling.NearMiss.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": []
+    }
+  },
+  {
+    "id": "imblearn.under_sampling.NeighbourhoodCleaningRule",
+    "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.under_sampling.NeighbourhoodCleaningRule.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": []
+    }
+  },
+  {
+    "id": "imblearn.under_sampling.OneSidedSelection",
+    "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.under_sampling.OneSidedSelection.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": []
+    }
+  },
+  {
+    "id": "imblearn.under_sampling.RandomUnderSampler",
+    "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.under_sampling.RandomUnderSampler.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": []
+    }
+  },
+  {
+    "id": "imblearn.under_sampling.RepeatedEditedNearestNeighbours",
+    "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.under_sampling.RepeatedEditedNearestNeighbours.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": []
+    }
+  },
+  {
+    "id": "imblearn.under_sampling.TomekLinks",
+    "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.under_sampling.TomekLinks.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": []
+    }
+  }
+]

@@ -1,0 +1,84 @@
+{
+  "attributes": [],
+  "doc_url": "https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_rank.html",
+  "extractor_version": "1",
+  "id": "optuna.visualization.plot_rank",
+  "import_path": "optuna.visualization.plot_rank",
+  "kind": "function",
+  "library": "optuna",
+  "library_version": "5.0.0",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "",
+      "effective_default": null,
+      "name": "study",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "params",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "target",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'Objective Value'",
+      "description": "",
+      "effective_default": null,
+      "name": "target_name",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [],
+  "signature": "plot_rank(study: 'Study', params: 'list[str] | None' = None, *, target: 'Callable[[FrozenTrial], float] | None' = None, target_name: 'str' = 'Objective Value') -> \"'go.Figure'\"",
+  "summary": "Plot parameter relations as scatter plots with colors indicating ranks of target value.",
+  "warnings": [
+    "parameter study: not documented in docstring",
+    "parameter params: not documented in docstring",
+    "parameter target: not documented in docstring",
+    "parameter target_name: not documented in docstring",
+    "no Returns section found"
+  ]
+}

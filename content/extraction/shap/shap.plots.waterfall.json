@@ -1,0 +1,65 @@
+{
+  "attributes": [],
+  "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.plots.waterfall.html",
+  "extractor_version": "1",
+  "id": "shap.plots.waterfall",
+  "import_path": "shap.plots.waterfall",
+  "kind": "function",
+  "library": "shap",
+  "library_version": "0.54.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "A one-dimensional :class:`.Explanation` object that contains the feature values and SHAP values to plot.",
+      "effective_default": null,
+      "name": "shap_values",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "Explanation"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "10",
+      "description": "The maximum number of features to display (default is 10).",
+      "effective_default": null,
+      "name": "max_display",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "Whether :external+mpl:func:`matplotlib.pyplot.show()` is called before returning.\nSetting this to ``False`` allows the plot to be customized further after it\nhas been created, returning the current axis via plt.gca().",
+      "effective_default": null,
+      "name": "show",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool"
+    }
+  ],
+  "returns": [],
+  "signature": "waterfall(shap_values, max_display=10, show=True)",
+  "summary": "Plots an explanation of a single prediction as a waterfall plot.",
+  "warnings": [
+    "no Returns section found"
+  ]
+}

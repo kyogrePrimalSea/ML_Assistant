@@ -1,0 +1,159 @@
+{
+  "attributes": [],
+  "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.LinearExplainer.html",
+  "extractor_version": "1",
+  "id": "shap.LinearExplainer",
+  "import_path": "shap.LinearExplainer",
+  "kind": "class",
+  "library": "shap",
+  "library_version": "0.54.1",
+  "methods": [
+    {
+      "name": "explain_row",
+      "signature": "explain_row(*row_args: Any, max_evals: int | Literal['auto'], main_effects: bool, error_bounds: bool, outputs: Any, silent: bool, **kwargs: Any) -> dict[str, typing.Any]",
+      "summary": "Explains a single row and returns the tuple (row_values, row_expected_values, row_mask_shapes)."
+    },
+    {
+      "name": "load",
+      "signature": "load(in_file: 'Any', model_loader: 'Callable[..., Any] | None' = None, masker_loader: 'Callable[..., Any] | None' = None, instantiate: 'bool' = True) -> 'Explainer | dict[str, Any]'",
+      "summary": "Load an Explainer from the given file stream."
+    },
+    {
+      "name": "save",
+      "signature": "save(out_file: 'Any', model_saver: 'str | Callable[..., Any]' = '.save', masker_saver: 'str | Callable[..., Any]' = '.save') -> 'None'",
+      "summary": "Write the explainer to the given file stream."
+    },
+    {
+      "name": "shap_values",
+      "signature": "shap_values(X: NDArray[numpy.floating[Any]] | pandas.DataFrame | pandas.Series) -> NDArray[numpy.floating[typing.Any]]",
+      "summary": "Estimate the SHAP values for a set of samples."
+    },
+    {
+      "name": "supports_model_with_masker",
+      "signature": "supports_model_with_masker(model: Any, masker: Any) -> bool",
+      "summary": "Determines if we can parse the given model."
+    }
+  ],
+  "overrides_applied": [
+    {
+      "path": "parameters[name=link].default",
+      "reason": "The introspected default repr of `link` embeds a memory address (nondeterministic across runs). The docs page shows the stable form `<function identity>`; that is recorded instead. Same object, repr cosmetics only.",
+      "source_url": "https://shap.readthedocs.io/en/latest/generated/shap.LinearExplainer.html"
+    }
+  ],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "User supplied linear model either as either a parameter pair or sklearn object.",
+      "effective_default": null,
+      "name": "model",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "(coef, intercept) or sklearn.linear_model.*"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "A callable Python object used to \"mask\" out hidden features of the form\n``masker(binary_mask, x)``. It takes a single input sample and a binary\nmask and returns a matrix of masked samples. These masked samples are\nevaluated using the model function and the outputs are then averaged.\n\nAs a shortcut for the standard masking using by SHAP you can pass a\nbackground data matrix instead of a function and that matrix will be\nused for masking.\n\nYou can also provide a tuple of ``(mean, covariance)``, or pass in a\nmasker meant for tabular data (i.e., :class:`.maskers.Independent`,\n:class:`.maskers.Impute`, or :class:`.maskers.Partition`) directly.",
+      "effective_default": null,
+      "name": "masker",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "function, numpy.array, pandas.DataFrame, tuple of (mean, cov), shap.maskers.Masker"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "<function identity>",
+      "description": "",
+      "effective_default": null,
+      "name": "link",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "1000",
+      "description": "Number of samples to use when estimating the transformation matrix used\nto account for feature correlations.",
+      "effective_default": null,
+      "name": "nsamples",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "DEPRECATED: this option is now deprecated in favor of using the appropriate\ntabular masker and will be removed in a future release.\n\nThere are two ways we might want to compute SHAP values, either the full\nconditional SHAP values or the interventional SHAP values.\n\n- For interventional SHAP values we break any dependence structure between\n  features in the model and so uncover how the model would behave if we\n  intervened and changed some of the inputs. This approach is used by the\n  Independent and Partition maskers.\n- For the full conditional SHAP values we respect the correlations among the\n  input features, so if the model depends on one input but that input is\n  correlated with another input, then both get some credit for the model's\n  behavior. This approach is used by the Impute masker.\n\nThe interventional option stays \"true to the model\" meaning it will only\ngive credit to features that are actually used by the model, while the\ncorrelation option stays \"true to the data\" in the sense that it only\nconsiders how the model would behave when respecting the correlations in\nthe input data. For sparse case only interventional option is supported.",
+      "effective_default": null,
+      "name": "feature_perturbation",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "None (default), \"interventional\" or \"correlation_dependent\""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "",
+      "effective_default": null,
+      "name": "kwargs",
+      "param_kind": "var_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The background dataset to use for computing conditional expectations.\nNote that only the mean and covariance of the dataset are used. This\nmeans passing a raw data matrix is just a convenient alternative to\npassing the mean and covariance directly.",
+      "effective_default": null,
+      "name": "data",
+      "param_kind": "documented_only",
+      "required": false,
+      "type_doc": "(mean, cov), numpy.array, pandas.DataFrame, iml.DenseData or scipy.csr_matrix"
+    }
+  ],
+  "returns": [],
+  "signature": "LinearExplainer(model: Any, masker: Any, link: collections.abc.Callable[[typing.Any], typing.Any] = <function identity at 0x7f78eb172770>, nsamples: int = 1000, feature_perturbation: None | Literal['interventional', 'correlation_dependent'] = None, **kwargs: Any) -> None",
+  "summary": "Computes SHAP values for a linear model, optionally accounting for inter-feature correlations.",
+  "warnings": [
+    "parameter link: default repr contains a memory address",
+    "parameter link: not documented in docstring",
+    "parameter data: documented only (not in signature); no default= in type_doc"
+  ]
+}

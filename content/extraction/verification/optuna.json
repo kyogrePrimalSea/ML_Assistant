@@ -1,0 +1,503 @@
+[
+  {
+    "id": "optuna.create_study",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.create_study.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "optuna.importance.get_param_importances",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.importance.get_param_importances.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "optuna.load_study",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.load_study.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "optuna.pruners.HyperbandPruner",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.HyperbandPruner.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "optuna.pruners.MedianPruner",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.MedianPruner.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "optuna.pruners.NopPruner",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.NopPruner.html",
+    "status": "unparsed",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {},
+    "error": "page layout not recognised"
+  },
+  {
+    "id": "optuna.pruners.PatientPruner",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.PatientPruner.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "optuna.pruners.PercentilePruner",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.PercentilePruner.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "optuna.pruners.SuccessiveHalvingPruner",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.SuccessiveHalvingPruner.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "optuna.pruners.ThresholdPruner",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.ThresholdPruner.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "optuna.pruners.WilcoxonPruner",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.WilcoxonPruner.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "optuna.samplers.BruteForceSampler",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.BruteForceSampler.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "optuna.samplers.CmaEsSampler",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.CmaEsSampler.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "optuna.samplers.GPSampler",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.GPSampler.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "optuna.samplers.GridSampler",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.GridSampler.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "optuna.samplers.NSGAIIISampler",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.NSGAIIISampler.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "optuna.samplers.NSGAIISampler",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.NSGAIISampler.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "optuna.samplers.PartialFixedSampler",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.PartialFixedSampler.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "optuna.samplers.QMCSampler",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.QMCSampler.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "optuna.samplers.RandomSampler",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.RandomSampler.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "optuna.samplers.TPESampler",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.TPESampler.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "optuna.study.MaxTrialsCallback",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.study.MaxTrialsCallback.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "optuna.study.Study",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.study.Study.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": []
+    }
+  },
+  {
+    "id": "optuna.terminator.Terminator",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.terminator.Terminator.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "optuna.terminator.TerminatorCallback",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.terminator.TerminatorCallback.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "optuna.trial.FrozenTrial",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.FrozenTrial.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": []
+    }
+  },
+  {
+    "id": "optuna.trial.Trial",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.Trial.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": []
+    }
+  },
+  {
+    "id": "optuna.visualization.plot_contour",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_contour.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "optuna.visualization.plot_edf",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_edf.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "optuna.visualization.plot_hypervolume_history",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_hypervolume_history.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "optuna.visualization.plot_intermediate_values",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_intermediate_values.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "optuna.visualization.plot_optimization_history",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_optimization_history.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "optuna.visualization.plot_parallel_coordinate",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_parallel_coordinate.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "optuna.visualization.plot_param_importances",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_param_importances.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "optuna.visualization.plot_pareto_front",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_pareto_front.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "optuna.visualization.plot_rank",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_rank.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "optuna.visualization.plot_slice",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_slice.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "optuna.visualization.plot_terminator_improvement",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_terminator_improvement.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "optuna.visualization.plot_timeline",
+    "doc_url": "https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_timeline.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  }
+]

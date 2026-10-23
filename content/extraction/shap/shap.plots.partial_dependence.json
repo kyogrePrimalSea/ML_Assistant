@@ -1,0 +1,324 @@
+{
+  "attributes": [],
+  "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.plots.partial_dependence.html",
+  "extractor_version": "1",
+  "id": "shap.plots.partial_dependence",
+  "import_path": "shap.plots.partial_dependence",
+  "kind": "function",
+  "library": "shap",
+  "library_version": "0.54.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "",
+      "effective_default": null,
+      "name": "ind",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "",
+      "effective_default": null,
+      "name": "model",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "",
+      "effective_default": null,
+      "name": "data",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'percentile(0)'",
+      "description": "",
+      "effective_default": null,
+      "name": "xmin",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'percentile(100)'",
+      "description": "",
+      "effective_default": null,
+      "name": "xmax",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "npoints",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "feature_names",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "",
+      "effective_default": null,
+      "name": "hist",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "",
+      "effective_default": null,
+      "name": "model_expected_value",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "",
+      "effective_default": null,
+      "name": "feature_expected_value",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "shap_values",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "ylabel",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "",
+      "effective_default": null,
+      "name": "ice",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "1",
+      "description": "",
+      "effective_default": null,
+      "name": "ace_opacity",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "1",
+      "description": "",
+      "effective_default": null,
+      "name": "pd_opacity",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "2",
+      "description": "",
+      "effective_default": null,
+      "name": "pd_linewidth",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'auto'",
+      "description": "",
+      "effective_default": null,
+      "name": "ace_linewidth",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "ax",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "",
+      "effective_default": null,
+      "name": "show",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [],
+  "signature": "partial_dependence(ind, model, data, xmin='percentile(0)', xmax='percentile(100)', npoints=None, feature_names=None, hist=True, model_expected_value=False, feature_expected_value=False, shap_values=None, ylabel=None, ice=True, ace_opacity=1, pd_opacity=1, pd_linewidth=2, ace_linewidth='auto', ax=None, show=True)",
+  "summary": "A basic partial dependence plot function.",
+  "warnings": [
+    "parameter ind: not documented in docstring",
+    "parameter model: not documented in docstring",
+    "parameter data: not documented in docstring",
+    "parameter xmin: not documented in docstring",
+    "parameter xmax: not documented in docstring",
+    "parameter npoints: not documented in docstring",
+    "parameter feature_names: not documented in docstring",
+    "parameter hist: not documented in docstring",
+    "parameter model_expected_value: not documented in docstring",
+    "parameter feature_expected_value: not documented in docstring",
+    "parameter shap_values: not documented in docstring",
+    "parameter ylabel: not documented in docstring",
+    "parameter ice: not documented in docstring",
+    "parameter ace_opacity: not documented in docstring",
+    "parameter pd_opacity: not documented in docstring",
+    "parameter pd_linewidth: not documented in docstring",
+    "parameter ace_linewidth: not documented in docstring",
+    "parameter ax: not documented in docstring",
+    "parameter show: not documented in docstring",
+    "no Returns section found"
+  ]
+}

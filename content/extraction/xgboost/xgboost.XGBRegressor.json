@@ -1,0 +1,876 @@
+{
+  "attributes": [
+    {
+      "description": "The best iteration obtained by early stopping.  This attribute is 0-based,",
+      "name": "best_iteration",
+      "type_doc": ""
+    },
+    {
+      "description": "The best score obtained by early stopping.",
+      "name": "best_score",
+      "type_doc": ""
+    },
+    {
+      "description": "Coefficients property",
+      "name": "coef_",
+      "type_doc": ""
+    },
+    {
+      "description": "Feature importances property, return depends on `importance_type`",
+      "name": "feature_importances_",
+      "type_doc": ""
+    },
+    {
+      "description": "Names of features seen during :py:meth:`fit`.  Defined only when `X` has",
+      "name": "feature_names_in_",
+      "type_doc": ""
+    },
+    {
+      "description": "Intercept (bias) property",
+      "name": "intercept_",
+      "type_doc": ""
+    },
+    {
+      "description": "Number of features seen during :py:meth:`fit`.",
+      "name": "n_features_in_",
+      "type_doc": ""
+    }
+  ],
+  "doc_url": "https://xgboost.readthedocs.io/en/stable/python/python_api.html#xgboost.XGBRegressor",
+  "extractor_version": "1",
+  "id": "xgboost.XGBRegressor",
+  "import_path": "xgboost.XGBRegressor",
+  "kind": "class",
+  "library": "xgboost",
+  "library_version": "3.4.1",
+  "methods": [
+    {
+      "name": "apply",
+      "signature": "apply(X: Any, iteration_range: Tuple[int | numpy.integer, int | numpy.integer] | None = None) -> numpy.ndarray",
+      "summary": "Return the predicted leaf every tree for each sample. If the model is trained"
+    },
+    {
+      "name": "evals_result",
+      "signature": "evals_result() -> Dict[str, Dict[str, List[float]]]",
+      "summary": "Return the evaluation results."
+    },
+    {
+      "name": "fit",
+      "signature": "fit(X: Any, y: Any, *, sample_weight: Any | None = None, base_margin: Any | None = None, eval_set: Sequence[Tuple[Any, Any]] | None = None, verbose: bool | int | None = True, xgb_model: xgboost.core.Booster | str | ForwardRef('XGBModel') | None = None, sample_weight_eval_set: Sequence[Any] | None = None, base_margin_eval_set: Sequence[Any] | None = None, feature_weights: Any | None = None) -> 'XGBModel'",
+      "summary": "Fit gradient boosting model."
+    },
+    {
+      "name": "get_booster",
+      "signature": "get_booster() -> xgboost.core.Booster",
+      "summary": "Get the underlying xgboost Booster of this model."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_num_boosting_rounds",
+      "signature": "get_num_boosting_rounds() -> int",
+      "summary": "Gets the number of xgboost boosting rounds."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep: bool = True) -> Dict[str, Any]",
+      "summary": "Get parameters."
+    },
+    {
+      "name": "get_xgb_params",
+      "signature": "get_xgb_params() -> Dict[str, Any]",
+      "summary": "Get xgboost specific parameters."
+    },
+    {
+      "name": "load_model",
+      "signature": "load_model(fname: os.PathLike[~AnyStr] | bytearray | str) -> None",
+      "summary": "Load the model from a file or a bytearray."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X: Any, *, output_margin: bool = False, validate_features: bool = True, base_margin: Any | None = None, iteration_range: Tuple[int | numpy.integer, int | numpy.integer] | None = None) -> Any",
+      "summary": "Predict with `X`.  If the model is trained with early stopping, then"
+    },
+    {
+      "name": "save_model",
+      "signature": "save_model(fname: str | os.PathLike) -> None",
+      "summary": "Save the model to a file."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Return :ref:`coefficient of determination <r2_score>` on test data."
+    },
+    {
+      "name": "set_fit_request",
+      "signature": "set_fit_request(*, base_margin: bool | None | str = '$UNCHANGED$', base_margin_eval_set: bool | None | str = '$UNCHANGED$', eval_set: bool | None | str = '$UNCHANGED$', feature_weights: bool | None | str = '$UNCHANGED$', sample_weight: bool | None | str = '$UNCHANGED$', sample_weight_eval_set: bool | None | str = '$UNCHANGED$', verbose: bool | None | str = '$UNCHANGED$', xgb_model: bool | None | str = '$UNCHANGED$') -> xgboost.sklearn.XGBRegressor",
+      "summary": "Configure whether metadata should be requested to be passed to the ``fit`` method."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params: Any) -> 'XGBModel'",
+      "summary": "Set the parameters of this estimator.  Modification of the sklearn method to"
+    },
+    {
+      "name": "set_predict_request",
+      "signature": "set_predict_request(*, base_margin: bool | None | str = '$UNCHANGED$', iteration_range: bool | None | str = '$UNCHANGED$', output_margin: bool | None | str = '$UNCHANGED$', validate_features: bool | None | str = '$UNCHANGED$') -> xgboost.sklearn.XGBRegressor",
+      "summary": "Configure whether metadata should be requested to be passed to the ``predict`` method."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> xgboost.sklearn.XGBRegressor",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    }
+  ],
+  "overrides_applied": [
+    {
+      "path": "parameters[name=max_depth].effective_default",
+      "reason": "effective_default: the sklearn-API signature default is None, meaning use the booster default; values are the booster defaults on https://xgboost.readthedocs.io/en/stable/parameter.html (sklearn name -> booster name: learning_rate -> eta; reg_alpha -> alpha; reg_lambda -> lambda; n_jobs -> nthread). reg_lambda/reg_alpha use the Tree Booster section (lambda=1, alpha=0), not the gblinear section. n_estimators=100 is not stated on any docs page; it is DEFAULT_N_ESTIMATORS = 100 in python-package/xgboost/sklearn.py at tag v3.4.1 (https://github.com/dmlc/xgboost/blob/v3.4.1/python-package/xgboost/sklearn.py), used when n_estimators is None (installed copy checked too). n_jobs: the page says nthread is 'default to maximum number of threads available if not set'. validate_parameters: the parameter page says 'default to false, except for Python, R and CLI interface', so True for this Python API. Not given a concrete default because the page gives none or a rule instead of a value: base_score (estimated automatically), eval_metric (default according to objective), importance_type, random_state, monotone_constraints, interaction_constraints, max_cat_to_onehot, max_cat_threshold, feature_*, early_stopping_rounds, callbacks. Docs page shows version 3.4.2; installed is 3.4.1.",
+      "source_url": "https://xgboost.readthedocs.io/en/stable/parameter.html"
+    },
+    {
+      "path": "parameters[name=max_leaves].effective_default",
+      "reason": "effective_default: the sklearn-API signature default is None, meaning use the booster default; values are the booster defaults on https://xgboost.readthedocs.io/en/stable/parameter.html (sklearn name -> booster name: learning_rate -> eta; reg_alpha -> alpha; reg_lambda -> lambda; n_jobs -> nthread). reg_lambda/reg_alpha use the Tree Booster section (lambda=1, alpha=0), not the gblinear section. n_estimators=100 is not stated on any docs page; it is DEFAULT_N_ESTIMATORS = 100 in python-package/xgboost/sklearn.py at tag v3.4.1 (https://github.com/dmlc/xgboost/blob/v3.4.1/python-package/xgboost/sklearn.py), used when n_estimators is None (installed copy checked too). n_jobs: the page says nthread is 'default to maximum number of threads available if not set'. validate_parameters: the parameter page says 'default to false, except for Python, R and CLI interface', so True for this Python API. Not given a concrete default because the page gives none or a rule instead of a value: base_score (estimated automatically), eval_metric (default according to objective), importance_type, random_state, monotone_constraints, interaction_constraints, max_cat_to_onehot, max_cat_threshold, feature_*, early_stopping_rounds, callbacks. Docs page shows version 3.4.2; installed is 3.4.1.",
+      "source_url": "https://xgboost.readthedocs.io/en/stable/parameter.html"
+    },
+    {
+      "path": "parameters[name=max_bin].effective_default",
+      "reason": "effective_default: the sklearn-API signature default is None, meaning use the booster default; values are the booster defaults on https://xgboost.readthedocs.io/en/stable/parameter.html (sklearn name -> booster name: learning_rate -> eta; reg_alpha -> alpha; reg_lambda -> lambda; n_jobs -> nthread). reg_lambda/reg_alpha use the Tree Booster section (lambda=1, alpha=0), not the gblinear section. n_estimators=100 is not stated on any docs page; it is DEFAULT_N_ESTIMATORS = 100 in python-package/xgboost/sklearn.py at tag v3.4.1 (https://github.com/dmlc/xgboost/blob/v3.4.1/python-package/xgboost/sklearn.py), used when n_estimators is None (installed copy checked too). n_jobs: the page says nthread is 'default to maximum number of threads available if not set'. validate_parameters: the parameter page says 'default to false, except for Python, R and CLI interface', so True for this Python API. Not given a concrete default because the page gives none or a rule instead of a value: base_score (estimated automatically), eval_metric (default according to objective), importance_type, random_state, monotone_constraints, interaction_constraints, max_cat_to_onehot, max_cat_threshold, feature_*, early_stopping_rounds, callbacks. Docs page shows version 3.4.2; installed is 3.4.1.",
+      "source_url": "https://xgboost.readthedocs.io/en/stable/parameter.html"
+    },
+    {
+      "path": "parameters[name=grow_policy].effective_default",
+      "reason": "effective_default: the sklearn-API signature default is None, meaning use the booster default; values are the booster defaults on https://xgboost.readthedocs.io/en/stable/parameter.html (sklearn name -> booster name: learning_rate -> eta; reg_alpha -> alpha; reg_lambda -> lambda; n_jobs -> nthread). reg_lambda/reg_alpha use the Tree Booster section (lambda=1, alpha=0), not the gblinear section. n_estimators=100 is not stated on any docs page; it is DEFAULT_N_ESTIMATORS = 100 in python-package/xgboost/sklearn.py at tag v3.4.1 (https://github.com/dmlc/xgboost/blob/v3.4.1/python-package/xgboost/sklearn.py), used when n_estimators is None (installed copy checked too). n_jobs: the page says nthread is 'default to maximum number of threads available if not set'. validate_parameters: the parameter page says 'default to false, except for Python, R and CLI interface', so True for this Python API. Not given a concrete default because the page gives none or a rule instead of a value: base_score (estimated automatically), eval_metric (default according to objective), importance_type, random_state, monotone_constraints, interaction_constraints, max_cat_to_onehot, max_cat_threshold, feature_*, early_stopping_rounds, callbacks. Docs page shows version 3.4.2; installed is 3.4.1.",
+      "source_url": "https://xgboost.readthedocs.io/en/stable/parameter.html"
+    },
+    {
+      "path": "parameters[name=learning_rate].effective_default",
+      "reason": "effective_default: the sklearn-API signature default is None, meaning use the booster default; values are the booster defaults on https://xgboost.readthedocs.io/en/stable/parameter.html (sklearn name -> booster name: learning_rate -> eta; reg_alpha -> alpha; reg_lambda -> lambda; n_jobs -> nthread). reg_lambda/reg_alpha use the Tree Booster section (lambda=1, alpha=0), not the gblinear section. n_estimators=100 is not stated on any docs page; it is DEFAULT_N_ESTIMATORS = 100 in python-package/xgboost/sklearn.py at tag v3.4.1 (https://github.com/dmlc/xgboost/blob/v3.4.1/python-package/xgboost/sklearn.py), used when n_estimators is None (installed copy checked too). n_jobs: the page says nthread is 'default to maximum number of threads available if not set'. validate_parameters: the parameter page says 'default to false, except for Python, R and CLI interface', so True for this Python API. Not given a concrete default because the page gives none or a rule instead of a value: base_score (estimated automatically), eval_metric (default according to objective), importance_type, random_state, monotone_constraints, interaction_constraints, max_cat_to_onehot, max_cat_threshold, feature_*, early_stopping_rounds, callbacks. Docs page shows version 3.4.2; installed is 3.4.1.",
+      "source_url": "https://xgboost.readthedocs.io/en/stable/parameter.html"
+    },
+    {
+      "path": "parameters[name=verbosity].effective_default",
+      "reason": "effective_default: the sklearn-API signature default is None, meaning use the booster default; values are the booster defaults on https://xgboost.readthedocs.io/en/stable/parameter.html (sklearn name -> booster name: learning_rate -> eta; reg_alpha -> alpha; reg_lambda -> lambda; n_jobs -> nthread). reg_lambda/reg_alpha use the Tree Booster section (lambda=1, alpha=0), not the gblinear section. n_estimators=100 is not stated on any docs page; it is DEFAULT_N_ESTIMATORS = 100 in python-package/xgboost/sklearn.py at tag v3.4.1 (https://github.com/dmlc/xgboost/blob/v3.4.1/python-package/xgboost/sklearn.py), used when n_estimators is None (installed copy checked too). n_jobs: the page says nthread is 'default to maximum number of threads available if not set'. validate_parameters: the parameter page says 'default to false, except for Python, R and CLI interface', so True for this Python API. Not given a concrete default because the page gives none or a rule instead of a value: base_score (estimated automatically), eval_metric (default according to objective), importance_type, random_state, monotone_constraints, interaction_constraints, max_cat_to_onehot, max_cat_threshold, feature_*, early_stopping_rounds, callbacks. Docs page shows version 3.4.2; installed is 3.4.1.",
+      "source_url": "https://xgboost.readthedocs.io/en/stable/parameter.html"
+    },
+    {
+      "path": "parameters[name=booster].effective_default",
+      "reason": "effective_default: the sklearn-API signature default is None, meaning use the booster default; values are the booster defaults on https://xgboost.readthedocs.io/en/stable/parameter.html (sklearn name -> booster name: learning_rate -> eta; reg_alpha -> alpha; reg_lambda -> lambda; n_jobs -> nthread). reg_lambda/reg_alpha use the Tree Booster section (lambda=1, alpha=0), not the gblinear section. n_estimators=100 is not stated on any docs page; it is DEFAULT_N_ESTIMATORS = 100 in python-package/xgboost/sklearn.py at tag v3.4.1 (https://github.com/dmlc/xgboost/blob/v3.4.1/python-package/xgboost/sklearn.py), used when n_estimators is None (installed copy checked too). n_jobs: the page says nthread is 'default to maximum number of threads available if not set'. validate_parameters: the parameter page says 'default to false, except for Python, R and CLI interface', so True for this Python API. Not given a concrete default because the page gives none or a rule instead of a value: base_score (estimated automatically), eval_metric (default according to objective), importance_type, random_state, monotone_constraints, interaction_constraints, max_cat_to_onehot, max_cat_threshold, feature_*, early_stopping_rounds, callbacks. Docs page shows version 3.4.2; installed is 3.4.1.",
+      "source_url": "https://xgboost.readthedocs.io/en/stable/parameter.html"
+    },
+    {
+      "path": "parameters[name=tree_method].effective_default",
+      "reason": "effective_default: the sklearn-API signature default is None, meaning use the booster default; values are the booster defaults on https://xgboost.readthedocs.io/en/stable/parameter.html (sklearn name -> booster name: learning_rate -> eta; reg_alpha -> alpha; reg_lambda -> lambda; n_jobs -> nthread). reg_lambda/reg_alpha use the Tree Booster section (lambda=1, alpha=0), not the gblinear section. n_estimators=100 is not stated on any docs page; it is DEFAULT_N_ESTIMATORS = 100 in python-package/xgboost/sklearn.py at tag v3.4.1 (https://github.com/dmlc/xgboost/blob/v3.4.1/python-package/xgboost/sklearn.py), used when n_estimators is None (installed copy checked too). n_jobs: the page says nthread is 'default to maximum number of threads available if not set'. validate_parameters: the parameter page says 'default to false, except for Python, R and CLI interface', so True for this Python API. Not given a concrete default because the page gives none or a rule instead of a value: base_score (estimated automatically), eval_metric (default according to objective), importance_type, random_state, monotone_constraints, interaction_constraints, max_cat_to_onehot, max_cat_threshold, feature_*, early_stopping_rounds, callbacks. Docs page shows version 3.4.2; installed is 3.4.1.",
+      "source_url": "https://xgboost.readthedocs.io/en/stable/parameter.html"
+    },
+    {
+      "path": "parameters[name=gamma].effective_default",
+      "reason": "effective_default: the sklearn-API signature default is None, meaning use the booster default; values are the booster defaults on https://xgboost.readthedocs.io/en/stable/parameter.html (sklearn name -> booster name: learning_rate -> eta; reg_alpha -> alpha; reg_lambda -> lambda; n_jobs -> nthread). reg_lambda/reg_alpha use the Tree Booster section (lambda=1, alpha=0), not the gblinear section. n_estimators=100 is not stated on any docs page; it is DEFAULT_N_ESTIMATORS = 100 in python-package/xgboost/sklearn.py at tag v3.4.1 (https://github.com/dmlc/xgboost/blob/v3.4.1/python-package/xgboost/sklearn.py), used when n_estimators is None (installed copy checked too). n_jobs: the page says nthread is 'default to maximum number of threads available if not set'. validate_parameters: the parameter page says 'default to false, except for Python, R and CLI interface', so True for this Python API. Not given a concrete default because the page gives none or a rule instead of a value: base_score (estimated automatically), eval_metric (default according to objective), importance_type, random_state, monotone_constraints, interaction_constraints, max_cat_to_onehot, max_cat_threshold, feature_*, early_stopping_rounds, callbacks. Docs page shows version 3.4.2; installed is 3.4.1.",
+      "source_url": "https://xgboost.readthedocs.io/en/stable/parameter.html"
+    },
+    {
+      "path": "parameters[name=min_child_weight].effective_default",
+      "reason": "effective_default: the sklearn-API signature default is None, meaning use the booster default; values are the booster defaults on https://xgboost.readthedocs.io/en/stable/parameter.html (sklearn name -> booster name: learning_rate -> eta; reg_alpha -> alpha; reg_lambda -> lambda; n_jobs -> nthread). reg_lambda/reg_alpha use the Tree Booster section (lambda=1, alpha=0), not the gblinear section. n_estimators=100 is not stated on any docs page; it is DEFAULT_N_ESTIMATORS = 100 in python-package/xgboost/sklearn.py at tag v3.4.1 (https://github.com/dmlc/xgboost/blob/v3.4.1/python-package/xgboost/sklearn.py), used when n_estimators is None (installed copy checked too). n_jobs: the page says nthread is 'default to maximum number of threads available if not set'. validate_parameters: the parameter page says 'default to false, except for Python, R and CLI interface', so True for this Python API. Not given a concrete default because the page gives none or a rule instead of a value: base_score (estimated automatically), eval_metric (default according to objective), importance_type, random_state, monotone_constraints, interaction_constraints, max_cat_to_onehot, max_cat_threshold, feature_*, early_stopping_rounds, callbacks. Docs page shows version 3.4.2; installed is 3.4.1.",
+      "source_url": "https://xgboost.readthedocs.io/en/stable/parameter.html"
+    },
+    {
+      "path": "parameters[name=max_delta_step].effective_default",
+      "reason": "effective_default: the sklearn-API signature default is None, meaning use the booster default; values are the booster defaults on https://xgboost.readthedocs.io/en/stable/parameter.html (sklearn name -> booster name: learning_rate -> eta; reg_alpha -> alpha; reg_lambda -> lambda; n_jobs -> nthread). reg_lambda/reg_alpha use the Tree Booster section (lambda=1, alpha=0), not the gblinear section. n_estimators=100 is not stated on any docs page; it is DEFAULT_N_ESTIMATORS = 100 in python-package/xgboost/sklearn.py at tag v3.4.1 (https://github.com/dmlc/xgboost/blob/v3.4.1/python-package/xgboost/sklearn.py), used when n_estimators is None (installed copy checked too). n_jobs: the page says nthread is 'default to maximum number of threads available if not set'. validate_parameters: the parameter page says 'default to false, except for Python, R and CLI interface', so True for this Python API. Not given a concrete default because the page gives none or a rule instead of a value: base_score (estimated automatically), eval_metric (default according to objective), importance_type, random_state, monotone_constraints, interaction_constraints, max_cat_to_onehot, max_cat_threshold, feature_*, early_stopping_rounds, callbacks. Docs page shows version 3.4.2; installed is 3.4.1.",
+      "source_url": "https://xgboost.readthedocs.io/en/stable/parameter.html"
+    },
+    {
+      "path": "parameters[name=subsample].effective_default",
+      "reason": "effective_default: the sklearn-API signature default is None, meaning use the booster default; values are the booster defaults on https://xgboost.readthedocs.io/en/stable/parameter.html (sklearn name -> booster name: learning_rate -> eta; reg_alpha -> alpha; reg_lambda -> lambda; n_jobs -> nthread). reg_lambda/reg_alpha use the Tree Booster section (lambda=1, alpha=0), not the gblinear section. n_estimators=100 is not stated on any docs page; it is DEFAULT_N_ESTIMATORS = 100 in python-package/xgboost/sklearn.py at tag v3.4.1 (https://github.com/dmlc/xgboost/blob/v3.4.1/python-package/xgboost/sklearn.py), used when n_estimators is None (installed copy checked too). n_jobs: the page says nthread is 'default to maximum number of threads available if not set'. validate_parameters: the parameter page says 'default to false, except for Python, R and CLI interface', so True for this Python API. Not given a concrete default because the page gives none or a rule instead of a value: base_score (estimated automatically), eval_metric (default according to objective), importance_type, random_state, monotone_constraints, interaction_constraints, max_cat_to_onehot, max_cat_threshold, feature_*, early_stopping_rounds, callbacks. Docs page shows version 3.4.2; installed is 3.4.1.",
+      "source_url": "https://xgboost.readthedocs.io/en/stable/parameter.html"
+    },
+    {
+      "path": "parameters[name=sampling_method].effective_default",
+      "reason": "effective_default: the sklearn-API signature default is None, meaning use the booster default; values are the booster defaults on https://xgboost.readthedocs.io/en/stable/parameter.html (sklearn name -> booster name: learning_rate -> eta; reg_alpha -> alpha; reg_lambda -> lambda; n_jobs -> nthread). reg_lambda/reg_alpha use the Tree Booster section (lambda=1, alpha=0), not the gblinear section. n_estimators=100 is not stated on any docs page; it is DEFAULT_N_ESTIMATORS = 100 in python-package/xgboost/sklearn.py at tag v3.4.1 (https://github.com/dmlc/xgboost/blob/v3.4.1/python-package/xgboost/sklearn.py), used when n_estimators is None (installed copy checked too). n_jobs: the page says nthread is 'default to maximum number of threads available if not set'. validate_parameters: the parameter page says 'default to false, except for Python, R and CLI interface', so True for this Python API. Not given a concrete default because the page gives none or a rule instead of a value: base_score (estimated automatically), eval_metric (default according to objective), importance_type, random_state, monotone_constraints, interaction_constraints, max_cat_to_onehot, max_cat_threshold, feature_*, early_stopping_rounds, callbacks. Docs page shows version 3.4.2; installed is 3.4.1.",
+      "source_url": "https://xgboost.readthedocs.io/en/stable/parameter.html"
+    },
+    {
+      "path": "parameters[name=colsample_bytree].effective_default",
+      "reason": "effective_default: the sklearn-API signature default is None, meaning use the booster default; values are the booster defaults on https://xgboost.readthedocs.io/en/stable/parameter.html (sklearn name -> booster name: learning_rate -> eta; reg_alpha -> alpha; reg_lambda -> lambda; n_jobs -> nthread). reg_lambda/reg_alpha use the Tree Booster section (lambda=1, alpha=0), not the gblinear section. n_estimators=100 is not stated on any docs page; it is DEFAULT_N_ESTIMATORS = 100 in python-package/xgboost/sklearn.py at tag v3.4.1 (https://github.com/dmlc/xgboost/blob/v3.4.1/python-package/xgboost/sklearn.py), used when n_estimators is None (installed copy checked too). n_jobs: the page says nthread is 'default to maximum number of threads available if not set'. validate_parameters: the parameter page says 'default to false, except for Python, R and CLI interface', so True for this Python API. Not given a concrete default because the page gives none or a rule instead of a value: base_score (estimated automatically), eval_metric (default according to objective), importance_type, random_state, monotone_constraints, interaction_constraints, max_cat_to_onehot, max_cat_threshold, feature_*, early_stopping_rounds, callbacks. Docs page shows version 3.4.2; installed is 3.4.1.",
+      "source_url": "https://xgboost.readthedocs.io/en/stable/parameter.html"
+    },
+    {
+      "path": "parameters[name=colsample_bylevel].effective_default",
+      "reason": "effective_default: the sklearn-API signature default is None, meaning use the booster default; values are the booster defaults on https://xgboost.readthedocs.io/en/stable/parameter.html (sklearn name -> booster name: learning_rate -> eta; reg_alpha -> alpha; reg_lambda -> lambda; n_jobs -> nthread). reg_lambda/reg_alpha use the Tree Booster section (lambda=1, alpha=0), not the gblinear section. n_estimators=100 is not stated on any docs page; it is DEFAULT_N_ESTIMATORS = 100 in python-package/xgboost/sklearn.py at tag v3.4.1 (https://github.com/dmlc/xgboost/blob/v3.4.1/python-package/xgboost/sklearn.py), used when n_estimators is None (installed copy checked too). n_jobs: the page says nthread is 'default to maximum number of threads available if not set'. validate_parameters: the parameter page says 'default to false, except for Python, R and CLI interface', so True for this Python API. Not given a concrete default because the page gives none or a rule instead of a value: base_score (estimated automatically), eval_metric (default according to objective), importance_type, random_state, monotone_constraints, interaction_constraints, max_cat_to_onehot, max_cat_threshold, feature_*, early_stopping_rounds, callbacks. Docs page shows version 3.4.2; installed is 3.4.1.",
+      "source_url": "https://xgboost.readthedocs.io/en/stable/parameter.html"
+    },
+    {
+      "path": "parameters[name=colsample_bynode].effective_default",
+      "reason": "effective_default: the sklearn-API signature default is None, meaning use the booster default; values are the booster defaults on https://xgboost.readthedocs.io/en/stable/parameter.html (sklearn name -> booster name: learning_rate -> eta; reg_alpha -> alpha; reg_lambda -> lambda; n_jobs -> nthread). reg_lambda/reg_alpha use the Tree Booster section (lambda=1, alpha=0), not the gblinear section. n_estimators=100 is not stated on any docs page; it is DEFAULT_N_ESTIMATORS = 100 in python-package/xgboost/sklearn.py at tag v3.4.1 (https://github.com/dmlc/xgboost/blob/v3.4.1/python-package/xgboost/sklearn.py), used when n_estimators is None (installed copy checked too). n_jobs: the page says nthread is 'default to maximum number of threads available if not set'. validate_parameters: the parameter page says 'default to false, except for Python, R and CLI interface', so True for this Python API. Not given a concrete default because the page gives none or a rule instead of a value: base_score (estimated automatically), eval_metric (default according to objective), importance_type, random_state, monotone_constraints, interaction_constraints, max_cat_to_onehot, max_cat_threshold, feature_*, early_stopping_rounds, callbacks. Docs page shows version 3.4.2; installed is 3.4.1.",
+      "source_url": "https://xgboost.readthedocs.io/en/stable/parameter.html"
+    },
+    {
+      "path": "parameters[name=reg_alpha].effective_default",
+      "reason": "effective_default: the sklearn-API signature default is None, meaning use the booster default; values are the booster defaults on https://xgboost.readthedocs.io/en/stable/parameter.html (sklearn name -> booster name: learning_rate -> eta; reg_alpha -> alpha; reg_lambda -> lambda; n_jobs -> nthread). reg_lambda/reg_alpha use the Tree Booster section (lambda=1, alpha=0), not the gblinear section. n_estimators=100 is not stated on any docs page; it is DEFAULT_N_ESTIMATORS = 100 in python-package/xgboost/sklearn.py at tag v3.4.1 (https://github.com/dmlc/xgboost/blob/v3.4.1/python-package/xgboost/sklearn.py), used when n_estimators is None (installed copy checked too). n_jobs: the page says nthread is 'default to maximum number of threads available if not set'. validate_parameters: the parameter page says 'default to false, except for Python, R and CLI interface', so True for this Python API. Not given a concrete default because the page gives none or a rule instead of a value: base_score (estimated automatically), eval_metric (default according to objective), importance_type, random_state, monotone_constraints, interaction_constraints, max_cat_to_onehot, max_cat_threshold, feature_*, early_stopping_rounds, callbacks. Docs page shows version 3.4.2; installed is 3.4.1.",
+      "source_url": "https://xgboost.readthedocs.io/en/stable/parameter.html"
+    },
+    {
+      "path": "parameters[name=reg_lambda].effective_default",
+      "reason": "effective_default: the sklearn-API signature default is None, meaning use the booster default; values are the booster defaults on https://xgboost.readthedocs.io/en/stable/parameter.html (sklearn name -> booster name: learning_rate -> eta; reg_alpha -> alpha; reg_lambda -> lambda; n_jobs -> nthread). reg_lambda/reg_alpha use the Tree Booster section (lambda=1, alpha=0), not the gblinear section. n_estimators=100 is not stated on any docs page; it is DEFAULT_N_ESTIMATORS = 100 in python-package/xgboost/sklearn.py at tag v3.4.1 (https://github.com/dmlc/xgboost/blob/v3.4.1/python-package/xgboost/sklearn.py), used when n_estimators is None (installed copy checked too). n_jobs: the page says nthread is 'default to maximum number of threads available if not set'. validate_parameters: the parameter page says 'default to false, except for Python, R and CLI interface', so True for this Python API. Not given a concrete default because the page gives none or a rule instead of a value: base_score (estimated automatically), eval_metric (default according to objective), importance_type, random_state, monotone_constraints, interaction_constraints, max_cat_to_onehot, max_cat_threshold, feature_*, early_stopping_rounds, callbacks. Docs page shows version 3.4.2; installed is 3.4.1.",
+      "source_url": "https://xgboost.readthedocs.io/en/stable/parameter.html"
+    },
+    {
+      "path": "parameters[name=scale_pos_weight].effective_default",
+      "reason": "effective_default: the sklearn-API signature default is None, meaning use the booster default; values are the booster defaults on https://xgboost.readthedocs.io/en/stable/parameter.html (sklearn name -> booster name: learning_rate -> eta; reg_alpha -> alpha; reg_lambda -> lambda; n_jobs -> nthread). reg_lambda/reg_alpha use the Tree Booster section (lambda=1, alpha=0), not the gblinear section. n_estimators=100 is not stated on any docs page; it is DEFAULT_N_ESTIMATORS = 100 in python-package/xgboost/sklearn.py at tag v3.4.1 (https://github.com/dmlc/xgboost/blob/v3.4.1/python-package/xgboost/sklearn.py), used when n_estimators is None (installed copy checked too). n_jobs: the page says nthread is 'default to maximum number of threads available if not set'. validate_parameters: the parameter page says 'default to false, except for Python, R and CLI interface', so True for this Python API. Not given a concrete default because the page gives none or a rule instead of a value: base_score (estimated automatically), eval_metric (default according to objective), importance_type, random_state, monotone_constraints, interaction_constraints, max_cat_to_onehot, max_cat_threshold, feature_*, early_stopping_rounds, callbacks. Docs page shows version 3.4.2; installed is 3.4.1.",
+      "source_url": "https://xgboost.readthedocs.io/en/stable/parameter.html"
+    },
+    {
+      "path": "parameters[name=num_parallel_tree].effective_default",
+      "reason": "effective_default: the sklearn-API signature default is None, meaning use the booster default; values are the booster defaults on https://xgboost.readthedocs.io/en/stable/parameter.html (sklearn name -> booster name: learning_rate -> eta; reg_alpha -> alpha; reg_lambda -> lambda; n_jobs -> nthread). reg_lambda/reg_alpha use the Tree Booster section (lambda=1, alpha=0), not the gblinear section. n_estimators=100 is not stated on any docs page; it is DEFAULT_N_ESTIMATORS = 100 in python-package/xgboost/sklearn.py at tag v3.4.1 (https://github.com/dmlc/xgboost/blob/v3.4.1/python-package/xgboost/sklearn.py), used when n_estimators is None (installed copy checked too). n_jobs: the page says nthread is 'default to maximum number of threads available if not set'. validate_parameters: the parameter page says 'default to false, except for Python, R and CLI interface', so True for this Python API. Not given a concrete default because the page gives none or a rule instead of a value: base_score (estimated automatically), eval_metric (default according to objective), importance_type, random_state, monotone_constraints, interaction_constraints, max_cat_to_onehot, max_cat_threshold, feature_*, early_stopping_rounds, callbacks. Docs page shows version 3.4.2; installed is 3.4.1.",
+      "source_url": "https://xgboost.readthedocs.io/en/stable/parameter.html"
+    },
+    {
+      "path": "parameters[name=multi_strategy].effective_default",
+      "reason": "effective_default: the sklearn-API signature default is None, meaning use the booster default; values are the booster defaults on https://xgboost.readthedocs.io/en/stable/parameter.html (sklearn name -> booster name: learning_rate -> eta; reg_alpha -> alpha; reg_lambda -> lambda; n_jobs -> nthread). reg_lambda/reg_alpha use the Tree Booster section (lambda=1, alpha=0), not the gblinear section. n_estimators=100 is not stated on any docs page; it is DEFAULT_N_ESTIMATORS = 100 in python-package/xgboost/sklearn.py at tag v3.4.1 (https://github.com/dmlc/xgboost/blob/v3.4.1/python-package/xgboost/sklearn.py), used when n_estimators is None (installed copy checked too). n_jobs: the page says nthread is 'default to maximum number of threads available if not set'. validate_parameters: the parameter page says 'default to false, except for Python, R and CLI interface', so True for this Python API. Not given a concrete default because the page gives none or a rule instead of a value: base_score (estimated automatically), eval_metric (default according to objective), importance_type, random_state, monotone_constraints, interaction_constraints, max_cat_to_onehot, max_cat_threshold, feature_*, early_stopping_rounds, callbacks. Docs page shows version 3.4.2; installed is 3.4.1.",
+      "source_url": "https://xgboost.readthedocs.io/en/stable/parameter.html"
+    },
+    {
+      "path": "parameters[name=device].effective_default",
+      "reason": "effective_default: the sklearn-API signature default is None, meaning use the booster default; values are the booster defaults on https://xgboost.readthedocs.io/en/stable/parameter.html (sklearn name -> booster name: learning_rate -> eta; reg_alpha -> alpha; reg_lambda -> lambda; n_jobs -> nthread). reg_lambda/reg_alpha use the Tree Booster section (lambda=1, alpha=0), not the gblinear section. n_estimators=100 is not stated on any docs page; it is DEFAULT_N_ESTIMATORS = 100 in python-package/xgboost/sklearn.py at tag v3.4.1 (https://github.com/dmlc/xgboost/blob/v3.4.1/python-package/xgboost/sklearn.py), used when n_estimators is None (installed copy checked too). n_jobs: the page says nthread is 'default to maximum number of threads available if not set'. validate_parameters: the parameter page says 'default to false, except for Python, R and CLI interface', so True for this Python API. Not given a concrete default because the page gives none or a rule instead of a value: base_score (estimated automatically), eval_metric (default according to objective), importance_type, random_state, monotone_constraints, interaction_constraints, max_cat_to_onehot, max_cat_threshold, feature_*, early_stopping_rounds, callbacks. Docs page shows version 3.4.2; installed is 3.4.1.",
+      "source_url": "https://xgboost.readthedocs.io/en/stable/parameter.html"
+    },
+    {
+      "path": "parameters[name=n_jobs].effective_default",
+      "reason": "effective_default: the sklearn-API signature default is None, meaning use the booster default; values are the booster defaults on https://xgboost.readthedocs.io/en/stable/parameter.html (sklearn name -> booster name: learning_rate -> eta; reg_alpha -> alpha; reg_lambda -> lambda; n_jobs -> nthread). reg_lambda/reg_alpha use the Tree Booster section (lambda=1, alpha=0), not the gblinear section. n_estimators=100 is not stated on any docs page; it is DEFAULT_N_ESTIMATORS = 100 in python-package/xgboost/sklearn.py at tag v3.4.1 (https://github.com/dmlc/xgboost/blob/v3.4.1/python-package/xgboost/sklearn.py), used when n_estimators is None (installed copy checked too). n_jobs: the page says nthread is 'default to maximum number of threads available if not set'. validate_parameters: the parameter page says 'default to false, except for Python, R and CLI interface', so True for this Python API. Not given a concrete default because the page gives none or a rule instead of a value: base_score (estimated automatically), eval_metric (default according to objective), importance_type, random_state, monotone_constraints, interaction_constraints, max_cat_to_onehot, max_cat_threshold, feature_*, early_stopping_rounds, callbacks. Docs page shows version 3.4.2; installed is 3.4.1.",
+      "source_url": "https://xgboost.readthedocs.io/en/stable/parameter.html"
+    },
+    {
+      "path": "parameters[name=n_estimators].effective_default",
+      "reason": "effective_default: the sklearn-API signature default is None, meaning use the booster default; values are the booster defaults on https://xgboost.readthedocs.io/en/stable/parameter.html (sklearn name -> booster name: learning_rate -> eta; reg_alpha -> alpha; reg_lambda -> lambda; n_jobs -> nthread). reg_lambda/reg_alpha use the Tree Booster section (lambda=1, alpha=0), not the gblinear section. n_estimators=100 is not stated on any docs page; it is DEFAULT_N_ESTIMATORS = 100 in python-package/xgboost/sklearn.py at tag v3.4.1 (https://github.com/dmlc/xgboost/blob/v3.4.1/python-package/xgboost/sklearn.py), used when n_estimators is None (installed copy checked too). n_jobs: the page says nthread is 'default to maximum number of threads available if not set'. validate_parameters: the parameter page says 'default to false, except for Python, R and CLI interface', so True for this Python API. Not given a concrete default because the page gives none or a rule instead of a value: base_score (estimated automatically), eval_metric (default according to objective), importance_type, random_state, monotone_constraints, interaction_constraints, max_cat_to_onehot, max_cat_threshold, feature_*, early_stopping_rounds, callbacks. Docs page shows version 3.4.2; installed is 3.4.1.",
+      "source_url": "https://xgboost.readthedocs.io/en/stable/parameter.html"
+    },
+    {
+      "path": "parameters[name=validate_parameters].effective_default",
+      "reason": "effective_default: the sklearn-API signature default is None, meaning use the booster default; values are the booster defaults on https://xgboost.readthedocs.io/en/stable/parameter.html (sklearn name -> booster name: learning_rate -> eta; reg_alpha -> alpha; reg_lambda -> lambda; n_jobs -> nthread). reg_lambda/reg_alpha use the Tree Booster section (lambda=1, alpha=0), not the gblinear section. n_estimators=100 is not stated on any docs page; it is DEFAULT_N_ESTIMATORS = 100 in python-package/xgboost/sklearn.py at tag v3.4.1 (https://github.com/dmlc/xgboost/blob/v3.4.1/python-package/xgboost/sklearn.py), used when n_estimators is None (installed copy checked too). n_jobs: the page says nthread is 'default to maximum number of threads available if not set'. validate_parameters: the parameter page says 'default to false, except for Python, R and CLI interface', so True for this Python API. Not given a concrete default because the page gives none or a rule instead of a value: base_score (estimated automatically), eval_metric (default according to objective), importance_type, random_state, monotone_constraints, interaction_constraints, max_cat_to_onehot, max_cat_threshold, feature_*, early_stopping_rounds, callbacks. Docs page shows version 3.4.2; installed is 3.4.1.",
+      "source_url": "https://xgboost.readthedocs.io/en/stable/parameter.html"
+    }
+  ],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'reg:squarederror'",
+      "description": "Specify the learning task and the corresponding learning objective or a custom\nobjective to be used.\n\nFor custom objective, see :doc:`/tutorials/custom_metric_obj` and\n:ref:`custom-obj-metric` for more information, along with the end note for\nfunction signatures.",
+      "effective_default": null,
+      "name": "objective",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str | xgboost.objective.Objective | xgboost.sklearn._SklObjWProto | typing.Callable[[typing.Any, typing.Any], typing.Tuple[numpy.ndarray, numpy.ndarray]] | None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Keyword arguments for XGBoost Booster object.  Full documentation of parameters\ncan be found :doc:`here </parameter>`.\nAttempting to set a parameter via the constructor args and \\*\\*kwargs\ndict simultaneously will result in a TypeError.\n\n.. note:: \\*\\*kwargs unsupported by scikit-learn\n\n    \\*\\*kwargs is unsupported by scikit-learn.  We do not guarantee\n    that parameters passed via this argument will interact properly\n    with scikit-learn.\n\n.. note::  Custom objective function\n\n    A custom objective function can be provided for the ``objective``\n    parameter. In this case, it should have the signature ``objective(y_true,\n    y_pred) -> [grad, hess]`` or ``objective(y_true, y_pred, *, sample_weight)\n    -> [grad, hess]``:\n\n    y_true: array_like of shape [n_samples]\n        The target values\n    y_pred: array_like of shape [n_samples]\n        The predicted values\n    sample_weight :\n        Optional sample weights.\n\n    grad: array_like of shape [n_samples]\n        The value of the gradient for each sample point.\n    hess: array_like of shape [n_samples]\n        The value of the second derivative for each sample point\n\n    Note that, if the custom objective produces negative values for\n    the Hessian, these will be clipped. If the objective is non-convex,\n    one might also consider using the expected Hessian (Fisher\n    information) instead.",
+      "effective_default": null,
+      "name": "kwargs",
+      "param_kind": "var_keyword",
+      "required": false,
+      "type_doc": "typing.Any | None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Maximum tree depth for base learners.",
+      "effective_default": "6",
+      "name": "max_depth",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": " int | None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Maximum number of leaves; 0 indicates no limit.",
+      "effective_default": "0",
+      "name": "max_leaves",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int | None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "If using histogram-based algorithm, maximum number of bins per feature",
+      "effective_default": "256",
+      "name": "max_bin",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int | None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Tree growing policy.\n\n- depthwise: Favors splitting at nodes closest to the node,\n- lossguide: Favors splitting at nodes with highest loss change.",
+      "effective_default": "depthwise",
+      "name": "grow_policy",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str | None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Boosting learning rate (xgb's \"eta\")",
+      "effective_default": "0.3",
+      "name": "learning_rate",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float | None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Number of gradient boosted trees.  Equivalent to number of boosting\nrounds.",
+      "effective_default": "100",
+      "name": "n_estimators",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int | None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The degree of verbosity. Valid values are 0 (silent) - 3 (debug).",
+      "effective_default": "1",
+      "name": "verbosity",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int | None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Specify which booster to use: ``gbtree``, ``gblinear`` or ``dart``.\n\n.. deprecated:: 3.3.0\n\n    ``gblinear`` is deprecated and support will be removed in a future release.",
+      "effective_default": "gbtree",
+      "name": "booster",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str | None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Specify which tree method to use.  Default to auto.  If this parameter is set to\ndefault, XGBoost will choose the most conservative option available.  It's\nrecommended to study this option from the parameters document :doc:`tree method\n</treemethod>`",
+      "effective_default": "auto",
+      "name": "tree_method",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str | None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Number of parallel threads used to run xgboost.  When used with other\nScikit-Learn algorithms like grid search, you may choose which algorithm to\nparallelize and balance the threads.  Creating thread contention will\nsignificantly slow down both algorithms.",
+      "effective_default": "maximum number of threads available",
+      "name": "n_jobs",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int | None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "(min_split_loss) Minimum loss reduction required to make a further partition on\na leaf node of the tree.",
+      "effective_default": "0",
+      "name": "gamma",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float | None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Minimum sum of instance weight(hessian) needed in a child.",
+      "effective_default": "1",
+      "name": "min_child_weight",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float | None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Maximum delta step we allow each tree's weight estimation to be.",
+      "effective_default": "0",
+      "name": "max_delta_step",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float | None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Subsample ratio of the training instance.",
+      "effective_default": "1",
+      "name": "subsample",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float | None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Sampling method. Used only by the GPU version of ``hist`` tree method.\n\n- ``uniform``: Select random training instances uniformly.\n- ``gradient_based``: Select random training instances with higher probability\n    when the gradient and hessian are larger. (cf. CatBoost)",
+      "effective_default": "uniform",
+      "name": "sampling_method",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str | None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Subsample ratio of columns when constructing each tree.",
+      "effective_default": "1",
+      "name": "colsample_bytree",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float | None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Subsample ratio of columns for each level.",
+      "effective_default": "1",
+      "name": "colsample_bylevel",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float | None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Subsample ratio of columns for each split.",
+      "effective_default": "1",
+      "name": "colsample_bynode",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float | None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "L1 regularization term on weights (xgb's alpha).",
+      "effective_default": "0",
+      "name": "reg_alpha",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float | None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "L2 regularization term on weights (xgb's lambda).",
+      "effective_default": "1",
+      "name": "reg_lambda",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float | None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Balancing of positive and negative weights.",
+      "effective_default": "1",
+      "name": "scale_pos_weight",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float | None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The initial prediction score of all instances, global bias.",
+      "effective_default": null,
+      "name": "base_score",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float | typing.List[float] | None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Random number seed.\n\n.. note::\n\n   Using gblinear booster with shotgun updater is nondeterministic as\n   it uses Hogwild algorithm.",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "numpy.random.mtrand.RandomState | numpy.random._generator.Generator | int | None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "nan",
+      "description": "Value in the data which needs to be present as a missing value. Default to\n:py:data:`numpy.nan`.",
+      "effective_default": null,
+      "name": "missing",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Used for boosting random forest.",
+      "effective_default": "1",
+      "name": "num_parallel_tree",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int | None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Constraint of variable monotonicity.  See :doc:`tutorial </tutorials/monotonic>`\nfor more information.",
+      "effective_default": null,
+      "name": "monotone_constraints",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "typing.Dict[str, int] | str | None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Constraints for interaction representing permitted interactions.  The\nconstraints must be specified in the form of a nested list, e.g. ``[[0, 1], [2,\n3, 4]]``, where each inner list is a group of indices of features that are\nallowed to interact with each other.  See :doc:`tutorial\n</tutorials/feature_interaction_constraint>` for more information",
+      "effective_default": null,
+      "name": "interaction_constraints",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str | typing.List[typing.Tuple[str]] | None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The feature importance type for the feature_importances\\_ property:\n\n* For tree model, it's either \"gain\", \"weight\", \"cover\", \"total_gain\" or\n  \"total_cover\".\n* For linear model, only \"weight\" is defined and it's the normalized\n  coefficients without bias.",
+      "effective_default": null,
+      "name": "importance_type",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str | None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": ".. versionadded:: 2.0.0\n\nDevice ordinal, available options are `cpu`, `cuda`, and `gpu`.",
+      "effective_default": "cpu",
+      "name": "device",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str | None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Give warnings for unknown parameter.",
+      "effective_default": "True",
+      "name": "validate_parameters",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool | None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "See the same parameter of :py:class:`DMatrix` for details.",
+      "effective_default": null,
+      "name": "enable_categorical",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": ".. versionadded:: 1.7.0\n\nUsed for specifying feature types without constructing a dataframe. See\nthe :py:class:`DMatrix` for details.",
+      "effective_default": null,
+      "name": "feature_types",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "typing.Sequence[str] | None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Weight for each feature, defines the probability of each feature being selected\nwhen colsample is being used.  All values must be greater than 0, otherwise a\n`ValueError` is thrown.",
+      "effective_default": null,
+      "name": "feature_weights",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "Optional[ArrayLike]"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": ".. versionadded:: 1.6.0\n\n.. note:: This parameter is experimental\n\nA threshold for deciding whether XGBoost should use one-hot encoding based split\nfor categorical data.  When number of categories is lesser than the threshold\nthen one-hot encoding is chosen, otherwise the categories will be partitioned\ninto children nodes. Also, `enable_categorical` needs to be set to have\ncategorical feature support. See :doc:`Categorical Data\n</tutorials/categorical>` and :ref:`cat-param` for details.",
+      "effective_default": null,
+      "name": "max_cat_to_onehot",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "Optional[int]"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": ".. versionadded:: 1.7.0\n\n.. note:: This parameter is experimental\n\nMaximum number of categories considered for each split. Used only by\npartition-based splits for preventing over-fitting. Also, `enable_categorical`\nneeds to be set to have categorical feature support. See :doc:`Categorical Data\n</tutorials/categorical>` and :ref:`cat-param` for details.",
+      "effective_default": null,
+      "name": "max_cat_threshold",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int | None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": ".. versionadded:: 2.0.0\n\n.. note:: This parameter is working-in-progress.\n\nThe strategy used for training multi-target models, including multi-target\nregression and multi-class classification. See :doc:`/tutorials/multioutput` for\nmore information.\n\n- ``one_output_per_tree``: One model for each target.\n- ``multi_output_tree``:  Use multi-target trees.",
+      "effective_default": "one_output_per_tree",
+      "name": "multi_strategy",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str | None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": ".. versionadded:: 1.6.0\n\nMetric used for monitoring the training result and early stopping.  It can be a\nstring or list of strings as names of predefined metric in XGBoost (See\n:doc:`/parameter`), one of the metrics in :py:mod:`sklearn.metrics`, or any\nother user defined metric that looks like `sklearn.metrics`.\n\nIf custom objective is also provided, then custom metric should implement the\ncorresponding reverse link function.\n\nUnlike the `scoring` parameter commonly used in scikit-learn, when a callable\nobject is provided, it's assumed to be a cost function and by default XGBoost\nwill minimize the result during early stopping.\n\nFor advanced usage on Early stopping like directly choosing to maximize instead\nof minimize, see :py:obj:`xgboost.callback.EarlyStopping`.\n\nSee :doc:`/tutorials/custom_metric_obj` and :ref:`custom-obj-metric` for more\ninformation.\n\n.. code-block:: python\n\n    from sklearn.datasets import load_diabetes\n    from sklearn.metrics import mean_absolute_error\n    X, y = load_diabetes(return_X_y=True)\n    reg = xgb.XGBRegressor(\n        tree_method=\"hist\",\n        eval_metric=mean_absolute_error,\n    )\n    reg.fit(X, y, eval_set=[(X, y)])",
+      "effective_default": null,
+      "name": "eval_metric",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str | typing.List[str | typing.Callable] | typing.Callable | None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": ".. versionadded:: 1.6.0\n\n- Activates early stopping. Validation metric needs to improve at least once in\n  every **early_stopping_rounds** round(s) to continue training.  Requires at\n  least one item in **eval_set** in :py:meth:`fit`.\n\n- If early stopping occurs, the model will have two additional attributes:\n  :py:attr:`best_score` and :py:attr:`best_iteration`. These are used by the\n  :py:meth:`predict` and :py:meth:`apply` methods to determine the optimal\n  number of trees during inference. If users want to access the full model\n  (including trees built after early stopping), they can specify the\n  `iteration_range` in these inference methods. In addition, other utilities\n  like model plotting can also use the entire model.\n\n- If you prefer to discard the trees after `best_iteration`, consider using the\n  callback function :py:class:`xgboost.callback.EarlyStopping`.\n\n- If there's more than one item in **eval_set**, the last entry will be used for\n  early stopping.  If there's more than one metric in **eval_metric**, the last\n  metric will be used for early stopping.",
+      "effective_default": null,
+      "name": "early_stopping_rounds",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int | None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "List of callback functions that are applied at end of each iteration.\nIt is possible to use predefined callbacks by using\n:ref:`Callback API <callback_api>`.\n\n.. note::\n\n   States in callback are not preserved during training, which means callback\n   objects can not be reused for multiple training sessions without\n   reinitialization or deepcopy.\n\n.. code-block:: python\n\n    for params in parameters_grid:\n        # be sure to (re)initialize the callbacks before each run\n        callbacks = [xgb.callback.LearningRateScheduler(custom_rates)]\n        reg = xgboost.XGBRegressor(**params, callbacks=callbacks)\n        reg.fit(X, y)",
+      "effective_default": null,
+      "name": "callbacks",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "typing.List[xgboost.callback.TrainingCallback] | None"
+    }
+  ],
+  "returns": [],
+  "signature": "XGBRegressor(*, objective: str | xgboost.objective.Objective | xgboost.sklearn._SklObjWProto | Callable[[Any, Any], Tuple[numpy.ndarray, numpy.ndarray]] | None = 'reg:squarederror', **kwargs: Any) -> None",
+  "summary": "Implementation of the scikit-learn API for XGBoost regression.",
+  "warnings": []
+}

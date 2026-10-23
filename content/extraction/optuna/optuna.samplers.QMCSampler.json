@@ -1,0 +1,146 @@
+{
+  "attributes": [],
+  "doc_url": "https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.QMCSampler.html",
+  "extractor_version": "1",
+  "id": "optuna.samplers.QMCSampler",
+  "import_path": "optuna.samplers.QMCSampler",
+  "kind": "class",
+  "library": "optuna",
+  "library_version": "5.0.0",
+  "methods": [
+    {
+      "name": "after_trial",
+      "signature": "after_trial(study: 'Study', trial: 'FrozenTrial', state: 'TrialState', values: 'Sequence[float] | None') -> 'None'",
+      "summary": "Trial post-processing."
+    },
+    {
+      "name": "before_trial",
+      "signature": "before_trial(study: 'Study', trial: 'FrozenTrial') -> 'None'",
+      "summary": "Trial pre-processing."
+    },
+    {
+      "name": "infer_relative_search_space",
+      "signature": "infer_relative_search_space(study: 'Study', trial: 'FrozenTrial') -> 'dict[str, BaseDistribution]'",
+      "summary": "Infer the search space that will be used by relative sampling in the target trial."
+    },
+    {
+      "name": "reseed_rng",
+      "signature": "reseed_rng() -> 'None'",
+      "summary": "Reseed sampler's random number generator."
+    },
+    {
+      "name": "sample_independent",
+      "signature": "sample_independent(study: 'Study', trial: 'FrozenTrial', param_name: 'str', param_distribution: 'BaseDistribution') -> 'Any'",
+      "summary": "Sample a parameter for a given distribution."
+    },
+    {
+      "name": "sample_relative",
+      "signature": "sample_relative(study: 'Study', trial: 'FrozenTrial', search_space: 'dict[str, BaseDistribution]') -> 'dict[str, Any]'",
+      "summary": "Sample parameters in a given search space."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'sobol'",
+      "description": "",
+      "effective_default": null,
+      "name": "qmc_type",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "",
+      "effective_default": null,
+      "name": "scramble",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "seed",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "independent_sampler",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "",
+      "effective_default": null,
+      "name": "warn_asynchronous_seeding",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "",
+      "effective_default": null,
+      "name": "warn_independent_sampling",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [],
+  "signature": "QMCSampler(*, qmc_type: 'str' = 'sobol', scramble: 'bool' = False, seed: 'int | None' = None, independent_sampler: 'BaseSampler | None' = None, warn_asynchronous_seeding: 'bool' = True, warn_independent_sampling: 'bool' = True) -> 'None'",
+  "summary": "A Quasi Monte Carlo Sampler that generates low-discrepancy sequences.",
+  "warnings": [
+    "parameter qmc_type: not documented in docstring",
+    "parameter scramble: not documented in docstring",
+    "parameter seed: not documented in docstring",
+    "parameter independent_sampler: not documented in docstring",
+    "parameter warn_asynchronous_seeding: not documented in docstring",
+    "parameter warn_independent_sampling: not documented in docstring"
+  ]
+}

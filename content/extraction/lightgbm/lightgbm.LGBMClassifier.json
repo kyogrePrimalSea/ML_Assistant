@@ -1,0 +1,468 @@
+{
+  "attributes": [
+    {
+      "description": ":obj:`int`: The best iteration of fitted model if ``early_stopping()`` callback has been specified.",
+      "name": "best_iteration_",
+      "type_doc": ""
+    },
+    {
+      "description": ":obj:`dict`: The best score of fitted model.",
+      "name": "best_score_",
+      "type_doc": ""
+    },
+    {
+      "description": "Booster: The underlying Booster of this model.",
+      "name": "booster_",
+      "type_doc": ""
+    },
+    {
+      "description": ":obj:`array` of shape = [n_classes]: The class label array.",
+      "name": "classes_",
+      "type_doc": ""
+    },
+    {
+      "description": ":obj:`dict`: The evaluation results if validation sets have been specified.",
+      "name": "evals_result_",
+      "type_doc": ""
+    },
+    {
+      "description": ":obj:`array` of shape = [n_features]: The feature importances (the higher, the more important).",
+      "name": "feature_importances_",
+      "type_doc": ""
+    },
+    {
+      "description": ":obj:`list` of shape = [n_features]: The names of features.",
+      "name": "feature_name_",
+      "type_doc": ""
+    },
+    {
+      "description": ":obj:`array` of shape = [n_features]: scikit-learn compatible version of ``.feature_name_``.",
+      "name": "feature_names_in_",
+      "type_doc": ""
+    },
+    {
+      "description": ":obj:`int`: The number of classes.",
+      "name": "n_classes_",
+      "type_doc": ""
+    },
+    {
+      "description": ":obj:`int`: True number of boosting iterations performed.",
+      "name": "n_estimators_",
+      "type_doc": ""
+    },
+    {
+      "description": ":obj:`int`: The number of features of fitted model.",
+      "name": "n_features_",
+      "type_doc": ""
+    },
+    {
+      "description": ":obj:`int`: The number of features of fitted model.",
+      "name": "n_features_in_",
+      "type_doc": ""
+    },
+    {
+      "description": ":obj:`int`: True number of boosting iterations performed.",
+      "name": "n_iter_",
+      "type_doc": ""
+    },
+    {
+      "description": ":obj:`str` or :obj:`callable`: The concrete objective used while fitting this model.",
+      "name": "objective_",
+      "type_doc": ""
+    }
+  ],
+  "doc_url": "https://lightgbm.readthedocs.io/en/stable/pythonapi/lightgbm.LGBMClassifier.html",
+  "extractor_version": "1",
+  "id": "lightgbm.LGBMClassifier",
+  "import_path": "lightgbm.LGBMClassifier",
+  "kind": "class",
+  "library": "lightgbm",
+  "library_version": "4.7.0",
+  "methods": [
+    {
+      "name": "decision_function",
+      "signature": "decision_function(X: List[List[float] | List[int]] | numpy.ndarray | pandas.DataFrame | narwhals._native.NativeDataFrame | scipy.sparse._matrix.spmatrix, *, start_iteration: int = 0, num_iteration: int | None = None, validate_features: bool = False, **kwargs: Any) -> numpy.ndarray | scipy.sparse._matrix.spmatrix | List[scipy.sparse._matrix.spmatrix]",
+      "summary": "Return the raw margin score for each sample."
+    },
+    {
+      "name": "fit",
+      "signature": "fit(X: List[List[float] | List[int]] | numpy.ndarray | pandas.DataFrame | narwhals._native.NativeDataFrame | scipy.sparse._matrix.spmatrix, y: List[float] | List[int] | numpy.ndarray | pandas.Series | pandas.DataFrame | narwhals._native.NativeSeries | narwhals._native.NativeDataFrame, sample_weight: List[float] | List[int] | numpy.ndarray | pandas.Series | narwhals._native.NativeSeries | None = None, init_score: List[float] | List[List[float]] | numpy.ndarray | pandas.Series | pandas.DataFrame | narwhals._native.NativeSeries | narwhals._native.NativeDataFrame | None = None, eval_set: List[Tuple[List[List[float] | List[int]] | numpy.ndarray | pandas.DataFrame | narwhals._native.NativeDataFrame | scipy.sparse._matrix.spmatrix, List[float] | List[int] | numpy.ndarray | pandas.Series | pandas.DataFrame | narwhals._native.NativeSeries | narwhals._native.NativeDataFrame]] | None = None, eval_names: List[str] | None = None, eval_sample_weight: List[List[float] | List[int] | numpy.ndarray | pandas.Series | narwhals._native.NativeSeries] | None = None, eval_class_weight: List[float] | None = None, eval_init_score: List[List[float] | List[List[float]] | numpy.ndarray | pandas.Series | pandas.DataFrame | narwhals._native.NativeSeries | narwhals._native.NativeDataFrame] | None = None, eval_metric: str | Callable[[numpy.ndarray | None, numpy.ndarray], Tuple[str, float, bool]] | Callable[[numpy.ndarray | None, numpy.ndarray], List[Tuple[str, float, bool]]] | Callable[[numpy.ndarray | None, numpy.ndarray, numpy.ndarray | None], Tuple[str, float, bool]] | Callable[[numpy.ndarray | None, numpy.ndarray, numpy.ndarray | None], List[Tuple[str, float, bool]]] | Callable[[numpy.ndarray | None, numpy.ndarray, numpy.ndarray | None, numpy.ndarray | None], Tuple[str, float, bool]] | Callable[[numpy.ndarray | None, numpy.ndarray, numpy.ndarray | None, numpy.ndarray | None], List[Tuple[str, float, bool]]] | List[str | Callable[[numpy.ndarray | None, numpy.ndarray], Tuple[str, float, bool]] | Callable[[numpy.ndarray | None, numpy.ndarray], List[Tuple[str, float, bool]]] | Callable[[numpy.ndarray | None, numpy.ndarray, numpy.ndarray | None], Tuple[str, float, bool]] | Callable[[numpy.ndarray | None, numpy.ndarray, numpy.ndarray | None], List[Tuple[str, float, bool]]] | Callable[[numpy.ndarray | None, numpy.ndarray, numpy.ndarray | None, numpy.ndarray | None], Tuple[str, float, bool]] | Callable[[numpy.ndarray | None, numpy.ndarray, numpy.ndarray | None, numpy.ndarray | None], List[Tuple[str, float, bool]]]] | None = None, feature_name: List[str] | ForwardRef(\"Literal['auto']\") = 'auto', categorical_feature: List[str] | List[int] | ForwardRef(\"Literal['auto']\") = 'auto', callbacks: List[Callable] | None = None, init_model: str | pathlib.Path | lightgbm.basic.Booster | lightgbm.sklearn.LGBMModel | None = None, *, eval_X: List[List[float] | List[int]] | numpy.ndarray | pandas.DataFrame | narwhals._native.NativeDataFrame | scipy.sparse._matrix.spmatrix | Tuple[List[List[float] | List[int]] | numpy.ndarray | pandas.DataFrame | narwhals._native.NativeDataFrame | scipy.sparse._matrix.spmatrix] | None = None, eval_y: List[float] | List[int] | numpy.ndarray | pandas.Series | pandas.DataFrame | narwhals._native.NativeSeries | narwhals._native.NativeDataFrame | Tuple[List[float] | List[int] | numpy.ndarray | pandas.Series | pandas.DataFrame | narwhals._native.NativeSeries | narwhals._native.NativeDataFrame] | None = None) -> 'LGBMClassifier'",
+      "summary": "Build a gradient boosting model from the training set (X, y)."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep: bool = True) -> Dict[str, Any]",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X: List[List[float] | List[int]] | numpy.ndarray | pandas.DataFrame | narwhals._native.NativeDataFrame | scipy.sparse._matrix.spmatrix, raw_score: bool = False, start_iteration: int = 0, num_iteration: int | None = None, pred_leaf: bool = False, pred_contrib: bool = False, validate_features: bool = False, **kwargs: Any) -> numpy.ndarray | scipy.sparse._matrix.spmatrix | List[scipy.sparse._matrix.spmatrix]",
+      "summary": "Return the predicted value for each sample."
+    },
+    {
+      "name": "predict_proba",
+      "signature": "predict_proba(X: List[List[float] | List[int]] | numpy.ndarray | pandas.DataFrame | narwhals._native.NativeDataFrame | scipy.sparse._matrix.spmatrix, raw_score: bool = False, start_iteration: int = 0, num_iteration: int | None = None, pred_leaf: bool = False, pred_contrib: bool = False, validate_features: bool = False, **kwargs: Any) -> numpy.ndarray | scipy.sparse._matrix.spmatrix | List[scipy.sparse._matrix.spmatrix]",
+      "summary": "Return the predicted probability for each class for each sample."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Return :ref:`accuracy <accuracy_score>` on provided data and labels."
+    },
+    {
+      "name": "set_decision_function_request",
+      "signature": "set_decision_function_request(*, num_iteration: bool | None | str = '$UNCHANGED$', start_iteration: bool | None | str = '$UNCHANGED$', validate_features: bool | None | str = '$UNCHANGED$') -> lightgbm.sklearn.LGBMClassifier",
+      "summary": "Configure whether metadata should be requested to be passed to the ``decision_function`` method."
+    },
+    {
+      "name": "set_fit_request",
+      "signature": "set_fit_request(*, callbacks: bool | None | str = '$UNCHANGED$', categorical_feature: bool | None | str = '$UNCHANGED$', eval_X: bool | None | str = '$UNCHANGED$', eval_class_weight: bool | None | str = '$UNCHANGED$', eval_init_score: bool | None | str = '$UNCHANGED$', eval_metric: bool | None | str = '$UNCHANGED$', eval_names: bool | None | str = '$UNCHANGED$', eval_sample_weight: bool | None | str = '$UNCHANGED$', eval_set: bool | None | str = '$UNCHANGED$', eval_y: bool | None | str = '$UNCHANGED$', feature_name: bool | None | str = '$UNCHANGED$', init_model: bool | None | str = '$UNCHANGED$', init_score: bool | None | str = '$UNCHANGED$', sample_weight: bool | None | str = '$UNCHANGED$') -> lightgbm.sklearn.LGBMClassifier",
+      "summary": "Configure whether metadata should be requested to be passed to the ``fit`` method."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params: Any) -> 'LGBMModel'",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_predict_proba_request",
+      "signature": "set_predict_proba_request(*, num_iteration: bool | None | str = '$UNCHANGED$', pred_contrib: bool | None | str = '$UNCHANGED$', pred_leaf: bool | None | str = '$UNCHANGED$', raw_score: bool | None | str = '$UNCHANGED$', start_iteration: bool | None | str = '$UNCHANGED$', validate_features: bool | None | str = '$UNCHANGED$') -> lightgbm.sklearn.LGBMClassifier",
+      "summary": "Configure whether metadata should be requested to be passed to the ``predict_proba`` method."
+    },
+    {
+      "name": "set_predict_request",
+      "signature": "set_predict_request(*, num_iteration: bool | None | str = '$UNCHANGED$', pred_contrib: bool | None | str = '$UNCHANGED$', pred_leaf: bool | None | str = '$UNCHANGED$', raw_score: bool | None | str = '$UNCHANGED$', start_iteration: bool | None | str = '$UNCHANGED$', validate_features: bool | None | str = '$UNCHANGED$') -> lightgbm.sklearn.LGBMClassifier",
+      "summary": "Configure whether metadata should be requested to be passed to the ``predict`` method."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> lightgbm.sklearn.LGBMClassifier",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    }
+  ],
+  "overrides_applied": [
+    {
+      "path": "parameters[name=objective].effective_default",
+      "reason": "effective_default for the two sentinel None defaults that the page gives a concrete meaning for: objective ('Default: regression for LGBMRegressor, binary or multiclass for LGBMClassifier, lambdarank for LGBMRanker') and n_jobs ('A value of None (the default) corresponds to using the number of physical cores in the system'). random_state=None ('default seeds in C++ code are used') and class_weight=None ('all classes are supposed to have weight one') are left without effective_default: they are not defaults of a tunable value. All other signature defaults are concrete and match the page.",
+      "source_url": "https://lightgbm.readthedocs.io/en/stable/pythonapi/lightgbm.LGBMClassifier.html"
+    },
+    {
+      "path": "parameters[name=n_jobs].effective_default",
+      "reason": "effective_default for the two sentinel None defaults that the page gives a concrete meaning for: objective ('Default: regression for LGBMRegressor, binary or multiclass for LGBMClassifier, lambdarank for LGBMRanker') and n_jobs ('A value of None (the default) corresponds to using the number of physical cores in the system'). random_state=None ('default seeds in C++ code are used') and class_weight=None ('all classes are supposed to have weight one') are left without effective_default: they are not defaults of a tunable value. All other signature defaults are concrete and match the page.",
+      "source_url": "https://lightgbm.readthedocs.io/en/stable/pythonapi/lightgbm.LGBMClassifier.html"
+    }
+  ],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'gbdt'",
+      "description": "'gbdt', traditional Gradient Boosting Decision Tree.\n'dart', Dropouts meet Multiple Additive Regression Trees.\n'rf', Random Forest.",
+      "effective_default": null,
+      "name": "boosting_type",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str, optional (default='gbdt')"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "31",
+      "description": "Maximum tree leaves for base learners.",
+      "effective_default": null,
+      "name": "num_leaves",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, optional (default=31)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "-1",
+      "description": "Maximum tree depth for base learners, <=0 means no limit.\nIf setting this to a positive value, consider also changing ``num_leaves`` to ``<= 2^max_depth``.",
+      "effective_default": null,
+      "name": "max_depth",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, optional (default=-1)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0.1",
+      "description": "Boosting learning rate.\nYou can use ``callbacks`` parameter of ``fit`` method to shrink/adapt learning rate\nin training using ``reset_parameter`` callback.\nNote, that this will ignore the ``learning_rate`` argument in training.",
+      "effective_default": null,
+      "name": "learning_rate",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, optional (default=0.1)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "100",
+      "description": "Number of boosted trees to fit.",
+      "effective_default": null,
+      "name": "n_estimators",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, optional (default=100)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "200000",
+      "description": "Number of samples for constructing bins.",
+      "effective_default": null,
+      "name": "subsample_for_bin",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, optional (default=200000)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Specify the learning task and the corresponding learning objective or\na custom objective function to be used (see note below).\nDefault: 'regression' for LGBMRegressor, 'binary' or 'multiclass' for LGBMClassifier, 'lambdarank' for LGBMRanker.",
+      "effective_default": "'binary' or 'multiclass' (documented as: 'binary' or 'multiclass' for LGBMClassifier)",
+      "name": "objective",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str, callable or None, optional (default=None)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Weights associated with classes in the form ``{class_label: weight}``.\nUse this parameter only for multi-class classification task;\nfor binary classification task you may use ``is_unbalance`` or ``scale_pos_weight`` parameters.\nNote, that the usage of all these parameters will result in poor estimates of the individual class probabilities.\nYou may want to consider performing probability calibration\n(https://scikit-learn.org/stable/modules/calibration.html) of your model.\nThe 'balanced' mode uses the values of y to automatically adjust weights\ninversely proportional to class frequencies in the input data as ``n_samples / (n_classes * np.bincount(y))``.\nIf None, all classes are supposed to have weight one.\nNote, that these weights will be multiplied with ``sample_weight`` (passed through the ``fit`` method)\nif ``sample_weight`` is specified.",
+      "effective_default": null,
+      "name": "class_weight",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "dict, 'balanced' or None, optional (default=None)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0.0",
+      "description": "Minimum loss reduction required to make a further partition on a leaf node of the tree.",
+      "effective_default": null,
+      "name": "min_split_gain",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, optional (default=0.)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0.001",
+      "description": "Minimum sum of instance weight (Hessian) needed in a child (leaf).",
+      "effective_default": null,
+      "name": "min_child_weight",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, optional (default=1e-3)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "20",
+      "description": "Minimum number of data needed in a child (leaf).",
+      "effective_default": null,
+      "name": "min_child_samples",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, optional (default=20)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "1.0",
+      "description": "Subsample ratio of the training instance.",
+      "effective_default": null,
+      "name": "subsample",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, optional (default=1.)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0",
+      "description": "Frequency of subsample, <=0 means no enable.",
+      "effective_default": null,
+      "name": "subsample_freq",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, optional (default=0)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "1.0",
+      "description": "Subsample ratio of columns when constructing each tree.",
+      "effective_default": null,
+      "name": "colsample_bytree",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, optional (default=1.)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0.0",
+      "description": "L1 regularization term on weights.",
+      "effective_default": null,
+      "name": "reg_alpha",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, optional (default=0.)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0.0",
+      "description": "L2 regularization term on weights.",
+      "effective_default": null,
+      "name": "reg_lambda",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, optional (default=0.)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Random number seed.\nIf int, this number is used to seed the C++ code.\nIf RandomState or Generator object (numpy), a random integer is picked based on its state to seed the C++ code.\nIf None, default seeds in C++ code are used.",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, RandomState object or None, optional (default=None)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Number of parallel threads to use for training (can be changed at prediction time by\npassing it as an extra keyword argument).\n\nFor better performance, it is recommended to set this to the number of physical cores\nin the CPU.\n\nNegative integers are interpreted as following joblib's formula (n_cpus + 1 + n_jobs), just like\nscikit-learn (so e.g. -1 means using all threads). A value of zero corresponds the default number of\nthreads configured for OpenMP in the system. A value of ``None`` (the default) corresponds\nto using the number of physical cores in the system (its correct detection requires\neither the ``joblib`` or the ``psutil`` util libraries to be installed).\n\n.. versionchanged:: 4.0.0",
+      "effective_default": "number of physical cores in the system",
+      "name": "n_jobs",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or None, optional (default=None)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'split'",
+      "description": "The type of feature importance to be filled into ``feature_importances_``.\nIf 'split', result contains numbers of times the feature is used in a model.\nIf 'gain', result contains total gains of splits which use the feature.",
+      "effective_default": null,
+      "name": "importance_type",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str, optional (default='split')"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Other parameters for the model.\nCheck http://lightgbm.readthedocs.io/en/latest/Parameters.html for more parameters.\n\n.. warning::\n\n    \\*\\*kwargs is not supported in sklearn, it may cause unexpected issues.",
+      "effective_default": null,
+      "name": "kwargs",
+      "param_kind": "var_keyword",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [],
+  "signature": "LGBMClassifier(*, boosting_type: str = 'gbdt', num_leaves: int = 31, max_depth: int = -1, learning_rate: float = 0.1, n_estimators: int = 100, subsample_for_bin: int = 200000, objective: str | Callable[[numpy.ndarray | None, numpy.ndarray], Tuple[numpy.ndarray, numpy.ndarray]] | Callable[[numpy.ndarray | None, numpy.ndarray, numpy.ndarray | None], Tuple[numpy.ndarray, numpy.ndarray]] | Callable[[numpy.ndarray | None, numpy.ndarray, numpy.ndarray | None, numpy.ndarray | None], Tuple[numpy.ndarray, numpy.ndarray]] | None = None, class_weight: Dict | str | None = None, min_split_gain: float = 0.0, min_child_weight: float = 0.001, min_child_samples: int = 20, subsample: float = 1.0, subsample_freq: int = 0, colsample_bytree: float = 1.0, reg_alpha: float = 0.0, reg_lambda: float = 0.0, random_state: int | numpy.random.mtrand.RandomState | numpy.random._generator.Generator | None = None, n_jobs: int | None = None, importance_type: str = 'split', **kwargs: Any) -> None",
+  "summary": "Construct a gradient boosting model.",
+  "warnings": [
+    "__init__ docstring: numpydoc: Unknown section Note"
+  ]
+}

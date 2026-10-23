@@ -1,0 +1,273 @@
+{
+  "attributes": [],
+  "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.plots.beeswarm.html",
+  "extractor_version": "1",
+  "id": "shap.plots.beeswarm",
+  "import_path": "shap.plots.beeswarm",
+  "kind": "function",
+  "library": "shap",
+  "library_version": "0.54.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "This is an :class:`.Explanation` object containing a matrix of SHAP values\n(# samples x # features).",
+      "effective_default": null,
+      "name": "shap_values",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "Explanation"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "10",
+      "description": "How many top features to include in the plot (default is 10, or 7 for\ninteraction plots).",
+      "effective_default": null,
+      "name": "max_display",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "shap.Explanation.abs.mean(0)",
+      "description": "",
+      "effective_default": null,
+      "name": "order",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "clustering",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0.5",
+      "description": "",
+      "effective_default": null,
+      "name": "cluster_threshold",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "color",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'#333333'",
+      "description": "",
+      "effective_default": null,
+      "name": "axis_color",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "1.0",
+      "description": "",
+      "effective_default": null,
+      "name": "alpha",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Axes object to draw the plot onto, otherwise uses the current Axes.",
+      "effective_default": null,
+      "name": "ax",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "matplotlib Axes"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "Whether :external+mpl:func:`matplotlib.pyplot.show()` is called before returning.\nSetting this to ``False`` allows the plot to be customized further\nafter it has been created, returning the current axis via\n:external+mpl:func:`matplotlib.pyplot.gca()`.",
+      "effective_default": null,
+      "name": "show",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "",
+      "effective_default": null,
+      "name": "log_scale",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "Whether to draw the color bar (legend).",
+      "effective_default": null,
+      "name": "color_bar",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "16",
+      "description": "What size to make the markers. For further information, see ``s`` in\n:external+mpl:func:`matplotlib.pyplot.scatter`.",
+      "effective_default": null,
+      "name": "s",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "float"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'auto'",
+      "description": "What size to make the plot. By default, the size is auto-scaled based on the\nnumber of features that are being displayed. Passing a single float will cause\neach row to be that many inches high. Passing a pair of floats will scale the\nplot by that number of inches. If ``None`` is passed, then the size of the\ncurrent figure will be left unchanged. If ``ax`` is not ``None``, then passing\n``plot_size`` will raise a :exc:`ValueError`.",
+      "effective_default": null,
+      "name": "plot_size",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "\"auto\" (default), float, (float, float), or None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'Feature value'",
+      "description": "",
+      "effective_default": null,
+      "name": "color_bar_label",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "If there are more features than ``max_display``, then plot a row representing\nthe sum of SHAP values of all remaining features. Default True.",
+      "effective_default": null,
+      "name": "group_remaining_features",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool"
+    }
+  ],
+  "returns": [
+    {
+      "description": "Returns the :external+mpl:class:`~matplotlib.axes.Axes` object with the plot drawn onto it. Only\nreturned if ``show=False``.",
+      "name": "",
+      "type_doc": "ax: matplotlib Axes"
+    }
+  ],
+  "signature": "beeswarm(shap_values: 'Explanation', max_display: 'int | None' = 10, order=shap.Explanation.abs.mean(0), clustering=None, cluster_threshold=0.5, color=None, axis_color='#333333', alpha: 'float' = 1.0, ax: 'plt.Axes | None' = None, show: 'bool' = True, log_scale: 'bool' = False, color_bar: 'bool' = True, s: 'float' = 16, plot_size: \"Literal['auto'] | float | tuple[float, float] | None\" = 'auto', color_bar_label: 'str' = 'Feature value', group_remaining_features: 'bool' = True)",
+  "summary": "Create a SHAP beeswarm plot, colored by feature values when they are provided.",
+  "warnings": [
+    "parameter order: not documented in docstring",
+    "parameter clustering: not documented in docstring",
+    "parameter cluster_threshold: not documented in docstring",
+    "parameter color: not documented in docstring",
+    "parameter axis_color: not documented in docstring",
+    "parameter alpha: not documented in docstring",
+    "parameter log_scale: not documented in docstring",
+    "parameter color_bar_label: not documented in docstring"
+  ]
+}

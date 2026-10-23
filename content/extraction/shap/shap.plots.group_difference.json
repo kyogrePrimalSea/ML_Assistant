@@ -1,0 +1,177 @@
+{
+  "attributes": [],
+  "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.plots.group_difference.html",
+  "extractor_version": "1",
+  "id": "shap.plots.group_difference",
+  "import_path": "shap.plots.group_difference",
+  "kind": "function",
+  "library": "shap",
+  "library_version": "0.54.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Matrix of SHAP values (# samples x # features) or a vector of model outputs (# samples).",
+      "effective_default": null,
+      "name": "shap_values",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "numpy.array"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "A boolean mask where True represents the first group of samples and False the second.",
+      "effective_default": null,
+      "name": "group_mask",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "numpy.array"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "A list of feature names.",
+      "effective_default": null,
+      "name": "feature_names",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "list"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "xlabel",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "xmin",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "xmax",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "max_display",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "",
+      "effective_default": null,
+      "name": "sort",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "",
+      "effective_default": null,
+      "name": "show",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "ax",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [],
+  "signature": "group_difference(shap_values, group_mask, feature_names=None, xlabel=None, xmin=None, xmax=None, max_display=None, sort=True, show=True, ax=None)",
+  "summary": "This plots the difference in mean SHAP values between two groups.",
+  "warnings": [
+    "parameter xlabel: not documented in docstring",
+    "parameter xmin: not documented in docstring",
+    "parameter xmax: not documented in docstring",
+    "parameter max_display: not documented in docstring",
+    "parameter sort: not documented in docstring",
+    "parameter show: not documented in docstring",
+    "parameter ax: not documented in docstring",
+    "no Returns section found"
+  ]
+}

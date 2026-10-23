@@ -1,0 +1,184 @@
+{
+  "attributes": [],
+  "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.Explainer.html",
+  "extractor_version": "1",
+  "id": "shap.Explainer",
+  "import_path": "shap.Explainer",
+  "kind": "class",
+  "library": "shap",
+  "library_version": "0.54.1",
+  "methods": [
+    {
+      "name": "explain_row",
+      "signature": "explain_row(*row_args: 'Any', max_evals: \"int | Literal['auto']\", main_effects: 'bool', error_bounds: 'bool', outputs: 'Any', silent: 'bool', **kwargs: 'Any') -> 'dict[str, Any]'",
+      "summary": "Explains a single row and returns the tuple (row_values, row_expected_values, row_mask_shapes, main_effects)."
+    },
+    {
+      "name": "load",
+      "signature": "load(in_file: 'Any', model_loader: 'Callable[..., Any] | None' = None, masker_loader: 'Callable[..., Any] | None' = None, instantiate: 'bool' = True) -> 'Explainer | dict[str, Any]'",
+      "summary": "Load an Explainer from the given file stream."
+    },
+    {
+      "name": "save",
+      "signature": "save(out_file: 'Any', model_saver: 'str | Callable[..., Any]' = '.save', masker_saver: 'str | Callable[..., Any]' = '.save') -> 'None'",
+      "summary": "Write the explainer to the given file stream."
+    },
+    {
+      "name": "supports_model_with_masker",
+      "signature": "supports_model_with_masker(model: 'Any', masker: 'Any') -> 'bool'",
+      "summary": "Determines if this explainer can handle the given model."
+    }
+  ],
+  "overrides_applied": [
+    {
+      "path": "parameters[name=link].default",
+      "reason": "The introspected default repr of `link` embeds a memory address (nondeterministic across runs). The docs page shows the stable form `<function identity>`; that is recorded instead. Same object, repr cosmetics only.",
+      "source_url": "https://shap.readthedocs.io/en/latest/generated/shap.Explainer.html"
+    }
+  ],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "User supplied function or model object that takes a dataset of samples and\ncomputes the output of the model for those samples.",
+      "effective_default": null,
+      "name": "model",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "object or function"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The function used to \"mask\" out hidden features of the form `masked_args = masker(*model_args, mask=mask)`.\nIt takes input in the same form as the model, but for just a single sample with a binary\nmask, then returns an iterable of masked samples. These\nmasked samples will then be evaluated using the model function and the outputs averaged.\nAs a shortcut for the standard masking using by SHAP you can pass a background data matrix\ninstead of a function and that matrix will be used for masking. Domain specific masking\nfunctions are available in shap such as shap.ImageMasker for images and shap.TokenMasker\nfor text. In addition to determining how to replace hidden features, the masker can also\nconstrain the rules of the cooperative game used to explain the model. For example\nshap.TabularMasker(data, hclustering=\"correlation\") will enforce a hierarchical clustering\nof coalitions for the game (in this special case the attributions are known as the Owen values).",
+      "effective_default": null,
+      "name": "masker",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "function, numpy.array, pandas.DataFrame, tokenizer, None, or a list of these for each model input"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "<function identity>",
+      "description": "The link function used to map between the output units of the model and the SHAP value units. By\ndefault it is shap.links.identity, but shap.links.logit can be useful so that expectations are\ncomputed in probability units while explanations remain in the (more naturally additive) log-odds\nunits. For more details on how link functions work see any overview of link functions for generalized\nlinear models.",
+      "effective_default": null,
+      "name": "link",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "function"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'auto'",
+      "description": "The algorithm used to estimate the Shapley values. There are many different algorithms that\ncan be used to estimate the Shapley values (and the related value for constrained games), each\nof these algorithms have various tradeoffs and are preferable in different situations. By\ndefault the \"auto\" options attempts to make the best choice given the passed model and masker,\nbut this choice can always be overridden by passing the name of a specific algorithm. The type of\nalgorithm used will determine what type of subclass object is returned by this constructor, and\nyou can also build those subclasses directly if you prefer or need more fine grained control over\ntheir options.",
+      "effective_default": null,
+      "name": "algorithm",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "\"auto\", \"permutation\", \"partition\", \"tree\", or \"linear\""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The names of the model outputs. For example if the model is an image classifier, then output_names would\nbe the names of all the output classes. This parameter is optional. When output_names is None then\nthe Explanation objects produced by this explainer will not have any output_names, which could effect\ndownstream plots.",
+      "effective_default": null,
+      "name": "output_names",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "None or list of strings"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "feature_names",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "",
+      "effective_default": null,
+      "name": "linearize_link",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "seed for reproducibility",
+      "effective_default": null,
+      "name": "seed",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "None or int"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "",
+      "effective_default": null,
+      "name": "kwargs",
+      "param_kind": "var_keyword",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [],
+  "signature": "Explainer(model: 'Any', masker: 'Any' = None, link: 'Callable[..., Any]' = <function identity at 0x7f78eb172770>, algorithm: \"Literal['auto', 'permutation', 'partition', 'tree', 'linear', 'deep', 'exact', 'additive']\" = 'auto', output_names: 'list[str] | None' = None, feature_names: 'list[str] | list[list[str]] | None' = None, linearize_link: 'bool' = True, seed: 'int | None' = None, **kwargs: 'Any') -> 'None'",
+  "summary": "Build a new explainer for the passed model.",
+  "warnings": [
+    "parameter link: default repr contains a memory address",
+    "parameter feature_names: not documented in docstring",
+    "parameter linearize_link: not documented in docstring"
+  ]
+}

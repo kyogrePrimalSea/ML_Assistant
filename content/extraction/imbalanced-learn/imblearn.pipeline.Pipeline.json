@@ -1,0 +1,218 @@
+{
+  "attributes": [
+    {
+      "description": "Read-only attribute to access any step parameter by user given name.\nKeys are step names and values are steps parameters.",
+      "name": "named_steps",
+      "type_doc": ":class:`~sklearn.utils.Bunch`"
+    },
+    {
+      "description": "The classes labels.",
+      "name": "classes_",
+      "type_doc": "ndarray of shape (n_classes,)"
+    },
+    {
+      "description": "Number of features seen during first step `fit` method.",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Only defined if the\nunderlying estimator exposes such an attribute when fit.",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.pipeline.Pipeline.html",
+  "extractor_version": "1",
+  "id": "imblearn.pipeline.Pipeline",
+  "import_path": "imblearn.pipeline.Pipeline",
+  "kind": "class",
+  "library": "imbalanced-learn",
+  "library_version": "0.14.2",
+  "methods": [
+    {
+      "name": "decision_function",
+      "signature": "decision_function(X, **params)",
+      "summary": "Transform the data, and apply `decision_function` with the final estimator."
+    },
+    {
+      "name": "fit",
+      "signature": "fit(X, y=None, **params)",
+      "summary": "Fit the model."
+    },
+    {
+      "name": "fit_predict",
+      "signature": "fit_predict(X, y=None, **params)",
+      "summary": "Apply `fit_predict` of last step in pipeline after transforms."
+    },
+    {
+      "name": "fit_resample",
+      "signature": "fit_resample(X, y=None, **params)",
+      "summary": "Fit the model and sample with the final estimator."
+    },
+    {
+      "name": "fit_transform",
+      "signature": "fit_transform(X, y=None, **params)",
+      "summary": "Fit the model and transform with the final estimator."
+    },
+    {
+      "name": "get_feature_names_out",
+      "signature": "get_feature_names_out(input_features=None)",
+      "summary": "Get output feature names for transformation."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "inverse_transform",
+      "signature": "inverse_transform(Xt, **params)",
+      "summary": "Apply `inverse_transform` for each step in a reverse order."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X, **params)",
+      "summary": "Transform the data, and apply `predict` with the final estimator."
+    },
+    {
+      "name": "predict_log_proba",
+      "signature": "predict_log_proba(X, **params)",
+      "summary": "Transform the data, and apply `predict_log_proba` with the final estimator."
+    },
+    {
+      "name": "predict_proba",
+      "signature": "predict_proba(X, **params)",
+      "summary": "Transform the data, and apply `predict_proba` with the final estimator."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y=None, sample_weight=None, **params)",
+      "summary": "Transform the data, and apply `score` with the final estimator."
+    },
+    {
+      "name": "score_samples",
+      "signature": "score_samples(X)",
+      "summary": "Transform the data, and apply `score_samples` with the final estimator."
+    },
+    {
+      "name": "set_callbacks",
+      "signature": "set_callbacks(*callbacks)",
+      "summary": "Set callbacks for the estimator."
+    },
+    {
+      "name": "set_output",
+      "signature": "set_output(*, transform=None)",
+      "summary": "Set the output container when `\"transform\"` and `\"fit_transform\"` are called."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**kwargs)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> imblearn.pipeline.Pipeline",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(X, **params)",
+      "summary": "Transform the data, and apply `transform` with the final estimator."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "n",
+          "o",
+          "_",
+          "v",
+          "a",
+          "l",
+          "i",
+          "d",
+          "a",
+          "t",
+          "i",
+          "o",
+          "n"
+        ]
+      },
+      "default": null,
+      "description": "List of (name, transform) tuples (implementing\nfit/transform/fit_resample) that are chained, in the order in which\nthey are chained, with the last object an estimator.",
+      "effective_default": null,
+      "name": "steps",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "list"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "list",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "The names of the :term:`metadata` parameters that should be transformed by the\npipeline before passing it to the step consuming it.\n\nThis enables transforming some input arguments to ``fit`` (other than ``X``)\nto be transformed by the steps of the pipeline up to the step which requires\nthem. Requirement is defined via :ref:`metadata routing <metadata_routing>`.\nFor instance, this can be used to pass a validation set through the pipeline.\n\nYou can only set this if metadata routing is enabled, which you\ncan enable using ``sklearn.set_config(enable_metadata_routing=True)``.\n\n.. versionadded:: 1.6",
+      "effective_default": null,
+      "name": "transform_input",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "list of str, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None",
+          "str",
+          "an object implementing 'cache'"
+        ]
+      },
+      "default": "None",
+      "description": "Used to cache the fitted transformers of the pipeline. By default,\nno caching is performed. If a string is given, it is the path to\nthe caching directory. Enabling caching triggers a clone of\nthe transformers before fitting. Therefore, the transformer\ninstance given to the pipeline cannot be inspected\ndirectly. Use the attribute ``named_steps`` or ``steps`` to\ninspect estimators within the pipeline. Caching the\ntransformers is advantageous when fitting is time consuming.",
+      "effective_default": null,
+      "name": "memory",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "Instance of joblib.Memory or str, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "If True, the time elapsed while fitting each step will be printed as it\nis completed.",
+      "effective_default": null,
+      "name": "verbose",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    }
+  ],
+  "returns": [],
+  "signature": "Pipeline(steps, *, transform_input=None, memory=None, verbose=False)",
+  "summary": "Pipeline of transforms and resamples with a final estimator.",
+  "warnings": []
+}

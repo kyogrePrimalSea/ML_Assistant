@@ -1,0 +1,133 @@
+{
+  "attributes": [
+    {
+      "description": "Returns constraint values.",
+      "name": "constraints",
+      "type_doc": ""
+    },
+    {
+      "description": "Return start datetime.",
+      "name": "datetime_start",
+      "type_doc": ""
+    },
+    {
+      "description": "Return distributions of parameters to be optimized.",
+      "name": "distributions",
+      "type_doc": ""
+    },
+    {
+      "description": "Return trial's number which is consecutive and unique in a study.",
+      "name": "number",
+      "type_doc": ""
+    },
+    {
+      "description": "Return parameters to be optimized.",
+      "name": "params",
+      "type_doc": ""
+    },
+    {
+      "description": "Return user attributes.",
+      "name": "user_attrs",
+      "type_doc": ""
+    }
+  ],
+  "doc_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.Trial.html",
+  "extractor_version": "1",
+  "id": "optuna.trial.Trial",
+  "import_path": "optuna.trial.Trial",
+  "kind": "class",
+  "library": "optuna",
+  "library_version": "5.0.0",
+  "methods": [
+    {
+      "name": "report",
+      "signature": "report(value: 'float', step: 'int') -> 'None'",
+      "summary": "Report an objective function value for a given step."
+    },
+    {
+      "name": "set_constraint",
+      "signature": "set_constraint(key: 'str', value: 'float') -> 'None'",
+      "summary": "Set a constraint value for the trial."
+    },
+    {
+      "name": "set_user_attr",
+      "signature": "set_user_attr(key: 'str', value: 'Any') -> 'None'",
+      "summary": "Set user attributes to the trial."
+    },
+    {
+      "name": "should_prune",
+      "signature": "should_prune() -> 'bool'",
+      "summary": "Suggest whether the trial should be pruned or not."
+    },
+    {
+      "name": "suggest_categorical",
+      "signature": "suggest_categorical(name: 'str', choices: 'Sequence[CategoricalChoiceType]') -> 'CategoricalChoiceType'",
+      "summary": "Suggest a value for the categorical parameter."
+    },
+    {
+      "name": "suggest_discrete_uniform",
+      "signature": "suggest_discrete_uniform(name: 'str', low: 'float', high: 'float', q: 'float') -> 'float'",
+      "summary": "Suggest a value for the discrete parameter."
+    },
+    {
+      "name": "suggest_float",
+      "signature": "suggest_float(name: 'str', low: 'float', high: 'float', *, step: 'float | None' = None, log: 'bool' = False) -> 'float'",
+      "summary": "Suggest a value for the floating point parameter."
+    },
+    {
+      "name": "suggest_int",
+      "signature": "suggest_int(name: 'str', low: 'int', high: 'int', *, step: 'int' = 1, log: 'bool' = False) -> 'int'",
+      "summary": "Suggest a value for the integer parameter."
+    },
+    {
+      "name": "suggest_loguniform",
+      "signature": "suggest_loguniform(name: 'str', low: 'float', high: 'float') -> 'float'",
+      "summary": "Suggest a value for the continuous parameter."
+    },
+    {
+      "name": "suggest_uniform",
+      "signature": "suggest_uniform(name: 'str', low: 'float', high: 'float') -> 'float'",
+      "summary": "Suggest a value for the continuous parameter."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "",
+      "effective_default": null,
+      "name": "study",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "",
+      "effective_default": null,
+      "name": "trial_id",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": ""
+    }
+  ],
+  "returns": [],
+  "signature": "Trial(study: 'Study', trial_id: 'int') -> 'None'",
+  "summary": "A trial is a process of evaluating an objective function.",
+  "warnings": [
+    "parameter study: not documented in docstring",
+    "parameter trial_id: not documented in docstring"
+  ]
+}

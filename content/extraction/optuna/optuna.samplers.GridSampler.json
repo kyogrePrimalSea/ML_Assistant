@@ -1,0 +1,87 @@
+{
+  "attributes": [],
+  "doc_url": "https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.GridSampler.html",
+  "extractor_version": "1",
+  "id": "optuna.samplers.GridSampler",
+  "import_path": "optuna.samplers.GridSampler",
+  "kind": "class",
+  "library": "optuna",
+  "library_version": "5.0.0",
+  "methods": [
+    {
+      "name": "after_trial",
+      "signature": "after_trial(study: 'Study', trial: 'FrozenTrial', state: 'TrialState', values: 'Sequence[float] | None') -> 'None'",
+      "summary": "Trial post-processing."
+    },
+    {
+      "name": "before_trial",
+      "signature": "before_trial(study: 'Study', trial: 'FrozenTrial') -> 'None'",
+      "summary": "Trial pre-processing."
+    },
+    {
+      "name": "infer_relative_search_space",
+      "signature": "infer_relative_search_space(study: 'Study', trial: 'FrozenTrial') -> 'dict[str, BaseDistribution]'",
+      "summary": "Infer the search space that will be used by relative sampling in the target trial."
+    },
+    {
+      "name": "is_exhausted",
+      "signature": "is_exhausted(study: 'Study') -> 'bool'",
+      "summary": "Return True if all the possible params are evaluated, otherwise return False."
+    },
+    {
+      "name": "reseed_rng",
+      "signature": "reseed_rng() -> 'None'",
+      "summary": "Reseed sampler's random number generator."
+    },
+    {
+      "name": "sample_independent",
+      "signature": "sample_independent(study: 'Study', trial: 'FrozenTrial', param_name: 'str', param_distribution: 'BaseDistribution') -> 'Any'",
+      "summary": "Sample a parameter for a given distribution."
+    },
+    {
+      "name": "sample_relative",
+      "signature": "sample_relative(study: 'Study', trial: 'FrozenTrial', search_space: 'dict[str, BaseDistribution]') -> 'dict[str, Any]'",
+      "summary": "Sample parameters in a given search space."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "",
+      "effective_default": null,
+      "name": "search_space",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "seed",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [],
+  "signature": "GridSampler(search_space: 'Mapping[str, Sequence[GridValueType]]', seed: 'int | None' = None) -> 'None'",
+  "summary": "Sampler that performs exhaustive search over the define-and-run user-specified grids.",
+  "warnings": [
+    "parameter search_space: not documented in docstring",
+    "parameter seed: not documented in docstring"
+  ]
+}

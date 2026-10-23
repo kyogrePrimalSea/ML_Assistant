@@ -1,0 +1,123 @@
+{
+  "attributes": [],
+  "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.ExactExplainer.html",
+  "extractor_version": "1",
+  "id": "shap.ExactExplainer",
+  "import_path": "shap.ExactExplainer",
+  "kind": "class",
+  "library": "shap",
+  "library_version": "0.54.1",
+  "methods": [
+    {
+      "name": "explain_row",
+      "signature": "explain_row(*row_args: 'Any', max_evals: \"int | Literal['auto']\", main_effects: 'bool', error_bounds: 'bool', batch_size: \"int | Literal['auto']\", outputs: 'Any', interactions: 'bool | int', silent: 'bool') -> 'dict[str, Any]'",
+      "summary": "Explains a single row and returns the tuple (row_values, row_expected_values, row_mask_shapes)."
+    },
+    {
+      "name": "load",
+      "signature": "load(in_file: 'Any', model_loader: 'Callable[..., Any] | None' = None, masker_loader: 'Callable[..., Any] | None' = None, instantiate: 'bool' = True) -> 'Explainer | dict[str, Any]'",
+      "summary": "Load an Explainer from the given file stream."
+    },
+    {
+      "name": "save",
+      "signature": "save(out_file: 'Any', model_saver: 'str | Callable[..., Any]' = '.save', masker_saver: 'str | Callable[..., Any]' = '.save') -> 'None'",
+      "summary": "Write the explainer to the given file stream."
+    },
+    {
+      "name": "supports_model_with_masker",
+      "signature": "supports_model_with_masker(model: 'Any', masker: 'Any') -> 'bool'",
+      "summary": "Determines if this explainer can handle the given model."
+    }
+  ],
+  "overrides_applied": [
+    {
+      "path": "parameters[name=link].default",
+      "reason": "The introspected default repr of `link` embeds a memory address (nondeterministic across runs). The docs page shows the stable form `<function identity>`; that is recorded instead. Same object, repr cosmetics only.",
+      "source_url": "https://shap.readthedocs.io/en/latest/generated/shap.ExactExplainer.html"
+    }
+  ],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "A callable python object that executes the model given a set of input data samples.",
+      "effective_default": null,
+      "name": "model",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "function"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "A callable python object used to \"mask\" out hidden features of the form `masker(mask, *fargs)`.\nIt takes a single a binary mask and an input sample and returns a matrix of masked samples. These\nmasked samples are evaluated using the model function and the outputs are then averaged.\nAs a shortcut for the standard masking used by SHAP you can pass a background data matrix\ninstead of a function and that matrix will be used for masking. To use a clustering\ngame structure you can pass a shap.maskers.TabularPartitions(data) object.",
+      "effective_default": null,
+      "name": "masker",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "function or numpy.array or pandas.DataFrame"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "<function identity>",
+      "description": "The link function used to map between the output units of the model and the SHAP value units. By\ndefault it is shap.links.identity, but shap.links.logit can be useful so that expectations are\ncomputed in probability units while explanations remain in the (more naturally additive) log-odds\nunits. For more details on how link functions work see any overview of link functions for generalized\nlinear models.",
+      "effective_default": null,
+      "name": "link",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "function"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "If we use a non-linear link function to take expectations then models that are additive with respect to that\nlink function for a single background sample will no longer be additive when using a background masker with\nmany samples. This for example means that a linear logistic regression model would have interaction effects\nthat arise from the non-linear changes in expectation averaging. To retain the additively of the model with\nstill respecting the link function we linearize the link function by default.",
+      "effective_default": null,
+      "name": "linearize_link",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "feature_names",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [],
+  "signature": "ExactExplainer(model: 'Any', masker: 'Any', link: 'Any' = <function identity at 0x7f78eb172770>, linearize_link: 'bool' = True, feature_names: 'Any' = None) -> 'None'",
+  "summary": "Build an explainers.Exact object for the given model using the given masker object.",
+  "warnings": [
+    "parameter link: default repr contains a memory address",
+    "parameter feature_names: not documented in docstring"
+  ]
+}

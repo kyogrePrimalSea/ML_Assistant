@@ -1,0 +1,129 @@
+{
+  "attributes": [],
+  "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.metrics.geometric_mean_score.html",
+  "extractor_version": "1",
+  "id": "imblearn.metrics.geometric_mean_score",
+  "import_path": "imblearn.metrics.geometric_mean_score",
+  "kind": "function",
+  "library": "imbalanced-learn",
+  "library_version": "0.14.2",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Ground truth (correct) target values.",
+      "effective_default": null,
+      "name": "y_true",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n_samples,)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Estimated targets as returned by a classifier.",
+      "effective_default": null,
+      "name": "y_pred",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n_samples,)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The set of labels to include when ``average != 'binary'``, and their\norder if ``average is None``. Labels present in the data can be\nexcluded, for example to calculate a multiclass average ignoring a\nmajority negative class, while labels not present in the data will\nresult in 0 components in a macro average.",
+      "effective_default": null,
+      "name": "labels",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "1",
+      "description": "The class to report if ``average='binary'`` and the data is binary.\nIf ``pos_label is None`` and in binary classification, this function\nreturns the average geometric mean if ``average`` is one of\n``'weighted'``.\nIf the data are multiclass, this will be ignored;\nsetting ``labels=[pos_label]`` and ``average != 'binary'`` will report\nscores for that label only.",
+      "effective_default": null,
+      "name": "pos_label",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str, int or None, default=1"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'multiclass'",
+      "description": "If ``None``, the scores for each class are returned. Otherwise, this\ndetermines the type of averaging performed on the data:\n\n``'binary'``:\n    Only report results for the class specified by ``pos_label``.\n    This is applicable only if targets (``y_{true,pred}``) are binary.\n``'micro'``:\n    Calculate metrics globally by counting the total true positives,\n    false negatives and false positives.\n``'macro'``:\n    Calculate metrics for each label, and find their unweighted\n    mean.  This does not take label imbalance into account.\n``'multiclass'``:\n    No average is taken.\n``'weighted'``:\n    Calculate metrics for each label, and find their average, weighted\n    by support (the number of true instances for each label). This\n    alters 'macro' to account for label imbalance; it can result in an\n    F-score that is not between precision and recall.\n``'samples'``:\n    Calculate metrics for each instance, and find their average (only\n    meaningful for multilabel classification where this differs from\n    :func:`accuracy_score`).",
+      "effective_default": null,
+      "name": "average",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str or None, default='multiclass'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Sample weights.",
+      "effective_default": null,
+      "name": "sample_weight",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of shape (n_samples,), default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0.0",
+      "description": "Substitutes sensitivity of unrecognized classes from zero to a given\nvalue.",
+      "effective_default": null,
+      "name": "correction",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0.0"
+    }
+  ],
+  "returns": [
+    {
+      "description": "Returns the geometric mean.",
+      "name": "geometric_mean",
+      "type_doc": "float"
+    }
+  ],
+  "signature": "geometric_mean_score(y_true, y_pred, *, labels=None, pos_label=1, average='multiclass', sample_weight=None, correction=0.0)",
+  "summary": "Compute the geometric mean.",
+  "warnings": []
+}

@@ -1,0 +1,233 @@
+{
+  "attributes": [],
+  "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.plots.force.html",
+  "extractor_version": "1",
+  "id": "shap.plots.force",
+  "import_path": "shap.plots.force",
+  "kind": "function",
+  "library": "shap",
+  "library_version": "0.54.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "If a float is passed in, this is the reference value that the feature contributions start from.\nFor SHAP values, it should be the value of ``explainer.expected_value``.\nHowever, it is recommended to pass in a SHAP :class:`.Explanation` object instead (``shap_values``\nis not necessary in this case).",
+      "effective_default": null,
+      "name": "base_value",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "float or shap.Explanation"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Matrix of SHAP values (# features) or (# samples x # features). If this is a\n1D array, then a single force plot will be drawn. If it is a 2D array, then a\nstacked force plot will be drawn.",
+      "effective_default": null,
+      "name": "shap_values",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "numpy.array"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Matrix of feature values (# features) or (# samples x # features). This provides the values of all the\nfeatures, and should be the same shape as the ``shap_values`` argument.",
+      "effective_default": null,
+      "name": "features",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "numpy.array"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "List of feature names (# features).",
+      "effective_default": null,
+      "name": "feature_names",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "list"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The name of the output of the model (plural to support multi-output plotting in the future).",
+      "effective_default": null,
+      "name": "out_names",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "str"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'identity'",
+      "description": "The transformation used when drawing the tick mark labels. Using \"logit\" will change log-odds numbers\ninto probabilities.",
+      "effective_default": null,
+      "name": "link",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "\"identity\" or \"logit\""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'RdBu'",
+      "description": "Color map to use. It can be a string (defaults to ``RdBu``) or a list of hex color strings.",
+      "effective_default": null,
+      "name": "plot_cmap",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "str or list[str]"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "Whether to use the default Javascript output, or the (less developed) matplotlib output.\nUsing matplotlib can be helpful in scenarios where rendering Javascript/HTML\nis inconvenient. Defaults to False.",
+      "effective_default": null,
+      "name": "matplotlib",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "Whether :external+mpl:func:`matplotlib.pyplot.show()` is called before returning.\nSetting this to ``False`` allows the plot\nto be customized further after it has been created.\nOnly applicable when ``matplotlib`` is set to True.",
+      "effective_default": null,
+      "name": "show",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "(20, 3)",
+      "description": "Figure size of the matplotlib output.",
+      "effective_default": null,
+      "name": "figsize",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "ordering_keys",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "ordering_keys_time_format",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0",
+      "description": "",
+      "effective_default": null,
+      "name": "text_rotation",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0.05",
+      "description": "Controls the feature names/values that are displayed on force plot.\nOnly features that the magnitude of their shap value is larger than min_perc * (sum of all abs shap values)\nwill be displayed.",
+      "effective_default": null,
+      "name": "contribution_threshold",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "float"
+    }
+  ],
+  "returns": [],
+  "signature": "force(base_value, shap_values=None, features=None, feature_names=None, out_names=None, link='identity', plot_cmap='RdBu', matplotlib=False, show=True, figsize=(20, 3), ordering_keys=None, ordering_keys_time_format=None, text_rotation=0, contribution_threshold=0.05)",
+  "summary": "Visualize the given SHAP values with an additive force layout.",
+  "warnings": [
+    "parameter ordering_keys: not documented in docstring",
+    "parameter ordering_keys_time_format: not documented in docstring",
+    "parameter text_rotation: not documented in docstring",
+    "no Returns section found"
+  ]
+}

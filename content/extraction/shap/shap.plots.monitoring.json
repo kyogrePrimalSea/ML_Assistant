@@ -1,0 +1,96 @@
+{
+  "attributes": [],
+  "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.plots.monitoring.html",
+  "extractor_version": "1",
+  "id": "shap.plots.monitoring",
+  "import_path": "shap.plots.monitoring",
+  "kind": "function",
+  "library": "shap",
+  "library_version": "0.54.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Index of the feature to plot.",
+      "effective_default": null,
+      "name": "ind",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "int"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Matrix of SHAP values (# samples x # features)",
+      "effective_default": null,
+      "name": "shap_values",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "numpy.array"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Matrix of feature values (# samples x # features)",
+      "effective_default": null,
+      "name": "features",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "numpy.array or pandas.DataFrame"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Names of the features (length # features)",
+      "effective_default": null,
+      "name": "feature_names",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "list"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "",
+      "effective_default": null,
+      "name": "show",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [],
+  "signature": "monitoring(ind, shap_values, features, feature_names=None, show=True)",
+  "summary": "Create a SHAP monitoring plot.",
+  "warnings": [
+    "parameter show: not documented in docstring",
+    "no Returns section found"
+  ]
+}

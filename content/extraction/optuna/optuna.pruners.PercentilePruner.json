@@ -1,0 +1,105 @@
+{
+  "attributes": [],
+  "doc_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.PercentilePruner.html",
+  "extractor_version": "1",
+  "id": "optuna.pruners.PercentilePruner",
+  "import_path": "optuna.pruners.PercentilePruner",
+  "kind": "class",
+  "library": "optuna",
+  "library_version": "5.0.0",
+  "methods": [
+    {
+      "name": "prune",
+      "signature": "prune(study: \"'optuna.study.Study'\", trial: \"'optuna.trial.FrozenTrial'\") -> 'bool'",
+      "summary": "Judge whether the trial should be pruned based on the reported values."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "",
+      "effective_default": null,
+      "name": "percentile",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "5",
+      "description": "",
+      "effective_default": null,
+      "name": "n_startup_trials",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0",
+      "description": "",
+      "effective_default": null,
+      "name": "n_warmup_steps",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "1",
+      "description": "",
+      "effective_default": null,
+      "name": "interval_steps",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "1",
+      "description": "",
+      "effective_default": null,
+      "name": "n_min_trials",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [],
+  "signature": "PercentilePruner(percentile: 'float', n_startup_trials: 'int' = 5, n_warmup_steps: 'int' = 0, interval_steps: 'int' = 1, *, n_min_trials: 'int' = 1) -> 'None'",
+  "summary": "Pruner to keep the specified percentile of the trials.",
+  "warnings": [
+    "parameter percentile: not documented in docstring",
+    "parameter n_startup_trials: not documented in docstring",
+    "parameter n_warmup_steps: not documented in docstring",
+    "parameter interval_steps: not documented in docstring",
+    "parameter n_min_trials: not documented in docstring"
+  ]
+}

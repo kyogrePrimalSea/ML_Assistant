@@ -1,0 +1,198 @@
+{
+  "attributes": [
+    {
+      "description": "Dictionary containing the information to sample the dataset. The keys\ncorresponds to the class labels from which to sample and the values\nare the number of samples to sample.",
+      "name": "sampling_strategy_",
+      "type_doc": "dict"
+    },
+    {
+      "description": "The edited nearest neighbour object used to make the first resampling.",
+      "name": "edited_nearest_neighbours_",
+      "type_doc": "estimator object"
+    },
+    {
+      "description": "Validated K-nearest Neighbours object created from `n_neighbors` parameter.",
+      "name": "nn_",
+      "type_doc": "estimator object"
+    },
+    {
+      "description": "The classes considered with under-sampling by `nn_` in the second cleaning\nphase.",
+      "name": "classes_to_clean_",
+      "type_doc": "list"
+    },
+    {
+      "description": "Indices of the samples selected.\n\n.. versionadded:: 0.4",
+      "name": "sample_indices_",
+      "type_doc": "ndarray of shape (n_new_samples,)"
+    },
+    {
+      "description": "Number of features in the input dataset.\n\n.. versionadded:: 0.9",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during `fit`. Defined only when `X` has feature\nnames that are all strings.\n\n.. versionadded:: 0.10",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.under_sampling.NeighbourhoodCleaningRule.html",
+  "extractor_version": "1",
+  "id": "imblearn.under_sampling.NeighbourhoodCleaningRule",
+  "import_path": "imblearn.under_sampling.NeighbourhoodCleaningRule",
+  "kind": "class",
+  "library": "imbalanced-learn",
+  "library_version": "0.14.2",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y, **params)",
+      "summary": "Check inputs and statistics of the sampler."
+    },
+    {
+      "name": "fit_resample",
+      "signature": "fit_resample(X, y, **params)",
+      "summary": "Resample the dataset."
+    },
+    {
+      "name": "get_feature_names_out",
+      "signature": "get_feature_names_out(input_features=None)",
+      "summary": "Get output feature names for transformation."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "right",
+            "left": 0,
+            "right": 1,
+            "type": "Real"
+          }
+        ],
+        "options": [
+          "all",
+          "auto",
+          "majority",
+          "not majority",
+          "not minority"
+        ],
+        "source": "constraints",
+        "types": [
+          "list",
+          "<built-in function callable>"
+        ]
+      },
+      "default": "'auto'",
+      "description": "Sampling information to sample the data set.\n\n- When ``str``, specify the class targeted by the resampling. Note the\n  the number of samples will not be equal in each. Possible choices\n  are:\n\n    ``'majority'``: resample only the majority class;\n\n    ``'not minority'``: resample all classes but the minority class;\n\n    ``'not majority'``: resample all classes but the majority class;\n\n    ``'all'``: resample all classes;\n\n    ``'auto'``: equivalent to ``'not minority'``.\n\n- When ``list``, the list contains the classes targeted by the\n  resampling.\n\n- When callable, function taking ``y`` and returns a ``dict``. The keys\n  correspond to the targeted classes. The values correspond to the\n  desired number of samples for each class.",
+      "effective_default": null,
+      "name": "sampling_strategy",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str, list or callable"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "an object implementing 'fit_resample'",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "The :class:`~imblearn.under_sampling.EditedNearestNeighbours` (ENN)\nobject to clean the dataset. If `None`, a default ENN is created with\n`kind_sel=\"mode\"` and `n_neighbors=n_neighbors`.",
+      "effective_default": null,
+      "name": "edited_nearest_neighbours",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "estimator object, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "an object implementing 'kneighbors' and 'kneighbors_graph'"
+        ]
+      },
+      "default": "3",
+      "description": "If ``int``, size of the neighbourhood to consider to compute the\nK-nearest neighbors. If object, an estimator that inherits from\n:class:`~sklearn.neighbors.base.KNeighborsMixin` that will be used to\nfind the nearest-neighbors. By default, it will be a 3-NN.",
+      "effective_default": null,
+      "name": "n_neighbors",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or estimator object, default=3"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "neither",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.5",
+      "description": "Threshold used to whether consider a class or not during the cleaning\nafter applying ENN. A class will be considered during cleaning when:\n\nCi > C x T ,\n\nwhere Ci and C is the number of samples in the class and the data set,\nrespectively and theta is the threshold.",
+      "effective_default": null,
+      "name": "threshold_cleaning",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0.5"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "Integral",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Number of CPU cores used during the cross-validation loop.\n``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.\n``-1`` means using all processors. See\n`Glossary <https://scikit-learn.org/stable/glossary.html#term-n-jobs>`_\nfor more details.",
+      "effective_default": null,
+      "name": "n_jobs",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=None"
+    }
+  ],
+  "returns": [],
+  "signature": "NeighbourhoodCleaningRule(*, sampling_strategy='auto', edited_nearest_neighbours=None, n_neighbors=3, threshold_cleaning=0.5, n_jobs=None)",
+  "summary": "Undersample based on the neighbourhood cleaning rule.",
+  "warnings": []
+}

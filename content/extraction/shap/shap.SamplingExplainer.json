@@ -1,0 +1,129 @@
+{
+  "attributes": [],
+  "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.SamplingExplainer.html",
+  "extractor_version": "1",
+  "id": "shap.SamplingExplainer",
+  "import_path": "shap.SamplingExplainer",
+  "kind": "class",
+  "library": "shap",
+  "library_version": "0.54.1",
+  "methods": [
+    {
+      "name": "addsample",
+      "signature": "addsample(x: NDArray[Any] | scipy.sparse._matrix.spmatrix, m: NDArray[typing.Any], w: float) -> None",
+      "summary": ""
+    },
+    {
+      "name": "allocate",
+      "signature": "allocate() -> None",
+      "summary": ""
+    },
+    {
+      "name": "explain",
+      "signature": "explain(incoming_instance: Any, **kwargs: Any) -> NDArray[numpy.floating[typing.Any]]",
+      "summary": ""
+    },
+    {
+      "name": "explain_row",
+      "signature": "explain_row(*row_args: 'Any', max_evals: \"int | Literal['auto']\", main_effects: 'bool', error_bounds: 'bool', outputs: 'Any', silent: 'bool', **kwargs: 'Any') -> 'dict[str, Any]'",
+      "summary": "Explains a single row and returns the tuple (row_values, row_expected_values, row_mask_shapes, main_effects)."
+    },
+    {
+      "name": "load",
+      "signature": "load(in_file: 'Any', model_loader: 'Callable[..., Any] | None' = None, masker_loader: 'Callable[..., Any] | None' = None, instantiate: 'bool' = True) -> 'Explainer | dict[str, Any]'",
+      "summary": "Load an Explainer from the given file stream."
+    },
+    {
+      "name": "not_equal",
+      "signature": "not_equal(i: Any, j: Any) -> int",
+      "summary": ""
+    },
+    {
+      "name": "run",
+      "signature": "run() -> None",
+      "summary": ""
+    },
+    {
+      "name": "sampling_estimate",
+      "signature": "sampling_estimate(j: int, f: Any, x: NDArray[typing.Any], X: NDArray[typing.Any], nsamples: int = 10) -> tuple[NDArray[numpy.floating[typing.Any]], NDArray[numpy.floating[typing.Any]]]",
+      "summary": ""
+    },
+    {
+      "name": "save",
+      "signature": "save(out_file: 'Any', model_saver: 'str | Callable[..., Any]' = '.save', masker_saver: 'str | Callable[..., Any]' = '.save') -> 'None'",
+      "summary": "Write the explainer to the given file stream."
+    },
+    {
+      "name": "shap_values",
+      "signature": "shap_values(X: NDArray[Any] | pandas.DataFrame | pandas.Series | scipy.sparse._matrix.spmatrix, **kwargs: Any) -> NDArray[typing.Any]",
+      "summary": "Estimate the SHAP values for a set of samples."
+    },
+    {
+      "name": "solve",
+      "signature": "solve(fraction_evaluated: float, dim: int) -> tuple[NDArray[typing.Any], NDArray[typing.Any]]",
+      "summary": ""
+    },
+    {
+      "name": "supports_model_with_masker",
+      "signature": "supports_model_with_masker(model: 'Any', masker: 'Any') -> 'bool'",
+      "summary": "Determines if this explainer can handle the given model."
+    },
+    {
+      "name": "varying_groups",
+      "signature": "varying_groups(x: NDArray[Any] | scipy.sparse._matrix.spmatrix) -> NDArray[numpy.int64]",
+      "summary": ""
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "User supplied function that takes a matrix of samples (# samples x # features) and\ncomputes the output of the model for those samples. The output can be a vector\n(# samples) or a matrix (# samples x # model outputs).",
+      "effective_default": null,
+      "name": "model",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "function"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The background dataset to use for integrating out features. To determine the impact\nof a feature, that feature is set to \"missing\" and the change in the model output\nis observed. Since most models aren't designed to handle arbitrary missing data at test\ntime, we simulate \"missing\" by replacing the feature with the values it takes in the\nbackground dataset. So if the background dataset is a simple sample of all zeros, then\nwe would approximate a feature being missing by setting it to zero. Unlike the\nKernelExplainer, this data can be the whole training set, even if that is a large set. This\nis because SamplingExplainer only samples from this background dataset.",
+      "effective_default": null,
+      "name": "data",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "numpy.array or pandas.DataFrame"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "",
+      "effective_default": null,
+      "name": "kwargs",
+      "param_kind": "var_keyword",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [],
+  "signature": "SamplingExplainer(model: Any, data: NDArray[Any] | pandas.DataFrame, **kwargs: Any) -> None",
+  "summary": "Computes SHAP values using an extension of the Shapley sampling values explanation method",
+  "warnings": []
+}

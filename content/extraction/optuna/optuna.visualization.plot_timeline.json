@@ -1,0 +1,52 @@
+{
+  "attributes": [],
+  "doc_url": "https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_timeline.html",
+  "extractor_version": "1",
+  "id": "optuna.visualization.plot_timeline",
+  "import_path": "optuna.visualization.plot_timeline",
+  "kind": "function",
+  "library": "optuna",
+  "library_version": "5.0.0",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "",
+      "effective_default": null,
+      "name": "study",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "n_recent_trials",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [],
+  "signature": "plot_timeline(study: 'Study', n_recent_trials: 'int | None' = None) -> \"'go.Figure'\"",
+  "summary": "Plot the timeline of a study.",
+  "warnings": [
+    "parameter study: not documented in docstring",
+    "parameter n_recent_trials: not documented in docstring",
+    "no Returns section found"
+  ]
+}

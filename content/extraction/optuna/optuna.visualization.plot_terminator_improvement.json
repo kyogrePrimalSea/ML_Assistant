@@ -1,0 +1,100 @@
+{
+  "attributes": [],
+  "doc_url": "https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_terminator_improvement.html",
+  "extractor_version": "1",
+  "id": "optuna.visualization.plot_terminator_improvement",
+  "import_path": "optuna.visualization.plot_terminator_improvement",
+  "kind": "function",
+  "library": "optuna",
+  "library_version": "5.0.0",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "",
+      "effective_default": null,
+      "name": "study",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "",
+      "effective_default": null,
+      "name": "plot_error",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "improvement_evaluator",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "error_evaluator",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "20",
+      "description": "",
+      "effective_default": null,
+      "name": "min_n_trials",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [],
+  "signature": "plot_terminator_improvement(study: 'Study', plot_error: 'bool' = False, improvement_evaluator: 'BaseImprovementEvaluator | None' = None, error_evaluator: 'BaseErrorEvaluator | None' = None, min_n_trials: 'int' = 20) -> \"'go.Figure'\"",
+  "summary": "Plot the potentials for future objective improvement.",
+  "warnings": [
+    "parameter study: not documented in docstring",
+    "parameter plot_error: not documented in docstring",
+    "parameter improvement_evaluator: not documented in docstring",
+    "parameter error_evaluator: not documented in docstring",
+    "parameter min_n_trials: not documented in docstring",
+    "no Returns section found"
+  ]
+}

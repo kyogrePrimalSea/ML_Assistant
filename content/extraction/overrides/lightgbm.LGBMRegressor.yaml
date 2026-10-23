@@ -1,0 +1,12 @@
+source_url: https://lightgbm.readthedocs.io/en/stable/pythonapi/lightgbm.LGBMRegressor.html
+reason: 'effective_default for the two sentinel None defaults that the page gives a concrete meaning for:
+  objective (''Default: regression for LGBMRegressor, binary or multiclass for LGBMClassifier, lambdarank
+  for LGBMRanker'') and n_jobs (''A value of None (the default) corresponds to using the number of physical
+  cores in the system''). random_state=None (''default seeds in C++ code are used'') and class_weight=None
+  (''all classes are supposed to have weight one'') are left without effective_default: they are not defaults
+  of a tunable value. All other signature defaults are concrete and match the page.'
+patches:
+- path: parameters[name=objective].effective_default
+  value: regression
+- path: parameters[name=n_jobs].effective_default
+  value: number of physical cores in the system

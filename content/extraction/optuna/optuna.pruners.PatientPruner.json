@@ -1,0 +1,73 @@
+{
+  "attributes": [],
+  "doc_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.PatientPruner.html",
+  "extractor_version": "1",
+  "id": "optuna.pruners.PatientPruner",
+  "import_path": "optuna.pruners.PatientPruner",
+  "kind": "class",
+  "library": "optuna",
+  "library_version": "5.0.0",
+  "methods": [
+    {
+      "name": "prune",
+      "signature": "prune(study: 'optuna.study.Study', trial: 'optuna.trial.FrozenTrial') -> 'bool'",
+      "summary": "Judge whether the trial should be pruned based on the reported values."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "",
+      "effective_default": null,
+      "name": "wrapped_pruner",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "",
+      "effective_default": null,
+      "name": "patience",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0.0",
+      "description": "",
+      "effective_default": null,
+      "name": "min_delta",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [],
+  "signature": "PatientPruner(wrapped_pruner: 'BasePruner | None', patience: 'int', min_delta: 'float' = 0.0) -> 'None'",
+  "summary": "Pruner which wraps another pruner with tolerance.",
+  "warnings": [
+    "parameter wrapped_pruner: not documented in docstring",
+    "parameter patience: not documented in docstring",
+    "parameter min_delta: not documented in docstring"
+  ]
+}

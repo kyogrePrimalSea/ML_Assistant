@@ -1,0 +1,7 @@
+source_url: https://shap.readthedocs.io/en/latest/generated/shap.plots.scatter.html
+reason: The introspected default repr of `cmap` embeds a memory address (nondeterministic across runs).
+  The docs page shows the stable form `<matplotlib.colors.LinearSegmentedColormap object>`; that is recorded
+  instead. Same object, repr cosmetics only.
+patches:
+- path: parameters[name=cmap].default
+  value: <matplotlib.colors.LinearSegmentedColormap object>

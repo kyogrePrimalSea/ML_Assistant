@@ -1,0 +1,354 @@
+{
+  "attributes": [],
+  "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.plots.decision.html",
+  "extractor_version": "1",
+  "id": "shap.plots.decision",
+  "import_path": "shap.plots.decision",
+  "kind": "function",
+  "library": "shap",
+  "library_version": "0.54.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "This is the reference value that the feature contributions start from. Usually, this is\n``explainer.expected_value``.",
+      "effective_default": null,
+      "name": "base_value",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "float or numpy.ndarray"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Matrix of SHAP values (# features) or (# samples x # features) from\n``explainer.shap_values()``. Or cube of SHAP interaction values (# samples x\n# features x # features) from ``explainer.shap_interaction_values()``.",
+      "effective_default": null,
+      "name": "shap_values",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "numpy.ndarray"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Matrix of feature values (# features) or (# samples x # features). This provides the values of all the\nfeatures and, optionally, the feature names.",
+      "effective_default": null,
+      "name": "features",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "numpy.array or pandas.Series or pandas.DataFrame or numpy.ndarray or list"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "List of feature names (# features). If ``None``, names may be derived from the\n``features`` argument if a Pandas object is provided. Otherwise, numeric feature\nnames will be generated.",
+      "effective_default": null,
+      "name": "feature_names",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "list or numpy.ndarray"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'importance'",
+      "description": "Any of \"importance\" (the default), \"hclust\" (hierarchical clustering), ``None``,\nor a list/array of indices.",
+      "effective_default": null,
+      "name": "feature_order",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "str or None or list or numpy.ndarray"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The slice or range of features to plot after ordering features by ``feature_order``. A step of 1 or ``None``\nwill display the features in ascending order. A step of -1 will display the features in descending order. If\n``feature_display_range=None``, ``slice(-1, -21, -1)`` is used (i.e. show the last 20 features in descending order).\nIf ``shap_values`` contains interaction values, the number of features is automatically expanded to include all\npossible interactions: N(N + 1)/2 where N = ``shap_values.shape[1]``.",
+      "effective_default": null,
+      "name": "feature_display_range",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "slice or range"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Specify which observations to draw in a different line style. All numpy indexing methods are supported. For\nexample, list of integer indices, or a bool array.",
+      "effective_default": null,
+      "name": "highlight",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "Any"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'identity'",
+      "description": "Use \"identity\" or \"logit\" to specify the transformation used for the x-axis. The \"logit\" link transforms\nlog-odds into probabilities.",
+      "effective_default": null,
+      "name": "link",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "str"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Color spectrum used to draw the plot lines. If ``str``, a registered matplotlib color name is assumed.",
+      "effective_default": null,
+      "name": "plot_color",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "str or matplotlib.colors.ColorMap"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'#333333'",
+      "description": "Color used to draw plot axes.",
+      "effective_default": null,
+      "name": "axis_color",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "str or int"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'#333333'",
+      "description": "Color used to draw feature demarcation lines on the y-axis.",
+      "effective_default": null,
+      "name": "y_demarc_color",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "str or int"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Alpha blending value in [0, 1] used to draw plot lines.",
+      "effective_default": null,
+      "name": "alpha",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "float"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "Whether to draw the color bar (legend).",
+      "effective_default": null,
+      "name": "color_bar",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "Whether to automatically size the matplotlib plot to fit the number of features\ndisplayed. If ``False``, specify the plot size using matplotlib before calling\nthis function.",
+      "effective_default": null,
+      "name": "auto_size_plot",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Title of the plot.",
+      "effective_default": null,
+      "name": "title",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "str"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The extents of the x-axis (e.g. ``(-1.0, 1.0)``). If not specified, the limits\nare determined by the maximum/minimum predictions centered around base_value\nwhen ``link=\"identity\"``. When ``link=\"logit\"``, the x-axis extents are ``(0,\n1)`` centered at 0.5. ``xlim`` values are not transformed by the ``link``\nfunction. This argument is provided to simplify producing multiple plots on the\nsame scale for comparison.",
+      "effective_default": null,
+      "name": "xlim",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "tuple[float, float]"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "Whether :external+mpl:func:`matplotlib.pyplot.show()` is called before returning.\nSetting this to ``False`` allows the plot\nto be customized further after it has been created.",
+      "effective_default": null,
+      "name": "show",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "Whether to return a :obj:`DecisionPlotResult` object containing various plotting\nfeatures. This can be used to generate multiple decision plots using the same\nfeature ordering and scale.",
+      "effective_default": null,
+      "name": "return_objects",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "Plotting many data points or too many features at a time may be slow, or may create very large plots. Set\nthis argument to ``True`` to override hard-coded limits that prevent plotting large amounts of data.",
+      "effective_default": null,
+      "name": "ignore_warnings",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "SHAP values are relative to a base value. By default, this base value is the\nexpected value of the model's raw predictions. Use ``new_base_value`` to shift\nthe base value to an arbitrary value (e.g. the cutoff point for a binary\nclassification task).",
+      "effective_default": null,
+      "name": "new_base_value",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "float"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "List of legend labels. If ``None``, legend will not be shown.",
+      "effective_default": null,
+      "name": "legend_labels",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "list of str"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'best'",
+      "description": "Legend location. Any of \"best\", \"upper right\", \"upper left\", \"lower left\", \"lower right\", \"right\",\n\"center left\", \"center right\", \"lower center\", \"upper center\", \"center\".",
+      "effective_default": null,
+      "name": "legend_location",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "str"
+    }
+  ],
+  "returns": [
+    {
+      "description": "Returns a :obj:`DecisionPlotResult` object if ``return_objects=True``. Returns ``None`` otherwise (the default).",
+      "name": "",
+      "type_doc": "DecisionPlotResult or None"
+    }
+  ],
+  "signature": "decision(base_value: 'float | np.ndarray', shap_values: 'np.ndarray', features: 'np.ndarray | pd.Series | pd.DataFrame | list | None' = None, feature_names=None, feature_order='importance', feature_display_range=None, highlight=None, link='identity', plot_color=None, axis_color='#333333', y_demarc_color='#333333', alpha=None, color_bar=True, auto_size_plot=True, title=None, xlim=None, show=True, return_objects=False, ignore_warnings=False, new_base_value=None, legend_labels=None, legend_location='best') -> 'DecisionPlotResult | None'",
+  "summary": "Visualize model decisions using cumulative SHAP values.",
+  "warnings": []
+}

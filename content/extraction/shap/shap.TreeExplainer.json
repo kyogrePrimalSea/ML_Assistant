@@ -1,0 +1,185 @@
+{
+  "attributes": [],
+  "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.TreeExplainer.html",
+  "extractor_version": "1",
+  "id": "shap.TreeExplainer",
+  "import_path": "shap.TreeExplainer",
+  "kind": "class",
+  "library": "shap",
+  "library_version": "0.54.1",
+  "methods": [
+    {
+      "name": "assert_additivity",
+      "signature": "assert_additivity(phi: 'npt.NDArray[Any] | list[npt.NDArray[Any]]', model_output: 'npt.NDArray[Any]') -> 'None'",
+      "summary": ""
+    },
+    {
+      "name": "explain_row",
+      "signature": "explain_row(*row_args: 'Any', max_evals: \"int | Literal['auto']\", main_effects: 'bool', error_bounds: 'bool', outputs: 'Any', silent: 'bool', **kwargs: 'Any') -> 'dict[str, Any]'",
+      "summary": "Explains a single row and returns the tuple (row_values, row_expected_values, row_mask_shapes, main_effects)."
+    },
+    {
+      "name": "load",
+      "signature": "load(in_file: 'Any', model_loader: 'Callable[..., Any] | None' = None, masker_loader: 'Callable[..., Any] | None' = None, instantiate: 'bool' = True) -> 'Explainer | dict[str, Any]'",
+      "summary": "Load an Explainer from the given file stream."
+    },
+    {
+      "name": "save",
+      "signature": "save(out_file: 'Any', model_saver: 'str | Callable[..., Any]' = '.save', masker_saver: 'str | Callable[..., Any]' = '.save') -> 'None'",
+      "summary": "Write the explainer to the given file stream."
+    },
+    {
+      "name": "shap_interaction_values",
+      "signature": "shap_interaction_values(X: 'npt.NDArray[Any] | pd.DataFrame | Any', y: 'npt.NDArray[Any] | pd.Series | None' = None, tree_limit: 'int | None' = None) -> 'npt.NDArray[Any]'",
+      "summary": "Estimate the SHAP interaction values for a set of samples."
+    },
+    {
+      "name": "shap_values",
+      "signature": "shap_values(X: 'Any', y: 'npt.NDArray[Any] | pd.Series | None' = None, tree_limit: 'int | None' = None, approximate: 'bool' = False, check_additivity: 'bool' = True, from_call: 'bool' = False) -> 'npt.NDArray[Any]'",
+      "summary": "Estimate the SHAP values for a set of samples."
+    },
+    {
+      "name": "supports_model_with_masker",
+      "signature": "supports_model_with_masker(model: 'Any', masker: 'Any') -> 'bool'",
+      "summary": "Determines if this explainer can handle the given model."
+    }
+  ],
+  "overrides_applied": [
+    {
+      "path": "parameters[name=approximate].default",
+      "reason": "The introspected default repr of `approximate` embeds a memory address (nondeterministic across runs). The docs page shows the stable form `<object object>`; that is recorded instead. Same object, repr cosmetics only.",
+      "source_url": "https://shap.readthedocs.io/en/latest/generated/shap.TreeExplainer.html"
+    }
+  ],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The tree based machine learning model that we want to explain.\nXGBoost, LightGBM, CatBoost, Pyspark and most tree-based\nscikit-learn models are supported.",
+      "effective_default": null,
+      "name": "model",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "model object"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The background dataset to use for integrating out features.\n\nThis argument is optional when\n``feature_perturbation=\"tree_path_dependent\"``, since in that case\nwe can use the number of training samples that went down each tree\npath as our background dataset (this is recorded in the ``model``\nobject).",
+      "effective_default": null,
+      "name": "data",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "numpy.array or pandas.DataFrame"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'raw'",
+      "description": "What output of the model should be explained.\n\n* If \"raw\", then we explain the raw output of the trees, which\n  varies by model. For regression models, \"raw\" is the standard\n  output. For binary classification in XGBoost, this is the log odds\n  ratio.\n* If \"probability\", then we explain the output of the model\n  transformed into probability space (note that this means the SHAP\n  values now sum to the probability output of the model).\n* If \"log_loss\", then we explain the natural logarithm of the model\n  loss function, so that the SHAP values sum up to the log loss of\n  the model for each sample. This is helpful for breaking down model\n  performance by feature.\n* If ``model_output`` is the name of a supported prediction method\n  on the ``model`` object, then we explain the output of that model\n  method name. For example, ``model_output=\"predict_proba\"``\n  explains the result of calling ``model.predict_proba``.\n\nCurrently the \"probability\" and \"log_loss\" options are only\nsupported when ``feature_perturbation=\"interventional\"``.",
+      "effective_default": null,
+      "name": "model_output",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "\"raw\", \"probability\", \"log_loss\", or model method name"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'auto'",
+      "description": "Since SHAP values rely on conditional expectations, we need to\ndecide how to handle correlated (or otherwise dependent) input\nfeatures.\n\n- if ``\"interventional\"``, a background dataset ``data`` is required. The\n  dependencies between features are handled according to the rules dictated\n  by causal inference [1]_. The runtime scales linearly with the size of the\n  background dataset you use: anywhere from 100 to 1000 random background\n  samples are good sizes to use.\n- if ``\"tree_path_dependent\"``, no background dataset is required and the\n  approach is to just follow the trees and use the number of training\n  examples that went down each leaf to represent the background\n  distribution.\n- if ``\"auto\"``, the \"interventional\" approach will be used when a\n  background is provided, otherwise the \"tree_path_dependent\" approach will\n  be used.\n\n.. versionadded:: 0.47\n   The `\"auto\"` option was added.\n\n.. versionchanged:: 0.47\n   The default behaviour will change from `\"interventional\"` to `\"auto\"` in 0.47.\n   In the future, passing `feature_pertubation=\"interventional\"` without providing\n   a background dataset will raise an error.",
+      "effective_default": null,
+      "name": "feature_perturbation",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "\"auto\" (default), \"interventional\" or \"tree_path_dependent\""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "feature_names",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "<object object>",
+      "description": "Deprecated, will be deprecated in v0.47.0 and removed in version v0.49.0.\nPlease use the ``approximate`` argument in the :meth:`.shap_values` or ``__call__`` methods instead.",
+      "effective_default": null,
+      "name": "approximate",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "link",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "linearize_link",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [],
+  "signature": "TreeExplainer(model: 'Any', data: 'npt.NDArray[Any] | pd.DataFrame | None' = None, model_output: 'str' = 'raw', feature_perturbation: \"Literal['auto', 'interventional', 'tree_path_dependent']\" = 'auto', feature_names: 'list[str] | None' = None, approximate: 'Any' = <object object at 0x7f78eb723f80>, link: 'Any' = None, linearize_link: 'Any' = None) -> 'None'",
+  "summary": "Build a new Tree explainer for the passed model.",
+  "warnings": [
+    "parameter feature_names: not documented in docstring",
+    "parameter approximate: default repr contains a memory address",
+    "parameter link: not documented in docstring",
+    "parameter linearize_link: not documented in docstring"
+  ]
+}

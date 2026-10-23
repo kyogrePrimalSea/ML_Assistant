@@ -1,0 +1,292 @@
+[
+  {
+    "id": "shap.AdditiveExplainer",
+    "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.AdditiveExplainer.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "shap.ExactExplainer",
+    "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.ExactExplainer.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "shap.Explainer",
+    "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.Explainer.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "shap.Explanation",
+    "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.Explanation.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": []
+    }
+  },
+  {
+    "id": "shap.KernelExplainer",
+    "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.KernelExplainer.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "shap.LinearExplainer",
+    "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.LinearExplainer.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "shap.PartitionExplainer",
+    "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.PartitionExplainer.html",
+    "status": "mismatch",
+    "missing_in_extraction": [],
+    "missing_in_docs": [
+      "partition_tree"
+    ],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "shap.PermutationExplainer",
+    "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.PermutationExplainer.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "shap.SamplingExplainer",
+    "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.SamplingExplainer.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "shap.TreeExplainer",
+    "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.TreeExplainer.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "shap.plots.bar",
+    "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.plots.bar.html",
+    "status": "mismatch",
+    "missing_in_extraction": [
+      "clustering: np.ndarray or None",
+      "clustering_cutoff: float",
+      "show_data: bool or str",
+      "ax: matplotlib Axes"
+    ],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "shap.plots.beeswarm",
+    "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.plots.beeswarm.html",
+    "status": "mismatch",
+    "missing_in_extraction": [
+      "ax: matplotlib Axes",
+      "group_remaining_features: bool"
+    ],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "shap.plots.decision",
+    "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.plots.decision.html",
+    "status": "mismatch",
+    "missing_in_extraction": [
+      "feature_display_range: slice or range",
+      "xlim: tuple[float",
+      "float]"
+    ],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "shap.plots.force",
+    "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.plots.force.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "shap.plots.group_difference",
+    "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.plots.group_difference.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "shap.plots.heatmap",
+    "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.plots.heatmap.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "shap.plots.monitoring",
+    "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.plots.monitoring.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "shap.plots.partial_dependence",
+    "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.plots.partial_dependence.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "shap.plots.scatter",
+    "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.plots.scatter.html",
+    "status": "mismatch",
+    "missing_in_extraction": [
+      "title: str",
+      "optional",
+      "overlay: dict"
+    ],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "shap.plots.violin",
+    "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.plots.violin.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  },
+  {
+    "id": "shap.plots.waterfall",
+    "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.plots.waterfall.html",
+    "status": "match",
+    "missing_in_extraction": [],
+    "missing_in_docs": [],
+    "default_mismatches": [],
+    "attribute_diff": {
+      "missing_in_extraction": [],
+      "missing_in_docs": [],
+      "note": "page lists no attributes; not compared"
+    }
+  }
+]

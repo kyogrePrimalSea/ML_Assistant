@@ -1,0 +1,23 @@
+{
+  "attributes": [],
+  "doc_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.NopPruner.html",
+  "extractor_version": "1",
+  "id": "optuna.pruners.NopPruner",
+  "import_path": "optuna.pruners.NopPruner",
+  "kind": "class",
+  "library": "optuna",
+  "library_version": "5.0.0",
+  "methods": [
+    {
+      "name": "prune",
+      "signature": "prune(study: 'Study', trial: 'FrozenTrial') -> 'bool'",
+      "summary": "Judge whether the trial should be pruned based on the reported values."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [],
+  "returns": [],
+  "signature": "NopPruner()",
+  "summary": "Pruner which never prunes trials.",
+  "warnings": []
+}

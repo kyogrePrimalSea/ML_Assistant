@@ -1,0 +1,144 @@
+{
+  "attributes": [],
+  "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.plots.bar.html",
+  "extractor_version": "1",
+  "id": "shap.plots.bar",
+  "import_path": "shap.plots.bar",
+  "kind": "function",
+  "library": "shap",
+  "library_version": "0.54.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Passing a multi-row :class:`.Explanation` object creates a global\nfeature importance plot.\n\nPassing a single row of an explanation (i.e. ``shap_values[0]``) creates\na local feature importance plot.\n\nPassing a dictionary of Explanation objects will create a multiple-bar\nplot with one bar type for each of the cohorts represented by the\nexplanation objects.",
+      "effective_default": null,
+      "name": "shap_values",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "shap.Explanation or shap.Cohorts or dictionary of shap.Explanation objects"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "10",
+      "description": "How many top features to include in the bar plot (default is 10).",
+      "effective_default": null,
+      "name": "max_display",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "shap.Explanation.abs",
+      "description": "A function that returns a sort ordering given a matrix of SHAP values\nand an axis, or a direct sample ordering given as a ``numpy.ndarray``.\n\nBy default, take the absolute value.",
+      "effective_default": null,
+      "name": "order",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "OpChain or numpy.ndarray"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "A partition tree, as returned by :func:`shap.utils.hclust`",
+      "effective_default": null,
+      "name": "clustering",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "np.ndarray or None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0.5",
+      "description": "Controls how much of the clustering structure is displayed.",
+      "effective_default": null,
+      "name": "clustering_cutoff",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "float"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'auto'",
+      "description": "Controls if data values are shown as part of the y tick labels. If\n\"auto\", we show the data only when there are no transforms.",
+      "effective_default": null,
+      "name": "show_data",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool or str"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Axes object to draw the plot onto, otherwise uses the current Axes.",
+      "effective_default": null,
+      "name": "ax",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "matplotlib Axes"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "Whether :external+mpl:func:`matplotlib.pyplot.show()` is called before returning.\nSetting this to ``False`` allows the plot\nto be customized further after it has been created.",
+      "effective_default": null,
+      "name": "show",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool"
+    }
+  ],
+  "returns": [
+    {
+      "description": "Returns the :external+mpl:class:`~matplotlib.axes.Axes` object with the plot drawn onto it. Only\nreturned if ``show=False``.",
+      "name": "",
+      "type_doc": "ax: matplotlib Axes"
+    }
+  ],
+  "signature": "bar(shap_values, max_display=10, order=shap.Explanation.abs, clustering=None, clustering_cutoff=0.5, show_data='auto', ax=None, show=True)",
+  "summary": "Create a bar plot of a set of SHAP values.",
+  "warnings": []
+}

@@ -1,0 +1,52 @@
+source_url: https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.FrozenTrial.html
+reason: The page documents 11 plain instance attributes (number ... intermediate_values) that the class
+  docstring does not list as properties, so the extractor missed them. Added with names and text from
+  the page; types are taken from the page's constructor parameter list, which gives the same names. The
+  3 properties the extractor already found (constraints, duration, last_step) are kept unchanged.
+patches:
+- path: attributes
+  value:
+  - name: number
+    type_doc: int
+    description: Unique and consecutive number of Trial for each Study. Note that this field uses zero-based
+      numbering.
+  - name: state
+    type_doc: TrialState
+    description: TrialState of the Trial.
+  - name: value
+    type_doc: float | None
+    description: Objective value of the Trial. value and values must not be specified at the same time.
+  - name: values
+    type_doc: Sequence[float] | None
+    description: Sequence of objective values of the Trial. The length is greater than 1 if the problem
+      is multi-objective optimization. value and values must not be specified at the same time.
+  - name: datetime_start
+    type_doc: datetime.datetime | None
+    description: Datetime where the Trial started.
+  - name: datetime_complete
+    type_doc: datetime.datetime | None
+    description: Datetime where the Trial finished.
+  - name: params
+    type_doc: dict[str, Any]
+    description: Dictionary that contains suggested parameters.
+  - name: distributions
+    type_doc: dict[str, BaseDistribution]
+    description: Dictionary that contains the distributions of params.
+  - name: user_attrs
+    type_doc: dict[str, Any]
+    description: Dictionary that contains the attributes of the Trial set with optuna.trial.Trial.set_user_attr().
+  - name: system_attrs
+    type_doc: dict[str, Any]
+    description: Dictionary that contains the optuna-internal attributes.
+  - name: intermediate_values
+    type_doc: dict[int, float]
+    description: Intermediate objective values set with optuna.trial.Trial.report().
+  - description: Returns constraint values.
+    name: constraints
+    type_doc: ''
+  - description: Return the elapsed time taken to complete the trial.
+    name: duration
+    type_doc: ''
+  - description: Return the maximum step of :attr:`intermediate_values` in the trial.
+    name: last_step
+    type_doc: ''

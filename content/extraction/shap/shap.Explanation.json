@@ -1,0 +1,401 @@
+{
+  "attributes": [
+    {
+      "description": "Pass-through from the underlying slicer object.",
+      "name": "base_values",
+      "type_doc": ""
+    },
+    {
+      "description": "Pass-through from the underlying slicer object.",
+      "name": "clustering",
+      "type_doc": ""
+    },
+    {
+      "description": "Pass-through from the underlying slicer object.",
+      "name": "data",
+      "type_doc": ""
+    },
+    {
+      "description": "Pass-through from the underlying slicer object.",
+      "name": "display_data",
+      "type_doc": ""
+    },
+    {
+      "description": "Pass-through from the underlying slicer object.",
+      "name": "error_std",
+      "type_doc": ""
+    },
+    {
+      "description": "Pass-through from the underlying slicer object.",
+      "name": "feature_names",
+      "type_doc": ""
+    },
+    {
+      "description": "Pass-through from the underlying slicer object.",
+      "name": "hierarchical_values",
+      "type_doc": ""
+    },
+    {
+      "description": "Pass-through from the underlying slicer object.",
+      "name": "instance_names",
+      "type_doc": ""
+    },
+    {
+      "description": "Pass-through from the underlying slicer object.",
+      "name": "lower_bounds",
+      "type_doc": ""
+    },
+    {
+      "description": "Pass-through from the underlying slicer object.",
+      "name": "main_effects",
+      "type_doc": ""
+    },
+    {
+      "description": "Pass-through from the underlying slicer object.",
+      "name": "output_indexes",
+      "type_doc": ""
+    },
+    {
+      "description": "Pass-through from the underlying slicer object.",
+      "name": "output_names",
+      "type_doc": ""
+    },
+    {
+      "description": "Compute the shape over potentially complex data nesting.",
+      "name": "shape",
+      "type_doc": ""
+    },
+    {
+      "description": "Pass-through from the underlying slicer object.",
+      "name": "upper_bounds",
+      "type_doc": ""
+    },
+    {
+      "description": "Pass-through from the underlying slicer object.",
+      "name": "values",
+      "type_doc": ""
+    }
+  ],
+  "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.Explanation.html",
+  "extractor_version": "1",
+  "id": "shap.Explanation",
+  "import_path": "shap.Explanation",
+  "kind": "class",
+  "library": "shap",
+  "library_version": "0.54.1",
+  "methods": [
+    {
+      "name": "abs",
+      "signature": "abs(*args: 'Any', **kwargs: 'Any') -> 'OpChain'",
+      "summary": "A way to represent a set of dot chained operations on an object without actually running them."
+    },
+    {
+      "name": "argsort",
+      "signature": "argsort(*args: 'Any', **kwargs: 'Any') -> 'OpChain'",
+      "summary": "A way to represent a set of dot chained operations on an object without actually running them."
+    },
+    {
+      "name": "cohorts",
+      "signature": "cohorts(cohorts: 'int | list[int] | tuple[int] | np.ndarray') -> 'Cohorts'",
+      "summary": "Split this explanation into several cohorts."
+    },
+    {
+      "name": "flip",
+      "signature": "flip(*args: 'Any', **kwargs: 'Any') -> 'OpChain'",
+      "summary": "A way to represent a set of dot chained operations on an object without actually running them."
+    },
+    {
+      "name": "hclust",
+      "signature": "hclust(*args: 'Any', **kwargs: 'Any') -> 'OpChain'",
+      "summary": "A way to represent a set of dot chained operations on an object without actually running them."
+    },
+    {
+      "name": "hstack",
+      "signature": "hstack(other: 'Explanation') -> 'Explanation'",
+      "summary": "Stack two explanations column-wise."
+    },
+    {
+      "name": "identity",
+      "signature": "identity(*args: 'Any', **kwargs: 'Any') -> 'OpChain'",
+      "summary": "A way to represent a set of dot chained operations on an object without actually running them."
+    },
+    {
+      "name": "max",
+      "signature": "max(*args: 'Any', **kwargs: 'Any') -> 'OpChain'",
+      "summary": "A way to represent a set of dot chained operations on an object without actually running them."
+    },
+    {
+      "name": "mean",
+      "signature": "mean(*args: 'Any', **kwargs: 'Any') -> 'OpChain'",
+      "summary": "A way to represent a set of dot chained operations on an object without actually running them."
+    },
+    {
+      "name": "min",
+      "signature": "min(*args: 'Any', **kwargs: 'Any') -> 'OpChain'",
+      "summary": "A way to represent a set of dot chained operations on an object without actually running them."
+    },
+    {
+      "name": "percentile",
+      "signature": "percentile(q: 'float', axis: 'int | None' = None) -> 'Explanation'",
+      "summary": ""
+    },
+    {
+      "name": "sample",
+      "signature": "sample(*args: 'Any', **kwargs: 'Any') -> 'OpChain'",
+      "summary": "A way to represent a set of dot chained operations on an object without actually running them."
+    },
+    {
+      "name": "sum",
+      "signature": "sum(*args: 'Any', **kwargs: 'Any') -> 'OpChain'",
+      "summary": "A way to represent a set of dot chained operations on an object without actually running them."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "",
+      "effective_default": null,
+      "name": "values",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "base_values",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "data",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "display_data",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "instance_names",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "feature_names",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "output_names",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "output_indexes",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "lower_bounds",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "upper_bounds",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "error_std",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "main_effects",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "hierarchical_values",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "clustering",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "compute_time",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [],
+  "signature": "Explanation(values: 'npt.NDArray[Any] | list[Any] | Explanation', base_values: 'npt.NDArray[Any] | list[Any] | float | None' = None, data: 'npt.NDArray[Any] | pd.DataFrame | list[Any] | None' = None, display_data: 'npt.NDArray[Any] | pd.DataFrame | None' = None, instance_names: 'Sequence[str] | npt.NDArray[Any] | None' = None, feature_names: 'Sequence[str] | npt.NDArray[Any] | Alias | None' = None, output_names: 'Sequence[str] | npt.NDArray[Any] | str | Alias | None' = None, output_indexes: 'npt.NDArray[Any] | None' = None, lower_bounds: 'npt.NDArray[Any] | None' = None, upper_bounds: 'npt.NDArray[Any] | None' = None, error_std: 'npt.NDArray[Any] | None' = None, main_effects: 'npt.NDArray[Any] | None' = None, hierarchical_values: 'npt.NDArray[Any] | list[Any] | None' = None, clustering: 'npt.NDArray[Any] | list[Any] | None' = None, compute_time: 'float | None' = None) -> 'None'",
+  "summary": "A sliceable set of parallel arrays representing a SHAP explanation.",
+  "warnings": [
+    "parameter values: not documented in docstring",
+    "parameter base_values: not documented in docstring",
+    "parameter data: not documented in docstring",
+    "parameter display_data: not documented in docstring",
+    "parameter instance_names: not documented in docstring",
+    "parameter feature_names: not documented in docstring",
+    "parameter output_names: not documented in docstring",
+    "parameter output_indexes: not documented in docstring",
+    "parameter lower_bounds: not documented in docstring",
+    "parameter upper_bounds: not documented in docstring",
+    "parameter error_std: not documented in docstring",
+    "parameter main_effects: not documented in docstring",
+    "parameter hierarchical_values: not documented in docstring",
+    "parameter clustering: not documented in docstring",
+    "parameter compute_time: not documented in docstring"
+  ]
+}

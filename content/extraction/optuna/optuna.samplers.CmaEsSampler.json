@@ -1,0 +1,274 @@
+{
+  "attributes": [],
+  "doc_url": "https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.CmaEsSampler.html",
+  "extractor_version": "1",
+  "id": "optuna.samplers.CmaEsSampler",
+  "import_path": "optuna.samplers.CmaEsSampler",
+  "kind": "class",
+  "library": "optuna",
+  "library_version": "5.0.0",
+  "methods": [
+    {
+      "name": "after_trial",
+      "signature": "after_trial(study: \"'optuna.Study'\", trial: \"'optuna.trial.FrozenTrial'\", state: 'TrialState', values: 'Sequence[float] | None') -> 'None'",
+      "summary": "Trial post-processing."
+    },
+    {
+      "name": "before_trial",
+      "signature": "before_trial(study: 'optuna.Study', trial: 'FrozenTrial') -> 'None'",
+      "summary": "Trial pre-processing."
+    },
+    {
+      "name": "infer_relative_search_space",
+      "signature": "infer_relative_search_space(study: \"'optuna.Study'\", trial: \"'optuna.trial.FrozenTrial'\") -> 'dict[str, BaseDistribution]'",
+      "summary": "Infer the search space that will be used by relative sampling in the target trial."
+    },
+    {
+      "name": "reseed_rng",
+      "signature": "reseed_rng() -> 'None'",
+      "summary": "Reseed sampler's random number generator."
+    },
+    {
+      "name": "sample_independent",
+      "signature": "sample_independent(study: \"'optuna.Study'\", trial: \"'optuna.trial.FrozenTrial'\", param_name: 'str', param_distribution: 'BaseDistribution') -> 'Any'",
+      "summary": "Sample a parameter for a given distribution."
+    },
+    {
+      "name": "sample_relative",
+      "signature": "sample_relative(study: \"'optuna.Study'\", trial: \"'optuna.trial.FrozenTrial'\", search_space: 'dict[str, BaseDistribution]') -> 'dict[str, Any]'",
+      "summary": "Sample parameters in a given search space."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "x0",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "sigma0",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "1",
+      "description": "",
+      "effective_default": null,
+      "name": "n_startup_trials",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "independent_sampler",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "",
+      "effective_default": null,
+      "name": "warn_independent_sampling",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "seed",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "",
+      "effective_default": null,
+      "name": "consider_pruned_trials",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "restart_strategy",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "popsize",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "-1",
+      "description": "",
+      "effective_default": null,
+      "name": "inc_popsize",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "",
+      "effective_default": null,
+      "name": "use_separable_cma",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "",
+      "effective_default": null,
+      "name": "with_margin",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "",
+      "effective_default": null,
+      "name": "lr_adapt",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "source_trials",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [],
+  "signature": "CmaEsSampler(*, x0: 'dict[str, Any] | None' = None, sigma0: 'float | None' = None, n_startup_trials: 'int' = 1, independent_sampler: 'BaseSampler | None' = None, warn_independent_sampling: 'bool' = True, seed: 'int | None' = None, consider_pruned_trials: 'bool' = False, restart_strategy: 'str | None' = None, popsize: 'int | None' = None, inc_popsize: 'int' = -1, use_separable_cma: 'bool' = False, with_margin: 'bool' = False, lr_adapt: 'bool' = False, source_trials: 'list[FrozenTrial] | None' = None) -> 'None'",
+  "summary": "A sampler using `cmaes <https://github.com/CyberAgentAILab/cmaes>`__ as the backend.",
+  "warnings": [
+    "parameter x0: not documented in docstring",
+    "parameter sigma0: not documented in docstring",
+    "parameter n_startup_trials: not documented in docstring",
+    "parameter independent_sampler: not documented in docstring",
+    "parameter warn_independent_sampling: not documented in docstring",
+    "parameter seed: not documented in docstring",
+    "parameter consider_pruned_trials: not documented in docstring",
+    "parameter restart_strategy: not documented in docstring",
+    "parameter popsize: not documented in docstring",
+    "parameter inc_popsize: not documented in docstring",
+    "parameter use_separable_cma: not documented in docstring",
+    "parameter with_margin: not documented in docstring",
+    "parameter lr_adapt: not documented in docstring",
+    "parameter source_trials: not documented in docstring"
+  ]
+}

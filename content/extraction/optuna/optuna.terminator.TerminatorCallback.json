@@ -1,0 +1,35 @@
+{
+  "attributes": [],
+  "doc_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.terminator.TerminatorCallback.html",
+  "extractor_version": "1",
+  "id": "optuna.terminator.TerminatorCallback",
+  "import_path": "optuna.terminator.TerminatorCallback",
+  "kind": "class",
+  "library": "optuna",
+  "library_version": "5.0.0",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "terminator",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [],
+  "signature": "TerminatorCallback(terminator: 'BaseTerminator | None' = None) -> 'None'",
+  "summary": "A callback that terminates the optimization using Terminator.",
+  "warnings": [
+    "parameter terminator: not documented in docstring"
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "attributes": [],
+  "doc_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.terminator.Terminator.html",
+  "extractor_version": "1",
+  "id": "optuna.terminator.Terminator",
+  "import_path": "optuna.terminator.Terminator",
+  "kind": "class",
+  "library": "optuna",
+  "library_version": "5.0.0",
+  "methods": [
+    {
+      "name": "should_terminate",
+      "signature": "should_terminate(study: 'Study') -> 'bool'",
+      "summary": "Judge whether the study should be terminated based on the reported values."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "improvement_evaluator",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "error_evaluator",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "20",
+      "description": "",
+      "effective_default": null,
+      "name": "min_n_trials",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [],
+  "signature": "Terminator(improvement_evaluator: 'BaseImprovementEvaluator | None' = None, error_evaluator: 'BaseErrorEvaluator | None' = None, min_n_trials: 'int' = 20) -> 'None'",
+  "summary": "Automatic stopping mechanism for Optuna studies.",
+  "warnings": [
+    "parameter improvement_evaluator: not documented in docstring",
+    "parameter error_evaluator: not documented in docstring",
+    "parameter min_n_trials: not documented in docstring"
+  ]
+}

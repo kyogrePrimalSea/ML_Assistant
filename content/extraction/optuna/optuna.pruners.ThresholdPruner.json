@@ -1,0 +1,89 @@
+{
+  "attributes": [],
+  "doc_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.ThresholdPruner.html",
+  "extractor_version": "1",
+  "id": "optuna.pruners.ThresholdPruner",
+  "import_path": "optuna.pruners.ThresholdPruner",
+  "kind": "class",
+  "library": "optuna",
+  "library_version": "5.0.0",
+  "methods": [
+    {
+      "name": "prune",
+      "signature": "prune(study: 'Study', trial: 'FrozenTrial') -> 'bool'",
+      "summary": "Judge whether the trial should be pruned based on the reported values."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "lower",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "upper",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0",
+      "description": "",
+      "effective_default": null,
+      "name": "n_warmup_steps",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "1",
+      "description": "",
+      "effective_default": null,
+      "name": "interval_steps",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [],
+  "signature": "ThresholdPruner(lower: 'float | None' = None, upper: 'float | None' = None, n_warmup_steps: 'int' = 0, interval_steps: 'int' = 1) -> 'None'",
+  "summary": "Pruner to detect outlying metrics of the trials.",
+  "warnings": [
+    "parameter lower: not documented in docstring",
+    "parameter upper: not documented in docstring",
+    "parameter n_warmup_steps: not documented in docstring",
+    "parameter interval_steps: not documented in docstring"
+  ]
+}

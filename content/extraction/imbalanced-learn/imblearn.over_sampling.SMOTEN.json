@@ -1,0 +1,165 @@
+{
+  "attributes": [
+    {
+      "description": "The encoder used to encode the categorical features.",
+      "name": "categorical_encoder_",
+      "type_doc": "estimator"
+    },
+    {
+      "description": "Dictionary containing the information to sample the dataset. The keys\ncorresponds to the class labels from which to sample and the values\nare the number of samples to sample.",
+      "name": "sampling_strategy_",
+      "type_doc": "dict"
+    },
+    {
+      "description": "Validated k-nearest neighbours created from the `k_neighbors` parameter.",
+      "name": "nn_k_",
+      "type_doc": "estimator object"
+    },
+    {
+      "description": "Number of features in the input dataset.\n\n.. versionadded:: 0.9",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during `fit`. Defined only when `X` has feature\nnames that are all strings.\n\n.. versionadded:: 0.10",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.over_sampling.SMOTEN.html",
+  "extractor_version": "1",
+  "id": "imblearn.over_sampling.SMOTEN",
+  "import_path": "imblearn.over_sampling.SMOTEN",
+  "kind": "class",
+  "library": "imbalanced-learn",
+  "library_version": "0.14.2",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y, **params)",
+      "summary": "Check inputs and statistics of the sampler."
+    },
+    {
+      "name": "fit_resample",
+      "signature": "fit_resample(X, y, **params)",
+      "summary": "Resample the dataset."
+    },
+    {
+      "name": "get_feature_names_out",
+      "signature": "get_feature_names_out(input_features=None)",
+      "summary": "Get output feature names for transformation."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "an object implementing 'fit_transform' and 'inverse_transform'",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Ordinal encoder used to encode the categorical features. If `None`, a\n:class:`~sklearn.preprocessing.OrdinalEncoder` is used with default parameters.",
+      "effective_default": null,
+      "name": "categorical_encoder",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "estimator, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "right",
+            "left": 0,
+            "right": 1,
+            "type": "Real"
+          }
+        ],
+        "options": [
+          "all",
+          "auto",
+          "minority",
+          "not majority",
+          "not minority"
+        ],
+        "source": "constraints",
+        "types": [
+          "Mapping",
+          "<built-in function callable>"
+        ]
+      },
+      "default": "'auto'",
+      "description": "Sampling information to resample the data set.\n\n- When ``float``, it corresponds to the desired ratio of the number of\n  samples in the minority class over the number of samples in the\n  majority class after resampling. Therefore, the ratio is expressed as\n  :math:`\\alpha_{os} = N_{rm} / N_{M}` where :math:`N_{rm}` is the\n  number of samples in the minority class after resampling and\n  :math:`N_{M}` is the number of samples in the majority class.\n\n    .. warning::\n       ``float`` is only available for **binary** classification. An\n       error is raised for multi-class classification.\n\n- When ``str``, specify the class targeted by the resampling. The\n  number of samples in the different classes will be equalized.\n  Possible choices are:\n\n    ``'minority'``: resample only the minority class;\n\n    ``'not minority'``: resample all classes but the minority class;\n\n    ``'not majority'``: resample all classes but the majority class;\n\n    ``'all'``: resample all classes;\n\n    ``'auto'``: equivalent to ``'not majority'``.\n\n- When ``dict``, the keys correspond to the targeted classes. The\n  values correspond to the desired number of samples for each targeted\n  class.\n\n- When callable, function taking ``y`` and returns a ``dict``. The keys\n  correspond to the targeted classes. The values correspond to the\n  desired number of samples for each class.",
+      "effective_default": null,
+      "name": "sampling_strategy",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, str, dict or callable, default='auto'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "random_state"
+        ]
+      },
+      "default": "None",
+      "description": "Control the randomization of the algorithm.\n\n- If int, ``random_state`` is the seed used by the random number\n  generator;\n- If ``RandomState`` instance, random_state is the random number\n  generator;\n- If ``None``, the random number generator is the ``RandomState``\n  instance used by ``np.random``.",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, RandomState instance, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "an object implementing 'kneighbors' and 'kneighbors_graph'"
+        ]
+      },
+      "default": "5",
+      "description": "The nearest neighbors used to define the neighborhood of samples to use\nto generate the synthetic samples. You can pass:\n\n- an `int` corresponding to the number of neighbors to use. A\n  `~sklearn.neighbors.NearestNeighbors` instance will be fitted in this\n  case.\n- an instance of a compatible nearest neighbors algorithm that should\n  implement both methods `kneighbors` and `kneighbors_graph`. For\n  instance, it could correspond to a\n  :class:`~sklearn.neighbors.NearestNeighbors` but could be extended to\n  any compatible class.",
+      "effective_default": null,
+      "name": "k_neighbors",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or object, default=5"
+    }
+  ],
+  "returns": [],
+  "signature": "SMOTEN(categorical_encoder=None, *, sampling_strategy='auto', random_state=None, k_neighbors=5)",
+  "summary": "Synthetic Minority Over-sampling Technique for Nominal.",
+  "warnings": []
+}

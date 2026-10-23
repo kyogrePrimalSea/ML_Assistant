@@ -1,0 +1,89 @@
+{
+  "attributes": [],
+  "doc_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.HyperbandPruner.html",
+  "extractor_version": "1",
+  "id": "optuna.pruners.HyperbandPruner",
+  "import_path": "optuna.pruners.HyperbandPruner",
+  "kind": "class",
+  "library": "optuna",
+  "library_version": "5.0.0",
+  "methods": [
+    {
+      "name": "prune",
+      "signature": "prune(study: \"'optuna.study.Study'\", trial: \"'optuna.trial.FrozenTrial'\") -> 'bool'",
+      "summary": "Judge whether the trial should be pruned based on the reported values."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "1",
+      "description": "",
+      "effective_default": null,
+      "name": "min_resource",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'auto'",
+      "description": "",
+      "effective_default": null,
+      "name": "max_resource",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "3",
+      "description": "",
+      "effective_default": null,
+      "name": "reduction_factor",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0",
+      "description": "",
+      "effective_default": null,
+      "name": "bootstrap_count",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [],
+  "signature": "HyperbandPruner(min_resource: 'int' = 1, max_resource: 'str | int' = 'auto', reduction_factor: 'int' = 3, bootstrap_count: 'int' = 0) -> 'None'",
+  "summary": "Pruner using Hyperband.",
+  "warnings": [
+    "parameter min_resource: not documented in docstring",
+    "parameter max_resource: not documented in docstring",
+    "parameter reduction_factor: not documented in docstring",
+    "parameter bootstrap_count: not documented in docstring"
+  ]
+}

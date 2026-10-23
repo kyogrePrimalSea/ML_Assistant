@@ -110,7 +110,8 @@
       "T010",
       "T011",
       "T012",
-      "T013"
+      "T013",
+      "T014"
     ]
   },
   "tasks": {
@@ -185,7 +186,7 @@
     "T008": {
       "title": "Extract and verify: XGBoost, LightGBM, imbalanced-learn, Optuna, SHAP",
       "file": "tasks/T008-extract-verify-boosting-and-supporting-libs.md",
-      "status": "In progress",
+      "status": "Done",
       "dependencies": [
         "T002",
         "T003",
@@ -201,7 +202,8 @@
       "dependencies": [
         "T006",
         "T007",
-        "T008"
+        "T008",
+        "T014"
       ],
       "epic": "E01"
     },
@@ -238,6 +240,18 @@
       "status": "Done",
       "dependencies": [
         "T004"
+      ],
+      "epic": "E01"
+    },
+    "T014": {
+      "title": "Verifier and override fixes; regenerate all extractions",
+      "file": "tasks/T014-tool-fixes-and-regeneration.md",
+      "status": "In progress",
+      "dependencies": [
+        "T006",
+        "T007",
+        "T008",
+        "T013"
       ],
       "epic": "E01"
     }

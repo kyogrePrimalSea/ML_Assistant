@@ -1,0 +1,339 @@
+{
+  "attributes": [
+    {
+      "description": "Unique and consecutive number of Trial for each Study. Note that this field uses zero-based numbering.",
+      "name": "number",
+      "type_doc": "int"
+    },
+    {
+      "description": "TrialState of the Trial.",
+      "name": "state",
+      "type_doc": "TrialState"
+    },
+    {
+      "description": "Objective value of the Trial. value and values must not be specified at the same time.",
+      "name": "value",
+      "type_doc": "float | None"
+    },
+    {
+      "description": "Sequence of objective values of the Trial. The length is greater than 1 if the problem is multi-objective optimization. value and values must not be specified at the same time.",
+      "name": "values",
+      "type_doc": "Sequence[float] | None"
+    },
+    {
+      "description": "Datetime where the Trial started.",
+      "name": "datetime_start",
+      "type_doc": "datetime.datetime | None"
+    },
+    {
+      "description": "Datetime where the Trial finished.",
+      "name": "datetime_complete",
+      "type_doc": "datetime.datetime | None"
+    },
+    {
+      "description": "Dictionary that contains suggested parameters.",
+      "name": "params",
+      "type_doc": "dict[str, Any]"
+    },
+    {
+      "description": "Dictionary that contains the distributions of params.",
+      "name": "distributions",
+      "type_doc": "dict[str, BaseDistribution]"
+    },
+    {
+      "description": "Dictionary that contains the attributes of the Trial set with optuna.trial.Trial.set_user_attr().",
+      "name": "user_attrs",
+      "type_doc": "dict[str, Any]"
+    },
+    {
+      "description": "Dictionary that contains the optuna-internal attributes.",
+      "name": "system_attrs",
+      "type_doc": "dict[str, Any]"
+    },
+    {
+      "description": "Intermediate objective values set with optuna.trial.Trial.report().",
+      "name": "intermediate_values",
+      "type_doc": "dict[int, float]"
+    },
+    {
+      "description": "Returns constraint values.",
+      "name": "constraints",
+      "type_doc": ""
+    },
+    {
+      "description": "Return the elapsed time taken to complete the trial.",
+      "name": "duration",
+      "type_doc": ""
+    },
+    {
+      "description": "Return the maximum step of :attr:`intermediate_values` in the trial.",
+      "name": "last_step",
+      "type_doc": ""
+    }
+  ],
+  "doc_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.FrozenTrial.html",
+  "extractor_version": "1",
+  "id": "optuna.trial.FrozenTrial",
+  "import_path": "optuna.trial.FrozenTrial",
+  "kind": "class",
+  "library": "optuna",
+  "library_version": "5.0.0",
+  "methods": [
+    {
+      "name": "report",
+      "signature": "report(value: 'float', step: 'int') -> 'None'",
+      "summary": "Interface of report function."
+    },
+    {
+      "name": "set_constraint",
+      "signature": "set_constraint(key: 'str', value: 'float') -> 'None'",
+      "summary": "Set a constraint value for the trial."
+    },
+    {
+      "name": "set_user_attr",
+      "signature": "set_user_attr(key: 'str', value: 'Any') -> 'None'",
+      "summary": ""
+    },
+    {
+      "name": "should_prune",
+      "signature": "should_prune() -> 'bool'",
+      "summary": "Suggest whether the trial should be pruned or not."
+    },
+    {
+      "name": "suggest_categorical",
+      "signature": "suggest_categorical(name: 'str', choices: 'Sequence[CategoricalChoiceType]') -> 'CategoricalChoiceType'",
+      "summary": ""
+    },
+    {
+      "name": "suggest_discrete_uniform",
+      "signature": "suggest_discrete_uniform(name: 'str', low: 'float', high: 'float', q: 'float') -> 'float'",
+      "summary": ".. warning::"
+    },
+    {
+      "name": "suggest_float",
+      "signature": "suggest_float(name: 'str', low: 'float', high: 'float', *, step: 'float | None' = None, log: 'bool' = False) -> 'float'",
+      "summary": ""
+    },
+    {
+      "name": "suggest_int",
+      "signature": "suggest_int(name: 'str', low: 'int', high: 'int', *, step: 'int' = 1, log: 'bool' = False) -> 'int'",
+      "summary": ""
+    },
+    {
+      "name": "suggest_loguniform",
+      "signature": "suggest_loguniform(name: 'str', low: 'float', high: 'float') -> 'float'",
+      "summary": ".. warning::"
+    },
+    {
+      "name": "suggest_uniform",
+      "signature": "suggest_uniform(name: 'str', low: 'float', high: 'float') -> 'float'",
+      "summary": ".. warning::"
+    }
+  ],
+  "overrides_applied": [
+    {
+      "path": "attributes",
+      "reason": "The page documents 11 plain instance attributes (number ... intermediate_values) that the class docstring does not list as properties, so the extractor missed them. Added with names and text from the page; types are taken from the page's constructor parameter list, which gives the same names. The 3 properties the extractor already found (constraints, duration, last_step) are kept unchanged.",
+      "source_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.FrozenTrial.html"
+    }
+  ],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "",
+      "effective_default": null,
+      "name": "number",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "",
+      "effective_default": null,
+      "name": "state",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "",
+      "effective_default": null,
+      "name": "value",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "",
+      "effective_default": null,
+      "name": "datetime_start",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "",
+      "effective_default": null,
+      "name": "datetime_complete",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "",
+      "effective_default": null,
+      "name": "params",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "",
+      "effective_default": null,
+      "name": "distributions",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "",
+      "effective_default": null,
+      "name": "user_attrs",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "",
+      "effective_default": null,
+      "name": "system_attrs",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "",
+      "effective_default": null,
+      "name": "intermediate_values",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "",
+      "effective_default": null,
+      "name": "trial_id",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "values",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [],
+  "signature": "FrozenTrial(number: 'int', state: 'TrialState', value: 'float | None', datetime_start: 'datetime.datetime | None', datetime_complete: 'datetime.datetime | None', params: 'dict[str, Any]', distributions: 'dict[str, BaseDistribution]', user_attrs: 'dict[str, Any]', system_attrs: 'dict[str, Any]', intermediate_values: 'dict[int, float]', trial_id: 'int', *, values: 'Sequence[float] | None' = None) -> 'None'",
+  "summary": "Status and results of a :class:`~optuna.trial.Trial`.",
+  "warnings": [
+    "parameter number: not documented in docstring",
+    "parameter state: not documented in docstring",
+    "parameter value: not documented in docstring",
+    "parameter datetime_start: not documented in docstring",
+    "parameter datetime_complete: not documented in docstring",
+    "parameter params: not documented in docstring",
+    "parameter distributions: not documented in docstring",
+    "parameter user_attrs: not documented in docstring",
+    "parameter system_attrs: not documented in docstring",
+    "parameter intermediate_values: not documented in docstring",
+    "parameter trial_id: not documented in docstring",
+    "parameter values: not documented in docstring"
+  ]
+}

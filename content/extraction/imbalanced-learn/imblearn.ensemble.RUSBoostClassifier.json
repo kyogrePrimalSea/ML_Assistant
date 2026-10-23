@@ -1,0 +1,301 @@
+{
+  "attributes": [
+    {
+      "description": "The base estimator from which the ensemble is grown.\n\n.. versionadded:: 0.10",
+      "name": "estimator_",
+      "type_doc": "estimator"
+    },
+    {
+      "description": "The collection of fitted sub-estimators.",
+      "name": "estimators_",
+      "type_doc": "list of classifiers"
+    },
+    {
+      "description": "The base sampler used to generate the subsequent samplers.",
+      "name": "base_sampler_",
+      "type_doc": ":class:`~imblearn.under_sampling.RandomUnderSampler`"
+    },
+    {
+      "description": "The collection of fitted samplers.",
+      "name": "samplers_",
+      "type_doc": "list of :class:`~imblearn.under_sampling.RandomUnderSampler`"
+    },
+    {
+      "description": "The collection of fitted pipelines (samplers + trees).",
+      "name": "pipelines_",
+      "type_doc": "list of Pipeline"
+    },
+    {
+      "description": "The classes labels.",
+      "name": "classes_",
+      "type_doc": "ndarray of shape (n_classes,)"
+    },
+    {
+      "description": "The number of classes.",
+      "name": "n_classes_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Weights for each estimator in the boosted ensemble.",
+      "name": "estimator_weights_",
+      "type_doc": "ndarray of shape (n_estimator,)"
+    },
+    {
+      "description": "Classification error for each estimator in the boosted\nensemble.",
+      "name": "estimator_errors_",
+      "type_doc": "ndarray of shape (n_estimator,)"
+    },
+    {
+      "description": "The feature importances if supported by the ``base_estimator``.",
+      "name": "feature_importances_",
+      "type_doc": "ndarray of shape (n_features,)"
+    },
+    {
+      "description": "Number of features in the input dataset.\n\n.. versionadded:: 0.9",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during `fit`. Defined only when `X` has feature\nnames that are all strings.\n\n.. versionadded:: 0.9",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.ensemble.RUSBoostClassifier.html",
+  "extractor_version": "1",
+  "id": "imblearn.ensemble.RUSBoostClassifier",
+  "import_path": "imblearn.ensemble.RUSBoostClassifier",
+  "kind": "class",
+  "library": "imbalanced-learn",
+  "library_version": "0.14.2",
+  "methods": [
+    {
+      "name": "decision_function",
+      "signature": "decision_function(X)",
+      "summary": "Compute the decision function of ``X``."
+    },
+    {
+      "name": "fit",
+      "signature": "fit(X, y, sample_weight=None)",
+      "summary": "Build a boosted classifier from the training set (X, y)."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Raise `NotImplementedError`."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X)",
+      "summary": "Predict classes for X."
+    },
+    {
+      "name": "predict_log_proba",
+      "signature": "predict_log_proba(X)",
+      "summary": "Predict class log-probabilities for X."
+    },
+    {
+      "name": "predict_proba",
+      "signature": "predict_proba(X)",
+      "summary": "Predict class probabilities for X."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Return :ref:`accuracy <accuracy_score>` on provided data and labels."
+    },
+    {
+      "name": "set_fit_request",
+      "signature": "set_fit_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> imblearn.ensemble._weight_boosting.RUSBoostClassifier",
+      "summary": "Configure whether metadata should be requested to be passed to the ``fit`` method."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> imblearn.ensemble._weight_boosting.RUSBoostClassifier",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    },
+    {
+      "name": "staged_decision_function",
+      "signature": "staged_decision_function(X)",
+      "summary": "Compute decision function of ``X`` for each boosting iteration."
+    },
+    {
+      "name": "staged_predict",
+      "signature": "staged_predict(X)",
+      "summary": "Return staged predictions for X."
+    },
+    {
+      "name": "staged_predict_proba",
+      "signature": "staged_predict_proba(X)",
+      "summary": "Predict class probabilities for X."
+    },
+    {
+      "name": "staged_score",
+      "signature": "staged_score(X, y, sample_weight=None)",
+      "summary": "Return staged scores for X, y."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "an object implementing 'fit' and 'predict'",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "The base estimator from which the boosted ensemble is built.\nSupport for sample weighting is required, as well as proper\n``classes_`` and ``n_classes_`` attributes. If ``None``, then\nthe base estimator is ``DecisionTreeClassifier(max_depth=1)``.\n\n.. versionadded:: 0.12",
+      "effective_default": null,
+      "name": "estimator",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "estimator object, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "50",
+      "description": "The maximum number of estimators at which boosting is terminated.\nIn case of perfect fit, the learning procedure is stopped early.",
+      "effective_default": null,
+      "name": "n_estimators",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=50"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "neither",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "1.0",
+      "description": "Learning rate shrinks the contribution of each classifier by\n``learning_rate``. There is a trade-off between ``learning_rate`` and\n``n_estimators``.",
+      "effective_default": null,
+      "name": "learning_rate",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=1.0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "SAMME",
+          "SAMME.R",
+          "deprecated"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'deprecated'",
+      "description": "If 'SAMME.R' then use the SAMME.R real boosting algorithm.\n``base_estimator`` must support calculation of class probabilities.\nIf 'SAMME' then use the SAMME discrete boosting algorithm.\nThe SAMME.R algorithm typically converges faster than SAMME,\nachieving a lower test error with fewer boosting iterations.\n\n.. deprecated:: 0.12\n    `\"SAMME.R\"` is deprecated and will be removed in version 0.14.\n    '\"SAMME\"' will become the default.",
+      "effective_default": null,
+      "name": "algorithm",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'SAMME', 'SAMME.R'}, default='SAMME.R'"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "right",
+            "left": 0,
+            "right": 1,
+            "type": "Real"
+          }
+        ],
+        "options": [
+          "all",
+          "auto",
+          "majority",
+          "not majority",
+          "not minority"
+        ],
+        "source": "constraints",
+        "types": [
+          "dict",
+          "<built-in function callable>"
+        ]
+      },
+      "default": "'auto'",
+      "description": "Sampling information to sample the data set.\n\n- When ``float``, it corresponds to the desired ratio of the number of\n  samples in the minority class over the number of samples in the\n  majority class after resampling. Therefore, the ratio is expressed as\n  :math:`\\alpha_{us} = N_{m} / N_{rM}` where :math:`N_{m}` is the\n  number of samples in the minority class and\n  :math:`N_{rM}` is the number of samples in the majority class\n  after resampling.\n\n  .. warning::\n     ``float`` is only available for **binary** classification. An\n     error is raised for multi-class classification.\n\n- When ``str``, specify the class targeted by the resampling. The\n  number of samples in the different classes will be equalized.\n  Possible choices are:\n\n    ``'majority'``: resample only the majority class;\n\n    ``'not minority'``: resample all classes but the minority class;\n\n    ``'not majority'``: resample all classes but the majority class;\n\n    ``'all'``: resample all classes;\n\n    ``'auto'``: equivalent to ``'not minority'``.\n\n- When ``dict``, the keys correspond to the targeted classes. The\n  values correspond to the desired number of samples for each targeted\n  class.\n\n- When callable, function taking ``y`` and returns a ``dict``. The keys\n  correspond to the targeted classes. The values correspond to the\n  desired number of samples for each class.",
+      "effective_default": null,
+      "name": "sampling_strategy",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, str, dict, callable, default='auto'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "Whether or not to sample randomly with replacement or not.",
+      "effective_default": null,
+      "name": "replacement",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "random_state"
+        ]
+      },
+      "default": "None",
+      "description": "Control the randomization of the algorithm.\n\n- If int, ``random_state`` is the seed used by the random number\n  generator;\n- If ``RandomState`` instance, random_state is the random number\n  generator;\n- If ``None``, the random number generator is the ``RandomState``\n  instance used by ``np.random``.",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, RandomState instance, default=None"
+    }
+  ],
+  "returns": [],
+  "signature": "RUSBoostClassifier(estimator=None, *, n_estimators=50, learning_rate=1.0, algorithm='deprecated', sampling_strategy='auto', replacement=False, random_state=None)",
+  "summary": "Random under-sampling integrated in the learning of AdaBoost.",
+  "warnings": []
+}

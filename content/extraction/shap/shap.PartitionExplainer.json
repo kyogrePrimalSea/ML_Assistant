@@ -1,0 +1,182 @@
+{
+  "attributes": [],
+  "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.PartitionExplainer.html",
+  "extractor_version": "1",
+  "id": "shap.PartitionExplainer",
+  "import_path": "shap.PartitionExplainer",
+  "kind": "class",
+  "library": "shap",
+  "library_version": "0.54.1",
+  "methods": [
+    {
+      "name": "explain_row",
+      "signature": "explain_row(*row_args: Any, max_evals: int | Literal['auto'], main_effects: bool, error_bounds: bool, outputs: Any, silent: bool, batch_size: int | Literal['auto'] = 'auto', fixed_context: Literal[0, 1, 'auto'] | None = 'auto', **kwargs: Any) -> dict[str, typing.Any]",
+      "summary": "Explains a single row and returns the tuple (row_values, row_expected_values, row_mask_shapes)."
+    },
+    {
+      "name": "load",
+      "signature": "load(in_file: 'Any', model_loader: 'Callable[..., Any] | None' = None, masker_loader: 'Callable[..., Any] | None' = None, instantiate: 'bool' = True) -> 'Explainer | dict[str, Any]'",
+      "summary": "Load an Explainer from the given file stream."
+    },
+    {
+      "name": "owen",
+      "signature": "owen(fm: shap.utils._masked_model.MaskedModel, f00: NDArray[typing.Any], f11: NDArray[typing.Any], max_evals: int, output_indexes: Any, fixed_context: Literal[0, 1] | None, batch_size: int | Literal['auto'], silent: bool) -> tuple[typing.Any, NDArray[typing.Any]]",
+      "summary": "Compute a nested set of recursive Owen values based on an ordering recursion."
+    },
+    {
+      "name": "owen3",
+      "signature": "owen3(fm: shap.utils._masked_model.MaskedModel, f00: NDArray[typing.Any], f11: NDArray[typing.Any], max_evals: int, output_indexes: Any, fixed_context: Literal[0, 1] | None, batch_size: int | Literal['auto'], silent: bool) -> tuple[typing.Any, NDArray[typing.Any]]",
+      "summary": "Compute a nested set of recursive Owen values based on an ordering recursion."
+    },
+    {
+      "name": "save",
+      "signature": "save(out_file: 'Any', model_saver: 'str | Callable[..., Any]' = '.save', masker_saver: 'str | Callable[..., Any]' = '.save') -> 'None'",
+      "summary": "Write the explainer to the given file stream."
+    },
+    {
+      "name": "supports_model_with_masker",
+      "signature": "supports_model_with_masker(model: 'Any', masker: 'Any') -> 'bool'",
+      "summary": "Determines if this explainer can handle the given model."
+    }
+  ],
+  "overrides_applied": [
+    {
+      "path": "parameters[name=link].default",
+      "reason": "The introspected default repr of `link` embeds a memory address (nondeterministic across runs). The docs page shows the stable form `<function identity>`; that is recorded instead. Same object, repr cosmetics only.",
+      "source_url": "https://shap.readthedocs.io/en/latest/generated/shap.PartitionExplainer.html"
+    }
+  ],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "User supplied function that takes a matrix of samples (# samples x # features) and\ncomputes the output of the model for those samples.",
+      "effective_default": null,
+      "name": "model",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "function"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The function used to \"mask\" out hidden features of the form `masker(mask, x)`. It takes a\nsingle input sample and a binary mask and returns a matrix of masked samples. These\nmasked samples will then be evaluated using the model function and the outputs averaged.\nAs a shortcut for the standard masking using by SHAP you can pass a background data matrix\ninstead of a function and that matrix will be used for masking. Domain specific masking\nfunctions are available in shap such as shap.maksers.Image for images and shap.maskers.Text\nfor text.",
+      "effective_default": null,
+      "name": "masker",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "function or numpy.array or pandas.DataFrame or tokenizer"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "output_names",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "<function identity>",
+      "description": "",
+      "effective_default": null,
+      "name": "link",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "",
+      "effective_default": null,
+      "name": "linearize_link",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "feature_names",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "",
+      "effective_default": null,
+      "name": "call_args",
+      "param_kind": "var_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "A hierarchical clustering of the input features represented by a matrix that follows the format\nused by scipy.cluster.hierarchy (see the notebooks_html/partition_explainer directory an example).\nIf this is a function then the function produces a clustering matrix when given a single input\nexample. If you are using a standard SHAP masker object then you can pass masker.clustering\nto use that masker's built-in clustering of the features, or if partition_tree is None then\nmasker.clustering will be used by default.",
+      "effective_default": null,
+      "name": "partition_tree",
+      "param_kind": "documented_only",
+      "required": false,
+      "type_doc": "None or function or numpy.array"
+    }
+  ],
+  "returns": [],
+  "signature": "PartitionExplainer(model: Any, masker: Any, *, output_names: list[str] | None = None, link: collections.abc.Callable[..., typing.Any] = <function identity at 0x7f78eb172770>, linearize_link: bool = True, feature_names: list[str] | None = None, **call_args: Any) -> None",
+  "summary": "Build a PartitionExplainer for the given model with the given masker.",
+  "warnings": [
+    "parameter output_names: not documented in docstring",
+    "parameter link: default repr contains a memory address",
+    "parameter link: not documented in docstring",
+    "parameter linearize_link: not documented in docstring",
+    "parameter feature_names: not documented in docstring",
+    "parameter partition_tree: documented only (not in signature); no default= in type_doc"
+  ]
+}

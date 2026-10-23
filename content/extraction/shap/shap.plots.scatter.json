@@ -1,0 +1,291 @@
+{
+  "attributes": [],
+  "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.plots.scatter.html",
+  "extractor_version": "1",
+  "id": "shap.plots.scatter",
+  "import_path": "shap.plots.scatter",
+  "kind": "function",
+  "library": "shap",
+  "library_version": "0.54.1",
+  "methods": [],
+  "overrides_applied": [
+    {
+      "path": "parameters[name=cmap].default",
+      "reason": "The introspected default repr of `cmap` embeds a memory address (nondeterministic across runs). The docs page shows the stable form `<matplotlib.colors.LinearSegmentedColormap object>`; that is recorded instead. Same object, repr cosmetics only.",
+      "source_url": "https://shap.readthedocs.io/en/latest/generated/shap.plots.scatter.html"
+    }
+  ],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Typically a single column of an :class:`.Explanation` object\n(i.e. ``shap_values[:, \"Feature A\"]``).\n\nAlternatively, pass multiple columns to create several subplots\n(i.e. ``shap_values[:, [\"Feature A\", \"Feature B\"]]``).",
+      "effective_default": null,
+      "name": "shap_values",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "shap.Explanation"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'#1E88E5'",
+      "description": "How to color the scatter plot points. This can be a fixed color string, or an\n:class:`.Explanation` object.\n\nIf it is an :class:`.Explanation` object, then the scatter plot points are\ncolored by the feature that seems to have the strongest interaction effect with\nthe feature given by the ``shap_values`` argument. This is calculated using\n:func:`shap.utils.approximate_interactions`.\n\nIf only a single column of an :class:`.Explanation` object is passed, then that\nfeature column will be used to color the data points.",
+      "effective_default": null,
+      "name": "color",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "string or shap.Explanation, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "Whether to show a light histogram along the x-axis to show the density of the\ndata. Note that the histogram is normalized such that if all the points were in\na single bin, then that bin would span the full height of the plot. Defaults to\n``True``.",
+      "effective_default": null,
+      "name": "hist",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'#333333'",
+      "description": "",
+      "effective_default": null,
+      "name": "axis_color",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "<matplotlib.colors.LinearSegmentedColormap object>",
+      "description": "",
+      "effective_default": null,
+      "name": "cmap",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "16",
+      "description": "",
+      "effective_default": null,
+      "name": "dot_size",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'auto'",
+      "description": "Adds random jitter to feature values by specifying a float between 0 to 1. May\nincrease plot readability when a feature is discrete. By default, ``x_jitter``\nis chosen based on auto-detection of categorical features.",
+      "effective_default": null,
+      "name": "x_jitter",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "'auto' or float"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "1.0",
+      "description": "The transparency of the data points (between 0 and 1). This can be useful to\nshow the density of the data points when using a large dataset.",
+      "effective_default": null,
+      "name": "alpha",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "float"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Plot title.",
+      "effective_default": null,
+      "name": "title",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "str, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Desired axis limits. Can be a float to specify a fixed limit.\n\nIt can be a string of the format ``\"percentile(float)\"`` to denote that\npercentile of the feature's value.\n\nIt can also be an aggregated column of a single column of an :class:`.Explanation`,\nsuch as ``explanation[:, \"feature_name\"].percentile(20)``.",
+      "effective_default": null,
+      "name": "xmin",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "float, string, aggregated Explanation or None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Desired axis limits. Can be a float to specify a fixed limit.\n\nIt can be a string of the format ``\"percentile(float)\"`` to denote that\npercentile of the feature's value.\n\nIt can also be an aggregated column of a single column of an :class:`.Explanation`,\nsuch as ``explanation[:, \"feature_name\"].percentile(20)``.",
+      "effective_default": null,
+      "name": "xmax",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "float, string, aggregated Explanation or None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Desired axis limits. Can be a float to specify a fixed limit.\n\nIt can be a string of the format ``\"percentile(float)\"`` to denote that\npercentile of the feature's value.\n\nIt can also be an aggregated column of a single column of an :class:`.Explanation`,\nsuch as ``explanation[:, \"feature_name\"].percentile(20)``.",
+      "effective_default": null,
+      "name": "ymin",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "float, string, aggregated Explanation or None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Desired axis limits. Can be a float to specify a fixed limit.\n\nIt can be a string of the format ``\"percentile(float)\"`` to denote that\npercentile of the feature's value.\n\nIt can also be an aggregated column of a single column of an :class:`.Explanation`,\nsuch as ``explanation[:, \"feature_name\"].percentile(20)``.",
+      "effective_default": null,
+      "name": "ymax",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "float, string, aggregated Explanation or None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Optional dictionary of up to three additional curves to overlay as line plots.\n\nThe dictionary maps a curve name to a list of (xvalues, yvalues) pairs, where\nthere is one pair for each feature to be plotted.",
+      "effective_default": null,
+      "name": "overlay",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "dict, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Optionally specify an existing :external+mpl:class:`matplotlib.axes.Axes` object, into which\nthe plot will be placed.\n\nOnly supported when plotting a single feature.",
+      "effective_default": null,
+      "name": "ax",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "matplotlib Axes, optional"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'SHAP value'",
+      "description": "",
+      "effective_default": null,
+      "name": "ylabel",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "Whether :external+mpl:func:`matplotlib.pyplot.show()` is called before returning.\n\nSetting this to ``False`` allows the plot to be customized further after it\nhas been created.",
+      "effective_default": null,
+      "name": "show",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool"
+    }
+  ],
+  "returns": [
+    {
+      "description": "Returns the :external+mpl:class:`~matplotlib.axes.Axes` object with the plot drawn onto it. Only\nreturned if ``show=False``.",
+      "name": "ax",
+      "type_doc": "matplotlib Axes object"
+    }
+  ],
+  "signature": "scatter(shap_values: 'Explanation', color: 'str | Explanation | None' = '#1E88E5', hist: 'bool' = True, axis_color='#333333', cmap=<matplotlib.colors.LinearSegmentedColormap object at 0x7f78e8ae0940>, dot_size=16, x_jitter: \"float | Literal['auto']\" = 'auto', alpha: 'float' = 1.0, title: 'str | None' = None, xmin: 'AxisLimitSpec' = None, xmax: 'AxisLimitSpec' = None, ymin: 'AxisLimitSpec' = None, ymax: 'AxisLimitSpec' = None, overlay: 'dict[str, Any] | None' = None, ax: 'plt.Axes | None' = None, ylabel: 'str' = 'SHAP value', show: 'bool' = True)",
+  "summary": "Create a SHAP dependence scatter plot, optionally colored by an interaction feature.",
+  "warnings": [
+    "parameter axis_color: not documented in docstring",
+    "parameter cmap: default repr contains a memory address",
+    "parameter cmap: not documented in docstring",
+    "parameter dot_size: not documented in docstring",
+    "parameter ylabel: not documented in docstring"
+  ]
+}

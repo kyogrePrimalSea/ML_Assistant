@@ -1,0 +1,65 @@
+source_url: https://xgboost.readthedocs.io/en/stable/parameter.html
+reason: 'effective_default: the sklearn-API signature default is None, meaning use the booster default;
+  values are the booster defaults on https://xgboost.readthedocs.io/en/stable/parameter.html (sklearn
+  name -> booster name: learning_rate -> eta; reg_alpha -> alpha; reg_lambda -> lambda; n_jobs -> nthread).
+  reg_lambda/reg_alpha use the Tree Booster section (lambda=1, alpha=0), not the gblinear section. n_estimators=100
+  is not stated on any docs page; it is DEFAULT_N_ESTIMATORS = 100 in python-package/xgboost/sklearn.py
+  at tag v3.4.1 (https://github.com/dmlc/xgboost/blob/v3.4.1/python-package/xgboost/sklearn.py), used
+  when n_estimators is None (installed copy checked too). n_jobs: the page says nthread is ''default to
+  maximum number of threads available if not set''. validate_parameters: the parameter page says ''default
+  to false, except for Python, R and CLI interface'', so True for this Python API. Not given a concrete
+  default because the page gives none or a rule instead of a value: base_score (estimated automatically),
+  eval_metric (default according to objective), importance_type, random_state, monotone_constraints, interaction_constraints,
+  max_cat_to_onehot, max_cat_threshold, feature_*, early_stopping_rounds, callbacks. Docs page shows version
+  3.4.2; installed is 3.4.1.'
+patches:
+- path: parameters[name=max_depth].effective_default
+  value: '6'
+- path: parameters[name=max_leaves].effective_default
+  value: '0'
+- path: parameters[name=max_bin].effective_default
+  value: '256'
+- path: parameters[name=grow_policy].effective_default
+  value: depthwise
+- path: parameters[name=learning_rate].effective_default
+  value: '0.3'
+- path: parameters[name=verbosity].effective_default
+  value: '1'
+- path: parameters[name=booster].effective_default
+  value: gbtree
+- path: parameters[name=tree_method].effective_default
+  value: auto
+- path: parameters[name=gamma].effective_default
+  value: '0'
+- path: parameters[name=min_child_weight].effective_default
+  value: '1'
+- path: parameters[name=max_delta_step].effective_default
+  value: '0'
+- path: parameters[name=subsample].effective_default
+  value: '1'
+- path: parameters[name=sampling_method].effective_default
+  value: uniform
+- path: parameters[name=colsample_bytree].effective_default
+  value: '1'
+- path: parameters[name=colsample_bylevel].effective_default
+  value: '1'
+- path: parameters[name=colsample_bynode].effective_default
+  value: '1'
+- path: parameters[name=reg_alpha].effective_default
+  value: '0'
+- path: parameters[name=reg_lambda].effective_default
+  value: '1'
+- path: parameters[name=scale_pos_weight].effective_default
+  value: '1'
+- path: parameters[name=num_parallel_tree].effective_default
+  value: '1'
+- path: parameters[name=multi_strategy].effective_default
+  value: one_output_per_tree
+- path: parameters[name=device].effective_default
+  value: cpu
+- path: parameters[name=n_jobs].effective_default
+  value: maximum number of threads available
+- path: parameters[name=n_estimators].effective_default
+  value: '100'
+- path: parameters[name=validate_parameters].effective_default
+  value: 'True'

@@ -1,0 +1,246 @@
+{
+  "attributes": [],
+  "doc_url": "https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.NSGAIISampler.html",
+  "extractor_version": "1",
+  "id": "optuna.samplers.NSGAIISampler",
+  "import_path": "optuna.samplers.NSGAIISampler",
+  "kind": "class",
+  "library": "optuna",
+  "library_version": "5.0.0",
+  "methods": [
+    {
+      "name": "after_trial",
+      "signature": "after_trial(study: 'Study', trial: 'FrozenTrial', state: 'TrialState', values: 'Sequence[float] | None') -> 'None'",
+      "summary": "Trial post-processing."
+    },
+    {
+      "name": "before_trial",
+      "signature": "before_trial(study: 'Study', trial: 'FrozenTrial') -> 'None'",
+      "summary": "Trial pre-processing."
+    },
+    {
+      "name": "get_parent_population",
+      "signature": "get_parent_population(study: 'Study', generation: 'int') -> 'list[FrozenTrial]'",
+      "summary": "Get the parent population of the given generation."
+    },
+    {
+      "name": "get_population",
+      "signature": "get_population(study: 'Study', generation: 'int') -> 'list[FrozenTrial]'",
+      "summary": "Get the population of the given generation."
+    },
+    {
+      "name": "get_trial_generation",
+      "signature": "get_trial_generation(study: 'Study', trial: 'FrozenTrial') -> 'int'",
+      "summary": "Get the generation number of the given trial."
+    },
+    {
+      "name": "infer_relative_search_space",
+      "signature": "infer_relative_search_space(study: 'Study', trial: 'FrozenTrial') -> 'dict[str, BaseDistribution]'",
+      "summary": "Infer the search space that will be used by relative sampling in the target trial."
+    },
+    {
+      "name": "reseed_rng",
+      "signature": "reseed_rng() -> 'None'",
+      "summary": "Reseed sampler's random number generator."
+    },
+    {
+      "name": "sample_independent",
+      "signature": "sample_independent(study: 'Study', trial: 'FrozenTrial', param_name: 'str', param_distribution: 'BaseDistribution') -> 'Any'",
+      "summary": "Sample a parameter for a given distribution."
+    },
+    {
+      "name": "sample_relative",
+      "signature": "sample_relative(study: 'Study', trial: 'FrozenTrial', search_space: 'dict[str, BaseDistribution]') -> 'dict[str, Any]'",
+      "summary": "Sample parameters in a given search space."
+    },
+    {
+      "name": "select_parent",
+      "signature": "select_parent(study: 'Study', generation: 'int') -> 'list[FrozenTrial]'",
+      "summary": "Select parent trials from the population for the given generation."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "50",
+      "description": "",
+      "effective_default": null,
+      "name": "population_size",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "mutation",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "mutation_prob",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "crossover",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0.9",
+      "description": "",
+      "effective_default": null,
+      "name": "crossover_prob",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0.5",
+      "description": "",
+      "effective_default": null,
+      "name": "swapping_prob",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "seed",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "constraints_func",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "elite_population_selection_strategy",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "child_generation_strategy",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "after_trial_strategy",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [],
+  "signature": "NSGAIISampler(*, population_size: 'int' = 50, mutation: 'BaseMutation | None' = None, mutation_prob: 'float | None' = None, crossover: 'BaseCrossover | None' = None, crossover_prob: 'float' = 0.9, swapping_prob: 'float' = 0.5, seed: 'int | None' = None, constraints_func: 'Callable[[FrozenTrial], Sequence[float]] | None' = None, elite_population_selection_strategy: 'Callable[[Study, list[FrozenTrial]], list[FrozenTrial]] | None' = None, child_generation_strategy: 'Callable[[Study, dict[str, BaseDistribution], list[FrozenTrial]], dict[str, Any]] | None' = None, after_trial_strategy: 'Callable[[Study, FrozenTrial, TrialState, Sequence[float] | None], None] | None' = None) -> 'None'",
+  "summary": "Multi-objective sampler using the NSGA-II algorithm.",
+  "warnings": [
+    "parameter population_size: not documented in docstring",
+    "parameter mutation: not documented in docstring",
+    "parameter mutation_prob: not documented in docstring",
+    "parameter crossover: not documented in docstring",
+    "parameter crossover_prob: not documented in docstring",
+    "parameter swapping_prob: not documented in docstring",
+    "parameter seed: not documented in docstring",
+    "parameter constraints_func: not documented in docstring",
+    "parameter elite_population_selection_strategy: not documented in docstring",
+    "parameter child_generation_strategy: not documented in docstring",
+    "parameter after_trial_strategy: not documented in docstring"
+  ]
+}

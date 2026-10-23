@@ -1,0 +1,233 @@
+{
+  "attributes": [
+    {
+      "description": "Dictionary containing the information to sample the dataset. The keys\ncorresponds to the class labels from which to sample and the values\nare the number of samples to sample.",
+      "name": "sampling_strategy_",
+      "type_doc": "dict"
+    },
+    {
+      "description": "The fitted clustering method used before to apply SMOTE.",
+      "name": "kmeans_estimator_",
+      "type_doc": "estimator"
+    },
+    {
+      "description": "The fitted k-NN estimator used in SMOTE.",
+      "name": "nn_k_",
+      "type_doc": "estimator"
+    },
+    {
+      "description": "The threshold used during ``fit`` for calling a cluster balanced.",
+      "name": "cluster_balance_threshold_",
+      "type_doc": "float"
+    },
+    {
+      "description": "Number of features in the input dataset.\n\n.. versionadded:: 0.9",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during `fit`. Defined only when `X` has feature\nnames that are all strings.\n\n.. versionadded:: 0.10",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.over_sampling.KMeansSMOTE.html",
+  "extractor_version": "1",
+  "id": "imblearn.over_sampling.KMeansSMOTE",
+  "import_path": "imblearn.over_sampling.KMeansSMOTE",
+  "kind": "class",
+  "library": "imbalanced-learn",
+  "library_version": "0.14.2",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y, **params)",
+      "summary": "Check inputs and statistics of the sampler."
+    },
+    {
+      "name": "fit_resample",
+      "signature": "fit_resample(X, y, **params)",
+      "summary": "Resample the dataset."
+    },
+    {
+      "name": "get_feature_names_out",
+      "signature": "get_feature_names_out(input_features=None)",
+      "summary": "Get output feature names for transformation."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "right",
+            "left": 0,
+            "right": 1,
+            "type": "Real"
+          }
+        ],
+        "options": [
+          "all",
+          "auto",
+          "minority",
+          "not majority",
+          "not minority"
+        ],
+        "source": "constraints",
+        "types": [
+          "Mapping",
+          "<built-in function callable>"
+        ]
+      },
+      "default": "'auto'",
+      "description": "Sampling information to resample the data set.\n\n- When ``float``, it corresponds to the desired ratio of the number of\n  samples in the minority class over the number of samples in the\n  majority class after resampling. Therefore, the ratio is expressed as\n  :math:`\\alpha_{os} = N_{rm} / N_{M}` where :math:`N_{rm}` is the\n  number of samples in the minority class after resampling and\n  :math:`N_{M}` is the number of samples in the majority class.\n\n    .. warning::\n       ``float`` is only available for **binary** classification. An\n       error is raised for multi-class classification.\n\n- When ``str``, specify the class targeted by the resampling. The\n  number of samples in the different classes will be equalized.\n  Possible choices are:\n\n    ``'minority'``: resample only the minority class;\n\n    ``'not minority'``: resample all classes but the minority class;\n\n    ``'not majority'``: resample all classes but the majority class;\n\n    ``'all'``: resample all classes;\n\n    ``'auto'``: equivalent to ``'not majority'``.\n\n- When ``dict``, the keys correspond to the targeted classes. The\n  values correspond to the desired number of samples for each targeted\n  class.\n\n- When callable, function taking ``y`` and returns a ``dict``. The keys\n  correspond to the targeted classes. The values correspond to the\n  desired number of samples for each class.",
+      "effective_default": null,
+      "name": "sampling_strategy",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, str, dict or callable, default='auto'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "random_state"
+        ]
+      },
+      "default": "None",
+      "description": "Control the randomization of the algorithm.\n\n- If int, ``random_state`` is the seed used by the random number\n  generator;\n- If ``RandomState`` instance, random_state is the random number\n  generator;\n- If ``None``, the random number generator is the ``RandomState``\n  instance used by ``np.random``.",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, RandomState instance, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "an object implementing 'kneighbors' and 'kneighbors_graph'"
+        ]
+      },
+      "default": "2",
+      "description": "The nearest neighbors used to define the neighborhood of samples to use\nto generate the synthetic samples. You can pass:\n\n- an `int` corresponding to the number of neighbors to use. A\n  `~sklearn.neighbors.NearestNeighbors` instance will be fitted in this\n  case.\n- an instance of a compatible nearest neighbors algorithm that should\n  implement both methods `kneighbors` and `kneighbors_graph`. For\n  instance, it could correspond to a\n  :class:`~sklearn.neighbors.NearestNeighbors` but could be extended to\n  any compatible class.",
+      "effective_default": null,
+      "name": "k_neighbors",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or object, default=2"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "Integral",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Number of CPU cores used during the cross-validation loop.\n``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.\n``-1`` means using all processors. See\n`Glossary <https://scikit-learn.org/stable/glossary.html#term-n-jobs>`_\nfor more details.",
+      "effective_default": null,
+      "name": "n_jobs",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "an object implementing 'fit' and 'predict'",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "A KMeans instance or the number of clusters to be used. By default,\nwe used a :class:`~sklearn.cluster.MiniBatchKMeans` which tend to be\nbetter with large number of samples.",
+      "effective_default": null,
+      "name": "kmeans_estimator",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or object, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "auto"
+        ],
+        "source": "constraints",
+        "types": [
+          "Real"
+        ]
+      },
+      "default": "'auto'",
+      "description": "The threshold at which a cluster is called balanced and where samples\nof the class selected for SMOTE will be oversampled. If \"auto\", this\nwill be determined by the ratio for each class, or it can be set\nmanually.",
+      "effective_default": null,
+      "name": "cluster_balance_threshold",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "\"auto\" or float, default=\"auto\""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "auto"
+        ],
+        "source": "constraints",
+        "types": [
+          "Real"
+        ]
+      },
+      "default": "'auto'",
+      "description": "This exponent is used to determine the density of a cluster. Leaving\nthis to \"auto\" will use a feature-length based exponent.",
+      "effective_default": null,
+      "name": "density_exponent",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "\"auto\" or float, default=\"auto\""
+    }
+  ],
+  "returns": [],
+  "signature": "KMeansSMOTE(*, sampling_strategy='auto', random_state=None, k_neighbors=2, n_jobs=None, kmeans_estimator=None, cluster_balance_threshold='auto', density_exponent='auto')",
+  "summary": "Apply a KMeans clustering before to over-sample using SMOTE.",
+  "warnings": []
+}

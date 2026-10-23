@@ -1,0 +1,135 @@
+{
+  "attributes": [
+    {
+      "description": "Dictionary containing the information to sample the dataset. The keys\ncorresponds to the class labels from which to sample and the values\nare the number of samples to sample.",
+      "name": "sampling_strategy_",
+      "type_doc": "dict"
+    },
+    {
+      "description": "Number of features in the input dataset.\n\n.. versionadded:: 0.9",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during `fit`. Defined only when `X` has feature\nnames that are all strings.\n\n.. versionadded:: 0.10",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://imbalanced-learn.org/stable/references/generated/imblearn.FunctionSampler.html",
+  "extractor_version": "1",
+  "id": "imblearn.FunctionSampler",
+  "import_path": "imblearn.FunctionSampler",
+  "kind": "class",
+  "library": "imbalanced-learn",
+  "library_version": "0.14.2",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y)",
+      "summary": "Check inputs and statistics of the sampler."
+    },
+    {
+      "name": "fit_resample",
+      "signature": "fit_resample(X, y)",
+      "summary": "Resample the dataset."
+    },
+    {
+      "name": "get_feature_names_out",
+      "signature": "get_feature_names_out(input_features=None)",
+      "summary": "Get output feature names for transformation."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "<built-in function callable>",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "The callable to use for the transformation. This will be passed the\nsame arguments as transform, with args and kwargs forwarded. If func is\nNone, then func will be the identity function.",
+      "effective_default": null,
+      "name": "func",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "callable, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "Whether sparse input are supported. By default, sparse inputs are\nsupported.",
+      "effective_default": null,
+      "name": "accept_sparse",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "dict",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "The keyword argument expected by ``func``.",
+      "effective_default": null,
+      "name": "kw_args",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "dict, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "Whether or not to bypass the validation of ``X`` and ``y``. Turning-off\nvalidation allows to use the ``FunctionSampler`` with any type of\ndata.\n\n.. versionadded:: 0.6",
+      "effective_default": null,
+      "name": "validate",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    }
+  ],
+  "returns": [],
+  "signature": "FunctionSampler(*, func=None, accept_sparse=True, kw_args=None, validate=True)",
+  "summary": "Construct a sampler from calling an arbitrary callable.",
+  "warnings": []
+}

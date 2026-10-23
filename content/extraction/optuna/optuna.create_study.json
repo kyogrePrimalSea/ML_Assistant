@@ -1,0 +1,132 @@
+{
+  "attributes": [],
+  "doc_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.create_study.html",
+  "extractor_version": "1",
+  "id": "optuna.create_study",
+  "import_path": "optuna.create_study",
+  "kind": "function",
+  "library": "optuna",
+  "library_version": "5.0.0",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "storage",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "sampler",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "pruner",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "study_name",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "direction",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "",
+      "effective_default": null,
+      "name": "load_if_exists",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "directions",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [],
+  "signature": "create_study(*, storage: 'str | storages.BaseStorage | None' = None, sampler: \"'samplers.BaseSampler' | None\" = None, pruner: 'pruners.BasePruner | None' = None, study_name: 'str | None' = None, direction: \"Literal['minimize', 'maximize'] | StudyDirection | None\" = None, load_if_exists: 'bool' = False, directions: \"Sequence[Literal['minimize', 'maximize'] | StudyDirection] | None\" = None) -> 'Study'",
+  "summary": "Create a new :class:`~optuna.study.Study`.",
+  "warnings": [
+    "parameter storage: not documented in docstring",
+    "parameter sampler: not documented in docstring",
+    "parameter pruner: not documented in docstring",
+    "parameter study_name: not documented in docstring",
+    "parameter direction: not documented in docstring",
+    "parameter load_if_exists: not documented in docstring",
+    "parameter directions: not documented in docstring",
+    "no Returns section found"
+  ]
+}

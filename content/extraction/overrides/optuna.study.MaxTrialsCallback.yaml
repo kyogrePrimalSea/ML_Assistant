@@ -1,0 +1,6 @@
+source_url: https://optuna.readthedocs.io/en/stable/reference/generated/optuna.study.MaxTrialsCallback.html
+reason: 'Default repr of `states` is the enum repr `(<TrialState.COMPLETE: 1>,)`; the docs page shows
+  `(TrialState.COMPLETE,)`. Same value, recorded in the readable docs form.'
+patches:
+- path: parameters[name=states].default
+  value: (TrialState.COMPLETE,)

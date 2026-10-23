@@ -1,0 +1,118 @@
+{
+  "attributes": [],
+  "doc_url": "https://shap.readthedocs.io/en/latest/generated/shap.AdditiveExplainer.html",
+  "extractor_version": "1",
+  "id": "shap.AdditiveExplainer",
+  "import_path": "shap.AdditiveExplainer",
+  "kind": "class",
+  "library": "shap",
+  "library_version": "0.54.1",
+  "methods": [
+    {
+      "name": "explain_row",
+      "signature": "explain_row(*row_args: Any, max_evals: int | Literal['auto'], main_effects: bool, error_bounds: bool, outputs: Any, silent: bool, **kwargs: Any) -> dict[str, typing.Any]",
+      "summary": "Explains a single row and returns the tuple (row_values, row_expected_values, row_mask_shapes)."
+    },
+    {
+      "name": "load",
+      "signature": "load(in_file: 'Any', model_loader: 'Callable[..., Any] | None' = None, masker_loader: 'Callable[..., Any] | None' = None, instantiate: 'bool' = True) -> 'Explainer | dict[str, Any]'",
+      "summary": "Load an Explainer from the given file stream."
+    },
+    {
+      "name": "save",
+      "signature": "save(out_file: 'Any', model_saver: 'str | Callable[..., Any]' = '.save', masker_saver: 'str | Callable[..., Any]' = '.save') -> 'None'",
+      "summary": "Write the explainer to the given file stream."
+    },
+    {
+      "name": "supports_model_with_masker",
+      "signature": "supports_model_with_masker(model: Any, masker: Any) -> bool",
+      "summary": "Determines if this explainer can handle the given model."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "A callable python object that executes the model given a set of input data samples.",
+      "effective_default": null,
+      "name": "model",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "function"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "A callable python object used to \"mask\" out hidden features of the form ``masker(mask, *fargs)``.\nIt takes a single a binary mask and an input sample and returns a matrix of masked samples. These\nmasked samples are evaluated using the model function and the outputs are then averaged.\nAs a shortcut for the standard masking used by SHAP you can pass a background data matrix\ninstead of a function and that matrix will be used for masking. To use a clustering\ngame structure you can pass a ``shap.maskers.Tabular(data, hclustering=\"correlation\")`` object, but\nnote that this structure information has no effect on the explanations of additive models.",
+      "effective_default": null,
+      "name": "masker",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "function or numpy.array or pandas.DataFrame"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "link",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "feature_names",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "",
+      "effective_default": null,
+      "name": "linearize_link",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [],
+  "signature": "AdditiveExplainer(model: Any, masker: Any, link: Any = None, feature_names: list[str] | None = None, linearize_link: bool = True) -> None",
+  "summary": "Build an Additive explainer for the given model using the given masker object.",
+  "warnings": [
+    "parameter link: not documented in docstring",
+    "parameter feature_names: not documented in docstring",
+    "parameter linearize_link: not documented in docstring"
+  ]
+}

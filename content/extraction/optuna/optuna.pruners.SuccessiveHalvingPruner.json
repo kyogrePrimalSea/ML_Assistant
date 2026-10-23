@@ -1,0 +1,89 @@
+{
+  "attributes": [],
+  "doc_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.SuccessiveHalvingPruner.html",
+  "extractor_version": "1",
+  "id": "optuna.pruners.SuccessiveHalvingPruner",
+  "import_path": "optuna.pruners.SuccessiveHalvingPruner",
+  "kind": "class",
+  "library": "optuna",
+  "library_version": "5.0.0",
+  "methods": [
+    {
+      "name": "prune",
+      "signature": "prune(study: \"'optuna.study.Study'\", trial: \"'optuna.trial.FrozenTrial'\") -> 'bool'",
+      "summary": "Judge whether the trial should be pruned based on the reported values."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'auto'",
+      "description": "",
+      "effective_default": null,
+      "name": "min_resource",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "4",
+      "description": "",
+      "effective_default": null,
+      "name": "reduction_factor",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0",
+      "description": "",
+      "effective_default": null,
+      "name": "min_early_stopping_rate",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0",
+      "description": "",
+      "effective_default": null,
+      "name": "bootstrap_count",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [],
+  "signature": "SuccessiveHalvingPruner(min_resource: 'str | int' = 'auto', reduction_factor: 'int' = 4, min_early_stopping_rate: 'int' = 0, bootstrap_count: 'int' = 0) -> 'None'",
+  "summary": "Pruner using Asynchronous Successive Halving Algorithm.",
+  "warnings": [
+    "parameter min_resource: not documented in docstring",
+    "parameter reduction_factor: not documented in docstring",
+    "parameter min_early_stopping_rate: not documented in docstring",
+    "parameter bootstrap_count: not documented in docstring"
+  ]
+}

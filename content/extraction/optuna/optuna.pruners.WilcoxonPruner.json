@@ -1,0 +1,57 @@
+{
+  "attributes": [],
+  "doc_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.WilcoxonPruner.html",
+  "extractor_version": "1",
+  "id": "optuna.pruners.WilcoxonPruner",
+  "import_path": "optuna.pruners.WilcoxonPruner",
+  "kind": "class",
+  "library": "optuna",
+  "library_version": "5.0.0",
+  "methods": [
+    {
+      "name": "prune",
+      "signature": "prune(study: \"'optuna.study.Study'\", trial: 'FrozenTrial') -> 'bool'",
+      "summary": "Judge whether the trial should be pruned based on the reported values."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0.1",
+      "description": "",
+      "effective_default": null,
+      "name": "p_threshold",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "2",
+      "description": "",
+      "effective_default": null,
+      "name": "n_startup_steps",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [],
+  "signature": "WilcoxonPruner(*, p_threshold: 'float' = 0.1, n_startup_steps: 'int' = 2) -> 'None'",
+  "summary": "Pruner based on the `Wilcoxon signed-rank test <https://en.wikipedia.org/w/index.php?title=Wilcoxon_signed-rank_test&oldid=1195011212>`__.",
+  "warnings": [
+    "parameter p_threshold: not documented in docstring",
+    "parameter n_startup_steps: not documented in docstring"
+  ]
+}

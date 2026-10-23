@@ -1,0 +1,57 @@
+{
+  "attributes": [],
+  "doc_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.study.MaxTrialsCallback.html",
+  "extractor_version": "1",
+  "id": "optuna.study.MaxTrialsCallback",
+  "import_path": "optuna.study.MaxTrialsCallback",
+  "kind": "class",
+  "library": "optuna",
+  "library_version": "5.0.0",
+  "methods": [],
+  "overrides_applied": [
+    {
+      "path": "parameters[name=states].default",
+      "reason": "Default repr of `states` is the enum repr `(<TrialState.COMPLETE: 1>,)`; the docs page shows `(TrialState.COMPLETE,)`. Same value, recorded in the readable docs form.",
+      "source_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.study.MaxTrialsCallback.html"
+    }
+  ],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "",
+      "effective_default": null,
+      "name": "n_trials",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "(TrialState.COMPLETE,)",
+      "description": "",
+      "effective_default": null,
+      "name": "states",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [],
+  "signature": "MaxTrialsCallback(n_trials: 'int', states: 'Container[TrialState] | None' = (<TrialState.COMPLETE: 1>,)) -> 'None'",
+  "summary": "Set a maximum number of trials before ending the study.",
+  "warnings": [
+    "parameter n_trials: not documented in docstring",
+    "parameter states: not documented in docstring"
+  ]
+}

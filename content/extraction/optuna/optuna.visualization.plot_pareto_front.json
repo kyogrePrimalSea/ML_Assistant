@@ -1,0 +1,100 @@
+{
+  "attributes": [],
+  "doc_url": "https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_pareto_front.html",
+  "extractor_version": "1",
+  "id": "optuna.visualization.plot_pareto_front",
+  "import_path": "optuna.visualization.plot_pareto_front",
+  "kind": "function",
+  "library": "optuna",
+  "library_version": "5.0.0",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "",
+      "effective_default": null,
+      "name": "study",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "target_names",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "",
+      "effective_default": null,
+      "name": "include_dominated_trials",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "constraints_func",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "",
+      "effective_default": null,
+      "name": "targets",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": ""
+    }
+  ],
+  "returns": [],
+  "signature": "plot_pareto_front(study: 'Study', *, target_names: 'list[str] | None' = None, include_dominated_trials: 'bool' = True, constraints_func: 'Callable[[FrozenTrial], Sequence[float]] | None' = None, targets: 'Callable[[FrozenTrial], Sequence[float]] | None' = None) -> \"'go.Figure'\"",
+  "summary": "Plot the Pareto front of a study.",
+  "warnings": [
+    "parameter study: not documented in docstring",
+    "parameter target_names: not documented in docstring",
+    "parameter include_dominated_trials: not documented in docstring",
+    "parameter constraints_func: not documented in docstring",
+    "parameter targets: not documented in docstring",
+    "no Returns section found"
+  ]
+}
