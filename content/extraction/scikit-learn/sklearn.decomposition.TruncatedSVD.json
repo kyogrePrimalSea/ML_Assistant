@@ -1,0 +1,238 @@
+{
+  "attributes": [
+    {
+      "description": "The right singular vectors of the input data.",
+      "name": "components_",
+      "type_doc": "ndarray of shape (n_components, n_features)"
+    },
+    {
+      "description": "The variance of the training samples transformed by a projection to\neach component.",
+      "name": "explained_variance_",
+      "type_doc": "ndarray of shape (n_components,)"
+    },
+    {
+      "description": "Percentage of variance explained by each of the selected components.",
+      "name": "explained_variance_ratio_",
+      "type_doc": "ndarray of shape (n_components,)"
+    },
+    {
+      "description": "The singular values corresponding to each of the selected components.\nThe singular values are equal to the 2-norms of the ``n_components``\nvariables in the lower-dimensional space.",
+      "name": "singular_values_",
+      "type_doc": "ndarray of shape (n_components,)"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.TruncatedSVD.html",
+  "extractor_version": "1",
+  "id": "sklearn.decomposition.TruncatedSVD",
+  "import_path": "sklearn.decomposition.TruncatedSVD",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y=None)",
+      "summary": "Fit model on training data X."
+    },
+    {
+      "name": "fit_transform",
+      "signature": "fit_transform(X, y=None)",
+      "summary": "Fit model to X and perform dimensionality reduction on X."
+    },
+    {
+      "name": "get_feature_names_out",
+      "signature": "get_feature_names_out(input_features=None)",
+      "summary": "Get output feature names for transformation."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "inverse_transform",
+      "signature": "inverse_transform(X)",
+      "summary": "Transform X back to its original space."
+    },
+    {
+      "name": "set_output",
+      "signature": "set_output(*, transform=None)",
+      "summary": "Set output container."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(X)",
+      "summary": "Perform dimensionality reduction on X."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "2",
+      "description": "Desired dimensionality of output data.\nIf algorithm='arpack', must be strictly less than the number of features.\nIf algorithm='randomized', must be less than or equal to the number of features.\nThe default value is useful for visualisation. For LSA, a value of\n100 is recommended.",
+      "effective_default": null,
+      "name": "n_components",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int, default=2"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "arpack",
+          "randomized"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'randomized'",
+      "description": "SVD solver to use. Either \"arpack\" for the ARPACK wrapper in SciPy\n(scipy.sparse.linalg.svds), or \"randomized\" for the randomized\nalgorithm due to Halko (2009).",
+      "effective_default": null,
+      "name": "algorithm",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'arpack', 'randomized'}, default='randomized'"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "5",
+      "description": "Number of iterations for randomized SVD solver. Not used by ARPACK. The\ndefault is larger than the default in\n:func:`~sklearn.utils.extmath.randomized_svd` to handle sparse\nmatrices that may have large slowly decaying spectrum.",
+      "effective_default": null,
+      "name": "n_iter",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=5"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "10",
+      "description": "Number of oversamples for randomized SVD solver. Not used by ARPACK.\nSee :func:`~sklearn.utils.extmath.randomized_svd` for a complete\ndescription.\n\n.. versionadded:: 1.1",
+      "effective_default": null,
+      "name": "n_oversamples",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=10"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "LU",
+          "QR",
+          "auto",
+          "none"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'auto'",
+      "description": "Power iteration normalizer for randomized SVD solver.\nNot used by ARPACK. See :func:`~sklearn.utils.extmath.randomized_svd`\nfor more details.\n\n.. versionadded:: 1.1",
+      "effective_default": null,
+      "name": "power_iteration_normalizer",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'auto', 'QR', 'LU', 'none'}, default='auto'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "random_state"
+        ]
+      },
+      "default": "None",
+      "description": "Used during randomized svd. Pass an int for reproducible results across\nmultiple function calls.\nSee :term:`Glossary <random_state>`.",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, RandomState instance or None, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.0",
+      "description": "Tolerance for ARPACK. 0 means machine precision. Ignored by randomized\nSVD solver.",
+      "effective_default": null,
+      "name": "tol",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0.0"
+    }
+  ],
+  "returns": [],
+  "signature": "TruncatedSVD(n_components=2, *, algorithm='randomized', n_iter=5, n_oversamples=10, power_iteration_normalizer='auto', random_state=None, tol=0.0)",
+  "summary": "Dimensionality reduction using truncated SVD (aka LSA).",
+  "warnings": []
+}

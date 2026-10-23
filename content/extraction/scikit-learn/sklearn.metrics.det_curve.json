@@ -1,0 +1,109 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.metrics.det_curve.html",
+  "extractor_version": "1",
+  "id": "sklearn.metrics.det_curve",
+  "import_path": "sklearn.metrics.det_curve",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "True binary labels. If labels are not either {-1, 1} or {0, 1}, then\npos_label should be explicitly given.",
+      "effective_default": null,
+      "name": "y_true",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n_samples,)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Target scores, can either be probability estimates of the positive\nclass or non-thresholded decision values (as returned by\n:term:`decision_function` on some classifiers).\nFor :term:`decision_function` scores, values greater than or equal to\nzero should indicate the positive class.",
+      "effective_default": null,
+      "name": "y_score",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape of (n_samples,)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The label of the positive class.\nWhen ``pos_label=None``, if `y_true` is in {-1, 1} or {0, 1},\n``pos_label`` is set to 1, otherwise an error will be raised.",
+      "effective_default": null,
+      "name": "pos_label",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int, float, bool or str, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Sample weights.",
+      "effective_default": null,
+      "name": "sample_weight",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "array-like of shape (n_samples,), default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "Whether to drop thresholds where true positives (tp) do not change from\nthe previous or subsequent threshold. All points with the same tp value\nhave the same `fnr` and thus same y coordinate.\n\n.. versionadded:: 1.7",
+      "effective_default": null,
+      "name": "drop_intermediate",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool, default=False"
+    }
+  ],
+  "returns": [
+    {
+      "description": "False positive rate (FPR) such that element i is the false positive\nrate of predictions with score >= thresholds[i]. This is occasionally\nreferred to as false acceptance probability or fall-out.",
+      "name": "fpr",
+      "type_doc": "ndarray of shape (n_thresholds,)"
+    },
+    {
+      "description": "False negative rate (FNR) such that element i is the false negative\nrate of predictions with score < thresholds[i]. This is occasionally\nreferred to as false rejection or miss rate.",
+      "name": "fnr",
+      "type_doc": "ndarray of shape (n_thresholds,)"
+    },
+    {
+      "description": "Increasing thresholds on the decision function (either `predict_proba`\nor `decision_function`) used to compute FPR and FNR.\n\n.. versionchanged:: 1.7\n   An arbitrary threshold at infinity is added for the case `fpr=0`\n   and `fnr=1`.",
+      "name": "thresholds",
+      "type_doc": "ndarray of shape (n_thresholds,)"
+    }
+  ],
+  "signature": "det_curve(y_true, y_score, pos_label=None, sample_weight=None, drop_intermediate=False)",
+  "summary": "Compute Detection Error Tradeoff (DET) for different probability thresholds.",
+  "warnings": []
+}

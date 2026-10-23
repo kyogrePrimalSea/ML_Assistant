@@ -1,0 +1,177 @@
+{
+  "attributes": [
+    {
+      "description": "The class labels.",
+      "name": "classes_",
+      "type_doc": "ndarray of shape (n_classes,)"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`. Only defined if the\nunderlying estimator exposes such an attribute when fit.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Only defined if the\nunderlying estimator exposes such an attribute when fit.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    },
+    {
+      "description": "The list of classifier and calibrator pairs.\n\n- When `ensemble=True`, `n_cv` fitted `estimator` and calibrator pairs.\n  `n_cv` is the number of cross-validation folds.\n- When `ensemble=False`, the `estimator`, fitted on all the data, and fitted\n  calibrator.\n\n.. versionchanged:: 0.24\n    Single calibrated classifier case when `ensemble=False`.",
+      "name": "calibrated_classifiers_",
+      "type_doc": "list (len() equal to cv or 1 if `ensemble=False`)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.calibration.CalibratedClassifierCV.html",
+  "extractor_version": "1",
+  "id": "sklearn.calibration.CalibratedClassifierCV",
+  "import_path": "sklearn.calibration.CalibratedClassifierCV",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y, sample_weight=None, **fit_params)",
+      "summary": "Fit the calibrated model."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X)",
+      "summary": "Predict the target of new samples."
+    },
+    {
+      "name": "predict_proba",
+      "signature": "predict_proba(X)",
+      "summary": "Calibrated probabilities of classification."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Return :ref:`accuracy <accuracy_score>` on provided data and labels."
+    },
+    {
+      "name": "set_fit_request",
+      "signature": "set_fit_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.calibration.CalibratedClassifierCV",
+      "summary": "Configure whether metadata should be requested to be passed to the ``fit`` method."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.calibration.CalibratedClassifierCV",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "an object implementing 'fit' and 'predict_proba'",
+          "an object implementing 'fit' and 'decision_function'",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "The classifier whose output need to be calibrated to provide more\naccurate `predict_proba` outputs. The default classifier is\na :class:`~sklearn.svm.LinearSVC`.\n\n.. versionadded:: 1.2",
+      "effective_default": null,
+      "name": "estimator",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "estimator instance, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "isotonic",
+          "sigmoid",
+          "temperature"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'sigmoid'",
+      "description": "The method to use for calibration. Can be:\n\n- 'sigmoid', which corresponds to Platt's method (i.e. a binary logistic\n  regression model).\n- 'isotonic', which is a non-parametric approach.\n- 'temperature', temperature scaling.\n\nSigmoid and isotonic calibration methods natively support only binary\nclassifiers and extend to multi-class classification using a One-vs-Rest (OvR)\nstrategy with post-hoc renormalization, i.e., adjusting the probabilities after\ncalibration to ensure they sum up to 1.\n\nIn contrast, temperature scaling naturally supports multi-class calibration by\napplying `softmax(classifier_logits/T)` with a value of `T` (temperature)\nthat optimizes the log loss.\n\nFor very uncalibrated classifiers on very imbalanced datasets, sigmoid\ncalibration might be preferred because it fits an additional intercept\nparameter. This helps shift decision boundaries appropriately when the\nclassifier being calibrated is biased towards the majority class.\n\nIsotonic calibration is not recommended when the number of calibration samples\nis too low ``(≪1000)`` since it then tends to overfit.\n\n.. versionchanged:: 1.8\n   Added option 'temperature'.",
+      "effective_default": null,
+      "name": "method",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'sigmoid', 'isotonic', 'temperature'}, default='sigmoid'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "cv_object"
+        ]
+      },
+      "default": "None",
+      "description": "Determines the cross-validation splitting strategy.\nPossible inputs for cv are:\n\n- None, to use the default 5-fold cross-validation,\n- integer, to specify the number of folds,\n- :term:`CV splitter`,\n- an iterable yielding (train, test) splits as arrays of indices.\n\nFor integer/None inputs, if ``y`` is binary or multiclass,\n:class:`~sklearn.model_selection.StratifiedKFold` is used. If ``y`` is\nneither binary nor multiclass, :class:`~sklearn.model_selection.KFold`\nis used.\n\nRefer to the :ref:`User Guide <cross_validation>` for the various\ncross-validation strategies that can be used here.\n\n.. versionchanged:: 0.22\n    ``cv`` default value if None changed from 3-fold to 5-fold.",
+      "effective_default": null,
+      "name": "cv",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, cross-validation generator, or iterable, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "Integral",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Number of jobs to run in parallel.\n``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.\n``-1`` means using all processors.\n\nBase estimator clones are fitted in parallel across cross-validation\niterations.\n\nSee :term:`Glossary <n_jobs>` for more details.\n\n.. versionadded:: 0.24",
+      "effective_default": null,
+      "name": "n_jobs",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "auto"
+        ],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "'auto'",
+      "description": "Determines how the calibrator is fitted.\n\n\"auto\" will use `False` if the `estimator` is a\n:class:`~sklearn.frozen.FrozenEstimator`, and `True` otherwise.\n\nIf `True`, the `estimator` is fitted using training data, and\ncalibrated using testing data, for each `cv` fold. The final estimator\nis an ensemble of `n_cv` fitted classifier and calibrator pairs, where\n`n_cv` is the number of cross-validation folds. The output is the\naverage predicted probabilities of all pairs.\n\nIf `False`, `cv` is used to compute unbiased predictions, via\n:func:`~sklearn.model_selection.cross_val_predict`, which are then\nused for calibration. At prediction time, the classifier used is the\n`estimator` trained on all the data.\nNote that this method is also internally implemented  in\n:mod:`sklearn.svm` estimators with the `probabilities=True` parameter.\n\n.. versionadded:: 0.24\n\n.. versionchanged:: 1.6\n    `\"auto\"` option is added and is the default.",
+      "effective_default": null,
+      "name": "ensemble",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, or \"auto\", default=\"auto\""
+    }
+  ],
+  "returns": [],
+  "signature": "CalibratedClassifierCV(estimator=None, *, method='sigmoid', cv=None, n_jobs=None, ensemble='auto')",
+  "summary": "Calibrate probabilities using isotonic, sigmoid, or temperature scaling.",
+  "warnings": []
+}

@@ -1,0 +1,94 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.ShuffleSplit.html",
+  "extractor_version": "1",
+  "id": "sklearn.model_selection.ShuffleSplit",
+  "import_path": "sklearn.model_selection.ShuffleSplit",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_n_splits",
+      "signature": "get_n_splits(X=None, y=None, groups=None)",
+      "summary": "Returns the number of splitting iterations as set with the `n_splits` param"
+    },
+    {
+      "name": "split",
+      "signature": "split(X, y=None, groups=None)",
+      "summary": "Generate indices to split data into training and test set."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "10",
+      "description": "Number of re-shuffling & splitting iterations.",
+      "effective_default": null,
+      "name": "n_splits",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int, default=10"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "If float, should be between 0.0 and 1.0 and represent the proportion\nof the dataset to include in the test split. If int, represents the\nabsolute number of test samples. If None, the value is set to the\ncomplement of the train size. If ``train_size`` is also None, it will\nbe set to 0.1.",
+      "effective_default": null,
+      "name": "test_size",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float or int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "If float, should be between 0.0 and 1.0 and represent the\nproportion of the dataset to include in the train split. If\nint, represents the absolute number of train samples. If None,\nthe value is automatically set to the complement of the test size.",
+      "effective_default": null,
+      "name": "train_size",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float or int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Controls the randomness of the training and testing indices produced.\nPass an int for reproducible output across multiple function calls.\nSee :term:`Glossary <random_state>`.",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, RandomState instance or None, default=None"
+    }
+  ],
+  "returns": [],
+  "signature": "ShuffleSplit(n_splits=10, *, test_size=None, train_size=None, random_state=None)",
+  "summary": "Random permutation cross-validator.",
+  "warnings": []
+}

@@ -1,0 +1,99 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.label_binarize.html",
+  "extractor_version": "1",
+  "id": "sklearn.preprocessing.label_binarize",
+  "import_path": "sklearn.preprocessing.label_binarize",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Sequence of integer labels or multilabel data to encode.",
+      "effective_default": null,
+      "name": "y",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like or sparse matrix"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Uniquely holds the label for each class.",
+      "effective_default": null,
+      "name": "classes",
+      "param_kind": "keyword_only",
+      "required": true,
+      "type_doc": "array-like of shape (n_classes,)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0",
+      "description": "Value with which negative labels must be encoded.",
+      "effective_default": null,
+      "name": "neg_label",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "1",
+      "description": "Value with which positive labels must be encoded.",
+      "effective_default": null,
+      "name": "pos_label",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=1"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "Set to true if output binary array is desired in CSR sparse format.",
+      "effective_default": null,
+      "name": "sparse_output",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False,"
+    }
+  ],
+  "returns": [
+    {
+      "description": "Shape will be (n_samples, 1) for binary problems. Sparse matrix will\nbe of CSR format.",
+      "name": "Y",
+      "type_doc": "{ndarray, sparse matrix} of shape (n_samples, n_classes)"
+    }
+  ],
+  "signature": "label_binarize(y, *, classes, neg_label=0, pos_label=1, sparse_output=False)",
+  "summary": "Binarize labels in a one-vs-all fashion.",
+  "warnings": []
+}

@@ -1,0 +1,392 @@
+{
+  "attributes": [
+    {
+      "description": "The feature importances.\nThe higher, the more important the feature.\nThe importance of a feature is computed as the\n(normalized) total reduction of the criterion brought\nby that feature. It is also known as the Gini importance [4]_.\n\nWarning: impurity-based feature importances can be misleading for\nhigh cardinality features (many unique values). See\n:func:`sklearn.inspection.permutation_importance` as an alternative.",
+      "name": "feature_importances_",
+      "type_doc": "ndarray of shape (n_features,)"
+    },
+    {
+      "description": "The inferred value of max_features.",
+      "name": "max_features_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    },
+    {
+      "description": "The number of outputs when ``fit`` is performed.",
+      "name": "n_outputs_",
+      "type_doc": "int"
+    },
+    {
+      "description": "The underlying Tree object. Please refer to\n``help(sklearn.tree._tree.Tree)`` for attributes of Tree object and\n:ref:`sphx_glr_auto_examples_tree_plot_unveil_tree_structure.py`\nfor basic usage of these attributes.",
+      "name": "tree_",
+      "type_doc": "Tree instance"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeRegressor.html",
+  "extractor_version": "1",
+  "id": "sklearn.tree.DecisionTreeRegressor",
+  "import_path": "sklearn.tree.DecisionTreeRegressor",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "apply",
+      "signature": "apply(X, check_input=True)",
+      "summary": "Return the index of the leaf that each sample is predicted as."
+    },
+    {
+      "name": "cost_complexity_pruning_path",
+      "signature": "cost_complexity_pruning_path(X, y, sample_weight=None)",
+      "summary": "Compute the pruning path during Minimal Cost-Complexity Pruning."
+    },
+    {
+      "name": "decision_path",
+      "signature": "decision_path(X, check_input=True)",
+      "summary": "Return the decision path in the tree."
+    },
+    {
+      "name": "fit",
+      "signature": "fit(X, y, sample_weight=None, check_input=True)",
+      "summary": "Build a decision tree regressor from the training set (X, y)."
+    },
+    {
+      "name": "get_depth",
+      "signature": "get_depth()",
+      "summary": "Return the depth of the decision tree."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_n_leaves",
+      "signature": "get_n_leaves()",
+      "summary": "Return the number of leaves of the decision tree."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X, check_input=True)",
+      "summary": "Predict class or regression value for X."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Return :ref:`coefficient of determination <r2_score>` on test data."
+    },
+    {
+      "name": "set_fit_request",
+      "signature": "set_fit_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.tree._classes.DecisionTreeRegressor",
+      "summary": "Configure whether metadata should be requested to be passed to the ``fit`` method."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.tree._classes.DecisionTreeRegressor",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "absolute_error",
+          "poisson",
+          "squared_error"
+        ],
+        "source": "constraints",
+        "types": [
+          "Criterion"
+        ]
+      },
+      "default": "'squared_error'",
+      "description": "The function to measure the quality of a split. Supported criteria\nare \"squared_error\" for the mean squared error, which is equal to\nvariance reduction as feature selection criterion and minimizes the L2\nloss using the mean of each terminal node, \"absolute_error\" for the mean\nabsolute error, which minimizes the L1 loss using the median of each terminal\nnode, and \"poisson\" which uses reduction in Poisson deviance to find splits,\nalso using the mean of each terminal node.\n\n.. versionadded:: 0.18\n   Mean Absolute Error (MAE) criterion.\n\n.. versionadded:: 0.24\n    Poisson deviance criterion.\n\n.. versionchanged:: 1.9\n    Criterion `\"friedman_mse\"` was deprecated.",
+      "effective_default": null,
+      "name": "criterion",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{\"squared_error\", \"absolute_error\", \"poisson\"}, default=\"squared_error\""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "best",
+          "random"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'best'",
+      "description": "The strategy used to choose the split at each node. Supported\nstrategies are \"best\" to choose the best split and \"random\" to choose\nthe best random split among considered features for this split.",
+      "effective_default": null,
+      "name": "splitter",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{\"best\", \"random\"}, default=\"best\""
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "The maximum depth of the tree. If None, then nodes are expanded until\nall leaves are pure or until all leaves contain less than\nmin_samples_split samples.\n\nFor an example of how ``max_depth`` influences the model, see\n:ref:`sphx_glr_auto_examples_tree_plot_tree_regression.py`.",
+      "effective_default": null,
+      "name": "max_depth",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 2,
+            "right": null,
+            "type": "Integral"
+          },
+          {
+            "closed": "right",
+            "left": 0.0,
+            "right": 1.0,
+            "type": "RealNotInt"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "2",
+      "description": "The minimum number of samples required to split an internal node:\n\n- If int, then consider `min_samples_split` as the minimum number.\n- If float, then `min_samples_split` is a fraction and\n  `ceil(min_samples_split * n_samples)` are the minimum\n  number of samples for each split.\n\n.. versionchanged:: 0.18\n   Added float values for fractions.",
+      "effective_default": null,
+      "name": "min_samples_split",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or float, default=2"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          },
+          {
+            "closed": "neither",
+            "left": 0.0,
+            "right": 1.0,
+            "type": "RealNotInt"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "1",
+      "description": "The minimum number of samples required to be at a leaf node.\nA split point at any depth will only be considered if it leaves at\nleast ``min_samples_leaf`` training samples in each of the left and\nright branches.  This may have the effect of smoothing the model,\nespecially in regression.\n\n- If int, then consider `min_samples_leaf` as the minimum number.\n- If float, then `min_samples_leaf` is a fraction and\n  `ceil(min_samples_leaf * n_samples)` are the minimum\n  number of samples for each node.\n\n.. versionchanged:: 0.18\n   Added float values for fractions.",
+      "effective_default": null,
+      "name": "min_samples_leaf",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or float, default=1"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "both",
+            "left": 0.0,
+            "right": 0.5,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.0",
+      "description": "The minimum weighted fraction of the sum total of weights (of all\nthe input samples) required to be at a leaf node. Samples have\nequal weight when sample_weight is not provided.",
+      "effective_default": null,
+      "name": "min_weight_fraction_leaf",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0.0"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          },
+          {
+            "closed": "right",
+            "left": 0.0,
+            "right": 1.0,
+            "type": "RealNotInt"
+          }
+        ],
+        "options": [
+          "log2",
+          "sqrt"
+        ],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "The number of features to consider when looking for the best split:\n\n- If int, then consider `max_features` features at each split.\n- If float, then `max_features` is a fraction and\n  `max(1, int(max_features * n_features_in_))` features are considered at each\n  split.\n- If \"sqrt\", then `max_features=sqrt(n_features)`.\n- If \"log2\", then `max_features=log2(n_features)`.\n- If None, then `max_features=n_features`.\n\nNote: splitting may inspect more than ``max_features`` features if\nneeded to find a valid split.",
+      "effective_default": null,
+      "name": "max_features",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, float or {\"sqrt\", \"log2\"}, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "random_state"
+        ]
+      },
+      "default": "None",
+      "description": "Controls the randomness of the estimator. The features are always\nrandomly permuted at each split, even if ``splitter`` is set to\n``\"best\"``. When ``max_features < n_features``, the algorithm will\nselect ``max_features`` at random at each split before finding the best\nsplit among them. But the best found split may vary across different\nruns, even if ``max_features=n_features``. That is the case, if the\nimprovement of the criterion is identical for several splits and one\nsplit has to be selected at random. To obtain a deterministic behaviour\nduring fitting, ``random_state`` has to be fixed to an integer.\nSee :term:`Glossary <random_state>` for details.",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, RandomState instance or None, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 2,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Grow a tree with ``max_leaf_nodes`` in best-first fashion.\nBest nodes are defined as relative reduction in impurity.\nIf None then unlimited number of leaf nodes.",
+      "effective_default": null,
+      "name": "max_leaf_nodes",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0.0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.0",
+      "description": "A node will be split if this split induces a decrease of the impurity\ngreater than or equal to this value.\n\nThe weighted impurity decrease equation is the following::\n\n    N_t / N * (impurity - N_t_R / N_t * right_impurity\n                        - N_t_L / N_t * left_impurity)\n\nwhere ``N`` is the total number of samples, ``N_t`` is the number of\nsamples at the current node, ``N_t_L`` is the number of samples in the\nleft child, and ``N_t_R`` is the number of samples in the right child.\n\n``N``, ``N_t``, ``N_t_R`` and ``N_t_L`` all refer to the weighted sum,\nif ``sample_weight`` is passed.\n\n.. versionadded:: 0.19",
+      "effective_default": null,
+      "name": "min_impurity_decrease",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0.0"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0.0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.0",
+      "description": "Complexity parameter used for Minimal Cost-Complexity Pruning. The\nsubtree with the largest cost complexity that is smaller than\n``ccp_alpha`` will be chosen. By default, no pruning is performed. See\n:ref:`minimal_cost_complexity_pruning` for details. See\n:ref:`sphx_glr_auto_examples_tree_plot_cost_complexity_pruning.py`\nfor an example of such pruning.\n\n.. versionadded:: 0.22",
+      "effective_default": null,
+      "name": "ccp_alpha",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "non-negative float, default=0.0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "array-like",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Indicates the monotonicity constraint to enforce on each feature.\n  - 1: monotonic increase\n  - 0: no constraint\n  - -1: monotonic decrease\n\nIf monotonic_cst is None, no constraints are applied.\n\nMonotonicity constraints are not supported for:\n  - multioutput regressions (i.e. when `n_outputs_ > 1`).\n\nRead more in the :ref:`User Guide <monotonic_cst_gbdt>`.\n\n.. versionadded:: 1.4",
+      "effective_default": null,
+      "name": "monotonic_cst",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of int of shape (n_features), default=None"
+    }
+  ],
+  "returns": [],
+  "signature": "DecisionTreeRegressor(*, criterion='squared_error', splitter='best', max_depth=None, min_samples_split=2, min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_features=None, random_state=None, max_leaf_nodes=None, min_impurity_decrease=0.0, ccp_alpha=0.0, monotonic_cst=None)",
+  "summary": "A decision tree regressor.",
+  "warnings": []
+}

@@ -1,0 +1,358 @@
+{
+  "attributes": [
+    {
+      "description": "The amount of penalization chosen by cross validation.",
+      "name": "alpha_",
+      "type_doc": "float"
+    },
+    {
+      "description": "Parameter vector (w in the cost function formula).",
+      "name": "coef_",
+      "type_doc": "ndarray of shape (n_features,) or (n_targets, n_features)"
+    },
+    {
+      "description": "Independent term in decision function.",
+      "name": "intercept_",
+      "type_doc": "float or ndarray of shape (n_targets,)"
+    },
+    {
+      "description": "Mean square error for the test set on each fold, varying alpha.",
+      "name": "mse_path_",
+      "type_doc": "ndarray of shape (n_alphas, n_folds)"
+    },
+    {
+      "description": "The grid of alphas used for fitting.",
+      "name": "alphas_",
+      "type_doc": "ndarray of shape (n_alphas,)"
+    },
+    {
+      "description": "The dual gap at the end of the optimization for the optimal alpha\n(``alpha_``).",
+      "name": "dual_gap_",
+      "type_doc": "float or ndarray of shape (n_targets,)"
+    },
+    {
+      "description": "Number of iterations run by the coordinate descent solver to reach\nthe specified tolerance for the optimal alpha.",
+      "name": "n_iter_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LassoCV.html",
+  "extractor_version": "1",
+  "id": "sklearn.linear_model.LassoCV",
+  "import_path": "sklearn.linear_model.LassoCV",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y, sample_weight=None, **params)",
+      "summary": "Fit Lasso model with coordinate descent."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "path",
+      "signature": "path(X, y, *, eps=0.001, n_alphas='deprecated', alphas='warn', precompute='auto', Xy=None, copy_X=True, coef_init=None, verbose=False, return_n_iter=False, positive=False, **params)",
+      "summary": "Compute Lasso path with coordinate descent."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X)",
+      "summary": "Predict using the linear model."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Return :ref:`coefficient of determination <r2_score>` on test data."
+    },
+    {
+      "name": "set_fit_request",
+      "signature": "set_fit_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.linear_model._coordinate_descent.LassoCV",
+      "summary": "Configure whether metadata should be requested to be passed to the ``fit`` method."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.linear_model._coordinate_descent.LassoCV",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "neither",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.001",
+      "description": "Length of the path. ``eps=1e-3`` means that\n``alpha_min / alpha_max = 1e-3``.",
+      "effective_default": null,
+      "name": "eps",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=1e-3"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "array-like"
+        ]
+      },
+      "default": "100",
+      "description": "Values of alphas to test along the regularization path.\nIf int, `alphas` values are generated automatically.\nIf array-like, list of alpha values to use.\n\n.. versionchanged:: 1.7\n    `alphas` accepts an integer value which removes the need to pass\n    `n_alphas`.",
+      "effective_default": null,
+      "name": "alphas",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like or int, default=100"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "Whether to calculate the intercept for this model. If set\nto false, no intercept will be used in calculations\n(i.e. data is expected to be centered).",
+      "effective_default": null,
+      "name": "fit_intercept",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "auto"
+        ],
+        "source": "constraints",
+        "types": [
+          "array-like",
+          "boolean"
+        ]
+      },
+      "default": "'auto'",
+      "description": "Whether to use a precomputed Gram matrix to speed up\ncalculations. If set to ``'auto'`` let us decide. The Gram\nmatrix can also be passed as an argument.",
+      "effective_default": null,
+      "name": "precompute",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "'auto', bool or array-like of shape (n_features, n_features), default='auto'"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "1000",
+      "description": "The maximum number of iterations.",
+      "effective_default": null,
+      "name": "max_iter",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=1000"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.0001",
+      "description": "The tolerance for the optimization: if the updates are smaller or equal to\n``tol``, the optimization code checks the dual gap for optimality and continues\nuntil it is smaller or equal to ``tol``.",
+      "effective_default": null,
+      "name": "tol",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=1e-4"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "If ``True``, `X` will be copied; otherwise, it may be overwritten.",
+      "effective_default": null,
+      "name": "copy_X",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "cv_object"
+        ]
+      },
+      "default": "None",
+      "description": "Determines the cross-validation splitting strategy.\nPossible inputs for cv are:\n\n- None, to use the default 5-fold cross-validation,\n- int, to specify the number of folds,\n- :term:`CV splitter`,\n- an iterable yielding (train, test) splits as arrays of indices.\n\nFor int/None inputs, :class:`~sklearn.model_selection.KFold` is used.\n\nRefer :ref:`User Guide <cross_validation>` for the various\ncross-validation strategies that can be used here.\n\n.. versionchanged:: 0.22\n    ``cv`` default value if None changed from 3-fold to 5-fold.",
+      "effective_default": null,
+      "name": "cv",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, cross-validation generator or iterable, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "verbose"
+        ]
+      },
+      "default": "False",
+      "description": "Amount of verbosity.",
+      "effective_default": null,
+      "name": "verbose",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool or int, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "Integral",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Number of CPUs to use during the cross validation.\n``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.\n``-1`` means using all processors. See :term:`Glossary <n_jobs>`\nfor more details.",
+      "effective_default": null,
+      "name": "n_jobs",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "If positive, restrict regression coefficients to be positive.",
+      "effective_default": null,
+      "name": "positive",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "random_state"
+        ]
+      },
+      "default": "None",
+      "description": "The seed of the pseudo random number generator that selects a random\nfeature to update. Used when ``selection`` == 'random'.\nPass an int for reproducible output across multiple function calls.\nSee :term:`Glossary <random_state>`.",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, RandomState instance, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "cyclic",
+          "random"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'cyclic'",
+      "description": "If set to 'random', a random coefficient is updated every iteration\nrather than looping over features sequentially by default. This\n(setting to 'random') often leads to significantly faster convergence\nespecially when tol is higher than 1e-4.",
+      "effective_default": null,
+      "name": "selection",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'cyclic', 'random'}, default='cyclic'"
+    }
+  ],
+  "returns": [],
+  "signature": "LassoCV(*, eps=0.001, alphas=100, fit_intercept=True, precompute='auto', max_iter=1000, tol=0.0001, copy_X=True, cv=None, verbose=False, n_jobs=None, positive=False, random_state=None, selection='cyclic')",
+  "summary": "Lasso linear model with iterative fitting along a regularization path.",
+  "warnings": []
+}

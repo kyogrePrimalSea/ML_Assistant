@@ -1,0 +1,285 @@
+{
+  "attributes": [
+    {
+      "description": "Cross-validation values for each alpha (only available if\n``store_cv_results=True`` and ``cv=None``). After ``fit()`` has been\ncalled, this attribute will contain the mean squared errors if\n`scoring is None` otherwise it will contain standardized per point\nprediction values.\n\n.. versionchanged:: 1.5\n    `cv_values_` changed to `cv_results_`.",
+      "name": "cv_results_",
+      "type_doc": "ndarray of shape (n_samples, n_alphas) or shape (n_samples, n_targets, n_alphas), optional"
+    },
+    {
+      "description": "Weight vector(s).",
+      "name": "coef_",
+      "type_doc": "ndarray of shape (n_features) or (n_targets, n_features)"
+    },
+    {
+      "description": "Independent term in decision function. Set to 0.0 if\n``fit_intercept = False``.",
+      "name": "intercept_",
+      "type_doc": "float or ndarray of shape (n_targets,)"
+    },
+    {
+      "description": "Estimated regularization parameter, or, if ``alpha_per_target=True``,\nthe estimated regularization parameter for each target.",
+      "name": "alpha_",
+      "type_doc": "float or ndarray of shape (n_targets,)"
+    },
+    {
+      "description": "Score of base estimator with best alpha, or, if\n``alpha_per_target=True``, a score for each target.\n\n.. versionadded:: 0.23",
+      "name": "best_score_",
+      "type_doc": "float or ndarray of shape (n_targets,)"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.RidgeCV.html",
+  "extractor_version": "1",
+  "id": "sklearn.linear_model.RidgeCV",
+  "import_path": "sklearn.linear_model.RidgeCV",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y, sample_weight=None, **params)",
+      "summary": "Fit Ridge regression model with cv."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X)",
+      "summary": "Predict using the linear model."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Return :ref:`coefficient of determination <r2_score>` on test data."
+    },
+    {
+      "name": "set_fit_request",
+      "signature": "set_fit_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.linear_model._ridge.RidgeCV",
+      "summary": "Configure whether metadata should be requested to be passed to the ``fit`` method."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.linear_model._ridge.RidgeCV",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "neither",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "array-like"
+        ]
+      },
+      "default": "(0.1, 1.0, 10.0)",
+      "description": "Array of alpha values to try.\nRegularization strength; must be a positive float. Regularization\nimproves the conditioning of the problem and reduces the variance of\nthe estimates. Larger values specify stronger regularization.\nAlpha corresponds to ``1 / (2C)`` in other linear models such as\n:class:`~sklearn.linear_model.LogisticRegression` or\n:class:`~sklearn.svm.LinearSVC`.\nIf using Leave-One-Out cross-validation, alphas must be strictly positive.\n\nFor an example on how regularization strength affects the model coefficients,\nsee :ref:`sphx_glr_auto_examples_linear_model_plot_ridge_coeffs.py`.",
+      "effective_default": null,
+      "name": "alphas",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "array-like of shape (n_alphas,), default=(0.1, 1.0, 10.0)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "Whether to calculate the intercept for this model. If set\nto false, no intercept will be used in calculations\n(i.e. data is expected to be centered).",
+      "effective_default": null,
+      "name": "fit_intercept",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "accuracy",
+          "adjusted_mutual_info_score",
+          "adjusted_rand_score",
+          "average_precision",
+          "balanced_accuracy",
+          "completeness_score",
+          "d2_absolute_error_score",
+          "d2_brier_score",
+          "d2_log_loss_score",
+          "explained_variance",
+          "f1",
+          "f1_macro",
+          "f1_micro",
+          "f1_samples",
+          "f1_weighted",
+          "fowlkes_mallows_score",
+          "homogeneity_score",
+          "jaccard",
+          "jaccard_macro",
+          "jaccard_micro",
+          "jaccard_samples",
+          "jaccard_weighted",
+          "matthews_corrcoef",
+          "mutual_info_score",
+          "neg_brier_score",
+          "neg_log_loss",
+          "neg_max_error",
+          "neg_mean_absolute_error",
+          "neg_mean_absolute_percentage_error",
+          "neg_mean_gamma_deviance",
+          "neg_mean_poisson_deviance",
+          "neg_mean_squared_error",
+          "neg_mean_squared_log_error",
+          "neg_median_absolute_error",
+          "neg_negative_likelihood_ratio",
+          "neg_root_mean_squared_error",
+          "neg_root_mean_squared_log_error",
+          "normalized_mutual_info_score",
+          "positive_likelihood_ratio",
+          "precision",
+          "precision_macro",
+          "precision_micro",
+          "precision_samples",
+          "precision_weighted",
+          "r2",
+          "rand_score",
+          "recall",
+          "recall_macro",
+          "recall_micro",
+          "recall_samples",
+          "recall_weighted",
+          "roc_auc",
+          "roc_auc_ovo",
+          "roc_auc_ovo_weighted",
+          "roc_auc_ovr",
+          "roc_auc_ovr_weighted",
+          "top_k_accuracy",
+          "v_measure_score"
+        ],
+        "source": "constraints",
+        "types": [
+          "<built-in function callable>",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "The scoring method to use for cross-validation. Options:\n\n- str: see :ref:`scoring_string_names` for options.\n- callable: a scorer callable object (e.g., function) with signature\n  ``scorer(estimator, X, y)``. See :ref:`scoring_callable` for details.\n- `None`: negative :ref:`mean squared error <mean_squared_error>` if cv is\n  None (i.e. when using leave-one-out cross-validation), or\n  :ref:`coefficient of determination <r2_score>` (:math:`R^2`) otherwise.",
+      "effective_default": null,
+      "name": "scoring",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str, callable, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "cv_object"
+        ]
+      },
+      "default": "None",
+      "description": "Determines the cross-validation splitting strategy.\nPossible inputs for cv are:\n\n- None, to use the efficient Leave-One-Out cross-validation\n- integer, to specify the number of folds,\n- :term:`CV splitter`,\n- an iterable yielding (train, test) splits as arrays of indices.\n\nFor integer/None inputs, if ``y`` is binary or multiclass,\n:class:`~sklearn.model_selection.StratifiedKFold` is used, else,\n:class:`~sklearn.model_selection.KFold` is used.\n\nRefer :ref:`User Guide <cross_validation>` for the various\ncross-validation strategies that can be used here.",
+      "effective_default": null,
+      "name": "cv",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, cross-validation generator or an iterable, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "auto",
+          "eigen",
+          "svd"
+        ],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Flag indicating which strategy to use when performing\nLeave-One-Out Cross-Validation. Options are::\n\n    'auto' : same as 'eigen'\n    'svd' : use singular value decomposition of X when X is dense,\n        fallback to 'eigen' when X is sparse\n    'eigen' : use eigendecomposition of X X' when n_samples <= n_features\n        or X' X when n_features < n_samples\n\nThe 'auto' mode is the default and is intended to pick the cheaper\noption depending on the shape and sparsity of the training data.",
+      "effective_default": null,
+      "name": "gcv_mode",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'auto', 'svd', 'eigen'}, default='auto'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "Flag indicating if the cross-validation values corresponding to\neach alpha should be stored in the ``cv_results_`` attribute (see\nbelow). This flag is only compatible with ``cv=None`` (i.e. using\nLeave-One-Out Cross-Validation).\n\n.. versionchanged:: 1.5\n    Parameter name changed from `store_cv_values` to `store_cv_results`.",
+      "effective_default": null,
+      "name": "store_cv_results",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "Flag indicating whether to optimize the alpha value (picked from the\n`alphas` parameter list) for each target separately (for multi-output\nsettings: multiple prediction targets). When set to `True`, after\nfitting, the `alpha_` attribute will contain a value for each target.\nWhen set to `False`, a single alpha is used for all targets.\nThis flag is only compatible with ``cv=None`` (i.e. using\nLeave-One-Out Cross-Validation).\n\n.. versionadded:: 0.24",
+      "effective_default": null,
+      "name": "alpha_per_target",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    }
+  ],
+  "returns": [],
+  "signature": "RidgeCV(alphas=(0.1, 1.0, 10.0), *, fit_intercept=True, scoring=None, cv=None, gcv_mode=None, store_cv_results=False, alpha_per_target=False)",
+  "summary": "Ridge regression with built-in cross-validation.",
+  "warnings": []
+}

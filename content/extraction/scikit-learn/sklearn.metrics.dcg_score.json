@@ -1,0 +1,114 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.metrics.dcg_score.html",
+  "extractor_version": "1",
+  "id": "sklearn.metrics.dcg_score",
+  "import_path": "sklearn.metrics.dcg_score",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "True targets of multilabel classification, or true scores of entities\nto be ranked.",
+      "effective_default": null,
+      "name": "y_true",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n_samples, n_labels)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Target scores, can either be probability estimates of the positive\nclass or non-thresholded decision values (as returned by\n:term:`decision_function` on some classifiers).",
+      "effective_default": null,
+      "name": "y_score",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n_samples, n_labels)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Only consider the highest k scores in the ranking. If None, use all\noutputs.",
+      "effective_default": null,
+      "name": "k",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "2",
+      "description": "Base of the logarithm used for the discount. A low value means a\nsharper discount (top results are more important).",
+      "effective_default": null,
+      "name": "log_base",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=2"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Sample weights. If `None`, all samples are given the same weight.",
+      "effective_default": null,
+      "name": "sample_weight",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of shape (n_samples,), default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "Assume that there are no ties in y_score (which is likely to be the\ncase if y_score is continuous) for efficiency gains.",
+      "effective_default": null,
+      "name": "ignore_ties",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    }
+  ],
+  "returns": [
+    {
+      "description": "The averaged sample DCG scores.",
+      "name": "discounted_cumulative_gain",
+      "type_doc": "float"
+    }
+  ],
+  "signature": "dcg_score(y_true, y_score, *, k=None, log_base=2, sample_weight=None, ignore_ties=False)",
+  "summary": "Compute Discounted Cumulative Gain.",
+  "warnings": []
+}

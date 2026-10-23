@@ -1,0 +1,313 @@
+{
+  "attributes": [
+    {
+      "description": "Maximum of covariances (in absolute value) at each iteration.\n``n_alphas`` is either ``max_iter``, ``n_features`` or the\nnumber of nodes in the path with ``alpha >= alpha_min``, whichever\nis smaller. If this is a list of array-like, the length of the outer\nlist is `n_targets`.",
+      "name": "alphas_",
+      "type_doc": "array-like of shape (n_alphas + 1,) or list of such arrays"
+    },
+    {
+      "description": "Indices of active variables at the end of the path.\nIf this is a list of list, the length of the outer list is `n_targets`.",
+      "name": "active_",
+      "type_doc": "list of length n_alphas or list of such lists"
+    },
+    {
+      "description": "If a list is passed it's expected to be one of n_targets such arrays.\nThe varying values of the coefficients along the path. It is not\npresent if the ``fit_path`` parameter is ``False``. If this is a list\nof array-like, the length of the outer list is `n_targets`.",
+      "name": "coef_path_",
+      "type_doc": "array-like of shape (n_features, n_alphas + 1) or list of such arrays"
+    },
+    {
+      "description": "Parameter vector (w in the formulation formula).",
+      "name": "coef_",
+      "type_doc": "array-like of shape (n_features,) or (n_targets, n_features)"
+    },
+    {
+      "description": "Independent term in decision function.",
+      "name": "intercept_",
+      "type_doc": "float or array-like of shape (n_targets,)"
+    },
+    {
+      "description": "The number of iterations taken by lars_path to find the\ngrid of alphas for each target.",
+      "name": "n_iter_",
+      "type_doc": "array-like or int"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LassoLars.html",
+  "extractor_version": "1",
+  "id": "sklearn.linear_model.LassoLars",
+  "import_path": "sklearn.linear_model.LassoLars",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y, Xy=None)",
+      "summary": "Fit the model using X, y as training data."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X)",
+      "summary": "Predict using the linear model."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Return :ref:`coefficient of determination <r2_score>` on test data."
+    },
+    {
+      "name": "set_fit_request",
+      "signature": "set_fit_request(*, Xy: bool | None | str = '$UNCHANGED$') -> sklearn.linear_model._least_angle.LassoLars",
+      "summary": "Configure whether metadata should be requested to be passed to the ``fit`` method."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.linear_model._least_angle.LassoLars",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "1.0",
+      "description": "Constant that multiplies the penalty term. Defaults to 1.0.\n``alpha = 0`` is equivalent to an ordinary least square, solved\nby :class:`LinearRegression`. For numerical reasons, using\n``alpha = 0`` with the LassoLars object is not advised and you\nshould prefer the LinearRegression object.",
+      "effective_default": null,
+      "name": "alpha",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "float, default=1.0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "Whether to calculate the intercept for this model. If set\nto false, no intercept will be used in calculations\n(i.e. data is expected to be centered).",
+      "effective_default": null,
+      "name": "fit_intercept",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "verbose"
+        ]
+      },
+      "default": "False",
+      "description": "Sets the verbosity amount.",
+      "effective_default": null,
+      "name": "verbose",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool or int, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "auto"
+        ],
+        "source": "constraints",
+        "types": [
+          "boolean",
+          "ndarray",
+          "None"
+        ]
+      },
+      "default": "'auto'",
+      "description": "Whether to use a precomputed Gram matrix to speed up\ncalculations. If set to ``'auto'`` let us decide. The Gram\nmatrix can also be passed as argument.",
+      "effective_default": null,
+      "name": "precompute",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, 'auto' or array-like, default='auto'"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "500",
+      "description": "Maximum number of iterations to perform.",
+      "effective_default": null,
+      "name": "max_iter",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=500"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "np.float64(2.220446049250313e-16)",
+      "description": "The machine-precision regularization in the computation of the\nCholesky diagonal factors. Increase this for very ill-conditioned\nsystems. Unlike the ``tol`` parameter in some iterative\noptimization-based algorithms, this parameter does not control\nthe tolerance of the optimization.",
+      "effective_default": null,
+      "name": "eps",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=np.finfo(float).eps"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "If True, X will be copied; else, it may be overwritten.",
+      "effective_default": null,
+      "name": "copy_X",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "If ``True`` the full path is stored in the ``coef_path_`` attribute.\nIf you compute the solution for a large problem or many targets,\nsetting ``fit_path`` to ``False`` will lead to a speedup, especially\nwith a small alpha.",
+      "effective_default": null,
+      "name": "fit_path",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "Restrict coefficients to be >= 0. Be aware that you might want to\nremove fit_intercept which is set True by default.\nUnder the positive restriction the model coefficients will not converge\nto the ordinary-least-squares solution for small values of alpha.\nOnly coefficients up to the smallest alpha value (``alphas_[alphas_ >\n0.].min()`` when fit_path=True) reached by the stepwise Lars-Lasso\nalgorithm are typically in congruence with the solution of the\ncoordinate descent Lasso estimator.",
+      "effective_default": null,
+      "name": "positive",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Upper bound on a uniform noise parameter to be added to the\n`y` values, to satisfy the model's assumption of\none-at-a-time computations. Might help with stability.\n\n.. versionadded:: 0.23",
+      "effective_default": null,
+      "name": "jitter",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "random_state"
+        ]
+      },
+      "default": "None",
+      "description": "Determines random number generation for jittering. Pass an int\nfor reproducible output across multiple function calls.\nSee :term:`Glossary <random_state>`. Ignored if `jitter` is None.\n\n.. versionadded:: 0.23",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, RandomState instance or None, default=None"
+    }
+  ],
+  "returns": [],
+  "signature": "LassoLars(alpha=1.0, *, fit_intercept=True, verbose=False, precompute='auto', max_iter=500, eps=np.float64(2.220446049250313e-16), copy_X=True, fit_path=True, positive=False, jitter=None, random_state=None)",
+  "summary": "Lasso model fit with Least Angle Regression aka Lars.",
+  "warnings": []
+}

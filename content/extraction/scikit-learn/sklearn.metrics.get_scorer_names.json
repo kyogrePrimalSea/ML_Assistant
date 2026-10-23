@@ -1,0 +1,23 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.metrics.get_scorer_names.html",
+  "extractor_version": "1",
+  "id": "sklearn.metrics.get_scorer_names",
+  "import_path": "sklearn.metrics.get_scorer_names",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [],
+  "returns": [
+    {
+      "description": "Names of all available scorers.",
+      "name": "",
+      "type_doc": "list of str"
+    }
+  ],
+  "signature": "get_scorer_names()",
+  "summary": "Get the names of all available scorers.",
+  "warnings": []
+}

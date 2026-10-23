@@ -1,0 +1,144 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.metrics.classification_report.html",
+  "extractor_version": "1",
+  "id": "sklearn.metrics.classification_report",
+  "import_path": "sklearn.metrics.classification_report",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Ground truth (correct) target values. Sparse matrix is only supported when\ntargets are of :term:`multilabel` type.",
+      "effective_default": null,
+      "name": "y_true",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "1d array-like, or label indicator array / sparse matrix"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Estimated targets as returned by a classifier. Sparse matrix is only\nsupported when targets are of :term:`multilabel` type.",
+      "effective_default": null,
+      "name": "y_pred",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "1d array-like, or label indicator array / sparse matrix"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Optional list of label indices to include in the report.",
+      "effective_default": null,
+      "name": "labels",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of shape (n_labels,), default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Optional display names matching the labels (same order).",
+      "effective_default": null,
+      "name": "target_names",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of shape (n_labels,), default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Sample weights.",
+      "effective_default": null,
+      "name": "sample_weight",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of shape (n_samples,), default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "2",
+      "description": "Number of digits for formatting output floating point values.\nWhen ``output_dict`` is ``True``, this will be ignored and the\nreturned values will not be rounded.",
+      "effective_default": null,
+      "name": "digits",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=2"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "If True, return output as dict.\n\n.. versionadded:: 0.20",
+      "effective_default": null,
+      "name": "output_dict",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'warn'",
+      "description": "Sets the value to return when there is a zero division. If set to\n\"warn\", this acts as 0, but warnings are also raised.\n\n.. versionadded:: 1.3\n   `np.nan` option was added.",
+      "effective_default": null,
+      "name": "zero_division",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{\"warn\", 0.0, 1.0, np.nan}, default=\"warn\""
+    }
+  ],
+  "returns": [
+    {
+      "description": "Text summary of the precision, recall, F1 score for each class.\nDictionary returned if output_dict is True. Dictionary has the\nfollowing structure::\n\n    {'label 1': {'precision':0.5,\n                 'recall':1.0,\n                 'f1-score':0.67,\n                 'support':1},\n     'label 2': { ... },\n      ...\n    }\n\nThe reported averages include macro average (averaging the unweighted\nmean per label), weighted average (averaging the support-weighted mean\nper label), and sample average (only for multilabel classification).\nMicro average (averaging the total true positives, false negatives and\nfalse positives) is only shown for multi-label or multi-class\nwith a subset of classes, because it corresponds to accuracy\notherwise and would be the same for all metrics.\nSee also :func:`precision_recall_fscore_support` for more details\non averages.\n\nNote that in binary classification, recall of the positive class\nis also known as \"sensitivity\"; recall of the negative class is\n\"specificity\".",
+      "name": "report",
+      "type_doc": "str or dict"
+    }
+  ],
+  "signature": "classification_report(y_true, y_pred, *, labels=None, target_names=None, sample_weight=None, digits=2, output_dict=False, zero_division='warn')",
+  "summary": "Build a text report showing the main classification metrics.",
+  "warnings": []
+}

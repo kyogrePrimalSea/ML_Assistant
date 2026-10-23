@@ -1,0 +1,564 @@
+{
+  "attributes": [
+    {
+      "description": "Weights assigned to the features.",
+      "name": "coef_",
+      "type_doc": "ndarray of shape (1, n_features) if n_classes == 2 else (n_classes, n_features)"
+    },
+    {
+      "description": "Constants in decision function.",
+      "name": "intercept_",
+      "type_doc": "ndarray of shape (1,) if n_classes == 2 else (n_classes,)"
+    },
+    {
+      "description": "The actual number of iterations before reaching the stopping criterion.\nFor multiclass fits, it is the maximum over every binary fit.",
+      "name": "n_iter_",
+      "type_doc": "int"
+    },
+    {
+      "description": "",
+      "name": "classes_",
+      "type_doc": "array of shape (n_classes,)"
+    },
+    {
+      "description": "Number of weight updates performed during training.\nSame as ``(n_iter_ * n_samples + 1)``.",
+      "name": "t_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.SGDClassifier.html",
+  "extractor_version": "1",
+  "id": "sklearn.linear_model.SGDClassifier",
+  "import_path": "sklearn.linear_model.SGDClassifier",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "decision_function",
+      "signature": "decision_function(X)",
+      "summary": "Predict confidence scores for samples."
+    },
+    {
+      "name": "densify",
+      "signature": "densify()",
+      "summary": "Convert coefficient matrix to dense array format."
+    },
+    {
+      "name": "fit",
+      "signature": "fit(X, y, coef_init=None, intercept_init=None, sample_weight=None)",
+      "summary": "Fit linear model with Stochastic Gradient Descent."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "partial_fit",
+      "signature": "partial_fit(X, y, classes=None, sample_weight=None)",
+      "summary": "Perform one epoch of stochastic gradient descent on given samples."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X)",
+      "summary": "Predict class labels for samples in X."
+    },
+    {
+      "name": "predict_log_proba",
+      "signature": "predict_log_proba(X)",
+      "summary": "Log of probability estimates."
+    },
+    {
+      "name": "predict_proba",
+      "signature": "predict_proba(X)",
+      "summary": "Probability estimates."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Return :ref:`accuracy <accuracy_score>` on provided data and labels."
+    },
+    {
+      "name": "set_fit_request",
+      "signature": "set_fit_request(*, coef_init: bool | None | str = '$UNCHANGED$', intercept_init: bool | None | str = '$UNCHANGED$', sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.linear_model._stochastic_gradient.SGDClassifier",
+      "summary": "Configure whether metadata should be requested to be passed to the ``fit`` method."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_partial_fit_request",
+      "signature": "set_partial_fit_request(*, classes: bool | None | str = '$UNCHANGED$', sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.linear_model._stochastic_gradient.SGDClassifier",
+      "summary": "Configure whether metadata should be requested to be passed to the ``partial_fit`` method."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.linear_model._stochastic_gradient.SGDClassifier",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    },
+    {
+      "name": "sparsify",
+      "signature": "sparsify()",
+      "summary": "Convert coefficient matrix to sparse format."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "epsilon_insensitive",
+          "hinge",
+          "huber",
+          "log_loss",
+          "modified_huber",
+          "perceptron",
+          "squared_epsilon_insensitive",
+          "squared_error",
+          "squared_hinge"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'hinge'",
+      "description": "The loss function to be used.\n\n- 'hinge' gives a linear SVM.\n- 'log_loss' gives logistic regression, a probabilistic classifier.\n- 'modified_huber' is another smooth loss that brings tolerance to\n  outliers as well as probability estimates.\n- 'squared_hinge' is like hinge but is quadratically penalized.\n- 'perceptron' is the linear loss used by the perceptron algorithm.\n- The other losses, 'squared_error', 'huber', 'epsilon_insensitive' and\n  'squared_epsilon_insensitive' are designed for regression but can be useful\n  in classification as well; see\n  :class:`~sklearn.linear_model.SGDRegressor` for a description.\n\nMore details about the losses formulas can be found in the :ref:`User Guide\n<sgd_mathematical_formulation>` and you can find a visualisation of the loss\nfunctions in\n:ref:`sphx_glr_auto_examples_linear_model_plot_sgd_loss_functions.py`.",
+      "effective_default": null,
+      "name": "loss",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "{'hinge', 'log_loss', 'modified_huber', 'squared_hinge', 'perceptron', 'squared_error', 'huber', 'epsilon_insensitive', 'squared_epsilon_insensitive'}, default='hinge'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "elasticnet",
+          "l1",
+          "l2"
+        ],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "'l2'",
+      "description": "The penalty (aka regularization term) to be used. Defaults to 'l2'\nwhich is the standard regularizer for linear SVM models. 'l1' and\n'elasticnet' might bring sparsity to the model (feature selection)\nnot achievable with 'l2'. No penalty is added when set to `None`.\n\nYou can see a visualisation of the penalties in\n:ref:`sphx_glr_auto_examples_linear_model_plot_sgd_penalties.py`.",
+      "effective_default": null,
+      "name": "penalty",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'l2', 'l1', 'elasticnet', None}, default='l2'"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.0001",
+      "description": "Constant that multiplies the regularization term. The higher the\nvalue, the stronger the regularization. Also used to compute the\nlearning rate when `learning_rate` is set to 'optimal'.\nValues must be in the range `[0.0, inf)`.",
+      "effective_default": null,
+      "name": "alpha",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0.0001"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "both",
+            "left": 0,
+            "right": 1,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "0.15",
+      "description": "The Elastic Net mixing parameter, with 0 <= l1_ratio <= 1.\nl1_ratio=0 corresponds to L2 penalty, l1_ratio=1 to L1.\nOnly used if `penalty` is 'elasticnet'.\nValues must be in the range `[0.0, 1.0]` or can be `None` if\n`penalty` is not `elasticnet`.\n\n.. versionchanged:: 1.7\n    `l1_ratio` can be `None` when `penalty` is not \"elasticnet\".",
+      "effective_default": null,
+      "name": "l1_ratio",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0.15"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "Whether the intercept should be estimated or not. If False, the\ndata is assumed to be already centered.",
+      "effective_default": null,
+      "name": "fit_intercept",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "1000",
+      "description": "The maximum number of passes over the training data (aka epochs).\nIt only impacts the behavior in the ``fit`` method, and not the\n:meth:`partial_fit` method.\nValues must be in the range `[1, inf)`.\n\n.. versionadded:: 0.19",
+      "effective_default": null,
+      "name": "max_iter",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=1000"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "0.001",
+      "description": "The stopping criterion. If it is not None, training will stop\nwhen (loss > best_loss - tol) for ``n_iter_no_change`` consecutive\nepochs.\nConvergence is checked against the training loss or the\nvalidation loss depending on the `early_stopping` parameter.\nValues must be in the range `[0.0, inf)`.\n\n.. versionadded:: 0.19",
+      "effective_default": null,
+      "name": "tol",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float or None, default=1e-3"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "Whether or not the training data should be shuffled after each epoch.",
+      "effective_default": null,
+      "name": "shuffle",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "verbose"
+        ]
+      },
+      "default": "0",
+      "description": "The verbosity level.\nValues must be in the range `[0, inf)`.",
+      "effective_default": null,
+      "name": "verbose",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=0"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.1",
+      "description": "Epsilon in the epsilon-insensitive loss functions; only if `loss` is\n'huber', 'epsilon_insensitive', or 'squared_epsilon_insensitive'.\nFor 'huber', determines the threshold at which it becomes less\nimportant to get the prediction exactly right.\nFor epsilon-insensitive, any differences between the current prediction\nand the correct label are ignored if they are less than this threshold.\nValues must be in the range `[0.0, inf)`.",
+      "effective_default": null,
+      "name": "epsilon",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0.1"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "Integral",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "The number of CPUs to use to do the OVA (One Versus All, for\nmulti-class problems) computation.\n``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.\n``-1`` means using all processors. See :term:`Glossary <n_jobs>`\nfor more details.",
+      "effective_default": null,
+      "name": "n_jobs",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "random_state"
+        ]
+      },
+      "default": "None",
+      "description": "Used for shuffling the data, when ``shuffle`` is set to ``True``.\nPass an int for reproducible output across multiple function calls.\nSee :term:`Glossary <random_state>`.\nInteger values must be in the range `[0, 2**32 - 1]`.",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, RandomState instance, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "adaptive",
+          "constant",
+          "invscaling",
+          "optimal",
+          "pa1",
+          "pa2"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'optimal'",
+      "description": "The learning rate schedule:\n\n- 'constant': `eta = eta0`\n- 'optimal': `eta = 1.0 / (alpha * (t + t0))`\n  where `t0` is chosen by a heuristic proposed by Leon Bottou.\n- 'invscaling': `eta = eta0 / pow(t, power_t)`\n- 'adaptive': `eta = eta0`, as long as the training keeps decreasing.\n  Each time n_iter_no_change consecutive epochs fail to decrease the\n  training loss by tol or fail to increase validation score by tol if\n  `early_stopping` is `True`, the current learning rate is divided by 5.\n- 'pa1': passive-aggressive algorithm 1, see [1]_. Only with `loss='hinge'`.\n  Update is `w += eta y x` with `eta = min(eta0, loss/||x||**2)`.\n- 'pa2': passive-aggressive algorithm 2, see [1]_. Only with\n  `loss='hinge'`.\n  Update is `w += eta y x` with `eta = hinge_loss / (||x||**2 + 1/(2 eta0))`.\n\n.. versionadded:: 0.20\n    Added 'adaptive' option.\n\n.. versionadded:: 1.8\n   Added options 'pa1' and 'pa2'",
+      "effective_default": null,
+      "name": "learning_rate",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str, default='optimal'"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "neither",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.01",
+      "description": "The initial learning rate for the 'constant', 'invscaling' or\n'adaptive' schedules. The default value is 0.01, but note that eta0 is not used\nby the default learning rate 'optimal'.\nValues must be in the range `(0.0, inf)`.\n\nFor PA-1 (`learning_rate=pa1`) and PA-II (`pa2`), it specifies the\naggressiveness parameter for the passive-aggressive algorithm, see [1] where it\nis called C:\n\n- For PA-I it is the maximum step size.\n- For PA-II it regularizes the step size (the smaller `eta0` the more it\n  regularizes).\n\nAs a general rule-of-thumb for PA, `eta0` should be small when the data is\nnoisy.",
+      "effective_default": null,
+      "name": "eta0",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0.01"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "neither",
+            "left": null,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.5",
+      "description": "The exponent for inverse scaling learning rate.\nValues must be in the range `[0.0, inf)`.\n\n.. deprecated:: 1.8\n    Negative values for `power_t` are deprecated in version 1.8 and will raise\n    an error in 1.10. Use values in the range [0.0, inf) instead.",
+      "effective_default": null,
+      "name": "power_t",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0.5"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "Whether to use early stopping to terminate training when validation\nscore is not improving. If set to `True`, it will automatically set aside\na stratified fraction of training data as validation and terminate\ntraining when validation score returned by the `score` method is not\nimproving by at least tol for n_iter_no_change consecutive epochs.\n\nSee :ref:`sphx_glr_auto_examples_linear_model_plot_sgd_early_stopping.py` for an\nexample of the effects of early stopping.\n\n.. versionadded:: 0.20\n    Added 'early_stopping' option",
+      "effective_default": null,
+      "name": "early_stopping",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "neither",
+            "left": 0,
+            "right": 1,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.1",
+      "description": "The proportion of training data to set aside as validation set for\nearly stopping. Must be between 0 and 1.\nOnly used if `early_stopping` is True.\nValues must be in the range `(0.0, 1.0)`.\n\n.. versionadded:: 0.20\n    Added 'validation_fraction' option",
+      "effective_default": null,
+      "name": "validation_fraction",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0.1"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "5",
+      "description": "Number of iterations with no improvement to wait before stopping\nfitting.\nConvergence is checked against the training loss or the\nvalidation loss depending on the `early_stopping` parameter.\nInteger values must be in the range `[1, max_iter)`.\n\n.. versionadded:: 0.20\n    Added 'n_iter_no_change' option",
+      "effective_default": null,
+      "name": "n_iter_no_change",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=5"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "balanced"
+        ],
+        "source": "constraints",
+        "types": [
+          "dict",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Preset for the class_weight fit parameter.\n\nWeights associated with classes. If not given, all classes\nare supposed to have weight one.\n\nThe \"balanced\" mode uses the values of y to automatically adjust\nweights inversely proportional to class frequencies in the input data\nas ``n_samples / (n_classes * np.bincount(y))``.",
+      "effective_default": null,
+      "name": "class_weight",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "dict, {class_label: weight} or \"balanced\", default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "When set to True, reuse the solution of the previous call to fit as\ninitialization, otherwise, just erase the previous solution.\nSee :term:`the Glossary <warm_start>`.\n\nRepeatedly calling fit or partial_fit when warm_start is True can\nresult in a different solution than when calling fit a single time\nbecause of the way the data is shuffled.\nIf a dynamic learning rate is used, the learning rate is adapted\ndepending on the number of samples already seen. Calling ``fit`` resets\nthis counter, while ``partial_fit`` will result in increasing the\nexisting counter.",
+      "effective_default": null,
+      "name": "warm_start",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "neither",
+            "left": 0,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "When set to `True`, computes the averaged SGD weights across all\nupdates and stores the result in the ``coef_`` attribute. If set to\nan int greater than 1, averaging will begin once the total number of\nsamples seen reaches `average`. So ``average=10`` will begin\naveraging after seeing 10 samples.\nInteger values must be in the range `[1, n_samples]`.",
+      "effective_default": null,
+      "name": "average",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool or int, default=False"
+    }
+  ],
+  "returns": [],
+  "signature": "SGDClassifier(loss='hinge', *, penalty='l2', alpha=0.0001, l1_ratio=0.15, fit_intercept=True, max_iter=1000, tol=0.001, shuffle=True, verbose=0, epsilon=0.1, n_jobs=None, random_state=None, learning_rate='optimal', eta0=0.01, power_t=0.5, early_stopping=False, validation_fraction=0.1, n_iter_no_change=5, class_weight=None, warm_start=False, average=False)",
+  "summary": "Linear classifiers (SVM, logistic regression, etc.) with SGD training.",
+  "warnings": []
+}

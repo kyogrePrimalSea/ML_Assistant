@@ -1,0 +1,59 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.f_classif.html",
+  "extractor_version": "1",
+  "id": "sklearn.feature_selection.f_classif",
+  "import_path": "sklearn.feature_selection.f_classif",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The set of regressors that will be tested sequentially.",
+      "effective_default": null,
+      "name": "X",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "{array-like, sparse matrix} of shape (n_samples, n_features)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The target vector.",
+      "effective_default": null,
+      "name": "y",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n_samples,)"
+    }
+  ],
+  "returns": [
+    {
+      "description": "F-statistic for each feature.",
+      "name": "f_statistic",
+      "type_doc": "ndarray of shape (n_features,)"
+    },
+    {
+      "description": "P-values associated with the F-statistic.",
+      "name": "p_values",
+      "type_doc": "ndarray of shape (n_features,)"
+    }
+  ],
+  "signature": "f_classif(X, y)",
+  "summary": "Compute the ANOVA F-value for the provided sample.",
+  "warnings": []
+}

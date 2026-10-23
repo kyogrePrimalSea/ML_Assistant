@@ -1,0 +1,388 @@
+{
+  "attributes": [
+    {
+      "description": "Weights assigned to the features.",
+      "name": "coef_",
+      "type_doc": "array, shape = [1, n_features] if n_classes == 2 else [n_classes, n_features]"
+    },
+    {
+      "description": "Constants in decision function.",
+      "name": "intercept_",
+      "type_doc": "array, shape = [1] if n_classes == 2 else [n_classes]"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    },
+    {
+      "description": "The actual number of iterations to reach the stopping criterion.",
+      "name": "n_iter_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Number of weight updates performed during training.\nSame as ``(n_iter_ * n_samples + 1)``.",
+      "name": "t_",
+      "type_doc": "int"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.PassiveAggressiveRegressor.html",
+  "extractor_version": "1",
+  "id": "sklearn.linear_model.PassiveAggressiveRegressor",
+  "import_path": "sklearn.linear_model.PassiveAggressiveRegressor",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "densify",
+      "signature": "densify()",
+      "summary": "Convert coefficient matrix to dense array format."
+    },
+    {
+      "name": "fit",
+      "signature": "fit(X, y, coef_init=None, intercept_init=None)",
+      "summary": "Fit linear model with Passive Aggressive algorithm."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "partial_fit",
+      "signature": "partial_fit(X, y)",
+      "summary": "Fit linear model with Passive Aggressive algorithm."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X)",
+      "summary": "Predict using the linear model."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Return :ref:`coefficient of determination <r2_score>` on test data."
+    },
+    {
+      "name": "set_fit_request",
+      "signature": "set_fit_request(*, coef_init: bool | None | str = '$UNCHANGED$', intercept_init: bool | None | str = '$UNCHANGED$') -> sklearn.linear_model._passive_aggressive.PassiveAggressiveRegressor",
+      "summary": "Configure whether metadata should be requested to be passed to the ``fit`` method."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_partial_fit_request",
+      "signature": "set_partial_fit_request() -> sklearn.linear_model._passive_aggressive.PassiveAggressiveRegressor",
+      "summary": "No-op."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.linear_model._passive_aggressive.PassiveAggressiveRegressor",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    },
+    {
+      "name": "sparsify",
+      "signature": "sparsify()",
+      "summary": "Convert coefficient matrix to sparse format."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "right",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "1.0",
+      "description": "Aggressiveness parameter for the passive-aggressive algorithm, see [1].\nFor PA-I it is the maximum step size. For PA-II it regularizes the\nstep size (the smaller `C` the more it regularizes).\nAs a general rule-of-thumb, `C` should be small when the data is noisy.",
+      "effective_default": null,
+      "name": "C",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=1.0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "Whether the intercept should be estimated or not. If False, the\ndata is assumed to be already centered. Defaults to True.",
+      "effective_default": null,
+      "name": "fit_intercept",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "1000",
+      "description": "The maximum number of passes over the training data (aka epochs).\nIt only impacts the behavior in the ``fit`` method, and not the\n:meth:`~sklearn.linear_model.PassiveAggressiveRegressor.partial_fit` method.\n\n.. versionadded:: 0.19",
+      "effective_default": null,
+      "name": "max_iter",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=1000"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "0.001",
+      "description": "The stopping criterion. If it is not None, the iterations will stop\nwhen (loss > previous_loss - tol).\n\n.. versionadded:: 0.19",
+      "effective_default": null,
+      "name": "tol",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float or None, default=1e-3"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "Whether to use early stopping to terminate training when validation.\nscore is not improving. If set to True, it will automatically set aside\na fraction of training data as validation and terminate\ntraining when validation score is not improving by at least tol for\nn_iter_no_change consecutive epochs.\n\n.. versionadded:: 0.20",
+      "effective_default": null,
+      "name": "early_stopping",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "neither",
+            "left": 0,
+            "right": 1,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.1",
+      "description": "The proportion of training data to set aside as validation set for\nearly stopping. Must be between 0 and 1.\nOnly used if early_stopping is True.\n\n.. versionadded:: 0.20",
+      "effective_default": null,
+      "name": "validation_fraction",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0.1"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "5",
+      "description": "Number of iterations with no improvement to wait before early stopping.\n\n.. versionadded:: 0.20",
+      "effective_default": null,
+      "name": "n_iter_no_change",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=5"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "Whether or not the training data should be shuffled after each epoch.",
+      "effective_default": null,
+      "name": "shuffle",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "verbose"
+        ]
+      },
+      "default": "0",
+      "description": "The verbosity level.",
+      "effective_default": null,
+      "name": "verbose",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "epsilon_insensitive",
+          "squared_epsilon_insensitive"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'epsilon_insensitive'",
+      "description": "The loss function to be used:\nepsilon_insensitive: equivalent to PA-I in the reference paper.\nsquared_epsilon_insensitive: equivalent to PA-II in the reference\npaper.",
+      "effective_default": null,
+      "name": "loss",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str, default=\"epsilon_insensitive\""
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.1",
+      "description": "If the difference between the current prediction and the correct label\nis below this threshold, the model is not updated.",
+      "effective_default": null,
+      "name": "epsilon",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0.1"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "random_state"
+        ]
+      },
+      "default": "None",
+      "description": "Used to shuffle the training data, when ``shuffle`` is set to\n``True``. Pass an int for reproducible output across multiple\nfunction calls.\nSee :term:`Glossary <random_state>`.",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, RandomState instance, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "When set to True, reuse the solution of the previous call to fit as\ninitialization, otherwise, just erase the previous solution.\nSee :term:`the Glossary <warm_start>`.\n\nRepeatedly calling fit or partial_fit when warm_start is True can\nresult in a different solution than when calling fit a single time\nbecause of the way the data is shuffled.",
+      "effective_default": null,
+      "name": "warm_start",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "neither",
+            "left": 0,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "When set to True, computes the averaged SGD weights and stores the\nresult in the ``coef_`` attribute. If set to an int greater than 1,\naveraging will begin once the total number of samples seen reaches\naverage. So average=10 will begin averaging after seeing 10 samples.\n\n.. versionadded:: 0.19\n   parameter *average* to use weights averaging in SGD.",
+      "effective_default": null,
+      "name": "average",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool or int, default=False"
+    }
+  ],
+  "returns": [],
+  "signature": "PassiveAggressiveRegressor(*, C=1.0, fit_intercept=True, max_iter=1000, tol=0.001, early_stopping=False, validation_fraction=0.1, n_iter_no_change=5, shuffle=True, verbose=0, loss='epsilon_insensitive', epsilon=0.1, random_state=None, warm_start=False, average=False)",
+  "summary": "Passive Aggressive Regressor.",
+  "warnings": []
+}

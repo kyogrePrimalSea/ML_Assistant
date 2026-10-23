@@ -1,0 +1,111 @@
+{
+  "attributes": [
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.Normalizer.html",
+  "extractor_version": "1",
+  "id": "sklearn.preprocessing.Normalizer",
+  "import_path": "sklearn.preprocessing.Normalizer",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y=None)",
+      "summary": "Only validates estimator's parameters."
+    },
+    {
+      "name": "fit_transform",
+      "signature": "fit_transform(X, y=None, **fit_params)",
+      "summary": "Fit to data, then transform it."
+    },
+    {
+      "name": "get_feature_names_out",
+      "signature": "get_feature_names_out(input_features=None)",
+      "summary": "Get output feature names for transformation."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "set_output",
+      "signature": "set_output(*, transform=None)",
+      "summary": "Set output container."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_transform_request",
+      "signature": "set_transform_request(*, copy: bool | None | str = '$UNCHANGED$') -> sklearn.preprocessing._data.Normalizer",
+      "summary": "Configure whether metadata should be requested to be passed to the ``transform`` method."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(X, copy=None)",
+      "summary": "Scale each non zero row of X to unit norm."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "l1",
+          "l2",
+          "max"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'l2'",
+      "description": "The norm to use to normalize each non zero sample. If norm='max'\nis used, values will be rescaled by the maximum of the absolute\nvalues.",
+      "effective_default": null,
+      "name": "norm",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "{'l1', 'l2', 'max'}, default='l2'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "Set to False to perform inplace row normalization and avoid a\ncopy (if the input is already a numpy array or a scipy.sparse\nCSR matrix).",
+      "effective_default": null,
+      "name": "copy",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    }
+  ],
+  "returns": [],
+  "signature": "Normalizer(norm='l2', *, copy=True)",
+  "summary": "Normalize samples individually to unit norm.",
+  "warnings": []
+}

@@ -1,0 +1,338 @@
+{
+  "attributes": [
+    {
+      "description": "The fitted classifier used when predicting.",
+      "name": "estimator_",
+      "type_doc": "estimator instance"
+    },
+    {
+      "description": "The new decision threshold.",
+      "name": "best_threshold_",
+      "type_doc": "float"
+    },
+    {
+      "description": "The optimal score of the objective metric, evaluated at `best_threshold_`.",
+      "name": "best_score_",
+      "type_doc": "float or None"
+    },
+    {
+      "description": "A dictionary containing the scores and thresholds computed during the\ncross-validation process. Only exist if `store_cv_results=True`. The\nkeys are `\"thresholds\"` and `\"scores\"`.",
+      "name": "cv_results_",
+      "type_doc": "dict or None"
+    },
+    {
+      "description": "The class labels.",
+      "name": "classes_",
+      "type_doc": "ndarray of shape (n_classes,)"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`. Only defined if the\nunderlying estimator exposes such an attribute when fit.",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Only defined if the\nunderlying estimator exposes such an attribute when fit.",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TunedThresholdClassifierCV.html",
+  "extractor_version": "1",
+  "id": "sklearn.model_selection.TunedThresholdClassifierCV",
+  "import_path": "sklearn.model_selection.TunedThresholdClassifierCV",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "decision_function",
+      "signature": "decision_function(X)",
+      "summary": "Decision function for samples in `X` using the fitted estimator."
+    },
+    {
+      "name": "fit",
+      "signature": "fit(X, y, **params)",
+      "summary": "Fit the classifier."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X)",
+      "summary": "Predict the target of new samples."
+    },
+    {
+      "name": "predict_log_proba",
+      "signature": "predict_log_proba(X)",
+      "summary": "Predict logarithm class probabilities for `X` using the fitted estimator."
+    },
+    {
+      "name": "predict_proba",
+      "signature": "predict_proba(X)",
+      "summary": "Predict class probabilities for `X` using the fitted estimator."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Return :ref:`accuracy <accuracy_score>` on provided data and labels."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.model_selection._classification_threshold.TunedThresholdClassifierCV",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "an object implementing 'fit' and 'predict_proba'",
+          "an object implementing 'fit' and 'decision_function'"
+        ]
+      },
+      "default": null,
+      "description": "The classifier, fitted or not, for which we want to optimize\nthe decision threshold used during `predict`.",
+      "effective_default": null,
+      "name": "estimator",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "estimator instance"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "accuracy",
+          "adjusted_mutual_info_score",
+          "adjusted_rand_score",
+          "average_precision",
+          "balanced_accuracy",
+          "completeness_score",
+          "d2_absolute_error_score",
+          "d2_brier_score",
+          "d2_log_loss_score",
+          "explained_variance",
+          "f1",
+          "f1_macro",
+          "f1_micro",
+          "f1_samples",
+          "f1_weighted",
+          "fowlkes_mallows_score",
+          "homogeneity_score",
+          "jaccard",
+          "jaccard_macro",
+          "jaccard_micro",
+          "jaccard_samples",
+          "jaccard_weighted",
+          "matthews_corrcoef",
+          "mutual_info_score",
+          "neg_brier_score",
+          "neg_log_loss",
+          "neg_max_error",
+          "neg_mean_absolute_error",
+          "neg_mean_absolute_percentage_error",
+          "neg_mean_gamma_deviance",
+          "neg_mean_poisson_deviance",
+          "neg_mean_squared_error",
+          "neg_mean_squared_log_error",
+          "neg_median_absolute_error",
+          "neg_negative_likelihood_ratio",
+          "neg_root_mean_squared_error",
+          "neg_root_mean_squared_log_error",
+          "normalized_mutual_info_score",
+          "positive_likelihood_ratio",
+          "precision",
+          "precision_macro",
+          "precision_micro",
+          "precision_samples",
+          "precision_weighted",
+          "r2",
+          "rand_score",
+          "recall",
+          "recall_macro",
+          "recall_micro",
+          "recall_samples",
+          "recall_weighted",
+          "roc_auc",
+          "roc_auc_ovo",
+          "roc_auc_ovo_weighted",
+          "roc_auc_ovr",
+          "roc_auc_ovr_weighted",
+          "top_k_accuracy",
+          "v_measure_score"
+        ],
+        "source": "constraints",
+        "types": [
+          "<built-in function callable>",
+          "MutableMapping"
+        ]
+      },
+      "default": "'balanced_accuracy'",
+      "description": "The objective metric to be optimized. Can be one of:\n\n- str: string associated to a scoring function for binary classification,\n  see :ref:`scoring_string_names` for options.\n- callable: a scorer callable object (e.g., function) with signature\n  ``scorer(estimator, X, y)``. See :ref:`scoring_callable` for details.",
+      "effective_default": null,
+      "name": "scoring",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str or callable, default=\"balanced_accuracy\""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "auto",
+          "decision_function",
+          "predict_proba"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'auto'",
+      "description": "Methods by the classifier `estimator` corresponding to the\ndecision function for which we want to find a threshold. It can be:\n\n* if `\"auto\"`, it will try to invoke, for each classifier,\n  `\"predict_proba\"` or `\"decision_function\"` in that order.\n* otherwise, one of `\"predict_proba\"` or `\"decision_function\"`.\n  If the method is not implemented by the classifier, it will raise an\n  error.",
+      "effective_default": null,
+      "name": "response_method",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{\"auto\", \"decision_function\", \"predict_proba\"}, default=\"auto\""
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "array-like"
+        ]
+      },
+      "default": "100",
+      "description": "The number of decision threshold to use when discretizing the output of the\nclassifier `method`. Pass an array-like to manually specify the thresholds\nto use.",
+      "effective_default": null,
+      "name": "thresholds",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or array-like, default=100"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "neither",
+            "left": 0.0,
+            "right": 1.0,
+            "type": "RealNotInt"
+          }
+        ],
+        "options": [
+          "prefit"
+        ],
+        "source": "constraints",
+        "types": [
+          "cv_object"
+        ]
+      },
+      "default": "None",
+      "description": "Determines the cross-validation splitting strategy to train classifier.\nPossible inputs for cv are:\n\n* `None`, to use the default 5-fold stratified K-fold cross validation;\n* An integer number, to specify the number of folds in a stratified k-fold;\n* A float number, to specify a single shuffle split. The floating number should\n  be in (0, 1) and represent the size of the validation set;\n* An object to be used as a cross-validation generator;\n* An iterable yielding train, test splits;\n* `\"prefit\"`, to bypass the cross-validation.\n\nRefer :ref:`User Guide <cross_validation>` for the various\ncross-validation strategies that can be used here.\n\n.. warning::\n    Using `cv=\"prefit\"` and passing the same dataset for fitting `estimator`\n    and tuning the cut-off point is subject to undesired overfitting. You can\n    refer to :ref:`TunedThresholdClassifierCV_no_cv` for an example.\n\n    This option should only be used when the set used to fit `estimator` is\n    different from the one used to tune the cut-off point (by calling\n    :meth:`TunedThresholdClassifierCV.fit`).",
+      "effective_default": null,
+      "name": "cv",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, float, cross-validation generator, iterable or \"prefit\", default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "Whether or not to refit the classifier on the entire training set once\nthe decision threshold has been found.\nNote that forcing `refit=False` on cross-validation having more\nthan a single split will raise an error. Similarly, `refit=True` in\nconjunction with `cv=\"prefit\"` will raise an error.",
+      "effective_default": null,
+      "name": "refit",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "Integral",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "The number of jobs to run in parallel. When `cv` represents a\ncross-validation strategy, the fitting and scoring on each data split\nis done in parallel. ``None`` means 1 unless in a\n:obj:`joblib.parallel_backend` context. ``-1`` means using all\nprocessors. See :term:`Glossary <n_jobs>` for more details.",
+      "effective_default": null,
+      "name": "n_jobs",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "random_state"
+        ]
+      },
+      "default": "None",
+      "description": "Controls the randomness of cross-validation when `cv` is a float.\nSee :term:`Glossary <random_state>`.",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, RandomState instance or None, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "Whether to store all scores and thresholds computed during the cross-validation\nprocess.",
+      "effective_default": null,
+      "name": "store_cv_results",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    }
+  ],
+  "returns": [],
+  "signature": "TunedThresholdClassifierCV(estimator, *, scoring='balanced_accuracy', response_method='auto', thresholds=100, cv=None, refit=True, n_jobs=None, random_state=None, store_cv_results=False)",
+  "summary": "Classifier that post-tunes the decision threshold using cross-validation.",
+  "warnings": []
+}

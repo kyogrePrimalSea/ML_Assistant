@@ -1,0 +1,4 @@
+source_url: https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SelectFpr.html
+reason: "Signature default for score_func is the function f_classif; the introspected repr embeds a memory address (<function f_classif at 0x...>) which is not reproducible. The docs page shows the default as <function f_classif>."
+patches:
+  - {path: "parameters[name=score_func].default", value: "<function f_classif>"}

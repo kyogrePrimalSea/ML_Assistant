@@ -1,0 +1,599 @@
+{
+  "attributes": [
+    {
+      "description": "The number of estimators as selected by early stopping (if\n``n_iter_no_change`` is specified). Otherwise it is set to\n``n_estimators``.",
+      "name": "n_estimators_",
+      "type_doc": "int"
+    },
+    {
+      "description": "The number of trees that are built at each iteration. For regressors, this is\nalways 1.\n\n.. versionadded:: 1.4.0",
+      "name": "n_trees_per_iteration_",
+      "type_doc": "int"
+    },
+    {
+      "description": "The impurity-based feature importances.\nThe higher, the more important the feature.\nThe importance of a feature is computed as the (normalized)\ntotal reduction of the MSE brought by that feature.  It is also\nknown as the Gini importance.\n\nWarning: impurity-based feature importances can be misleading for\nhigh cardinality features (many unique values). See\n:func:`sklearn.inspection.permutation_importance` as an alternative.",
+      "name": "feature_importances_",
+      "type_doc": "ndarray of shape (n_features,)"
+    },
+    {
+      "description": "The improvement in loss on the out-of-bag samples\nrelative to the previous iteration.\n``oob_improvement_[0]`` is the improvement in\nloss of the first stage over the ``init`` estimator.\nOnly available if ``subsample < 1.0``.",
+      "name": "oob_improvement_",
+      "type_doc": "ndarray of shape (n_estimators,)"
+    },
+    {
+      "description": "The full history of the loss values on the out-of-bag\nsamples. Only available if `subsample < 1.0`.\n\n.. versionadded:: 1.3",
+      "name": "oob_scores_",
+      "type_doc": "ndarray of shape (n_estimators,)"
+    },
+    {
+      "description": "The last value of the loss on the out-of-bag samples. It is\nthe same as `oob_scores_[-1]`. Only available if `subsample < 1.0`.\n\n.. versionadded:: 1.3",
+      "name": "oob_score_",
+      "type_doc": "float"
+    },
+    {
+      "description": "The i-th score ``train_score_[i]`` is the loss of the\nmodel at iteration ``i`` on the in-bag sample.\nIf ``subsample == 1`` this is the loss on the training data.",
+      "name": "train_score_",
+      "type_doc": "ndarray of shape (n_estimators,)"
+    },
+    {
+      "description": "The estimator that provides the initial predictions. Set via the ``init``\nargument.",
+      "name": "init_",
+      "type_doc": "estimator"
+    },
+    {
+      "description": "The collection of fitted sub-estimators.",
+      "name": "estimators_",
+      "type_doc": "ndarray of DecisionTreeRegressor of shape (n_estimators, 1)"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    },
+    {
+      "description": "The inferred value of max_features.",
+      "name": "max_features_",
+      "type_doc": "int"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingRegressor.html",
+  "extractor_version": "1",
+  "id": "sklearn.ensemble.GradientBoostingRegressor",
+  "import_path": "sklearn.ensemble.GradientBoostingRegressor",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "apply",
+      "signature": "apply(X)",
+      "summary": "Apply trees in the ensemble to X, return leaf indices."
+    },
+    {
+      "name": "fit",
+      "signature": "fit(X, y, sample_weight=None, monitor=None)",
+      "summary": "Fit the gradient boosting model."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X)",
+      "summary": "Predict regression target for X."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Return :ref:`coefficient of determination <r2_score>` on test data."
+    },
+    {
+      "name": "set_fit_request",
+      "signature": "set_fit_request(*, monitor: bool | None | str = '$UNCHANGED$', sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.ensemble._gb.GradientBoostingRegressor",
+      "summary": "Configure whether metadata should be requested to be passed to the ``fit`` method."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.ensemble._gb.GradientBoostingRegressor",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    },
+    {
+      "name": "staged_predict",
+      "signature": "staged_predict(X)",
+      "summary": "Predict regression target at each stage for X."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "absolute_error",
+          "huber",
+          "quantile",
+          "squared_error"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'squared_error'",
+      "description": "Loss function to be optimized. 'squared_error' refers to the squared\nerror for regression. 'absolute_error' refers to the absolute error of\nregression and is a robust loss function. 'huber' is a\ncombination of the two. 'quantile' allows quantile regression (use\n`alpha` to specify the quantile).\nSee\n:ref:`sphx_glr_auto_examples_ensemble_plot_gradient_boosting_quantile.py`\nfor an example that demonstrates quantile regression for creating\nprediction intervals with `loss='quantile'`.",
+      "effective_default": null,
+      "name": "loss",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'squared_error', 'absolute_error', 'huber', 'quantile'}, default='squared_error'"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0.0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.1",
+      "description": "Learning rate shrinks the contribution of each tree by `learning_rate`.\nThere is a trade-off between learning_rate and n_estimators.\nValues must be in the range `[0.0, inf)`.",
+      "effective_default": null,
+      "name": "learning_rate",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0.1"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "100",
+      "description": "The number of boosting stages to perform. Gradient boosting\nis fairly robust to over-fitting so a large number usually\nresults in better performance.\nValues must be in the range `[1, inf)`.",
+      "effective_default": null,
+      "name": "n_estimators",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=100"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "right",
+            "left": 0.0,
+            "right": 1.0,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "1.0",
+      "description": "The fraction of samples to be used for fitting the individual base\nlearners. If smaller than 1.0 this results in Stochastic Gradient\nBoosting. `subsample` interacts with the parameter `n_estimators`.\nChoosing `subsample < 1.0` leads to a reduction of variance\nand an increase in bias.\nValues must be in the range `(0.0, 1.0]`.",
+      "effective_default": null,
+      "name": "subsample",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=1.0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "squared_error",
+          "deprecated",
+          "friedman_mse"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'deprecated'",
+      "description": "This parameter has no effect.\n\n.. versionadded:: 0.18\n\n.. deprecated:: 1.9\n   `criterion` is deprecated and will be removed in 1.11.",
+      "effective_default": null,
+      "name": "criterion",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'friedman_mse', 'squared_error'}, default='friedman_mse'"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 2,
+            "right": null,
+            "type": "Integral"
+          },
+          {
+            "closed": "right",
+            "left": 0.0,
+            "right": 1.0,
+            "type": "RealNotInt"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "2",
+      "description": "The minimum number of samples required to split an internal node:\n\n- If int, values must be in the range `[2, inf)`.\n- If float, values must be in the range `(0.0, 1.0]` and `min_samples_split`\n  will be `ceil(min_samples_split * n_samples)`.\n\n.. versionchanged:: 0.18\n   Added float values for fractions.",
+      "effective_default": null,
+      "name": "min_samples_split",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or float, default=2"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          },
+          {
+            "closed": "neither",
+            "left": 0.0,
+            "right": 1.0,
+            "type": "RealNotInt"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "1",
+      "description": "The minimum number of samples required to be at a leaf node.\nA split point at any depth will only be considered if it leaves at\nleast ``min_samples_leaf`` training samples in each of the left and\nright branches.  This may have the effect of smoothing the model,\nespecially in regression.\n\n- If int, values must be in the range `[1, inf)`.\n- If float, values must be in the range `(0.0, 1.0)` and `min_samples_leaf`\n  will be `ceil(min_samples_leaf * n_samples)`.\n\n.. versionchanged:: 0.18\n   Added float values for fractions.",
+      "effective_default": null,
+      "name": "min_samples_leaf",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or float, default=1"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "both",
+            "left": 0.0,
+            "right": 0.5,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.0",
+      "description": "The minimum weighted fraction of the sum total of weights (of all\nthe input samples) required to be at a leaf node. Samples have\nequal weight when sample_weight is not provided.\nValues must be in the range `[0.0, 0.5]`.",
+      "effective_default": null,
+      "name": "min_weight_fraction_leaf",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0.0"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "3",
+      "description": "Maximum depth of the individual regression estimators. The maximum\ndepth limits the number of nodes in the tree. Tune this parameter\nfor best performance; the best value depends on the interaction\nof the input variables. If None, then nodes are expanded until\nall leaves are pure or until all leaves contain less than\nmin_samples_split samples.\nIf int, values must be in the range `[1, inf)`.",
+      "effective_default": null,
+      "name": "max_depth",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or None, default=3"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0.0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.0",
+      "description": "A node will be split if this split induces a decrease of the impurity\ngreater than or equal to this value.\nValues must be in the range `[0.0, inf)`.\n\nThe weighted impurity decrease equation is the following::\n\n    N_t / N * (impurity - N_t_R / N_t * right_impurity\n                        - N_t_L / N_t * left_impurity)\n\nwhere ``N`` is the total number of samples, ``N_t`` is the number of\nsamples at the current node, ``N_t_L`` is the number of samples in the\nleft child, and ``N_t_R`` is the number of samples in the right child.\n\n``N``, ``N_t``, ``N_t_R`` and ``N_t_L`` all refer to the weighted sum,\nif ``sample_weight`` is passed.\n\n.. versionadded:: 0.19",
+      "effective_default": null,
+      "name": "min_impurity_decrease",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0.0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "zero"
+        ],
+        "source": "constraints",
+        "types": [
+          "None",
+          "an object implementing 'fit' and 'predict'"
+        ]
+      },
+      "default": "None",
+      "description": "An estimator object that is used to compute the initial predictions.\n``init`` has to provide :term:`fit` and :term:`predict`. If 'zero', the\ninitial raw predictions are set to zero. By default a\n``DummyEstimator`` is used, predicting either the average target value\n(for loss='squared_error'), or a quantile for the other losses.",
+      "effective_default": null,
+      "name": "init",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "estimator or 'zero', default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "random_state"
+        ]
+      },
+      "default": "None",
+      "description": "Controls the random seed given to each Tree estimator at each\nboosting iteration.\nIn addition, it controls the random permutation of the features at\neach split (see Notes for more details).\nIt also controls the random splitting of the training data to obtain a\nvalidation set if `n_iter_no_change` is not None.\nPass an int for reproducible output across multiple function calls.\nSee :term:`Glossary <random_state>`.",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, RandomState instance or None, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          },
+          {
+            "closed": "right",
+            "left": 0.0,
+            "right": 1.0,
+            "type": "RealNotInt"
+          }
+        ],
+        "options": [
+          "log2",
+          "sqrt"
+        ],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "The number of features to consider when looking for the best split:\n\n- If int, values must be in the range `[1, inf)`.\n- If float, values must be in the range `(0.0, 1.0]` and the features\n  considered at each split will be `max(1, int(max_features * n_features_in_))`.\n- If \"sqrt\", then `max_features=sqrt(n_features)`.\n- If \"log2\", then `max_features=log2(n_features)`.\n- If None, then `max_features=n_features`.\n\nChoosing `max_features < n_features` leads to a reduction of variance\nand an increase in bias.\n\nNote: the search for a split does not stop until at least one\nvalid partition of the node samples is found, even if it requires to\neffectively inspect more than ``max_features`` features.",
+      "effective_default": null,
+      "name": "max_features",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'sqrt', 'log2'}, int or float, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "neither",
+            "left": 0.0,
+            "right": 1.0,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.9",
+      "description": "The alpha-quantile of the huber loss function and the quantile\nloss function. Only if ``loss='huber'`` or ``loss='quantile'``.\nValues must be in the range `(0.0, 1.0)`.",
+      "effective_default": null,
+      "name": "alpha",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0.9"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "verbose"
+        ]
+      },
+      "default": "0",
+      "description": "Enable verbose output. If 1 then it prints progress and performance\nonce in a while (the more trees the lower the frequency). If greater\nthan 1 then it prints progress and performance for every tree.\nValues must be in the range `[0, inf)`.",
+      "effective_default": null,
+      "name": "verbose",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=0"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 2,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Grow trees with ``max_leaf_nodes`` in best-first fashion.\nBest nodes are defined as relative reduction in impurity.\nValues must be in the range `[2, inf)`.\nIf None, then unlimited number of leaf nodes.",
+      "effective_default": null,
+      "name": "max_leaf_nodes",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "When set to ``True``, reuse the solution of the previous call to fit\nand add more estimators to the ensemble, otherwise, just erase the\nprevious solution. See :term:`the Glossary <warm_start>`.",
+      "effective_default": null,
+      "name": "warm_start",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "neither",
+            "left": 0.0,
+            "right": 1.0,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.1",
+      "description": "The proportion of training data to set aside as validation set for\nearly stopping. Values must be in the range `(0.0, 1.0)`.\nOnly used if ``n_iter_no_change`` is set to an integer.\n\n.. versionadded:: 0.20",
+      "effective_default": null,
+      "name": "validation_fraction",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0.1"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "``n_iter_no_change`` is used to decide if early stopping will be used\nto terminate training when validation score is not improving. By\ndefault it is set to None to disable early stopping. If set to a\nnumber, it will set aside ``validation_fraction`` size of the training\ndata as validation and terminate training when validation score is not\nimproving in all of the previous ``n_iter_no_change`` numbers of\niterations.\nValues must be in the range `[1, inf)`.\nSee\n:ref:`sphx_glr_auto_examples_ensemble_plot_gradient_boosting_early_stopping.py`.\n\n.. versionadded:: 0.20",
+      "effective_default": null,
+      "name": "n_iter_no_change",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0.0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.0001",
+      "description": "Tolerance for the early stopping. When the loss is not improving\nby at least tol for ``n_iter_no_change`` iterations (if set to a\nnumber), the training stops.\nValues must be in the range `[0.0, inf)`.\n\n.. versionadded:: 0.20",
+      "effective_default": null,
+      "name": "tol",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=1e-4"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0.0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.0",
+      "description": "Complexity parameter used for Minimal Cost-Complexity Pruning. The\nsubtree with the largest cost complexity that is smaller than\n``ccp_alpha`` will be chosen. By default, no pruning is performed.\nValues must be in the range `[0.0, inf)`.\nSee :ref:`minimal_cost_complexity_pruning` for details. See\n:ref:`sphx_glr_auto_examples_tree_plot_cost_complexity_pruning.py`\nfor an example of such pruning.\n\n.. versionadded:: 0.22",
+      "effective_default": null,
+      "name": "ccp_alpha",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "non-negative float, default=0.0"
+    }
+  ],
+  "returns": [],
+  "signature": "GradientBoostingRegressor(*, loss='squared_error', learning_rate=0.1, n_estimators=100, subsample=1.0, criterion='deprecated', min_samples_split=2, min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_depth=3, min_impurity_decrease=0.0, init=None, random_state=None, max_features=None, alpha=0.9, verbose=0, max_leaf_nodes=None, warm_start=False, validation_fraction=0.1, n_iter_no_change=None, tol=0.0001, ccp_alpha=0.0)",
+  "summary": "Gradient Boosting for regression.",
+  "warnings": []
+}

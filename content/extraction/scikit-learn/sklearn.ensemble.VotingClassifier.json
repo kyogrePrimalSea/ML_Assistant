@@ -1,0 +1,220 @@
+{
+  "attributes": [
+    {
+      "description": "The collection of fitted sub-estimators as defined in ``estimators``\nthat are not 'drop'. Note that sub-estimators are always fitted on\ninteger-encoded labels (see ``le_`` attribute). When ``y`` contains\nnon-integer class labels (e.g. strings), use ``le_.inverse_transform``\nto map predictions back to the original label space.",
+      "name": "estimators_",
+      "type_doc": "list of classifiers"
+    },
+    {
+      "description": "Attribute to access any fitted sub-estimators by name.\n\n.. versionadded:: 0.20",
+      "name": "named_estimators_",
+      "type_doc": ":class:`~sklearn.utils.Bunch`"
+    },
+    {
+      "description": "Transformer used to encode the labels during fit and decode during\nprediction. Sub-estimators in ``estimators_`` are fitted on the\ninteger-encoded labels produced by this encoder.",
+      "name": "le_",
+      "type_doc": ":class:`~sklearn.preprocessing.LabelEncoder`"
+    },
+    {
+      "description": "The classes labels.",
+      "name": "classes_",
+      "type_doc": "ndarray of shape (n_classes,)"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`. Only defined if the\nunderlying classifier exposes such an attribute when fit.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Only defined if the\nunderlying estimators expose such an attribute when fit.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    },
+    {
+      "description": "Dictionary to access any fitted sub-estimators by name.",
+      "name": "named_estimators",
+      "type_doc": ""
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.VotingClassifier.html",
+  "extractor_version": "1",
+  "id": "sklearn.ensemble.VotingClassifier",
+  "import_path": "sklearn.ensemble.VotingClassifier",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y, **fit_params)",
+      "summary": "Fit the estimators."
+    },
+    {
+      "name": "fit_transform",
+      "signature": "fit_transform(X, y=None, **fit_params)",
+      "summary": "Return class labels or probabilities for each estimator."
+    },
+    {
+      "name": "get_feature_names_out",
+      "signature": "get_feature_names_out(input_features=None)",
+      "summary": "Get output feature names for transformation."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get the parameters of an estimator from the ensemble."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X)",
+      "summary": "Predict class labels for X."
+    },
+    {
+      "name": "predict_proba",
+      "signature": "predict_proba(X)",
+      "summary": "Compute probabilities of possible outcomes for samples in X."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Return :ref:`accuracy <accuracy_score>` on provided data and labels."
+    },
+    {
+      "name": "set_output",
+      "signature": "set_output(*, transform=None)",
+      "summary": "Set output container."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of an estimator from the ensemble."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.ensemble._voting.VotingClassifier",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(X)",
+      "summary": "Return class labels or probabilities for X for each estimator."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "list"
+        ]
+      },
+      "default": null,
+      "description": "Invoking the ``fit`` method on the ``VotingClassifier`` will fit clones\nof those original estimators that will be stored in the class attribute\n``self.estimators_``. An estimator can be set to ``'drop'`` using\n:meth:`set_params`.\n\n.. versionchanged:: 0.21\n    ``'drop'`` is accepted. Using None was deprecated in 0.22 and\n    support was removed in 0.24.",
+      "effective_default": null,
+      "name": "estimators",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "list of (str, estimator) tuples"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "hard",
+          "soft"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'hard'",
+      "description": "If 'hard', uses predicted class labels for majority rule voting.\nElse if 'soft', predicts the class label based on the argmax of\nthe sums of the predicted probabilities, which is recommended for\nan ensemble of well-calibrated classifiers.",
+      "effective_default": null,
+      "name": "voting",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'hard', 'soft'}, default='hard'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "array-like",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Sequence of weights (`float` or `int`) to weight the occurrences of\npredicted class labels (`hard` voting) or class probabilities\nbefore averaging (`soft` voting). Uses uniform weights if `None`.",
+      "effective_default": null,
+      "name": "weights",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of shape (n_classifiers,), default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None",
+          "Integral"
+        ]
+      },
+      "default": "None",
+      "description": "The number of jobs to run in parallel for ``fit``.\n``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.\n``-1`` means using all processors. See :term:`Glossary <n_jobs>`\nfor more details.\n\n.. versionadded:: 0.18",
+      "effective_default": null,
+      "name": "n_jobs",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "Affects shape of transform output only when voting='soft'\nIf voting='soft' and flatten_transform=True, transform method returns\nmatrix with shape (n_samples, n_classifiers * n_classes). If\nflatten_transform=False, it returns\n(n_classifiers, n_samples, n_classes).",
+      "effective_default": null,
+      "name": "flatten_transform",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "verbose"
+        ]
+      },
+      "default": "False",
+      "description": "If True, the time elapsed while fitting will be printed as it\nis completed.\n\n.. versionadded:: 0.23",
+      "effective_default": null,
+      "name": "verbose",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    }
+  ],
+  "returns": [],
+  "signature": "VotingClassifier(estimators, *, voting='hard', weights=None, n_jobs=None, flatten_transform=True, verbose=False)",
+  "summary": "Soft Voting/Majority Rule classifier for unfitted estimators.",
+  "warnings": []
+}

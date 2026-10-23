@@ -1,0 +1,218 @@
+{
+  "attributes": [
+    {
+      "description": "Representation of weight vector(s) in kernel space",
+      "name": "dual_coef_",
+      "type_doc": "ndarray of shape (n_samples,) or (n_samples, n_targets)"
+    },
+    {
+      "description": "Training data, which is also required for prediction. If\nkernel == \"precomputed\" this is instead the precomputed\ntraining matrix, of shape (n_samples, n_samples).",
+      "name": "X_fit_",
+      "type_doc": "{ndarray, sparse matrix} of shape (n_samples, n_features)"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.kernel_ridge.KernelRidge.html",
+  "extractor_version": "1",
+  "id": "sklearn.kernel_ridge.KernelRidge",
+  "import_path": "sklearn.kernel_ridge.KernelRidge",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y, sample_weight=None)",
+      "summary": "Fit Kernel Ridge regression model."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X)",
+      "summary": "Predict using the kernel ridge model."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Return :ref:`coefficient of determination <r2_score>` on test data."
+    },
+    {
+      "name": "set_fit_request",
+      "signature": "set_fit_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.kernel_ridge.KernelRidge",
+      "summary": "Configure whether metadata should be requested to be passed to the ``fit`` method."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.kernel_ridge.KernelRidge",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "array-like"
+        ]
+      },
+      "default": "1",
+      "description": "Regularization strength; must be a positive float. Regularization\nimproves the conditioning of the problem and reduces the variance of\nthe estimates. Larger values specify stronger regularization.\nAlpha corresponds to ``1 / (2C)`` in other linear models such as\n:class:`~sklearn.linear_model.LogisticRegression` or\n:class:`~sklearn.svm.LinearSVC`. If an array is passed, penalties are\nassumed to be specific to the targets. Hence they must correspond in\nnumber. See :ref:`ridge_regression` for formula.",
+      "effective_default": null,
+      "name": "alpha",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "float or array-like of shape (n_targets,), default=1.0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "additive_chi2",
+          "chi2",
+          "cosine",
+          "laplacian",
+          "linear",
+          "poly",
+          "polynomial",
+          "precomputed",
+          "rbf",
+          "sigmoid"
+        ],
+        "source": "constraints",
+        "types": [
+          "<built-in function callable>"
+        ]
+      },
+      "default": "'linear'",
+      "description": "Kernel mapping used internally. This parameter is directly passed to\n:class:`~sklearn.metrics.pairwise.pairwise_kernels`.\nIf `kernel` is a string, it must be one of the metrics\nin `pairwise.PAIRWISE_KERNEL_FUNCTIONS` or \"precomputed\".\nIf `kernel` is \"precomputed\", X is assumed to be a kernel matrix.\nAlternatively, if `kernel` is a callable function, it is called on\neach pair of instances (rows) and the resulting value recorded. The\ncallable should take two rows from X as input and return the\ncorresponding kernel value as a single number. This means that\ncallables from :mod:`sklearn.metrics.pairwise` are not allowed, as\nthey operate on matrices, not single samples. Use the string\nidentifying the kernel instead.",
+      "effective_default": null,
+      "name": "kernel",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str or callable, default=\"linear\""
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Gamma parameter for the RBF, laplacian, polynomial, exponential chi2\nand sigmoid kernels. Interpretation of the default value is left to\nthe kernel; see the documentation for sklearn.metrics.pairwise.\nIgnored by other kernels.",
+      "effective_default": null,
+      "name": "gamma",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "3",
+      "description": "Degree of the polynomial kernel. Ignored by other kernels.",
+      "effective_default": null,
+      "name": "degree",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=3"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "neither",
+            "left": null,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "1",
+      "description": "Zero coefficient for polynomial and sigmoid kernels.\nIgnored by other kernels.",
+      "effective_default": null,
+      "name": "coef0",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=1"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "dict",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Additional parameters (keyword arguments) for kernel function passed\nas callable object.",
+      "effective_default": null,
+      "name": "kernel_params",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "dict, default=None"
+    }
+  ],
+  "returns": [],
+  "signature": "KernelRidge(alpha=1, *, kernel='linear', gamma=None, degree=3, coef0=1, kernel_params=None)",
+  "summary": "Kernel ridge regression.",
+  "warnings": []
+}

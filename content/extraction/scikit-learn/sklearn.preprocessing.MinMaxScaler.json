@@ -1,0 +1,161 @@
+{
+  "attributes": [
+    {
+      "description": "Per feature adjustment for minimum. Equivalent to\n``min - X.min(axis=0) * self.scale_``",
+      "name": "min_",
+      "type_doc": "ndarray of shape (n_features,)"
+    },
+    {
+      "description": "Per feature relative scaling of the data. Equivalent to\n``(max - min) / (X.max(axis=0) - X.min(axis=0))``\n\n.. versionadded:: 0.17\n   *scale_* attribute.",
+      "name": "scale_",
+      "type_doc": "ndarray of shape (n_features,)"
+    },
+    {
+      "description": "Per feature minimum seen in the data\n\n.. versionadded:: 0.17\n   *data_min_*",
+      "name": "data_min_",
+      "type_doc": "ndarray of shape (n_features,)"
+    },
+    {
+      "description": "Per feature maximum seen in the data\n\n.. versionadded:: 0.17\n   *data_max_*",
+      "name": "data_max_",
+      "type_doc": "ndarray of shape (n_features,)"
+    },
+    {
+      "description": "Per feature range ``(data_max_ - data_min_)`` seen in the data\n\n.. versionadded:: 0.17\n   *data_range_*",
+      "name": "data_range_",
+      "type_doc": "ndarray of shape (n_features,)"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "The number of samples processed by the estimator.\nIt will be reset on new calls to fit, but increments across\n``partial_fit`` calls.",
+      "name": "n_samples_seen_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.MinMaxScaler.html",
+  "extractor_version": "1",
+  "id": "sklearn.preprocessing.MinMaxScaler",
+  "import_path": "sklearn.preprocessing.MinMaxScaler",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y=None)",
+      "summary": "Compute the minimum and maximum to be used for later scaling."
+    },
+    {
+      "name": "fit_transform",
+      "signature": "fit_transform(X, y=None, **fit_params)",
+      "summary": "Fit to data, then transform it."
+    },
+    {
+      "name": "get_feature_names_out",
+      "signature": "get_feature_names_out(input_features=None)",
+      "summary": "Get output feature names for transformation."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "inverse_transform",
+      "signature": "inverse_transform(X)",
+      "summary": "Undo the scaling of X according to feature_range."
+    },
+    {
+      "name": "partial_fit",
+      "signature": "partial_fit(X, y=None)",
+      "summary": "Online computation of min and max on X for later scaling."
+    },
+    {
+      "name": "set_output",
+      "signature": "set_output(*, transform=None)",
+      "summary": "Set output container."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(X)",
+      "summary": "Scale features of X according to feature_range."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "tuple"
+        ]
+      },
+      "default": "(0, 1)",
+      "description": "Desired range of transformed data.",
+      "effective_default": null,
+      "name": "feature_range",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "tuple (min, max), default=(0, 1)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "Set to False to perform inplace row normalization and avoid a\ncopy (if the input is already a numpy array).",
+      "effective_default": null,
+      "name": "copy",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "Set to True to clip transformed values of held-out data to\nprovided `feature_range`.\nSince this parameter will clip values, `inverse_transform` may not\nbe able to restore the original data.\n\n.. note::\n    Setting `clip=True` does not prevent feature drift (a distribution\n    shift between training and test data). The transformed values are clipped\n    to the `feature_range`, which helps avoid unintended behavior in models\n    sensitive to out-of-range inputs (e.g. linear models). Use with care,\n    as clipping can distort the distribution of test data.\n\n.. versionadded:: 0.24",
+      "effective_default": null,
+      "name": "clip",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    }
+  ],
+  "returns": [],
+  "signature": "MinMaxScaler(feature_range=(0, 1), *, copy=True, clip=False)",
+  "summary": "Transform features by scaling each feature to a given range.",
+  "warnings": []
+}

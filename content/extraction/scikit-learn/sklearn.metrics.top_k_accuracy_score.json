@@ -1,0 +1,114 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.metrics.top_k_accuracy_score.html",
+  "extractor_version": "1",
+  "id": "sklearn.metrics.top_k_accuracy_score",
+  "import_path": "sklearn.metrics.top_k_accuracy_score",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "True labels.",
+      "effective_default": null,
+      "name": "y_true",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n_samples,)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Target scores. These can be either probability estimates or\nnon-thresholded decision values (as returned by\n:term:`decision_function` on some classifiers).\nThe binary case expects scores with shape (n_samples,) while the\nmulticlass case expects scores with shape (n_samples, n_classes).\nIn the multiclass case, the order of the class scores must\ncorrespond to the order of ``labels``, if provided, or else to\nthe numerical or lexicographical order of the labels in ``y_true``.\nIf ``y_true`` does not contain all the labels, ``labels`` must be\nprovided.",
+      "effective_default": null,
+      "name": "y_score",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n_samples,) or (n_samples, n_classes)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "2",
+      "description": "Number of most likely outcomes considered to find the correct label.",
+      "effective_default": null,
+      "name": "k",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=2"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "If `True`, return the fraction of correctly classified samples.\nOtherwise, return the number of correctly classified samples.",
+      "effective_default": null,
+      "name": "normalize",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Sample weights. If `None`, all samples are given the same weight.",
+      "effective_default": null,
+      "name": "sample_weight",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of shape (n_samples,), default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Multiclass only. List of labels that index the classes in ``y_score``.\nIf ``None``, the numerical or lexicographical order of the labels in\n``y_true`` is used. If ``y_true`` does not contain all the labels,\n``labels`` must be provided.",
+      "effective_default": null,
+      "name": "labels",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of shape (n_classes,), default=None"
+    }
+  ],
+  "returns": [
+    {
+      "description": "The top-k accuracy score. The best performance is 1 with\n`normalize == True` and the number of samples with\n`normalize == False`.",
+      "name": "score",
+      "type_doc": "float"
+    }
+  ],
+  "signature": "top_k_accuracy_score(y_true, y_score, *, k=2, normalize=True, sample_weight=None, labels=None)",
+  "summary": "Top-k Accuracy classification score.",
+  "warnings": []
+}

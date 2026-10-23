@@ -1,0 +1,189 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_val_score.html",
+  "extractor_version": "1",
+  "id": "sklearn.model_selection.cross_val_score",
+  "import_path": "sklearn.model_selection.cross_val_score",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The object to use to fit the data.",
+      "effective_default": null,
+      "name": "estimator",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "estimator object implementing 'fit'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The data to fit. Can be for example a list, or an array.",
+      "effective_default": null,
+      "name": "X",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "{array-like, sparse matrix} of shape (n_samples, n_features)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The target variable to try to predict in the case of\nsupervised learning.",
+      "effective_default": null,
+      "name": "y",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "array-like of shape (n_samples,) or (n_samples, n_outputs), default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Group labels for the samples used while splitting the dataset into\ntrain/test set. Only used in conjunction with a \"Group\" :term:`cv`\ninstance (e.g., :class:`GroupKFold`).\n\n.. versionchanged:: 1.4\n    ``groups`` can only be passed if metadata routing is not enabled\n    via ``sklearn.set_config(enable_metadata_routing=True)``. When routing\n    is enabled, pass ``groups`` alongside other metadata via the ``params``\n    argument instead. E.g.:\n    ``cross_val_score(..., params={'groups': groups})``.",
+      "effective_default": null,
+      "name": "groups",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of shape (n_samples,), default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Strategy to evaluate the performance of the `estimator` across cross-validation\nsplits.\n\n- str: see :ref:`scoring_string_names` for options.\n- callable: a scorer callable object (e.g., function) with signature\n  ``scorer(estimator, X, y)``, which should return only a single value.\n  See :ref:`scoring_callable` for details.\n- `None`: the `estimator`'s\n  :ref:`default evaluation criterion <scoring_api_overview>` is used.\n\nSimilar to the use of `scoring` in :func:`cross_validate` but only a\nsingle metric is permitted.",
+      "effective_default": null,
+      "name": "scoring",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str or callable, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Determines the cross-validation splitting strategy.\nPossible inputs for cv are:\n\n- `None`, to use the default 5-fold cross validation,\n- int, to specify the number of folds in a `(Stratified)KFold`,\n- :term:`CV splitter`,\n- An iterable that generates (train, test) splits as arrays of indices.\n\nFor `int`/`None` inputs, if the estimator is a classifier and `y` is\neither binary or multiclass, :class:`StratifiedKFold` is used. In all\nother cases, :class:`KFold` is used. These splitters are instantiated\nwith `shuffle=False` so the splits will be the same across calls.\n\nRefer :ref:`User Guide <cross_validation>` for the various\ncross-validation strategies that can be used here.\n\n.. versionchanged:: 0.22\n    `cv` default value if `None` changed from 3-fold to 5-fold.",
+      "effective_default": null,
+      "name": "cv",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, cross-validation generator or an iterable, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Number of jobs to run in parallel. Training the estimator and computing\nthe score are parallelized over the cross-validation splits.\n``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.\n``-1`` means using all processors. See :term:`Glossary <n_jobs>`\nfor more details.",
+      "effective_default": null,
+      "name": "n_jobs",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0",
+      "description": "The verbosity level.",
+      "effective_default": null,
+      "name": "verbose",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Parameters to pass to the underlying estimator's ``fit``, the scorer,\nand the CV splitter.\n\n.. versionadded:: 1.4",
+      "effective_default": null,
+      "name": "params",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "dict, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'2*n_jobs'",
+      "description": "Controls the number of jobs that get dispatched during parallel\nexecution. Reducing this number can be useful to avoid an\nexplosion of memory consumption when more jobs get dispatched\nthan CPUs can process. This parameter can be:\n\n- ``None``, in which case all the jobs are immediately created and spawned. Use\n  this for lightweight and fast-running jobs, to avoid delays due to on-demand\n  spawning of the jobs\n- An int, giving the exact number of total jobs that are spawned\n- A str, giving an expression as a function of n_jobs, as in '2*n_jobs'",
+      "effective_default": null,
+      "name": "pre_dispatch",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or str, default='2*n_jobs'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "nan",
+      "description": "Value to assign to the score if an error occurs in estimator fitting.\nIf set to 'raise', the error is raised.\nIf a numeric value is given, FitFailedWarning is raised.\n\n.. versionadded:: 0.20",
+      "effective_default": null,
+      "name": "error_score",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "'raise' or numeric, default=np.nan"
+    }
+  ],
+  "returns": [
+    {
+      "description": "Array of scores of the estimator for each run of the cross validation.",
+      "name": "scores",
+      "type_doc": "ndarray of float of shape=(len(list(cv)),)"
+    }
+  ],
+  "signature": "cross_val_score(estimator, X, y=None, *, groups=None, scoring=None, cv=None, n_jobs=None, verbose=0, params=None, pre_dispatch='2*n_jobs', error_score=nan)",
+  "summary": "Evaluate a score by cross-validation.",
+  "warnings": []
+}

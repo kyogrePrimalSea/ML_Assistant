@@ -1,0 +1,274 @@
+{
+  "attributes": [
+    {
+      "description": "The estimator instance that defines the likelihood function\nusing the observed data.",
+      "name": "base_estimator_",
+      "type_doc": "``Estimator`` instance"
+    },
+    {
+      "description": "The kernel used for prediction. In case of binary classification,\nthe structure of the kernel is the same as the one passed as parameter\nbut with optimized hyperparameters. In case of multi-class\nclassification, a CompoundKernel is returned which consists of the\ndifferent kernels used in the one-versus-rest classifiers.",
+      "name": "kernel_",
+      "type_doc": "kernel instance"
+    },
+    {
+      "description": "The log-marginal-likelihood of ``self.kernel_.theta``",
+      "name": "log_marginal_likelihood_value_",
+      "type_doc": "float"
+    },
+    {
+      "description": "Unique class labels.",
+      "name": "classes_",
+      "type_doc": "array-like of shape (n_classes,)"
+    },
+    {
+      "description": "The number of classes in the training data",
+      "name": "n_classes_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.gaussian_process.GaussianProcessClassifier.html",
+  "extractor_version": "1",
+  "id": "sklearn.gaussian_process.GaussianProcessClassifier",
+  "import_path": "sklearn.gaussian_process.GaussianProcessClassifier",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y)",
+      "summary": "Fit Gaussian process classification model."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "latent_mean_and_variance",
+      "signature": "latent_mean_and_variance(X)",
+      "summary": "Compute the mean and variance of the latent function."
+    },
+    {
+      "name": "log_marginal_likelihood",
+      "signature": "log_marginal_likelihood(theta=None, eval_gradient=False, clone_kernel=True)",
+      "summary": "Return log-marginal likelihood of theta for training data."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X)",
+      "summary": "Perform classification on an array of test vectors X."
+    },
+    {
+      "name": "predict_proba",
+      "signature": "predict_proba(X)",
+      "summary": "Return probability estimates for the test vector X."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Return :ref:`accuracy <accuracy_score>` on provided data and labels."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.gaussian_process._gpc.GaussianProcessClassifier",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "Kernel",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "The kernel specifying the covariance function of the GP. If None is\npassed, the kernel \"1.0 * RBF(1.0)\" is used as default. Note that\nthe kernel's hyperparameters are optimized during fitting. Also kernel\ncannot be a `CompoundKernel`.",
+      "effective_default": null,
+      "name": "kernel",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "kernel instance, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "fmin_l_bfgs_b"
+        ],
+        "source": "constraints",
+        "types": [
+          "<built-in function callable>",
+          "None"
+        ]
+      },
+      "default": "'fmin_l_bfgs_b'",
+      "description": "Can either be one of the internally supported optimizers for optimizing\nthe kernel's parameters, specified by a string, or an externally\ndefined optimizer passed as a callable. If a callable is passed, it\nmust have the  signature::\n\n    def optimizer(obj_func, initial_theta, bounds):\n        # * 'obj_func' is the objective function to be maximized, which\n        #   takes the hyperparameters theta as parameter and an\n        #   optional flag eval_gradient, which determines if the\n        #   gradient is returned additionally to the function value\n        # * 'initial_theta': the initial value for theta, which can be\n        #   used by local optimizers\n        # * 'bounds': the bounds on the values of theta\n        ....\n        # Returned are the best found hyperparameters theta and\n        # the corresponding value of the target function.\n        return theta_opt, func_min\n\nPer default, the 'L-BFGS-B' algorithm from scipy.optimize.minimize\nis used. If None is passed, the kernel's parameters are kept fixed.\nAvailable internal optimizers are::\n\n    'fmin_l_bfgs_b'",
+      "effective_default": null,
+      "name": "optimizer",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "'fmin_l_bfgs_b', callable or None, default='fmin_l_bfgs_b'"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0",
+      "description": "The number of restarts of the optimizer for finding the kernel's\nparameters which maximize the log-marginal likelihood. The first run\nof the optimizer is performed from the kernel's initial parameters,\nthe remaining ones (if any) from thetas sampled log-uniform randomly\nfrom the space of allowed theta-values. If greater than 0, all bounds\nmust be finite. Note that n_restarts_optimizer=0 implies that one\nrun is performed.",
+      "effective_default": null,
+      "name": "n_restarts_optimizer",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=0"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "100",
+      "description": "The maximum number of iterations in Newton's method for approximating\nthe posterior during predict. Smaller values will reduce computation\ntime at the cost of worse results.",
+      "effective_default": null,
+      "name": "max_iter_predict",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=100"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "If warm-starts are enabled, the solution of the last Newton iteration\non the Laplace approximation of the posterior mode is used as\ninitialization for the next call of _posterior_mode(). This can speed\nup convergence when _posterior_mode is called several times on similar\nproblems as in hyperparameter optimization. See :term:`the Glossary\n<warm_start>`.",
+      "effective_default": null,
+      "name": "warm_start",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "If True, a persistent copy of the training data is stored in the\nobject. Otherwise, just a reference to the training data is stored,\nwhich might cause predictions to change if the data is modified\nexternally.",
+      "effective_default": null,
+      "name": "copy_X_train",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "random_state"
+        ]
+      },
+      "default": "None",
+      "description": "Determines random number generation used to initialize the centers.\nPass an int for reproducible results across multiple function calls.\nSee :term:`Glossary <random_state>`.",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, RandomState instance or None, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "one_vs_one",
+          "one_vs_rest"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'one_vs_rest'",
+      "description": "Specifies how multi-class classification problems are handled.\nSupported are 'one_vs_rest' and 'one_vs_one'. In 'one_vs_rest',\none binary Gaussian process classifier is fitted for each class, which\nis trained to separate this class from the rest. In 'one_vs_one', one\nbinary Gaussian process classifier is fitted for each pair of classes,\nwhich is trained to separate these two classes. The predictions of\nthese binary predictors are combined into multi-class predictions.\nNote that 'one_vs_one' does not support predicting probability\nestimates.",
+      "effective_default": null,
+      "name": "multi_class",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'one_vs_rest', 'one_vs_one'}, default='one_vs_rest'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "Integral",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "The number of jobs to use for the computation: the specified\nmulticlass problems are computed in parallel.\n``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.\n``-1`` means using all processors. See :term:`Glossary <n_jobs>`\nfor more details.",
+      "effective_default": null,
+      "name": "n_jobs",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=None"
+    }
+  ],
+  "returns": [],
+  "signature": "GaussianProcessClassifier(kernel=None, *, optimizer='fmin_l_bfgs_b', n_restarts_optimizer=0, max_iter_predict=100, warm_start=False, copy_X_train=True, random_state=None, multi_class='one_vs_rest', n_jobs=None)",
+  "summary": "Gaussian process classification (GPC) based on Laplace approximation.",
+  "warnings": []
+}

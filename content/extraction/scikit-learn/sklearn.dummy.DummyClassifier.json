@@ -1,0 +1,163 @@
+{
+  "attributes": [
+    {
+      "description": "Unique class labels observed in `y`. For multi-output classification\nproblems, this attribute is a list of arrays as each output has an\nindependent set of possible classes.",
+      "name": "classes_",
+      "type_doc": "ndarray of shape (n_classes,) or list of such arrays"
+    },
+    {
+      "description": "Number of label for each output.",
+      "name": "n_classes_",
+      "type_doc": "int or list of int"
+    },
+    {
+      "description": "Frequency of each class observed in `y`. For multioutput classification\nproblems, this is computed independently for each output.",
+      "name": "class_prior_",
+      "type_doc": "ndarray of shape (n_classes,) or list of such arrays"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X` has\nfeature names that are all strings.",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    },
+    {
+      "description": "Number of outputs.",
+      "name": "n_outputs_",
+      "type_doc": "int"
+    },
+    {
+      "description": "True if the array returned from predict is to be in sparse CSC format.\nIs automatically set to True if the input `y` is passed in sparse\nformat.",
+      "name": "sparse_output_",
+      "type_doc": "bool"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.dummy.DummyClassifier.html",
+  "extractor_version": "1",
+  "id": "sklearn.dummy.DummyClassifier",
+  "import_path": "sklearn.dummy.DummyClassifier",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y, sample_weight=None)",
+      "summary": "Fit the baseline classifier."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X)",
+      "summary": "Perform classification on test vectors X."
+    },
+    {
+      "name": "predict_log_proba",
+      "signature": "predict_log_proba(X)",
+      "summary": "Return log probability estimates for the test vectors X."
+    },
+    {
+      "name": "predict_proba",
+      "signature": "predict_proba(X)",
+      "summary": "Return probability estimates for the test vectors X."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Return the mean accuracy on the given test data and labels."
+    },
+    {
+      "name": "set_fit_request",
+      "signature": "set_fit_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.dummy.DummyClassifier",
+      "summary": "Configure whether metadata should be requested to be passed to the ``fit`` method."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.dummy.DummyClassifier",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "constant",
+          "most_frequent",
+          "prior",
+          "stratified",
+          "uniform"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'prior'",
+      "description": "Strategy to use to generate predictions.\n\n* \"most_frequent\": the `predict` method always returns the most\n  frequent class label in the observed `y` argument passed to `fit`.\n  The `predict_proba` method returns the matching one-hot encoded\n  vector.\n* \"prior\": the `predict` method always returns the most frequent\n  class label in the observed `y` argument passed to `fit` (like\n  \"most_frequent\"). ``predict_proba`` always returns the empirical\n  class distribution of `y` also known as the empirical class prior\n  distribution.\n* \"stratified\": the `predict_proba` method randomly samples one-hot\n  vectors from a multinomial distribution parametrized by the empirical\n  class prior probabilities.\n  The `predict` method returns the class label which got probability\n  one in the one-hot vector of `predict_proba`.\n  Each sampled row of both methods is therefore independent and\n  identically distributed.\n* \"uniform\": generates predictions uniformly at random from the list\n  of unique classes observed in `y`, i.e. each class has equal\n  probability.\n* \"constant\": always predicts a constant label that is provided by\n  the user. This is useful for metrics that evaluate a non-majority\n  class.\n\n  .. versionchanged:: 0.24\n     The default value of `strategy` has changed to \"prior\" in version\n     0.24.",
+      "effective_default": null,
+      "name": "strategy",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{\"most_frequent\", \"prior\", \"stratified\", \"uniform\", \"constant\"}, default=\"prior\""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "random_state"
+        ]
+      },
+      "default": "None",
+      "description": "Controls the randomness to generate the predictions when\n``strategy='stratified'`` or ``strategy='uniform'``.\nPass an int for reproducible output across multiple function calls.\nSee :term:`Glossary <random_state>`.",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, RandomState instance or None, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "Integral",
+          "str",
+          "array-like",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "The explicit constant as predicted by the \"constant\" strategy. This\nparameter is useful only for the \"constant\" strategy.",
+      "effective_default": null,
+      "name": "constant",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or str or array-like of shape (n_outputs,), default=None"
+    }
+  ],
+  "returns": [],
+  "signature": "DummyClassifier(*, strategy='prior', random_state=None, constant=None)",
+  "summary": "DummyClassifier makes predictions that ignore the input features.",
+  "warnings": []
+}

@@ -1,0 +1,154 @@
+{
+  "attributes": [
+    {
+      "description": "Mean or median or quantile of the training targets or constant value\ngiven by the user.",
+      "name": "constant_",
+      "type_doc": "ndarray of shape (1, n_outputs)"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X` has\nfeature names that are all strings.",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    },
+    {
+      "description": "Number of outputs.",
+      "name": "n_outputs_",
+      "type_doc": "int"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.dummy.DummyRegressor.html",
+  "extractor_version": "1",
+  "id": "sklearn.dummy.DummyRegressor",
+  "import_path": "sklearn.dummy.DummyRegressor",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y, sample_weight=None)",
+      "summary": "Fit the baseline regressor."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X, return_std=False)",
+      "summary": "Perform classification on test vectors X."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Return the coefficient of determination R^2 of the prediction."
+    },
+    {
+      "name": "set_fit_request",
+      "signature": "set_fit_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.dummy.DummyRegressor",
+      "summary": "Configure whether metadata should be requested to be passed to the ``fit`` method."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_predict_request",
+      "signature": "set_predict_request(*, return_std: bool | None | str = '$UNCHANGED$') -> sklearn.dummy.DummyRegressor",
+      "summary": "Configure whether metadata should be requested to be passed to the ``predict`` method."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.dummy.DummyRegressor",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "constant",
+          "mean",
+          "median",
+          "quantile"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'mean'",
+      "description": "Strategy to use to generate predictions.\n\n* \"mean\": always predicts the mean of the training set\n* \"median\": always predicts the median of the training set\n* \"quantile\": always predicts a specified quantile of the training set,\n  provided with the quantile parameter.\n* \"constant\": always predicts a constant value that is provided by\n  the user.",
+      "effective_default": null,
+      "name": "strategy",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{\"mean\", \"median\", \"quantile\", \"constant\"}, default=\"mean\""
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "neither",
+            "left": null,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "array-like",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "The explicit constant as predicted by the \"constant\" strategy. This\nparameter is useful only for the \"constant\" strategy.",
+      "effective_default": null,
+      "name": "constant",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or float or array-like of shape (n_outputs,), default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "both",
+            "left": 0.0,
+            "right": 1.0,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "The quantile to predict using the \"quantile\" strategy. A quantile of\n0.5 corresponds to the median, while 0.0 to the minimum and 1.0 to the\nmaximum.",
+      "effective_default": null,
+      "name": "quantile",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float in [0.0, 1.0], default=None"
+    }
+  ],
+  "returns": [],
+  "signature": "DummyRegressor(*, strategy='mean', constant=None, quantile=None)",
+  "summary": "Regressor that makes predictions using simple rules.",
+  "warnings": []
+}

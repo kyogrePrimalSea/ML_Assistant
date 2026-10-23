@@ -1,0 +1,84 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.metrics.hinge_loss.html",
+  "extractor_version": "1",
+  "id": "sklearn.metrics.hinge_loss",
+  "import_path": "sklearn.metrics.hinge_loss",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "True target. For :term:`binary` data, it should only contain two unique\nvalues, with the positive label being greater than the negative label.\nFor :term:`multiclass` data, all labels should be present, or provided\nvia `labels`.",
+      "effective_default": null,
+      "name": "y_true",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n_samples,)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Predicted decisions, as output by :term:`decision_function` (floats).",
+      "effective_default": null,
+      "name": "pred_decision",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n_samples,) or (n_samples, n_classes)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Contains all the labels for the problem. Used in multiclass hinge loss.",
+      "effective_default": null,
+      "name": "labels",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Sample weights.",
+      "effective_default": null,
+      "name": "sample_weight",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of shape (n_samples,), default=None"
+    }
+  ],
+  "returns": [
+    {
+      "description": "Average hinge loss.",
+      "name": "loss",
+      "type_doc": "float"
+    }
+  ],
+  "signature": "hinge_loss(y_true, pred_decision, *, labels=None, sample_weight=None)",
+  "summary": "Average hinge loss (non-regularized).",
+  "warnings": []
+}

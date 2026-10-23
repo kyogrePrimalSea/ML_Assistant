@@ -1,0 +1,146 @@
+{
+  "attributes": [
+    {
+      "description": "The features indices which will be returned when calling\n:meth:`transform`. They are computed during :meth:`fit`. If\n`features='all'`, `features_` is equal to `range(n_features)`.",
+      "name": "features_",
+      "type_doc": "ndarray of shape (n_missing_features,) or (n_features,)"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.impute.MissingIndicator.html",
+  "extractor_version": "1",
+  "id": "sklearn.impute.MissingIndicator",
+  "import_path": "sklearn.impute.MissingIndicator",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y=None)",
+      "summary": "Fit the transformer on `X`."
+    },
+    {
+      "name": "fit_transform",
+      "signature": "fit_transform(X, y=None)",
+      "summary": "Generate missing values indicator for `X`."
+    },
+    {
+      "name": "get_feature_names_out",
+      "signature": "get_feature_names_out(input_features=None)",
+      "summary": "Get output feature names for transformation."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "set_output",
+      "signature": "set_output(*, transform=None)",
+      "summary": "Set output container."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(X)",
+      "summary": "Generate missing values indicator for `X`."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "an instance of 'int', a float in the range [-inf, inf], numpy.nan, pandas.NA, an instance of 'str' or None"
+        ]
+      },
+      "default": "nan",
+      "description": "The placeholder for the missing values. All occurrences of\n`missing_values` will be imputed. For pandas' dataframes with\nnullable integer dtypes with missing values, `missing_values`\nshould be set to `np.nan`, since `pd.NA` will be converted to `np.nan`.",
+      "effective_default": null,
+      "name": "missing_values",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, float, str, np.nan or None, default=np.nan"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "all",
+          "missing-only"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'missing-only'",
+      "description": "Whether the imputer mask should represent all or a subset of\nfeatures.\n\n- If `'missing-only'` (default), the imputer mask will only represent\n  features containing missing values during fit time.\n- If `'all'`, the imputer mask will represent all features.",
+      "effective_default": null,
+      "name": "features",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'missing-only', 'all'}, default='missing-only'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "auto"
+        ],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "'auto'",
+      "description": "Whether the imputer mask format should be sparse or dense.\n\n- If `'auto'` (default), the imputer mask will be of same type as\n  input.\n- If `True`, the imputer mask will be a sparse matrix.\n- If `False`, the imputer mask will be a numpy array.",
+      "effective_default": null,
+      "name": "sparse",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool or 'auto', default='auto'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "If `True`, :meth:`transform` will raise an error when there are\nfeatures with missing values that have no missing values in\n:meth:`fit`. This is applicable only when `features='missing-only'`.",
+      "effective_default": null,
+      "name": "error_on_new",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    }
+  ],
+  "returns": [],
+  "signature": "MissingIndicator(*, missing_values=nan, features='missing-only', sparse='auto', error_on_new=True)",
+  "summary": "Binary indicators for missing values.",
+  "warnings": []
+}

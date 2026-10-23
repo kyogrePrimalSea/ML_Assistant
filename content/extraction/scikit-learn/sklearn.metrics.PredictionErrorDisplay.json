@@ -1,0 +1,90 @@
+{
+  "attributes": [
+    {
+      "description": "Optimal line representing `y_true == y_pred`. Therefore, it is a\ndiagonal line for `kind=\"predictions\"` and a horizontal line for\n`kind=\"residuals\"`.",
+      "name": "line_",
+      "type_doc": "matplotlib Artist"
+    },
+    {
+      "description": "Residual lines. If `with_errors=False`, then it is set to `None`.",
+      "name": "errors_lines_",
+      "type_doc": "matplotlib Artist or None"
+    },
+    {
+      "description": "Scatter data points.",
+      "name": "scatter_",
+      "type_doc": "matplotlib Artist"
+    },
+    {
+      "description": "Axes with the different matplotlib axis.",
+      "name": "ax_",
+      "type_doc": "matplotlib Axes"
+    },
+    {
+      "description": "Figure containing the scatter and lines.",
+      "name": "figure_",
+      "type_doc": "matplotlib Figure"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.metrics.PredictionErrorDisplay.html",
+  "extractor_version": "1",
+  "id": "sklearn.metrics.PredictionErrorDisplay",
+  "import_path": "sklearn.metrics.PredictionErrorDisplay",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "from_estimator",
+      "signature": "from_estimator(estimator, X, y, *, kind='residual_vs_predicted', subsample=1000, random_state=None, ax=None, scatter_kwargs=None, line_kwargs=None)",
+      "summary": "Plot the prediction error given a regressor and some data."
+    },
+    {
+      "name": "from_predictions",
+      "signature": "from_predictions(y_true, y_pred, *, kind='residual_vs_predicted', subsample=1000, random_state=None, ax=None, scatter_kwargs=None, line_kwargs=None)",
+      "summary": "Plot the prediction error given the true and predicted targets."
+    },
+    {
+      "name": "plot",
+      "signature": "plot(ax=None, *, kind='residual_vs_predicted', scatter_kwargs=None, line_kwargs=None)",
+      "summary": "Plot visualization."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "True values.",
+      "effective_default": null,
+      "name": "y_true",
+      "param_kind": "keyword_only",
+      "required": true,
+      "type_doc": "ndarray of shape (n_samples,)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Prediction values.",
+      "effective_default": null,
+      "name": "y_pred",
+      "param_kind": "keyword_only",
+      "required": true,
+      "type_doc": "ndarray of shape (n_samples,)"
+    }
+  ],
+  "returns": [],
+  "signature": "PredictionErrorDisplay(*, y_true, y_pred)",
+  "summary": "Visualization of the prediction error of a regression model.",
+  "warnings": []
+}

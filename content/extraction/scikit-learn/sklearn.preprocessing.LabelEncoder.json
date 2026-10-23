@@ -1,0 +1,64 @@
+{
+  "attributes": [
+    {
+      "description": "Holds the label for each class.",
+      "name": "classes_",
+      "type_doc": "ndarray of shape (n_classes,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.LabelEncoder.html",
+  "extractor_version": "1",
+  "id": "sklearn.preprocessing.LabelEncoder",
+  "import_path": "sklearn.preprocessing.LabelEncoder",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(y)",
+      "summary": "Fit label encoder."
+    },
+    {
+      "name": "fit_transform",
+      "signature": "fit_transform(y)",
+      "summary": "Fit label encoder and return encoded labels."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "inverse_transform",
+      "signature": "inverse_transform(y)",
+      "summary": "Transform labels back to original encoding."
+    },
+    {
+      "name": "set_output",
+      "signature": "set_output(*, transform=None)",
+      "summary": "Set output container."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(y)",
+      "summary": "Transform labels to normalized encoding."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [],
+  "returns": [],
+  "signature": "LabelEncoder()",
+  "summary": "Encode target labels with value between 0 and n_classes-1.",
+  "warnings": []
+}

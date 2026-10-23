@@ -1,0 +1,99 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.metrics.multilabel_confusion_matrix.html",
+  "extractor_version": "1",
+  "id": "sklearn.metrics.multilabel_confusion_matrix",
+  "import_path": "sklearn.metrics.multilabel_confusion_matrix",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Ground truth (correct) target values. Sparse matrix is only supported when\nlabels are of :term:`multilabel` type.",
+      "effective_default": null,
+      "name": "y_true",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "{array-like, sparse matrix} of shape (n_samples, n_outputs) or (n_samples,)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Estimated targets as returned by a classifier. Sparse matrix is only\nsupported when labels are of :term:`multilabel` type.",
+      "effective_default": null,
+      "name": "y_pred",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "{array-like, sparse matrix} of shape (n_samples, n_outputs) or (n_samples,)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Sample weights.",
+      "effective_default": null,
+      "name": "sample_weight",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of shape (n_samples,), default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "A list of classes or column indices to select some (or to force\ninclusion of classes absent from the data).",
+      "effective_default": null,
+      "name": "labels",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of shape (n_classes,), default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "In the multilabel case, this calculates a confusion matrix per sample.",
+      "effective_default": null,
+      "name": "samplewise",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    }
+  ],
+  "returns": [
+    {
+      "description": "A 2x2 confusion matrix corresponding to each output in the input.\nWhen calculating class-wise multi_confusion (default), then\nn_outputs = n_labels; when calculating sample-wise multi_confusion\n(samplewise=True), n_outputs = n_samples. If ``labels`` is defined,\nthe results will be returned in the order specified in ``labels``,\notherwise the results will be returned in sorted order by default.",
+      "name": "multi_confusion",
+      "type_doc": "ndarray of shape (n_outputs, 2, 2)"
+    }
+  ],
+  "signature": "multilabel_confusion_matrix(y_true, y_pred, *, sample_weight=None, labels=None, samplewise=False)",
+  "summary": "Compute a confusion matrix for each class or sample.",
+  "warnings": []
+}

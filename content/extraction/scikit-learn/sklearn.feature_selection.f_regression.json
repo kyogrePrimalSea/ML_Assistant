@@ -1,0 +1,89 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.f_regression.html",
+  "extractor_version": "1",
+  "id": "sklearn.feature_selection.f_regression",
+  "import_path": "sklearn.feature_selection.f_regression",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The data matrix.",
+      "effective_default": null,
+      "name": "X",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "{array-like, sparse matrix} of shape (n_samples, n_features)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The target vector.",
+      "effective_default": null,
+      "name": "y",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n_samples,)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "Whether or not to center the data matrix `X` and the target vector `y`.\nBy default, `X` and `y` will be centered.",
+      "effective_default": null,
+      "name": "center",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "Whether or not to force the F-statistics and associated p-values to\nbe finite. There are two cases where the F-statistic is expected to not\nbe finite:\n\n- when the target `y` or some features in `X` are constant. In this\n  case, the Pearson's R correlation is not defined leading to obtain\n  `np.nan` values in the F-statistic and p-value. When\n  `force_finite=True`, the F-statistic is set to `0.0` and the\n  associated p-value is set to `1.0`.\n- when a feature in `X` is perfectly correlated (or\n  anti-correlated) with the target `y`. In this case, the F-statistic\n  is expected to be `np.inf`. When `force_finite=True`, the F-statistic\n  is set to `np.finfo(dtype).max` and the associated p-value is set to\n  `0.0`.\n\n.. versionadded:: 1.1",
+      "effective_default": null,
+      "name": "force_finite",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    }
+  ],
+  "returns": [
+    {
+      "description": "F-statistic for each feature.",
+      "name": "f_statistic",
+      "type_doc": "ndarray of shape (n_features,)"
+    },
+    {
+      "description": "P-values associated with the F-statistic.",
+      "name": "p_values",
+      "type_doc": "ndarray of shape (n_features,)"
+    }
+  ],
+  "signature": "f_regression(X, y, *, center=True, force_finite=True)",
+  "summary": "Univariate linear regression tests returning F-statistic and p-values.",
+  "warnings": []
+}

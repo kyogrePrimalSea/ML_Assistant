@@ -1,0 +1,79 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.StratifiedKFold.html",
+  "extractor_version": "1",
+  "id": "sklearn.model_selection.StratifiedKFold",
+  "import_path": "sklearn.model_selection.StratifiedKFold",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_n_splits",
+      "signature": "get_n_splits(X=None, y=None, groups=None)",
+      "summary": "Returns the number of splitting iterations as set with the `n_splits` param"
+    },
+    {
+      "name": "split",
+      "signature": "split(X, y, groups=None)",
+      "summary": "Generate indices to split data into training and test set."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "5",
+      "description": "Number of folds. Must be at least 2.\n\n.. versionchanged:: 0.22\n    ``n_splits`` default value changed from 3 to 5.",
+      "effective_default": null,
+      "name": "n_splits",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int, default=5"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "Whether to shuffle each class's samples before splitting into batches.\nNote that the samples within each split will not be shuffled.",
+      "effective_default": null,
+      "name": "shuffle",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "When `shuffle` is True, `random_state` affects the ordering of the\nindices, which controls the randomness of each fold for each class.\nOtherwise, leave `random_state` as `None`.\nPass an int for reproducible output across multiple function calls.\nSee :term:`Glossary <random_state>`.",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, RandomState instance or None, default=None"
+    }
+  ],
+  "returns": [],
+  "signature": "StratifiedKFold(n_splits=5, *, shuffle=False, random_state=None)",
+  "summary": "Class-wise stratified K-Fold cross-validator.",
+  "warnings": []
+}

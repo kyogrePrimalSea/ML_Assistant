@@ -1,0 +1,233 @@
+{
+  "attributes": [
+    {
+      "description": "The base estimator from which the transformer is built. This attribute\nexist only when `fit` has been called.\n\n- If `prefit=True`, it is a deep copy of `estimator`.\n- If `prefit=False`, it is a clone of `estimator` and fit on the data\n  passed to `fit` or `partial_fit`.",
+      "name": "estimator_",
+      "type_doc": "estimator"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`. Only defined if the\nunderlying estimator exposes such an attribute when fit.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Maximum number of features calculated during :term:`fit`. Only defined\nif the ``max_features`` is not `None`.\n\n- If `max_features` is an `int`, then `max_features_ = max_features`.\n- If `max_features` is a callable, then `max_features_ = max_features(X)`.\n\n.. versionadded:: 1.1",
+      "name": "max_features_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    },
+    {
+      "description": "The threshold value used for feature selection.",
+      "name": "threshold_",
+      "type_doc": "float"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SelectFromModel.html",
+  "extractor_version": "1",
+  "id": "sklearn.feature_selection.SelectFromModel",
+  "import_path": "sklearn.feature_selection.SelectFromModel",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y=None, **fit_params)",
+      "summary": "Fit the SelectFromModel meta-transformer."
+    },
+    {
+      "name": "fit_transform",
+      "signature": "fit_transform(X, y=None, **fit_params)",
+      "summary": "Fit to data, then transform it."
+    },
+    {
+      "name": "get_feature_names_out",
+      "signature": "get_feature_names_out(input_features=None)",
+      "summary": "Mask feature names according to selected features."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "get_support",
+      "signature": "get_support(indices=False)",
+      "summary": "Get a mask, or integer index, of the features selected."
+    },
+    {
+      "name": "inverse_transform",
+      "signature": "inverse_transform(X)",
+      "summary": "Reverse the transformation operation."
+    },
+    {
+      "name": "partial_fit",
+      "signature": "partial_fit(X, y=None, **partial_fit_params)",
+      "summary": "Fit the SelectFromModel meta-transformer only once."
+    },
+    {
+      "name": "set_output",
+      "signature": "set_output(*, transform=None)",
+      "summary": "Set output container."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(X)",
+      "summary": "Reduce X to the selected features."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "an object implementing 'fit'"
+        ]
+      },
+      "default": null,
+      "description": "The base estimator from which the transformer is built.\nThis can be both a fitted (if ``prefit`` is set to True)\nor a non-fitted estimator. The estimator should have a\n``feature_importances_`` or ``coef_`` attribute after fitting.\nOtherwise, the ``importance_getter`` parameter should be used.",
+      "effective_default": null,
+      "name": "estimator",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "object"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "both",
+            "left": null,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "str",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "The threshold value to use for feature selection. Features whose\nabsolute importance value is greater or equal are kept while the others\nare discarded. If \"median\" (resp. \"mean\"), then the ``threshold`` value\nis the median (resp. the mean) of the feature importances. A scaling\nfactor (e.g., \"1.25*mean\") may also be used. If None and if the\nestimator has a parameter penalty set to l1, either explicitly\nor implicitly (e.g, Lasso), the threshold used is 1e-5.\nOtherwise, \"mean\" is used by default.",
+      "effective_default": null,
+      "name": "threshold",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str or float, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "Whether a prefit model is expected to be passed into the constructor\ndirectly or not.\nIf `True`, `estimator` must be a fitted estimator.\nIf `False`, `estimator` is fitted and updated by calling\n`fit` and `partial_fit`, respectively.",
+      "effective_default": null,
+      "name": "prefit",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "right",
+            "left": null,
+            "right": -1,
+            "type": "Integral"
+          },
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [
+          "-inf",
+          "inf"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "1",
+      "description": "Order of the norm used to filter the vectors of coefficients below\n``threshold`` in the case where the ``coef_`` attribute of the\nestimator is of dimension 2.",
+      "effective_default": null,
+      "name": "norm_order",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "non-zero int, inf, -inf, default=1"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "<built-in function callable>",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "The maximum number of features to select.\n\n- If an integer, then it specifies the maximum number of features to\n  allow.\n- If a callable, then it specifies how to calculate the maximum number of\n  features allowed. The callable will receive `X` as input: `max_features(X)`.\n- If `None`, then all features are kept.\n\nTo only select based on ``max_features``, set ``threshold=-np.inf``.\n\n.. versionadded:: 0.20\n.. versionchanged:: 1.1\n   `max_features` accepts a callable.",
+      "effective_default": null,
+      "name": "max_features",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, callable, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "str",
+          "<built-in function callable>"
+        ]
+      },
+      "default": "'auto'",
+      "description": "If 'auto', uses the feature importance either through a ``coef_``\nattribute or ``feature_importances_`` attribute of estimator.\n\nAlso accepts a string that specifies an attribute name/path\nfor extracting feature importance (implemented with `attrgetter`).\nFor example, give `regressor_.coef_` in case of\n:class:`~sklearn.compose.TransformedTargetRegressor`  or\n`named_steps.clf.feature_importances_` in case of\n:class:`~sklearn.pipeline.Pipeline` with its last step named `clf`.\n\nIf `callable`, overrides the default feature importance getter.\nThe callable is passed with the fitted estimator and it should\nreturn importance for each feature.\n\n.. versionadded:: 0.24",
+      "effective_default": null,
+      "name": "importance_getter",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str or callable, default='auto'"
+    }
+  ],
+  "returns": [],
+  "signature": "SelectFromModel(estimator, *, threshold=None, prefit=False, norm_order=1, max_features=None, importance_getter='auto')",
+  "summary": "Meta-transformer for selecting features based on importance weights.",
+  "warnings": []
+}

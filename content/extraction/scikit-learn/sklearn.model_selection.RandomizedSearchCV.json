@@ -1,0 +1,424 @@
+{
+  "attributes": [
+    {
+      "description": "A dict with keys as column headers and values as columns, that can be\nimported into a pandas ``DataFrame``.\n\nFor instance the below given table\n\n+--------------+-------------+-------------------+---+---------------+\n| param_kernel | param_gamma | split0_test_score |...|rank_test_score|\n+==============+=============+===================+===+===============+\n|    'rbf'     |     0.1     |       0.80        |...|       1       |\n+--------------+-------------+-------------------+---+---------------+\n|    'rbf'     |     0.2     |       0.84        |...|       3       |\n+--------------+-------------+-------------------+---+---------------+\n|    'rbf'     |     0.3     |       0.70        |...|       2       |\n+--------------+-------------+-------------------+---+---------------+\n\nwill be represented by a ``cv_results_`` dict of::\n\n    {\n    'param_kernel' : masked_array(data = ['rbf', 'rbf', 'rbf'],\n                                  mask = False),\n    'param_gamma'  : masked_array(data = [0.1 0.2 0.3], mask = False),\n    'split0_test_score'  : [0.80, 0.84, 0.70],\n    'split1_test_score'  : [0.82, 0.50, 0.70],\n    'mean_test_score'    : [0.81, 0.67, 0.70],\n    'std_test_score'     : [0.01, 0.24, 0.00],\n    'rank_test_score'    : [1, 3, 2],\n    'split0_train_score' : [0.80, 0.92, 0.70],\n    'split1_train_score' : [0.82, 0.55, 0.70],\n    'mean_train_score'   : [0.81, 0.74, 0.70],\n    'std_train_score'    : [0.01, 0.19, 0.00],\n    'mean_fit_time'      : [0.73, 0.63, 0.43],\n    'std_fit_time'       : [0.01, 0.02, 0.01],\n    'mean_score_time'    : [0.01, 0.06, 0.04],\n    'std_score_time'     : [0.00, 0.00, 0.00],\n    'params'             : [{'kernel' : 'rbf', 'gamma' : 0.1}, ...],\n    }\n\nFor an example of analysing ``cv_results_``,\nsee :ref:`sphx_glr_auto_examples_model_selection_plot_grid_search_stats.py`.\n\nNOTE\n\nThe key ``'params'`` is used to store a list of parameter\nsettings dicts for all the parameter candidates.\n\nThe ``mean_fit_time``, ``std_fit_time``, ``mean_score_time`` and\n``std_score_time`` are all in seconds.\n\nFor multi-metric evaluation, the scores for all the scorers are\navailable in the ``cv_results_`` dict at the keys ending with that\nscorer's name (``'_<scorer_name>'``) instead of ``'_score'`` shown\nabove. ('split0_test_precision', 'mean_train_precision' etc.)",
+      "name": "cv_results_",
+      "type_doc": "dict of numpy (masked) ndarrays"
+    },
+    {
+      "description": "Estimator that was chosen by the search, i.e. estimator\nwhich gave highest score (or smallest loss if specified)\non the left out data. Not available if ``refit=False``.\n\nFor multi-metric evaluation, this attribute is present only if\n``refit`` is specified.\n\nSee ``refit`` parameter for more information on allowed values.",
+      "name": "best_estimator_",
+      "type_doc": "estimator"
+    },
+    {
+      "description": "Mean cross-validated score of the best_estimator.\n\nFor multi-metric evaluation, this is not available if ``refit`` is\n``False``. See ``refit`` parameter for more information.\n\nThis attribute is not available if ``refit`` is a function.",
+      "name": "best_score_",
+      "type_doc": "float"
+    },
+    {
+      "description": "Parameter setting that gave the best results on the hold out data.\n\nFor multi-metric evaluation, this is not available if ``refit`` is\n``False``. See ``refit`` parameter for more information.",
+      "name": "best_params_",
+      "type_doc": "dict"
+    },
+    {
+      "description": "The index (of the ``cv_results_`` arrays) which corresponds to the best\ncandidate parameter setting.\n\nThe dict at ``search.cv_results_['params'][search.best_index_]`` gives\nthe parameter setting for the best model, that gives the highest\nmean score (``search.best_score_``).\n\nFor multi-metric evaluation, this is not available if ``refit`` is\n``False``. See ``refit`` parameter for more information.",
+      "name": "best_index_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Scorer function used on the held out data to choose the best\nparameters for the model.\n\nFor multi-metric evaluation, this attribute holds the validated\n``scoring`` dict which maps the scorer key to the scorer callable.",
+      "name": "scorer_",
+      "type_doc": "function or a dict"
+    },
+    {
+      "description": "The number of cross-validation splits (folds/iterations).",
+      "name": "n_splits_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Seconds used for refitting the best model on the whole dataset.\n\nThis is present only if ``refit`` is not False.\n\n.. versionadded:: 0.20",
+      "name": "refit_time_",
+      "type_doc": "float"
+    },
+    {
+      "description": "Whether or not the scorers compute several metrics.",
+      "name": "multimetric_",
+      "type_doc": "bool"
+    },
+    {
+      "description": "The classes labels. This is present only if ``refit`` is specified and\nthe underlying estimator is a classifier.",
+      "name": "classes_",
+      "type_doc": "ndarray of shape (n_classes,)"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`. Only defined if\n`best_estimator_` is defined (see the documentation for the `refit`\nparameter for more details) and that `best_estimator_` exposes\n`n_features_in_` when fit.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Only defined if\n`best_estimator_` is defined (see the documentation for the `refit`\nparameter for more details) and that `best_estimator_` exposes\n`feature_names_in_` when fit.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html",
+  "extractor_version": "1",
+  "id": "sklearn.model_selection.RandomizedSearchCV",
+  "import_path": "sklearn.model_selection.RandomizedSearchCV",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "decision_function",
+      "signature": "decision_function(X)",
+      "summary": "Call decision_function on the estimator with the best found parameters."
+    },
+    {
+      "name": "fit",
+      "signature": "fit(X, y=None, **params)",
+      "summary": "Run fit with all sets of parameters."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "inverse_transform",
+      "signature": "inverse_transform(X)",
+      "summary": "Call inverse_transform on the estimator with the best found params."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X)",
+      "summary": "Call predict on the estimator with the best found parameters."
+    },
+    {
+      "name": "predict_log_proba",
+      "signature": "predict_log_proba(X)",
+      "summary": "Call predict_log_proba on the estimator with the best found parameters."
+    },
+    {
+      "name": "predict_proba",
+      "signature": "predict_proba(X)",
+      "summary": "Call predict_proba on the estimator with the best found parameters."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y=None, **params)",
+      "summary": "Return the score on the given data, if the estimator has been refit."
+    },
+    {
+      "name": "score_samples",
+      "signature": "score_samples(X)",
+      "summary": "Call score_samples on the estimator with the best found parameters."
+    },
+    {
+      "name": "set_callbacks",
+      "signature": "set_callbacks(*callbacks)",
+      "summary": "Set callbacks for the estimator."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(X)",
+      "summary": "Call transform on the estimator with the best found parameters."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "an object implementing 'fit'"
+        ]
+      },
+      "default": null,
+      "description": "An object of that type is instantiated for each grid point.\nThis is assumed to implement the scikit-learn estimator interface.\nEither estimator needs to provide a ``score`` function,\nor ``scoring`` must be passed.",
+      "effective_default": null,
+      "name": "estimator",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "estimator object"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "dict",
+          "list"
+        ]
+      },
+      "default": null,
+      "description": "Dictionary with parameters names (`str`) as keys and distributions\nor lists of parameters to try. Distributions must provide a ``rvs``\nmethod for sampling (such as those from scipy.stats.distributions).\nIf a list is given, it is sampled uniformly.\nIf a list of dicts is given, first a dict is sampled uniformly, and\nthen a parameter is sampled using that dict as above.",
+      "effective_default": null,
+      "name": "param_distributions",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "dict or list of dicts"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "10",
+      "description": "Number of parameter settings that are sampled. n_iter trades\noff runtime vs quality of the solution.",
+      "effective_default": null,
+      "name": "n_iter",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=10"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "accuracy",
+          "adjusted_mutual_info_score",
+          "adjusted_rand_score",
+          "average_precision",
+          "balanced_accuracy",
+          "completeness_score",
+          "d2_absolute_error_score",
+          "d2_brier_score",
+          "d2_log_loss_score",
+          "explained_variance",
+          "f1",
+          "f1_macro",
+          "f1_micro",
+          "f1_samples",
+          "f1_weighted",
+          "fowlkes_mallows_score",
+          "homogeneity_score",
+          "jaccard",
+          "jaccard_macro",
+          "jaccard_micro",
+          "jaccard_samples",
+          "jaccard_weighted",
+          "matthews_corrcoef",
+          "mutual_info_score",
+          "neg_brier_score",
+          "neg_log_loss",
+          "neg_max_error",
+          "neg_mean_absolute_error",
+          "neg_mean_absolute_percentage_error",
+          "neg_mean_gamma_deviance",
+          "neg_mean_poisson_deviance",
+          "neg_mean_squared_error",
+          "neg_mean_squared_log_error",
+          "neg_median_absolute_error",
+          "neg_negative_likelihood_ratio",
+          "neg_root_mean_squared_error",
+          "neg_root_mean_squared_log_error",
+          "normalized_mutual_info_score",
+          "positive_likelihood_ratio",
+          "precision",
+          "precision_macro",
+          "precision_micro",
+          "precision_samples",
+          "precision_weighted",
+          "r2",
+          "rand_score",
+          "recall",
+          "recall_macro",
+          "recall_micro",
+          "recall_samples",
+          "recall_weighted",
+          "roc_auc",
+          "roc_auc_ovo",
+          "roc_auc_ovo_weighted",
+          "roc_auc_ovr",
+          "roc_auc_ovr_weighted",
+          "top_k_accuracy",
+          "v_measure_score"
+        ],
+        "source": "constraints",
+        "types": [
+          "<built-in function callable>",
+          "list",
+          "tuple",
+          "dict",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Strategy to evaluate the performance of the cross-validated model on\nthe test set.\n\nIf `scoring` represents a single score, one can use:\n\n- a single string (see :ref:`scoring_string_names`);\n- a callable (see :ref:`scoring_callable`) that returns a single value;\n- `None`, the `estimator`'s\n  :ref:`default evaluation criterion <scoring_api_overview>` is used.\n\nIf `scoring` represents multiple scores, one can use:\n\n- a list or tuple of unique strings;\n- a callable returning a dictionary where the keys are the metric\n  names and the values are the metric scores;\n- a dictionary with metric names as keys and callables as values.\n\nSee :ref:`multimetric_grid_search` for an example.\n\nIf None, the estimator's score method is used.",
+      "effective_default": null,
+      "name": "scoring",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str, callable, list, tuple or dict, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "Integral",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Number of jobs to run in parallel.\n``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.\n``-1`` means using all processors. See :term:`Glossary <n_jobs>`\nfor more details.\n\n.. versionchanged:: v0.20\n   `n_jobs` default changed from 1 to None",
+      "effective_default": null,
+      "name": "n_jobs",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean",
+          "str",
+          "<built-in function callable>"
+        ]
+      },
+      "default": "True",
+      "description": "Refit an estimator using the best found parameters on the whole\ndataset.\n\nFor multiple metric evaluation, this needs to be a `str` denoting the\nscorer that would be used to find the best parameters for refitting\nthe estimator at the end.\n\nWhere there are considerations other than maximum score in\nchoosing a best estimator, ``refit`` can be set to a function which\nreturns the selected ``best_index_`` given the ``cv_results_``. In that\ncase, the ``best_estimator_`` and ``best_params_`` will be set\naccording to the returned ``best_index_`` while the ``best_score_``\nattribute will not be available.\n\nThe refitted estimator is made available at the ``best_estimator_``\nattribute and permits using ``predict`` directly on this\n``RandomizedSearchCV`` instance.\n\nAlso for multiple metric evaluation, the attributes ``best_index_``,\n``best_score_`` and ``best_params_`` will only be available if\n``refit`` is set and all of them will be determined w.r.t this specific\nscorer.\n\nSee ``scoring`` parameter to know more about multiple metric\nevaluation.\n\nSee :ref:`this example\n<sphx_glr_auto_examples_model_selection_plot_grid_search_refit_callable.py>`\nfor an example of how to use ``refit=callable`` to balance model\ncomplexity and cross-validated score.\n\n.. versionchanged:: 0.20\n    Support for callable added.",
+      "effective_default": null,
+      "name": "refit",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, str, or callable, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "cv_object"
+        ]
+      },
+      "default": "None",
+      "description": "Determines the cross-validation splitting strategy.\nPossible inputs for cv are:\n\n- None, to use the default 5-fold cross validation,\n- integer, to specify the number of folds in a `(Stratified)KFold`,\n- :term:`CV splitter`,\n- an iterable yielding (train, test) splits as arrays of indices.\n\nFor integer/None inputs, if the estimator is a classifier and ``y`` is\neither binary or multiclass, :class:`StratifiedKFold` is used. In all\nother cases, :class:`KFold` is used. These splitters are instantiated\nwith `shuffle=False` so the splits will be the same across calls.\n\nRefer :ref:`User Guide <cross_validation>` for the various\ncross-validation strategies that can be used here.\n\n.. versionchanged:: 0.22\n    ``cv`` default value if None changed from 3-fold to 5-fold.",
+      "effective_default": null,
+      "name": "cv",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, cross-validation generator or an iterable, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "verbose"
+        ]
+      },
+      "default": "0",
+      "description": "Controls the verbosity of information printed during fitting, with higher\nvalues yielding more detailed logging.\n\n- 0 : no messages are printed;\n- >=1 : summary of the total number of fits;\n- >=2 : computation time for each fold and parameter candidate;\n- >=3 : fold indices and scores;\n- >=10 : parameter candidate indices and START messages before each fit.",
+      "effective_default": null,
+      "name": "verbose",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default = 0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "Integral",
+          "str"
+        ]
+      },
+      "default": "'2*n_jobs'",
+      "description": "Controls the number of jobs that get dispatched during parallel\nexecution. Reducing this number can be useful to avoid an\nexplosion of memory consumption when more jobs get dispatched\nthan CPUs can process. This parameter can be:\n\n- None, in which case all the jobs are immediately created and spawned. Use\n  this for lightweight and fast-running jobs, to avoid delays due to on-demand\n  spawning of the jobs\n- An int, giving the exact number of total jobs that are spawned\n- A str, giving an expression as a function of n_jobs, as in '2*n_jobs'",
+      "effective_default": null,
+      "name": "pre_dispatch",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, or str, default='2*n_jobs'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "random_state"
+        ]
+      },
+      "default": "None",
+      "description": "Pseudo random number generator state used for random uniform sampling\nfrom lists of possible values instead of scipy.stats distributions.\nPass an int for reproducible output across multiple\nfunction calls.\nSee :term:`Glossary <random_state>`.",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, RandomState instance or None, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "raise"
+        ],
+        "source": "constraints",
+        "types": [
+          "Real"
+        ]
+      },
+      "default": "nan",
+      "description": "Value to assign to the score if an error occurs in estimator fitting.\nIf set to 'raise', the error is raised. If a numeric value is given,\nFitFailedWarning is raised. This parameter does not affect the refit\nstep, which will always raise the error.",
+      "effective_default": null,
+      "name": "error_score",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "'raise' or numeric, default=np.nan"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "If ``False``, the ``cv_results_`` attribute will not include training\nscores.\nComputing training scores is used to get insights on how different\nparameter settings impact the overfitting/underfitting trade-off.\nHowever computing the scores on the training set can be computationally\nexpensive and is not strictly required to select the parameters that\nyield the best generalization performance.\n\n.. versionadded:: 0.19\n\n.. versionchanged:: 0.21\n    Default value was changed from ``True`` to ``False``",
+      "effective_default": null,
+      "name": "return_train_score",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    }
+  ],
+  "returns": [],
+  "signature": "RandomizedSearchCV(estimator, param_distributions, *, n_iter=10, scoring=None, n_jobs=None, refit=True, cv=None, verbose=0, pre_dispatch='2*n_jobs', random_state=None, error_score=nan, return_train_score=False)",
+  "summary": "Randomized search on hyper parameters.",
+  "warnings": []
+}

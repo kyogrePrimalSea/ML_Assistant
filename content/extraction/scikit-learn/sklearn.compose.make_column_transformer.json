@@ -1,0 +1,117 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.compose.make_column_transformer.html",
+  "extractor_version": "1",
+  "id": "sklearn.compose.make_column_transformer",
+  "import_path": "sklearn.compose.make_column_transformer",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Tuples of the form (transformer, columns) specifying the\ntransformer objects to be applied to subsets of the data.\n\ntransformer : {'drop', 'passthrough'} or estimator\n    Estimator must support :term:`fit` and :term:`transform`.\n    Special-cased strings 'drop' and 'passthrough' are accepted as\n    well, to indicate to drop the columns or to pass them through\n    untransformed, respectively.\ncolumns : str,  array-like of str, int, array-like of int, slice,                 array-like of bool or callable\n    Indexes the data on its second axis. Integers are interpreted as\n    positional columns, while strings can reference DataFrame columns\n    by name. A scalar string or int should be used where\n    ``transformer`` expects X to be a 1d array-like (vector),\n    otherwise a 2d array will be passed to the transformer.\n    A callable is passed the input data `X` and can return any of the\n    above. To select multiple columns by name or dtype, you can use\n    :obj:`make_column_selector`.",
+      "effective_default": null,
+      "name": "transformers",
+      "param_kind": "var_positional",
+      "required": false,
+      "type_doc": "tuples"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "drop",
+          "passthrough"
+        ],
+        "source": "docstring",
+        "types": []
+      },
+      "default": "'drop'",
+      "description": "By default, only the specified columns in `transformers` are\ntransformed and combined in the output, and the non-specified\ncolumns are dropped. (default of ``'drop'``).\nBy specifying ``remainder='passthrough'``, all remaining columns that\nwere not specified in `transformers` will be automatically passed\nthrough. This subset of columns is concatenated with the output of\nthe transformers.\nBy setting ``remainder`` to be an estimator, the remaining\nnon-specified columns will use the ``remainder`` estimator. The\nestimator must support :term:`fit` and :term:`transform`.",
+      "effective_default": null,
+      "name": "remainder",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'drop', 'passthrough'} or estimator, default='drop'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0.3",
+      "description": "If the transformed output consists of a mix of sparse and dense data,\nit will be stacked as a sparse matrix if the density is lower than this\nvalue. Use ``sparse_threshold=0`` to always return dense.\nWhen the transformed output consists of all sparse or all dense data,\nthe stacked result will be sparse or dense, respectively, and this\nkeyword will be ignored.",
+      "effective_default": null,
+      "name": "sparse_threshold",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0.3"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Number of jobs to run in parallel.\n``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.\n``-1`` means using all processors. See :term:`Glossary <n_jobs>`\nfor more details.",
+      "effective_default": null,
+      "name": "n_jobs",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "If True, the time elapsed while fitting each transformer will be\nprinted as it is completed.",
+      "effective_default": null,
+      "name": "verbose",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "If True, :meth:`ColumnTransformer.get_feature_names_out` will prefix\nall feature names with the name of the transformer that generated that\nfeature.\nIf False, :meth:`ColumnTransformer.get_feature_names_out` will not\nprefix any feature names and will error if feature names are not\nunique.\n\n.. versionadded:: 1.0",
+      "effective_default": null,
+      "name": "verbose_feature_names_out",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    }
+  ],
+  "returns": [
+    {
+      "description": "Returns a :class:`ColumnTransformer` object.",
+      "name": "ct",
+      "type_doc": "ColumnTransformer"
+    }
+  ],
+  "signature": "make_column_transformer(*transformers, remainder='drop', sparse_threshold=0.3, n_jobs=None, verbose=False, verbose_feature_names_out=True)",
+  "summary": "Construct a ColumnTransformer from the given transformers.",
+  "warnings": []
+}

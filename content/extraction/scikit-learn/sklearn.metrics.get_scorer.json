@@ -1,0 +1,39 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.metrics.get_scorer.html",
+  "extractor_version": "1",
+  "id": "sklearn.metrics.get_scorer",
+  "import_path": "sklearn.metrics.get_scorer",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Scoring method as string. If callable it is returned as is.\nIf None, returns None.",
+      "effective_default": null,
+      "name": "scoring",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "str, callable or None"
+    }
+  ],
+  "returns": [
+    {
+      "description": "The scorer.",
+      "name": "scorer",
+      "type_doc": "callable"
+    }
+  ],
+  "signature": "get_scorer(scoring)",
+  "summary": "Get a scorer from string.",
+  "warnings": []
+}

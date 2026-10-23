@@ -1,0 +1,255 @@
+{
+  "attributes": [
+    {
+      "description": "The left singular vectors of the cross-covariance matrices of each\niteration.",
+      "name": "x_weights_",
+      "type_doc": "ndarray of shape (n_features, n_components)"
+    },
+    {
+      "description": "The right singular vectors of the cross-covariance matrices of each\niteration.",
+      "name": "y_weights_",
+      "type_doc": "ndarray of shape (n_targets, n_components)"
+    },
+    {
+      "description": "The loadings of `X`.",
+      "name": "x_loadings_",
+      "type_doc": "ndarray of shape (n_features, n_components)"
+    },
+    {
+      "description": "The loadings of `y`.",
+      "name": "y_loadings_",
+      "type_doc": "ndarray of shape (n_targets, n_components)"
+    },
+    {
+      "description": "The transformed training samples.",
+      "name": "x_scores_",
+      "type_doc": "ndarray of shape (n_samples, n_components)"
+    },
+    {
+      "description": "The transformed training targets.",
+      "name": "y_scores_",
+      "type_doc": "ndarray of shape (n_samples, n_components)"
+    },
+    {
+      "description": "The projection matrix used to transform `X`.",
+      "name": "x_rotations_",
+      "type_doc": "ndarray of shape (n_features, n_components)"
+    },
+    {
+      "description": "The projection matrix used to transform `y`.",
+      "name": "y_rotations_",
+      "type_doc": "ndarray of shape (n_targets, n_components)"
+    },
+    {
+      "description": "The coefficients of the linear model such that `y` is approximated as\n`y = X @ coef_.T + intercept_`.",
+      "name": "coef_",
+      "type_doc": "ndarray of shape (n_target, n_features)"
+    },
+    {
+      "description": "The intercepts of the linear model such that `y` is approximated as\n`y = X @ coef_.T + intercept_`.\n\n.. versionadded:: 1.1",
+      "name": "intercept_",
+      "type_doc": "ndarray of shape (n_targets,)"
+    },
+    {
+      "description": "Number of iterations of the power method, for each\ncomponent.",
+      "name": "n_iter_",
+      "type_doc": "list of shape (n_components,)"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.cross_decomposition.PLSRegression.html",
+  "extractor_version": "1",
+  "id": "sklearn.cross_decomposition.PLSRegression",
+  "import_path": "sklearn.cross_decomposition.PLSRegression",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y)",
+      "summary": "Fit model to data."
+    },
+    {
+      "name": "fit_transform",
+      "signature": "fit_transform(X, y=None)",
+      "summary": "Learn and apply the dimension reduction on the train data."
+    },
+    {
+      "name": "get_feature_names_out",
+      "signature": "get_feature_names_out(input_features=None)",
+      "summary": "Get output feature names for transformation."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "inverse_transform",
+      "signature": "inverse_transform(X, y=None)",
+      "summary": "Transform data back to its original space."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X, copy=True)",
+      "summary": "Predict targets of given samples."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Return :ref:`coefficient of determination <r2_score>` on test data."
+    },
+    {
+      "name": "set_output",
+      "signature": "set_output(*, transform=None)",
+      "summary": "Set output container."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_predict_request",
+      "signature": "set_predict_request(*, copy: bool | None | str = '$UNCHANGED$') -> sklearn.cross_decomposition._pls.PLSRegression",
+      "summary": "Configure whether metadata should be requested to be passed to the ``predict`` method."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.cross_decomposition._pls.PLSRegression",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    },
+    {
+      "name": "set_transform_request",
+      "signature": "set_transform_request(*, copy: bool | None | str = '$UNCHANGED$') -> sklearn.cross_decomposition._pls.PLSRegression",
+      "summary": "Configure whether metadata should be requested to be passed to the ``transform`` method."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(X, y=None, copy=True)",
+      "summary": "Apply the dimension reduction."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "2",
+      "description": "Number of components to keep. Should be in `[1, n_features]`.",
+      "effective_default": null,
+      "name": "n_components",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int, default=2"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "Whether to scale `X` and `y`.",
+      "effective_default": null,
+      "name": "scale",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "500",
+      "description": "The maximum number of iterations of the power method when\n`algorithm='nipals'`. Ignored otherwise.",
+      "effective_default": null,
+      "name": "max_iter",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=500"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "1e-06",
+      "description": "The tolerance used as convergence criteria in the power method: the\nalgorithm stops whenever the squared norm of `u_i - u_{i-1}` is less\nthan `tol`, where `u` corresponds to the left singular vector.",
+      "effective_default": null,
+      "name": "tol",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=1e-06"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "Whether to copy `X` and `y` in :term:`fit` before applying centering,\nand potentially scaling. If `False`, these operations will be done\ninplace, modifying both arrays.",
+      "effective_default": null,
+      "name": "copy",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    }
+  ],
+  "returns": [],
+  "signature": "PLSRegression(n_components=2, *, scale=True, max_iter=500, tol=1e-06, copy=True)",
+  "summary": "PLS regression.",
+  "warnings": []
+}

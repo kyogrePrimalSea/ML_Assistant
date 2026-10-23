@@ -1,0 +1,289 @@
+{
+  "attributes": [
+    {
+      "description": "Weight vector(s).",
+      "name": "coef_",
+      "type_doc": "ndarray of shape (n_features,) or (n_classes, n_features)"
+    },
+    {
+      "description": "Intercept term.",
+      "name": "intercept_",
+      "type_doc": "ndarray of shape (n_classes,)"
+    },
+    {
+      "description": "Weighted within-class covariance matrix. It corresponds to\n`sum_k prior_k * C_k` where `C_k` is the covariance matrix of the\nsamples in class `k`. The `C_k` are estimated using the (potentially\nshrunk) biased estimator of covariance. If solver is 'svd', only\nexists when `store_covariance` is True.",
+      "name": "covariance_",
+      "type_doc": "array-like of shape (n_features, n_features)"
+    },
+    {
+      "description": "Percentage of variance explained by each of the selected components.\nIf ``n_components`` is not set then all components are stored and the\nsum of explained variances is equal to 1.0. Only available when eigen\nor svd solver is used.",
+      "name": "explained_variance_ratio_",
+      "type_doc": "ndarray of shape (n_components,)"
+    },
+    {
+      "description": "Class-wise means.",
+      "name": "means_",
+      "type_doc": "array-like of shape (n_classes, n_features)"
+    },
+    {
+      "description": "Class priors (sum to 1).",
+      "name": "priors_",
+      "type_doc": "array-like of shape (n_classes,)"
+    },
+    {
+      "description": "Scaling of the features in the space spanned by the class centroids.\nOnly available for 'svd' and 'eigen' solvers.",
+      "name": "scalings_",
+      "type_doc": "array-like of shape (rank, n_classes - 1)"
+    },
+    {
+      "description": "Overall mean. Only present if solver is 'svd'.",
+      "name": "xbar_",
+      "type_doc": "array-like of shape (n_features,)"
+    },
+    {
+      "description": "Unique class labels.",
+      "name": "classes_",
+      "type_doc": "array-like of shape (n_classes,)"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.discriminant_analysis.LinearDiscriminantAnalysis.html",
+  "extractor_version": "1",
+  "id": "sklearn.discriminant_analysis.LinearDiscriminantAnalysis",
+  "import_path": "sklearn.discriminant_analysis.LinearDiscriminantAnalysis",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "decision_function",
+      "signature": "decision_function(X)",
+      "summary": "Apply decision function to an array of samples."
+    },
+    {
+      "name": "fit",
+      "signature": "fit(X, y)",
+      "summary": "Fit the Linear Discriminant Analysis model."
+    },
+    {
+      "name": "fit_transform",
+      "signature": "fit_transform(X, y=None, **fit_params)",
+      "summary": "Fit to data, then transform it."
+    },
+    {
+      "name": "get_feature_names_out",
+      "signature": "get_feature_names_out(input_features=None)",
+      "summary": "Get output feature names for transformation."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X)",
+      "summary": "Predict class labels for samples in X."
+    },
+    {
+      "name": "predict_log_proba",
+      "signature": "predict_log_proba(X)",
+      "summary": "Estimate log probability."
+    },
+    {
+      "name": "predict_proba",
+      "signature": "predict_proba(X)",
+      "summary": "Estimate probability."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Return :ref:`accuracy <accuracy_score>` on provided data and labels."
+    },
+    {
+      "name": "set_output",
+      "signature": "set_output(*, transform=None)",
+      "summary": "Set output container."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.discriminant_analysis.LinearDiscriminantAnalysis",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(X)",
+      "summary": "Project data to maximize class separation."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "eigen",
+          "lsqr",
+          "svd"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'svd'",
+      "description": "Solver to use, possible values:\n  - 'svd': Singular value decomposition (default).\n    Does not compute the covariance matrix, therefore this solver is\n    recommended for data with a large number of features.\n  - 'lsqr': Least squares solution.\n    Can be combined with shrinkage or custom covariance estimator.\n  - 'eigen': Eigenvalue decomposition.\n    Can be combined with shrinkage or custom covariance estimator.\n\n.. versionchanged:: 1.2\n    `solver=\"svd\"` now has experimental Array API support. See the\n    :ref:`Array API User Guide <array_api>` for more details.",
+      "effective_default": null,
+      "name": "solver",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "{'svd', 'lsqr', 'eigen'}, default='svd'"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "both",
+            "left": 0,
+            "right": 1,
+            "type": "Real"
+          }
+        ],
+        "options": [
+          "auto"
+        ],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Shrinkage parameter, possible values:\n  - None: no shrinkage (default).\n  - 'auto': automatic shrinkage using the Ledoit-Wolf lemma.\n  - float between 0 and 1: fixed shrinkage parameter.\n\nThis should be left to None if `covariance_estimator` is used.\nNote that shrinkage works only with 'lsqr' and 'eigen' solvers.\n\nFor a usage example, see\n:ref:`sphx_glr_auto_examples_classification_plot_lda.py`.",
+      "effective_default": null,
+      "name": "shrinkage",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "'auto' or float, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "array-like",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "The class prior probabilities. By default, the class proportions are\ninferred from the training data.",
+      "effective_default": null,
+      "name": "priors",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "array-like of shape (n_classes,), default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Number of components (<= min(n_classes - 1, n_features)) for\ndimensionality reduction. If None, will be set to\nmin(n_classes - 1, n_features). This parameter only affects the\n`transform` method.\n\nFor a usage example, see\n:ref:`sphx_glr_auto_examples_decomposition_plot_pca_vs_lda.py`.",
+      "effective_default": null,
+      "name": "n_components",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "If True, explicitly compute the weighted within-class covariance\nmatrix when solver is 'svd'. The matrix is always computed\nand stored for the other solvers.\n\n.. versionadded:: 0.17",
+      "effective_default": null,
+      "name": "store_covariance",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.0001",
+      "description": "Absolute threshold for a singular value of X to be considered\nsignificant, used to estimate the rank of X. Dimensions whose\nsingular values are non-significant are discarded. Only used if\nsolver is 'svd'.\n\n.. versionadded:: 0.17",
+      "effective_default": null,
+      "name": "tol",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "float, default=1.0e-4"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "an object implementing 'fit'",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "If not None, `covariance_estimator` is used to estimate\nthe covariance matrices instead of relying on the empirical\ncovariance estimator (with potential shrinkage).\nThe object should have a fit method and a ``covariance_`` attribute\nlike the estimators in :mod:`sklearn.covariance`.\nif None the shrinkage parameter drives the estimate.\n\nThis should be left to None if `shrinkage` is used.\nNote that `covariance_estimator` works only with 'lsqr' and 'eigen'\nsolvers.\n\n.. versionadded:: 0.24",
+      "effective_default": null,
+      "name": "covariance_estimator",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "covariance estimator, default=None"
+    }
+  ],
+  "returns": [],
+  "signature": "LinearDiscriminantAnalysis(solver='svd', shrinkage=None, priors=None, n_components=None, store_covariance=False, tol=0.0001, covariance_estimator=None)",
+  "summary": "Linear Discriminant Analysis.",
+  "warnings": []
+}

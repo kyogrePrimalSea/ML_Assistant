@@ -1,0 +1,181 @@
+{
+  "attributes": [
+    {
+      "description": "Estimated coefficients for the linear regression problem.\nIf multiple targets are passed during the fit (y 2D), this\nis a 2D array of shape (n_targets, n_features), while if only\none target is passed, this is a 1D array of length n_features.",
+      "name": "coef_",
+      "type_doc": "array of shape (n_features, ) or (n_targets, n_features)"
+    },
+    {
+      "description": "Rank of matrix `X`. Only available when `X` is dense.",
+      "name": "rank_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Singular values of `X`. Only available when `X` is dense.",
+      "name": "singular_",
+      "type_doc": "array of shape (min(X, y),)"
+    },
+    {
+      "description": "Independent term in the linear model. Set to 0.0 if\n`fit_intercept = False`.",
+      "name": "intercept_",
+      "type_doc": "float or array of shape (n_targets,)"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html",
+  "extractor_version": "1",
+  "id": "sklearn.linear_model.LinearRegression",
+  "import_path": "sklearn.linear_model.LinearRegression",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y, sample_weight=None)",
+      "summary": "Fit linear model."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X)",
+      "summary": "Predict using the linear model."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Return :ref:`coefficient of determination <r2_score>` on test data."
+    },
+    {
+      "name": "set_fit_request",
+      "signature": "set_fit_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.linear_model._base.LinearRegression",
+      "summary": "Configure whether metadata should be requested to be passed to the ``fit`` method."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.linear_model._base.LinearRegression",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "Whether to calculate the intercept for this model. If set\nto False, no intercept will be used in calculations\n(i.e. data is expected to be centered).",
+      "effective_default": null,
+      "name": "fit_intercept",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "If True, X will be copied; else, it may be overwritten.",
+      "effective_default": null,
+      "name": "copy_X",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "1e-06",
+      "description": "The precision of the solution (`coef_`) is determined by `tol` which\nspecifies the convergence criterion of the underlying solver. `tol` is\nset as `atol` and `btol` of :func:`scipy.sparse.linalg.lsqr` when\nfitting on sparse training data. `tol` is set as `cond` of\n:func:`scipy.linalg.lstsq` when fitting on dense training data.\n\n.. versionadded:: 1.7\n.. versionchanged:: 1.9\n    Now supported on dense data, interpreted as the `cond` parameter.",
+      "effective_default": null,
+      "name": "tol",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=1e-6"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None",
+          "Integral"
+        ]
+      },
+      "default": "None",
+      "description": "The number of jobs to use for the computation. This will only provide\nspeedup in case of sufficiently large problems, that is if firstly\n`n_targets > 1` and secondly `X` is sparse or if `positive` is set\nto `True`. ``None`` means 1 unless in a\n:obj:`joblib.parallel_backend` context. ``-1`` means using all\nprocessors. See :term:`Glossary <n_jobs>` for more details.",
+      "effective_default": null,
+      "name": "n_jobs",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "When set to ``True``, forces the coefficients to be positive. This\noption is only supported for dense arrays.\n\nFor a comparison between a linear regression model with positive constraints\non the regression coefficients and a linear regression without such constraints,\nsee :ref:`sphx_glr_auto_examples_linear_model_plot_nnls.py`.\n\n.. versionadded:: 0.24",
+      "effective_default": null,
+      "name": "positive",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    }
+  ],
+  "returns": [],
+  "signature": "LinearRegression(*, fit_intercept=True, copy_X=True, tol=1e-06, n_jobs=None, positive=False)",
+  "summary": "Ordinary least squares Linear Regression.",
+  "warnings": []
+}

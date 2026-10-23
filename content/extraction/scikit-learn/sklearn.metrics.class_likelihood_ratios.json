@@ -1,0 +1,99 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.metrics.class_likelihood_ratios.html",
+  "extractor_version": "1",
+  "id": "sklearn.metrics.class_likelihood_ratios",
+  "import_path": "sklearn.metrics.class_likelihood_ratios",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Ground truth (correct) target values. Sparse matrix is only supported when\ntargets are of :term:`multilabel` type.",
+      "effective_default": null,
+      "name": "y_true",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "1d array-like, or label indicator array / sparse matrix"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Estimated targets as returned by a classifier. Sparse matrix is only\nsupported when targets are of :term:`multilabel` type.",
+      "effective_default": null,
+      "name": "y_pred",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "1d array-like, or label indicator array / sparse matrix"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "List of labels to index the matrix. This may be used to select the\npositive and negative classes with the ordering `labels=[negative_class,\npositive_class]`. If `None` is given, those that appear at least once in\n`y_true` or `y_pred` are used in sorted order.",
+      "effective_default": null,
+      "name": "labels",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Sample weights.",
+      "effective_default": null,
+      "name": "sample_weight",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of shape (n_samples,), default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "nan",
+      "description": "Sets the return values for LR+ and LR- when there is a division by zero. Can\ntake the following values:\n\n- `np.nan` to return `np.nan` for both `LR+` and `LR-`\n- `1.0` to return the worst possible scores: `{\"LR+\": 1.0, \"LR-\": 1.0}`\n- a dict in the format `{\"LR+\": value_1, \"LR-\": value_2}` where the values can\n  be non-negative floats, `np.inf` or `np.nan` in the range of the\n  likelihood ratios. For example, `{\"LR+\": 1.0, \"LR-\": 1.0}` can be used for\n  returning the worst scores, indicating a useless model, and `{\"LR+\": np.inf,\n  \"LR-\": 0.0}` can be used for returning the best scores, indicating a useful\n  model.\n\nIf a division by zero occurs, only the affected metric is replaced with the set\nvalue; the other metric is calculated as usual.\n\n.. versionadded:: 1.7",
+      "effective_default": null,
+      "name": "replace_undefined_by",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "np.nan, 1.0, or dict, default=np.nan"
+    }
+  ],
+  "returns": [
+    {
+      "description": "A tuple of two floats, the first containing the positive likelihood ratio (LR+)\nand the second the negative likelihood ratio (LR-).",
+      "name": "(positive_likelihood_ratio, negative_likelihood_ratio)",
+      "type_doc": "tuple of float"
+    }
+  ],
+  "signature": "class_likelihood_ratios(y_true, y_pred, *, labels=None, sample_weight=None, replace_undefined_by=nan)",
+  "summary": "Compute binary classification positive and negative likelihood ratios.",
+  "warnings": []
+}

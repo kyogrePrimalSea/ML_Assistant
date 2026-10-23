@@ -1,0 +1,84 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.make_pipeline.html",
+  "extractor_version": "1",
+  "id": "sklearn.pipeline.make_pipeline",
+  "import_path": "sklearn.pipeline.make_pipeline",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "List of the scikit-learn estimators that are chained together.",
+      "effective_default": null,
+      "name": "steps",
+      "param_kind": "var_positional",
+      "required": false,
+      "type_doc": "list of Estimator objects"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Used to cache the fitted transformers of the pipeline. The last step\nwill never be cached, even if it is a transformer. By default, no\ncaching is performed. If a string is given, it is the path to the\ncaching directory. Enabling caching triggers a clone of the transformers\nbefore fitting. Therefore, the transformer instance given to the\npipeline cannot be inspected directly. Use the attribute ``named_steps``\nor ``steps`` to inspect estimators within the pipeline. Caching the\ntransformers is advantageous when fitting is time consuming.",
+      "effective_default": null,
+      "name": "memory",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str or object with the joblib.Memory interface, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "This enables transforming some input arguments to ``fit`` (other than ``X``)\nto be transformed by the steps of the pipeline up to the step which requires\nthem. Requirement is defined via :ref:`metadata routing <metadata_routing>`.\nThis can be used to pass a validation set through the pipeline for instance.\n\nYou can only set this if metadata routing is enabled, which you\ncan enable using ``sklearn.set_config(enable_metadata_routing=True)``.\n\n.. versionadded:: 1.6",
+      "effective_default": null,
+      "name": "transform_input",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "list of str, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "If True, the time elapsed while fitting each step will be printed as it\nis completed.",
+      "effective_default": null,
+      "name": "verbose",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    }
+  ],
+  "returns": [
+    {
+      "description": "Returns a scikit-learn :class:`Pipeline` object.",
+      "name": "p",
+      "type_doc": "Pipeline"
+    }
+  ],
+  "signature": "make_pipeline(*steps, memory=None, transform_input=None, verbose=False)",
+  "summary": "Construct a :class:`Pipeline` from the given estimators.",
+  "warnings": []
+}

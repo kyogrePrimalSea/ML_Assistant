@@ -1,0 +1,114 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html",
+  "extractor_version": "1",
+  "id": "sklearn.model_selection.train_test_split",
+  "import_path": "sklearn.model_selection.train_test_split",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Indexable data-structures can be arrays, lists, dataframes, scipy\nsparse matrices or pandas dataframes with consistent first dimension.",
+      "effective_default": null,
+      "name": "arrays",
+      "param_kind": "var_positional",
+      "required": false,
+      "type_doc": "sequence of array-like of shape (n_samples,) or (n_samples, n_outputs)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "If float, should be between 0.0 and 1.0 and represent the proportion\nof the dataset to include in the test split. If int, represents the\nabsolute number of test samples. If None, the value is set to the\ncomplement of the train size. If ``train_size`` is also None, it will\nbe set to 0.25.",
+      "effective_default": null,
+      "name": "test_size",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float or int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "If float, should be between 0.0 and 1.0 and represent the\nproportion of the dataset to include in the train split. If\nint, represents the absolute number of train samples. If None,\nthe value is automatically set to the complement of the test size.",
+      "effective_default": null,
+      "name": "train_size",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float or int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Controls the shuffling applied to the data before applying the split.\nPass an int for reproducible output across multiple function calls.\nSee :term:`Glossary <random_state>`.",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, RandomState instance or None, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "Whether or not to shuffle the data before splitting. If shuffle=False\nthen stratify must be None.",
+      "effective_default": null,
+      "name": "shuffle",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "If not None, data is split in a stratified fashion, using this as\nthe class labels.\nRead more in the :ref:`User Guide <stratification>`.",
+      "effective_default": null,
+      "name": "stratify",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of shape (n_samples,), default=None"
+    }
+  ],
+  "returns": [
+    {
+      "description": "List containing train-test split of inputs.\n\n.. versionadded:: 0.16\n    If the input is sparse, the output will be a\n    ``scipy.sparse.csr_matrix``. Else, output type is the same as the\n    input type.",
+      "name": "splitting",
+      "type_doc": "list, length=2 * len(arrays)"
+    }
+  ],
+  "signature": "train_test_split(*arrays, test_size=None, train_size=None, random_state=None, shuffle=True, stratify=None)",
+  "summary": "Split arrays or matrices into random train and test subsets.",
+  "warnings": []
+}

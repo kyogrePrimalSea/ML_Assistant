@@ -1,0 +1,63 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.ParameterSampler.html",
+  "extractor_version": "1",
+  "id": "sklearn.model_selection.ParameterSampler",
+  "import_path": "sklearn.model_selection.ParameterSampler",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Dictionary with parameter names (`str`) as keys and distributions\nor lists of parameters to try. Distributions must provide a ``rvs``\nmethod for sampling (such as those from scipy.stats.distributions).\nIf a list is given, it is sampled uniformly.\nIf a list of dicts is given, first a dict is sampled uniformly, and\nthen a parameter is sampled using that dict as above.",
+      "effective_default": null,
+      "name": "param_distributions",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "dict"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Number of parameter settings that are produced.",
+      "effective_default": null,
+      "name": "n_iter",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "int"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Pseudo random number generator state used for random uniform sampling\nfrom lists of possible values instead of scipy.stats distributions.\nPass an int for reproducible output across multiple\nfunction calls.\nSee :term:`Glossary <random_state>`.",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, RandomState instance or None, default=None"
+    }
+  ],
+  "returns": [],
+  "signature": "ParameterSampler(param_distributions, n_iter, *, random_state=None)",
+  "summary": "Generator on parameters sampled from given distributions.",
+  "warnings": []
+}

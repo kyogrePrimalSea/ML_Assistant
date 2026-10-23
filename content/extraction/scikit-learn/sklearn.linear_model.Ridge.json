@@ -1,0 +1,252 @@
+{
+  "attributes": [
+    {
+      "description": "Weight vector(s).",
+      "name": "coef_",
+      "type_doc": "ndarray of shape (n_features,) or (n_targets, n_features)"
+    },
+    {
+      "description": "Independent term in decision function. Set to 0.0 if\n``fit_intercept = False``.",
+      "name": "intercept_",
+      "type_doc": "float or ndarray of shape (n_targets,)"
+    },
+    {
+      "description": "Actual number of iterations for each target. Available only for\n'sag' and 'lsqr' solvers. Other solvers will return None.\n\n.. versionadded:: 0.17",
+      "name": "n_iter_",
+      "type_doc": "None or ndarray of shape (n_targets,)"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    },
+    {
+      "description": "The solver that was used at fit time by the computational\nroutines.\n\n.. versionadded:: 1.5",
+      "name": "solver_",
+      "type_doc": "str"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html",
+  "extractor_version": "1",
+  "id": "sklearn.linear_model.Ridge",
+  "import_path": "sklearn.linear_model.Ridge",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y, sample_weight=None)",
+      "summary": "Fit Ridge regression model."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X)",
+      "summary": "Predict using the linear model."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Return :ref:`coefficient of determination <r2_score>` on test data."
+    },
+    {
+      "name": "set_fit_request",
+      "signature": "set_fit_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.linear_model._ridge.Ridge",
+      "summary": "Configure whether metadata should be requested to be passed to the ``fit`` method."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.linear_model._ridge.Ridge",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "array-like"
+        ]
+      },
+      "default": "1.0",
+      "description": "Constant that multiplies the L2 term, controlling regularization\nstrength. `alpha` must be a non-negative float i.e. in `[0, inf)`.\n\nWhen `alpha = 0`, the objective is equivalent to ordinary least\nsquares, solved by the :class:`LinearRegression` object. For numerical\nreasons, using `alpha = 0` with the `Ridge` object is not advised.\nInstead, you should use the :class:`LinearRegression` object.\n\nIf an array is passed, penalties are assumed to be specific to the\ntargets. Hence they must correspond in number.\n\nSee :ref:`sphx_glr_auto_examples_linear_model_plot_ridge_coeffs.py`\nfor an illustration of the effect of alpha on the model coefficients.",
+      "effective_default": null,
+      "name": "alpha",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "float or array-like of shape (n_targets,), default=1.0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "Whether to fit the intercept for this model. If set\nto false, no intercept will be used in calculations\n(i.e. ``X`` and ``y`` are expected to be centered).",
+      "effective_default": null,
+      "name": "fit_intercept",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "If True, X will be copied; else, it may be overwritten.",
+      "effective_default": null,
+      "name": "copy_X",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Maximum number of iterations for conjugate gradient solver.\nFor 'sparse_cg' and 'lsqr' solvers, the default value is determined\nby scipy.sparse.linalg. For 'sag' solver, the default value is 1000.\nFor 'lbfgs' solver, the default value is 15000.",
+      "effective_default": null,
+      "name": "max_iter",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.0001",
+      "description": "The precision of the solution (`coef_`) is determined by `tol` which\nspecifies a different convergence criterion for each solver:\n\n- 'svd': `tol` has no impact.\n\n- 'cholesky': `tol` has no impact.\n\n- 'sparse_cg': norm of residuals smaller than `tol`.\n\n- 'lsqr': `tol` is set as atol and btol of scipy.sparse.linalg.lsqr,\n  which control the norm of the residual vector in terms of the norms of\n  matrix and coefficients.\n\n- 'sag' and 'saga': relative change of coef smaller than `tol`.\n\n- 'lbfgs': maximum of the absolute (projected) gradient=max|residuals|\n  smaller than `tol`.\n\n.. versionchanged:: 1.2\n   Default value changed from 1e-3 to 1e-4 for consistency with other linear\n   models.",
+      "effective_default": null,
+      "name": "tol",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=1e-4"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "auto",
+          "cholesky",
+          "lbfgs",
+          "lsqr",
+          "sag",
+          "saga",
+          "sparse_cg",
+          "svd"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'auto'",
+      "description": "Solver to use in the computational routines:\n\n- 'auto' chooses the solver automatically based on the type of data.\n\n- 'svd' uses a Singular Value Decomposition of X to compute the Ridge\n  coefficients. It is the most stable solver, in particular more stable\n  for singular matrices than 'cholesky' at the cost of being slower.\n\n- 'cholesky' uses the standard :func:`scipy.linalg.solve` function to\n  obtain a closed-form solution.\n\n- 'sparse_cg' uses the conjugate gradient solver as found in\n  :func:`scipy.sparse.linalg.cg`. As an iterative algorithm, this solver is\n  more appropriate than 'cholesky' for large-scale data\n  (possibility to set `tol` and `max_iter`).\n\n- 'lsqr' uses the dedicated regularized least-squares routine\n  :func:`scipy.sparse.linalg.lsqr`. It is the fastest and uses an iterative\n  procedure.\n\n- 'sag' uses a Stochastic Average Gradient descent, and 'saga' uses\n  its improved, unbiased version named SAGA. Both methods also use an\n  iterative procedure, and are often faster than other solvers when\n  both n_samples and n_features are large. Note that 'sag' and\n  'saga' fast convergence is only guaranteed on features with\n  approximately the same scale. You can preprocess the data with a\n  scaler from :mod:`sklearn.preprocessing`.\n\n- 'lbfgs' uses L-BFGS-B algorithm implemented in\n  :func:`scipy.optimize.minimize`. It can be used only when `positive`\n  is True.\n\nAll solvers except 'svd' support both dense and sparse data. However, only\n'lsqr', 'sag', 'sparse_cg', and 'lbfgs' support sparse input when\n`fit_intercept` is True.\n\n.. versionadded:: 0.17\n   Stochastic Average Gradient descent solver.\n.. versionadded:: 0.19\n   SAGA solver.",
+      "effective_default": null,
+      "name": "solver",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'auto', 'svd', 'cholesky', 'lsqr', 'sparse_cg', 'sag', 'saga', 'lbfgs'}, default='auto'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "When set to ``True``, forces the coefficients to be positive.\nOnly 'lbfgs' solver is supported in this case.",
+      "effective_default": null,
+      "name": "positive",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "random_state"
+        ]
+      },
+      "default": "None",
+      "description": "Used when ``solver`` == 'sag' or 'saga' to shuffle the data.\nSee :term:`Glossary <random_state>` for details.\n\n.. versionadded:: 0.17\n   `random_state` to support Stochastic Average Gradient.",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, RandomState instance, default=None"
+    }
+  ],
+  "returns": [],
+  "signature": "Ridge(alpha=1.0, *, fit_intercept=True, copy_X=True, max_iter=None, tol=0.0001, solver='auto', positive=False, random_state=None)",
+  "summary": "Linear least squares with l2 regularization.",
+  "warnings": []
+}

@@ -1,0 +1,156 @@
+{
+  "attributes": [
+    {
+      "description": "`powers_[i, j]` is the exponent of the jth input in the ith output.",
+      "name": "powers_",
+      "type_doc": "ndarray of shape (`n_output_features_`, `n_features_in_`)"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    },
+    {
+      "description": "The total number of polynomial output features. The number of output\nfeatures is computed by iterating over all suitably sized combinations\nof input features.",
+      "name": "n_output_features_",
+      "type_doc": "int"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.PolynomialFeatures.html",
+  "extractor_version": "1",
+  "id": "sklearn.preprocessing.PolynomialFeatures",
+  "import_path": "sklearn.preprocessing.PolynomialFeatures",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y=None)",
+      "summary": "Compute number of output features."
+    },
+    {
+      "name": "fit_transform",
+      "signature": "fit_transform(X, y=None, **fit_params)",
+      "summary": "Fit to data, then transform it."
+    },
+    {
+      "name": "get_feature_names_out",
+      "signature": "get_feature_names_out(input_features=None)",
+      "summary": "Get output feature names for transformation."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "set_output",
+      "signature": "set_output(*, transform=None)",
+      "summary": "Set output container."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(X)",
+      "summary": "Transform data to polynomial features."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "array-like"
+        ]
+      },
+      "default": "2",
+      "description": "If a single int is given, it specifies the maximal degree of the\npolynomial features. If a tuple `(min_degree, max_degree)` is passed,\nthen `min_degree` is the minimum and `max_degree` is the maximum\npolynomial degree of the generated features. Note that `min_degree=0`\nand `min_degree=1` are equivalent as outputting the degree zero term is\ndetermined by `include_bias`.",
+      "effective_default": null,
+      "name": "degree",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int or tuple (min_degree, max_degree), default=2"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "If `True`, only interaction features are produced: features that are\nproducts of at most `degree` *distinct* input features, i.e. terms with\npower of 2 or higher of the same input feature are excluded:\n\n- included: `x[0]`, `x[1]`, `x[0] * x[1]`, etc.\n- excluded: `x[0] ** 2`, `x[0] ** 2 * x[1]`, etc.",
+      "effective_default": null,
+      "name": "interaction_only",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "If `True` (default), then include a bias column, the feature in which\nall polynomial powers are zero (i.e. a column of ones - acts as an\nintercept term in a linear model).",
+      "effective_default": null,
+      "name": "include_bias",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "C",
+          "F"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'C'",
+      "description": "Order of output array in the dense case. `'F'` order is faster to\ncompute, but may slow down subsequent estimators.\n\n.. versionadded:: 0.21",
+      "effective_default": null,
+      "name": "order",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'C', 'F'}, default='C'"
+    }
+  ],
+  "returns": [],
+  "signature": "PolynomialFeatures(degree=2, *, interaction_only=False, include_bias=True, order='C')",
+  "summary": "Generate polynomial and interaction features.",
+  "warnings": []
+}

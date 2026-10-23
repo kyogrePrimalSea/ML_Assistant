@@ -1,0 +1,222 @@
+{
+  "attributes": [
+    {
+      "description": "Estimated coefficients for the linear predictor (`X @ coef_ +\nintercept_`) in the GLM.",
+      "name": "coef_",
+      "type_doc": "array of shape (n_features,)"
+    },
+    {
+      "description": "Intercept (a.k.a. bias) added to linear predictor.",
+      "name": "intercept_",
+      "type_doc": "float"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    },
+    {
+      "description": "Actual number of iterations used in the solver.",
+      "name": "n_iter_",
+      "type_doc": "int"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.PoissonRegressor.html",
+  "extractor_version": "1",
+  "id": "sklearn.linear_model.PoissonRegressor",
+  "import_path": "sklearn.linear_model.PoissonRegressor",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y, sample_weight=None)",
+      "summary": "Fit a Generalized Linear Model."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X)",
+      "summary": "Predict using GLM with feature matrix X."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Compute D^2, the percentage of deviance explained."
+    },
+    {
+      "name": "set_fit_request",
+      "signature": "set_fit_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.linear_model._glm.glm.PoissonRegressor",
+      "summary": "Configure whether metadata should be requested to be passed to the ``fit`` method."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.linear_model._glm.glm.PoissonRegressor",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0.0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "1.0",
+      "description": "Constant that multiplies the L2 penalty term and determines the\nregularization strength. ``alpha = 0`` is equivalent to unpenalized\nGLMs. In this case, the design matrix `X` must have full column rank\n(no collinearities).\nValues of `alpha` must be in the range `[0.0, inf)`.",
+      "effective_default": null,
+      "name": "alpha",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=1"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "Specifies if a constant (a.k.a. bias or intercept) should be\nadded to the linear predictor (`X @ coef + intercept`).",
+      "effective_default": null,
+      "name": "fit_intercept",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "lbfgs",
+          "newton-cholesky"
+        ],
+        "source": "constraints",
+        "types": [
+          "type"
+        ]
+      },
+      "default": "'lbfgs'",
+      "description": "Algorithm to use in the optimization problem:\n\n'lbfgs'\n    Calls scipy's L-BFGS-B optimizer.\n\n'newton-cholesky'\n    Uses Newton-Raphson steps (in arbitrary precision arithmetic equivalent to\n    iterated reweighted least squares) with an inner Cholesky based solver.\n    This solver is a good choice for `n_samples` >> `n_features`, especially\n    with one-hot encoded categorical features with rare categories. Be aware\n    that the memory usage of this solver has a quadratic dependency on\n    `n_features` because it explicitly computes the Hessian matrix.\n\n    .. versionadded:: 1.2",
+      "effective_default": null,
+      "name": "solver",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'lbfgs', 'newton-cholesky'}, default='lbfgs'"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "100",
+      "description": "The maximal number of iterations for the solver.\nValues must be in the range `[1, inf)`.",
+      "effective_default": null,
+      "name": "max_iter",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=100"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "neither",
+            "left": 0.0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.0001",
+      "description": "Stopping criterion. For the lbfgs solver,\nthe iteration will stop when ``max{|g_j|, j = 1, ..., d} <= tol``\nwhere ``g_j`` is the j-th component of the gradient (derivative) of\nthe objective function.\nValues must be in the range `(0.0, inf)`.",
+      "effective_default": null,
+      "name": "tol",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=1e-4"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "If set to ``True``, reuse the solution of the previous call to ``fit``\nas initialization for ``coef_`` and ``intercept_`` .",
+      "effective_default": null,
+      "name": "warm_start",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "verbose"
+        ]
+      },
+      "default": "0",
+      "description": "For the lbfgs solver set verbose to any positive number for verbosity.\nValues must be in the range `[0, inf)`.",
+      "effective_default": null,
+      "name": "verbose",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=0"
+    }
+  ],
+  "returns": [],
+  "signature": "PoissonRegressor(*, alpha=1.0, fit_intercept=True, solver='lbfgs', max_iter=100, tol=0.0001, warm_start=False, verbose=0)",
+  "summary": "Generalized Linear Model with a Poisson distribution.",
+  "warnings": []
+}

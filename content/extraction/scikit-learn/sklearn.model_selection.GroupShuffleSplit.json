@@ -1,0 +1,99 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupShuffleSplit.html",
+  "extractor_version": "1",
+  "id": "sklearn.model_selection.GroupShuffleSplit",
+  "import_path": "sklearn.model_selection.GroupShuffleSplit",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_n_splits",
+      "signature": "get_n_splits(X=None, y=None, groups=None)",
+      "summary": "Returns the number of splitting iterations as set with the `n_splits` param"
+    },
+    {
+      "name": "set_split_request",
+      "signature": "set_split_request(*, groups: bool | None | str = '$UNCHANGED$') -> sklearn.model_selection._split.GroupShuffleSplit",
+      "summary": "Configure whether metadata should be requested to be passed to the ``split`` method."
+    },
+    {
+      "name": "split",
+      "signature": "split(X, y=None, groups=None)",
+      "summary": "Generate indices to split data into training and test set."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "5",
+      "description": "Number of re-shuffling & splitting iterations.",
+      "effective_default": null,
+      "name": "n_splits",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int, default=5"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "If float, should be between 0.0 and 1.0 and represent the proportion\nof groups to include in the test split (rounded up). If int,\nrepresents the absolute number of test groups. If None, the value is\nset to the complement of the train size. If ``train_size`` is also None,\nit will be set to 0.2.",
+      "effective_default": null,
+      "name": "test_size",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "If float, should be between 0.0 and 1.0 and represent the\nproportion of the groups to include in the train split. If\nint, represents the absolute number of train groups. If None,\nthe value is automatically set to the complement of the test size.",
+      "effective_default": null,
+      "name": "train_size",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float or int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Controls the randomness of the training and testing indices produced.\nPass an int for reproducible output across multiple function calls.\nSee :term:`Glossary <random_state>`.",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, RandomState instance or None, default=None"
+    }
+  ],
+  "returns": [],
+  "signature": "GroupShuffleSplit(n_splits=5, *, test_size=None, train_size=None, random_state=None)",
+  "summary": "Shuffle-Group(s)-Out cross-validation iterator.",
+  "warnings": []
+}

@@ -1,0 +1,356 @@
+{
+  "attributes": [
+    {
+      "description": "Final model fitted on the inliers predicted by the \"best\" model found\nduring RANSAC sampling (copy of the `estimator` object).",
+      "name": "estimator_",
+      "type_doc": "object"
+    },
+    {
+      "description": "Number of random selection trials until one of the stop criteria is\nmet. It is always ``<= max_trials``.",
+      "name": "n_trials_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Boolean mask of inliers classified as ``True``.",
+      "name": "inlier_mask_",
+      "type_doc": "bool array of shape [n_samples]"
+    },
+    {
+      "description": "Number of iterations skipped due to finding zero inliers.\n\n.. versionadded:: 0.19",
+      "name": "n_skips_no_inliers_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Number of iterations skipped due to invalid data defined by\n``is_data_valid``.\n\n.. versionadded:: 0.19",
+      "name": "n_skips_invalid_data_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Number of iterations skipped due to an invalid model defined by\n``is_model_valid``.\n\n.. versionadded:: 0.19",
+      "name": "n_skips_invalid_model_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.RANSACRegressor.html",
+  "extractor_version": "1",
+  "id": "sklearn.linear_model.RANSACRegressor",
+  "import_path": "sklearn.linear_model.RANSACRegressor",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y, sample_weight=None, **fit_params)",
+      "summary": "Fit estimator using RANSAC algorithm."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X, **params)",
+      "summary": "Predict using the estimated model."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, **params)",
+      "summary": "Return the score of the prediction."
+    },
+    {
+      "name": "set_fit_request",
+      "signature": "set_fit_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.linear_model._ransac.RANSACRegressor",
+      "summary": "Configure whether metadata should be requested to be passed to the ``fit`` method."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "an object implementing 'fit', 'score' and 'predict'",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Base estimator object which implements the following methods:\n\n* `fit(X, y)`: Fit model to given training data and target values.\n* `score(X, y)`: Returns the mean accuracy on the given test data,\n  which is used for the stop criterion defined by `stop_score`.\n  Additionally, the score is used to decide which of two equally\n  large consensus sets is chosen as the better one.\n* `predict(X)`: Returns predicted values using the linear model,\n  which is used to compute residual error using loss function.\n\nIf `estimator` is None, then\n:class:`~sklearn.linear_model.LinearRegression` is used for\ntarget values of dtype float.\n\nNote that the current implementation only supports regression\nestimators.",
+      "effective_default": null,
+      "name": "estimator",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "object, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          },
+          {
+            "closed": "both",
+            "left": 0,
+            "right": 1,
+            "type": "RealNotInt"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Minimum number of samples chosen randomly from original data. Treated\nas an absolute number of samples for `min_samples >= 1`, treated as a\nrelative number `ceil(min_samples * X.shape[0])` for\n`min_samples < 1`. This is typically chosen as the minimal number of\nsamples necessary to estimate the given `estimator`. By default a\n:class:`~sklearn.linear_model.LinearRegression` estimator is assumed and\n`min_samples` is chosen as ``X.shape[1] + 1``. This parameter is highly\ndependent upon the model, so if a `estimator` other than\n:class:`~sklearn.linear_model.LinearRegression` is used, the user must\nprovide a value.",
+      "effective_default": null,
+      "name": "min_samples",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int (>= 1) or float ([0, 1]), default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Maximum residual for a data sample to be classified as an inlier.\nBy default the threshold is chosen as the MAD (median absolute\ndeviation) of the target values `y`. Points whose residuals are\nstrictly equal to the threshold are considered as inliers.",
+      "effective_default": null,
+      "name": "residual_threshold",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "<built-in function callable>",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "This function is called with the randomly selected data before the\nmodel is fitted to it: `is_data_valid(X, y)`. If its return value is\nFalse the current randomly chosen sub-sample is skipped.",
+      "effective_default": null,
+      "name": "is_data_valid",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "callable, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "<built-in function callable>",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "This function is called with the estimated model and the randomly\nselected data: `is_model_valid(model, X, y)`. If its return value is\nFalse the current randomly chosen sub-sample is skipped.\nRejecting samples with this function is computationally costlier than\nwith `is_data_valid`. `is_model_valid` should therefore only be used if\nthe estimated model is needed for making the rejection decision.",
+      "effective_default": null,
+      "name": "is_model_valid",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "callable, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [
+          "inf"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "100",
+      "description": "Maximum number of iterations for random sample selection.",
+      "effective_default": null,
+      "name": "max_trials",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=100"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [
+          "inf"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "inf",
+      "description": "Maximum number of iterations that can be skipped due to finding zero\ninliers or invalid data defined by ``is_data_valid`` or invalid models\ndefined by ``is_model_valid``.\n\n.. versionadded:: 0.19",
+      "effective_default": null,
+      "name": "max_skips",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=np.inf"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [
+          "inf"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "inf",
+      "description": "Stop iteration if at least this number of inliers are found.",
+      "effective_default": null,
+      "name": "stop_n_inliers",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=np.inf"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "both",
+            "left": null,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "inf",
+      "description": "Stop iteration if score is greater equal than this threshold.",
+      "effective_default": null,
+      "name": "stop_score",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=np.inf"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "both",
+            "left": 0,
+            "right": 1,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.99",
+      "description": "RANSAC iteration stops if at least one outlier-free set of the training\ndata is sampled in RANSAC. This requires to generate at least N\nsamples (iterations)::\n\n    N >= log(1 - probability) / log(1 - e**m)\n\nwhere the probability (confidence) is typically set to high value such\nas 0.99 (the default) and e is the current fraction of inliers w.r.t.\nthe total number of samples.",
+      "effective_default": null,
+      "name": "stop_probability",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float in range [0, 1], default=0.99"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "absolute_error",
+          "squared_error"
+        ],
+        "source": "constraints",
+        "types": [
+          "<built-in function callable>"
+        ]
+      },
+      "default": "'absolute_error'",
+      "description": "String inputs, 'absolute_error' and 'squared_error' are supported which\nfind the absolute error and squared error per sample respectively.\n\nIf ``loss`` is a callable, then it should be a function that takes\ntwo arrays as inputs, the true and predicted value and returns a 1-D\narray with the i-th value of the array corresponding to the loss\non ``X[i]``.\n\nIf the loss on a sample is greater than the ``residual_threshold``,\nthen this sample is classified as an outlier.\n\n.. versionadded:: 0.18",
+      "effective_default": null,
+      "name": "loss",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str, callable, default='absolute_error'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "random_state"
+        ]
+      },
+      "default": "None",
+      "description": "The generator used to initialize the centers.\nPass an int for reproducible output across multiple function calls.\nSee :term:`Glossary <random_state>`.",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, RandomState instance, default=None"
+    }
+  ],
+  "returns": [],
+  "signature": "RANSACRegressor(estimator=None, *, min_samples=None, residual_threshold=None, is_data_valid=None, is_model_valid=None, max_trials=100, max_skips=inf, stop_n_inliers=inf, stop_score=inf, stop_probability=0.99, loss='absolute_error', random_state=None)",
+  "summary": "RANSAC (RANdom SAmple Consensus) algorithm.",
+  "warnings": []
+}

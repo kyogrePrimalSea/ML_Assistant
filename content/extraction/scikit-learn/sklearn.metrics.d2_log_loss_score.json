@@ -1,0 +1,99 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.metrics.d2_log_loss_score.html",
+  "extractor_version": "1",
+  "id": "sklearn.metrics.d2_log_loss_score",
+  "import_path": "sklearn.metrics.d2_log_loss_score",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The actuals labels for the n_samples samples.",
+      "effective_default": null,
+      "name": "y_true",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like or label indicator matrix"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Predicted probabilities, as returned by a classifier's\npredict_proba method. If ``y_proba.shape = (n_samples,)``\nthe probabilities provided are assumed to be that of the\npositive class. The labels in ``y_proba`` are assumed to be\nordered alphabetically, as done by\n:class:`~sklearn.preprocessing.LabelBinarizer`.\n\n.. versionadded:: 1.9\n    `y_pred` was renamed to `y_proba`.",
+      "effective_default": null,
+      "name": "y_proba",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "array-like of shape (n_samples, n_classes) or (n_samples,)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Sample weights.",
+      "effective_default": null,
+      "name": "sample_weight",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of shape (n_samples,), default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "If not provided, labels will be inferred from y_true. If ``labels``\nis ``None`` and ``y_pred`` has shape (n_samples,) the labels are\nassumed to be binary and are inferred from ``y_true``.",
+      "effective_default": null,
+      "name": "labels",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'deprecated'",
+      "description": "Predicted probabilities, as returned by a classifier's\npredict_proba method. If ``y_pred.shape = (n_samples,)``\nthe probabilities provided are assumed to be that of the\npositive class. The labels in ``y_pred`` are assumed to be\nordered alphabetically, as done by\n:class:`~sklearn.preprocessing.LabelBinarizer`.\n\n.. deprecated:: 1.9\n    `y_pred` was deprecated in favor of `y_proba` in v1.9 and will\n    be removed in v1.11.",
+      "effective_default": null,
+      "name": "y_pred",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of shape (n_samples, n_classes) or (n_samples,)"
+    }
+  ],
+  "returns": [
+    {
+      "description": "The D^2 score.",
+      "name": "d2",
+      "type_doc": "float or ndarray of floats"
+    }
+  ],
+  "signature": "d2_log_loss_score(y_true, y_proba=None, *, sample_weight=None, labels=None, y_pred='deprecated')",
+  "summary": ":math:`D^2` score function, fraction of log loss explained.",
+  "warnings": []
+}

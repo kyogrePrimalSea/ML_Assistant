@@ -1,0 +1,117 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.metrics.cohen_kappa_score.html",
+  "extractor_version": "1",
+  "id": "sklearn.metrics.cohen_kappa_score",
+  "import_path": "sklearn.metrics.cohen_kappa_score",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Labels assigned by the first annotator.",
+      "effective_default": null,
+      "name": "y1",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n_samples,)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Labels assigned by the second annotator. The kappa statistic is\nsymmetric, so swapping ``y1`` and ``y2`` doesn't change the value.",
+      "effective_default": null,
+      "name": "y2",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n_samples,)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "List of labels to index the matrix. This may be used to select a\nsubset of labels. If `None`, all labels that appear at least once in\n``y1`` or ``y2`` are used. Note that at least one label in `labels` must be\npresent in `y1`, even though this function is otherwise agnostic to the order\nof `y1` and `y2`.",
+      "effective_default": null,
+      "name": "labels",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of shape (n_classes,), default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "linear",
+          "quadratic"
+        ],
+        "source": "docstring",
+        "types": []
+      },
+      "default": "None",
+      "description": "Weighting type to calculate the score. `None` means not weighted;\n\"linear\" means linear weighting; \"quadratic\" means quadratic weighting.",
+      "effective_default": null,
+      "name": "weights",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'linear', 'quadratic'}, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Sample weights.",
+      "effective_default": null,
+      "name": "sample_weight",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of shape (n_samples,), default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "nan",
+      "description": "Sets the return value when the metric is undefined. This can happen when no\nlabel of interest (as defined in the `labels` param) is assigned by the second\nannotator, or when both `y1` and `y2`only have one label in common that is also\nin `labels`. In these cases, an\n:class:`~sklearn.exceptions.UndefinedMetricWarning` is raised. Can take the\nfollowing values:\n\n- `np.nan` to return `np.nan`\n- a floating point value in the range of [-1.0, 1.0] to return a specific value\n\n.. versionadded:: 1.9",
+      "effective_default": null,
+      "name": "replace_undefined_by",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "np.nan, float in [-1.0, 1.0], default=np.nan"
+    }
+  ],
+  "returns": [
+    {
+      "description": "The kappa statistic, which is a number between -1.0 and 1.0. The maximum value\nmeans complete agreement; the minimum value means complete disagreement; 0.0\nindicates no agreement beyond what would be expected by chance.",
+      "name": "kappa",
+      "type_doc": "float"
+    }
+  ],
+  "signature": "cohen_kappa_score(y1, y2, *, labels=None, weights=None, sample_weight=None, replace_undefined_by=nan)",
+  "summary": "Compute Cohen's kappa: a statistic that measures inter-annotator agreement.",
+  "warnings": []
+}

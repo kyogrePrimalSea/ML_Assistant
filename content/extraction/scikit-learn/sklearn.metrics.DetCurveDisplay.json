@@ -1,0 +1,110 @@
+{
+  "attributes": [
+    {
+      "description": "DET Curve.",
+      "name": "line_",
+      "type_doc": "matplotlib Artist"
+    },
+    {
+      "description": "Axes with DET Curve.",
+      "name": "ax_",
+      "type_doc": "matplotlib Axes"
+    },
+    {
+      "description": "Figure containing the curve.",
+      "name": "figure_",
+      "type_doc": "matplotlib Figure"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.metrics.DetCurveDisplay.html",
+  "extractor_version": "1",
+  "id": "sklearn.metrics.DetCurveDisplay",
+  "import_path": "sklearn.metrics.DetCurveDisplay",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "from_estimator",
+      "signature": "from_estimator(estimator, X, y, *, sample_weight=None, drop_intermediate=True, response_method='auto', pos_label=None, name=None, ax=None, **kwargs)",
+      "summary": "Plot DET curve given an estimator and data."
+    },
+    {
+      "name": "from_predictions",
+      "signature": "from_predictions(y_true, y_score=None, *, sample_weight=None, drop_intermediate=True, pos_label=None, name=None, ax=None, y_pred='deprecated', **kwargs)",
+      "summary": "Plot the DET curve given the true and predicted labels."
+    },
+    {
+      "name": "plot",
+      "signature": "plot(ax=None, *, name=None, **kwargs)",
+      "summary": "Plot visualization."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "False positive rate.",
+      "effective_default": null,
+      "name": "fpr",
+      "param_kind": "keyword_only",
+      "required": true,
+      "type_doc": "ndarray"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "False negative rate.",
+      "effective_default": null,
+      "name": "fnr",
+      "param_kind": "keyword_only",
+      "required": true,
+      "type_doc": "ndarray"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Name of estimator. If None, the estimator name is not shown.",
+      "effective_default": null,
+      "name": "estimator_name",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The label of the positive class. If not `None`, this value is displayed in\nthe x- and y-axes labels.",
+      "effective_default": null,
+      "name": "pos_label",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, float, bool or str, default=None"
+    }
+  ],
+  "returns": [],
+  "signature": "DetCurveDisplay(*, fpr, fnr, estimator_name=None, pos_label=None)",
+  "summary": "Detection Error Tradeoff (DET) curve visualization.",
+  "warnings": []
+}

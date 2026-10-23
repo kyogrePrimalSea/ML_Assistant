@@ -1,0 +1,125 @@
+{
+  "attributes": [
+    {
+      "description": "Calibration curve.",
+      "name": "line_",
+      "type_doc": "matplotlib Artist"
+    },
+    {
+      "description": "Axes with calibration curve.",
+      "name": "ax_",
+      "type_doc": "matplotlib Axes"
+    },
+    {
+      "description": "Figure containing the curve.",
+      "name": "figure_",
+      "type_doc": "matplotlib Figure"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.calibration.CalibrationDisplay.html",
+  "extractor_version": "1",
+  "id": "sklearn.calibration.CalibrationDisplay",
+  "import_path": "sklearn.calibration.CalibrationDisplay",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "from_estimator",
+      "signature": "from_estimator(estimator, X, y, *, n_bins=5, strategy='uniform', pos_label=None, name=None, ax=None, ref_line=True, **kwargs)",
+      "summary": "Plot calibration curve using a binary classifier and data."
+    },
+    {
+      "name": "from_predictions",
+      "signature": "from_predictions(y_true, y_prob, *, n_bins=5, strategy='uniform', pos_label=None, name=None, ax=None, ref_line=True, **kwargs)",
+      "summary": "Plot calibration curve using true labels and predicted probabilities."
+    },
+    {
+      "name": "plot",
+      "signature": "plot(*, ax=None, name=None, ref_line=True, **kwargs)",
+      "summary": "Plot visualization."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The proportion of samples whose class is the positive class (fraction\nof positives), in each bin.",
+      "effective_default": null,
+      "name": "prob_true",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "ndarray of shape (n_bins,)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The mean predicted probability in each bin.",
+      "effective_default": null,
+      "name": "prob_pred",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "ndarray of shape (n_bins,)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Probability estimates for the positive class, for each sample.",
+      "effective_default": null,
+      "name": "y_prob",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "ndarray of shape (n_samples,)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Name of estimator. If None, the estimator name is not shown.",
+      "effective_default": null,
+      "name": "estimator_name",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The positive class when calibration curve computed.\nIf not `None`, this value is displayed in the x- and y-axes labels.\n\n.. versionadded:: 1.1",
+      "effective_default": null,
+      "name": "pos_label",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, float, bool or str, default=None"
+    }
+  ],
+  "returns": [],
+  "signature": "CalibrationDisplay(prob_true, prob_pred, y_prob, *, estimator_name=None, pos_label=None)",
+  "summary": "Calibration curve (also known as reliability diagram) visualization.",
+  "warnings": []
+}

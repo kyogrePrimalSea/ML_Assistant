@@ -1,0 +1,109 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.metrics.precision_recall_curve.html",
+  "extractor_version": "1",
+  "id": "sklearn.metrics.precision_recall_curve",
+  "import_path": "sklearn.metrics.precision_recall_curve",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "True binary labels. If labels are not either {-1, 1} or {0, 1}, then\npos_label should be explicitly given.",
+      "effective_default": null,
+      "name": "y_true",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n_samples,)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Target scores, can either be probability estimates of the positive\nclass, or non-thresholded measure of decisions (as returned by\n`decision_function` on some classifiers).\nFor :term:`decision_function` scores, values greater than or equal to\nzero should indicate the positive class.",
+      "effective_default": null,
+      "name": "y_score",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n_samples,)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The label of the positive class.\nWhen ``pos_label=None``, if y_true is in {-1, 1} or {0, 1},\n``pos_label`` is set to 1, otherwise an error will be raised.",
+      "effective_default": null,
+      "name": "pos_label",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, float, bool or str, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Sample weights.",
+      "effective_default": null,
+      "name": "sample_weight",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of shape (n_samples,), default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "Whether to drop some suboptimal thresholds which would not appear\non a plotted precision-recall curve. This is useful in order to create\nlighter precision-recall curves.\n\n.. versionadded:: 1.3",
+      "effective_default": null,
+      "name": "drop_intermediate",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    }
+  ],
+  "returns": [
+    {
+      "description": "Precision values such that element i is the precision of\npredictions with score >= thresholds[i] and the last element is 1.",
+      "name": "precision",
+      "type_doc": "ndarray of shape (n_thresholds + 1,)"
+    },
+    {
+      "description": "Decreasing recall values such that element i is the recall of\npredictions with score >= thresholds[i] and the last element is 0.",
+      "name": "recall",
+      "type_doc": "ndarray of shape (n_thresholds + 1,)"
+    },
+    {
+      "description": "Increasing thresholds on the decision function used to compute\nprecision and recall where `n_thresholds = len(np.unique(y_score))`.",
+      "name": "thresholds",
+      "type_doc": "ndarray of shape (n_thresholds,)"
+    }
+  ],
+  "signature": "precision_recall_curve(y_true, y_score, *, pos_label=None, sample_weight=None, drop_intermediate=False)",
+  "summary": "Compute precision-recall pairs for different probability thresholds.",
+  "warnings": []
+}

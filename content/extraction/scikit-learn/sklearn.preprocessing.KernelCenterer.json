@@ -1,0 +1,84 @@
+{
+  "attributes": [
+    {
+      "description": "Average of each column of kernel matrix.",
+      "name": "K_fit_rows_",
+      "type_doc": "ndarray of shape (n_samples,)"
+    },
+    {
+      "description": "Average of kernel matrix.",
+      "name": "K_fit_all_",
+      "type_doc": "float"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.KernelCenterer.html",
+  "extractor_version": "1",
+  "id": "sklearn.preprocessing.KernelCenterer",
+  "import_path": "sklearn.preprocessing.KernelCenterer",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(K, y=None)",
+      "summary": "Fit KernelCenterer."
+    },
+    {
+      "name": "fit_transform",
+      "signature": "fit_transform(X, y=None, **fit_params)",
+      "summary": "Fit to data, then transform it."
+    },
+    {
+      "name": "get_feature_names_out",
+      "signature": "get_feature_names_out(input_features=None)",
+      "summary": "Get output feature names for transformation."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "set_output",
+      "signature": "set_output(*, transform=None)",
+      "summary": "Set output container."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_transform_request",
+      "signature": "set_transform_request(*, copy: bool | None | str = '$UNCHANGED$') -> sklearn.preprocessing._data.KernelCenterer",
+      "summary": "Configure whether metadata should be requested to be passed to the ``transform`` method."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(K, copy=True)",
+      "summary": "Center kernel matrix."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [],
+  "returns": [],
+  "signature": "KernelCenterer()",
+  "summary": "Center an arbitrary kernel matrix :math:`K`.",
+  "warnings": []
+}

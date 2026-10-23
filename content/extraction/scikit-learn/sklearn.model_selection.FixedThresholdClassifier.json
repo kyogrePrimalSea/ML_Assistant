@@ -1,0 +1,166 @@
+{
+  "attributes": [
+    {
+      "description": "The fitted classifier used when predicting.",
+      "name": "estimator_",
+      "type_doc": "estimator instance"
+    },
+    {
+      "description": "The class labels.",
+      "name": "classes_",
+      "type_doc": "ndarray of shape (n_classes,)"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`. Only defined if the\nunderlying estimator exposes such an attribute when fit.",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Only defined if the\nunderlying estimator exposes such an attribute when fit.",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.FixedThresholdClassifier.html",
+  "extractor_version": "1",
+  "id": "sklearn.model_selection.FixedThresholdClassifier",
+  "import_path": "sklearn.model_selection.FixedThresholdClassifier",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "decision_function",
+      "signature": "decision_function(X)",
+      "summary": "Decision function for samples in `X` using the fitted estimator."
+    },
+    {
+      "name": "fit",
+      "signature": "fit(X, y, **params)",
+      "summary": "Fit the classifier."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X)",
+      "summary": "Predict the target of new samples."
+    },
+    {
+      "name": "predict_log_proba",
+      "signature": "predict_log_proba(X)",
+      "summary": "Predict logarithm class probabilities for `X` using the fitted estimator."
+    },
+    {
+      "name": "predict_proba",
+      "signature": "predict_proba(X)",
+      "summary": "Predict class probabilities for `X` using the fitted estimator."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Return :ref:`accuracy <accuracy_score>` on provided data and labels."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.model_selection._classification_threshold.FixedThresholdClassifier",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "an object implementing 'fit' and 'predict_proba'",
+          "an object implementing 'fit' and 'decision_function'"
+        ]
+      },
+      "default": null,
+      "description": "The binary classifier, fitted or not, for which we want to optimize\nthe decision threshold used during `predict`.",
+      "effective_default": null,
+      "name": "estimator",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "estimator instance"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "auto"
+        ],
+        "source": "constraints",
+        "types": [
+          "Real"
+        ]
+      },
+      "default": "'auto'",
+      "description": "The decision threshold to use when converting posterior probability estimates\n(i.e. output of `predict_proba`) or decision scores (i.e. output of\n`decision_function`) into a class label. When `\"auto\"`, the threshold is set\nto 0.5 if `predict_proba` is used as `response_method`, otherwise it is set to\n0 (i.e. the default threshold for `decision_function`).",
+      "effective_default": null,
+      "name": "threshold",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{\"auto\"} or float, default=\"auto\""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "Real",
+          "str",
+          "boolean",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "The label of the positive class. Used to process the output of the\n`response_method` method. When `pos_label=None`, if `y_true` is in `{-1, 1}` or\n`{0, 1}`, `pos_label` is set to 1, otherwise an error will be raised.",
+      "effective_default": null,
+      "name": "pos_label",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, float, bool or str, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "auto",
+          "decision_function",
+          "predict_proba"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'auto'",
+      "description": "Methods by the classifier `estimator` corresponding to the\ndecision function for which we want to find a threshold. It can be:\n\n* if `\"auto\"`, it will try to invoke `\"predict_proba\"` or `\"decision_function\"`\n  in that order.\n* otherwise, one of `\"predict_proba\"` or `\"decision_function\"`.\n  If the method is not implemented by the classifier, it will raise an\n  error.",
+      "effective_default": null,
+      "name": "response_method",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{\"auto\", \"decision_function\", \"predict_proba\"}, default=\"auto\""
+    }
+  ],
+  "returns": [],
+  "signature": "FixedThresholdClassifier(estimator, *, threshold='auto', pos_label=None, response_method='auto')",
+  "summary": "Binary classifier that manually sets the decision threshold.",
+  "warnings": []
+}

@@ -1,0 +1,169 @@
+{
+  "attributes": [
+    {
+      "description": "Parameter vector (w in the formula).",
+      "name": "coef_",
+      "type_doc": "ndarray of shape (n_features,) or (n_targets, n_features)"
+    },
+    {
+      "description": "Independent term in decision function.",
+      "name": "intercept_",
+      "type_doc": "float or ndarray of shape (n_targets,)"
+    },
+    {
+      "description": "Number of active features across every target.",
+      "name": "n_iter_",
+      "type_doc": "int or array-like"
+    },
+    {
+      "description": "The number of non-zero coefficients in the solution or `None` when `tol` is\nset. If `n_nonzero_coefs` is None and `tol` is None this value is either set\nto 10% of `n_features` or 1, whichever is greater.",
+      "name": "n_nonzero_coefs_",
+      "type_doc": "int or None"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.OrthogonalMatchingPursuit.html",
+  "extractor_version": "1",
+  "id": "sklearn.linear_model.OrthogonalMatchingPursuit",
+  "import_path": "sklearn.linear_model.OrthogonalMatchingPursuit",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y)",
+      "summary": "Fit the model using X, y as training data."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X)",
+      "summary": "Predict using the linear model."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Return :ref:`coefficient of determination <r2_score>` on test data."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.linear_model._omp.OrthogonalMatchingPursuit",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Maximum number of non-zero entries in the solution. Ignored if `tol` is set.\nWhen `None` and `tol` is also `None`, this value is either set to 10% of\n`n_features` or 1, whichever is greater.",
+      "effective_default": null,
+      "name": "n_nonzero_coefs",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Maximum squared norm of the residual. If not None, overrides n_nonzero_coefs.",
+      "effective_default": null,
+      "name": "tol",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "Whether to calculate the intercept for this model. If set\nto false, no intercept will be used in calculations\n(i.e. data is expected to be centered).",
+      "effective_default": null,
+      "name": "fit_intercept",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "auto"
+        ],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "'auto'",
+      "description": "Whether to use a precomputed Gram and Xy matrix to speed up\ncalculations. Improves performance when :term:`n_targets` or\n:term:`n_samples` is very large.",
+      "effective_default": null,
+      "name": "precompute",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "'auto' or bool, default='auto'"
+    }
+  ],
+  "returns": [],
+  "signature": "OrthogonalMatchingPursuit(*, n_nonzero_coefs=None, tol=None, fit_intercept=True, precompute='auto')",
+  "summary": "Orthogonal Matching Pursuit model (OMP).",
+  "warnings": []
+}

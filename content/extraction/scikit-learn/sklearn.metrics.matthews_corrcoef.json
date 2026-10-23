@@ -1,0 +1,69 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.metrics.matthews_corrcoef.html",
+  "extractor_version": "1",
+  "id": "sklearn.metrics.matthews_corrcoef",
+  "import_path": "sklearn.metrics.matthews_corrcoef",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Ground truth (correct) target values.",
+      "effective_default": null,
+      "name": "y_true",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n_samples,)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Estimated targets as returned by a classifier.",
+      "effective_default": null,
+      "name": "y_pred",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n_samples,)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Sample weights.\n\n.. versionadded:: 0.18",
+      "effective_default": null,
+      "name": "sample_weight",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of shape (n_samples,), default=None"
+    }
+  ],
+  "returns": [
+    {
+      "description": "The Matthews correlation coefficient (+1 represents a perfect\nprediction, 0 an average random prediction and -1 and inverse\nprediction).",
+      "name": "mcc",
+      "type_doc": "float"
+    }
+  ],
+  "signature": "matthews_corrcoef(y_true, y_pred, *, sample_weight=None)",
+  "summary": "Compute the Matthews correlation coefficient (MCC).",
+  "warnings": []
+}

@@ -1,0 +1,129 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.robust_scale.html",
+  "extractor_version": "1",
+  "id": "sklearn.preprocessing.robust_scale",
+  "import_path": "sklearn.preprocessing.robust_scale",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The data to center and scale.",
+      "effective_default": null,
+      "name": "X",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "{array-like, sparse matrix} of shape (n_sample, n_features)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0",
+      "description": "Axis used to compute the medians and IQR along. If 0,\nindependently scale each feature, otherwise (if 1) scale\neach sample.",
+      "effective_default": null,
+      "name": "axis",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "If `True`, center the data before scaling.",
+      "effective_default": null,
+      "name": "with_centering",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "If `True`, scale the data to unit variance (or equivalently,\nunit standard deviation).",
+      "effective_default": null,
+      "name": "with_scaling",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "(25.0, 75.0)",
+      "description": "Quantile range used to calculate `scale_`. By default this is equal to\nthe IQR, i.e., `q_min` is the first quantile and `q_max` is the third\nquantile.\n\n.. versionadded:: 0.18",
+      "effective_default": null,
+      "name": "quantile_range",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "tuple (q_min, q_max), 0.0 < q_min < q_max < 100.0, default=(25.0, 75.0)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "If False, try to avoid a copy and scale in place.\nThis is not guaranteed to always work in place; e.g. if the data is\na numpy array with an int dtype, a copy will be returned even with\ncopy=False.",
+      "effective_default": null,
+      "name": "copy",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "If `True`, scale data so that normally distributed features have a\nvariance of 1. In general, if the difference between the x-values of\n`q_max` and `q_min` for a standard normal distribution is greater\nthan 1, the dataset will be scaled down. If less than 1, the dataset\nwill be scaled up.\n\n.. versionadded:: 0.24",
+      "effective_default": null,
+      "name": "unit_variance",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    }
+  ],
+  "returns": [
+    {
+      "description": "The transformed data.",
+      "name": "X_tr",
+      "type_doc": "{ndarray, sparse matrix} of shape (n_samples, n_features)"
+    }
+  ],
+  "signature": "robust_scale(X, *, axis=0, with_centering=True, with_scaling=True, quantile_range=(25.0, 75.0), copy=True, unit_variance=False)",
+  "summary": "Standardize a dataset along any axis.",
+  "warnings": []
+}

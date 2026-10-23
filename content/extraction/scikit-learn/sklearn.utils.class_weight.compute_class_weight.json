@@ -1,0 +1,84 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.utils.class_weight.compute_class_weight.html",
+  "extractor_version": "1",
+  "id": "sklearn.utils.class_weight.compute_class_weight",
+  "import_path": "sklearn.utils.class_weight.compute_class_weight",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "If \"balanced\", class weights will be given by\n`n_samples / (n_classes * np.bincount(y))` or their weighted equivalent if\n`sample_weight` is provided.\nIf a dictionary is given, keys are classes and values are corresponding class\nweights.\nIf `None` is given, the class weights will be uniform.",
+      "effective_default": null,
+      "name": "class_weight",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "dict, \"balanced\" or None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Array of the classes occurring in the data, as given by\n`np.unique(y_org)` with `y_org` the original class labels.",
+      "effective_default": null,
+      "name": "classes",
+      "param_kind": "keyword_only",
+      "required": true,
+      "type_doc": "ndarray"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Array of original class labels per sample.",
+      "effective_default": null,
+      "name": "y",
+      "param_kind": "keyword_only",
+      "required": true,
+      "type_doc": "array-like of shape (n_samples,)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Array of weights that are assigned to individual samples. Only used when\n`class_weight='balanced'`.",
+      "effective_default": null,
+      "name": "sample_weight",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of shape (n_samples,), default=None"
+    }
+  ],
+  "returns": [
+    {
+      "description": "Array with `class_weight_vect[i]` the weight for i-th class.",
+      "name": "class_weight_vect",
+      "type_doc": "ndarray of shape (n_classes,)"
+    }
+  ],
+  "signature": "compute_class_weight(class_weight, *, classes, y, sample_weight=None)",
+  "summary": "Estimate class weights for unbalanced datasets.",
+  "warnings": []
+}

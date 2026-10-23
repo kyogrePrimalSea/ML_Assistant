@@ -1,0 +1,165 @@
+{
+  "attributes": [
+    {
+      "description": "Precision recall curve(s).\n\n.. versionchanged:: 1.9\n    This attribute can now be a list of Artists, for when multiple curves\n    are plotted.",
+      "name": "line_",
+      "type_doc": "matplotlib Artist or list of Artists"
+    },
+    {
+      "description": "Chance level line(s). It is `None` if the chance level is not plotted.\n\n.. versionadded:: 1.3\n\n.. versionchanged:: 1.9\n    This attribute can now be a list of Artists, for when multiple curves\n    are plotted.",
+      "name": "chance_level_",
+      "type_doc": "matplotlib Artist or list of Artists or None"
+    },
+    {
+      "description": "Axes with precision recall curve.",
+      "name": "ax_",
+      "type_doc": "matplotlib Axes"
+    },
+    {
+      "description": "Figure containing the curve.",
+      "name": "figure_",
+      "type_doc": "matplotlib Figure"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.metrics.PrecisionRecallDisplay.html",
+  "extractor_version": "1",
+  "id": "sklearn.metrics.PrecisionRecallDisplay",
+  "import_path": "sklearn.metrics.PrecisionRecallDisplay",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "from_cv_results",
+      "signature": "from_cv_results(cv_results, X, y, *, sample_weight=None, drop_intermediate=True, response_method='auto', pos_label=None, name=None, ax=None, curve_kwargs=None, plot_chance_level=False, chance_level_kwargs=None, despine=False)",
+      "summary": "Plot multi-fold precision-recall curves given cross-validation results."
+    },
+    {
+      "name": "from_estimator",
+      "signature": "from_estimator(estimator, X, y, *, sample_weight=None, drop_intermediate=False, response_method='auto', pos_label=None, name=None, ax=None, curve_kwargs=None, plot_chance_level=False, chance_level_kw=None, despine=False, **kwargs)",
+      "summary": "Plot precision-recall curve given an estimator and some data."
+    },
+    {
+      "name": "from_predictions",
+      "signature": "from_predictions(y_true, y_score=None, *, sample_weight=None, drop_intermediate=False, pos_label=None, name=None, ax=None, curve_kwargs=None, plot_chance_level=False, chance_level_kw=None, despine=False, y_pred='deprecated', **kwargs)",
+      "summary": "Plot precision-recall curve given binary class predictions."
+    },
+    {
+      "name": "plot",
+      "signature": "plot(ax=None, *, name=None, curve_kwargs=None, plot_chance_level=False, chance_level_kw=None, despine=False, **kwargs)",
+      "summary": "Plot visualization."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Precision values. Each ndarray should contain values for a single curve.\nIf plotting multiple curves, list should be of same length as `recall`.\n\n.. versionchanged:: 1.9\n    Now accepts a list for plotting multiple curves.",
+      "effective_default": null,
+      "name": "precision",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "ndarray or list of ndarrays"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Recall values. Each ndarray should contain values for a single curve.\nIf plotting multiple curves, list should be of same length as `precision`.\n\n.. versionchanged:: 1.9\n    Now accepts a list for plotting multiple curves.",
+      "effective_default": null,
+      "name": "recall",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "ndarray or list of ndarrays"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Average precision, used for labeling each curve in the legend.\nIf plotting multiple curves, should be a list of the same length as `precision`\nand `recall`. If `None`, average precision values are not shown in the legend.\n\n.. versionchanged:: 1.9\n    Now accepts a list for plotting multiple curves.",
+      "effective_default": null,
+      "name": "average_precision",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float or list of floats, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Name for labeling legend entries. The number of legend entries is determined\nby the `curve_kwargs` passed to `plot`, and is not affected by `name`.\n\nIf a string is provided, it will be used to either label the single legend\nentry or if there are multiple legend entries, label each individual curve\nwith the same name.\n\nIf a list is provided, it will be used to label each curve individually.\nPassing a list will raise an error if `curve_kwargs` is not a list to avoid\nlabeling individual curves that have the same appearance.\n\nIf `None`, no name is shown in the legend.\n\n.. versionchanged:: 1.8\n    `estimator_name` was deprecated in favor of `name`.\n\n.. versionchanged:: 1.9\n    `name` can now take a list of str for multiple curves.",
+      "effective_default": null,
+      "name": "name",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str or list of str, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The class considered the positive class when precision and recall metrics\ncomputed. If not `None`, this value is displayed in the x- and y-axes labels.\n\n.. versionadded:: 0.24",
+      "effective_default": null,
+      "name": "pos_label",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, float, bool or str, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The prevalence of the positive label. It is used for plotting the\nchance level lines. If None, no chance level line will be plotted\neven if `plot_chance_level` is set to True when plotting.\n\n.. versionadded:: 1.3\n\n.. versionchanged:: 1.9\n    May now be list of floats for when multiple curves plotted.",
+      "effective_default": null,
+      "name": "prevalence_pos_label",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float or list of floats, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'deprecated'",
+      "description": "Name of estimator. If None, the estimator name is not shown.\n\n.. deprecated:: 1.8\n    `estimator_name` is deprecated and will be removed in 1.10. Use `name`\n    instead.",
+      "effective_default": null,
+      "name": "estimator_name",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str, default=None"
+    }
+  ],
+  "returns": [],
+  "signature": "PrecisionRecallDisplay(precision, recall, *, average_precision=None, name=None, pos_label=None, prevalence_pos_label=None, estimator_name='deprecated')",
+  "summary": "Precision Recall visualization.",
+  "warnings": []
+}

@@ -1,0 +1,99 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.scale.html",
+  "extractor_version": "1",
+  "id": "sklearn.preprocessing.scale",
+  "import_path": "sklearn.preprocessing.scale",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The data to center and scale.",
+      "effective_default": null,
+      "name": "X",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "{array-like, sparse matrix} of shape (n_samples, n_features)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0",
+      "description": "Axis used to compute the means and standard deviations along. If 0,\nindependently standardize each feature, otherwise (if 1) standardize\neach sample.",
+      "effective_default": null,
+      "name": "axis",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{0, 1}, default=0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "If True, center the data before scaling.",
+      "effective_default": null,
+      "name": "with_mean",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "If True, scale the data to unit variance (or equivalently,\nunit standard deviation).",
+      "effective_default": null,
+      "name": "with_std",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "If False, try to avoid a copy and scale in place.\nThis is not guaranteed to always work in place; e.g. if the data is\na numpy array with an int dtype, a copy will be returned even with\ncopy=False.",
+      "effective_default": null,
+      "name": "copy",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    }
+  ],
+  "returns": [
+    {
+      "description": "The transformed data.",
+      "name": "X_tr",
+      "type_doc": "{ndarray, sparse matrix} of shape (n_samples, n_features)"
+    }
+  ],
+  "signature": "scale(X, *, axis=0, with_mean=True, with_std=True, copy=True)",
+  "summary": "Standardize a dataset along any axis.",
+  "warnings": []
+}

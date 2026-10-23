@@ -1,0 +1,251 @@
+{
+  "attributes": [
+    {
+      "description": "Class labels.",
+      "name": "classes_",
+      "type_doc": "ndarray of shape (n_classes,) or list of ndarray if `y` is of type `\"multilabel-indicator\"`."
+    },
+    {
+      "description": "The elements of the `estimators` parameter, having been fitted on the\ntraining data. If an estimator has been set to `'drop'`, it\nwill not appear in `estimators_`. When `cv=\"prefit\"`, `estimators_`\nis set to `estimators` and is not fitted again.",
+      "name": "estimators_",
+      "type_doc": "list of estimators"
+    },
+    {
+      "description": "Attribute to access any fitted sub-estimators by name.",
+      "name": "named_estimators_",
+      "type_doc": ":class:`~sklearn.utils.Bunch`"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`. Only defined if the\nunderlying estimator exposes such an attribute when fit.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Only defined if the\nunderlying estimators expose such an attribute when fit.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    },
+    {
+      "description": "The classifier fit on the output of `estimators_` and responsible for\nfinal predictions.",
+      "name": "final_estimator_",
+      "type_doc": "estimator"
+    },
+    {
+      "description": "The method used by each base estimator.",
+      "name": "stack_method_",
+      "type_doc": "list of str"
+    },
+    {
+      "description": "Dictionary to access any fitted sub-estimators by name.",
+      "name": "named_estimators",
+      "type_doc": ""
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.StackingClassifier.html",
+  "extractor_version": "1",
+  "id": "sklearn.ensemble.StackingClassifier",
+  "import_path": "sklearn.ensemble.StackingClassifier",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "decision_function",
+      "signature": "decision_function(X)",
+      "summary": "Decision function for samples in `X` using the final estimator."
+    },
+    {
+      "name": "fit",
+      "signature": "fit(X, y, **fit_params)",
+      "summary": "Fit the estimators."
+    },
+    {
+      "name": "fit_transform",
+      "signature": "fit_transform(X, y=None, **fit_params)",
+      "summary": "Fit to data, then transform it."
+    },
+    {
+      "name": "get_feature_names_out",
+      "signature": "get_feature_names_out(input_features=None)",
+      "summary": "Get output feature names for transformation."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get the parameters of an estimator from the ensemble."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X, **predict_params)",
+      "summary": "Predict target for X."
+    },
+    {
+      "name": "predict_proba",
+      "signature": "predict_proba(X)",
+      "summary": "Predict class probabilities for `X` using the final estimator."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Return :ref:`accuracy <accuracy_score>` on provided data and labels."
+    },
+    {
+      "name": "set_output",
+      "signature": "set_output(*, transform=None)",
+      "summary": "Set output container."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of an estimator from the ensemble."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.ensemble._stacking.StackingClassifier",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(X)",
+      "summary": "Return class labels or probabilities for X for each estimator."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "list"
+        ]
+      },
+      "default": null,
+      "description": "Base estimators which will be stacked together. Each element of the\nlist is defined as a tuple of string (i.e. name) and an estimator\ninstance. An estimator can be set to 'drop' using `set_params`.\n\nThe type of estimator is generally expected to be a classifier.\nHowever, one can pass a regressor for some use case (e.g. ordinal\nregression).",
+      "effective_default": null,
+      "name": "estimators",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "list of (str, estimator)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None",
+          "an object implementing 'fit'"
+        ]
+      },
+      "default": "None",
+      "description": "A classifier which will be used to combine the base estimators.\nThe default classifier is a\n:class:`~sklearn.linear_model.LogisticRegression`.",
+      "effective_default": null,
+      "name": "final_estimator",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "estimator, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "prefit"
+        ],
+        "source": "constraints",
+        "types": [
+          "cv_object"
+        ]
+      },
+      "default": "None",
+      "description": "Determines the cross-validation splitting strategy used in\n`cross_val_predict` to train `final_estimator`. Possible inputs for\ncv are:\n\n* None, to use the default 5-fold cross validation,\n* integer, to specify the number of folds in a (Stratified) KFold,\n* An object to be used as a cross-validation generator,\n* An iterable yielding train, test splits,\n* `\"prefit\"`, to assume the `estimators` are prefit. In this case, the\n  estimators will not be refitted.\n\nFor integer/None inputs, if the estimator is a classifier and y is\neither binary or multiclass,\n:class:`~sklearn.model_selection.StratifiedKFold` is used.\nIn all other cases, :class:`~sklearn.model_selection.KFold` is used.\nThese splitters are instantiated with `shuffle=False` so the splits\nwill be the same across calls.\n\nRefer :ref:`User Guide <cross_validation>` for the various\ncross-validation strategies that can be used here.\n\nIf \"prefit\" is passed, it is assumed that all `estimators` have\nbeen fitted already. The `final_estimator_` is trained on the `estimators`\npredictions on the full training set and are **not** cross validated\npredictions. Please note that if the models have been trained on the same\ndata to train the stacking model, there is a very high risk of overfitting.\n\n.. versionadded:: 1.1\n    The 'prefit' option was added in 1.1\n\n.. note::\n   A larger number of split will provide no benefits if the number\n   of training samples is large enough. Indeed, the training time\n   will increase. ``cv`` is not used for model evaluation but for\n   prediction.",
+      "effective_default": null,
+      "name": "cv",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, cross-validation generator, iterable, or \"prefit\", default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "auto",
+          "decision_function",
+          "predict",
+          "predict_proba"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'auto'",
+      "description": "Methods called for each base estimator. It can be:\n\n* if 'auto', it will try to invoke, for each estimator,\n  `'predict_proba'`, `'decision_function'` or `'predict'` in that\n  order.\n* otherwise, one of `'predict_proba'`, `'decision_function'` or\n  `'predict'`. If the method is not implemented by the estimator, it\n  will raise an error.",
+      "effective_default": null,
+      "name": "stack_method",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'auto', 'predict_proba', 'decision_function', 'predict'}, default='auto'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None",
+          "Integral"
+        ]
+      },
+      "default": "None",
+      "description": "The number of jobs to run in parallel for `fit` of all `estimators`.\n`None` means 1 unless in a `joblib.parallel_backend` context. -1 means\nusing all processors. See :term:`Glossary <n_jobs>` for more details.",
+      "effective_default": null,
+      "name": "n_jobs",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "When False, only the predictions of estimators will be used as\ntraining data for `final_estimator`. When True, the\n`final_estimator` is trained on the predictions as well as the\noriginal training data.",
+      "effective_default": null,
+      "name": "passthrough",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "verbose"
+        ]
+      },
+      "default": "0",
+      "description": "Verbosity level.",
+      "effective_default": null,
+      "name": "verbose",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=0"
+    }
+  ],
+  "returns": [],
+  "signature": "StackingClassifier(estimators, final_estimator=None, *, cv=None, stack_method='auto', n_jobs=None, passthrough=False, verbose=0)",
+  "summary": "Stack of estimators with a final classifier.",
+  "warnings": []
+}

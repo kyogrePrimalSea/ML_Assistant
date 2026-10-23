@@ -1,0 +1,629 @@
+{
+  "attributes": [
+    {
+      "description": "Class labels for each output.",
+      "name": "classes_",
+      "type_doc": "ndarray or list of ndarray of shape (n_classes,)"
+    },
+    {
+      "description": "The current loss computed with the loss function.",
+      "name": "loss_",
+      "type_doc": "float"
+    },
+    {
+      "description": "The minimum loss reached by the solver throughout fitting.\nIf `early_stopping=True`, this attribute is set to `None`. Refer to\nthe `best_validation_score_` fitted attribute instead.",
+      "name": "best_loss_",
+      "type_doc": "float or None"
+    },
+    {
+      "description": "The ith element in the list represents the loss at the ith iteration.",
+      "name": "loss_curve_",
+      "type_doc": "list of shape (`n_iter_`,)"
+    },
+    {
+      "description": "The score at each iteration on a held-out validation set. The score\nreported is the accuracy score. Only available if `early_stopping=True`,\notherwise the attribute is set to `None`.",
+      "name": "validation_scores_",
+      "type_doc": "list of shape (`n_iter_`,) or None"
+    },
+    {
+      "description": "The best validation score (i.e. accuracy score) that triggered the\nearly stopping. Only available if `early_stopping=True`, otherwise the\nattribute is set to `None`.",
+      "name": "best_validation_score_",
+      "type_doc": "float or None"
+    },
+    {
+      "description": "The number of training samples seen by the solver during fitting.",
+      "name": "t_",
+      "type_doc": "int"
+    },
+    {
+      "description": "The ith element in the list represents the weight matrix corresponding\nto layer i.",
+      "name": "coefs_",
+      "type_doc": "list of shape (n_layers - 1,)"
+    },
+    {
+      "description": "The ith element in the list represents the bias vector corresponding to\nlayer i + 1.",
+      "name": "intercepts_",
+      "type_doc": "list of shape (n_layers - 1,)"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    },
+    {
+      "description": "The number of iterations the solver has run.",
+      "name": "n_iter_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Number of layers.",
+      "name": "n_layers_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Number of outputs.",
+      "name": "n_outputs_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Name of the output activation function.",
+      "name": "out_activation_",
+      "type_doc": "str"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPClassifier.html",
+  "extractor_version": "1",
+  "id": "sklearn.neural_network.MLPClassifier",
+  "import_path": "sklearn.neural_network.MLPClassifier",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y, sample_weight=None)",
+      "summary": "Fit the model to data matrix X and target(s) y."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "partial_fit",
+      "signature": "partial_fit(X, y, sample_weight=None, classes=None)",
+      "summary": "Update the model with a single iteration over the given data."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X)",
+      "summary": "Predict using the multi-layer perceptron classifier."
+    },
+    {
+      "name": "predict_log_proba",
+      "signature": "predict_log_proba(X)",
+      "summary": "Return the log of probability estimates."
+    },
+    {
+      "name": "predict_proba",
+      "signature": "predict_proba(X)",
+      "summary": "Probability estimates."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Return :ref:`accuracy <accuracy_score>` on provided data and labels."
+    },
+    {
+      "name": "set_fit_request",
+      "signature": "set_fit_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.neural_network._multilayer_perceptron.MLPClassifier",
+      "summary": "Configure whether metadata should be requested to be passed to the ``fit`` method."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_partial_fit_request",
+      "signature": "set_partial_fit_request(*, classes: bool | None | str = '$UNCHANGED$', sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.neural_network._multilayer_perceptron.MLPClassifier",
+      "summary": "Configure whether metadata should be requested to be passed to the ``partial_fit`` method."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.neural_network._multilayer_perceptron.MLPClassifier",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "array-like"
+        ]
+      },
+      "default": "(100,)",
+      "description": "The ith element represents the number of neurons in the ith\nhidden layer.",
+      "effective_default": null,
+      "name": "hidden_layer_sizes",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "array-like of shape(n_layers - 2,), default=(100,)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "identity",
+          "logistic",
+          "relu",
+          "tanh"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'relu'",
+      "description": "Activation function for the hidden layer.\n\n- 'identity', no-op activation, useful to implement linear bottleneck,\n  returns f(x) = x\n\n- 'logistic', the logistic sigmoid function,\n  returns f(x) = 1 / (1 + exp(-x)).\n\n- 'tanh', the hyperbolic tan function,\n  returns f(x) = tanh(x).\n\n- 'relu', the rectified linear unit function,\n  returns f(x) = max(0, x)",
+      "effective_default": null,
+      "name": "activation",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "{'identity', 'logistic', 'tanh', 'relu'}, default='relu'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "adam",
+          "lbfgs",
+          "sgd"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'adam'",
+      "description": "The solver for weight optimization.\n\n- 'lbfgs' is an optimizer in the family of quasi-Newton methods.\n\n- 'sgd' refers to stochastic gradient descent.\n\n- 'adam' refers to a stochastic gradient-based optimizer proposed\n  by Kingma, Diederik, and Jimmy Ba\n\nFor a comparison between Adam optimizer and SGD, see\n:ref:`sphx_glr_auto_examples_neural_networks_plot_mlp_training_curves.py`.\n\nNote: The default solver 'adam' works pretty well on relatively\nlarge datasets (with thousands of training samples or more) in terms of\nboth training time and validation score.\nFor small datasets, however, 'lbfgs' can converge faster and perform\nbetter.",
+      "effective_default": null,
+      "name": "solver",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'lbfgs', 'sgd', 'adam'}, default='adam'"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.0001",
+      "description": "Strength of the L2 regularization term. The L2 regularization term\nis divided by the sample size when added to the loss.\n\nFor an example usage and visualization of varying regularization, see\n:ref:`sphx_glr_auto_examples_neural_networks_plot_mlp_alpha.py`.",
+      "effective_default": null,
+      "name": "alpha",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0.0001"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [
+          "auto"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'auto'",
+      "description": "Size of minibatches for stochastic optimizers.\nIf the solver is 'lbfgs', the classifier will not use minibatch.\nWhen set to \"auto\", `batch_size=min(200, n_samples)`.",
+      "effective_default": null,
+      "name": "batch_size",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default='auto'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "adaptive",
+          "constant",
+          "invscaling"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'constant'",
+      "description": "Learning rate schedule for weight updates.\n\n- 'constant' is a constant learning rate given by\n  'learning_rate_init'.\n\n- 'invscaling' gradually decreases the learning rate at each\n  time step 't' using an inverse scaling exponent of 'power_t'.\n  effective_learning_rate = learning_rate_init / pow(t, power_t)\n\n- 'adaptive' keeps the learning rate constant to\n  'learning_rate_init' as long as training loss keeps decreasing.\n  Each time two consecutive epochs fail to decrease training loss by at\n  least tol, or fail to increase validation score by at least tol if\n  'early_stopping' is on, the current learning rate is divided by 5.\n\nOnly used when ``solver='sgd'``.",
+      "effective_default": null,
+      "name": "learning_rate",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'constant', 'invscaling', 'adaptive'}, default='constant'"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "neither",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.001",
+      "description": "The initial learning rate used. It controls the step-size\nin updating the weights. Only used when solver='sgd' or 'adam'.",
+      "effective_default": null,
+      "name": "learning_rate_init",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0.001"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.5",
+      "description": "The exponent for inverse scaling learning rate.\nIt is used in updating effective learning rate when the learning_rate\nis set to 'invscaling'. Only used when solver='sgd'.",
+      "effective_default": null,
+      "name": "power_t",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0.5"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "200",
+      "description": "Maximum number of iterations. The solver iterates until convergence\n(determined by 'tol') or this number of iterations. For stochastic\nsolvers ('sgd', 'adam'), note that this determines the number of epochs\n(how many times each data point will be used), not the number of\ngradient steps.",
+      "effective_default": null,
+      "name": "max_iter",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=200"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "Whether to shuffle samples in each iteration. Only used when\nsolver='sgd' or 'adam'.",
+      "effective_default": null,
+      "name": "shuffle",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "random_state"
+        ]
+      },
+      "default": "None",
+      "description": "Determines random number generation for weights and bias\ninitialization, train-test split if early stopping is used, and batch\nsampling when solver='sgd' or 'adam'.\nPass an int for reproducible results across multiple function calls.\nSee :term:`Glossary <random_state>`.",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, RandomState instance, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.0001",
+      "description": "Tolerance for the optimization. When the loss or score is not improving\nby at least ``tol`` for ``n_iter_no_change`` consecutive iterations,\nunless ``learning_rate`` is set to 'adaptive', convergence is\nconsidered to be reached and training stops.",
+      "effective_default": null,
+      "name": "tol",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=1e-4"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "verbose"
+        ]
+      },
+      "default": "False",
+      "description": "Whether to print progress messages to stdout.",
+      "effective_default": null,
+      "name": "verbose",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "When set to True, reuse the solution of the previous\ncall to fit as initialization, otherwise, just erase the\nprevious solution. See :term:`the Glossary <warm_start>`.",
+      "effective_default": null,
+      "name": "warm_start",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "both",
+            "left": 0,
+            "right": 1,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.9",
+      "description": "Momentum for gradient descent update. Should be between 0 and 1. Only\nused when solver='sgd'.",
+      "effective_default": null,
+      "name": "momentum",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0.9"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "Whether to use Nesterov's momentum. Only used when solver='sgd' and\nmomentum > 0.",
+      "effective_default": null,
+      "name": "nesterovs_momentum",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "Whether to use early stopping to terminate training when validation\nscore is not improving. If set to True, it will automatically set\naside ``validation_fraction`` of training data as validation and\nterminate training when validation score is not improving by at least\n``tol`` for ``n_iter_no_change`` consecutive epochs. The split is\nstratified, except in a multilabel setting.\nIf early stopping is False, then the training stops when the training\nloss does not improve by more than ``tol`` for ``n_iter_no_change``\nconsecutive passes over the training set.\nOnly effective when solver='sgd' or 'adam'.",
+      "effective_default": null,
+      "name": "early_stopping",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": 1,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.1",
+      "description": "The proportion of training data to set aside as validation set for\nearly stopping. Must be between 0 and 1.\nOnly used if early_stopping is True.",
+      "effective_default": null,
+      "name": "validation_fraction",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0.1"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": 1,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.9",
+      "description": "Exponential decay rate for estimates of first moment vector in adam,\nshould be in [0, 1). Only used when solver='adam'.",
+      "effective_default": null,
+      "name": "beta_1",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0.9"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": 1,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.999",
+      "description": "Exponential decay rate for estimates of second moment vector in adam,\nshould be in [0, 1). Only used when solver='adam'.",
+      "effective_default": null,
+      "name": "beta_2",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0.999"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "neither",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "1e-08",
+      "description": "Value for numerical stability in adam. Only used when solver='adam'.",
+      "effective_default": null,
+      "name": "epsilon",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=1e-8"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [
+          "inf"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "10",
+      "description": "Maximum number of epochs to not meet ``tol`` improvement.\nOnly effective when solver='sgd' or 'adam'.\n\n.. versionadded:: 0.20",
+      "effective_default": null,
+      "name": "n_iter_no_change",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=10"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "15000",
+      "description": "Only used when solver='lbfgs'. Maximum number of loss function calls.\nThe solver iterates until convergence (determined by 'tol'), number\nof iterations reaches max_iter, or this number of loss function calls.\nNote that number of loss function calls will be greater than or equal\nto the number of iterations for the `MLPClassifier`.\n\n.. versionadded:: 0.22",
+      "effective_default": null,
+      "name": "max_fun",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=15000"
+    }
+  ],
+  "returns": [],
+  "signature": "MLPClassifier(hidden_layer_sizes=(100,), activation='relu', *, solver='adam', alpha=0.0001, batch_size='auto', learning_rate='constant', learning_rate_init=0.001, power_t=0.5, max_iter=200, shuffle=True, random_state=None, tol=0.0001, verbose=False, warm_start=False, momentum=0.9, nesterovs_momentum=True, early_stopping=False, validation_fraction=0.1, beta_1=0.9, beta_2=0.999, epsilon=1e-08, n_iter_no_change=10, max_fun=15000)",
+  "summary": "Multi-layer Perceptron classifier.",
+  "warnings": []
+}

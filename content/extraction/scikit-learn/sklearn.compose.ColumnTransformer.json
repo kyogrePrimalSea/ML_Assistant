@@ -1,0 +1,223 @@
+{
+  "attributes": [
+    {
+      "description": "The collection of fitted transformers as tuples of (name,\nfitted_transformer, column). `fitted_transformer` can be an estimator,\nor `'drop'`; `'passthrough'` is replaced with an equivalent\n:class:`~sklearn.preprocessing.FunctionTransformer`. In case there were\nno columns selected, this will be the unfitted transformer. If there\nare remaining columns, the final element is a tuple of the form:\n('remainder', transformer, remaining_columns) corresponding to the\n``remainder`` parameter. If there are remaining columns, then\n``len(transformers_)==len(transformers)+1``, otherwise\n``len(transformers_)==len(transformers)``.\n\n.. versionadded:: 1.7\n    The format of the remaining columns now attempts to match that of the other\n    transformers: if all columns were provided as column names (`str`), the\n    remaining columns are stored as column names; if all columns were provided\n    as mask arrays (`bool`), so are the remaining columns; in all other cases\n    the remaining columns are stored as indices (`int`).",
+      "name": "transformers_",
+      "type_doc": "list"
+    },
+    {
+      "description": "Read-only attribute to access any transformer by given name.\nKeys are transformer names and values are the fitted transformer\nobjects.",
+      "name": "named_transformers_",
+      "type_doc": ":class:`~sklearn.utils.Bunch`"
+    },
+    {
+      "description": "Boolean flag indicating whether the output of ``transform`` is a\nsparse matrix or a dense numpy array, which depends on the output\nof the individual transformers and the `sparse_threshold` keyword.",
+      "name": "sparse_output_",
+      "type_doc": "bool"
+    },
+    {
+      "description": "A dictionary from each transformer name to a slice, where the slice\ncorresponds to indices in the transformed output. This is useful to\ninspect which transformer is responsible for which transformed\nfeature(s).\n\n.. versionadded:: 1.0",
+      "name": "output_indices_",
+      "type_doc": "dict"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`. Only defined if the\nunderlying transformers expose such an attribute when fit.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.compose.ColumnTransformer.html",
+  "extractor_version": "1",
+  "id": "sklearn.compose.ColumnTransformer",
+  "import_path": "sklearn.compose.ColumnTransformer",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y=None, **params)",
+      "summary": "Fit all transformers using X."
+    },
+    {
+      "name": "fit_transform",
+      "signature": "fit_transform(X, y=None, **params)",
+      "summary": "Fit all transformers, transform the data and concatenate results."
+    },
+    {
+      "name": "get_feature_names_out",
+      "signature": "get_feature_names_out(input_features=None)",
+      "summary": "Get output feature names for transformation."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "set_output",
+      "signature": "set_output(*, transform=None)",
+      "summary": "Set the output container when `\"transform\"` and `\"fit_transform\"` are called."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**kwargs)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(X, **params)",
+      "summary": "Transform X separately by each transformer, concatenate results."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "list",
+          "tuple"
+        ]
+      },
+      "default": null,
+      "description": "List of (name, transformer, columns) tuples specifying the\ntransformer objects to be applied to subsets of the data.\n\nname : str\n    Like in Pipeline and FeatureUnion, this allows the transformer and\n    its parameters to be set using ``set_params`` and searched in grid\n    search.\ntransformer : {'drop', 'passthrough'} or estimator\n    Estimator must support :term:`fit` and :term:`transform`.\n    Special-cased strings 'drop' and 'passthrough' are accepted as\n    well, to indicate to drop the columns or to pass them through\n    untransformed, respectively.\ncolumns :  str, array-like of str, int, array-like of int,                 array-like of bool, slice or callable\n    Indexes the data on its second axis. Integers are interpreted as\n    positional columns, while strings can reference DataFrame columns\n    by name.  A scalar string or int should be used where\n    ``transformer`` expects X to be a 1d array-like (vector),\n    otherwise a 2d array will be passed to the transformer.\n    A callable is passed the input data `X` and can return any of the\n    above. To select multiple columns by name or dtype, you can use\n    :obj:`make_column_selector`.",
+      "effective_default": null,
+      "name": "transformers",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "list of tuples"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "drop",
+          "passthrough"
+        ],
+        "source": "constraints",
+        "types": [
+          "an object implementing 'fit' and 'transform'",
+          "an object implementing 'fit_transform' and 'transform'"
+        ]
+      },
+      "default": "'drop'",
+      "description": "By default, only the specified columns in `transformers` are\ntransformed and combined in the output, and the non-specified\ncolumns are dropped. (default of ``'drop'``).\nBy specifying ``remainder='passthrough'``, all remaining columns that\nwere not specified in `transformers`, but present in the data passed\nto `fit` will be automatically passed through. This subset of columns\nis concatenated with the output of the transformers. For dataframes,\nextra columns not seen during `fit` will be excluded from the output\nof `transform`.\nBy setting ``remainder`` to be an estimator, the remaining\nnon-specified columns will use the ``remainder`` estimator. The\nestimator must support :term:`fit` and :term:`transform`.\nNote that using this feature requires that the DataFrame columns\ninput at :term:`fit` and :term:`transform` have identical order.",
+      "effective_default": null,
+      "name": "remainder",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'drop', 'passthrough'} or estimator, default='drop'"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "both",
+            "left": 0,
+            "right": 1,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.3",
+      "description": "If the output of the different transformers contains sparse matrices,\nthese will be stacked as a sparse matrix if the overall density is\nlower than this value. Use ``sparse_threshold=0`` to always return\ndense.  When the transformed output consists of all dense data, the\nstacked result will be dense, and this keyword will be ignored.",
+      "effective_default": null,
+      "name": "sparse_threshold",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0.3"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "Integral",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Number of jobs to run in parallel.\n``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.\n``-1`` means using all processors. See :term:`Glossary <n_jobs>`\nfor more details.",
+      "effective_default": null,
+      "name": "n_jobs",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "dict",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Multiplicative weights for features per transformer. The output of the\ntransformer is multiplied by these weights. Keys are transformer names,\nvalues the weights.",
+      "effective_default": null,
+      "name": "transformer_weights",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "dict, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "verbose"
+        ]
+      },
+      "default": "False",
+      "description": "If True, the time elapsed while fitting each transformer will be\nprinted as it is completed.",
+      "effective_default": null,
+      "name": "verbose",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean",
+          "str",
+          "<built-in function callable>"
+        ]
+      },
+      "default": "True",
+      "description": "- If True, :meth:`ColumnTransformer.get_feature_names_out` will prefix\n  all feature names with the name of the transformer that generated that\n  feature. It is equivalent to setting\n  `verbose_feature_names_out=\"{transformer_name}__{feature_name}\"`.\n- If False, :meth:`ColumnTransformer.get_feature_names_out` will not\n  prefix any feature names and will error if feature names are not\n  unique.\n- If ``Callable[[str, str], str]``,\n  :meth:`ColumnTransformer.get_feature_names_out` will rename all the features\n  using the name of the transformer. The first argument of the callable is the\n  transformer name and the second argument is the feature name. The returned\n  string will be the new feature name.\n- If ``str``, it must be a string ready for formatting. The given string will\n  be formatted using two field names: ``transformer_name`` and ``feature_name``.\n  e.g. ``\"{feature_name}__{transformer_name}\"``. See :meth:`str.format` method\n  from the standard library for more info.\n\n.. versionadded:: 1.0\n\n.. versionchanged:: 1.6\n    `verbose_feature_names_out` can be a callable or a string to be formatted.",
+      "effective_default": null,
+      "name": "verbose_feature_names_out",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, str or Callable[[str, str], str], default=True"
+    }
+  ],
+  "returns": [],
+  "signature": "ColumnTransformer(transformers, *, remainder='drop', sparse_threshold=0.3, n_jobs=None, transformer_weights=None, verbose=False, verbose_feature_names_out=True)",
+  "summary": "Applies transformers to columns of an array or pandas DataFrame.",
+  "warnings": []
+}

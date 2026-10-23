@@ -1,0 +1,214 @@
+{
+  "attributes": [
+    {
+      "description": "If `ax` is an axes or None, the `bounding_ax_` is the axes where the\ngrid of partial dependence plots are drawn. If `ax` is a list of axes\nor a numpy array of axes, `bounding_ax_` is None.",
+      "name": "bounding_ax_",
+      "type_doc": "matplotlib Axes or None"
+    },
+    {
+      "description": "If `ax` is an axes or None, `axes_[i, j]` is the axes on the i-th row\nand j-th column. If `ax` is a list of axes, `axes_[i]` is the i-th item\nin `ax`. Elements that are None correspond to a nonexisting axes in\nthat position.",
+      "name": "axes_",
+      "type_doc": "ndarray of matplotlib Axes"
+    },
+    {
+      "description": "If `ax` is an axes or None, `lines_[i, j]` is the partial dependence\ncurve on the i-th row and j-th column. If `ax` is a list of axes,\n`lines_[i]` is the partial dependence curve corresponding to the i-th\nitem in `ax`. Elements that are None correspond to a nonexisting axes\nor an axes that does not include a line plot.",
+      "name": "lines_",
+      "type_doc": "ndarray of matplotlib Artists"
+    },
+    {
+      "description": "If `ax` is an axes or None, `vlines_[i, j]` is the line collection\nrepresenting the x axis deciles of the i-th row and j-th column. If\n`ax` is a list of axes, `vlines_[i]` corresponds to the i-th item in\n`ax`. Elements that are None correspond to a nonexisting axes or an\naxes that does not include a PDP plot.\n\n.. versionadded:: 0.23",
+      "name": "deciles_vlines_",
+      "type_doc": "ndarray of matplotlib LineCollection"
+    },
+    {
+      "description": "If `ax` is an axes or None, `vlines_[i, j]` is the line collection\nrepresenting the y axis deciles of the i-th row and j-th column. If\n`ax` is a list of axes, `vlines_[i]` corresponds to the i-th item in\n`ax`. Elements that are None correspond to a nonexisting axes or an\naxes that does not include a 2-way plot.\n\n.. versionadded:: 0.23",
+      "name": "deciles_hlines_",
+      "type_doc": "ndarray of matplotlib LineCollection"
+    },
+    {
+      "description": "If `ax` is an axes or None, `contours_[i, j]` is the partial dependence\nplot on the i-th row and j-th column. If `ax` is a list of axes,\n`contours_[i]` is the partial dependence plot corresponding to the i-th\nitem in `ax`. Elements that are None correspond to a nonexisting axes\nor an axes that does not include a contour plot.",
+      "name": "contours_",
+      "type_doc": "ndarray of matplotlib Artists"
+    },
+    {
+      "description": "If `ax` is an axes or None, `bars_[i, j]` is the partial dependence bar\nplot on the i-th row and j-th column (for a categorical feature).\nIf `ax` is a list of axes, `bars_[i]` is the partial dependence bar\nplot corresponding to the i-th item in `ax`. Elements that are None\ncorrespond to a nonexisting axes or an axes that does not include a\nbar plot.\n\n.. versionadded:: 1.2",
+      "name": "bars_",
+      "type_doc": "ndarray of matplotlib Artists"
+    },
+    {
+      "description": "If `ax` is an axes or None, `heatmaps_[i, j]` is the partial dependence\nheatmap on the i-th row and j-th column (for a pair of categorical\nfeatures) . If `ax` is a list of axes, `heatmaps_[i]` is the partial\ndependence heatmap corresponding to the i-th item in `ax`. Elements\nthat are None correspond to a nonexisting axes or an axes that does not\ninclude a heatmap.\n\n.. versionadded:: 1.2",
+      "name": "heatmaps_",
+      "type_doc": "ndarray of matplotlib Artists"
+    },
+    {
+      "description": "Figure containing partial dependence plots.",
+      "name": "figure_",
+      "type_doc": "matplotlib Figure"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.inspection.PartialDependenceDisplay.html",
+  "extractor_version": "1",
+  "id": "sklearn.inspection.PartialDependenceDisplay",
+  "import_path": "sklearn.inspection.PartialDependenceDisplay",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "from_estimator",
+      "signature": "from_estimator(estimator, X, features, *, sample_weight=None, categorical_features=None, feature_names=None, target=None, response_method='auto', n_cols=3, grid_resolution=100, percentiles=(0.05, 0.95), custom_values=None, method='auto', n_jobs=None, verbose=0, line_kw=None, ice_lines_kw=None, pd_line_kw=None, contour_kw=None, ax=None, kind='average', centered=False, subsample=1000, random_state=None)",
+      "summary": "Partial dependence (PD) and individual conditional expectation (ICE) plots."
+    },
+    {
+      "name": "plot",
+      "signature": "plot(*, ax=None, n_cols=3, line_kw=None, ice_lines_kw=None, pd_line_kw=None, contour_kw=None, bar_kw=None, heatmap_kw=None, pdp_lim=None, centered=False)",
+      "summary": "Plot partial dependence plots."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Results of :func:`~sklearn.inspection.partial_dependence` for\n``features``.",
+      "effective_default": null,
+      "name": "pd_results",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "list of Bunch"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Indices of features for a given plot. A tuple of one integer will plot\na partial dependence curve of one feature. A tuple of two integers will\nplot a two-way partial dependence curve as a contour plot.",
+      "effective_default": null,
+      "name": "features",
+      "param_kind": "keyword_only",
+      "required": true,
+      "type_doc": "list of (int,) or list of (int, int)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Feature names corresponding to the indices in ``features``.",
+      "effective_default": null,
+      "name": "feature_names",
+      "param_kind": "keyword_only",
+      "required": true,
+      "type_doc": "list of str"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "- In a multiclass setting, specifies the class for which the PDPs\n  should be computed. Note that for binary classification, the\n  positive class (index 1) is always used.\n- In a multioutput setting, specifies the task for which the PDPs\n  should be computed.\n\nIgnored in binary classification or classical regression settings.",
+      "effective_default": null,
+      "name": "target_idx",
+      "param_kind": "keyword_only",
+      "required": true,
+      "type_doc": "int"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Deciles for feature indices in ``features``.",
+      "effective_default": null,
+      "name": "deciles",
+      "param_kind": "keyword_only",
+      "required": true,
+      "type_doc": "dict"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "average",
+          "individual",
+          "both"
+        ],
+        "source": "docstring",
+        "types": []
+      },
+      "default": "'average'",
+      "description": "Whether to plot the partial dependence averaged across all the samples\nin the dataset or one line per sample or both.\n\n- ``kind='average'`` results in the traditional PD plot;\n- ``kind='individual'`` results in the ICE plot;\n- ``kind='both'`` results in plotting both the ICE and PD on the same\n  plot.\n\nA list of such strings can be provided to specify `kind` on a per-plot\nbasis. The length of the list should be the same as the number of\ninteraction requested in `features`.\n\n.. note::\n   ICE ('individual' or 'both') is not a valid option for 2-ways\n   interactions plot. As a result, an error will be raised.\n   2-ways interaction plots should always be configured to\n   use the 'average' kind instead.\n\n.. note::\n   The fast ``method='recursion'`` option is only available for\n   `kind='average'` and `sample_weights=None`. Computing individual\n   dependencies and doing weighted averages requires using the slower\n   `method='brute'`.\n\n.. versionadded:: 0.24\n   Add `kind` parameter with `'average'`, `'individual'`, and `'both'`\n   options.\n\n.. versionadded:: 1.1\n   Add the possibility to pass a list of string specifying `kind`\n   for each plot.",
+      "effective_default": null,
+      "name": "kind",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'average', 'individual', 'both'} or list of such str, default='average'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "1000",
+      "description": "Sampling for ICE curves when `kind` is 'individual' or 'both'.\nIf float, should be between 0.0 and 1.0 and represent the proportion\nof the dataset to be used to plot ICE curves. If int, represents the\nmaximum absolute number of samples to use.\n\nNote that the full dataset is still used to calculate partial\ndependence when `kind='both'`.\n\n.. versionadded:: 0.24",
+      "effective_default": null,
+      "name": "subsample",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, int or None, default=1000"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Controls the randomness of the selected samples when subsamples is not\n`None`. See :term:`Glossary <random_state>` for details.\n\n.. versionadded:: 0.24",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, RandomState instance or None, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Whether each target feature in `features` is categorical or not.\nThe list should be same size as `features`. If `None`, all features\nare assumed to be continuous.\n\n.. versionadded:: 1.2",
+      "effective_default": null,
+      "name": "is_categorical",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "list of (bool,) or list of (bool, bool), default=None"
+    }
+  ],
+  "returns": [],
+  "signature": "PartialDependenceDisplay(pd_results, *, features, feature_names, target_idx, deciles, kind='average', subsample=1000, random_state=None, is_categorical=None)",
+  "summary": "Partial Dependence Plot (PDP) and Individual Conditional Expectation (ICE).",
+  "warnings": []
+}

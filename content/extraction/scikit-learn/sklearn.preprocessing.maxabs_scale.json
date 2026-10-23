@@ -1,0 +1,74 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.maxabs_scale.html",
+  "extractor_version": "1",
+  "id": "sklearn.preprocessing.maxabs_scale",
+  "import_path": "sklearn.preprocessing.maxabs_scale",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The data.",
+      "effective_default": null,
+      "name": "X",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "{array-like, sparse matrix} of shape (n_samples, n_features)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0",
+      "description": "Axis used to scale along. If 0, independently scale each feature,\notherwise (if 1) scale each sample.",
+      "effective_default": null,
+      "name": "axis",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{0, 1}, default=0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "If False, try to avoid a copy and scale in place.\nThis is not guaranteed to always work in place; e.g. if the data is\na numpy array with an int dtype, a copy will be returned even with\ncopy=False.",
+      "effective_default": null,
+      "name": "copy",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    }
+  ],
+  "returns": [
+    {
+      "description": "The transformed data.",
+      "name": "X_tr",
+      "type_doc": "{ndarray, sparse matrix} of shape (n_samples, n_features)"
+    },
+    {
+      "description": "Do not use :func:`~sklearn.preprocessing.maxabs_scale` unless you know\nwhat you are doing. A common mistake is to apply it to the entire data\n*before* splitting into training and test sets. This will bias the\nmodel evaluation because information would have leaked from the test\nset to the training set.\nIn general, we recommend using\n:class:`~sklearn.preprocessing.MaxAbsScaler` within a\n:ref:`Pipeline <pipeline>` in order to prevent most risks of data\nleaking: `pipe = make_pipeline(MaxAbsScaler(), LogisticRegression())`.",
+      "name": "",
+      "type_doc": ".. warning:: Risk of data leak"
+    }
+  ],
+  "signature": "maxabs_scale(X, *, axis=0, copy=True)",
+  "summary": "Scale each feature to the [-1, 1] range without breaking the sparsity.",
+  "warnings": []
+}

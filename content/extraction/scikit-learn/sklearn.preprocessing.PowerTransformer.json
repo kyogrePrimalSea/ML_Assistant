@@ -1,0 +1,132 @@
+{
+  "attributes": [
+    {
+      "description": "The parameters of the power transformation for the selected features.",
+      "name": "lambdas_",
+      "type_doc": "ndarray of float of shape (n_features,)"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.PowerTransformer.html",
+  "extractor_version": "1",
+  "id": "sklearn.preprocessing.PowerTransformer",
+  "import_path": "sklearn.preprocessing.PowerTransformer",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y=None)",
+      "summary": "Estimate the optimal parameter lambda for each feature."
+    },
+    {
+      "name": "fit_transform",
+      "signature": "fit_transform(X, y=None)",
+      "summary": "Fit `PowerTransformer` to `X`, then transform `X`."
+    },
+    {
+      "name": "get_feature_names_out",
+      "signature": "get_feature_names_out(input_features=None)",
+      "summary": "Get output feature names for transformation."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "inverse_transform",
+      "signature": "inverse_transform(X)",
+      "summary": "Apply the inverse power transformation using the fitted lambdas."
+    },
+    {
+      "name": "set_output",
+      "signature": "set_output(*, transform=None)",
+      "summary": "Set output container."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(X)",
+      "summary": "Apply the power transform to each feature using the fitted lambdas."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "box-cox",
+          "yeo-johnson"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'yeo-johnson'",
+      "description": "The power transform method. Available methods are:\n\n- 'yeo-johnson' [1]_, works with positive and negative values\n- 'box-cox' [2]_, only works with strictly positive values",
+      "effective_default": null,
+      "name": "method",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "{'yeo-johnson', 'box-cox'}, default='yeo-johnson'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "Set to True to apply zero-mean, unit-variance normalization to the\ntransformed output.",
+      "effective_default": null,
+      "name": "standardize",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "Set to False to perform inplace computation during transformation.",
+      "effective_default": null,
+      "name": "copy",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    }
+  ],
+  "returns": [],
+  "signature": "PowerTransformer(method='yeo-johnson', *, standardize=True, copy=True)",
+  "summary": "Apply a power transform featurewise to make data more Gaussian-like.",
+  "warnings": []
+}

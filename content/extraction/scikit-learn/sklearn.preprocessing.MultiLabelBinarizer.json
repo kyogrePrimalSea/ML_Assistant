@@ -1,0 +1,100 @@
+{
+  "attributes": [
+    {
+      "description": "A copy of the `classes` parameter when provided.\nOtherwise it corresponds to the sorted set of classes found\nwhen fitting.",
+      "name": "classes_",
+      "type_doc": "ndarray of shape (n_classes,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.MultiLabelBinarizer.html",
+  "extractor_version": "1",
+  "id": "sklearn.preprocessing.MultiLabelBinarizer",
+  "import_path": "sklearn.preprocessing.MultiLabelBinarizer",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(y)",
+      "summary": "Fit the label sets binarizer, storing :term:`classes_`."
+    },
+    {
+      "name": "fit_transform",
+      "signature": "fit_transform(y)",
+      "summary": "Fit the label sets binarizer and transform the given label sets."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "inverse_transform",
+      "signature": "inverse_transform(yt)",
+      "summary": "Transform the given indicator matrix into label sets."
+    },
+    {
+      "name": "set_output",
+      "signature": "set_output(*, transform=None)",
+      "summary": "Set output container."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(y)",
+      "summary": "Transform the given label sets."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "array-like",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Indicates an ordering for the class labels.\nAll entries should be unique (cannot contain duplicate classes).",
+      "effective_default": null,
+      "name": "classes",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of shape (n_classes,), default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "Set to True if output binary array is desired in CSR sparse format.",
+      "effective_default": null,
+      "name": "sparse_output",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    }
+  ],
+  "returns": [],
+  "signature": "MultiLabelBinarizer(*, classes=None, sparse_output=False)",
+  "summary": "Transform between iterable of iterables and a multilabel format.",
+  "warnings": []
+}

@@ -1,0 +1,109 @@
+{
+  "attributes": [
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.Binarizer.html",
+  "extractor_version": "1",
+  "id": "sklearn.preprocessing.Binarizer",
+  "import_path": "sklearn.preprocessing.Binarizer",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y=None)",
+      "summary": "Only validates estimator's parameters."
+    },
+    {
+      "name": "fit_transform",
+      "signature": "fit_transform(X, y=None, **fit_params)",
+      "summary": "Fit to data, then transform it."
+    },
+    {
+      "name": "get_feature_names_out",
+      "signature": "get_feature_names_out(input_features=None)",
+      "summary": "Get output feature names for transformation."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "set_output",
+      "signature": "set_output(*, transform=None)",
+      "summary": "Set output container."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_transform_request",
+      "signature": "set_transform_request(*, copy: bool | None | str = '$UNCHANGED$') -> sklearn.preprocessing._data.Binarizer",
+      "summary": "Configure whether metadata should be requested to be passed to the ``transform`` method."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(X, copy=None)",
+      "summary": "Binarize each element of X."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "Real"
+        ]
+      },
+      "default": "0.0",
+      "description": "Feature values below or equal to this are replaced by 0, above it by 1.\nThreshold may not be less than 0 for operations on sparse matrices.",
+      "effective_default": null,
+      "name": "threshold",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0.0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "Set to False to perform inplace binarization and avoid a copy (if\nthe input is already a numpy array or a scipy.sparse CSR matrix).",
+      "effective_default": null,
+      "name": "copy",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    }
+  ],
+  "returns": [],
+  "signature": "Binarizer(*, threshold=0.0, copy=True)",
+  "summary": "Binarize data (set feature values to 0 or 1) according to a threshold.",
+  "warnings": []
+}

@@ -1,0 +1,399 @@
+{
+  "attributes": [
+    {
+      "description": "A list of class labels known to the classifier.",
+      "name": "classes_",
+      "type_doc": "ndarray of shape (n_classes, )"
+    },
+    {
+      "description": "Coefficients of the features in the decision function.\n\n`coef_` is of shape (1, n_features) when the given problem is binary.\n\nBy default, it will be created as a dense array, but can be turned to\nsparse (CSR format) through :meth:`sparsify` (which can be beneficial\nunder L1 regularization when many coefficients are zero), and back to\ndense through :meth:`densify`.",
+      "name": "coef_",
+      "type_doc": "ndarray or CSR matrix of shape (1, n_features) or (n_classes, n_features)"
+    },
+    {
+      "description": "Intercept (a.k.a. bias) added to the decision function.\n\nIf `fit_intercept` is set to False, the intercept is set to zero.\n`intercept_` is of shape (1,) when the given problem is binary.",
+      "name": "intercept_",
+      "type_doc": "ndarray of shape (1,) or (n_classes,)"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    },
+    {
+      "description": "Actual number of iterations for all classes.\n\n.. versionchanged:: 0.20\n\n    In SciPy <= 1.0.0 the number of lbfgs iterations may exceed\n    ``max_iter``. ``n_iter_`` will now report at most ``max_iter``.",
+      "name": "n_iter_",
+      "type_doc": "ndarray of shape (1, )"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html",
+  "extractor_version": "1",
+  "id": "sklearn.linear_model.LogisticRegression",
+  "import_path": "sklearn.linear_model.LogisticRegression",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "decision_function",
+      "signature": "decision_function(X)",
+      "summary": "Predict confidence scores for samples."
+    },
+    {
+      "name": "densify",
+      "signature": "densify()",
+      "summary": "Convert coefficient matrix to dense array format."
+    },
+    {
+      "name": "fit",
+      "signature": "fit(X, y, sample_weight=None)",
+      "summary": "Fit the model according to the given training data."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X)",
+      "summary": "Predict class labels for samples in X."
+    },
+    {
+      "name": "predict_log_proba",
+      "signature": "predict_log_proba(X)",
+      "summary": "Predict logarithm of probability estimates."
+    },
+    {
+      "name": "predict_proba",
+      "signature": "predict_proba(X)",
+      "summary": "Probability estimates."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Return :ref:`accuracy <accuracy_score>` on provided data and labels."
+    },
+    {
+      "name": "set_callbacks",
+      "signature": "set_callbacks(*callbacks)",
+      "summary": "Set callbacks for the estimator."
+    },
+    {
+      "name": "set_fit_request",
+      "signature": "set_fit_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.linear_model._logistic.LogisticRegression",
+      "summary": "Configure whether metadata should be requested to be passed to the ``fit`` method."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.linear_model._logistic.LogisticRegression",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    },
+    {
+      "name": "sparsify",
+      "signature": "sparsify()",
+      "summary": "Convert coefficient matrix to sparse format."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "elasticnet",
+          "l1",
+          "l2",
+          "deprecated"
+        ],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "'deprecated'",
+      "description": "Specify the norm of the penalty:\n\n- `None`: no penalty is added;\n- `'l2'`: add an L2 penalty term and it is the default choice;\n- `'l1'`: add an L1 penalty term;\n- `'elasticnet'`: both L1 and L2 penalty terms are added.\n\n.. warning::\n   Some penalties may not work with some solvers. See the parameter\n   `solver` below, to know the compatibility between the penalty and\n   solver.\n\n.. versionadded:: 0.19\n   l1 penalty with SAGA solver (allowing 'multinomial' + L1)\n\n.. deprecated:: 1.8\n   `penalty` was deprecated in version 1.8 and will be removed in 1.10.\n   Use `l1_ratio` and `C` instead. `l1_ratio=0` for `penalty='l2'`,\n   `l1_ratio=1` for `penalty='l1'`, `l1_ratio` set to any float between 0 and 1\n   for `penalty='elasticnet'`, and `C=np.inf` for `penalty=None`.",
+      "effective_default": null,
+      "name": "penalty",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "{'l1', 'l2', 'elasticnet', None}, default='l2'"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "right",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "1.0",
+      "description": "Inverse of regularization strength; must be a positive float.\nLike in support vector machines, smaller values specify stronger\nregularization. `C=np.inf` results in unpenalized logistic regression.\nFor a visual example on the effect of tuning the `C` parameter\nwith an L1 penalty, see:\n:ref:`sphx_glr_auto_examples_linear_model_plot_logistic_path.py`.",
+      "effective_default": null,
+      "name": "C",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=1.0"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "both",
+            "left": 0,
+            "right": 1,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "0.0",
+      "description": "The Elastic-Net mixing parameter, with `0 <= l1_ratio <= 1`. Setting\n`l1_ratio=1` gives a pure L1-penalty, setting `l1_ratio=0` a pure L2-penalty.\nAny value between 0 and 1 gives an Elastic-Net penalty of the form\n`l1_ratio * L1 + (1 - l1_ratio) * L2`.\n\n.. warning::\n   Certain values of `l1_ratio`, i.e. some penalties, may not work with some\n   solvers. See the parameter `solver` below, to know the compatibility between\n   the penalty and solver.\n\n.. versionchanged:: 1.8\n    Default value changed from None to 0.0.\n\n.. deprecated:: 1.8\n    `None` is deprecated and will be removed in version 1.10. Always use\n    `l1_ratio` to specify the penalty type.",
+      "effective_default": null,
+      "name": "l1_ratio",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0.0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "Dual (constrained) or primal (regularized, see also\n:ref:`this equation <regularized-logistic-loss>`) formulation. Dual formulation\nis only implemented for l2 penalty with liblinear solver. Prefer `dual=False`\nwhen n_samples > n_features.",
+      "effective_default": null,
+      "name": "dual",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.0001",
+      "description": "Tolerance for stopping criteria.",
+      "effective_default": null,
+      "name": "tol",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=1e-4"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "Specifies if a constant (a.k.a. bias or intercept) should be\nadded to the decision function.",
+      "effective_default": null,
+      "name": "fit_intercept",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "neither",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "1",
+      "description": "Useful only when the solver `liblinear` is used\nand `self.fit_intercept` is set to `True`. In this case, `x` becomes\n`[x, self.intercept_scaling]`,\ni.e. a \"synthetic\" feature with constant value equal to\n`intercept_scaling` is appended to the instance vector.\nThe intercept becomes\n``intercept_scaling * synthetic_feature_weight``.\n\n.. note::\n    The synthetic feature weight is subject to L1 or L2\n    regularization as all other features.\n    To lessen the effect of regularization on synthetic feature weight\n    (and therefore on the intercept) `intercept_scaling` has to be increased.",
+      "effective_default": null,
+      "name": "intercept_scaling",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=1"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "balanced"
+        ],
+        "source": "constraints",
+        "types": [
+          "dict",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Weights associated with classes in the form ``{class_label: weight}``.\nIf not given, all classes are supposed to have weight one.\n\nThe \"balanced\" mode uses the values of y to automatically adjust\nweights inversely proportional to class frequencies in the input data\nas ``n_samples / (n_classes * np.bincount(y))``.\n\nNote that these weights will be multiplied with sample_weight (passed\nthrough the fit method) if sample_weight is specified.\n\n.. versionadded:: 0.17\n   *class_weight='balanced'*",
+      "effective_default": null,
+      "name": "class_weight",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "dict or 'balanced', default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "random_state"
+        ]
+      },
+      "default": "None",
+      "description": "Only used for `solver` == 'sag', 'saga' or 'liblinear' to shuffle the\ndata. It has no effect on the other solvers.\nSee :term:`Glossary <random_state>` for details.",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, RandomState instance, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "lbfgs",
+          "liblinear",
+          "newton-cg",
+          "newton-cholesky",
+          "sag",
+          "saga"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'lbfgs'",
+      "description": "Algorithm to use in the optimization problem. Default is 'lbfgs'.\nTo choose a solver, you might want to consider the following aspects:\n\n- 'lbfgs' is a good default solver because it works reasonably well for a wide\n  class of problems.\n- For :term:`multiclass` problems (`n_classes >= 3`), all solvers except\n  'liblinear' minimize the full multinomial loss, 'liblinear' will raise an\n  error.\n- 'newton-cholesky' is a good choice for\n  `n_samples` >> `n_features * n_classes`, especially with one-hot encoded\n  categorical features with rare categories. Be aware that the memory usage\n  of this solver has a quadratic dependency on `n_features * n_classes`\n  because it explicitly computes the full Hessian matrix.\n- For small datasets, 'liblinear' is a good choice, whereas 'sag'\n  and 'saga' are faster for large ones;\n- 'liblinear' can only handle binary classification by default. To apply a\n  one-versus-rest scheme for the multiclass setting one can wrap it with the\n  :class:`~sklearn.multiclass.OneVsRestClassifier`.\n\n.. warning::\n   The choice of the algorithm depends on the penalty chosen (`l1_ratio=0`\n   for L2-penalty, `l1_ratio=1` for L1-penalty and `0 < l1_ratio < 1` for\n   Elastic-Net) and on (multinomial) multiclass support:\n\n   ================= ======================== ======================\n   solver            l1_ratio                 multinomial multiclass\n   ================= ======================== ======================\n   'lbfgs'           l1_ratio=0               yes\n   'liblinear'       l1_ratio=1 or l1_ratio=0 no\n   'newton-cg'       l1_ratio=0               yes\n   'newton-cholesky' l1_ratio=0               yes\n   'sag'             l1_ratio=0               yes\n   'saga'            0<=l1_ratio<=1           yes\n   ================= ======================== ======================\n\n.. note::\n   'sag' and 'saga' fast convergence is only guaranteed on features\n   with approximately the same scale. You can preprocess the data with\n   a scaler from :mod:`sklearn.preprocessing`.\n\n.. seealso::\n   Refer to the :ref:`User Guide <Logistic_regression>` for more\n   information regarding :class:`LogisticRegression` and more specifically the\n   :ref:`Table <logistic_regression_solvers>`\n   summarizing solver/penalty supports.\n\n.. versionadded:: 0.17\n   Stochastic Average Gradient (SAG) descent solver. Multinomial support in\n   version 0.18.\n.. versionadded:: 0.19\n   SAGA solver.\n.. versionchanged:: 0.22\n   The default solver changed from 'liblinear' to 'lbfgs' in 0.22.\n.. versionadded:: 1.2\n   newton-cholesky solver. Multinomial support in version 1.6.",
+      "effective_default": null,
+      "name": "solver",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'lbfgs', 'liblinear', 'newton-cg', 'newton-cholesky', 'sag', 'saga'}, default='lbfgs'"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "100",
+      "description": "Maximum number of iterations taken for the solvers to converge.",
+      "effective_default": null,
+      "name": "max_iter",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=100"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "verbose"
+        ]
+      },
+      "default": "0",
+      "description": "For the liblinear and lbfgs solvers set verbose to any positive\nnumber for verbosity.",
+      "effective_default": null,
+      "name": "verbose",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "When set to True, reuse the solution of the previous call to fit as\ninitialization, otherwise, just erase the previous solution.\nUseless for liblinear solver. See :term:`the Glossary <warm_start>`.\n\n.. versionadded:: 0.17\n   *warm_start* to support *lbfgs*, *newton-cg*, *sag*, *saga* solvers.",
+      "effective_default": null,
+      "name": "warm_start",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None",
+          "Integral"
+        ]
+      },
+      "default": "None",
+      "description": "Does not have any effect.\n\n.. deprecated:: 1.8\n   `n_jobs` is deprecated in version 1.8 and will be removed in 1.10.",
+      "effective_default": null,
+      "name": "n_jobs",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=None"
+    }
+  ],
+  "returns": [],
+  "signature": "LogisticRegression(penalty='deprecated', *, C=1.0, l1_ratio=0.0, dual=False, tol=0.0001, fit_intercept=True, intercept_scaling=1, class_weight=None, random_state=None, solver='lbfgs', max_iter=100, verbose=0, warm_start=False, n_jobs=None)",
+  "summary": "Logistic Regression (aka logit, MaxEnt) classifier.",
+  "warnings": []
+}

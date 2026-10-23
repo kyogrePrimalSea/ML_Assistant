@@ -1,0 +1,33 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.ParameterGrid.html",
+  "extractor_version": "1",
+  "id": "sklearn.model_selection.ParameterGrid",
+  "import_path": "sklearn.model_selection.ParameterGrid",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The parameter grid to explore, as a dictionary mapping estimator\nparameters to sequences of allowed values.\n\nAn empty dict signifies default parameters.\n\nA sequence of dicts signifies a sequence of grids to search, and is\nuseful to avoid exploring parameter combinations that make no sense\nor have no effect. See the examples below.",
+      "effective_default": null,
+      "name": "param_grid",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "dict of str to sequence, or sequence of such"
+    }
+  ],
+  "returns": [],
+  "signature": "ParameterGrid(param_grid)",
+  "summary": "Grid of parameters with a discrete number of values for each.",
+  "warnings": []
+}

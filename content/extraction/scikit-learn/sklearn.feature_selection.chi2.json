@@ -1,0 +1,59 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.chi2.html",
+  "extractor_version": "1",
+  "id": "sklearn.feature_selection.chi2",
+  "import_path": "sklearn.feature_selection.chi2",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Sample vectors.",
+      "effective_default": null,
+      "name": "X",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "{array-like, sparse matrix} of shape (n_samples, n_features)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Target vector (class labels).",
+      "effective_default": null,
+      "name": "y",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n_samples,)"
+    }
+  ],
+  "returns": [
+    {
+      "description": "Chi2 statistics for each feature.",
+      "name": "chi2",
+      "type_doc": "ndarray of shape (n_features,)"
+    },
+    {
+      "description": "P-values for each feature.",
+      "name": "p_values",
+      "type_doc": "ndarray of shape (n_features,)"
+    }
+  ],
+  "signature": "chi2(X, y)",
+  "summary": "Compute chi-squared stats between each non-negative feature and class.",
+  "warnings": []
+}

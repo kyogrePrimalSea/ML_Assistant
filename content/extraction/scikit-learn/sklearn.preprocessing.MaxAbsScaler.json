@@ -1,0 +1,129 @@
+{
+  "attributes": [
+    {
+      "description": "Per feature relative scaling of the data.\n\n.. versionadded:: 0.17\n   *scale_* attribute.",
+      "name": "scale_",
+      "type_doc": "ndarray of shape (n_features,)"
+    },
+    {
+      "description": "Per feature maximum absolute value.",
+      "name": "max_abs_",
+      "type_doc": "ndarray of shape (n_features,)"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    },
+    {
+      "description": "The number of samples processed by the estimator. Will be reset on\nnew calls to fit, but increments across ``partial_fit`` calls.",
+      "name": "n_samples_seen_",
+      "type_doc": "int"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.MaxAbsScaler.html",
+  "extractor_version": "1",
+  "id": "sklearn.preprocessing.MaxAbsScaler",
+  "import_path": "sklearn.preprocessing.MaxAbsScaler",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y=None)",
+      "summary": "Compute the maximum absolute value to be used for later scaling."
+    },
+    {
+      "name": "fit_transform",
+      "signature": "fit_transform(X, y=None, **fit_params)",
+      "summary": "Fit to data, then transform it."
+    },
+    {
+      "name": "get_feature_names_out",
+      "signature": "get_feature_names_out(input_features=None)",
+      "summary": "Get output feature names for transformation."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "inverse_transform",
+      "signature": "inverse_transform(X)",
+      "summary": "Scale back the data to the original representation."
+    },
+    {
+      "name": "partial_fit",
+      "signature": "partial_fit(X, y=None)",
+      "summary": "Online computation of max absolute value of X for later scaling."
+    },
+    {
+      "name": "set_output",
+      "signature": "set_output(*, transform=None)",
+      "summary": "Set output container."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(X)",
+      "summary": "Scale the data."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "Set to False to perform inplace scaling and avoid a copy (if the input\nis already a numpy array).",
+      "effective_default": null,
+      "name": "copy",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "Set to True to clip transformed values of held-out data to [-1, 1].\nSince this parameter will clip values, `inverse_transform` may not\nbe able to restore the original data.\n\n.. note::\n    Setting `clip=True` does not prevent feature drift (a distribution\n    shift between training and test data). The transformed values are clipped\n    to the [-1, 1] range, which helps avoid unintended behavior in models\n    sensitive to out-of-range inputs (e.g. linear models). Use with care,\n    as clipping can distort the distribution of test data.",
+      "effective_default": null,
+      "name": "clip",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    }
+  ],
+  "returns": [],
+  "signature": "MaxAbsScaler(*, copy=True, clip=False)",
+  "summary": "Scale each feature by its maximum absolute value.",
+  "warnings": []
+}

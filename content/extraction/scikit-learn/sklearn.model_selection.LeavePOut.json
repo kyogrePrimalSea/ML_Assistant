@@ -1,0 +1,49 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.LeavePOut.html",
+  "extractor_version": "1",
+  "id": "sklearn.model_selection.LeavePOut",
+  "import_path": "sklearn.model_selection.LeavePOut",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_n_splits",
+      "signature": "get_n_splits(X, y=None, groups=None)",
+      "summary": "Returns the number of splitting iterations in the cross-validator."
+    },
+    {
+      "name": "split",
+      "signature": "split(X, y=None, groups=None)",
+      "summary": "Generate indices to split data into training and test set."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Size of the test sets. Must be strictly less than the number of\nsamples.",
+      "effective_default": null,
+      "name": "p",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "int"
+    }
+  ],
+  "returns": [],
+  "signature": "LeavePOut(p)",
+  "summary": "Leave-P-Out cross-validator.",
+  "warnings": []
+}

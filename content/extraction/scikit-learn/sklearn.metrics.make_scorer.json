@@ -1,0 +1,88 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.metrics.make_scorer.html",
+  "extractor_version": "1",
+  "id": "sklearn.metrics.make_scorer",
+  "import_path": "sklearn.metrics.make_scorer",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Score function (or loss function) with signature\n``score_func(y, y_pred, **kwargs)``.",
+      "effective_default": null,
+      "name": "score_func",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "callable"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "predict_proba",
+          "decision_function",
+          "predict"
+        ],
+        "source": "docstring",
+        "types": []
+      },
+      "default": "'predict'",
+      "description": "Specifies the response method to use get prediction from an estimator\n(i.e. :term:`predict_proba`, :term:`decision_function` or\n:term:`predict`). Possible choices are:\n\n- if `str`, it corresponds to the name to the method to return;\n- if a list or tuple of `str`, it provides the method names in order of\n  preference. The method returned corresponds to the first method in\n  the list and which is implemented by `estimator`.\n\n.. versionadded:: 1.4",
+      "effective_default": null,
+      "name": "response_method",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{\"predict_proba\", \"decision_function\", \"predict\"} or list/tuple of such str, default=\"predict\""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "Whether `score_func` is a score function (default), meaning high is\ngood, or a loss function, meaning low is good. In the latter case, the\nscorer object will sign-flip the outcome of the `score_func`.",
+      "effective_default": null,
+      "name": "greater_is_better",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Additional parameters to be passed to `score_func`.",
+      "effective_default": null,
+      "name": "kwargs",
+      "param_kind": "var_keyword",
+      "required": false,
+      "type_doc": "additional arguments"
+    }
+  ],
+  "returns": [
+    {
+      "description": "Callable object that returns a scalar score; greater is better.",
+      "name": "scorer",
+      "type_doc": "callable"
+    }
+  ],
+  "signature": "make_scorer(score_func, *, response_method='predict', greater_is_better=True, **kwargs)",
+  "summary": "Make a scorer from a performance metric or loss function.",
+  "warnings": []
+}

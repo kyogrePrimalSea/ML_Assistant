@@ -1,0 +1,107 @@
+{
+  "attributes": [
+    {
+      "description": "Variances of individual features.",
+      "name": "variances_",
+      "type_doc": "array, shape (n_features,)"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.VarianceThreshold.html",
+  "extractor_version": "1",
+  "id": "sklearn.feature_selection.VarianceThreshold",
+  "import_path": "sklearn.feature_selection.VarianceThreshold",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y=None)",
+      "summary": "Learn empirical variances from X."
+    },
+    {
+      "name": "fit_transform",
+      "signature": "fit_transform(X, y=None, **fit_params)",
+      "summary": "Fit to data, then transform it."
+    },
+    {
+      "name": "get_feature_names_out",
+      "signature": "get_feature_names_out(input_features=None)",
+      "summary": "Mask feature names according to selected features."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "get_support",
+      "signature": "get_support(indices=False)",
+      "summary": "Get a mask, or integer index, of the features selected."
+    },
+    {
+      "name": "inverse_transform",
+      "signature": "inverse_transform(X)",
+      "summary": "Reverse the transformation operation."
+    },
+    {
+      "name": "set_output",
+      "signature": "set_output(*, transform=None)",
+      "summary": "Set output container."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(X)",
+      "summary": "Reduce X to the selected features."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.0",
+      "description": "Features with a training-set variance lower than this threshold will\nbe removed. The default is to keep all features with non-zero variance,\ni.e. remove the features that have the same value in all samples.",
+      "effective_default": null,
+      "name": "threshold",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "float, default=0"
+    }
+  ],
+  "returns": [],
+  "signature": "VarianceThreshold(threshold=0.0)",
+  "summary": "Feature selector that removes all low-variance features.",
+  "warnings": []
+}

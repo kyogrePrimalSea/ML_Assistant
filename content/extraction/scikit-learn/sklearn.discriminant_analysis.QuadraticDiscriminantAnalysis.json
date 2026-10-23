@@ -1,0 +1,251 @@
+{
+  "attributes": [
+    {
+      "description": "For each class, gives the covariance matrix estimated using the\nsamples of that class. The estimates use the maximum likelihood\n(biased) covariance estimator. Only present if `store_covariance` is\nTrue.",
+      "name": "covariance_",
+      "type_doc": "list of len n_classes of ndarray of shape (n_features, n_features)"
+    },
+    {
+      "description": "Class-wise means.",
+      "name": "means_",
+      "type_doc": "array-like of shape (n_classes, n_features)"
+    },
+    {
+      "description": "Class priors (sum to 1).",
+      "name": "priors_",
+      "type_doc": "array-like of shape (n_classes,)"
+    },
+    {
+      "description": "For each class k an array of shape (n_features, n_k), where\n``n_k = min(n_features, number of elements in class k)``\nIt is the rotation of the Gaussian distribution, i.e. its\nprincipal axis. It corresponds to `V`, the matrix of eigenvectors\ncoming from the SVD of `Xk = U S Vt` where `Xk` is the centered\nmatrix of samples from class k.",
+      "name": "rotations_",
+      "type_doc": "list of len n_classes of ndarray of shape (n_features, n_k)"
+    },
+    {
+      "description": "For each class, contains the scaling of\nthe Gaussian distributions along its principal axes, i.e. the\nvariance in the rotated coordinate system. It corresponds to `S^2 /\nn_samples`, where `S` is the diagonal matrix of singular values\nfrom the SVD of `Xk`, where `Xk` is the centered matrix of samples\nfrom class k.",
+      "name": "scalings_",
+      "type_doc": "list of len n_classes of ndarray of shape (n_k,)"
+    },
+    {
+      "description": "Unique class labels.",
+      "name": "classes_",
+      "type_doc": "ndarray of shape (n_classes,)"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.discriminant_analysis.QuadraticDiscriminantAnalysis.html",
+  "extractor_version": "1",
+  "id": "sklearn.discriminant_analysis.QuadraticDiscriminantAnalysis",
+  "import_path": "sklearn.discriminant_analysis.QuadraticDiscriminantAnalysis",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "decision_function",
+      "signature": "decision_function(X)",
+      "summary": "Apply decision function to an array of samples."
+    },
+    {
+      "name": "fit",
+      "signature": "fit(X, y)",
+      "summary": "Fit the model according to the given training data and parameters."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X)",
+      "summary": "Perform classification on an array of vectors `X`."
+    },
+    {
+      "name": "predict_log_proba",
+      "signature": "predict_log_proba(X)",
+      "summary": "Estimate log class probabilities."
+    },
+    {
+      "name": "predict_proba",
+      "signature": "predict_proba(X)",
+      "summary": "Estimate class probabilities."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Return :ref:`accuracy <accuracy_score>` on provided data and labels."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.discriminant_analysis.QuadraticDiscriminantAnalysis",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "eigen",
+          "svd"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'svd'",
+      "description": "Solver to use, possible values:\n  - 'svd': Singular value decomposition (default).\n    Does not compute the covariance matrix, therefore this solver is\n    recommended for data with a large number of features.\n  - 'eigen': Eigenvalue decomposition.\n    Can be combined with shrinkage or custom covariance estimator.",
+      "effective_default": null,
+      "name": "solver",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'svd', 'eigen'}, default='svd'"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "both",
+            "left": 0,
+            "right": 1,
+            "type": "Real"
+          }
+        ],
+        "options": [
+          "auto"
+        ],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Shrinkage parameter, possible values:\n  - None: no shrinkage (default).\n  - 'auto': automatic shrinkage using the Ledoit-Wolf lemma.\n  - float between 0 and 1: fixed shrinkage parameter.\n\n  Enabling shrinkage is expected to improve the model when some\n  classes have a relatively small number of training data points\n  compared to the number of features by mitigating overfitting during\n  the covariance estimation step.\n\nThis should be left to `None` if `covariance_estimator` is used.\nNote that shrinkage works only with 'eigen' solver.",
+      "effective_default": null,
+      "name": "shrinkage",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "'auto' or float, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "array-like",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Class priors. By default, the class proportions are inferred from the\ntraining data.",
+      "effective_default": null,
+      "name": "priors",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of shape (n_classes,), default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "both",
+            "left": 0,
+            "right": 1,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.0",
+      "description": "Regularizes the per-class covariance estimates by transforming S2 as\n``S2 = (1 - reg_param) * S2 + reg_param * np.eye(n_features)``,\nwhere S2 corresponds to the `scaling_` attribute of a given class.",
+      "effective_default": null,
+      "name": "reg_param",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0.0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "If True, the class covariance matrices are explicitly computed and\nstored in the `self.covariance_` attribute.\n\n.. versionadded:: 0.17",
+      "effective_default": null,
+      "name": "store_covariance",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.0001",
+      "description": "Absolute threshold for the covariance matrix to be considered rank\ndeficient after applying some regularization (see `reg_param`) to each\n`Sk` where `Sk` represents covariance matrix for k-th class. This\nparameter does not affect the predictions. It controls when a warning\nis raised if the covariance matrix is not full rank.\n\n.. versionadded:: 0.17",
+      "effective_default": null,
+      "name": "tol",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=1.0e-4"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "an object implementing 'fit'",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "If not None, `covariance_estimator` is used to estimate the covariance\nmatrices instead of relying on the empirical covariance estimator\n(with potential shrinkage).  The object should have a fit method and\na ``covariance_`` attribute like the estimators in\n:mod:`sklearn.covariance`. If None the shrinkage parameter drives the\nestimate.\n\nThis should be left to `None` if `shrinkage` is used.\nNote that `covariance_estimator` works only with the 'eigen' solver.",
+      "effective_default": null,
+      "name": "covariance_estimator",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "covariance estimator, default=None"
+    }
+  ],
+  "returns": [],
+  "signature": "QuadraticDiscriminantAnalysis(*, solver='svd', shrinkage=None, priors=None, reg_param=0.0, store_covariance=False, tol=0.0001, covariance_estimator=None)",
+  "summary": "Quadratic Discriminant Analysis.",
+  "warnings": []
+}

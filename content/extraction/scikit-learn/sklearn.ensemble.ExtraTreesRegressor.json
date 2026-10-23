@@ -1,0 +1,513 @@
+{
+  "attributes": [
+    {
+      "description": "The child estimator template used to create the collection of fitted\nsub-estimators.\n\n.. versionadded:: 1.2\n   `base_estimator_` was renamed to `estimator_`.",
+      "name": "estimator_",
+      "type_doc": ":class:`~sklearn.tree.ExtraTreeRegressor`"
+    },
+    {
+      "description": "The collection of fitted sub-estimators.",
+      "name": "estimators_",
+      "type_doc": "list of DecisionTreeRegressor"
+    },
+    {
+      "description": "The impurity-based feature importances.\nThe higher, the more important the feature.\nThe importance of a feature is computed as the (normalized)\ntotal reduction of the criterion brought by that feature.  It is also\nknown as the Gini importance.\n\nWarning: impurity-based feature importances can be misleading for\nhigh cardinality features (many unique values). See\n:func:`sklearn.inspection.permutation_importance` as an alternative.",
+      "name": "feature_importances_",
+      "type_doc": "ndarray of shape (n_features,)"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    },
+    {
+      "description": "The number of outputs.",
+      "name": "n_outputs_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Score of the training dataset obtained using an out-of-bag estimate.\nThis attribute exists only when ``oob_score`` is True.",
+      "name": "oob_score_",
+      "type_doc": "float"
+    },
+    {
+      "description": "Prediction computed with out-of-bag estimate on the training set.\nThis attribute exists only when ``oob_score`` is True.",
+      "name": "oob_prediction_",
+      "type_doc": "ndarray of shape (n_samples,) or (n_samples, n_outputs)"
+    },
+    {
+      "description": "The subset of drawn samples (i.e., the in-bag samples) for each base\nestimator. Each subset is defined by an array of the indices selected.\n\n.. versionadded:: 1.4",
+      "name": "estimators_samples_",
+      "type_doc": "list of arrays"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.ExtraTreesRegressor.html",
+  "extractor_version": "1",
+  "id": "sklearn.ensemble.ExtraTreesRegressor",
+  "import_path": "sklearn.ensemble.ExtraTreesRegressor",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "apply",
+      "signature": "apply(X)",
+      "summary": "Apply trees in the forest to X, return leaf indices."
+    },
+    {
+      "name": "decision_path",
+      "signature": "decision_path(X)",
+      "summary": "Return the decision path in the forest."
+    },
+    {
+      "name": "fit",
+      "signature": "fit(X, y, sample_weight=None)",
+      "summary": "Build a forest of trees from the training set (X, y)."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X)",
+      "summary": "Predict regression target for X."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Return :ref:`coefficient of determination <r2_score>` on test data."
+    },
+    {
+      "name": "set_fit_request",
+      "signature": "set_fit_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.ensemble._forest.ExtraTreesRegressor",
+      "summary": "Configure whether metadata should be requested to be passed to the ``fit`` method."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.ensemble._forest.ExtraTreesRegressor",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "100",
+      "description": "The number of trees in the forest.\n\n.. versionchanged:: 0.22\n   The default value of ``n_estimators`` changed from 10 to 100\n   in 0.22.",
+      "effective_default": null,
+      "name": "n_estimators",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int, default=100"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "absolute_error",
+          "poisson",
+          "squared_error"
+        ],
+        "source": "constraints",
+        "types": [
+          "Criterion"
+        ]
+      },
+      "default": "'squared_error'",
+      "description": "The function to measure the quality of a split. Supported criteria\nare \"squared_error\" for the mean squared error, which is equal to\nvariance reduction as feature selection criterion and minimizes the L2\nloss using the mean of each terminal node, \"absolute_error\" for the mean\nabsolute error, which minimizes the L1 loss using the median of each terminal\nnode, and \"poisson\" which uses reduction in Poisson deviance to find splits,\nalso using the mean of each terminal node.\n\n.. versionadded:: 0.18\n   Mean Absolute Error (MAE) criterion.\n\n.. versionchanged:: 1.9\n    Criterion `\"friedman_mse\"` was deprecated.",
+      "effective_default": null,
+      "name": "criterion",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{\"squared_error\", \"absolute_error\", \"poisson\"}, default=\"squared_error\""
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "The maximum depth of the tree. If None, then nodes are expanded until\nall leaves are pure or until all leaves contain less than\nmin_samples_split samples.",
+      "effective_default": null,
+      "name": "max_depth",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 2,
+            "right": null,
+            "type": "Integral"
+          },
+          {
+            "closed": "right",
+            "left": 0.0,
+            "right": 1.0,
+            "type": "RealNotInt"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "2",
+      "description": "The minimum number of samples required to split an internal node:\n\n- If int, then consider `min_samples_split` as the minimum number.\n- If float, then `min_samples_split` is a fraction and\n  `ceil(min_samples_split * n_samples)` are the minimum\n  number of samples for each split.\n\n.. versionchanged:: 0.18\n   Added float values for fractions.",
+      "effective_default": null,
+      "name": "min_samples_split",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or float, default=2"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          },
+          {
+            "closed": "neither",
+            "left": 0.0,
+            "right": 1.0,
+            "type": "RealNotInt"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "1",
+      "description": "The minimum number of samples required to be at a leaf node.\nA split point at any depth will only be considered if it leaves at\nleast ``min_samples_leaf`` training samples in each of the left and\nright branches.  This may have the effect of smoothing the model,\nespecially in regression.\n\n- If int, then consider `min_samples_leaf` as the minimum number.\n- If float, then `min_samples_leaf` is a fraction and\n  `ceil(min_samples_leaf * n_samples)` are the minimum\n  number of samples for each node.\n\n.. versionchanged:: 0.18\n   Added float values for fractions.",
+      "effective_default": null,
+      "name": "min_samples_leaf",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or float, default=1"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "both",
+            "left": 0.0,
+            "right": 0.5,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.0",
+      "description": "The minimum weighted fraction of the sum total of weights (of all\nthe input samples) required to be at a leaf node. Samples have\nequal weight when sample_weight is not provided.",
+      "effective_default": null,
+      "name": "min_weight_fraction_leaf",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0.0"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          },
+          {
+            "closed": "right",
+            "left": 0.0,
+            "right": 1.0,
+            "type": "RealNotInt"
+          }
+        ],
+        "options": [
+          "log2",
+          "sqrt"
+        ],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "1.0",
+      "description": "The number of features to consider when looking for the best split:\n\n- If int, then consider `max_features` features at each split.\n- If float, then `max_features` is a fraction and\n  `max(1, int(max_features * n_features_in_))` features are considered at each\n  split.\n- If \"sqrt\", then `max_features=sqrt(n_features)`.\n- If \"log2\", then `max_features=log2(n_features)`.\n- If None or 1.0, then `max_features=n_features`.\n\n.. note::\n    The default of 1.0 is equivalent to bagged trees and more\n    randomness can be achieved by setting smaller values, e.g. 0.3.\n\n.. versionchanged:: 1.1\n    The default of `max_features` changed from `\"auto\"` to 1.0.\n\nNote: the search for a split does not stop until at least one\nvalid partition of the node samples is found, even if it requires to\neffectively inspect more than ``max_features`` features.",
+      "effective_default": null,
+      "name": "max_features",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{\"sqrt\", \"log2\", None}, int or float, default=1.0"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 2,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Grow trees with ``max_leaf_nodes`` in best-first fashion.\nBest nodes are defined as relative reduction in impurity.\nIf None then unlimited number of leaf nodes.",
+      "effective_default": null,
+      "name": "max_leaf_nodes",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0.0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.0",
+      "description": "A node will be split if this split induces a decrease of the impurity\ngreater than or equal to this value.\n\nThe weighted impurity decrease equation is the following::\n\n    N_t / N * (impurity - N_t_R / N_t * right_impurity\n                        - N_t_L / N_t * left_impurity)\n\nwhere ``N`` is the total number of samples, ``N_t`` is the number of\nsamples at the current node, ``N_t_L`` is the number of samples in the\nleft child, and ``N_t_R`` is the number of samples in the right child.\n\n``N``, ``N_t``, ``N_t_R`` and ``N_t_L`` all refer to the weighted sum,\nif ``sample_weight`` is passed.\n\n.. versionadded:: 0.19",
+      "effective_default": null,
+      "name": "min_impurity_decrease",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0.0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "Whether bootstrap samples are used when building trees. If False, the\nwhole dataset is used to build each tree.",
+      "effective_default": null,
+      "name": "bootstrap",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean",
+          "<built-in function callable>"
+        ]
+      },
+      "default": "False",
+      "description": "Whether to use out-of-bag samples to estimate the generalization score.\nBy default, :func:`~sklearn.metrics.r2_score` is used.\nProvide a callable with signature `metric(y_true, y_pred)` to use a\ncustom metric. Only available if `bootstrap=True`.\n\nFor an illustration of out-of-bag (OOB) error estimation, see the example\n:ref:`sphx_glr_auto_examples_ensemble_plot_ensemble_oob.py`.",
+      "effective_default": null,
+      "name": "oob_score",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool or callable, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "Integral",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "The number of jobs to run in parallel. :meth:`fit`, :meth:`predict`,\n:meth:`decision_path` and :meth:`apply` are all parallelized over the\ntrees. ``None`` means 1 unless in a :obj:`joblib.parallel_backend`\ncontext. ``-1`` means using all processors. See :term:`Glossary\n<n_jobs>` for more details.",
+      "effective_default": null,
+      "name": "n_jobs",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "random_state"
+        ]
+      },
+      "default": "None",
+      "description": "Controls 3 sources of randomness:\n\n- the bootstrapping of the samples used when building trees\n  (if ``bootstrap=True``)\n- the sampling of the features to consider when looking for the best\n  split at each node (if ``max_features < n_features``)\n- the draw of the splits for each of the `max_features`\n\nSee :term:`Glossary <random_state>` for details.",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, RandomState instance or None, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "verbose"
+        ]
+      },
+      "default": "0",
+      "description": "Controls the verbosity when fitting and predicting.",
+      "effective_default": null,
+      "name": "verbose",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "When set to ``True``, reuse the solution of the previous call to fit\nand add more estimators to the ensemble, otherwise, just fit a whole\nnew forest. See :term:`Glossary <warm_start>` and\n:ref:`tree_ensemble_warm_start` for details.",
+      "effective_default": null,
+      "name": "warm_start",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0.0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.0",
+      "description": "Complexity parameter used for Minimal Cost-Complexity Pruning. The\nsubtree with the largest cost complexity that is smaller than\n``ccp_alpha`` will be chosen. By default, no pruning is performed. See\n:ref:`minimal_cost_complexity_pruning` for details. See\n:ref:`sphx_glr_auto_examples_tree_plot_cost_complexity_pruning.py`\nfor an example of such pruning.\n\n.. versionadded:: 0.22",
+      "effective_default": null,
+      "name": "ccp_alpha",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "non-negative float, default=0.0"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "neither",
+            "left": 0.0,
+            "right": null,
+            "type": "RealNotInt"
+          },
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "If bootstrap is True, the number of samples to draw from X\nto train each base estimator.\n\n- If None (default), then draw `X.shape[0]` samples irrespective of\n  `sample_weight`.\n- If int, then draw `max_samples` samples.\n- If float, then draw `max_samples * X.shape[0]` unweighted samples\n  or `max_samples * sample_weight.sum()` weighted samples.\n\n.. versionadded:: 0.22\n\n.. versionchanged:: 1.9\n    Float `max_samples` is relative to `sample_weight.sum()` instead of\n    `X.shape[0]` for weighted samples.",
+      "effective_default": null,
+      "name": "max_samples",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or float, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "array-like",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Indicates the monotonicity constraint to enforce on each feature.\n  - 1: monotonically increasing\n  - 0: no constraint\n  - -1: monotonically decreasing\n\nIf monotonic_cst is None, no constraints are applied.\n\nMonotonicity constraints are not supported for:\n  - multioutput regressions (i.e. when `n_outputs_ > 1`).\n\nRead more in the :ref:`User Guide <monotonic_cst_gbdt>`.\n\n.. versionadded:: 1.4",
+      "effective_default": null,
+      "name": "monotonic_cst",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of int of shape (n_features,), default=None"
+    }
+  ],
+  "returns": [],
+  "signature": "ExtraTreesRegressor(n_estimators=100, *, criterion='squared_error', max_depth=None, min_samples_split=2, min_samples_leaf=1, min_weight_fraction_leaf=0.0, max_features=1.0, max_leaf_nodes=None, min_impurity_decrease=0.0, bootstrap=False, oob_score=False, n_jobs=None, random_state=None, verbose=0, warm_start=False, ccp_alpha=0.0, max_samples=None, monotonic_cst=None)",
+  "summary": "An extra-trees regressor.",
+  "warnings": []
+}

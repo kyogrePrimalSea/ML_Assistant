@@ -1,0 +1,218 @@
+{
+  "attributes": [
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X` has feature\nnames that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.FunctionTransformer.html",
+  "extractor_version": "1",
+  "id": "sklearn.preprocessing.FunctionTransformer",
+  "import_path": "sklearn.preprocessing.FunctionTransformer",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y=None)",
+      "summary": "Fit transformer by checking X."
+    },
+    {
+      "name": "fit_transform",
+      "signature": "fit_transform(X, y=None, **fit_params)",
+      "summary": "Fit to data, then transform it."
+    },
+    {
+      "name": "get_feature_names_out",
+      "signature": "get_feature_names_out(input_features=None)",
+      "summary": "Get output feature names for transformation."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "inverse_transform",
+      "signature": "inverse_transform(X)",
+      "summary": "Transform X using the inverse function."
+    },
+    {
+      "name": "set_output",
+      "signature": "set_output(*, transform=None)",
+      "summary": "Set output container."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(X)",
+      "summary": "Transform X using the forward function."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "<built-in function callable>",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "The callable to use for the transformation. This will be passed\nthe same arguments as transform, with args and kwargs forwarded.\nIf func is None, then func will be the identity function.",
+      "effective_default": null,
+      "name": "func",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "callable, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "<built-in function callable>",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "The callable to use for the inverse transformation. This will be\npassed the same arguments as inverse transform, with args and\nkwargs forwarded. If inverse_func is None, then inverse_func\nwill be the identity function.",
+      "effective_default": null,
+      "name": "inverse_func",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "callable, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "Indicate that the input X array should be checked before calling\n``func``. The possibilities are:\n\n- If False, there is no input validation.\n- If True, then X will be converted to a 2-dimensional NumPy array or\n  sparse matrix. If the conversion is not possible an exception is\n  raised.\n\n.. versionchanged:: 0.22\n   The default of ``validate`` changed from True to False.",
+      "effective_default": null,
+      "name": "validate",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "Indicate that func accepts a sparse matrix as input. If validate is\nFalse, this has no effect. Otherwise, if accept_sparse is false,\nsparse matrix inputs will cause an exception to be raised.",
+      "effective_default": null,
+      "name": "accept_sparse",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "Whether to check that or ``func`` followed by ``inverse_func`` leads to\nthe original inputs. It can be used for a sanity check, raising a\nwarning when the condition is not fulfilled.\n\n.. versionadded:: 0.20",
+      "effective_default": null,
+      "name": "check_inverse",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "one-to-one"
+        ],
+        "source": "constraints",
+        "types": [
+          "<built-in function callable>",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Determines the list of feature names that will be returned by the\n`get_feature_names_out` method. If it is 'one-to-one', then the output\nfeature names will be equal to the input feature names. If it is a\ncallable, then it must take two positional arguments: this\n`FunctionTransformer` (`self`) and an array-like of input feature names\n(`input_features`). It must return an array-like of output feature\nnames. The `get_feature_names_out` method is only defined if\n`feature_names_out` is not None.\n\nSee ``get_feature_names_out`` for more details.\n\n.. versionadded:: 1.1",
+      "effective_default": null,
+      "name": "feature_names_out",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "callable, 'one-to-one' or None, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "dict",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Dictionary of additional keyword arguments to pass to func.\n\n.. versionadded:: 0.18",
+      "effective_default": null,
+      "name": "kw_args",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "dict, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "dict",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Dictionary of additional keyword arguments to pass to inverse_func.\n\n.. versionadded:: 0.18",
+      "effective_default": null,
+      "name": "inv_kw_args",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "dict, default=None"
+    }
+  ],
+  "returns": [],
+  "signature": "FunctionTransformer(func=None, inverse_func=None, *, validate=False, accept_sparse=False, check_inverse=True, feature_names_out=None, kw_args=None, inv_kw_args=None)",
+  "summary": "Constructs a transformer from an arbitrary callable.",
+  "warnings": []
+}

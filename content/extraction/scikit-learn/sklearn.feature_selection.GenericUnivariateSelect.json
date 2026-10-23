@@ -1,0 +1,160 @@
+{
+  "attributes": [
+    {
+      "description": "Scores of features.",
+      "name": "scores_",
+      "type_doc": "array-like of shape (n_features,)"
+    },
+    {
+      "description": "p-values of feature scores, None if `score_func` returned scores only.",
+      "name": "pvalues_",
+      "type_doc": "array-like of shape (n_features,)"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.GenericUnivariateSelect.html",
+  "extractor_version": "1",
+  "id": "sklearn.feature_selection.GenericUnivariateSelect",
+  "import_path": "sklearn.feature_selection.GenericUnivariateSelect",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y=None)",
+      "summary": "Run score function on (X, y) and get the appropriate features."
+    },
+    {
+      "name": "fit_transform",
+      "signature": "fit_transform(X, y=None, **fit_params)",
+      "summary": "Fit to data, then transform it."
+    },
+    {
+      "name": "get_feature_names_out",
+      "signature": "get_feature_names_out(input_features=None)",
+      "summary": "Mask feature names according to selected features."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "get_support",
+      "signature": "get_support(indices=False)",
+      "summary": "Get a mask, or integer index, of the features selected."
+    },
+    {
+      "name": "inverse_transform",
+      "signature": "inverse_transform(X)",
+      "summary": "Reverse the transformation operation."
+    },
+    {
+      "name": "set_output",
+      "signature": "set_output(*, transform=None)",
+      "summary": "Set output container."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(X)",
+      "summary": "Reduce X to the selected features."
+    }
+  ],
+  "overrides_applied": [
+    {
+      "path": "parameters[name=score_func].default",
+      "reason": "Signature default for score_func is the function f_classif; the introspected repr embeds a memory address (<function f_classif at 0x...>) which is not reproducible. The docs page shows the default as <function f_classif>.",
+      "source_url": "https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.GenericUnivariateSelect.html"
+    }
+  ],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "<built-in function callable>"
+        ]
+      },
+      "default": "<function f_classif>",
+      "description": "Function taking two arrays X and y, and returning a pair of arrays\n(scores, pvalues). For modes 'percentile' or 'kbest' it can return\na single array scores.",
+      "effective_default": null,
+      "name": "score_func",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "callable, default=f_classif"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "fdr",
+          "fpr",
+          "fwe",
+          "k_best",
+          "percentile"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'percentile'",
+      "description": "Feature selection mode. Note that the `'percentile'` and `'kbest'`\nmodes are supporting unsupervised feature selection (when `y` is `None`).",
+      "effective_default": null,
+      "name": "mode",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'percentile', 'k_best', 'fpr', 'fdr', 'fwe'}, default='percentile'"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [
+          "all"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "1e-05",
+      "description": "Parameter of the corresponding mode.",
+      "effective_default": null,
+      "name": "param",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "\"all\", float or int, default=1e-5"
+    }
+  ],
+  "returns": [],
+  "signature": "GenericUnivariateSelect(score_func=<function f_classif at 0x7fa25d921590>, *, mode='percentile', param=1e-05)",
+  "summary": "Univariate feature selector with configurable strategy.",
+  "warnings": [
+    "parameter score_func: default repr contains a memory address"
+  ]
+}

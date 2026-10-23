@@ -1,0 +1,240 @@
+{
+  "attributes": [
+    {
+      "description": "List of BSplines objects, one for each feature.",
+      "name": "bsplines_",
+      "type_doc": "list of shape (n_features,)"
+    },
+    {
+      "description": "The total number of input features.",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    },
+    {
+      "description": "The total number of output features, which is computed as\n`n_features * n_splines`, where `n_splines` is\nthe number of bases elements of the B-splines,\n`n_knots + degree - 1` for non-periodic splines and\n`n_knots - 1` for periodic ones.\nIf `include_bias=False`, then it is only\n`n_features * (n_splines - 1)`.",
+      "name": "n_features_out_",
+      "type_doc": "int"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.SplineTransformer.html",
+  "extractor_version": "1",
+  "id": "sklearn.preprocessing.SplineTransformer",
+  "import_path": "sklearn.preprocessing.SplineTransformer",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y=None, sample_weight=None)",
+      "summary": "Compute knot positions of splines."
+    },
+    {
+      "name": "fit_transform",
+      "signature": "fit_transform(X, y=None, **fit_params)",
+      "summary": "Fit to data, then transform it."
+    },
+    {
+      "name": "get_feature_names_out",
+      "signature": "get_feature_names_out(input_features=None)",
+      "summary": "Get output feature names for transformation."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "set_fit_request",
+      "signature": "set_fit_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.preprocessing._polynomial.SplineTransformer",
+      "summary": "Configure whether metadata should be requested to be passed to the ``fit`` method."
+    },
+    {
+      "name": "set_output",
+      "signature": "set_output(*, transform=None)",
+      "summary": "Set output container."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(X)",
+      "summary": "Transform each feature data to B-splines."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 2,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "5",
+      "description": "Number of knots of the splines if `knots` equals one of\n{'uniform', 'quantile'}. Must be larger or equal 2. Ignored if `knots`\nis array-like.",
+      "effective_default": null,
+      "name": "n_knots",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int, default=5"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "3",
+      "description": "The polynomial degree of the spline basis. Must be a non-negative\ninteger.",
+      "effective_default": null,
+      "name": "degree",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int, default=3"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "quantile",
+          "uniform"
+        ],
+        "source": "constraints",
+        "types": [
+          "array-like"
+        ]
+      },
+      "default": "'uniform'",
+      "description": "Set knot positions such that first knot <= features <= last knot.\n\n- If 'uniform', `n_knots` number of knots are distributed uniformly\n  from min to max values of the features.\n- If 'quantile', they are distributed uniformly along the quantiles of\n  the features.\n- If an array-like is given, it directly specifies the sorted knot\n  positions including the boundary knots. Note that, internally,\n  `degree` number of knots are added before the first knot, the same\n  after the last knot.",
+      "effective_default": null,
+      "name": "knots",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'uniform', 'quantile'} or array-like of shape (n_knots, n_features), default='uniform'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "constant",
+          "continue",
+          "error",
+          "linear",
+          "periodic"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'constant'",
+      "description": "If 'error', values outside the min and max values of the training\nfeatures raises a `ValueError`. If 'constant', the value of the\nsplines at minimum and maximum value of the features is used as\nconstant extrapolation. If 'linear', a linear extrapolation is used.\nIf 'continue', the splines are extrapolated as is, i.e. option\n`extrapolate=True` in :class:`scipy.interpolate.BSpline`. If\n'periodic', periodic splines with a periodicity equal to the distance\nbetween the first and last knot are used. Periodic splines enforce\nequal function values and derivatives at the first and last knot.\nFor example, this makes it possible to avoid introducing an arbitrary\njump between Dec 31st and Jan 1st in spline features derived from a\nnaturally periodic \"day-of-year\" input feature. In this case it is\nrecommended to manually set the knot values to control the period.",
+      "effective_default": null,
+      "name": "extrapolation",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'error', 'constant', 'linear', 'continue', 'periodic'}, default='constant'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "If False, then the last spline element inside the data range\nof a feature is dropped. As B-splines sum to one over the spline basis\nfunctions for each data point, they implicitly include a bias term,\ni.e. a column of ones. It acts as an intercept term in a linear models.",
+      "effective_default": null,
+      "name": "include_bias",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "C",
+          "F"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'C'",
+      "description": "Order of output array in the dense case. `'F'` order is faster to compute, but\nmay slow down subsequent estimators.",
+      "effective_default": null,
+      "name": "order",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'C', 'F'}, default='C'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "error",
+          "zeros"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'error'",
+      "description": "Specifies the way missing values are handled.\n\n- 'error' : Raise an error if `np.nan` values are present during :meth:`fit`.\n- 'zeros' : Encode splines of missing values with values `0`.\n\nNote that `handle_missing='zeros'` differs from first imputing missing values\nwith zeros and then creating the spline basis. The latter creates spline basis\nfunctions which have non-zero values at the missing values\nwhereas this option simply sets all spline basis function values to zero at the\nmissing values.\n\n.. versionadded:: 1.8",
+      "effective_default": null,
+      "name": "handle_missing",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'error', 'zeros'}, default='error'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "Will return sparse CSR matrix if set True else will return an array.\n\n.. versionadded:: 1.2",
+      "effective_default": null,
+      "name": "sparse_output",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    }
+  ],
+  "returns": [],
+  "signature": "SplineTransformer(n_knots=5, degree=3, *, knots='uniform', extrapolation='constant', include_bias=True, order='C', handle_missing='error', sparse_output=False)",
+  "summary": "Generate univariate B-spline bases for features.",
+  "warnings": []
+}

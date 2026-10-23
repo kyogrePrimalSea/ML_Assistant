@@ -1,0 +1,108 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.normalize.html",
+  "extractor_version": "1",
+  "id": "sklearn.preprocessing.normalize",
+  "import_path": "sklearn.preprocessing.normalize",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The data to normalize, element by element.\nscipy.sparse matrices should be in CSR format to avoid an\nun-necessary copy.",
+      "effective_default": null,
+      "name": "X",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "{array-like, sparse matrix} of shape (n_samples, n_features)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "l1",
+          "l2",
+          "max"
+        ],
+        "source": "docstring",
+        "types": []
+      },
+      "default": "'l2'",
+      "description": "The norm to use to normalize each non zero sample (or each non-zero\nfeature if axis is 0).",
+      "effective_default": null,
+      "name": "norm",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "{'l1', 'l2', 'max'}, default='l2'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "1",
+      "description": "Define axis used to normalize the data along. If 1, independently\nnormalize each sample, otherwise (if 0) normalize each feature.",
+      "effective_default": null,
+      "name": "axis",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{0, 1}, default=1"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "If False, try to avoid a copy and normalize in place.\nThis is not guaranteed to always work in place; e.g. if the data is\na numpy array with an int dtype, a copy will be returned even with\ncopy=False.",
+      "effective_default": null,
+      "name": "copy",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "Whether to return the computed norms.",
+      "effective_default": null,
+      "name": "return_norm",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    }
+  ],
+  "returns": [
+    {
+      "description": "Normalized input X.",
+      "name": "X",
+      "type_doc": "{ndarray, sparse matrix} of shape (n_samples, n_features)"
+    },
+    {
+      "description": "An array of norms along given axis for X.\nWhen X is sparse, a NotImplementedError will be raised\nfor norm 'l1' or 'l2'.",
+      "name": "norms",
+      "type_doc": "ndarray of shape (n_samples, ) if axis=1 else (n_features, )"
+    }
+  ],
+  "signature": "normalize(X, norm='l2', *, axis=1, copy=True, return_norm=False)",
+  "summary": "Scale input vectors individually to unit norm (vector length).",
+  "warnings": []
+}

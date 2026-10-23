@@ -1,0 +1,274 @@
+{
+  "attributes": [
+    {
+      "description": "The categories of each feature determined during fitting\n(in order of the features in X and corresponding with the output\nof ``transform``). This includes the category specified in ``drop``\n(if any).",
+      "name": "categories_",
+      "type_doc": "list of arrays"
+    },
+    {
+      "description": "- ``drop_idx_[i]`` is the index in ``categories_[i]`` of the category\n  to be dropped for each feature.\n- ``drop_idx_[i] = None`` if no category is to be dropped from the\n  feature with index ``i``, e.g. when `drop='if_binary'` and the\n  feature isn't binary.\n- ``drop_idx_ = None`` if all the transformed features will be\n  retained.\n\nIf infrequent categories are enabled by setting `min_frequency` or\n`max_categories` to a non-default value and `drop_idx[i]` corresponds\nto an infrequent category, then the entire infrequent category is\ndropped.\n\n.. versionchanged:: 0.23\n   Added the possibility to contain `None` values.",
+      "name": "drop_idx_",
+      "type_doc": "array of shape (n_features,)"
+    },
+    {
+      "description": "Defined only if infrequent categories are enabled by setting\n`min_frequency` or `max_categories` to a non-default value.\n`infrequent_categories_[i]` are the infrequent categories for feature\n`i`. If the feature `i` has no infrequent categories\n`infrequent_categories_[i]` is None.\n\n.. versionadded:: 1.1",
+      "name": "infrequent_categories_",
+      "type_doc": "list of ndarray"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 1.0",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    },
+    {
+      "description": "Callable with signature `def callable(input_feature, category)` that returns a\nstring. This is used to create feature names to be returned by\n:meth:`get_feature_names_out`.\n\n.. versionadded:: 1.3",
+      "name": "feature_name_combiner",
+      "type_doc": "callable or None"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OneHotEncoder.html",
+  "extractor_version": "1",
+  "id": "sklearn.preprocessing.OneHotEncoder",
+  "import_path": "sklearn.preprocessing.OneHotEncoder",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y=None)",
+      "summary": "Fit OneHotEncoder to X."
+    },
+    {
+      "name": "fit_transform",
+      "signature": "fit_transform(X, y=None, **fit_params)",
+      "summary": "Fit to data, then transform it."
+    },
+    {
+      "name": "get_feature_names_out",
+      "signature": "get_feature_names_out(input_features=None)",
+      "summary": "Get output feature names for transformation."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "inverse_transform",
+      "signature": "inverse_transform(X)",
+      "summary": "Convert the data back to the original representation."
+    },
+    {
+      "name": "set_output",
+      "signature": "set_output(*, transform=None)",
+      "summary": "Set output container."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(X)",
+      "summary": "Transform X using one-hot encoding."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "auto"
+        ],
+        "source": "constraints",
+        "types": [
+          "list"
+        ]
+      },
+      "default": "'auto'",
+      "description": "Categories (unique values) per feature:\n\n- 'auto' : Determine categories automatically from the training data.\n- list : ``categories[i]`` holds the categories expected in the ith\n  column. The passed categories should not mix strings and numeric\n  values within a single feature, and should be sorted in case of\n  numeric values.\n\nThe used categories can be found in the ``categories_`` attribute.\n\n.. versionadded:: 0.20",
+      "effective_default": null,
+      "name": "categories",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "'auto' or a list of array-like, default='auto'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "first",
+          "if_binary"
+        ],
+        "source": "constraints",
+        "types": [
+          "array-like",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Specifies a methodology to use to drop one of the categories per\nfeature. This is useful in situations where perfectly collinear\nfeatures cause problems, such as when feeding the resulting data\ninto an unregularized linear regression model.\n\nHowever, dropping one category breaks the symmetry of the original\nrepresentation and can therefore induce a bias in downstream models,\nfor instance for penalized linear classification or regression models.\n\n- None : retain all features (the default).\n- 'first' : drop the first category in each feature. If only one\n  category is present, the feature will be dropped entirely.\n- 'if_binary' : drop the first category in each feature with two\n  categories. Features with 1 or more than 2 categories are\n  left intact.\n- array : ``drop[i]`` is the category in feature ``X[:, i]`` that\n  should be dropped.\n\nWhen `max_categories` or `min_frequency` is configured to group\ninfrequent categories, the dropping behavior is handled after the\ngrouping.\n\n.. versionadded:: 0.21\n   The parameter `drop` was added in 0.21.\n\n.. versionchanged:: 0.23\n   The option `drop='if_binary'` was added in 0.23.\n\n.. versionchanged:: 1.1\n    Support for dropping infrequent categories.",
+      "effective_default": null,
+      "name": "drop",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'first', 'if_binary'} or an array-like of shape (n_features,), default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "When ``True``, it returns a SciPy sparse matrix/array\nin \"Compressed Sparse Row\" (CSR) format.\n\n.. versionadded:: 1.2\n   `sparse` was renamed to `sparse_output`",
+      "effective_default": null,
+      "name": "sparse_output",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "n",
+          "o",
+          "_",
+          "v",
+          "a",
+          "l",
+          "i",
+          "d",
+          "a",
+          "t",
+          "i",
+          "o",
+          "n"
+        ]
+      },
+      "default": "<class 'numpy.float64'>",
+      "description": "Desired dtype of output.",
+      "effective_default": null,
+      "name": "dtype",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "number type, default=np.float64"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "error",
+          "ignore",
+          "infrequent_if_exist",
+          "warn"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'error'",
+      "description": "Specifies the way unknown categories are handled during :meth:`transform`.\n\n- 'error' : Raise an error if an unknown category is present during transform.\n- 'ignore' : When an unknown category is encountered during\n  transform, the resulting one-hot encoded columns for this feature\n  will be all zeros. In the inverse transform, an unknown category\n  will be denoted as None.\n- 'infrequent_if_exist' : When an unknown category is encountered\n  during transform, the resulting one-hot encoded columns for this\n  feature will map to the infrequent category if it exists. The\n  infrequent category will be mapped to the last position in the\n  encoding. During inverse transform, an unknown category will be\n  mapped to the category denoted `'infrequent'` if it exists. If the\n  `'infrequent'` category does not exist, then :meth:`transform` and\n  :meth:`inverse_transform` will handle an unknown category as with\n  `handle_unknown='ignore'`. Infrequent categories exist based on\n  `min_frequency` and `max_categories`. Read more in the\n  :ref:`User Guide <encoder_infrequent_categories>`.\n- 'warn' : When an unknown category is encountered during transform\n  a warning is issued, and the encoding then proceeds as described for\n  `handle_unknown=\"infrequent_if_exist\"`.\n\n.. versionchanged:: 1.1\n    `'infrequent_if_exist'` was added to automatically handle unknown\n    categories and infrequent categories.\n\n.. versionadded:: 1.6\n   The option `\"warn\"` was added in 1.6.",
+      "effective_default": null,
+      "name": "handle_unknown",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'error', 'ignore', 'infrequent_if_exist', 'warn'}, default='error'"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          },
+          {
+            "closed": "neither",
+            "left": 0,
+            "right": 1,
+            "type": "RealNotInt"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Specifies the minimum frequency below which a category will be\nconsidered infrequent.\n\n- If `int`, categories with a smaller cardinality will be considered\n  infrequent.\n\n- If `float`, categories with a smaller cardinality than\n  `min_frequency * n_samples`  will be considered infrequent.\n\n.. versionadded:: 1.1\n    Read more in the :ref:`User Guide <encoder_infrequent_categories>`.",
+      "effective_default": null,
+      "name": "min_frequency",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or float, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Specifies an upper limit to the number of output features for each input\nfeature when considering infrequent categories. If there are infrequent\ncategories, `max_categories` includes the category representing the\ninfrequent categories along with the frequent categories. If `None`,\nthere is no limit to the number of output features.\n\n.. versionadded:: 1.1\n    Read more in the :ref:`User Guide <encoder_infrequent_categories>`.",
+      "effective_default": null,
+      "name": "max_categories",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "concat"
+        ],
+        "source": "constraints",
+        "types": [
+          "<built-in function callable>"
+        ]
+      },
+      "default": "'concat'",
+      "description": "Callable with signature `def callable(input_feature, category)` that returns a\nstring. This is used to create feature names to be returned by\n:meth:`get_feature_names_out`.\n\n`\"concat\"` concatenates encoded feature name and category with\n`feature + \"_\" + str(category)`.E.g. feature X with values 1, 6, 7 create\nfeature names `X_1, X_6, X_7`.\n\n.. versionadded:: 1.3",
+      "effective_default": null,
+      "name": "feature_name_combiner",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "\"concat\" or callable, default=\"concat\""
+    }
+  ],
+  "returns": [],
+  "signature": "OneHotEncoder(*, categories='auto', drop=None, sparse_output=True, dtype=<class 'numpy.float64'>, handle_unknown='error', min_frequency=None, max_categories=None, feature_name_combiner='concat')",
+  "summary": "Encode categorical features as a one-hot numeric array.",
+  "warnings": []
+}

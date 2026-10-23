@@ -1,0 +1,107 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.calibration.calibration_curve.html",
+  "extractor_version": "1",
+  "id": "sklearn.calibration.calibration_curve",
+  "import_path": "sklearn.calibration.calibration_curve",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "True targets.",
+      "effective_default": null,
+      "name": "y_true",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n_samples,)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Probabilities of the positive class.",
+      "effective_default": null,
+      "name": "y_prob",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n_samples,)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The label of the positive class.\n\n.. versionadded:: 1.1",
+      "effective_default": null,
+      "name": "pos_label",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, float, bool or str, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "5",
+      "description": "Number of bins to discretize the [0, 1] interval. A bigger number\nrequires more data. Bins with no samples (i.e. without\ncorresponding values in `y_prob`) will not be returned, thus the\nreturned arrays may have less than `n_bins` values.",
+      "effective_default": null,
+      "name": "n_bins",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=5"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "uniform",
+          "quantile"
+        ],
+        "source": "docstring",
+        "types": []
+      },
+      "default": "'uniform'",
+      "description": "Strategy used to define the widths of the bins.\n\nuniform\n    The bins have identical widths.\nquantile\n    The bins have the same number of samples and depend on `y_prob`.",
+      "effective_default": null,
+      "name": "strategy",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'uniform', 'quantile'}, default='uniform'"
+    }
+  ],
+  "returns": [
+    {
+      "description": "The proportion of samples whose class is the positive class, in each\nbin (fraction of positives).",
+      "name": "prob_true",
+      "type_doc": "ndarray of shape (n_bins,) or smaller"
+    },
+    {
+      "description": "The mean predicted probability in each bin.",
+      "name": "prob_pred",
+      "type_doc": "ndarray of shape (n_bins,) or smaller"
+    }
+  ],
+  "signature": "calibration_curve(y_true, y_prob, *, pos_label=None, n_bins=5, strategy='uniform')",
+  "summary": "Compute true and predicted probabilities for a calibration curve.",
+  "warnings": []
+}

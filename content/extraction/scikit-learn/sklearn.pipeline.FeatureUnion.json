@@ -1,0 +1,150 @@
+{
+  "attributes": [
+    {
+      "description": "Dictionary-like object, with the following attributes.\nRead-only attribute to access any transformer parameter by user\ngiven name. Keys are transformer names and values are\ntransformer parameters.\n\n.. versionadded:: 1.2",
+      "name": "named_transformers",
+      "type_doc": ":class:`~sklearn.utils.Bunch`"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`. Only defined if the\nunderlying first transformer in `transformer_list` exposes such an\nattribute when fit.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when\n`X` has feature names that are all strings.\n\n.. versionadded:: 1.3",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.FeatureUnion.html",
+  "extractor_version": "1",
+  "id": "sklearn.pipeline.FeatureUnion",
+  "import_path": "sklearn.pipeline.FeatureUnion",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y=None, **fit_params)",
+      "summary": "Fit all transformers using X."
+    },
+    {
+      "name": "fit_transform",
+      "signature": "fit_transform(X, y=None, **params)",
+      "summary": "Fit all transformers, transform the data and concatenate results."
+    },
+    {
+      "name": "get_feature_names_out",
+      "signature": "get_feature_names_out(input_features=None)",
+      "summary": "Get output feature names for transformation."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "set_output",
+      "signature": "set_output(*, transform=None)",
+      "summary": "Set the output container when `\"transform\"` and `\"fit_transform\"` are called."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**kwargs)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(X, **params)",
+      "summary": "Transform X separately by each transformer, concatenate results."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "List of transformer objects to be applied to the data. The first\nhalf of each tuple is the name of the transformer. The transformer can\nbe 'drop' for it to be ignored or can be 'passthrough' for features to\nbe passed unchanged.\n\n.. versionadded:: 1.1\n   Added the option `\"passthrough\"`.\n\n.. versionchanged:: 0.22\n   Deprecated `None` as a transformer in favor of 'drop'.",
+      "effective_default": null,
+      "name": "transformer_list",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "list of (str, transformer) tuples"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Number of jobs to run in parallel.\n``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.\n``-1`` means using all processors. See :term:`Glossary <n_jobs>`\nfor more details.\n\n.. versionchanged:: v0.20\n   `n_jobs` default changed from 1 to None",
+      "effective_default": null,
+      "name": "n_jobs",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Multiplicative weights for features per transformer.\nKeys are transformer names, values the weights.\nRaises ValueError if key not present in ``transformer_list``.",
+      "effective_default": null,
+      "name": "transformer_weights",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "dict, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "If True, the time elapsed while fitting each transformer will be\nprinted as it is completed.",
+      "effective_default": null,
+      "name": "verbose",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "If True, :meth:`get_feature_names_out` will prefix all feature names\nwith the name of the transformer that generated that feature.\nIf False, :meth:`get_feature_names_out` will not prefix any feature\nnames and will error if feature names are not unique.\n\n.. versionadded:: 1.5",
+      "effective_default": null,
+      "name": "verbose_feature_names_out",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    }
+  ],
+  "returns": [],
+  "signature": "FeatureUnion(transformer_list, *, n_jobs=None, transformer_weights=None, verbose=False, verbose_feature_names_out=True)",
+  "summary": "Concatenates results of multiple transformer objects.",
+  "warnings": []
+}

@@ -1,0 +1,526 @@
+{
+  "attributes": [
+    {
+      "description": "The amount of resources used at each iteration.",
+      "name": "n_resources_",
+      "type_doc": "list of int"
+    },
+    {
+      "description": "The number of candidate parameters that were evaluated at each\niteration.",
+      "name": "n_candidates_",
+      "type_doc": "list of int"
+    },
+    {
+      "description": "The number of candidate parameters that are left after the last\niteration. It corresponds to `ceil(n_candidates[-1] / factor)`",
+      "name": "n_remaining_candidates_",
+      "type_doc": "int"
+    },
+    {
+      "description": "The maximum number of resources that any candidate is allowed to use\nfor a given iteration. Note that since the number of resources used\nat each iteration must be a multiple of ``min_resources_``, the\nactual number of resources used at the last iteration may be smaller\nthan ``max_resources_``.",
+      "name": "max_resources_",
+      "type_doc": "int"
+    },
+    {
+      "description": "The amount of resources that are allocated for each candidate at the\nfirst iteration.",
+      "name": "min_resources_",
+      "type_doc": "int"
+    },
+    {
+      "description": "The actual number of iterations that were run. This is equal to\n``n_required_iterations_`` if ``aggressive_elimination`` is ``True``.\nElse, this is equal to ``min(n_possible_iterations_,\nn_required_iterations_)``.",
+      "name": "n_iterations_",
+      "type_doc": "int"
+    },
+    {
+      "description": "The number of iterations that are possible starting with\n``min_resources_`` resources and without exceeding\n``max_resources_``.",
+      "name": "n_possible_iterations_",
+      "type_doc": "int"
+    },
+    {
+      "description": "The number of iterations that are required to end up with less than\n``factor`` candidates at the last iteration, starting with\n``min_resources_`` resources. This will be smaller than\n``n_possible_iterations_`` when there isn't enough resources.",
+      "name": "n_required_iterations_",
+      "type_doc": "int"
+    },
+    {
+      "description": "A dict with keys as column headers and values as columns, that can be\nimported into a pandas ``DataFrame``. It contains lots of information\nfor analysing the results of a search.\nPlease refer to the :ref:`User guide<successive_halving_cv_results>`\nfor details.\nFor an example of analysing ``cv_results_``,\nsee :ref:`sphx_glr_auto_examples_model_selection_plot_grid_search_stats.py`.",
+      "name": "cv_results_",
+      "type_doc": "dict of numpy (masked) ndarrays"
+    },
+    {
+      "description": "Estimator that was chosen by the search, i.e. estimator\nwhich gave highest score (or smallest loss if specified)\non the left out data, in the last halving iteration.\nNot available if ``refit=False``.\n\n.. note::\n    ``best_estimator_`` reflects the winner of the final iteration\n    only. ``cv_results_`` may contain candidates with a higher\n    ``rank_test_score``, but those scores were obtained with fewer\n    resources and are less reliable. To inspect final-iteration results\n    explicitly, filter ``cv_results_`` by\n    ``cv_results_['iter'] == n_iterations_ - 1``.",
+      "name": "best_estimator_",
+      "type_doc": "estimator or dict"
+    },
+    {
+      "description": "Mean cross-validated score of the ``best_estimator_``, computed over\nthe candidates from the last halving iteration only.",
+      "name": "best_score_",
+      "type_doc": "float"
+    },
+    {
+      "description": "Parameter setting that gave the best results on the hold out data in\nthe last halving iteration.",
+      "name": "best_params_",
+      "type_doc": "dict"
+    },
+    {
+      "description": "The index (of the ``cv_results_`` arrays) which corresponds to the best\ncandidate parameter setting.\n\nThe dict at ``search.cv_results_['params'][search.best_index_]`` gives\nthe parameter setting for the best model, that gives the highest\nmean score (``search.best_score_``).",
+      "name": "best_index_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Scorer function used on the held out data to choose the best\nparameters for the model.",
+      "name": "scorer_",
+      "type_doc": "function or a dict"
+    },
+    {
+      "description": "The number of cross-validation splits (folds/iterations).",
+      "name": "n_splits_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Seconds used for refitting the best model on the whole dataset.\n\nThis is present only if ``refit`` is not False.",
+      "name": "refit_time_",
+      "type_doc": "float"
+    },
+    {
+      "description": "Whether or not the scorers compute several metrics.",
+      "name": "multimetric_",
+      "type_doc": "bool"
+    },
+    {
+      "description": "The classes labels. This is present only if ``refit`` is specified and\nthe underlying estimator is a classifier.",
+      "name": "classes_",
+      "type_doc": "ndarray of shape (n_classes,)"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`. Only defined if\n`best_estimator_` is defined (see the documentation for the `refit`\nparameter for more details) and that `best_estimator_` exposes\n`n_features_in_` when fit.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Only defined if\n`best_estimator_` is defined (see the documentation for the `refit`\nparameter for more details) and that `best_estimator_` exposes\n`feature_names_in_` when fit.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.HalvingGridSearchCV.html",
+  "extractor_version": "1",
+  "id": "sklearn.model_selection.HalvingGridSearchCV",
+  "import_path": "sklearn.model_selection.HalvingGridSearchCV",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "decision_function",
+      "signature": "decision_function(X)",
+      "summary": "Call decision_function on the estimator with the best found parameters."
+    },
+    {
+      "name": "fit",
+      "signature": "fit(X, y=None, **params)",
+      "summary": "Run fit with all sets of parameters."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "inverse_transform",
+      "signature": "inverse_transform(X)",
+      "summary": "Call inverse_transform on the estimator with the best found params."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X)",
+      "summary": "Call predict on the estimator with the best found parameters."
+    },
+    {
+      "name": "predict_log_proba",
+      "signature": "predict_log_proba(X)",
+      "summary": "Call predict_log_proba on the estimator with the best found parameters."
+    },
+    {
+      "name": "predict_proba",
+      "signature": "predict_proba(X)",
+      "summary": "Call predict_proba on the estimator with the best found parameters."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y=None, **params)",
+      "summary": "Return the score on the given data, if the estimator has been refit."
+    },
+    {
+      "name": "score_samples",
+      "signature": "score_samples(X)",
+      "summary": "Call score_samples on the estimator with the best found parameters."
+    },
+    {
+      "name": "set_callbacks",
+      "signature": "set_callbacks(*callbacks)",
+      "summary": "Set callbacks for the estimator."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(X)",
+      "summary": "Call transform on the estimator with the best found parameters."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "an object implementing 'fit'"
+        ]
+      },
+      "default": null,
+      "description": "This is assumed to implement the scikit-learn estimator interface.\nEither estimator needs to provide a ``score`` function,\nor ``scoring`` must be passed.",
+      "effective_default": null,
+      "name": "estimator",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "estimator object"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "dict",
+          "list"
+        ]
+      },
+      "default": null,
+      "description": "Dictionary with parameters names (string) as keys and lists of\nparameter settings to try as values, or a list of such\ndictionaries, in which case the grids spanned by each dictionary\nin the list are explored. This enables searching over any sequence\nof parameter settings.",
+      "effective_default": null,
+      "name": "param_grid",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "dict or list of dictionaries"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "neither",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "3",
+      "description": "The 'halving' parameter, which determines the proportion of candidates\nthat are selected for each subsequent iteration. For example,\n``factor=3`` means that only one third of the candidates are selected.",
+      "effective_default": null,
+      "name": "factor",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or float, default=3"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "str"
+        ]
+      },
+      "default": "'n_samples'",
+      "description": "Defines the resource that increases with each iteration. By default,\nthe resource is the number of samples. It can also be set to any\nparameter of the base estimator that accepts positive integer\nvalues, e.g. 'n_iterations' or 'n_estimators' for a gradient\nboosting estimator. In this case ``max_resources`` cannot be 'auto'\nand must be set explicitly.",
+      "effective_default": null,
+      "name": "resource",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "``'n_samples'`` or str, default='n_samples'"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "neither",
+            "left": 0,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [
+          "auto"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'auto'",
+      "description": "The maximum amount of resource that any candidate is allowed to use\nfor a given iteration. By default, this is set to ``n_samples`` when\n``resource='n_samples'`` (default), else an error is raised.",
+      "effective_default": null,
+      "name": "max_resources",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default='auto'"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "neither",
+            "left": 0,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [
+          "exhaust",
+          "smallest"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'exhaust'",
+      "description": "The minimum amount of resource that any candidate is allowed to use\nfor a given iteration. Equivalently, this defines the amount of\nresources `r0` that are allocated for each candidate at the first\niteration.\n\n- 'smallest' is a heuristic that sets `r0` to a small value:\n\n  - ``n_splits * 2`` when ``resource='n_samples'`` for a regression problem\n  - ``n_classes * n_splits * 2`` when ``resource='n_samples'`` for a\n    classification problem\n  - ``1`` when ``resource != 'n_samples'``\n\n- 'exhaust' will set `r0` such that the **last** iteration uses as\n  much resources as possible. Namely, the last iteration will use the\n  highest value smaller than ``max_resources`` that is a multiple of\n  both ``min_resources`` and ``factor``. In general, using 'exhaust'\n  leads to a more accurate estimator, but is slightly more time\n  consuming.\n\nNote that the amount of resources used at each iteration is always a\nmultiple of ``min_resources``.",
+      "effective_default": null,
+      "name": "min_resources",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'exhaust', 'smallest'} or int, default='exhaust'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "This is only relevant in cases where there isn't enough resources to\nreduce the remaining candidates to at most `factor` after the last\niteration. If ``True``, then the search process will 'replay' the\nfirst iteration for as long as needed until the number of candidates\nis small enough. This is ``False`` by default, which means that the\nlast iteration may evaluate more than ``factor`` candidates. See\n:ref:`aggressive_elimination` for more details.",
+      "effective_default": null,
+      "name": "aggressive_elimination",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "cv_object"
+        ]
+      },
+      "default": "5",
+      "description": "Determines the cross-validation splitting strategy.\nPossible inputs for cv are:\n\n- integer, to specify the number of folds in a `(Stratified)KFold`,\n- :term:`CV splitter`,\n- an iterable yielding (train, test) splits as arrays of indices.\n\nFor integer/None inputs, if the estimator is a classifier and ``y`` is\neither binary or multiclass, :class:`StratifiedKFold` is used. In all\nother cases, :class:`KFold` is used. These splitters are instantiated\nwith `shuffle=False` so the splits will be the same across calls.\n\nRefer :ref:`User Guide <cross_validation>` for the various\ncross-validation strategies that can be used here.\n\n.. note::\n    Due to implementation details, the folds produced by `cv` must be\n    the same across multiple calls to `cv.split()`. For\n    built-in `scikit-learn` iterators, this can be achieved by\n    deactivating shuffling (`shuffle=False`), or by setting the\n    `cv`'s `random_state` parameter to an integer.",
+      "effective_default": null,
+      "name": "cv",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, cross-validation generator or iterable, default=5"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "accuracy",
+          "adjusted_mutual_info_score",
+          "adjusted_rand_score",
+          "average_precision",
+          "balanced_accuracy",
+          "completeness_score",
+          "d2_absolute_error_score",
+          "d2_brier_score",
+          "d2_log_loss_score",
+          "explained_variance",
+          "f1",
+          "f1_macro",
+          "f1_micro",
+          "f1_samples",
+          "f1_weighted",
+          "fowlkes_mallows_score",
+          "homogeneity_score",
+          "jaccard",
+          "jaccard_macro",
+          "jaccard_micro",
+          "jaccard_samples",
+          "jaccard_weighted",
+          "matthews_corrcoef",
+          "mutual_info_score",
+          "neg_brier_score",
+          "neg_log_loss",
+          "neg_max_error",
+          "neg_mean_absolute_error",
+          "neg_mean_absolute_percentage_error",
+          "neg_mean_gamma_deviance",
+          "neg_mean_poisson_deviance",
+          "neg_mean_squared_error",
+          "neg_mean_squared_log_error",
+          "neg_median_absolute_error",
+          "neg_negative_likelihood_ratio",
+          "neg_root_mean_squared_error",
+          "neg_root_mean_squared_log_error",
+          "normalized_mutual_info_score",
+          "positive_likelihood_ratio",
+          "precision",
+          "precision_macro",
+          "precision_micro",
+          "precision_samples",
+          "precision_weighted",
+          "r2",
+          "rand_score",
+          "recall",
+          "recall_macro",
+          "recall_micro",
+          "recall_samples",
+          "recall_weighted",
+          "roc_auc",
+          "roc_auc_ovo",
+          "roc_auc_ovo_weighted",
+          "roc_auc_ovr",
+          "roc_auc_ovr_weighted",
+          "top_k_accuracy",
+          "v_measure_score"
+        ],
+        "source": "constraints",
+        "types": [
+          "<built-in function callable>",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Scoring method to use to evaluate the predictions on the test set.\n\n- str: see :ref:`scoring_string_names` for options.\n- callable: a scorer callable object (e.g., function) with signature\n  ``scorer(estimator, X, y)``. See :ref:`scoring_callable` for details.\n- `None`: the `estimator`'s\n  :ref:`default evaluation criterion <scoring_api_overview>` is used.",
+      "effective_default": null,
+      "name": "scoring",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str or callable, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean",
+          "str",
+          "<built-in function callable>"
+        ]
+      },
+      "default": "True",
+      "description": "Refit an estimator using the best found parameters on the whole\ndataset.\n\nWhere there are considerations other than maximum score in\nchoosing a best estimator, ``refit`` can be set to a function which\nreturns the selected ``best_index_`` given ``cv_results_``. In that\ncase, the ``best_estimator_`` and ``best_params_`` will be set\naccording to the returned ``best_index_`` while the ``best_score_``\nattribute will not be available.\n\nThe refitted estimator is made available at the ``best_estimator_``\nattribute and permits using ``predict`` directly on this\n``HalvingGridSearchCV`` instance.\n\nSee :ref:`this example\n<sphx_glr_auto_examples_model_selection_plot_grid_search_refit_callable.py>`\nfor an example of how to use ``refit=callable`` to balance model\ncomplexity and cross-validated score.",
+      "effective_default": null,
+      "name": "refit",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool or callable, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "raise"
+        ],
+        "source": "constraints",
+        "types": [
+          "Real"
+        ]
+      },
+      "default": "nan",
+      "description": "Value to assign to the score if an error occurs in estimator fitting.\nIf set to 'raise', the error is raised. If a numeric value is given,\nFitFailedWarning is raised. This parameter does not affect the refit\nstep, which will always raise the error. Default is ``np.nan``.",
+      "effective_default": null,
+      "name": "error_score",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "'raise' or numeric"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "If ``False``, the ``cv_results_`` attribute will not include training\nscores.\nComputing training scores is used to get insights on how different\nparameter settings impact the overfitting/underfitting trade-off.\nHowever computing the scores on the training set can be computationally\nexpensive and is not strictly required to select the parameters that\nyield the best generalization performance.",
+      "effective_default": null,
+      "name": "return_train_score",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "random_state"
+        ]
+      },
+      "default": "None",
+      "description": "Pseudo random number generator state used for subsampling the dataset\nwhen `resources != 'n_samples'`. Ignored otherwise.\nPass an int for reproducible output across multiple function calls.\nSee :term:`Glossary <random_state>`.",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, RandomState instance or None, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "Integral",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Number of jobs to run in parallel.\n``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.\n``-1`` means using all processors. See :term:`Glossary <n_jobs>`\nfor more details.",
+      "effective_default": null,
+      "name": "n_jobs",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or None, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "verbose"
+        ]
+      },
+      "default": "0",
+      "description": "Controls the verbosity: the higher, the more messages.",
+      "effective_default": null,
+      "name": "verbose",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int"
+    }
+  ],
+  "returns": [],
+  "signature": "HalvingGridSearchCV(estimator, param_grid, *, factor=3, resource='n_samples', max_resources='auto', min_resources='exhaust', aggressive_elimination=False, cv=5, scoring=None, refit=True, error_score=nan, return_train_score=True, random_state=None, n_jobs=None, verbose=0)",
+  "summary": "Search over specified parameter values with successive halving.",
+  "warnings": []
+}

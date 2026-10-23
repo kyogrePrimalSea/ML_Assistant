@@ -1,0 +1,573 @@
+{
+  "attributes": [
+    {
+      "description": "Class labels.",
+      "name": "classes_",
+      "type_doc": "array, shape = (n_classes,)"
+    },
+    {
+      "description": "Indicates whether early stopping is used during training.",
+      "name": "do_early_stopping_",
+      "type_doc": "bool"
+    },
+    {
+      "description": "The number of iterations as selected by early stopping, depending on\nthe `early_stopping` parameter. Otherwise it corresponds to max_iter.",
+      "name": "n_iter_",
+      "type_doc": "int"
+    },
+    {
+      "description": "The number of tree that are built at each iteration. This is equal to 1\nfor binary classification, and to ``n_classes`` for multiclass\nclassification.",
+      "name": "n_trees_per_iteration_",
+      "type_doc": "int"
+    },
+    {
+      "description": "The scores at each iteration on the training data. The first entry\nis the score of the ensemble before the first iteration. Scores are\ncomputed according to the ``scoring`` parameter. If ``scoring`` is\nnot 'loss', scores are computed on a subset of at most 10 000\nsamples. Empty if no early stopping.",
+      "name": "train_score_",
+      "type_doc": "ndarray, shape (n_iter_+1,)"
+    },
+    {
+      "description": "The scores at each iteration on the held-out validation data. The\nfirst entry is the score of the ensemble before the first iteration.\nScores are computed according to the ``scoring`` parameter. Empty if\nno early stopping or if ``validation_fraction`` is None.",
+      "name": "validation_score_",
+      "type_doc": "ndarray, shape (n_iter_+1,)"
+    },
+    {
+      "description": "Boolean mask for the categorical features. ``None`` if there are no\ncategorical features.",
+      "name": "is_categorical_",
+      "type_doc": "ndarray, shape (n_features, ) or None"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.HistGradientBoostingClassifier.html",
+  "extractor_version": "1",
+  "id": "sklearn.ensemble.HistGradientBoostingClassifier",
+  "import_path": "sklearn.ensemble.HistGradientBoostingClassifier",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "decision_function",
+      "signature": "decision_function(X)",
+      "summary": "Compute the decision function of ``X``."
+    },
+    {
+      "name": "fit",
+      "signature": "fit(X, y, sample_weight=None, *, X_val=None, y_val=None, sample_weight_val=None)",
+      "summary": "Fit the gradient boosting model."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X)",
+      "summary": "Predict classes for X."
+    },
+    {
+      "name": "predict_proba",
+      "signature": "predict_proba(X)",
+      "summary": "Predict class probabilities for X."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Return :ref:`accuracy <accuracy_score>` on provided data and labels."
+    },
+    {
+      "name": "set_fit_request",
+      "signature": "set_fit_request(*, X_val: bool | None | str = '$UNCHANGED$', sample_weight: bool | None | str = '$UNCHANGED$', sample_weight_val: bool | None | str = '$UNCHANGED$', y_val: bool | None | str = '$UNCHANGED$') -> sklearn.ensemble._hist_gradient_boosting.gradient_boosting.HistGradientBoostingClassifier",
+      "summary": "Configure whether metadata should be requested to be passed to the ``fit`` method."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.ensemble._hist_gradient_boosting.gradient_boosting.HistGradientBoostingClassifier",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    },
+    {
+      "name": "staged_decision_function",
+      "signature": "staged_decision_function(X)",
+      "summary": "Compute decision function of ``X`` for each iteration."
+    },
+    {
+      "name": "staged_predict",
+      "signature": "staged_predict(X)",
+      "summary": "Predict classes at each iteration."
+    },
+    {
+      "name": "staged_predict_proba",
+      "signature": "staged_predict_proba(X)",
+      "summary": "Predict class probabilities at each iteration."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "log_loss"
+        ],
+        "source": "constraints",
+        "types": [
+          "BaseLoss"
+        ]
+      },
+      "default": "'log_loss'",
+      "description": "The loss function to use in the boosting process.\n\nFor binary classification problems, 'log_loss' is also known as logistic loss,\nbinomial deviance or binary crossentropy. Internally, the model fits one tree\nper boosting iteration and uses the logistic sigmoid function (expit) as\ninverse link function to compute the predicted positive class probability.\n\nFor multiclass classification problems, 'log_loss' is also known as multinomial\ndeviance or categorical crossentropy. Internally, the model fits one tree per\nboosting iteration and per class and uses the softmax function as inverse link\nfunction to compute the predicted probabilities of the classes.",
+      "effective_default": null,
+      "name": "loss",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "{'log_loss'}, default='log_loss'"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "neither",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.1",
+      "description": "The learning rate, also known as *shrinkage*. This is used as a\nmultiplicative factor for the leaves values. Use ``1`` for no\nshrinkage.",
+      "effective_default": null,
+      "name": "learning_rate",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0.1"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "100",
+      "description": "The maximum number of iterations of the boosting process, i.e. the\nmaximum number of trees for binary classification. For multiclass\nclassification, `n_classes` trees per iteration are built.",
+      "effective_default": null,
+      "name": "max_iter",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=100"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 2,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "31",
+      "description": "The maximum number of leaves for each tree. Must be strictly greater\nthan 1. If None, there is no maximum limit.",
+      "effective_default": null,
+      "name": "max_leaf_nodes",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or None, default=31"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "The maximum depth of each tree. The depth of a tree is the number of\nedges to go from the root to the deepest leaf.\nDepth isn't constrained by default.",
+      "effective_default": null,
+      "name": "max_depth",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or None, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "20",
+      "description": "The minimum number of samples per leaf. For small datasets with less\nthan a few hundred samples, it is recommended to lower this value\nsince only very shallow trees would be built.",
+      "effective_default": null,
+      "name": "min_samples_leaf",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=20"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.0",
+      "description": "The L2 regularization parameter penalizing leaves with small hessians.\nUse ``0`` for no regularization (default).",
+      "effective_default": null,
+      "name": "l2_regularization",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "right",
+            "left": 0,
+            "right": 1,
+            "type": "RealNotInt"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "1.0",
+      "description": "Proportion of randomly chosen features in each and every node split.\nThis is a form of regularization, smaller values make the trees weaker\nlearners and might prevent overfitting.\nIf interaction constraints from `interaction_cst` are present, only allowed\nfeatures are taken into account for the subsampling.\n\n.. versionadded:: 1.4",
+      "effective_default": null,
+      "name": "max_features",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=1.0"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "both",
+            "left": 2,
+            "right": 255,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "255",
+      "description": "The maximum number of bins to use for non-missing values. Before\ntraining, each feature of the input array `X` is binned into\ninteger-valued bins, which allows for a much faster training stage.\nFeatures with a small number of unique values may use less than\n``max_bins`` bins. In addition to the ``max_bins`` bins, one more bin\nis always reserved for missing values. Must be no larger than 255.",
+      "effective_default": null,
+      "name": "max_bins",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=255"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "from_dtype"
+        ],
+        "source": "constraints",
+        "types": [
+          "array-like",
+          "None"
+        ]
+      },
+      "default": "'from_dtype'",
+      "description": "Indicates the categorical features.\n\n- None : no feature will be considered categorical.\n- boolean array-like : boolean mask indicating categorical features.\n- integer array-like : integer indices indicating categorical\n  features.\n- str array-like: names of categorical features (assuming the training\n  data has feature names).\n- `\"from_dtype\"`: dataframe columns with dtype \"Categorical\" and \"Enum\" are\n  considered to be categorical features. The input must be a dataframe that\n  is supported by narwhals (or supports it): :func:`narwhals.from_native` must\n  work. This is the case, for instance, for pandas and polars DataFrames.\n\nFor each categorical feature, there must be at most `max_bins` unique\ncategories. Negative values for categorical features encoded as numeric\ndtypes are treated as missing values. All categorical values are\nconverted to floating point numbers. This means that categorical values\nof 1.0 and 1 are treated as the same category.\n\nRead more in the :ref:`User Guide <categorical_support_gbdt>`.\n\n.. versionadded:: 0.24\n\n.. versionchanged:: 1.2\n   Added support for feature names.\n\n.. versionchanged:: 1.4\n   Added `\"from_dtype\"` option.\n\n.. versionchanged:: 1.6\n   The default value changed from `None` to `\"from_dtype\"`.",
+      "effective_default": null,
+      "name": "categorical_features",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of {bool, int, str} of shape (n_features) or shape (n_categorical_features,), default='from_dtype'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "array-like",
+          "dict",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Monotonic constraint to enforce on each feature are specified using the\nfollowing integer values:\n\n- 1: monotonic increase\n- 0: no constraint\n- -1: monotonic decrease\n\nIf a dict with str keys, map feature to monotonic constraints by name.\nIf an array, the features are mapped to constraints by position. See\n:ref:`monotonic_cst_features_names` for a usage example.\n\nThe constraints are only valid for binary classifications and hold\nover the probability of the positive class.\nRead more in the :ref:`User Guide <monotonic_cst_gbdt>`.\n\n.. versionadded:: 0.23\n\n.. versionchanged:: 1.2\n   Accept dict of constraints with feature names as keys.",
+      "effective_default": null,
+      "name": "monotonic_cst",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of int of shape (n_features) or dict, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "no_interactions",
+          "pairwise"
+        ],
+        "source": "constraints",
+        "types": [
+          "list",
+          "tuple",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Specify interaction constraints, the sets of features which can\ninteract with each other in child node splits.\n\nEach item specifies the set of feature indices that are allowed\nto interact with each other. If there are more features than\nspecified in these constraints, they are treated as if they were\nspecified as an additional set.\n\nThe strings \"pairwise\" and \"no_interactions\" are shorthands for\nallowing only pairwise or no interactions, respectively.\n\nFor instance, with 5 features in total, `interaction_cst=[{0, 1}]`\nis equivalent to `interaction_cst=[{0, 1}, {2, 3, 4}]`,\nand specifies that each branch of a tree will either only split\non features 0 and 1 or only split on features 2, 3 and 4.\n\nSee :ref:`this example<ice-vs-pdp>` on how to use `interaction_cst`.\n\n.. versionadded:: 1.2",
+      "effective_default": null,
+      "name": "interaction_cst",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{\"pairwise\", \"no_interactions\"} or sequence of lists/tuples/sets of int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "When set to ``True``, reuse the solution of the previous call to fit\nand add more estimators to the ensemble. For results to be valid, the\nestimator should be re-trained on the same data only.\nSee :term:`the Glossary <warm_start>`.",
+      "effective_default": null,
+      "name": "warm_start",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "auto"
+        ],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "'auto'",
+      "description": "If 'auto', early stopping is enabled if the sample size is larger than\n10000 or if `X_val` and `y_val` are passed to `fit`. If True, early stopping\nis enabled, otherwise early stopping is disabled.\n\n.. versionadded:: 0.23",
+      "effective_default": null,
+      "name": "early_stopping",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "'auto' or bool, default='auto'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "str",
+          "<built-in function callable>",
+          "None"
+        ]
+      },
+      "default": "'loss'",
+      "description": "Scoring method to use for early stopping. Only used if `early_stopping`\nis enabled. Options:\n\n- str: see :ref:`scoring_string_names` for options.\n- callable: a scorer callable object (e.g., function) with signature\n  ``scorer(estimator, X, y)``. See :ref:`scoring_callable` for details.\n- `None`: :ref:`accuracy <accuracy_score>` is used.\n- 'loss': early stopping is checked w.r.t the loss value.",
+      "effective_default": null,
+      "name": "scoring",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str or callable or None, default='loss'"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "neither",
+            "left": 0,
+            "right": 1,
+            "type": "RealNotInt"
+          },
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "0.1",
+      "description": "Proportion (or absolute size) of training data to set aside as\nvalidation data for early stopping. If None, early stopping is done on\nthe training data.\nThe value is ignored if either early stopping is not performed, e.g.\n`early_stopping=False`, or if `X_val` and `y_val` are passed to fit.",
+      "effective_default": null,
+      "name": "validation_fraction",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or float or None, default=0.1"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "10",
+      "description": "Used to determine when to \"early stop\". The fitting process is\nstopped when none of the last ``n_iter_no_change`` scores are better\nthan the ``n_iter_no_change - 1`` -th-to-last one, up to some\ntolerance. Only used if early stopping is performed.",
+      "effective_default": null,
+      "name": "n_iter_no_change",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=10"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "1e-07",
+      "description": "The absolute tolerance to use when comparing scores. The higher the\ntolerance, the more likely we are to early stop: higher tolerance\nmeans that it will be harder for subsequent iterations to be\nconsidered an improvement upon the reference score.",
+      "effective_default": null,
+      "name": "tol",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=1e-7"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "verbose"
+        ]
+      },
+      "default": "0",
+      "description": "The verbosity level. If not zero, print some information about the\nfitting process. ``1`` prints only summary info, ``2`` prints info per\niteration.",
+      "effective_default": null,
+      "name": "verbose",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "random_state"
+        ]
+      },
+      "default": "None",
+      "description": "Pseudo-random number generator to control the subsampling in the\nbinning process, and the train/validation data split if early stopping\nis enabled.\nPass an int for reproducible output across multiple function calls.\nSee :term:`Glossary <random_state>`.",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, RandomState instance or None, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "balanced"
+        ],
+        "source": "constraints",
+        "types": [
+          "dict",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Weights associated with classes in the form `{class_label: weight}`.\nIf not given, all classes are supposed to have weight one.\nThe \"balanced\" mode uses the values of y to automatically adjust\nweights inversely proportional to class frequencies in the input data\nas `n_samples / (n_classes * np.bincount(y))`.\nNote that these weights will be multiplied with sample_weight (passed\nthrough the fit method) if `sample_weight` is specified.\n\n.. versionadded:: 1.2",
+      "effective_default": null,
+      "name": "class_weight",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "dict or 'balanced', default=None"
+    }
+  ],
+  "returns": [],
+  "signature": "HistGradientBoostingClassifier(loss='log_loss', *, learning_rate=0.1, max_iter=100, max_leaf_nodes=31, max_depth=None, min_samples_leaf=20, l2_regularization=0.0, max_features=1.0, max_bins=255, categorical_features='from_dtype', monotonic_cst=None, interaction_cst=None, warm_start=False, early_stopping='auto', scoring='loss', validation_fraction=0.1, n_iter_no_change=10, tol=1e-07, verbose=0, random_state=None, class_weight=None)",
+  "summary": "Histogram-based Gradient Boosting Classification Tree.",
+  "warnings": []
+}

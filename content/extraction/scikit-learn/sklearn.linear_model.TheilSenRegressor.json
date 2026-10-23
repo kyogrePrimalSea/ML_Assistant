@@ -1,0 +1,243 @@
+{
+  "attributes": [
+    {
+      "description": "Coefficients of the regression model (median of distribution).",
+      "name": "coef_",
+      "type_doc": "ndarray of shape (n_features,)"
+    },
+    {
+      "description": "Estimated intercept of regression model.",
+      "name": "intercept_",
+      "type_doc": "float"
+    },
+    {
+      "description": "Approximated breakdown point.",
+      "name": "breakdown_",
+      "type_doc": "float"
+    },
+    {
+      "description": "Number of iterations needed for the spatial median.",
+      "name": "n_iter_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Number of combinations taken into account from 'n choose k', where n is\nthe number of samples and k is the number of subsamples.",
+      "name": "n_subpopulation_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.TheilSenRegressor.html",
+  "extractor_version": "1",
+  "id": "sklearn.linear_model.TheilSenRegressor",
+  "import_path": "sklearn.linear_model.TheilSenRegressor",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y)",
+      "summary": "Fit linear model."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X)",
+      "summary": "Predict using the linear model."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Return :ref:`coefficient of determination <r2_score>` on test data."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.linear_model._theil_sen.TheilSenRegressor",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "Whether to calculate the intercept for this model. If set\nto false, no intercept will be used in calculations.",
+      "effective_default": null,
+      "name": "fit_intercept",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "10000.0",
+      "description": "Instead of computing with a set of cardinality 'n choose k', where n is\nthe number of samples and k is the number of subsamples (at least\nnumber of features), consider only a stochastic subpopulation of a\ngiven maximal size if 'n choose k' is larger than max_subpopulation.\nFor other than small problem sizes this parameter will determine\nmemory usage and runtime if n_subsamples is not changed. Note that the\ndata type should be int but floats such as 1e4 can be accepted too.",
+      "effective_default": null,
+      "name": "max_subpopulation",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=1e4"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None",
+          "Integral"
+        ]
+      },
+      "default": "None",
+      "description": "Number of samples to calculate the parameters. This is at least the\nnumber of features (plus 1 if fit_intercept=True) and the number of\nsamples as a maximum. A lower number leads to a higher breakdown\npoint and a low efficiency while a high number leads to a low\nbreakdown point and a high efficiency. If None, take the\nminimum number of subsamples leading to maximal robustness.\nIf n_subsamples is set to n_samples, Theil-Sen is identical to least\nsquares.",
+      "effective_default": null,
+      "name": "n_subsamples",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "300",
+      "description": "Maximum number of iterations for the calculation of spatial median.",
+      "effective_default": null,
+      "name": "max_iter",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=300"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0.0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.001",
+      "description": "Tolerance when calculating spatial median.",
+      "effective_default": null,
+      "name": "tol",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=1e-3"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "random_state"
+        ]
+      },
+      "default": "None",
+      "description": "A random number generator instance to define the state of the random\npermutations generator. Pass an int for reproducible output across\nmultiple function calls.\nSee :term:`Glossary <random_state>`.",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, RandomState instance or None, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None",
+          "Integral"
+        ]
+      },
+      "default": "None",
+      "description": "Number of CPUs to use during the cross validation.\n``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.\n``-1`` means using all processors. See :term:`Glossary <n_jobs>`\nfor more details.",
+      "effective_default": null,
+      "name": "n_jobs",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "verbose"
+        ]
+      },
+      "default": "False",
+      "description": "Verbose mode when fitting the model.",
+      "effective_default": null,
+      "name": "verbose",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    }
+  ],
+  "returns": [],
+  "signature": "TheilSenRegressor(*, fit_intercept=True, max_subpopulation=10000.0, n_subsamples=None, max_iter=300, tol=0.001, random_state=None, n_jobs=None, verbose=False)",
+  "summary": "Theil-Sen Estimator: robust multivariate regression model.",
+  "warnings": []
+}

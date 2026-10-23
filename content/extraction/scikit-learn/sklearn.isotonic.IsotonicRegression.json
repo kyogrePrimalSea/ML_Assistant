@@ -1,0 +1,196 @@
+{
+  "attributes": [
+    {
+      "description": "Minimum value of input array `X_` for left bound.",
+      "name": "X_min_",
+      "type_doc": "float"
+    },
+    {
+      "description": "Maximum value of input array `X_` for right bound.",
+      "name": "X_max_",
+      "type_doc": "float"
+    },
+    {
+      "description": "Unique ascending `X` values used to interpolate\nthe y = f(X) monotonic function.\n\n.. versionadded:: 0.24",
+      "name": "X_thresholds_",
+      "type_doc": "ndarray of shape (n_thresholds,)"
+    },
+    {
+      "description": "De-duplicated `y` values suitable to interpolate the y = f(X)\nmonotonic function.\n\n.. versionadded:: 0.24",
+      "name": "y_thresholds_",
+      "type_doc": "ndarray of shape (n_thresholds,)"
+    },
+    {
+      "description": "The stepwise interpolating function that covers the input domain ``X``.",
+      "name": "f_",
+      "type_doc": "function"
+    },
+    {
+      "description": "Inferred value for ``increasing``.",
+      "name": "increasing_",
+      "type_doc": "bool"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.isotonic.IsotonicRegression.html",
+  "extractor_version": "1",
+  "id": "sklearn.isotonic.IsotonicRegression",
+  "import_path": "sklearn.isotonic.IsotonicRegression",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y, sample_weight=None)",
+      "summary": "Fit the model using X, y as training data."
+    },
+    {
+      "name": "fit_transform",
+      "signature": "fit_transform(X, y=None, **fit_params)",
+      "summary": "Fit to data, then transform it."
+    },
+    {
+      "name": "get_feature_names_out",
+      "signature": "get_feature_names_out(input_features=None)",
+      "summary": "Get output feature names for transformation."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(T)",
+      "summary": "Predict new data by linear interpolation."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Return :ref:`coefficient of determination <r2_score>` on test data."
+    },
+    {
+      "name": "set_fit_request",
+      "signature": "set_fit_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.isotonic.IsotonicRegression",
+      "summary": "Configure whether metadata should be requested to be passed to the ``fit`` method."
+    },
+    {
+      "name": "set_output",
+      "signature": "set_output(*, transform=None)",
+      "summary": "Set output container."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.isotonic.IsotonicRegression",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(T)",
+      "summary": "Transform new data by linear interpolation."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "both",
+            "left": null,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Lower bound on the lowest predicted value (the minimum value may\nstill be higher). If not set, defaults to -inf.",
+      "effective_default": null,
+      "name": "y_min",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "both",
+            "left": null,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Upper bound on the highest predicted value (the maximum may still be\nlower). If not set, defaults to +inf.",
+      "effective_default": null,
+      "name": "y_max",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "auto"
+        ],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "Determines whether the predictions should be constrained to increase\nor decrease with `X`. 'auto' will decide based on the Spearman\ncorrelation estimate's sign.",
+      "effective_default": null,
+      "name": "increasing",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool or 'auto', default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "clip",
+          "nan",
+          "raise"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'nan'",
+      "description": "Handles how `X` values outside of the training domain are handled\nduring prediction.\n\n- 'nan', predictions will be NaN.\n- 'clip', predictions will be set to the value corresponding to\n  the nearest train interval endpoint.\n- 'raise', a `ValueError` is raised.",
+      "effective_default": null,
+      "name": "out_of_bounds",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'nan', 'clip', 'raise'}, default='nan'"
+    }
+  ],
+  "returns": [],
+  "signature": "IsotonicRegression(*, y_min=None, y_max=None, increasing=True, out_of_bounds='nan')",
+  "summary": "Isotonic regression model.",
+  "warnings": []
+}

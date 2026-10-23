@@ -1,0 +1,234 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_validate.html",
+  "extractor_version": "1",
+  "id": "sklearn.model_selection.cross_validate",
+  "import_path": "sklearn.model_selection.cross_validate",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The object to use to fit the data.",
+      "effective_default": null,
+      "name": "estimator",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "estimator object implementing 'fit'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The data to fit. Can be for example a list, or an array.",
+      "effective_default": null,
+      "name": "X",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "{array-like, sparse matrix} of shape (n_samples, n_features)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The target variable to try to predict in the case of\nsupervised learning.",
+      "effective_default": null,
+      "name": "y",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "array-like of shape (n_samples,) or (n_samples, n_outputs), default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Group labels for the samples used while splitting the dataset into\ntrain/test set. Only used in conjunction with a \"Group\" :term:`cv`\ninstance (e.g., :class:`GroupKFold`).\n\n.. versionchanged:: 1.4\n    ``groups`` can only be passed if metadata routing is not enabled\n    via ``sklearn.set_config(enable_metadata_routing=True)``. When routing\n    is enabled, pass ``groups`` alongside other metadata via the ``params``\n    argument instead. E.g.:\n    ``cross_validate(..., params={'groups': groups})``.",
+      "effective_default": null,
+      "name": "groups",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of shape (n_samples,), default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Strategy to evaluate the performance of the `estimator` across cross-validation\nsplits.\n\nIf `scoring` represents a single score, one can use:\n\n- a single string (see :ref:`scoring_string_names`);\n- a callable (see :ref:`scoring_callable`) that returns a single value.\n- `None`, the `estimator`'s\n  :ref:`default evaluation criterion <scoring_api_overview>` is used.\n\nIf `scoring` represents multiple scores, one can use:\n\n- a list or tuple of unique strings;\n- a callable returning a dictionary where the keys are the metric\n  names and the values are the metric scores;\n- a dictionary with metric names as keys and callables as values.\n\nSee :ref:`multimetric_grid_search` for an example.",
+      "effective_default": null,
+      "name": "scoring",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str, callable, list, tuple, or dict, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Determines the cross-validation splitting strategy.\nPossible inputs for cv are:\n\n- None, to use the default 5-fold cross validation,\n- int, to specify the number of folds in a `(Stratified)KFold`,\n- :term:`CV splitter`,\n- an iterable yielding (train, test) splits as arrays of indices.\n\nFor int/None inputs, if the estimator is a classifier and ``y`` is\neither binary or multiclass, :class:`StratifiedKFold` is used. In all\nother cases, :class:`KFold` is used. These splitters are instantiated\nwith `shuffle=False` so the splits will be the same across calls.\n\nRefer :ref:`User Guide <cross_validation>` for the various\ncross-validation strategies that can be used here.\n\n.. versionchanged:: 0.22\n    ``cv`` default value if None changed from 3-fold to 5-fold.",
+      "effective_default": null,
+      "name": "cv",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, cross-validation generator or an iterable, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Number of jobs to run in parallel. Training the estimator and computing\nthe score are parallelized over the cross-validation splits.\n``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.\n``-1`` means using all processors. See :term:`Glossary <n_jobs>`\nfor more details.",
+      "effective_default": null,
+      "name": "n_jobs",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0",
+      "description": "The verbosity level.",
+      "effective_default": null,
+      "name": "verbose",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Parameters to pass to the underlying estimator's ``fit``, the scorer,\nand the CV splitter.\n\n.. versionadded:: 1.4",
+      "effective_default": null,
+      "name": "params",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "dict, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'2*n_jobs'",
+      "description": "Controls the number of jobs that get dispatched during parallel\nexecution. Reducing this number can be useful to avoid an\nexplosion of memory consumption when more jobs get dispatched\nthan CPUs can process. This parameter can be:\n\n- An int, giving the exact number of total jobs that are spawned\n- A str, giving an expression as a function of n_jobs, as in '2*n_jobs'",
+      "effective_default": null,
+      "name": "pre_dispatch",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or str, default='2*n_jobs'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "Whether to include train scores.\nComputing training scores is used to get insights on how different\nparameter settings impact the overfitting/underfitting trade-off.\nHowever computing the scores on the training set can be computationally\nexpensive and is not strictly required to select the parameters that\nyield the best generalization performance.\n\n.. versionadded:: 0.19\n\n.. versionchanged:: 0.21\n    Default value was changed from ``True`` to ``False``",
+      "effective_default": null,
+      "name": "return_train_score",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "Whether to return the estimators fitted on each split.\n\n.. versionadded:: 0.20",
+      "effective_default": null,
+      "name": "return_estimator",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "Whether to return the train-test indices selected for each split.\n\n.. versionadded:: 1.3",
+      "effective_default": null,
+      "name": "return_indices",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "nan",
+      "description": "Value to assign to the score if an error occurs in estimator fitting.\nIf set to 'raise', the error is raised.\nIf a numeric value is given, FitFailedWarning is raised.\n\n.. versionadded:: 0.20",
+      "effective_default": null,
+      "name": "error_score",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "'raise' or numeric, default=np.nan"
+    }
+  ],
+  "returns": [
+    {
+      "description": "Array of scores of the estimator for each run of the cross validation.\n\nA dict of arrays containing the score/time arrays for each scorer is\nreturned. The possible keys for this ``dict`` are:\n\n``test_score``\n    The score array for test scores on each cv split.\n    Suffix ``_score`` in ``test_score`` changes to a specific\n    metric like ``test_r2`` or ``test_auc`` if there are\n    multiple scoring metrics in the scoring parameter.\n``train_score``\n    The score array for train scores on each cv split.\n    Suffix ``_score`` in ``train_score`` changes to a specific\n    metric like ``train_r2`` or ``train_auc`` if there are\n    multiple scoring metrics in the scoring parameter.\n    This is available only if ``return_train_score`` parameter\n    is ``True``.\n``fit_time``\n    The time for fitting the estimator on the train\n    set for each cv split.\n``score_time``\n    The time for scoring the estimator on the test set for each\n    cv split. (Note: time for scoring on the train set is not\n    included even if ``return_train_score`` is set to ``True``).\n``estimator``\n    The estimator objects for each cv split.\n    This is available only if ``return_estimator`` parameter\n    is set to ``True``.\n``indices``\n    The train/test positional indices for each cv split. A dictionary\n    is returned where the keys are either `\"train\"` or `\"test\"`\n    and the associated values are a list of integer-dtyped NumPy\n    arrays with the indices. Available only if `return_indices=True`.",
+      "name": "scores",
+      "type_doc": "dict of float arrays of shape (n_splits,)"
+    }
+  ],
+  "signature": "cross_validate(estimator, X, y=None, *, groups=None, scoring=None, cv=None, n_jobs=None, verbose=0, params=None, pre_dispatch='2*n_jobs', return_train_score=False, return_estimator=False, return_indices=False, error_score=nan)",
+  "summary": "Evaluate metric(s) by cross-validation and also record fit/score times.",
+  "warnings": []
+}

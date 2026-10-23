@@ -1,0 +1,205 @@
+{
+  "attributes": [
+    {
+      "description": "Indicator used to add binary indicators for missing values.\n``None`` if add_indicator is False.",
+      "name": "indicator_",
+      "type_doc": ":class:`~sklearn.impute.MissingIndicator`"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.impute.KNNImputer.html",
+  "extractor_version": "1",
+  "id": "sklearn.impute.KNNImputer",
+  "import_path": "sklearn.impute.KNNImputer",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y=None)",
+      "summary": "Fit the imputer on X."
+    },
+    {
+      "name": "fit_transform",
+      "signature": "fit_transform(X, y=None, **fit_params)",
+      "summary": "Fit to data, then transform it."
+    },
+    {
+      "name": "get_feature_names_out",
+      "signature": "get_feature_names_out(input_features=None)",
+      "summary": "Get output feature names for transformation."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "set_output",
+      "signature": "set_output(*, transform=None)",
+      "summary": "Set output container."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(X)",
+      "summary": "Impute all missing values in X."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "an instance of 'int', a float in the range [-inf, inf], numpy.nan, pandas.NA, an instance of 'str' or None"
+        ]
+      },
+      "default": "nan",
+      "description": "The placeholder for the missing values. All occurrences of\n`missing_values` will be imputed. For pandas' dataframes with\nnullable integer dtypes with missing values, `missing_values`\nshould be set to np.nan, since `pd.NA` will be converted to np.nan.",
+      "effective_default": null,
+      "name": "missing_values",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, float, str, np.nan or None, default=np.nan"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "5",
+      "description": "Number of neighboring samples to use for imputation.",
+      "effective_default": null,
+      "name": "n_neighbors",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=5"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "distance",
+          "uniform"
+        ],
+        "source": "constraints",
+        "types": [
+          "<built-in function callable>",
+          "None"
+        ]
+      },
+      "default": "'uniform'",
+      "description": "Weight function used in prediction.  Possible values:\n\n- 'uniform' : uniform weights. All points in each neighborhood are\n  weighted equally.\n- 'distance' : weight points by the inverse of their distance.\n  in this case, closer neighbors of a query point will have a\n  greater influence than neighbors which are further away.\n- callable : a user-defined function which accepts an\n  array of distances, and returns an array of the same shape\n  containing the weights.",
+      "effective_default": null,
+      "name": "weights",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'uniform', 'distance'} or callable, default='uniform'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "nan_euclidean"
+        ],
+        "source": "constraints",
+        "types": [
+          "<built-in function callable>"
+        ]
+      },
+      "default": "'nan_euclidean'",
+      "description": "Distance metric for searching neighbors. Possible values:\n\n- 'nan_euclidean'\n- callable : a user-defined function which conforms to the definition\n  of ``func_metric(x, y, *, missing_values=np.nan)``. `x` and `y`\n  corresponds to a row (i.e. 1-D arrays) of `X` and `Y`, respectively.\n  The callable should returns a scalar distance value.",
+      "effective_default": null,
+      "name": "metric",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'nan_euclidean'} or callable, default='nan_euclidean'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "If True, a copy of X will be created. If False, imputation will\nbe done in-place whenever possible.",
+      "effective_default": null,
+      "name": "copy",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "If True, a :class:`MissingIndicator` transform will stack onto the\noutput of the imputer's transform. This allows a predictive estimator\nto account for missingness despite imputation. If a feature has no\nmissing values at fit/train time, the feature won't appear on the\nmissing indicator even if there are missing values at transform/test\ntime.",
+      "effective_default": null,
+      "name": "add_indicator",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "If True, features that consist exclusively of missing values when\n`fit` is called are returned in results when `transform` is called.\nThe imputed value is always `0`.\n\n.. versionadded:: 1.2",
+      "effective_default": null,
+      "name": "keep_empty_features",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    }
+  ],
+  "returns": [],
+  "signature": "KNNImputer(*, missing_values=nan, n_neighbors=5, weights='uniform', metric='nan_euclidean', copy=True, add_indicator=False, keep_empty_features=False)",
+  "summary": "Imputation for completing missing values using k-Nearest Neighbors.",
+  "warnings": []
+}

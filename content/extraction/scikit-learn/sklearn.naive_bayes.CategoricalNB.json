@@ -1,0 +1,224 @@
+{
+  "attributes": [
+    {
+      "description": "Holds arrays of shape (n_classes, n_categories of respective feature)\nfor each feature. Each array provides the number of samples\nencountered for each class and category of the specific feature.",
+      "name": "category_count_",
+      "type_doc": "list of arrays of shape (n_features,)"
+    },
+    {
+      "description": "Number of samples encountered for each class during fitting. This\nvalue is weighted by the sample weight when provided.",
+      "name": "class_count_",
+      "type_doc": "ndarray of shape (n_classes,)"
+    },
+    {
+      "description": "Smoothed empirical log probability for each class.",
+      "name": "class_log_prior_",
+      "type_doc": "ndarray of shape (n_classes,)"
+    },
+    {
+      "description": "Class labels known to the classifier",
+      "name": "classes_",
+      "type_doc": "ndarray of shape (n_classes,)"
+    },
+    {
+      "description": "Holds arrays of shape (n_classes, n_categories of respective feature)\nfor each feature. Each array provides the empirical log probability\nof categories given the respective feature and class, ``P(x_i|y)``.",
+      "name": "feature_log_prob_",
+      "type_doc": "list of arrays of shape (n_features,)"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    },
+    {
+      "description": "Number of categories for each feature. This value is\ninferred from the data or set by the minimum number of categories.\n\n.. versionadded:: 0.24",
+      "name": "n_categories_",
+      "type_doc": "ndarray of shape (n_features,), dtype=np.int64"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.CategoricalNB.html",
+  "extractor_version": "1",
+  "id": "sklearn.naive_bayes.CategoricalNB",
+  "import_path": "sklearn.naive_bayes.CategoricalNB",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y, sample_weight=None)",
+      "summary": "Fit Naive Bayes classifier according to X, y."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "partial_fit",
+      "signature": "partial_fit(X, y, classes=None, sample_weight=None)",
+      "summary": "Incremental fit on a batch of samples."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X)",
+      "summary": "Perform classification on an array of test vectors X."
+    },
+    {
+      "name": "predict_joint_log_proba",
+      "signature": "predict_joint_log_proba(X)",
+      "summary": "Return joint log probability estimates for the test vector X."
+    },
+    {
+      "name": "predict_log_proba",
+      "signature": "predict_log_proba(X)",
+      "summary": "Return log-probability estimates for the test vector X."
+    },
+    {
+      "name": "predict_proba",
+      "signature": "predict_proba(X)",
+      "summary": "Return probability estimates for the test vector X."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Return :ref:`accuracy <accuracy_score>` on provided data and labels."
+    },
+    {
+      "name": "set_fit_request",
+      "signature": "set_fit_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.naive_bayes.CategoricalNB",
+      "summary": "Configure whether metadata should be requested to be passed to the ``fit`` method."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_partial_fit_request",
+      "signature": "set_partial_fit_request(*, classes: bool | None | str = '$UNCHANGED$', sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.naive_bayes.CategoricalNB",
+      "summary": "Configure whether metadata should be requested to be passed to the ``partial_fit`` method."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.naive_bayes.CategoricalNB",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "1.0",
+      "description": "Additive (Laplace/Lidstone) smoothing parameter\n(set alpha=0 and force_alpha=True, for no smoothing).",
+      "effective_default": null,
+      "name": "alpha",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=1.0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "If False and alpha is less than 1e-10, it will set alpha to\n1e-10. If True, alpha will remain unchanged. This may cause\nnumerical errors if alpha is too close to 0.\n\n.. versionadded:: 1.2\n.. versionchanged:: 1.4\n   The default value of `force_alpha` changed to `True`.",
+      "effective_default": null,
+      "name": "force_alpha",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "Whether to learn class prior probabilities or not.\nIf false, a uniform prior will be used.",
+      "effective_default": null,
+      "name": "fit_prior",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "array-like",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Prior probabilities of the classes. If specified, the priors are not\nadjusted according to the data.",
+      "effective_default": null,
+      "name": "class_prior",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of shape (n_classes,), default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None",
+          "array-like"
+        ]
+      },
+      "default": "None",
+      "description": "Minimum number of categories per feature.\n\n- integer: Sets the minimum number of categories per feature to\n  `n_categories` for each features.\n- array-like: shape (n_features,) where `n_categories[i]` holds the\n  minimum number of categories for the ith column of the input.\n- None (default): Determines the number of categories automatically\n  from the training data.\n\n.. versionadded:: 0.24",
+      "effective_default": null,
+      "name": "min_categories",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or array-like of shape (n_features,), default=None"
+    }
+  ],
+  "returns": [],
+  "signature": "CategoricalNB(*, alpha=1.0, force_alpha=True, fit_prior=True, class_prior=None, min_categories=None)",
+  "summary": "Naive Bayes classifier for categorical features.",
+  "warnings": []
+}

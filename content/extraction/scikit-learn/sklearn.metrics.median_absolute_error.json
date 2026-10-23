@@ -1,0 +1,87 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.metrics.median_absolute_error.html",
+  "extractor_version": "1",
+  "id": "sklearn.metrics.median_absolute_error",
+  "import_path": "sklearn.metrics.median_absolute_error",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Ground truth (correct) target values.",
+      "effective_default": null,
+      "name": "y_true",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n_samples,) or (n_samples, n_outputs)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Estimated target values.",
+      "effective_default": null,
+      "name": "y_pred",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n_samples,) or (n_samples, n_outputs)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "raw_values",
+          "uniform_average"
+        ],
+        "source": "docstring",
+        "types": []
+      },
+      "default": "'uniform_average'",
+      "description": "Defines aggregating of multiple output values. Array-like value defines\nweights used to average errors.\n\n'raw_values' :\n    Returns a full set of errors in case of multioutput input.\n\n'uniform_average' :\n    Errors of all outputs are averaged with uniform weight.",
+      "effective_default": null,
+      "name": "multioutput",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'raw_values', 'uniform_average'} or array-like of shape (n_outputs,), default='uniform_average'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Sample weights.\n\n.. versionadded:: 0.24",
+      "effective_default": null,
+      "name": "sample_weight",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of shape (n_samples,), default=None"
+    }
+  ],
+  "returns": [
+    {
+      "description": "If multioutput is 'raw_values', then mean absolute error is returned\nfor each output separately.\nIf multioutput is 'uniform_average' or an ndarray of weights, then the\nweighted average of all output errors is returned.",
+      "name": "loss",
+      "type_doc": "float or ndarray of floats"
+    }
+  ],
+  "signature": "median_absolute_error(y_true, y_pred, *, multioutput='uniform_average', sample_weight=None)",
+  "summary": "Median absolute error regression loss.",
+  "warnings": []
+}

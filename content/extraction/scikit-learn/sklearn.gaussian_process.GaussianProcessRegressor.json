@@ -1,0 +1,269 @@
+{
+  "attributes": [
+    {
+      "description": "Feature vectors or other representations of training data (also\nrequired for prediction).",
+      "name": "X_train_",
+      "type_doc": "array-like of shape (n_samples, n_features) or list of object"
+    },
+    {
+      "description": "Target values in training data (also required for prediction).",
+      "name": "y_train_",
+      "type_doc": "array-like of shape (n_samples,) or (n_samples, n_targets)"
+    },
+    {
+      "description": "The kernel used for prediction. The structure of the kernel is the\nsame as the one passed as parameter but with optimized hyperparameters.",
+      "name": "kernel_",
+      "type_doc": "kernel instance"
+    },
+    {
+      "description": "Lower-triangular Cholesky decomposition of the kernel in ``X_train_``.",
+      "name": "L_",
+      "type_doc": "array-like of shape (n_samples, n_samples)"
+    },
+    {
+      "description": "Dual coefficients of training data points in kernel space.",
+      "name": "alpha_",
+      "type_doc": "array-like of shape (n_samples,)"
+    },
+    {
+      "description": "The log-marginal-likelihood of ``self.kernel_.theta``.",
+      "name": "log_marginal_likelihood_value_",
+      "type_doc": "float"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.gaussian_process.GaussianProcessRegressor.html",
+  "extractor_version": "1",
+  "id": "sklearn.gaussian_process.GaussianProcessRegressor",
+  "import_path": "sklearn.gaussian_process.GaussianProcessRegressor",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y)",
+      "summary": "Fit Gaussian process regression model."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "log_marginal_likelihood",
+      "signature": "log_marginal_likelihood(theta=None, eval_gradient=False, clone_kernel=True)",
+      "summary": "Return log-marginal likelihood of theta for training data."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X, return_std=False, return_cov=False)",
+      "summary": "Predict using the Gaussian process regression model."
+    },
+    {
+      "name": "sample_y",
+      "signature": "sample_y(X, n_samples=1, random_state=0)",
+      "summary": "Draw samples from Gaussian process and evaluate at X."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Return :ref:`coefficient of determination <r2_score>` on test data."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_predict_request",
+      "signature": "set_predict_request(*, return_cov: bool | None | str = '$UNCHANGED$', return_std: bool | None | str = '$UNCHANGED$') -> sklearn.gaussian_process._gpr.GaussianProcessRegressor",
+      "summary": "Configure whether metadata should be requested to be passed to the ``predict`` method."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.gaussian_process._gpr.GaussianProcessRegressor",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None",
+          "Kernel"
+        ]
+      },
+      "default": "None",
+      "description": "The kernel specifying the covariance function of the GP.\nIf `None` is passed,\nthe kernel `ConstantKernel() * RBF()` is used as default.\nNote that\nthe kernel hyperparameters are optimized during fitting\nunless the bounds are marked as `\"fixed\"`\nor the argument `optimizer` is set to `None`.",
+      "effective_default": null,
+      "name": "kernel",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "kernel instance, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "ndarray"
+        ]
+      },
+      "default": "1e-10",
+      "description": "Value added to the diagonal of the kernel matrix during fitting.\nThis can prevent a potential numerical issue during fitting, by\nensuring that the calculated values form a positive definite matrix.\nIt can also be interpreted as the variance of additional Gaussian\nmeasurement noise on the training observations. Note that this is\ndifferent from using a `WhiteKernel`. If an array is passed, it must\nhave the same number of entries as the data used for fitting and is\nused as datapoint-dependent noise level. Allowing to specify the\nnoise level directly as a parameter is mainly for convenience and\nfor consistency with :class:`~sklearn.linear_model.Ridge`.\nFor an example illustrating how the alpha parameter controls\nthe noise variance in Gaussian Process Regression, see\n:ref:`sphx_glr_auto_examples_gaussian_process_plot_gpr_noisy_targets.py`.",
+      "effective_default": null,
+      "name": "alpha",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float or ndarray of shape (n_samples,), default=1e-10"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "fmin_l_bfgs_b"
+        ],
+        "source": "constraints",
+        "types": [
+          "<built-in function callable>",
+          "None"
+        ]
+      },
+      "default": "'fmin_l_bfgs_b'",
+      "description": "Can either be one of the internally supported optimizers for optimizing\nthe kernel's parameters, specified by a string, or an externally\ndefined optimizer passed as a callable. If a callable is passed, it\nmust have the signature::\n\n    def optimizer(obj_func, initial_theta, bounds):\n        # * 'obj_func': the objective function to be minimized, which\n        #   takes the hyperparameters theta as a parameter and an\n        #   optional flag eval_gradient, which determines if the\n        #   gradient is returned additionally to the function value\n        # * 'initial_theta': the initial value for theta, which can be\n        #   used by local optimizers\n        # * 'bounds': the bounds on the values of theta\n        ....\n        # Returned are the best found hyperparameters theta and\n        # the corresponding value of the target function.\n        return theta_opt, func_min\n\nPer default, the L-BFGS-B algorithm from `scipy.optimize.minimize`\nis used. If None is passed, the kernel's parameters are kept fixed.\nAvailable internal optimizers are: `{'fmin_l_bfgs_b'}`.",
+      "effective_default": null,
+      "name": "optimizer",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "\"fmin_l_bfgs_b\", callable or None, default=\"fmin_l_bfgs_b\""
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0",
+      "description": "The number of restarts of the optimizer for finding the kernel's\nparameters which maximize the log-marginal likelihood. The first run\nof the optimizer is performed from the kernel's initial parameters,\nthe remaining ones (if any) from thetas sampled log-uniform randomly\nfrom the space of allowed theta-values. If greater than 0, all bounds\nmust be finite. Note that `n_restarts_optimizer == 0` implies that one\nrun is performed.",
+      "effective_default": null,
+      "name": "n_restarts_optimizer",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "Whether or not to normalize the target values `y` by removing the mean\nand scaling to unit-variance. This is recommended for cases where\nzero-mean, unit-variance priors are used. Note that, in this\nimplementation, the normalisation is reversed before the GP predictions\nare reported.\n\n.. versionchanged:: 0.23",
+      "effective_default": null,
+      "name": "normalize_y",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "If True, a persistent copy of the training data is stored in the\nobject. Otherwise, just a reference to the training data is stored,\nwhich might cause predictions to change if the data is modified\nexternally.",
+      "effective_default": null,
+      "name": "copy_X_train",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "The number of dimensions of the target values. Used to decide the number\nof outputs when sampling from the prior distributions (i.e. calling\n:meth:`sample_y` before :meth:`fit`). This parameter is ignored once\n:meth:`fit` has been called.\n\n.. versionadded:: 1.3",
+      "effective_default": null,
+      "name": "n_targets",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "random_state"
+        ]
+      },
+      "default": "None",
+      "description": "Determines random number generation used to initialize the centers.\nPass an int for reproducible results across multiple function calls.\nSee :term:`Glossary <random_state>`.",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, RandomState instance or None, default=None"
+    }
+  ],
+  "returns": [],
+  "signature": "GaussianProcessRegressor(kernel=None, *, alpha=1e-10, optimizer='fmin_l_bfgs_b', n_restarts_optimizer=0, normalize_y=False, copy_X_train=True, n_targets=None, random_state=None)",
+  "summary": "Gaussian process regression (GPR).",
+  "warnings": []
+}

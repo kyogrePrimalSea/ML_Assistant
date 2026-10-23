@@ -160,7 +160,7 @@
     "T006": {
       "title": "Extract and verify: scikit-learn",
       "file": "tasks/T006-extract-verify-sklearn.md",
-      "status": "In progress",
+      "status": "Done",
       "dependencies": [
         "T002",
         "T003",

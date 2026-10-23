@@ -1,0 +1,69 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.metrics.hamming_loss.html",
+  "extractor_version": "1",
+  "id": "sklearn.metrics.hamming_loss",
+  "import_path": "sklearn.metrics.hamming_loss",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Ground truth (correct) labels. Sparse matrix is only supported when\ntargets are of :term:`multilabel` type.",
+      "effective_default": null,
+      "name": "y_true",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "1d array-like, or label indicator array / sparse matrix"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Predicted labels, as returned by a classifier. Sparse matrix is only\nsupported when targets are of :term:`multilabel` type.",
+      "effective_default": null,
+      "name": "y_pred",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "1d array-like, or label indicator array / sparse matrix"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Sample weights.\n\n.. versionadded:: 0.18",
+      "effective_default": null,
+      "name": "sample_weight",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of shape (n_samples,), default=None"
+    }
+  ],
+  "returns": [
+    {
+      "description": "Returns the average Hamming loss between element of ``y_true`` and\n``y_pred``.",
+      "name": "loss",
+      "type_doc": "float"
+    }
+  ],
+  "signature": "hamming_loss(y_true, y_pred, *, sample_weight=None)",
+  "summary": "Compute the average Hamming loss.",
+  "warnings": []
+}

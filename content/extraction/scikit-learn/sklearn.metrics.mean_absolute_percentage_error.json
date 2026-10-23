@@ -1,0 +1,87 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_absolute_percentage_error.html",
+  "extractor_version": "1",
+  "id": "sklearn.metrics.mean_absolute_percentage_error",
+  "import_path": "sklearn.metrics.mean_absolute_percentage_error",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Ground truth (correct) target values.",
+      "effective_default": null,
+      "name": "y_true",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n_samples,) or (n_samples, n_outputs)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Estimated target values.",
+      "effective_default": null,
+      "name": "y_pred",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n_samples,) or (n_samples, n_outputs)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Sample weights.",
+      "effective_default": null,
+      "name": "sample_weight",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of shape (n_samples,), default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "raw_values",
+          "uniform_average"
+        ],
+        "source": "docstring",
+        "types": []
+      },
+      "default": "'uniform_average'",
+      "description": "Defines aggregating of multiple output values.\nArray-like value defines weights used to average errors.\nIf input is list then the shape must be (n_outputs,).\n\n'raw_values' :\n    Returns a full set of errors in case of multioutput input.\n\n'uniform_average' :\n    Errors of all outputs are averaged with uniform weight.",
+      "effective_default": null,
+      "name": "multioutput",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'raw_values', 'uniform_average'} or array-like"
+    }
+  ],
+  "returns": [
+    {
+      "description": "If multioutput is 'raw_values', then mean absolute percentage error\nis returned for each output separately.\nIf multioutput is 'uniform_average' or an ndarray of weights, then the\nweighted average of all output errors is returned.\n\nMAPE output is non-negative floating point. The best value is 0.0.\nBut note that bad predictions can lead to arbitrarily large\nMAPE values, especially if some `y_true` values are very close to zero.\nNote that we return a large value instead of `inf` when `y_true` is zero.",
+      "name": "loss",
+      "type_doc": "float or ndarray of floats"
+    }
+  ],
+  "signature": "mean_absolute_percentage_error(y_true, y_pred, *, sample_weight=None, multioutput='uniform_average')",
+  "summary": "Mean absolute percentage error (MAPE) regression loss.",
+  "warnings": []
+}

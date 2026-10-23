@@ -1,0 +1,135 @@
+{
+  "attributes": [
+    {
+      "description": "ROC Curves.\n\n.. versionchanged:: 1.7\n    This attribute can now be a list of Artists, for when multiple curves\n    are plotted.",
+      "name": "line_",
+      "type_doc": "matplotlib Artist or list of matplotlib Artists"
+    },
+    {
+      "description": "The chance level line. It is `None` if the chance level is not plotted.\n\n.. versionadded:: 1.3",
+      "name": "chance_level_",
+      "type_doc": "matplotlib Artist or None"
+    },
+    {
+      "description": "Axes with ROC Curve.",
+      "name": "ax_",
+      "type_doc": "matplotlib Axes"
+    },
+    {
+      "description": "Figure containing the curve.",
+      "name": "figure_",
+      "type_doc": "matplotlib Figure"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.metrics.RocCurveDisplay.html",
+  "extractor_version": "1",
+  "id": "sklearn.metrics.RocCurveDisplay",
+  "import_path": "sklearn.metrics.RocCurveDisplay",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "from_cv_results",
+      "signature": "from_cv_results(cv_results, X, y, *, sample_weight=None, drop_intermediate=True, response_method='auto', pos_label=None, ax=None, name=None, curve_kwargs=None, plot_chance_level=False, chance_level_kwargs=None, despine=False)",
+      "summary": "Create a multi-fold ROC curve display given cross-validation results."
+    },
+    {
+      "name": "from_estimator",
+      "signature": "from_estimator(estimator, X, y, *, sample_weight=None, drop_intermediate=True, response_method='auto', pos_label=None, name=None, ax=None, curve_kwargs=None, plot_chance_level=False, chance_level_kw=None, despine=False)",
+      "summary": "Create a ROC Curve display from an estimator."
+    },
+    {
+      "name": "from_predictions",
+      "signature": "from_predictions(y_true, y_score=None, *, sample_weight=None, drop_intermediate=True, pos_label=None, name=None, ax=None, curve_kwargs=None, plot_chance_level=False, chance_level_kw=None, despine=False)",
+      "summary": "Plot ROC curve given the true and predicted values."
+    },
+    {
+      "name": "plot",
+      "signature": "plot(ax=None, *, name=None, curve_kwargs=None, plot_chance_level=False, chance_level_kw=None, despine=False)",
+      "summary": "Plot visualization."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "False positive rates. Each ndarray should contain values for a single curve.\nIf plotting multiple curves, list should be of same length as `tpr`.\n\n.. versionchanged:: 1.7\n    Now accepts a list for plotting multiple curves.",
+      "effective_default": null,
+      "name": "fpr",
+      "param_kind": "keyword_only",
+      "required": true,
+      "type_doc": "ndarray or list of ndarrays"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "True positive rates. Each ndarray should contain values for a single curve.\nIf plotting multiple curves, list should be of same length as `fpr`.\n\n.. versionchanged:: 1.7\n    Now accepts a list for plotting multiple curves.",
+      "effective_default": null,
+      "name": "tpr",
+      "param_kind": "keyword_only",
+      "required": true,
+      "type_doc": "ndarray or list of ndarrays"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Area under ROC curve, used for labeling each curve in the legend.\nIf plotting multiple curves, should be a list of the same length as `fpr`\nand `tpr`. If `None`, ROC AUC scores are not shown in the legend.\n\n.. versionchanged:: 1.7\n    Now accepts a list for plotting multiple curves.",
+      "effective_default": null,
+      "name": "roc_auc",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float or list of floats, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Name for labeling legend entries. The number of legend entries is determined\nby the `curve_kwargs` passed to `plot`, and is not affected by `name`.\n\nIf a string is provided, it will be used to either label the single legend\nentry or if there are multiple legend entries, label each individual curve\nwith the same name.\n\nIf a list is provided, it will be used to label each curve individually.\nPassing a list will raise an error if `curve_kwargs` is not a list to avoid\nlabeling individual curves that have the same appearance.\n\nIf `None`, no name is shown in the legend.\n\n.. versionchanged:: 1.7\n    `estimator_name` was deprecated in favor of `name` and now accepts\n    a list for plotting multiple curves.",
+      "effective_default": null,
+      "name": "name",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str or list of str, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The class considered the positive class when ROC AUC metrics computed.\nIf not `None`, this value is displayed in the x- and y-axes labels.\n\n.. versionadded:: 0.24",
+      "effective_default": null,
+      "name": "pos_label",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, float, bool or str, default=None"
+    }
+  ],
+  "returns": [],
+  "signature": "RocCurveDisplay(*, fpr, tpr, roc_auc=None, name=None, pos_label=None)",
+  "summary": "ROC Curve visualization.",
+  "warnings": []
+}

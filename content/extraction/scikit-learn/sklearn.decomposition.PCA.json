@@ -1,0 +1,327 @@
+{
+  "attributes": [
+    {
+      "description": "Principal axes in feature space, representing the directions of\nmaximum variance in the data. Equivalently, the right singular\nvectors of the centered input data, parallel to its eigenvectors.\nThe components are sorted by decreasing ``explained_variance_``.",
+      "name": "components_",
+      "type_doc": "ndarray of shape (n_components, n_features)"
+    },
+    {
+      "description": "The amount of variance explained by each of the selected components.\nThe variance estimation uses `n_samples - 1` degrees of freedom.\n\nEqual to n_components largest eigenvalues\nof the covariance matrix of X.\n\n.. versionadded:: 0.18",
+      "name": "explained_variance_",
+      "type_doc": "ndarray of shape (n_components,)"
+    },
+    {
+      "description": "Percentage of variance explained by each of the selected components.\n\nIf ``n_components`` is not set then all components are stored and the\nsum of the ratios is equal to 1.0.",
+      "name": "explained_variance_ratio_",
+      "type_doc": "ndarray of shape (n_components,)"
+    },
+    {
+      "description": "The singular values corresponding to each of the selected components.\nThe singular values are equal to the 2-norms of the ``n_components``\nvariables in the lower-dimensional space.\n\n.. versionadded:: 0.19",
+      "name": "singular_values_",
+      "type_doc": "ndarray of shape (n_components,)"
+    },
+    {
+      "description": "Per-feature empirical mean, estimated from the training set.\n\nEqual to `X.mean(axis=0)`.",
+      "name": "mean_",
+      "type_doc": "ndarray of shape (n_features,)"
+    },
+    {
+      "description": "The estimated number of components. When n_components is set\nto 'mle' or a number between 0 and 1 (with svd_solver == 'full') this\nnumber is estimated from input data. Otherwise it equals the parameter\nn_components, or the lesser value of n_features and n_samples\nif n_components is None.",
+      "name": "n_components_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Number of samples in the training data.",
+      "name": "n_samples_",
+      "type_doc": "int"
+    },
+    {
+      "description": "The estimated noise covariance following the Probabilistic PCA model\nfrom Tipping and Bishop 1999. See \"Pattern Recognition and\nMachine Learning\" by C. Bishop, 12.2.1 p. 574 or\nhttp://www.miketipping.com/papers/met-mppca.pdf. It is required to\ncompute the estimated data covariance and score samples.\n\nEqual to the average of (min(n_features, n_samples) - n_components)\nsmallest eigenvalues of the covariance matrix of X.",
+      "name": "noise_variance_",
+      "type_doc": "float"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html",
+  "extractor_version": "1",
+  "id": "sklearn.decomposition.PCA",
+  "import_path": "sklearn.decomposition.PCA",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y=None)",
+      "summary": "Fit the model with X."
+    },
+    {
+      "name": "fit_transform",
+      "signature": "fit_transform(X, y=None)",
+      "summary": "Fit the model with X and apply the dimensionality reduction on X."
+    },
+    {
+      "name": "get_covariance",
+      "signature": "get_covariance()",
+      "summary": "Compute data covariance with the generative model."
+    },
+    {
+      "name": "get_feature_names_out",
+      "signature": "get_feature_names_out(input_features=None)",
+      "summary": "Get output feature names for transformation."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "get_precision",
+      "signature": "get_precision()",
+      "summary": "Compute data precision matrix with the generative model."
+    },
+    {
+      "name": "inverse_transform",
+      "signature": "inverse_transform(X)",
+      "summary": "Transform data back to its original space."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y=None)",
+      "summary": "Return the average log-likelihood of all samples."
+    },
+    {
+      "name": "score_samples",
+      "signature": "score_samples(X)",
+      "summary": "Return the log-likelihood of each sample."
+    },
+    {
+      "name": "set_output",
+      "signature": "set_output(*, transform=None)",
+      "summary": "Set output container."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(X)",
+      "summary": "Apply dimensionality reduction to X."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Integral"
+          },
+          {
+            "closed": "neither",
+            "left": 0,
+            "right": 1,
+            "type": "RealNotInt"
+          }
+        ],
+        "options": [
+          "mle"
+        ],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Number of components to keep.\nif n_components is not set all components are kept::\n\n    n_components == min(n_samples, n_features)\n\nIf ``n_components == 'mle'`` and ``svd_solver == 'full'``, Minka's\nMLE is used to guess the dimension. Use of ``n_components == 'mle'``\nwill interpret ``svd_solver == 'auto'`` as ``svd_solver == 'full'``.\n\nIf ``0 < n_components < 1`` and ``svd_solver == 'full'``, select the\nnumber of components such that the amount of variance that needs to be\nexplained is greater than the percentage specified by n_components.\n\nIf ``svd_solver == 'arpack'``, the number of components must be\nstrictly less than the minimum of n_features and n_samples.\n\nHence, the None case results in::\n\n    n_components == min(n_samples, n_features) - 1",
+      "effective_default": null,
+      "name": "n_components",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int, float or 'mle', default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "If False, data passed to fit are overwritten and running\nfit(X).transform(X) will not yield the expected results,\nuse fit_transform(X) instead.",
+      "effective_default": null,
+      "name": "copy",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "When True (False by default) the `components_` vectors are multiplied\nby the square root of n_samples and then divided by the singular values\nto ensure uncorrelated outputs with unit component-wise variances.\n\nWhitening will remove some information from the transformed signal\n(the relative variance scales of the components) but can sometime\nimprove the predictive accuracy of the downstream estimators by\nmaking their data respect some hard-wired assumptions.",
+      "effective_default": null,
+      "name": "whiten",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "arpack",
+          "auto",
+          "covariance_eigh",
+          "full",
+          "randomized"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'auto'",
+      "description": "\"auto\" :\n    The solver is selected by a default 'auto' policy is based on `X.shape` and\n    `n_components`: if the input data has fewer than 1000 features and\n    more than 10 times as many samples, then the \"covariance_eigh\"\n    solver is used. Otherwise, if the input data is larger than 500x500\n    and the number of components to extract is lower than 80% of the\n    smallest dimension of the data, then the more efficient\n    \"randomized\" method is selected. Otherwise the exact \"full\" SVD is\n    computed and optionally truncated afterwards.\n\"full\" :\n    Run exact full SVD calling the standard LAPACK solver via\n    `scipy.linalg.svd` and select the components by postprocessing\n\"covariance_eigh\" :\n    Precompute the covariance matrix (on centered data), run a\n    classical eigenvalue decomposition on the covariance matrix\n    typically using LAPACK and select the components by postprocessing.\n    This solver is very efficient for n_samples >> n_features and small\n    n_features. It is, however, not tractable otherwise for large\n    n_features (large memory footprint required to materialize the\n    covariance matrix). Also note that compared to the \"full\" solver,\n    this solver effectively doubles the condition number and is\n    therefore less numerical stable (e.g. on input data with a large\n    range of singular values).\n\"arpack\" :\n    Run SVD truncated to `n_components` calling ARPACK solver via\n    `scipy.sparse.linalg.svds`. It requires strictly\n    `0 < n_components < min(X.shape)`\n\"randomized\" :\n    Run randomized SVD by the method of Halko et al.\n\n.. versionadded:: 0.18.0\n\n.. versionchanged:: 1.5\n    Added the 'covariance_eigh' solver.",
+      "effective_default": null,
+      "name": "svd_solver",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'auto', 'full', 'covariance_eigh', 'arpack', 'randomized'}, default='auto'"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.0",
+      "description": "Tolerance for singular values computed by svd_solver == 'arpack'.\nMust be of range [0.0, infinity).\n\n.. versionadded:: 0.18.0",
+      "effective_default": null,
+      "name": "tol",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0.0"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [
+          "auto"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'auto'",
+      "description": "Number of iterations for the power method computed by\nsvd_solver == 'randomized'.\nMust be of range [0, infinity).\n\n.. versionadded:: 0.18.0",
+      "effective_default": null,
+      "name": "iterated_power",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or 'auto', default='auto'"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "10",
+      "description": "This parameter is only relevant when `svd_solver=\"randomized\"`.\nIt corresponds to the additional number of random vectors to sample the\nrange of `X` so as to ensure proper conditioning. See\n:func:`~sklearn.utils.extmath.randomized_svd` for more details.\n\n.. versionadded:: 1.1",
+      "effective_default": null,
+      "name": "n_oversamples",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=10"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "LU",
+          "QR",
+          "auto",
+          "none"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'auto'",
+      "description": "Power iteration normalizer for randomized SVD solver.\nNot used by ARPACK. See :func:`~sklearn.utils.extmath.randomized_svd`\nfor more details.\n\n.. versionadded:: 1.1",
+      "effective_default": null,
+      "name": "power_iteration_normalizer",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'auto', 'QR', 'LU', 'none'}, default='auto'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "random_state"
+        ]
+      },
+      "default": "None",
+      "description": "Used when the 'arpack' or 'randomized' solvers are used. Pass an int\nfor reproducible results across multiple function calls.\nSee :term:`Glossary <random_state>`.\n\n.. versionadded:: 0.18.0",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, RandomState instance or None, default=None"
+    }
+  ],
+  "returns": [],
+  "signature": "PCA(n_components=None, *, copy=True, whiten=False, svd_solver='auto', tol=0.0, iterated_power='auto', n_oversamples=10, power_iteration_normalizer='auto', random_state=None)",
+  "summary": "Principal component analysis (PCA).",
+  "warnings": []
+}

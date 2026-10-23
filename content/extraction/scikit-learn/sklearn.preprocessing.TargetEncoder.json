@@ -1,0 +1,218 @@
+{
+  "attributes": [
+    {
+      "description": "Encodings learnt on all of `X`.\nFor feature `i`, `encodings_[i]` are the encodings matching the\ncategories listed in `categories_[i]`. When `target_type_` is\n\"multiclass\", the encoding for feature `i` and class `j` is stored in\n`encodings_[j + (i * len(classes_))]`. E.g., for 2 features (f) and\n3 classes (c), encodings are ordered:\nf0_c0, f0_c1, f0_c2, f1_c0, f1_c1, f1_c2,",
+      "name": "encodings_",
+      "type_doc": "list of shape (n_features,) or (n_features * n_classes) of ndarray"
+    },
+    {
+      "description": "The categories of each input feature determined during fitting or\nspecified in `categories`\n(in order of the features in `X` and corresponding with the output\nof :meth:`transform`).",
+      "name": "categories_",
+      "type_doc": "list of shape (n_features,) of ndarray"
+    },
+    {
+      "description": "Type of target.",
+      "name": "target_type_",
+      "type_doc": "str"
+    },
+    {
+      "description": "The overall mean of the target. This value is only used in :meth:`transform`\nto encode categories.",
+      "name": "target_mean_",
+      "type_doc": "float"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    },
+    {
+      "description": "If `target_type_` is 'binary' or 'multiclass', holds the label for each class,\notherwise `None`.",
+      "name": "classes_",
+      "type_doc": "ndarray or None"
+    },
+    {
+      "description": "Infrequent categories for each feature.",
+      "name": "infrequent_categories_",
+      "type_doc": ""
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.TargetEncoder.html",
+  "extractor_version": "1",
+  "id": "sklearn.preprocessing.TargetEncoder",
+  "import_path": "sklearn.preprocessing.TargetEncoder",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y)",
+      "summary": "Fit the :class:`TargetEncoder` to X and y."
+    },
+    {
+      "name": "fit_transform",
+      "signature": "fit_transform(X, y, **params)",
+      "summary": "Fit :class:`TargetEncoder` and transform `X` with the target encoding."
+    },
+    {
+      "name": "get_feature_names_out",
+      "signature": "get_feature_names_out(input_features=None)",
+      "summary": "Get output feature names for transformation."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "set_output",
+      "signature": "set_output(*, transform=None)",
+      "summary": "Set output container."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(X)",
+      "summary": "Transform X with the target encoding."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "auto"
+        ],
+        "source": "constraints",
+        "types": [
+          "list"
+        ]
+      },
+      "default": "'auto'",
+      "description": "Categories (unique values) per feature:\n\n- `\"auto\"` : Determine categories automatically from the training data.\n- list : `categories[i]` holds the categories expected in the i-th column. The\n  passed categories should not mix strings and numeric values within a single\n  feature, and should be sorted in case of numeric values.\n\nThe used categories are stored in the `categories_` fitted attribute.",
+      "effective_default": null,
+      "name": "categories",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "\"auto\" or list of shape (n_features,) of array-like, default=\"auto\""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "auto",
+          "binary",
+          "continuous",
+          "multiclass"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'auto'",
+      "description": "Type of target.\n\n- `\"auto\"` : Type of target is inferred with\n  :func:`~sklearn.utils.multiclass.type_of_target`.\n- `\"continuous\"` : Continuous target\n- `\"binary\"` : Binary target\n- `\"multiclass\"` : Multiclass target\n\n.. note::\n    The type of target inferred with `\"auto\"` may not be the desired target\n    type used for modeling. For example, if the target consisted of integers\n    between 0 and 100, then :func:`~sklearn.utils.multiclass.type_of_target`\n    will infer the target as `\"multiclass\"`. In this case, setting\n    `target_type=\"continuous\"` will specify the target as a regression\n    problem. The `target_type_` attribute gives the target type used by the\n    encoder.\n\n.. versionchanged:: 1.4\n   Added the option 'multiclass'.",
+      "effective_default": null,
+      "name": "target_type",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "{\"auto\", \"continuous\", \"binary\", \"multiclass\"}, default=\"auto\""
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [
+          "auto"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'auto'",
+      "description": "The amount of mixing of the target mean conditioned on the value of the\ncategory with the global target mean. A larger `smooth` value will put\nmore weight on the global target mean.\nIf `\"auto\"`, then `smooth` is set to an empirical Bayes estimate.",
+      "effective_default": null,
+      "name": "smooth",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "\"auto\" or float, default=\"auto\""
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "cv_object"
+        ]
+      },
+      "default": "5",
+      "description": "Determines the splitting strategy used in the internal :term:`cross fitting`\nduring :meth:`fit_transform`. Splitters where each sample index doesn't appear\nin the validation fold exactly once, raise a `ValueError`.\nPossible inputs for cv are:\n\n- `None`, to use a 5-fold cross-validation chosen internally based on\n    `target_type`,\n- integer, to specify the number of folds for the cross-validation chosen\n    internally based on `target_type`,\n- :term:`CV splitter` that does not repeat samples across validation folds,\n- an iterable yielding (train, test) splits as arrays of indices.\n\nFor integer/None inputs, if `target_type` is `\"continuous\"`, :class:`KFold` is\nused, otherwise :class:`StratifiedKFold` is used.\n\nRefer :ref:`User Guide <cross_validation>` for more information on\ncross-validation strategies.\n\n.. versionchanged:: 1.9\n    Cross-validation generators and iterables can also be passed as `cv`.",
+      "effective_default": null,
+      "name": "cv",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int, cross-validation generator or an iterable, default=5"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "deprecated"
+        ],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "'deprecated'",
+      "description": "Whether to shuffle the data in :meth:`fit_transform` before splitting into\nfolds. Note that the samples within each split will not be shuffled. Only\napplies if `cv` is an int or `None`. If `cv` is a cross-validation generator or\nan iterable, `shuffle` is ignored.\n\n.. deprecated:: 1.9\n    `shuffle` is deprecated and will be removed in 1.11. Pass a cross-validation\n    generator as `cv` argument to specify the shuffling instead.",
+      "effective_default": null,
+      "name": "shuffle",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "deprecated"
+        ],
+        "source": "constraints",
+        "types": [
+          "random_state"
+        ]
+      },
+      "default": "'deprecated'",
+      "description": "When `shuffle` is True, `random_state` affects the ordering of the\nindices, which controls the randomness of each fold. Otherwise, this\nparameter has no effect.\nPass an int for reproducible output across multiple function calls.\nSee :term:`Glossary <random_state>`.\n\n.. deprecated:: 1.9\n    `random_state` is deprecated and will be removed in 1.11. Pass a\n    cross-validation generator as `cv` argument to specify the random state of\n    the shuffling instead.",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int, RandomState instance or None, default=None"
+    }
+  ],
+  "returns": [],
+  "signature": "TargetEncoder(categories='auto', target_type='auto', smooth='auto', cv=5, shuffle='deprecated', random_state='deprecated')",
+  "summary": "Target Encoder for regression and classification targets.",
+  "warnings": []
+}

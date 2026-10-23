@@ -1,0 +1,170 @@
+{
+  "attributes": [
+    {
+      "description": "The median value for each feature in the training set.",
+      "name": "center_",
+      "type_doc": "array of floats"
+    },
+    {
+      "description": "The (scaled) interquartile range for each feature in the training set.\n\n.. versionadded:: 0.17\n   *scale_* attribute.",
+      "name": "scale_",
+      "type_doc": "array of floats"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.RobustScaler.html",
+  "extractor_version": "1",
+  "id": "sklearn.preprocessing.RobustScaler",
+  "import_path": "sklearn.preprocessing.RobustScaler",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y=None)",
+      "summary": "Compute the median and quantiles to be used for scaling."
+    },
+    {
+      "name": "fit_transform",
+      "signature": "fit_transform(X, y=None, **fit_params)",
+      "summary": "Fit to data, then transform it."
+    },
+    {
+      "name": "get_feature_names_out",
+      "signature": "get_feature_names_out(input_features=None)",
+      "summary": "Get output feature names for transformation."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "inverse_transform",
+      "signature": "inverse_transform(X)",
+      "summary": "Scale back the data to the original representation."
+    },
+    {
+      "name": "set_output",
+      "signature": "set_output(*, transform=None)",
+      "summary": "Set output container."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(X)",
+      "summary": "Center and scale the data."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "If `True`, center the data before scaling.\nThis will cause :meth:`transform` to raise an exception when attempted\non sparse matrices, because centering them entails building a dense\nmatrix which in common use cases is likely to be too large to fit in\nmemory.",
+      "effective_default": null,
+      "name": "with_centering",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "If `True`, scale the data to interquartile range.",
+      "effective_default": null,
+      "name": "with_scaling",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "tuple"
+        ]
+      },
+      "default": "(25.0, 75.0)",
+      "description": "Quantile range used to calculate `scale_`. By default this is equal to\nthe IQR, i.e., `q_min` is the first quantile and `q_max` is the third\nquantile.\n\n.. versionadded:: 0.18",
+      "effective_default": null,
+      "name": "quantile_range",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "tuple (q_min, q_max), 0.0 < q_min < q_max < 100.0, default=(25.0, 75.0)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "If `False`, try to avoid a copy and do inplace scaling instead.\nThis is not guaranteed to always work inplace; e.g. if the data is\nnot a NumPy array or scipy.sparse CSR matrix, a copy may still be\nreturned.",
+      "effective_default": null,
+      "name": "copy",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "If `True`, scale data so that normally distributed features have a\nvariance of 1. In general, if the difference between the x-values of\n`q_max` and `q_min` for a standard normal distribution is greater\nthan 1, the dataset will be scaled down. If less than 1, the dataset\nwill be scaled up.\n\n.. versionadded:: 0.24",
+      "effective_default": null,
+      "name": "unit_variance",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    }
+  ],
+  "returns": [],
+  "signature": "RobustScaler(*, with_centering=True, with_scaling=True, quantile_range=(25.0, 75.0), copy=True, unit_variance=False)",
+  "summary": "Scale features using statistics that are robust to outliers.",
+  "warnings": []
+}

@@ -1,0 +1,240 @@
+{
+  "attributes": [
+    {
+      "description": "The classes labels. Only available when `estimator` is a classifier.",
+      "name": "classes_",
+      "type_doc": "ndarray of shape (n_classes,)"
+    },
+    {
+      "description": "The fitted estimator used to select features.",
+      "name": "estimator_",
+      "type_doc": "``Estimator`` instance"
+    },
+    {
+      "description": "The number of selected features.",
+      "name": "n_features_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`. Only defined if the\nunderlying estimator exposes such an attribute when fit.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    },
+    {
+      "description": "The feature ranking, such that ``ranking_[i]`` corresponds to the\nranking position of the i-th feature. Selected (i.e., estimated\nbest) features are assigned rank 1.",
+      "name": "ranking_",
+      "type_doc": "ndarray of shape (n_features,)"
+    },
+    {
+      "description": "The mask of selected features.",
+      "name": "support_",
+      "type_doc": "ndarray of shape (n_features,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.RFE.html",
+  "extractor_version": "1",
+  "id": "sklearn.feature_selection.RFE",
+  "import_path": "sklearn.feature_selection.RFE",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "decision_function",
+      "signature": "decision_function(X)",
+      "summary": "Compute the decision function of ``X``."
+    },
+    {
+      "name": "fit",
+      "signature": "fit(X, y, **fit_params)",
+      "summary": "Fit the RFE model and then the underlying estimator on the selected features."
+    },
+    {
+      "name": "fit_transform",
+      "signature": "fit_transform(X, y=None, **fit_params)",
+      "summary": "Fit to data, then transform it."
+    },
+    {
+      "name": "get_feature_names_out",
+      "signature": "get_feature_names_out(input_features=None)",
+      "summary": "Mask feature names according to selected features."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "get_support",
+      "signature": "get_support(indices=False)",
+      "summary": "Get a mask, or integer index, of the features selected."
+    },
+    {
+      "name": "inverse_transform",
+      "signature": "inverse_transform(X)",
+      "summary": "Reverse the transformation operation."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X, **predict_params)",
+      "summary": "Reduce X to the selected features and predict using the estimator."
+    },
+    {
+      "name": "predict_log_proba",
+      "signature": "predict_log_proba(X)",
+      "summary": "Predict class log-probabilities for X."
+    },
+    {
+      "name": "predict_proba",
+      "signature": "predict_proba(X)",
+      "summary": "Predict class probabilities for X."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, **score_params)",
+      "summary": "Reduce X to the selected features and return the score of the estimator."
+    },
+    {
+      "name": "set_output",
+      "signature": "set_output(*, transform=None)",
+      "summary": "Set output container."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(X)",
+      "summary": "Reduce X to the selected features."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "an object implementing 'fit'"
+        ]
+      },
+      "default": null,
+      "description": "A supervised learning estimator with a ``fit`` method that provides\ninformation about feature importance\n(e.g. `coef_`, `feature_importances_`).",
+      "effective_default": null,
+      "name": "estimator",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "``Estimator`` instance"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "right",
+            "left": 0,
+            "right": 1,
+            "type": "RealNotInt"
+          },
+          {
+            "closed": "neither",
+            "left": 0,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "The number of features to select. If `None`, half of the features are\nselected. If integer, the parameter is the absolute number of features\nto select. If float between 0 and 1, it is the fraction of features to\nselect.\n\n.. versionchanged:: 0.24\n   Added float values for fractions.",
+      "effective_default": null,
+      "name": "n_features_to_select",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or float, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "neither",
+            "left": 0,
+            "right": null,
+            "type": "Integral"
+          },
+          {
+            "closed": "neither",
+            "left": 0,
+            "right": 1,
+            "type": "RealNotInt"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "1",
+      "description": "If greater than or equal to 1, then ``step`` corresponds to the\n(integer) number of features to remove at each iteration.\nIf within (0.0, 1.0), then ``step`` corresponds to the percentage\n(rounded down) of features to remove at each iteration.",
+      "effective_default": null,
+      "name": "step",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or float, default=1"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "verbose"
+        ]
+      },
+      "default": "0",
+      "description": "Controls verbosity of output.",
+      "effective_default": null,
+      "name": "verbose",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "str",
+          "<built-in function callable>"
+        ]
+      },
+      "default": "'auto'",
+      "description": "If 'auto', uses the feature importance either through a `coef_`\nor `feature_importances_` attributes of estimator.\n\nAlso accepts a string that specifies an attribute name/path\nfor extracting feature importance (implemented with `attrgetter`).\nFor example, give `regressor_.coef_` in case of\n:class:`~sklearn.compose.TransformedTargetRegressor`  or\n`named_steps.clf.feature_importances_` in case of\nclass:`~sklearn.pipeline.Pipeline` with its last step named `clf`.\n\nIf `callable`, overrides the default feature importance getter.\nThe callable is passed with the fitted estimator and it should\nreturn importance for each feature.\n\n.. versionadded:: 0.24",
+      "effective_default": null,
+      "name": "importance_getter",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str or callable, default='auto'"
+    }
+  ],
+  "returns": [],
+  "signature": "RFE(estimator, *, n_features_to_select=None, step=1, verbose=0, importance_getter='auto')",
+  "summary": "Feature ranking with recursive feature elimination.",
+  "warnings": []
+}

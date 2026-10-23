@@ -1,0 +1,54 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.LeavePGroupsOut.html",
+  "extractor_version": "1",
+  "id": "sklearn.model_selection.LeavePGroupsOut",
+  "import_path": "sklearn.model_selection.LeavePGroupsOut",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_n_splits",
+      "signature": "get_n_splits(X=None, y=None, groups=None)",
+      "summary": "Returns the number of splitting iterations in the cross-validator."
+    },
+    {
+      "name": "set_split_request",
+      "signature": "set_split_request(*, groups: bool | None | str = '$UNCHANGED$') -> sklearn.model_selection._split.LeavePGroupsOut",
+      "summary": "Configure whether metadata should be requested to be passed to the ``split`` method."
+    },
+    {
+      "name": "split",
+      "signature": "split(X, y=None, groups=None)",
+      "summary": "Generate indices to split data into training and test set."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Number of groups (``p``) to leave out in the test split.",
+      "effective_default": null,
+      "name": "n_groups",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "int"
+    }
+  ],
+  "returns": [],
+  "signature": "LeavePGroupsOut(n_groups)",
+  "summary": "Leave P Group(s) Out cross-validator.",
+  "warnings": []
+}

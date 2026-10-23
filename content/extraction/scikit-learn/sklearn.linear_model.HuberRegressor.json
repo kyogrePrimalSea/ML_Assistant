@@ -1,0 +1,217 @@
+{
+  "attributes": [
+    {
+      "description": "Features got by optimizing the L2-regularized Huber loss.",
+      "name": "coef_",
+      "type_doc": "array, shape (n_features,)"
+    },
+    {
+      "description": "Bias.",
+      "name": "intercept_",
+      "type_doc": "float"
+    },
+    {
+      "description": "The value by which ``|y - Xw - c|`` is scaled down.",
+      "name": "scale_",
+      "type_doc": "float"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    },
+    {
+      "description": "Number of iterations that\n``scipy.optimize.minimize(method=\"L-BFGS-B\")`` has run for.\n\n.. versionchanged:: 0.20\n\n    In SciPy <= 1.0.0 the number of lbfgs iterations may exceed\n    ``max_iter``. ``n_iter_`` will now report at most ``max_iter``.",
+      "name": "n_iter_",
+      "type_doc": "int"
+    },
+    {
+      "description": "A boolean mask which is set to True where the samples are identified\nas outliers.",
+      "name": "outliers_",
+      "type_doc": "array, shape (n_samples,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.HuberRegressor.html",
+  "extractor_version": "1",
+  "id": "sklearn.linear_model.HuberRegressor",
+  "import_path": "sklearn.linear_model.HuberRegressor",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y, sample_weight=None)",
+      "summary": "Fit the model according to the given training data."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X)",
+      "summary": "Predict using the linear model."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Return :ref:`coefficient of determination <r2_score>` on test data."
+    },
+    {
+      "name": "set_fit_request",
+      "signature": "set_fit_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.linear_model._huber.HuberRegressor",
+      "summary": "Configure whether metadata should be requested to be passed to the ``fit`` method."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.linear_model._huber.HuberRegressor",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1.0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "1.35",
+      "description": "The parameter epsilon controls the number of samples that should be\nclassified as outliers. The smaller the epsilon, the more robust it is\nto outliers. Epsilon must be in the range `[1, inf)`.",
+      "effective_default": null,
+      "name": "epsilon",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=1.35"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "100",
+      "description": "Maximum number of iterations that\n``scipy.optimize.minimize(method=\"L-BFGS-B\")`` should run for.",
+      "effective_default": null,
+      "name": "max_iter",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=100"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.0001",
+      "description": "Strength of the squared L2 regularization. Note that the penalty is\nequal to ``alpha * ||w||^2``.\nMust be in the range `[0, inf)`.",
+      "effective_default": null,
+      "name": "alpha",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0.0001"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "This is useful if the stored attributes of a previously used model\nhas to be reused. If set to False, then the coefficients will\nbe rewritten for every call to fit.\nSee :term:`the Glossary <warm_start>`.",
+      "effective_default": null,
+      "name": "warm_start",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "Whether or not to fit the intercept. This can be set to False\nif the data is already centered around the origin.",
+      "effective_default": null,
+      "name": "fit_intercept",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0.0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "1e-05",
+      "description": "The iteration will stop when\n``max{|proj g_i | i = 1, ..., n}`` <= ``tol``\nwhere pg_i is the i-th component of the projected gradient.",
+      "effective_default": null,
+      "name": "tol",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=1e-05"
+    }
+  ],
+  "returns": [],
+  "signature": "HuberRegressor(*, epsilon=1.35, max_iter=100, alpha=0.0001, warm_start=False, fit_intercept=True, tol=1e-05)",
+  "summary": "L2-regularized linear regression model that is robust to outliers.",
+  "warnings": []
+}

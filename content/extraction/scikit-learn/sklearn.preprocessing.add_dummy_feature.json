@@ -1,0 +1,54 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.add_dummy_feature.html",
+  "extractor_version": "1",
+  "id": "sklearn.preprocessing.add_dummy_feature",
+  "import_path": "sklearn.preprocessing.add_dummy_feature",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Data.",
+      "effective_default": null,
+      "name": "X",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "{array-like, sparse matrix} of shape (n_samples, n_features)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "1.0",
+      "description": "Value to use for the dummy feature.",
+      "effective_default": null,
+      "name": "value",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "float"
+    }
+  ],
+  "returns": [
+    {
+      "description": "Same data with dummy feature added as first column.",
+      "name": "X",
+      "type_doc": "{ndarray, sparse matrix} of shape (n_samples, n_features + 1)"
+    }
+  ],
+  "signature": "add_dummy_feature(X, value=1.0)",
+  "summary": "Augment dataset with an additional dummy feature.",
+  "warnings": []
+}

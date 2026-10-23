@@ -1,0 +1,99 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.metrics.d2_brier_score.html",
+  "extractor_version": "1",
+  "id": "sklearn.metrics.d2_brier_score",
+  "import_path": "sklearn.metrics.d2_brier_score",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "True targets.",
+      "effective_default": null,
+      "name": "y_true",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n_samples,)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Predicted probabilities. If `y_proba.shape = (n_samples,)`\nthe probabilities provided are assumed to be that of the\npositive class. If `y_proba.shape = (n_samples, n_classes)`\nthe columns in `y_proba` are assumed to correspond to the\nlabels in alphabetical order, as done by\n:class:`~sklearn.preprocessing.LabelBinarizer`.",
+      "effective_default": null,
+      "name": "y_proba",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n_samples,) or (n_samples, n_classes)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Sample weights.",
+      "effective_default": null,
+      "name": "sample_weight",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of shape (n_samples,), default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Label of the positive class. `pos_label` will be inferred in the\nfollowing manner:\n\n* if `y_true` in {-1, 1} or {0, 1}, `pos_label` defaults to 1;\n* else if `y_true` contains string, an error will be raised and\n  `pos_label` should be explicitly specified;\n* otherwise, `pos_label` defaults to the greater label,\n  i.e. `np.unique(y_true)[-1]`.",
+      "effective_default": null,
+      "name": "pos_label",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, float, bool or str, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Class labels when `y_proba.shape = (n_samples, n_classes)`.\nIf not provided, labels will be inferred from `y_true`.",
+      "effective_default": null,
+      "name": "labels",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of shape (n_classes,), default=None"
+    }
+  ],
+  "returns": [
+    {
+      "description": "The D^2 score.",
+      "name": "d2",
+      "type_doc": "float"
+    }
+  ],
+  "signature": "d2_brier_score(y_true, y_proba, *, sample_weight=None, pos_label=None, labels=None)",
+  "summary": ":math:`D^2` score function, fraction of Brier score explained.",
+  "warnings": []
+}

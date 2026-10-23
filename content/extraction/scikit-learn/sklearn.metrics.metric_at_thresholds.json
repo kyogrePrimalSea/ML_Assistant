@@ -1,0 +1,104 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.metrics.metric_at_thresholds.html",
+  "extractor_version": "1",
+  "id": "sklearn.metrics.metric_at_thresholds",
+  "import_path": "sklearn.metrics.metric_at_thresholds",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Ground truth (correct) target labels.",
+      "effective_default": null,
+      "name": "y_true",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n_samples,)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Continuous prediction scores, either estimated probabilities of the\npositive class or output of a :term:`decision_function`.",
+      "effective_default": null,
+      "name": "y_score",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n_samples,)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The metric function to use. It will be called as\n`metric_func(y_true, y_pred, **metric_params)`, where `y_pred` are\nthresholded predictions, internally computed as\n`y_pred = (y_score >= threshold)`. The output should be\na single numeric or a collection where each element has the same size.",
+      "effective_default": null,
+      "name": "metric_func",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "callable"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Sample weights. If not `None`, will be passed to `metric_func`.",
+      "effective_default": null,
+      "name": "sample_weight",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of shape (n_samples,), default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Parameters to pass to `metric_func`.",
+      "effective_default": null,
+      "name": "metric_params",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "dict, default=None"
+    }
+  ],
+  "returns": [
+    {
+      "description": "The scores associated with each threshold. If `metric_func` returns a\ncollection (e.g., a tuple of floats), the output would be a 2D array\nof shape (n_thresholds, \\*n_outputs).",
+      "name": "metric_values",
+      "type_doc": "ndarray of shape (n_thresholds,) or (n_thresholds, \\*n_outputs)"
+    },
+    {
+      "description": "The thresholds used to compute the scores.",
+      "name": "thresholds",
+      "type_doc": "ndarray of shape (n_thresholds,)"
+    }
+  ],
+  "signature": "metric_at_thresholds(y_true, y_score, metric_func, *, sample_weight=None, metric_params=None)",
+  "summary": "Compute `metric_func` per threshold for :term:`binary` data.",
+  "warnings": []
+}

@@ -1,0 +1,129 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.mutual_info_classif.html",
+  "extractor_version": "1",
+  "id": "sklearn.feature_selection.mutual_info_classif",
+  "import_path": "sklearn.feature_selection.mutual_info_classif",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Feature matrix.",
+      "effective_default": null,
+      "name": "X",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "{array-like, sparse matrix} of shape (n_samples, n_features)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Target vector.",
+      "effective_default": null,
+      "name": "y",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n_samples,)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'auto'",
+      "description": "If bool, then determines whether to consider all features discrete\nor continuous. If array, then it should be either a boolean mask\nwith shape (n_features,) or array with indices of discrete features.\nIf 'auto', it is assigned to False for dense `X` and to True for\nsparse `X`.",
+      "effective_default": null,
+      "name": "discrete_features",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "'auto', bool or array-like, default='auto'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "3",
+      "description": "Number of neighbors to use for MI estimation for continuous variables,\nsee [2]_ and [3]_. Higher values reduce variance of the estimation, but\ncould introduce a bias.",
+      "effective_default": null,
+      "name": "n_neighbors",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=3"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "Whether to make a copy of the given data. If set to False, the initial\ndata will be overwritten.",
+      "effective_default": null,
+      "name": "copy",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Determines random number generation for adding small noise to\ncontinuous variables in order to remove repeated values.\nPass an int for reproducible results across multiple function calls.\nSee :term:`Glossary <random_state>`.",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, RandomState instance or None, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The number of jobs to use for computing the mutual information.\nThe parallelization is done on the columns of `X`.\n``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.\n``-1`` means using all processors. See :term:`Glossary <n_jobs>`\nfor more details.\n\n.. versionadded:: 1.5",
+      "effective_default": null,
+      "name": "n_jobs",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=None"
+    }
+  ],
+  "returns": [
+    {
+      "description": "Estimated mutual information between each feature and the target in\nnat units.",
+      "name": "mi",
+      "type_doc": "ndarray, shape (n_features,)"
+    }
+  ],
+  "signature": "mutual_info_classif(X, y, *, discrete_features='auto', n_neighbors=3, copy=True, random_state=None, n_jobs=None)",
+  "summary": "Estimate mutual information for a discrete target variable.",
+  "warnings": []
+}

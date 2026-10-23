@@ -1,0 +1,219 @@
+{
+  "attributes": [
+    {
+      "description": "The base estimator from which the ensemble is grown.\n\n.. versionadded:: 1.2\n   `base_estimator_` was renamed to `estimator_`.",
+      "name": "estimator_",
+      "type_doc": "estimator"
+    },
+    {
+      "description": "The collection of fitted sub-estimators.",
+      "name": "estimators_",
+      "type_doc": "list of classifiers"
+    },
+    {
+      "description": "The classes labels.",
+      "name": "classes_",
+      "type_doc": "ndarray of shape (n_classes,)"
+    },
+    {
+      "description": "The number of classes.",
+      "name": "n_classes_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Weights for each estimator in the boosted ensemble.",
+      "name": "estimator_weights_",
+      "type_doc": "ndarray of floats"
+    },
+    {
+      "description": "Classification error for each estimator in the boosted\nensemble.",
+      "name": "estimator_errors_",
+      "type_doc": "ndarray of floats"
+    },
+    {
+      "description": "The impurity-based feature importances if supported by the\n``estimator`` (when based on decision trees).\n\nWarning: impurity-based feature importances can be misleading for\nhigh cardinality features (many unique values). See\n:func:`sklearn.inspection.permutation_importance` as an alternative.",
+      "name": "feature_importances_",
+      "type_doc": "ndarray of shape (n_features,)"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostClassifier.html",
+  "extractor_version": "1",
+  "id": "sklearn.ensemble.AdaBoostClassifier",
+  "import_path": "sklearn.ensemble.AdaBoostClassifier",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "decision_function",
+      "signature": "decision_function(X)",
+      "summary": "Compute the decision function of ``X``."
+    },
+    {
+      "name": "fit",
+      "signature": "fit(X, y, sample_weight=None)",
+      "summary": "Build a boosted classifier/regressor from the training set (X, y)."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Raise `NotImplementedError`."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X)",
+      "summary": "Predict classes for X."
+    },
+    {
+      "name": "predict_log_proba",
+      "signature": "predict_log_proba(X)",
+      "summary": "Predict class log-probabilities for X."
+    },
+    {
+      "name": "predict_proba",
+      "signature": "predict_proba(X)",
+      "summary": "Predict class probabilities for X."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Return :ref:`accuracy <accuracy_score>` on provided data and labels."
+    },
+    {
+      "name": "set_fit_request",
+      "signature": "set_fit_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.ensemble._weight_boosting.AdaBoostClassifier",
+      "summary": "Configure whether metadata should be requested to be passed to the ``fit`` method."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.ensemble._weight_boosting.AdaBoostClassifier",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    },
+    {
+      "name": "staged_decision_function",
+      "signature": "staged_decision_function(X)",
+      "summary": "Compute decision function of ``X`` for each boosting iteration."
+    },
+    {
+      "name": "staged_predict",
+      "signature": "staged_predict(X)",
+      "summary": "Return staged predictions for X."
+    },
+    {
+      "name": "staged_predict_proba",
+      "signature": "staged_predict_proba(X)",
+      "summary": "Predict class probabilities for X."
+    },
+    {
+      "name": "staged_score",
+      "signature": "staged_score(X, y, sample_weight=None)",
+      "summary": "Return staged scores for X, y."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "an object implementing 'fit' and 'predict'",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "The base estimator from which the boosted ensemble is built.\nSupport for sample weighting is required, as well as proper\n``classes_`` and ``n_classes_`` attributes. If ``None``, then\nthe base estimator is :class:`~sklearn.tree.DecisionTreeClassifier`\ninitialized with `max_depth=1`.\n\n.. versionadded:: 1.2\n   `base_estimator` was renamed to `estimator`.",
+      "effective_default": null,
+      "name": "estimator",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "object, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "50",
+      "description": "The maximum number of estimators at which boosting is terminated.\nIn case of perfect fit, the learning procedure is stopped early.\nValues must be in the range `[1, inf)`.",
+      "effective_default": null,
+      "name": "n_estimators",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=50"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "neither",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "1.0",
+      "description": "Weight applied to each classifier at each boosting iteration. A higher\nlearning rate increases the contribution of each classifier. There is\na trade-off between the `learning_rate` and `n_estimators` parameters.\nValues must be in the range `(0.0, inf)`.",
+      "effective_default": null,
+      "name": "learning_rate",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=1.0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "random_state"
+        ]
+      },
+      "default": "None",
+      "description": "Controls the random seed given at each `estimator` at each\nboosting iteration.\nThus, it is only used when `estimator` exposes a `random_state`.\nPass an int for reproducible output across multiple function calls.\nSee :term:`Glossary <random_state>`.",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, RandomState instance or None, default=None"
+    }
+  ],
+  "returns": [],
+  "signature": "AdaBoostClassifier(estimator=None, *, n_estimators=50, learning_rate=1.0, random_state=None)",
+  "summary": "An AdaBoost classifier.",
+  "warnings": []
+}

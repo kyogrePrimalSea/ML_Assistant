@@ -1,0 +1,131 @@
+{
+  "attributes": [
+    {
+      "description": "Holds the label for each class.",
+      "name": "classes_",
+      "type_doc": "ndarray of shape (n_classes,)"
+    },
+    {
+      "description": "Represents the type of the target data as evaluated by\n:func:`~sklearn.utils.multiclass.type_of_target`. Possible type are\n'continuous', 'continuous-multioutput', 'binary', 'multiclass',\n'multiclass-multioutput', 'multilabel-indicator', and 'unknown'.",
+      "name": "y_type_",
+      "type_doc": "str"
+    },
+    {
+      "description": "`True` if the input data to transform is given as a sparse matrix,\n `False` otherwise.",
+      "name": "sparse_input_",
+      "type_doc": "bool"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.LabelBinarizer.html",
+  "extractor_version": "1",
+  "id": "sklearn.preprocessing.LabelBinarizer",
+  "import_path": "sklearn.preprocessing.LabelBinarizer",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(y)",
+      "summary": "Fit label binarizer."
+    },
+    {
+      "name": "fit_transform",
+      "signature": "fit_transform(y)",
+      "summary": "Fit label binarizer/transform multi-class labels to binary labels."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "inverse_transform",
+      "signature": "inverse_transform(Y, threshold=None)",
+      "summary": "Transform binary labels back to multi-class labels."
+    },
+    {
+      "name": "set_inverse_transform_request",
+      "signature": "set_inverse_transform_request(*, threshold: bool | None | str = '$UNCHANGED$') -> sklearn.preprocessing._label.LabelBinarizer",
+      "summary": "Configure whether metadata should be requested to be passed to the ``inverse_transform`` method."
+    },
+    {
+      "name": "set_output",
+      "signature": "set_output(*, transform=None)",
+      "summary": "Set output container."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(y)",
+      "summary": "Transform multi-class labels to binary labels."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "Integral"
+        ]
+      },
+      "default": "0",
+      "description": "Value with which negative labels must be encoded.",
+      "effective_default": null,
+      "name": "neg_label",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "Integral"
+        ]
+      },
+      "default": "1",
+      "description": "Value with which positive labels must be encoded.",
+      "effective_default": null,
+      "name": "pos_label",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=1"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "True if the returned array from transform is desired to be in sparse\nCSR format.",
+      "effective_default": null,
+      "name": "sparse_output",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    }
+  ],
+  "returns": [],
+  "signature": "LabelBinarizer(*, neg_label=0, pos_label=1, sparse_output=False)",
+  "summary": "Binarize labels in a one-vs-all fashion.",
+  "warnings": []
+}

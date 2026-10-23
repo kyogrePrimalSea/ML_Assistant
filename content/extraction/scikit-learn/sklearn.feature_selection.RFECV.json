@@ -1,0 +1,291 @@
+{
+  "attributes": [
+    {
+      "description": "The classes labels. Only available when `estimator` is a classifier.",
+      "name": "classes_",
+      "type_doc": "ndarray of shape (n_classes,)"
+    },
+    {
+      "description": "The fitted estimator used to select features.",
+      "name": "estimator_",
+      "type_doc": "``Estimator`` instance"
+    },
+    {
+      "description": "All arrays (values of the dictionary) are sorted in ascending order\nby the number of features used (i.e., the first element of the array\nrepresents the models that used the least number of features, while the\nlast element represents the models that used all available features).\n\n.. versionadded:: 1.0\n\nThis dictionary contains the following keys:\n\nsplit(k)_test_score : ndarray of shape (n_subsets_of_features,)\n    The cross-validation scores across (k)th fold.\n\nmean_test_score : ndarray of shape (n_subsets_of_features,)\n    Mean of scores over the folds.\n\nstd_test_score : ndarray of shape (n_subsets_of_features,)\n    Standard deviation of scores over the folds.\n\nn_features : ndarray of shape (n_subsets_of_features,)\n    Number of features used at each step.\n\n    .. versionadded:: 1.5\n\nsplit(k)_ranking : ndarray of shape (n_subsets_of_features,)\n    The cross-validation rankings across (k)th fold.\n    Selected (i.e., estimated best) features are assigned rank 1.\n    Illustration in\n    :ref:`sphx_glr_auto_examples_feature_selection_plot_rfe_with_cross_validation.py`\n\n    .. versionadded:: 1.7\n\nsplit(k)_support : ndarray of shape (n_subsets_of_features,)\n    The cross-validation supports across (k)th fold. The support\n    is the mask of selected features.\n\n    .. versionadded:: 1.7",
+      "name": "cv_results_",
+      "type_doc": "dict of ndarrays"
+    },
+    {
+      "description": "The number of selected features with cross-validation.",
+      "name": "n_features_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`. Only defined if the\nunderlying estimator exposes such an attribute when fit.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    },
+    {
+      "description": "The feature ranking, such that `ranking_[i]`\ncorresponds to the ranking\nposition of the i-th feature.\nSelected (i.e., estimated best)\nfeatures are assigned rank 1.",
+      "name": "ranking_",
+      "type_doc": "narray of shape (n_features,)"
+    },
+    {
+      "description": "The mask of selected features.",
+      "name": "support_",
+      "type_doc": "ndarray of shape (n_features,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.RFECV.html",
+  "extractor_version": "1",
+  "id": "sklearn.feature_selection.RFECV",
+  "import_path": "sklearn.feature_selection.RFECV",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "decision_function",
+      "signature": "decision_function(X)",
+      "summary": "Compute the decision function of ``X``."
+    },
+    {
+      "name": "fit",
+      "signature": "fit(X, y, **params)",
+      "summary": "Fit the RFE model and automatically tune the number of selected features."
+    },
+    {
+      "name": "fit_transform",
+      "signature": "fit_transform(X, y=None, **fit_params)",
+      "summary": "Fit to data, then transform it."
+    },
+    {
+      "name": "get_feature_names_out",
+      "signature": "get_feature_names_out(input_features=None)",
+      "summary": "Mask feature names according to selected features."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "get_support",
+      "signature": "get_support(indices=False)",
+      "summary": "Get a mask, or integer index, of the features selected."
+    },
+    {
+      "name": "inverse_transform",
+      "signature": "inverse_transform(X)",
+      "summary": "Reverse the transformation operation."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X, **predict_params)",
+      "summary": "Reduce X to the selected features and predict using the estimator."
+    },
+    {
+      "name": "predict_log_proba",
+      "signature": "predict_log_proba(X)",
+      "summary": "Predict class log-probabilities for X."
+    },
+    {
+      "name": "predict_proba",
+      "signature": "predict_proba(X)",
+      "summary": "Predict class probabilities for X."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, **score_params)",
+      "summary": "Score using the `scoring` option on the given test data and labels."
+    },
+    {
+      "name": "set_output",
+      "signature": "set_output(*, transform=None)",
+      "summary": "Set output container."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(X)",
+      "summary": "Reduce X to the selected features."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "an object implementing 'fit'"
+        ]
+      },
+      "default": null,
+      "description": "A supervised learning estimator with a ``fit`` method that provides\ninformation about feature importance either through a ``coef_``\nattribute or through a ``feature_importances_`` attribute.",
+      "effective_default": null,
+      "name": "estimator",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "``Estimator`` instance"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "neither",
+            "left": 0,
+            "right": null,
+            "type": "Integral"
+          },
+          {
+            "closed": "neither",
+            "left": 0,
+            "right": 1,
+            "type": "RealNotInt"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "1",
+      "description": "If greater than or equal to 1, then ``step`` corresponds to the\n(integer) number of features to remove at each iteration.\nIf within (0.0, 1.0), then ``step`` corresponds to the percentage\n(rounded down) of features to remove at each iteration.\nNote that the last iteration may remove fewer than ``step`` features in\norder to reach ``min_features_to_select``.",
+      "effective_default": null,
+      "name": "step",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or float, default=1"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "neither",
+            "left": 0,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "1",
+      "description": "The minimum number of features to be selected. This number of features\nwill always be scored, even if the difference between the original\nfeature count and ``min_features_to_select`` isn't divisible by\n``step``.\n\n.. versionadded:: 0.20",
+      "effective_default": null,
+      "name": "min_features_to_select",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=1"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "cv_object"
+        ]
+      },
+      "default": "None",
+      "description": "Determines the cross-validation splitting strategy.\nPossible inputs for cv are:\n\n- None, to use the default 5-fold cross-validation,\n- integer, to specify the number of folds,\n- :term:`CV splitter`,\n- an iterable yielding (train, test) splits as arrays of indices.\n\nFor integer/None inputs, if ``y`` is binary or multiclass,\n:class:`~sklearn.model_selection.StratifiedKFold` is used. If the\nestimator is not a classifier or if ``y`` is neither binary nor multiclass,\n:class:`~sklearn.model_selection.KFold` is used.\n\nRefer :ref:`User Guide <cross_validation>` for the various\ncross-validation strategies that can be used here.\n\n.. versionchanged:: 0.22\n    ``cv`` default value of None changed from 3-fold to 5-fold.",
+      "effective_default": null,
+      "name": "cv",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, cross-validation generator or an iterable, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None",
+          "str",
+          "<built-in function callable>"
+        ]
+      },
+      "default": "None",
+      "description": "Scoring method to evaluate the :class:`RFE` selectors' performance. Options:\n\n- str: see :ref:`scoring_string_names` for options.\n- callable: a scorer callable object (e.g., function) with signature\n  ``scorer(estimator, X, y)``. See :ref:`scoring_callable` for details.\n- `None`: the `estimator`'s\n  :ref:`default evaluation criterion <scoring_api_overview>` is used.",
+      "effective_default": null,
+      "name": "scoring",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str or callable, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "verbose"
+        ]
+      },
+      "default": "0",
+      "description": "Controls verbosity of output.",
+      "effective_default": null,
+      "name": "verbose",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None",
+          "Integral"
+        ]
+      },
+      "default": "None",
+      "description": "Number of cores to run in parallel while fitting across folds.\n``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.\n``-1`` means using all processors. See :term:`Glossary <n_jobs>`\nfor more details.\n\n.. versionadded:: 0.18",
+      "effective_default": null,
+      "name": "n_jobs",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or None, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "str",
+          "<built-in function callable>"
+        ]
+      },
+      "default": "'auto'",
+      "description": "If 'auto', uses the feature importance either through a `coef_`\nor `feature_importances_` attributes of estimator.\n\nAlso accepts a string that specifies an attribute name/path\nfor extracting feature importance.\nFor example, give `regressor_.coef_` in case of\n:class:`~sklearn.compose.TransformedTargetRegressor`  or\n`named_steps.clf.feature_importances_` in case of\n:class:`~sklearn.pipeline.Pipeline` with its last step named `clf`.\n\nIf `callable`, overrides the default feature importance getter.\nThe callable is passed with the fitted estimator and it should\nreturn importance for each feature.\n\n.. versionadded:: 0.24",
+      "effective_default": null,
+      "name": "importance_getter",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str or callable, default='auto'"
+    }
+  ],
+  "returns": [],
+  "signature": "RFECV(estimator, *, step=1, min_features_to_select=1, cv=None, scoring=None, verbose=0, n_jobs=None, importance_getter='auto')",
+  "summary": "Recursive feature elimination with cross-validation to select features.",
+  "warnings": []
+}

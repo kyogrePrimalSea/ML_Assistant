@@ -1,0 +1,63 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.compose.make_column_selector.html",
+  "extractor_version": "1",
+  "id": "sklearn.compose.make_column_selector",
+  "import_path": "sklearn.compose.make_column_selector",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Name of columns containing this regex pattern will be included. If\nNone, column selection will not be selected based on pattern.",
+      "effective_default": null,
+      "name": "pattern",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "str, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "A selection of dtypes to include. For more details, see\n:meth:`pandas.DataFrame.select_dtypes`.",
+      "effective_default": null,
+      "name": "dtype_include",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "column dtype or list of column dtypes, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "A selection of dtypes to exclude. For more details, see\n:meth:`pandas.DataFrame.select_dtypes`.",
+      "effective_default": null,
+      "name": "dtype_exclude",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "column dtype or list of column dtypes, default=None"
+    }
+  ],
+  "returns": [],
+  "signature": "make_column_selector(pattern=None, *, dtype_include=None, dtype_exclude=None)",
+  "summary": "Create a callable to select columns to be used with",
+  "warnings": []
+}

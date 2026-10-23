@@ -1,0 +1,204 @@
+{
+  "attributes": [
+    {
+      "description": "The imputation fill value for each feature.\nComputing statistics can result in `np.nan` values.\nDuring :meth:`transform`, features corresponding to `np.nan`\nstatistics will be discarded.",
+      "name": "statistics_",
+      "type_doc": "array of shape (n_features,)"
+    },
+    {
+      "description": "Indicator used to add binary indicators for missing values.\n`None` if `add_indicator=False`.",
+      "name": "indicator_",
+      "type_doc": ":class:`~sklearn.impute.MissingIndicator`"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.impute.SimpleImputer.html",
+  "extractor_version": "1",
+  "id": "sklearn.impute.SimpleImputer",
+  "import_path": "sklearn.impute.SimpleImputer",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y=None)",
+      "summary": "Fit the imputer on `X`."
+    },
+    {
+      "name": "fit_transform",
+      "signature": "fit_transform(X, y=None, **fit_params)",
+      "summary": "Fit to data, then transform it."
+    },
+    {
+      "name": "get_feature_names_out",
+      "signature": "get_feature_names_out(input_features=None)",
+      "summary": "Get output feature names for transformation."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "inverse_transform",
+      "signature": "inverse_transform(X)",
+      "summary": "Convert the data back to the original representation."
+    },
+    {
+      "name": "set_output",
+      "signature": "set_output(*, transform=None)",
+      "summary": "Set output container."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(X)",
+      "summary": "Impute all missing values in `X`."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "an instance of 'int', a float in the range [-inf, inf], numpy.nan, pandas.NA, an instance of 'str' or None"
+        ]
+      },
+      "default": "nan",
+      "description": "The placeholder for the missing values. All occurrences of\n`missing_values` will be imputed. For pandas' dataframes with\nnullable integer dtypes with missing values, `missing_values`\ncan be set to either `np.nan` or `pd.NA`.",
+      "effective_default": null,
+      "name": "missing_values",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, float, str, np.nan, None or pandas.NA, default=np.nan"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "constant",
+          "mean",
+          "median",
+          "most_frequent"
+        ],
+        "source": "constraints",
+        "types": [
+          "<built-in function callable>"
+        ]
+      },
+      "default": "'mean'",
+      "description": "The imputation strategy.\n\n- If \"mean\", then replace missing values using the mean along\n  each column. Can only be used with numeric data.\n- If \"median\", then replace missing values using the median along\n  each column. Can only be used with numeric data.\n- If \"most_frequent\", then replace missing using the most frequent\n  value along each column. Can be used with strings or numeric data.\n  If there is more than one such value, only the smallest is returned.\n- If \"constant\", then replace missing values with fill_value. Can be\n  used with strings or numeric data.\n- If an instance of Callable, then replace missing values using the\n  scalar statistic returned by running the callable over a dense 1d\n  array containing non-missing values of each column.\n\n.. versionadded:: 0.20\n   strategy=\"constant\" for fixed value imputation.\n\n.. versionadded:: 1.5\n   strategy=callable for custom value imputation.",
+      "effective_default": null,
+      "name": "strategy",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str or Callable, default='mean'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "n",
+          "o",
+          "_",
+          "v",
+          "a",
+          "l",
+          "i",
+          "d",
+          "a",
+          "t",
+          "i",
+          "o",
+          "n"
+        ]
+      },
+      "default": "None",
+      "description": "When strategy == \"constant\", `fill_value` is used to replace all\noccurrences of missing_values. For string or object data types,\n`fill_value` must be a string.\nIf `None`, `fill_value` will be 0 when imputing numerical\ndata and \"missing_value\" for strings or object data types.",
+      "effective_default": null,
+      "name": "fill_value",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str or numerical value, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "If True, a copy of X will be created. If False, imputation will\nbe done in-place whenever possible. Note that, in the following cases,\na new copy will always be made, even if `copy=False`:\n\n- If `X` is not an array of floating values;\n- If `X` is encoded as a CSR matrix;\n- If `add_indicator=True`.",
+      "effective_default": null,
+      "name": "copy",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "If True, a :class:`MissingIndicator` transform will stack onto output\nof the imputer's transform. This allows a predictive estimator\nto account for missingness despite imputation. If a feature has no\nmissing values at fit/train time, the feature won't appear on\nthe missing indicator even if there are missing values at\ntransform/test time.",
+      "effective_default": null,
+      "name": "add_indicator",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "If True, features that consist exclusively of missing values when\n`fit` is called are returned in results when `transform` is called.\nThe imputed value is always `0` except when `strategy=\"constant\"`\nin which case `fill_value` will be used instead.\n\n.. versionadded:: 1.2",
+      "effective_default": null,
+      "name": "keep_empty_features",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    }
+  ],
+  "returns": [],
+  "signature": "SimpleImputer(*, missing_values=nan, strategy='mean', fill_value=None, copy=True, add_indicator=False, keep_empty_features=False)",
+  "summary": "Univariate imputer for completing missing values with simple strategies.",
+  "warnings": []
+}

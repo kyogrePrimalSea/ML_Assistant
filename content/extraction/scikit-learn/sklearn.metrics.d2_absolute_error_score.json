@@ -1,0 +1,87 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.metrics.d2_absolute_error_score.html",
+  "extractor_version": "1",
+  "id": "sklearn.metrics.d2_absolute_error_score",
+  "import_path": "sklearn.metrics.d2_absolute_error_score",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Ground truth (correct) target values.",
+      "effective_default": null,
+      "name": "y_true",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n_samples,) or (n_samples, n_outputs)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Estimated target values.",
+      "effective_default": null,
+      "name": "y_pred",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n_samples,) or (n_samples, n_outputs)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Sample weights.",
+      "effective_default": null,
+      "name": "sample_weight",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of shape (n_samples,), default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "raw_values",
+          "uniform_average"
+        ],
+        "source": "docstring",
+        "types": []
+      },
+      "default": "'uniform_average'",
+      "description": "Defines aggregating of multiple output values.\nArray-like value defines weights used to average scores.\n\n'raw_values' :\n    Returns a full set of errors in case of multioutput input.\n\n'uniform_average' :\n    Scores of all outputs are averaged with uniform weight.",
+      "effective_default": null,
+      "name": "multioutput",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'raw_values', 'uniform_average'} or array-like of shape (n_outputs,), default='uniform_average'"
+    }
+  ],
+  "returns": [
+    {
+      "description": "The :math:`D^2` score with an absolute error deviance\nor ndarray of scores if 'multioutput' is 'raw_values'.",
+      "name": "score",
+      "type_doc": "float or ndarray of floats"
+    }
+  ],
+  "signature": "d2_absolute_error_score(y_true, y_pred, *, sample_weight=None, multioutput='uniform_average')",
+  "summary": ":math:`D^2` regression score function, fraction of absolute error explained.",
+  "warnings": []
+}

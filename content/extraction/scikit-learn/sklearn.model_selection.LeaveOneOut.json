@@ -1,0 +1,33 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.LeaveOneOut.html",
+  "extractor_version": "1",
+  "id": "sklearn.model_selection.LeaveOneOut",
+  "import_path": "sklearn.model_selection.LeaveOneOut",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_n_splits",
+      "signature": "get_n_splits(X, y=None, groups=None)",
+      "summary": "Returns the number of splitting iterations in the cross-validator."
+    },
+    {
+      "name": "split",
+      "signature": "split(X, y=None, groups=None)",
+      "summary": "Generate indices to split data into training and test set."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [],
+  "returns": [],
+  "signature": "LeaveOneOut()",
+  "summary": "Leave-One-Out cross-validator.",
+  "warnings": []
+}

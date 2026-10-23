@@ -1,0 +1,104 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.metrics.confusion_matrix_at_thresholds.html",
+  "extractor_version": "1",
+  "id": "sklearn.metrics.confusion_matrix_at_thresholds",
+  "import_path": "sklearn.metrics.confusion_matrix_at_thresholds",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "True targets of binary classification.",
+      "effective_default": null,
+      "name": "y_true",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n_samples,)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Estimated probabilities or output of a decision function.",
+      "effective_default": null,
+      "name": "y_score",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n_samples,)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The label of the positive class.",
+      "effective_default": null,
+      "name": "pos_label",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, float, bool or str, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Sample weights.",
+      "effective_default": null,
+      "name": "sample_weight",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of shape (n_samples,), default=None"
+    }
+  ],
+  "returns": [
+    {
+      "description": "A count of true negatives, at index `i` being the number of negative\nsamples assigned a `score < thresholds[i]`.",
+      "name": "tns",
+      "type_doc": "ndarray of shape (n_thresholds,)"
+    },
+    {
+      "description": "A count of false positives, at index `i` being the number of negative\nsamples assigned a `score >= thresholds[i]`. The total number of\nnegative samples is equal to `fps[-1]`.",
+      "name": "fps",
+      "type_doc": "ndarray of shape (n_thresholds,)"
+    },
+    {
+      "description": "A count of false negatives, at index `i` being the number of positive\nsamples assigned a `score < thresholds[i]`.",
+      "name": "fns",
+      "type_doc": "ndarray of shape (n_thresholds,)"
+    },
+    {
+      "description": "An increasing count of true positives, at index `i` being the number\nof positive samples assigned a `score >= thresholds[i]`. The total\nnumber of positive samples is equal to `tps[-1]`.",
+      "name": "tps",
+      "type_doc": "ndarray of shape (n_thresholds,)"
+    },
+    {
+      "description": "Decreasing score values.",
+      "name": "thresholds",
+      "type_doc": "ndarray of shape (n_thresholds,)"
+    }
+  ],
+  "signature": "confusion_matrix_at_thresholds(y_true, y_score, *, pos_label=None, sample_weight=None)",
+  "summary": "Calculate :term:`binary` confusion matrix terms per classification threshold.",
+  "warnings": []
+}

@@ -1,0 +1,291 @@
+{
+  "attributes": [
+    {
+      "description": "Number of features seen during :term:`fit`. Only defined if the\nunderlying estimator exposes such an attribute when fit.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    },
+    {
+      "description": "The number of features that were selected.",
+      "name": "n_features_to_select_",
+      "type_doc": "int"
+    },
+    {
+      "description": "The mask of selected features.",
+      "name": "support_",
+      "type_doc": "ndarray of shape (n_features,), dtype=bool"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SequentialFeatureSelector.html",
+  "extractor_version": "1",
+  "id": "sklearn.feature_selection.SequentialFeatureSelector",
+  "import_path": "sklearn.feature_selection.SequentialFeatureSelector",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y=None, **params)",
+      "summary": "Learn the features to select from X."
+    },
+    {
+      "name": "fit_transform",
+      "signature": "fit_transform(X, y=None, **fit_params)",
+      "summary": "Fit to data, then transform it."
+    },
+    {
+      "name": "get_feature_names_out",
+      "signature": "get_feature_names_out(input_features=None)",
+      "summary": "Mask feature names according to selected features."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "get_support",
+      "signature": "get_support(indices=False)",
+      "summary": "Get a mask, or integer index, of the features selected."
+    },
+    {
+      "name": "inverse_transform",
+      "signature": "inverse_transform(X)",
+      "summary": "Reverse the transformation operation."
+    },
+    {
+      "name": "set_output",
+      "signature": "set_output(*, transform=None)",
+      "summary": "Set output container."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(X)",
+      "summary": "Reduce X to the selected features."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "an object implementing 'fit'"
+        ]
+      },
+      "default": null,
+      "description": "An unfitted estimator.",
+      "effective_default": null,
+      "name": "estimator",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "estimator instance"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "right",
+            "left": 0,
+            "right": 1,
+            "type": "RealNotInt"
+          },
+          {
+            "closed": "neither",
+            "left": 0,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [
+          "auto"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'auto'",
+      "description": "If `\"auto\"`, the behaviour depends on the `tol` parameter:\n\n- if `tol` is not `None`, then features are selected while the score\n  change does not exceed `tol`.\n- otherwise, half of the features are selected.\n\nIf integer, the parameter is the absolute number of features to select.\nIf float between 0 and 1, it is the fraction of features to select.\n\n.. versionadded:: 1.1\n   The option `\"auto\"` was added in version 1.1.\n\n.. versionchanged:: 1.3\n   The default changed from `\"warn\"` to `\"auto\"` in 1.3.",
+      "effective_default": null,
+      "name": "n_features_to_select",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "\"auto\", int or float, default=\"auto\""
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "neither",
+            "left": null,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "If the score is not incremented by at least `tol` between two\nconsecutive feature additions or removals, stop adding or removing.\n\n`tol` can be negative when removing features using `direction=\"backward\"`.\n`tol` is required to be strictly positive when doing forward selection.\nIt can be useful to reduce the number of features at the cost of a small\ndecrease in the score.\n\n`tol` is enabled only when `n_features_to_select` is `\"auto\"`.\n\n.. versionadded:: 1.1",
+      "effective_default": null,
+      "name": "tol",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "backward",
+          "forward"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'forward'",
+      "description": "Whether to perform forward selection or backward selection.",
+      "effective_default": null,
+      "name": "direction",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'forward', 'backward'}, default='forward'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "accuracy",
+          "adjusted_mutual_info_score",
+          "adjusted_rand_score",
+          "average_precision",
+          "balanced_accuracy",
+          "completeness_score",
+          "d2_absolute_error_score",
+          "d2_brier_score",
+          "d2_log_loss_score",
+          "explained_variance",
+          "f1",
+          "f1_macro",
+          "f1_micro",
+          "f1_samples",
+          "f1_weighted",
+          "fowlkes_mallows_score",
+          "homogeneity_score",
+          "jaccard",
+          "jaccard_macro",
+          "jaccard_micro",
+          "jaccard_samples",
+          "jaccard_weighted",
+          "matthews_corrcoef",
+          "mutual_info_score",
+          "neg_brier_score",
+          "neg_log_loss",
+          "neg_max_error",
+          "neg_mean_absolute_error",
+          "neg_mean_absolute_percentage_error",
+          "neg_mean_gamma_deviance",
+          "neg_mean_poisson_deviance",
+          "neg_mean_squared_error",
+          "neg_mean_squared_log_error",
+          "neg_median_absolute_error",
+          "neg_negative_likelihood_ratio",
+          "neg_root_mean_squared_error",
+          "neg_root_mean_squared_log_error",
+          "normalized_mutual_info_score",
+          "positive_likelihood_ratio",
+          "precision",
+          "precision_macro",
+          "precision_micro",
+          "precision_samples",
+          "precision_weighted",
+          "r2",
+          "rand_score",
+          "recall",
+          "recall_macro",
+          "recall_micro",
+          "recall_samples",
+          "recall_weighted",
+          "roc_auc",
+          "roc_auc_ovo",
+          "roc_auc_ovo_weighted",
+          "roc_auc_ovr",
+          "roc_auc_ovr_weighted",
+          "top_k_accuracy",
+          "v_measure_score"
+        ],
+        "source": "constraints",
+        "types": [
+          "None",
+          "<built-in function callable>"
+        ]
+      },
+      "default": "None",
+      "description": "Scoring method to use for cross-validation. Options:\n\n- str: see :ref:`scoring_string_names` for options.\n- callable: a scorer callable object (e.g., function) with signature\n  ``scorer(estimator, X, y)`` that returns a single value.\n  See :ref:`scoring_callable` for details.\n- `None`: the `estimator`'s\n  :ref:`default evaluation criterion <scoring_api_overview>` is used.",
+      "effective_default": null,
+      "name": "scoring",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str or callable, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "cv_object"
+        ]
+      },
+      "default": "5",
+      "description": "Determines the cross-validation splitting strategy.\nPossible inputs for cv are:\n\n- None, to use the default 5-fold cross validation,\n- integer, to specify the number of folds in a `(Stratified)KFold`,\n- :term:`CV splitter`,\n- an iterable yielding (train, test) splits as arrays of indices.\n\nFor integer/None inputs, if the estimator is a classifier and ``y`` is\neither binary or multiclass,\n:class:`~sklearn.model_selection.StratifiedKFold` is used. In all other\ncases, :class:`~sklearn.model_selection.KFold` is used. These splitters\nare instantiated with `shuffle=False` so the splits will be the same\nacross calls.\n\nRefer :ref:`User Guide <cross_validation>` for the various\ncross-validation strategies that can be used here.",
+      "effective_default": null,
+      "name": "cv",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, cross-validation generator or an iterable, default=5"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None",
+          "Integral"
+        ]
+      },
+      "default": "None",
+      "description": "Number of jobs to run in parallel. When evaluating a new feature to\nadd or remove, the cross-validation procedure is parallel over the\nfolds.\n``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.\n``-1`` means using all processors. See :term:`Glossary <n_jobs>`\nfor more details.",
+      "effective_default": null,
+      "name": "n_jobs",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=None"
+    }
+  ],
+  "returns": [],
+  "signature": "SequentialFeatureSelector(estimator, *, n_features_to_select='auto', tol=None, direction='forward', scoring=None, cv=5, n_jobs=None)",
+  "summary": "Transformer that performs Sequential Feature Selection.",
+  "warnings": []
+}

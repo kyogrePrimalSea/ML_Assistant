@@ -1,0 +1,147 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.quantile_transform.html",
+  "extractor_version": "1",
+  "id": "sklearn.preprocessing.quantile_transform",
+  "import_path": "sklearn.preprocessing.quantile_transform",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The data to transform.",
+      "effective_default": null,
+      "name": "X",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "{array-like, sparse matrix} of shape (n_samples, n_features)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0",
+      "description": "Axis used to compute the means and standard deviations along. If 0,\ntransform each feature, otherwise (if 1) transform each sample.",
+      "effective_default": null,
+      "name": "axis",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "1000",
+      "description": "Number of quantiles to be computed. It corresponds to the number\nof landmarks used to discretize the cumulative distribution function.\nIf n_quantiles is larger than the number of samples, n_quantiles is set\nto the number of samples as a larger number of quantiles does not give\na better approximation of the cumulative distribution function\nestimator.",
+      "effective_default": null,
+      "name": "n_quantiles",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=1000 or n_samples"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "uniform",
+          "normal"
+        ],
+        "source": "docstring",
+        "types": []
+      },
+      "default": "'uniform'",
+      "description": "Marginal distribution for the transformed data. The choices are\n'uniform' (default) or 'normal'.",
+      "effective_default": null,
+      "name": "output_distribution",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'uniform', 'normal'}, default='uniform'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "False",
+      "description": "Only applies to sparse matrices. If True, the sparse entries of the\nmatrix are discarded to compute the quantile statistics, including\nwhen subsampling. If False, these entries are treated as zeros.",
+      "effective_default": null,
+      "name": "ignore_implicit_zeros",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "100000",
+      "description": "Maximum number of samples used to estimate the quantiles for\ncomputational efficiency. Note that the subsampling procedure may\ndiffer for value-identical sparse and dense matrices.\nDisable subsampling by setting `subsample=None`.\n\n.. versionadded:: 1.5\n   The option `None` to disable subsampling was added.",
+      "effective_default": null,
+      "name": "subsample",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or None, default=1e5"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Determines random number generation for subsampling and smoothing\nnoise.\nPlease see ``subsample`` for more details.\nPass an int for reproducible results across multiple function calls.\nSee :term:`Glossary <random_state>`.",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, RandomState instance or None, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "If False, try to avoid a copy and transform in place.\nThis is not guaranteed to always work in place; e.g. if the data is\na numpy array with an int dtype, a copy will be returned even with\ncopy=False.\n\n.. versionchanged:: 0.23\n    The default value of `copy` changed from False to True in 0.23.",
+      "effective_default": null,
+      "name": "copy",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    }
+  ],
+  "returns": [
+    {
+      "description": "The transformed data.",
+      "name": "Xt",
+      "type_doc": "{ndarray, sparse matrix} of shape (n_samples, n_features)"
+    }
+  ],
+  "signature": "quantile_transform(X, *, axis=0, n_quantiles=1000, output_distribution='uniform', ignore_implicit_zeros=False, subsample=100000, random_state=None, copy=True)",
+  "summary": "Transform features using quantiles information.",
+  "warnings": []
+}

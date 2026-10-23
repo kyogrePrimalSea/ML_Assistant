@@ -1,0 +1,164 @@
+{
+  "attributes": [
+    {
+      "description": "Fitted regressor.",
+      "name": "regressor_",
+      "type_doc": "object"
+    },
+    {
+      "description": "Transformer used in :meth:`fit` and :meth:`predict`.",
+      "name": "transformer_",
+      "type_doc": "object"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`. Only defined if the\nunderlying regressor exposes such an attribute when fit.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.compose.TransformedTargetRegressor.html",
+  "extractor_version": "1",
+  "id": "sklearn.compose.TransformedTargetRegressor",
+  "import_path": "sklearn.compose.TransformedTargetRegressor",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y, **fit_params)",
+      "summary": "Fit the model according to the given training data."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X, **predict_params)",
+      "summary": "Predict using the base regressor, applying inverse."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Return :ref:`coefficient of determination <r2_score>` on test data."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.compose._target.TransformedTargetRegressor",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "an object implementing 'fit' and 'predict'",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Regressor object such as derived from\n:class:`~sklearn.base.RegressorMixin`. This regressor will\nautomatically be cloned each time prior to fitting. If `regressor is\nNone`, :class:`~sklearn.linear_model.LinearRegression` is created and used.",
+      "effective_default": null,
+      "name": "regressor",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "object, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "an object implementing 'transform'",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Estimator object such as derived from\n:class:`~sklearn.base.TransformerMixin`. Cannot be set at the same time\nas `func` and `inverse_func`. If `transformer is None` as well as\n`func` and `inverse_func`, the transformer will be an identity\ntransformer. Note that the transformer will be cloned during fitting.\nAlso, the transformer is restricting `y` to be a numpy array.",
+      "effective_default": null,
+      "name": "transformer",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "object, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "<built-in function callable>",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Function to apply to `y` before passing to :meth:`fit`. Cannot be set\nat the same time as `transformer`. If `func is None`, the function used will be\nthe identity function. If `func` is set, `inverse_func` also needs to be\nprovided. The function needs to return a 2-dimensional array.",
+      "effective_default": null,
+      "name": "func",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "function, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "<built-in function callable>",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Function to apply to the prediction of the regressor. Cannot be set at\nthe same time as `transformer`. The inverse function is used to return\npredictions to the same space of the original training labels. If\n`inverse_func` is set, `func` also needs to be provided. The inverse\nfunction needs to return a 2-dimensional array.",
+      "effective_default": null,
+      "name": "inverse_func",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "function, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "Whether to check that `transform` followed by `inverse_transform`\nor `func` followed by `inverse_func` leads to the original targets.",
+      "effective_default": null,
+      "name": "check_inverse",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    }
+  ],
+  "returns": [],
+  "signature": "TransformedTargetRegressor(regressor=None, *, transformer=None, func=None, inverse_func=None, check_inverse=True)",
+  "summary": "Meta-estimator to regress on a transformed target.",
+  "warnings": []
+}

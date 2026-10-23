@@ -1,0 +1,54 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.metrics.auc.html",
+  "extractor_version": "1",
+  "id": "sklearn.metrics.auc",
+  "import_path": "sklearn.metrics.auc",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "X coordinates. These must be either monotonic increasing or monotonic\ndecreasing.",
+      "effective_default": null,
+      "name": "x",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n,)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Y coordinates.",
+      "effective_default": null,
+      "name": "y",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n,)"
+    }
+  ],
+  "returns": [
+    {
+      "description": "Area Under the Curve.",
+      "name": "auc",
+      "type_doc": "float"
+    }
+  ],
+  "signature": "auc(x, y)",
+  "summary": "Compute Area Under the Curve (AUC) using the trapezoidal rule.",
+  "warnings": []
+}

@@ -1,0 +1,69 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.binarize.html",
+  "extractor_version": "1",
+  "id": "sklearn.preprocessing.binarize",
+  "import_path": "sklearn.preprocessing.binarize",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The data to binarize, element by element.\nscipy.sparse matrices should be in CSR or CSC format to avoid an\nun-necessary copy.",
+      "effective_default": null,
+      "name": "X",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "{array-like, sparse matrix} of shape (n_samples, n_features)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0.0",
+      "description": "Feature values below or equal to this are replaced by 0, above it by 1.\nThreshold may not be less than 0 for operations on sparse matrices.",
+      "effective_default": null,
+      "name": "threshold",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0.0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "True",
+      "description": "If False, try to avoid a copy and binarize in place.\nThis is not guaranteed to always work in place; e.g. if the data is\na numpy array with an object dtype, a copy will be returned even with\ncopy=False.",
+      "effective_default": null,
+      "name": "copy",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    }
+  ],
+  "returns": [
+    {
+      "description": "The transformed data.",
+      "name": "X_tr",
+      "type_doc": "{ndarray, sparse matrix} of shape (n_samples, n_features)"
+    }
+  ],
+  "signature": "binarize(X, *, threshold=0.0, copy=True)",
+  "summary": "Boolean thresholding of array-like or scipy.sparse matrix.",
+  "warnings": []
+}

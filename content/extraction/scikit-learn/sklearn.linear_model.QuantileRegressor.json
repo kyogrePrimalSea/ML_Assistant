@@ -1,0 +1,185 @@
+{
+  "attributes": [
+    {
+      "description": "Estimated coefficients for the features.",
+      "name": "coef_",
+      "type_doc": "array of shape (n_features,)"
+    },
+    {
+      "description": "The intercept of the model, aka bias term.",
+      "name": "intercept_",
+      "type_doc": "float"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    },
+    {
+      "description": "The actual number of iterations performed by the solver.",
+      "name": "n_iter_",
+      "type_doc": "int"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.QuantileRegressor.html",
+  "extractor_version": "1",
+  "id": "sklearn.linear_model.QuantileRegressor",
+  "import_path": "sklearn.linear_model.QuantileRegressor",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y, sample_weight=None)",
+      "summary": "Fit the model according to the given training data."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X)",
+      "summary": "Predict using the linear model."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Return :ref:`coefficient of determination <r2_score>` on test data."
+    },
+    {
+      "name": "set_fit_request",
+      "signature": "set_fit_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.linear_model._quantile.QuantileRegressor",
+      "summary": "Configure whether metadata should be requested to be passed to the ``fit`` method."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.linear_model._quantile.QuantileRegressor",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "neither",
+            "left": 0,
+            "right": 1,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.5",
+      "description": "The quantile that the model tries to predict. It must be strictly\nbetween 0 and 1. If 0.5 (default), the model predicts the 50%\nquantile, i.e. the median.",
+      "effective_default": null,
+      "name": "quantile",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=0.5"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "1.0",
+      "description": "Regularization constant that multiplies the L1 penalty term.",
+      "effective_default": null,
+      "name": "alpha",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=1.0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "Whether or not to fit the intercept.",
+      "effective_default": null,
+      "name": "fit_intercept",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "highs",
+          "highs-ds",
+          "highs-ipm",
+          "interior-point",
+          "revised simplex"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'highs'",
+      "description": "Method used by :func:`scipy.optimize.linprog` to solve the linear\nprogramming formulation.\n\nIt is recommended to use the highs methods because\nthey are the fastest ones. Solvers \"highs-ds\", \"highs-ipm\" and \"highs\"\nsupport sparse input data and, in fact, always convert to sparse csc.\n\nFrom `scipy>=1.11.0`, \"interior-point\" is not available anymore.\n\n.. versionchanged:: 1.4\n   The default of `solver` changed to `\"highs\"` in version 1.4.",
+      "effective_default": null,
+      "name": "solver",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'highs-ds', 'highs-ipm', 'highs', 'interior-point', 'revised simplex'}, default='highs'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "dict",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Additional parameters passed to :func:`scipy.optimize.linprog` as\noptions. If `None` and if `solver='interior-point'`, then\n`{\"lstsq\": True}` is passed to :func:`scipy.optimize.linprog` for the\nsake of stability.",
+      "effective_default": null,
+      "name": "solver_options",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "dict, default=None"
+    }
+  ],
+  "returns": [],
+  "signature": "QuantileRegressor(*, quantile=0.5, alpha=1.0, fit_intercept=True, solver='highs', solver_options=None)",
+  "summary": "Linear regression model that predicts conditional quantiles.",
+  "warnings": []
+}

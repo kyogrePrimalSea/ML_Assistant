@@ -1,0 +1,114 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.metrics.brier_score_loss.html",
+  "extractor_version": "1",
+  "id": "sklearn.metrics.brier_score_loss",
+  "import_path": "sklearn.metrics.brier_score_loss",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "True targets.",
+      "effective_default": null,
+      "name": "y_true",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n_samples,)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Predicted probabilities. If `y_proba.shape = (n_samples,)`\nthe probabilities provided are assumed to be that of the\npositive class. If `y_proba.shape = (n_samples, n_classes)`\nthe columns in `y_proba` are assumed to correspond to the\nlabels in alphabetical order, as done by\n:class:`~sklearn.preprocessing.LabelBinarizer`.",
+      "effective_default": null,
+      "name": "y_proba",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n_samples,) or (n_samples, n_classes)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Sample weights.",
+      "effective_default": null,
+      "name": "sample_weight",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of shape (n_samples,), default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Label of the positive class when `y_proba.shape = (n_samples,)`.\nIf not provided, `pos_label` will be inferred in the\nfollowing manner:\n\n* if `y_true` in {-1, 1} or {0, 1}, `pos_label` defaults to 1;\n* else if `y_true` contains string, an error will be raised and\n  `pos_label` should be explicitly specified;\n* otherwise, `pos_label` defaults to the greater label,\n  i.e. `np.unique(y_true)[-1]`.",
+      "effective_default": null,
+      "name": "pos_label",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, float, bool or str, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Class labels when `y_proba.shape = (n_samples, n_classes)`.\nIf not provided, labels will be inferred from `y_true`.\n\n.. versionadded:: 1.7",
+      "effective_default": null,
+      "name": "labels",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of shape (n_classes,), default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "'auto'",
+      "description": "When True, scale the Brier score by 1/2 to lie in the [0, 1] range instead\nof the [0, 2] range. The default \"auto\" option implements the rescaling to\n[0, 1] only for binary classification (as customary) but keeps the\noriginal [0, 2] range for multiclass classification.\n\n.. versionadded:: 1.7",
+      "effective_default": null,
+      "name": "scale_by_half",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool or \"auto\", default=\"auto\""
+    }
+  ],
+  "returns": [
+    {
+      "description": "Brier score loss.",
+      "name": "score",
+      "type_doc": "float"
+    }
+  ],
+  "signature": "brier_score_loss(y_true, y_proba, *, sample_weight=None, pos_label=None, labels=None, scale_by_half='auto')",
+  "summary": "Compute the Brier score loss.",
+  "warnings": []
+}

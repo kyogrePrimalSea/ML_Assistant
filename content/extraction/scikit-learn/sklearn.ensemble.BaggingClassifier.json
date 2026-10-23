@@ -1,0 +1,343 @@
+{
+  "attributes": [
+    {
+      "description": "The base estimator from which the ensemble is grown.\n\n.. versionadded:: 1.2\n   `base_estimator_` was renamed to `estimator_`.",
+      "name": "estimator_",
+      "type_doc": "estimator"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    },
+    {
+      "description": "The collection of fitted base estimators.",
+      "name": "estimators_",
+      "type_doc": "list of estimators"
+    },
+    {
+      "description": "The subset of drawn samples (i.e., the in-bag samples) for each base\nestimator. Each subset is defined by an array of the indices selected.",
+      "name": "estimators_samples_",
+      "type_doc": "list of arrays"
+    },
+    {
+      "description": "The subset of drawn features for each base estimator.",
+      "name": "estimators_features_",
+      "type_doc": "list of arrays"
+    },
+    {
+      "description": "The classes labels.",
+      "name": "classes_",
+      "type_doc": "ndarray of shape (n_classes,)"
+    },
+    {
+      "description": "The number of classes.",
+      "name": "n_classes_",
+      "type_doc": "int or list"
+    },
+    {
+      "description": "Score of the training dataset obtained using an out-of-bag estimate.\nThis attribute exists only when ``oob_score`` is True.",
+      "name": "oob_score_",
+      "type_doc": "float"
+    },
+    {
+      "description": "Decision function computed with out-of-bag estimate on the training\nset. If n_estimators is small it might be possible that a data point\nwas never left out during the bootstrap. In this case,\n`oob_decision_function_` might contain NaN. This attribute exists\nonly when ``oob_score`` is True.",
+      "name": "oob_decision_function_",
+      "type_doc": "ndarray of shape (n_samples, n_classes)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.BaggingClassifier.html",
+  "extractor_version": "1",
+  "id": "sklearn.ensemble.BaggingClassifier",
+  "import_path": "sklearn.ensemble.BaggingClassifier",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "decision_function",
+      "signature": "decision_function(X, **params)",
+      "summary": "Average of the decision functions of the base classifiers."
+    },
+    {
+      "name": "fit",
+      "signature": "fit(X, y, sample_weight=None, **fit_params)",
+      "summary": "Build a Bagging ensemble of estimators from the training set (X, y)."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X, **params)",
+      "summary": "Predict class for X."
+    },
+    {
+      "name": "predict_log_proba",
+      "signature": "predict_log_proba(X, **params)",
+      "summary": "Predict class log-probabilities for X."
+    },
+    {
+      "name": "predict_proba",
+      "signature": "predict_proba(X, **params)",
+      "summary": "Predict class probabilities for X."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, sample_weight=None)",
+      "summary": "Return :ref:`accuracy <accuracy_score>` on provided data and labels."
+    },
+    {
+      "name": "set_fit_request",
+      "signature": "set_fit_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.ensemble._bagging.BaggingClassifier",
+      "summary": "Configure whether metadata should be requested to be passed to the ``fit`` method."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.ensemble._bagging.BaggingClassifier",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "an object implementing 'fit' and 'predict'",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "The base estimator to fit on random subsets of the dataset.\nIf None, then the base estimator is a\n:class:`~sklearn.tree.DecisionTreeClassifier`.\n\n.. versionadded:: 1.2\n   `base_estimator` was renamed to `estimator`.",
+      "effective_default": null,
+      "name": "estimator",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "object, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "10",
+      "description": "The number of base estimators in the ensemble.",
+      "effective_default": null,
+      "name": "n_estimators",
+      "param_kind": "positional_or_keyword",
+      "required": false,
+      "type_doc": "int, default=10"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          },
+          {
+            "closed": "right",
+            "left": 0,
+            "right": 1,
+            "type": "RealNotInt"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "The number of samples to draw from X to train each base estimator (with\nreplacement by default, see `bootstrap` for more details).\n\n- If None, then draw `X.shape[0]` samples irrespective of `sample_weight`.\n- If int, then draw `max_samples` samples.\n- If float, then draw `max_samples * X.shape[0]` unweighted samples or\n  `max_samples * sample_weight.sum()` weighted samples.",
+      "effective_default": null,
+      "name": "max_samples",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or float, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          },
+          {
+            "closed": "right",
+            "left": 0,
+            "right": 1,
+            "type": "RealNotInt"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "1.0",
+      "description": "The number of features to draw from X to train each base estimator (\nwithout replacement by default, see `bootstrap_features` for more\ndetails).\n\n- If int, then draw `max_features` features.\n- If float, then draw `max(1, int(max_features * n_features_in_))` features.",
+      "effective_default": null,
+      "name": "max_features",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or float, default=1.0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "Whether samples are drawn with replacement. If False, sampling without\nreplacement is performed. If fitting with `sample_weight`, it is\nstrongly recommended to choose True, as only drawing with replacement\nwill ensure the expected frequency semantics of `sample_weight`.",
+      "effective_default": null,
+      "name": "bootstrap",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "Whether features are drawn with replacement.",
+      "effective_default": null,
+      "name": "bootstrap_features",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "Whether to use out-of-bag samples to estimate\nthe generalization error. Only available if bootstrap=True.",
+      "effective_default": null,
+      "name": "oob_score",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "When set to True, reuse the solution of the previous call to fit\nand add more estimators to the ensemble, otherwise, just fit\na whole new ensemble. See :term:`the Glossary <warm_start>`.\n\n.. versionadded:: 0.17\n   *warm_start* constructor parameter.",
+      "effective_default": null,
+      "name": "warm_start",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None",
+          "Integral"
+        ]
+      },
+      "default": "None",
+      "description": "The number of jobs to run in parallel for both :meth:`fit` and\n:meth:`predict`. ``None`` means 1 unless in a\n:obj:`joblib.parallel_backend` context. ``-1`` means using all\nprocessors. See :term:`Glossary <n_jobs>` for more details.",
+      "effective_default": null,
+      "name": "n_jobs",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "random_state"
+        ]
+      },
+      "default": "None",
+      "description": "Controls the random resampling of the original dataset\n(sample wise and feature wise).\nIf the base estimator accepts a `random_state` attribute, a different\nseed is generated for each instance in the ensemble.\nPass an int for reproducible output across multiple function calls.\nSee :term:`Glossary <random_state>`.",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, RandomState instance or None, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "verbose"
+        ]
+      },
+      "default": "0",
+      "description": "Controls the verbosity when fitting and predicting.",
+      "effective_default": null,
+      "name": "verbose",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=0"
+    }
+  ],
+  "returns": [],
+  "signature": "BaggingClassifier(estimator=None, n_estimators=10, *, max_samples=None, max_features=1.0, bootstrap=True, bootstrap_features=False, oob_score=False, warm_start=False, n_jobs=None, random_state=None, verbose=0)",
+  "summary": "A Bagging classifier.",
+  "warnings": []
+}

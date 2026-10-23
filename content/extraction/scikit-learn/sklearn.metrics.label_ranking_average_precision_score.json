@@ -1,0 +1,69 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.metrics.label_ranking_average_precision_score.html",
+  "extractor_version": "1",
+  "id": "sklearn.metrics.label_ranking_average_precision_score",
+  "import_path": "sklearn.metrics.label_ranking_average_precision_score",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "True binary labels in :term:`label indicator format`.",
+      "effective_default": null,
+      "name": "y_true",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "{array-like, sparse matrix} of shape (n_samples, n_labels)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Target scores, can either be probability estimates of the positive\nclass or non-thresholded decision values (as returned by\n:term:`decision_function` on some classifiers).\nFor :term:`decision_function` scores, values greater than or equal to\nzero should indicate the positive class.",
+      "effective_default": null,
+      "name": "y_score",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n_samples, n_labels)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Sample weights.\n\n.. versionadded:: 0.20",
+      "effective_default": null,
+      "name": "sample_weight",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of shape (n_samples,), default=None"
+    }
+  ],
+  "returns": [
+    {
+      "description": "Ranking-based average precision score.",
+      "name": "score",
+      "type_doc": "float"
+    }
+  ],
+  "signature": "label_ranking_average_precision_score(y_true, y_score, *, sample_weight=None)",
+  "summary": "Compute ranking-based average precision.",
+  "warnings": []
+}

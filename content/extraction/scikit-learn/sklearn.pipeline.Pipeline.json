@@ -1,0 +1,202 @@
+{
+  "attributes": [
+    {
+      "description": "Dictionary-like object, with the following attributes.\nRead-only attribute to access any step parameter by user given name.\nKeys are step names and values are steps parameters.",
+      "name": "named_steps",
+      "type_doc": ":class:`~sklearn.utils.Bunch`"
+    },
+    {
+      "description": "The classes labels. Only exist if the last step of the pipeline is a\nclassifier.",
+      "name": "classes_",
+      "type_doc": "ndarray of shape (n_classes,)"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`. Only defined if the\nunderlying first estimator in `steps` exposes such an attribute\nwhen fit.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Only defined if the\nunderlying estimator exposes such an attribute when fit.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html",
+  "extractor_version": "1",
+  "id": "sklearn.pipeline.Pipeline",
+  "import_path": "sklearn.pipeline.Pipeline",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "decision_function",
+      "signature": "decision_function(X, **params)",
+      "summary": "Transform the data, and apply `decision_function` with the final estimator."
+    },
+    {
+      "name": "fit",
+      "signature": "fit(X, y=None, **params)",
+      "summary": "Fit the model."
+    },
+    {
+      "name": "fit_predict",
+      "signature": "fit_predict(X, y=None, **params)",
+      "summary": "Transform the data, and apply `fit_predict` with the final estimator."
+    },
+    {
+      "name": "fit_transform",
+      "signature": "fit_transform(X, y=None, **params)",
+      "summary": "Fit the model and transform with the final estimator."
+    },
+    {
+      "name": "get_feature_names_out",
+      "signature": "get_feature_names_out(input_features=None)",
+      "summary": "Get output feature names for transformation."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "inverse_transform",
+      "signature": "inverse_transform(X, **params)",
+      "summary": "Apply `inverse_transform` for each step in a reverse order."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X, **params)",
+      "summary": "Transform the data, and apply `predict` with the final estimator."
+    },
+    {
+      "name": "predict_log_proba",
+      "signature": "predict_log_proba(X, **params)",
+      "summary": "Transform the data, and apply `predict_log_proba` with the final estimator."
+    },
+    {
+      "name": "predict_proba",
+      "signature": "predict_proba(X, **params)",
+      "summary": "Transform the data, and apply `predict_proba` with the final estimator."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y=None, sample_weight=None, **params)",
+      "summary": "Transform the data, and apply `score` with the final estimator."
+    },
+    {
+      "name": "score_samples",
+      "signature": "score_samples(X)",
+      "summary": "Transform the data, and apply `score_samples` with the final estimator."
+    },
+    {
+      "name": "set_callbacks",
+      "signature": "set_callbacks(*callbacks)",
+      "summary": "Set callbacks for the estimator."
+    },
+    {
+      "name": "set_output",
+      "signature": "set_output(*, transform=None)",
+      "summary": "Set the output container when `\"transform\"` and `\"fit_transform\"` are called."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**kwargs)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.pipeline.Pipeline",
+      "summary": "Configure whether metadata should be requested to be passed to the ``score`` method."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(X, **params)",
+      "summary": "Transform the data, and apply `transform` with the final estimator."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "list",
+          "tuple"
+        ]
+      },
+      "default": null,
+      "description": "List of (name of step, estimator) tuples that are to be chained in\nsequential order. To be compatible with the scikit-learn API, all steps\nmust define `fit`. All non-last steps must also define `transform`. See\n:ref:`Combining Estimators <combining_estimators>` for more details.",
+      "effective_default": null,
+      "name": "steps",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "list of tuples"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "list",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "The names of the :term:`metadata` parameters that should be transformed by the\npipeline before passing it to the step consuming it.\n\nThis enables transforming some input arguments to ``fit`` (other than ``X``)\nto be transformed by the steps of the pipeline up to the step which requires\nthem. Requirement is defined via :ref:`metadata routing <metadata_routing>`.\nFor instance, this can be used to pass a validation set through the pipeline.\n\nYou can only set this if metadata routing is enabled, which you\ncan enable using ``sklearn.set_config(enable_metadata_routing=True)``.\n\n.. versionadded:: 1.6",
+      "effective_default": null,
+      "name": "transform_input",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "list of str, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None",
+          "str",
+          "an object implementing 'cache'"
+        ]
+      },
+      "default": "None",
+      "description": "Used to cache the fitted transformers of the pipeline. The last step\nwill never be cached, even if it is a transformer. By default, no\ncaching is performed. If a string is given, it is the path to the\ncaching directory. Enabling caching triggers a clone of the transformers\nbefore fitting. Therefore, the transformer instance given to the\npipeline cannot be inspected directly. Use the attribute ``named_steps``\nor ``steps`` to inspect estimators within the pipeline. Caching the\ntransformers is advantageous when fitting is time consuming. See\n:ref:`sphx_glr_auto_examples_neighbors_plot_caching_nearest_neighbors.py`\nfor an example on how to enable caching.",
+      "effective_default": null,
+      "name": "memory",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str or object with the joblib.Memory interface, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "If True, the time elapsed while fitting each step will be printed as it\nis completed.",
+      "effective_default": null,
+      "name": "verbose",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    }
+  ],
+  "returns": [],
+  "signature": "Pipeline(steps, *, transform_input=None, memory=None, verbose=False)",
+  "summary": "A sequence of data transformers with an optional final predictor.",
+  "warnings": []
+}

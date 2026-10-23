@@ -1,0 +1,539 @@
+{
+  "attributes": [
+    {
+      "description": "A list of class labels known to the classifier.",
+      "name": "classes_",
+      "type_doc": "ndarray of shape (n_classes, )"
+    },
+    {
+      "description": "Coefficient of the features in the decision function.\n\n`coef_` is of shape (1, n_features) when the given problem\nis binary.",
+      "name": "coef_",
+      "type_doc": "ndarray of shape (1, n_features) or (n_classes, n_features)"
+    },
+    {
+      "description": "Intercept (a.k.a. bias) added to the decision function.\n\nIf `fit_intercept` is set to False, the intercept is set to zero.\n`intercept_` is of shape (1,) when the problem is binary.",
+      "name": "intercept_",
+      "type_doc": "ndarray of shape (1,) or (n_classes,)"
+    },
+    {
+      "description": "Array of C i.e. inverse of regularization parameter values used\nfor cross-validation.",
+      "name": "Cs_",
+      "type_doc": "ndarray of shape (n_cs)"
+    },
+    {
+      "description": "Array of l1_ratios used for cross-validation. If l1_ratios=None is used\n(i.e. penalty is not 'elasticnet'), this is set to ``[None]``",
+      "name": "l1_ratios_",
+      "type_doc": "ndarray of shape (n_l1_ratios)"
+    },
+    {
+      "description": "A dict with classes as the keys, and the path of coefficients obtained\nduring cross-validating across each fold (`n_folds`) and then across each Cs\n(`n_cs`).\nThe size of the coefficients is the number of degrees of freedom (`n_dof`),\ni.e. without intercept `n_dof=n_features` and with intercept\n`n_dof=n_features+1`.\nIf `penalty='elasticnet'`, there is an additional dimension for the number of\nl1_ratio values (`n_l1_ratios`), which gives a shape of\n``(n_folds, n_cs, n_l1_ratios_, n_dof)``.\nSee also parameter `use_legacy_attributes`.",
+      "name": "coefs_paths_",
+      "type_doc": "dict of ndarray of shape (n_folds, n_cs, n_dof) or (n_folds, n_cs, n_l1_ratios, n_dof)"
+    },
+    {
+      "description": "A dict with classes as the keys, and the values as the\ngrid of scores obtained during cross-validating each fold.\nThe same score is repeated across all classes. Each dict value\nhas shape ``(n_folds, n_cs)`` or ``(n_folds, n_cs, n_l1_ratios)`` if\n``penalty='elasticnet'``.\nSee also parameter `use_legacy_attributes`.",
+      "name": "scores_",
+      "type_doc": "dict"
+    },
+    {
+      "description": "The value of C that maps to the best score, repeated n_classes times.\nIf refit is set to False, the best C is the average of the\nC's that correspond to the best score for each fold.\n`C_` is of shape (1,) when the problem is binary.\nSee also parameter `use_legacy_attributes`.",
+      "name": "C_",
+      "type_doc": "ndarray of shape (n_classes,) or (1,)"
+    },
+    {
+      "description": "The value of l1_ratio that maps to the best score, repeated n_classes times.\nIf refit is set to False, the best l1_ratio is the average of the\nl1_ratio's that correspond to the best score for each fold.\n`l1_ratio_` is of shape (1,) when the problem is binary.\nSee also parameter `use_legacy_attributes`.",
+      "name": "l1_ratio_",
+      "type_doc": "ndarray of shape (n_classes,) or (n_classes - 1,)"
+    },
+    {
+      "description": "Actual number of iterations for all classes, folds and Cs.\nIf `penalty='elasticnet'`, the shape is `(1, n_folds, n_cs, n_l1_ratios)`.\nSee also parameter `use_legacy_attributes`.",
+      "name": "n_iter_",
+      "type_doc": "ndarray of shape (1, n_folds, n_cs) or (1, n_folds, n_cs, n_l1_ratios)"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegressionCV.html",
+  "extractor_version": "1",
+  "id": "sklearn.linear_model.LogisticRegressionCV",
+  "import_path": "sklearn.linear_model.LogisticRegressionCV",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "decision_function",
+      "signature": "decision_function(X)",
+      "summary": "Predict confidence scores for samples."
+    },
+    {
+      "name": "densify",
+      "signature": "densify()",
+      "summary": "Convert coefficient matrix to dense array format."
+    },
+    {
+      "name": "fit",
+      "signature": "fit(X, y, sample_weight=None, **params)",
+      "summary": "Fit the model according to the given training data."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "predict",
+      "signature": "predict(X)",
+      "summary": "Predict class labels for samples in X."
+    },
+    {
+      "name": "predict_log_proba",
+      "signature": "predict_log_proba(X)",
+      "summary": "Predict logarithm of probability estimates."
+    },
+    {
+      "name": "predict_proba",
+      "signature": "predict_proba(X)",
+      "summary": "Probability estimates."
+    },
+    {
+      "name": "score",
+      "signature": "score(X, y, *, sample_weight=None, **score_params)",
+      "summary": "Score using the `scoring` option on the given test data and labels."
+    },
+    {
+      "name": "set_callbacks",
+      "signature": "set_callbacks(*callbacks)",
+      "summary": "Set callbacks for the estimator."
+    },
+    {
+      "name": "set_fit_request",
+      "signature": "set_fit_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.linear_model._logistic.LogisticRegressionCV",
+      "summary": "Configure whether metadata should be requested to be passed to the ``fit`` method."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_score_request",
+      "signature": "set_score_request() -> sklearn.linear_model._logistic.LogisticRegressionCV",
+      "summary": "No-op."
+    },
+    {
+      "name": "sparsify",
+      "signature": "sparsify()",
+      "summary": "Convert coefficient matrix to sparse format."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "array-like"
+        ]
+      },
+      "default": "10",
+      "description": "Each of the values in Cs describes the inverse of regularization\nstrength. If Cs is as an int, then a grid of Cs values are chosen\nin a logarithmic scale between 1e-4 and 1e4.\nLike in support vector machines, smaller values specify stronger\nregularization.",
+      "effective_default": null,
+      "name": "Cs",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or list of floats, default=10"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "warn"
+        ],
+        "source": "constraints",
+        "types": [
+          "array-like",
+          "None"
+        ]
+      },
+      "default": "'warn'",
+      "description": "Floats between 0 and 1 passed as Elastic-Net mixing parameter (scaling between\nL1 and L2 penalties). For `l1_ratio = 0` the penalty is an L2 penalty. For\n`l1_ratio = 1` it is an L1 penalty. For `0 < l1_ratio < 1`, the penalty is a\ncombination of L1 and L2.\nAll the values of the given array-like are tested by cross-validation and the\none giving the best prediction score is used.\n\n.. warning::\n   Certain values of `l1_ratios`, i.e. some penalties, may not work with some\n   solvers. See the parameter `solver` below, to know the compatibility between\n   the penalty and solver.\n\n.. deprecated:: 1.8\n    `l1_ratios=None` is deprecated in 1.8 and will raise an error\n    in version 1.10. Default value will change from `None` to `(0.0,)`\n    in version 1.10.",
+      "effective_default": null,
+      "name": "l1_ratios",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of shape (n_l1_ratios), default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "Specifies if a constant (a.k.a. bias or intercept) should be\nadded to the decision function.",
+      "effective_default": null,
+      "name": "fit_intercept",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "cv_object"
+        ]
+      },
+      "default": "None",
+      "description": "The default cross-validation generator used is Stratified K-Folds.\nIf an integer is provided, it specifies the number of folds, `n_folds`, used.\nSee the module :mod:`sklearn.model_selection` module for the\nlist of possible cross-validation objects.\n\n.. versionchanged:: 0.22\n    ``cv`` default value if None changed from 3-fold to 5-fold.",
+      "effective_default": null,
+      "name": "cv",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or cross-validation generator, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "Dual (constrained) or primal (regularized, see also\n:ref:`this equation <regularized-logistic-loss>`) formulation. Dual formulation\nis only implemented for l2 penalty with liblinear solver. Prefer dual=False when\nn_samples > n_features.",
+      "effective_default": null,
+      "name": "dual",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "elasticnet",
+          "l1",
+          "l2",
+          "deprecated"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'deprecated'",
+      "description": "Specify the norm of the penalty:\n\n- `'l2'`: add an L2 penalty term (used by default);\n- `'l1'`: add an L1 penalty term;\n- `'elasticnet'`: both L1 and L2 penalty terms are added.\n\n.. warning::\n   Some penalties may not work with some solvers. See the parameter\n   `solver` below, to know the compatibility between the penalty and\n   solver.\n\n.. deprecated:: 1.8\n   `penalty` was deprecated in version 1.8 and will be removed in 1.10.\n   Use `l1_ratio` and `C` instead. `l1_ratio=0` for `penalty='l2'`,\n   `l1_ratio=1` for `penalty='l1'`, `l1_ratio` set to any float between 0 and 1\n   for `penalty='elasticnet'`, and `C=np.inf` for `penalty=None`.",
+      "effective_default": null,
+      "name": "penalty",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'l1', 'l2', 'elasticnet'}, default='l2'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "accuracy",
+          "adjusted_mutual_info_score",
+          "adjusted_rand_score",
+          "average_precision",
+          "balanced_accuracy",
+          "completeness_score",
+          "d2_absolute_error_score",
+          "d2_brier_score",
+          "d2_log_loss_score",
+          "explained_variance",
+          "f1",
+          "f1_macro",
+          "f1_micro",
+          "f1_samples",
+          "f1_weighted",
+          "fowlkes_mallows_score",
+          "homogeneity_score",
+          "jaccard",
+          "jaccard_macro",
+          "jaccard_micro",
+          "jaccard_samples",
+          "jaccard_weighted",
+          "matthews_corrcoef",
+          "mutual_info_score",
+          "neg_brier_score",
+          "neg_log_loss",
+          "neg_max_error",
+          "neg_mean_absolute_error",
+          "neg_mean_absolute_percentage_error",
+          "neg_mean_gamma_deviance",
+          "neg_mean_poisson_deviance",
+          "neg_mean_squared_error",
+          "neg_mean_squared_log_error",
+          "neg_median_absolute_error",
+          "neg_negative_likelihood_ratio",
+          "neg_root_mean_squared_error",
+          "neg_root_mean_squared_log_error",
+          "normalized_mutual_info_score",
+          "positive_likelihood_ratio",
+          "precision",
+          "precision_macro",
+          "precision_micro",
+          "precision_samples",
+          "precision_weighted",
+          "r2",
+          "rand_score",
+          "recall",
+          "recall_macro",
+          "recall_micro",
+          "recall_samples",
+          "recall_weighted",
+          "roc_auc",
+          "roc_auc_ovo",
+          "roc_auc_ovo_weighted",
+          "roc_auc_ovr",
+          "roc_auc_ovr_weighted",
+          "top_k_accuracy",
+          "v_measure_score",
+          "warn"
+        ],
+        "source": "constraints",
+        "types": [
+          "<built-in function callable>",
+          "None"
+        ]
+      },
+      "default": "'warn'",
+      "description": "The scoring method to use for cross-validation. Options:\n\n- str: see :ref:`scoring_string_names` for options.\n- callable: a scorer callable object (e.g., function) with signature\n  ``scorer(estimator, X, y)``. See :ref:`scoring_callable` for details.\n- `None`: :ref:`accuracy <accuracy_score>` is used.\n\n.. versionchanged:: 1.11\n   The default will change from None, i.e. accuracy, to 'neg_log_loss' in\n   version 1.11.",
+      "effective_default": null,
+      "name": "scoring",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str or callable, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "lbfgs",
+          "liblinear",
+          "newton-cg",
+          "newton-cholesky",
+          "sag",
+          "saga"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'lbfgs'",
+      "description": "Algorithm to use in the optimization problem. Default is 'lbfgs'.\nTo choose a solver, you might want to consider the following aspects:\n\n- 'lbfgs' is a good default solver because it works reasonably well for a wide\n  class of problems.\n- For :term:`multiclass` problems (`n_classes >= 3`), all solvers except\n  'liblinear' minimize the full multinomial loss, 'liblinear' will raise an\n  error.\n- 'newton-cholesky' is a good choice for\n  `n_samples` >> `n_features * n_classes`, especially with one-hot encoded\n  categorical features with rare categories. Be aware that the memory usage\n  of this solver has a quadratic dependency on `n_features * n_classes`\n  because it explicitly computes the full Hessian matrix.\n- For small datasets, 'liblinear' is a good choice, whereas 'sag'\n  and 'saga' are faster for large ones;\n- 'liblinear' might be slower in :class:`LogisticRegressionCV`\n  because it does not handle warm-starting.\n- 'liblinear' can only handle binary classification by default. To apply a\n  one-versus-rest scheme for the multiclass setting one can wrap it with the\n  :class:`~sklearn.multiclass.OneVsRestClassifier`.\n\n.. warning::\n   The choice of the algorithm depends on the penalty (`l1_ratio=0` for\n   L2-penalty, `l1_ratio=1` for L1-penalty and `0 < l1_ratio < 1` for\n   Elastic-Net) chosen and on (multinomial) multiclass support:\n\n   ================= ======================== ======================\n   solver            l1_ratio                 multinomial multiclass\n   ================= ======================== ======================\n   'lbfgs'           l1_ratio=0               yes\n   'liblinear'       l1_ratio=1 or l1_ratio=0 no\n   'newton-cg'       l1_ratio=0               yes\n   'newton-cholesky' l1_ratio=0               yes\n   'sag'             l1_ratio=0               yes\n   'saga'            0<=l1_ratio<=1           yes\n   ================= ======================== ======================\n\n.. note::\n   'sag' and 'saga' fast convergence is only guaranteed on features\n   with approximately the same scale. You can preprocess the data with\n   a scaler from :mod:`sklearn.preprocessing`.\n\n.. versionadded:: 0.17\n   Stochastic Average Gradient (SAG) descent solver. Multinomial support in\n   version 0.18.\n.. versionadded:: 0.19\n   SAGA solver.\n.. versionadded:: 1.2\n   newton-cholesky solver. Multinomial support in version 1.6.",
+      "effective_default": null,
+      "name": "solver",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'lbfgs', 'liblinear', 'newton-cg', 'newton-cholesky', 'sag', 'saga'}, default='lbfgs'"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "0.0001",
+      "description": "Tolerance for stopping criteria.",
+      "effective_default": null,
+      "name": "tol",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=1e-4"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 0,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "100",
+      "description": "Maximum number of iterations of the optimization algorithm.",
+      "effective_default": null,
+      "name": "max_iter",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=100"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "balanced"
+        ],
+        "source": "constraints",
+        "types": [
+          "dict",
+          "None"
+        ]
+      },
+      "default": "None",
+      "description": "Weights associated with classes in the form ``{class_label: weight}``.\nIf not given, all classes are supposed to have weight one.\n\nThe \"balanced\" mode uses the values of y to automatically adjust\nweights inversely proportional to class frequencies in the input data\nas ``n_samples / (n_classes * np.bincount(y))``.\n\nNote that these weights will be multiplied with sample_weight (passed\nthrough the fit method) if sample_weight is specified.\n\n.. versionadded:: 0.17\n   class_weight == 'balanced'",
+      "effective_default": null,
+      "name": "class_weight",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "dict or 'balanced', default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None",
+          "Integral"
+        ]
+      },
+      "default": "None",
+      "description": "Number of CPU cores used during the cross-validation loop.\n``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.\n``-1`` means using all processors. See :term:`Glossary <n_jobs>`\nfor more details.",
+      "effective_default": null,
+      "name": "n_jobs",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "verbose"
+        ]
+      },
+      "default": "0",
+      "description": "For the 'liblinear', 'sag' and 'lbfgs' solvers set verbose to any\npositive number for verbosity.",
+      "effective_default": null,
+      "name": "verbose",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "If set to True, the scores are averaged across all folds, and the\ncoefs and the C that corresponds to the best score is taken, and a\nfinal refit is done using these parameters.\nOtherwise the coefs, intercepts and C that correspond to the\nbest scores across folds are averaged.",
+      "effective_default": null,
+      "name": "refit",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "neither",
+            "left": 0,
+            "right": null,
+            "type": "Real"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "1.0",
+      "description": "Useful only when the solver `liblinear` is used\nand `self.fit_intercept` is set to `True`. In this case, `x` becomes\n`[x, self.intercept_scaling]`,\ni.e. a \"synthetic\" feature with constant value equal to\n`intercept_scaling` is appended to the instance vector.\nThe intercept becomes\n``intercept_scaling * synthetic_feature_weight``.\n\n.. note::\n    The synthetic feature weight is subject to L1 or L2\n    regularization as all other features.\n    To lessen the effect of regularization on synthetic feature weight\n    (and therefore on the intercept) `intercept_scaling` has to be increased.",
+      "effective_default": null,
+      "name": "intercept_scaling",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "float, default=1"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "random_state"
+        ]
+      },
+      "default": "None",
+      "description": "Only used for `solver` == 'sag', 'saga' or 'liblinear' to shuffle the\ndata. It has no effect on the other solvers.\nNote that this only applies to the solver and not the cross-validation\ngenerator. See :term:`Glossary <random_state>` for details.",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, RandomState instance, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "warn"
+        ],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "'warn'",
+      "description": "If True, use legacy values for attributes:\n\n- `C_` is an ndarray of shape (n_classes,) with the same value repeated\n- `l1_ratio_` is an ndarray of shape (n_classes,) with the same value repeated\n- `coefs_paths_` is a dict with class labels as keys and ndarrays as values\n- `scores_` is a dict with class labels as keys and ndarrays as values\n- `n_iter_` is an ndarray of shape (1, n_folds, n_cs) or similar\n\nIf False, use new values for attributes:\n\n- `C_` is a float\n- `l1_ratio_` is a float\n- `coefs_paths_` is an ndarray of shape\n  (n_folds, n_l1_ratios, n_cs, n_classes, n_features)\n  For binary problems (n_classes=2), the 2nd last dimension is 1.\n- `scores_` is an ndarray of shape (n_folds, n_l1_ratios, n_cs)\n- `n_iter_` is an ndarray of shape (n_folds, n_l1_ratios, n_cs)\n\n.. versionchanged:: 1.10\n   The default will change from True to False in version 1.10.\n.. deprecated:: 1.10\n   `use_legacy_attributes` will be deprecated in version 1.10 and be removed in\n   1.12.",
+      "effective_default": null,
+      "name": "use_legacy_attributes",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    }
+  ],
+  "returns": [],
+  "signature": "LogisticRegressionCV(*, Cs=10, l1_ratios='warn', fit_intercept=True, cv=None, dual=False, penalty='deprecated', scoring='warn', solver='lbfgs', tol=0.0001, max_iter=100, class_weight=None, n_jobs=None, verbose=0, refit=True, intercept_scaling=1.0, random_state=None, use_legacy_attributes='warn')",
+  "summary": "Logistic Regression CV (aka logit, MaxEnt) classifier.",
+  "warnings": []
+}

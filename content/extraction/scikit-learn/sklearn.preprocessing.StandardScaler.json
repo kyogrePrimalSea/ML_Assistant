@@ -1,0 +1,176 @@
+{
+  "attributes": [
+    {
+      "description": "Per feature relative scaling of the data to achieve zero mean and unit\nvariance. Generally this is calculated using `np.sqrt(var_)`. If a\nvariance is zero, we can't achieve unit variance, and the data is left\nas-is, giving a scaling factor of 1. `scale_` is equal to `None`\nwhen `with_std=False`.\n\n.. versionadded:: 0.17\n   *scale_*",
+      "name": "scale_",
+      "type_doc": "ndarray of shape (n_features,) or None"
+    },
+    {
+      "description": "The mean value for each feature in the training set.\nEqual to ``None`` when ``with_mean=False`` and ``with_std=False``.",
+      "name": "mean_",
+      "type_doc": "ndarray of shape (n_features,) or None"
+    },
+    {
+      "description": "The variance for each feature in the training set. Used to compute\n`scale_`. Equal to ``None`` when ``with_mean=False`` and\n``with_std=False``.",
+      "name": "var_",
+      "type_doc": "ndarray of shape (n_features,) or None"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    },
+    {
+      "description": "The number of samples processed by the estimator for each feature.\nIf there are no missing samples, the ``n_samples_seen`` will be an\ninteger, otherwise it will be an array of dtype int. If\n`sample_weights` are used it will be a float (if no missing data)\nor an array of dtype float that sums the weights seen so far.\nWill be reset on new calls to fit, but increments across\n``partial_fit`` calls.",
+      "name": "n_samples_seen_",
+      "type_doc": "int or ndarray of shape (n_features,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html",
+  "extractor_version": "1",
+  "id": "sklearn.preprocessing.StandardScaler",
+  "import_path": "sklearn.preprocessing.StandardScaler",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y=None, sample_weight=None)",
+      "summary": "Compute the mean and std to be used for later scaling."
+    },
+    {
+      "name": "fit_transform",
+      "signature": "fit_transform(X, y=None, **fit_params)",
+      "summary": "Fit to data, then transform it."
+    },
+    {
+      "name": "get_feature_names_out",
+      "signature": "get_feature_names_out(input_features=None)",
+      "summary": "Get output feature names for transformation."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "inverse_transform",
+      "signature": "inverse_transform(X, copy=None)",
+      "summary": "Scale back the data to the original representation."
+    },
+    {
+      "name": "partial_fit",
+      "signature": "partial_fit(X, y=None, sample_weight=None)",
+      "summary": "Online computation of mean and std on X for later scaling."
+    },
+    {
+      "name": "set_callbacks",
+      "signature": "set_callbacks(*callbacks)",
+      "summary": "Set callbacks for the estimator."
+    },
+    {
+      "name": "set_fit_request",
+      "signature": "set_fit_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.preprocessing._data.StandardScaler",
+      "summary": "Configure whether metadata should be requested to be passed to the ``fit`` method."
+    },
+    {
+      "name": "set_inverse_transform_request",
+      "signature": "set_inverse_transform_request(*, copy: bool | None | str = '$UNCHANGED$') -> sklearn.preprocessing._data.StandardScaler",
+      "summary": "Configure whether metadata should be requested to be passed to the ``inverse_transform`` method."
+    },
+    {
+      "name": "set_output",
+      "signature": "set_output(*, transform=None)",
+      "summary": "Set output container."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "set_partial_fit_request",
+      "signature": "set_partial_fit_request(*, sample_weight: bool | None | str = '$UNCHANGED$') -> sklearn.preprocessing._data.StandardScaler",
+      "summary": "Configure whether metadata should be requested to be passed to the ``partial_fit`` method."
+    },
+    {
+      "name": "set_transform_request",
+      "signature": "set_transform_request(*, copy: bool | None | str = '$UNCHANGED$') -> sklearn.preprocessing._data.StandardScaler",
+      "summary": "Configure whether metadata should be requested to be passed to the ``transform`` method."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(X, copy=None)",
+      "summary": "Perform standardization by centering and scaling."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "If False, try to avoid a copy and do inplace scaling instead.\nThis is not guaranteed to always work inplace; e.g. if the data is\nnot a NumPy array or scipy.sparse CSR matrix, a copy may still be\nreturned.",
+      "effective_default": null,
+      "name": "copy",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "If True, center the data before scaling.\nThis does not work (and will raise an exception) when attempted on\nsparse matrices, because centering them entails building a dense\nmatrix which in common use cases is likely to be too large to fit in\nmemory.",
+      "effective_default": null,
+      "name": "with_mean",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "If True, scale the data to unit variance (or equivalently,\nunit standard deviation).",
+      "effective_default": null,
+      "name": "with_std",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    }
+  ],
+  "returns": [],
+  "signature": "StandardScaler(*, copy=True, with_mean=True, with_std=True)",
+  "summary": "Standardize features by removing the mean and scaling to unit variance.",
+  "warnings": []
+}

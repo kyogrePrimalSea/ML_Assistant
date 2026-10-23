@@ -1,0 +1,199 @@
+{
+  "attributes": [],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.permutation_test_score.html",
+  "extractor_version": "1",
+  "id": "sklearn.model_selection.permutation_test_score",
+  "import_path": "sklearn.model_selection.permutation_test_score",
+  "kind": "function",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The object to use to fit the data.",
+      "effective_default": null,
+      "name": "estimator",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "estimator object implementing 'fit'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The data to fit.",
+      "effective_default": null,
+      "name": "X",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape at least 2D"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "The target variable to try to predict in the case of\nsupervised learning.",
+      "effective_default": null,
+      "name": "y",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "array-like of shape (n_samples,) or (n_samples, n_outputs) or None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Labels to constrain permutation within groups, i.e. ``y`` values\nare permuted among samples with the same group identifier.\nWhen not specified, ``y`` values are permuted among all samples.\n\nWhen a grouped cross-validator is used, the group labels are\nalso passed on to the ``split`` method of the cross-validator. The\ncross-validator uses them for grouping the samples  while splitting\nthe dataset into train/test set.\n\n.. versionchanged:: 1.6\n    ``groups`` can only be passed if metadata routing is not enabled\n    via ``sklearn.set_config(enable_metadata_routing=True)``. When routing\n    is enabled, pass ``groups`` alongside other metadata via the ``params``\n    argument instead. E.g.:\n    ``permutation_test_score(..., params={'groups': groups})``.",
+      "effective_default": null,
+      "name": "groups",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "array-like of shape (n_samples,), default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Determines the cross-validation splitting strategy.\nPossible inputs for cv are:\n\n- `None`, to use the default 5-fold cross validation,\n- int, to specify the number of folds in a `(Stratified)KFold`,\n- :term:`CV splitter`,\n- an iterable yielding (train, test) splits as arrays of indices.\n\nFor `int`/`None` inputs, if the estimator is a classifier and `y` is\neither binary or multiclass, :class:`StratifiedKFold` is used. In all\nother cases, :class:`KFold` is used. These splitters are instantiated\nwith `shuffle=False` so the splits will be the same across calls.\n\nRefer :ref:`User Guide <cross_validation>` for the various\ncross-validation strategies that can be used here.\n\n.. versionchanged:: 0.22\n    `cv` default value if `None` changed from 3-fold to 5-fold.",
+      "effective_default": null,
+      "name": "cv",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, cross-validation generator or an iterable, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "100",
+      "description": "Number of times to permute ``y``.",
+      "effective_default": null,
+      "name": "n_permutations",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=100"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Number of jobs to run in parallel. Training the estimator and computing\nthe cross-validated score are parallelized over the permutations.\n``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.\n``-1`` means using all processors. See :term:`Glossary <n_jobs>`\nfor more details.",
+      "effective_default": null,
+      "name": "n_jobs",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0",
+      "description": "Pass an int for reproducible output for permutation of\n``y`` values among samples. See :term:`Glossary <random_state>`.",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, RandomState instance or None, default=0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "0",
+      "description": "The verbosity level.",
+      "effective_default": null,
+      "name": "verbose",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=0"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Scoring method to use to evaluate the predictions on the validation set.\n\n- str: see :ref:`scoring_string_names` for options.\n- callable: a scorer callable object (e.g., function) with signature\n  ``scorer(estimator, X, y)``, which should return only a single value.\n  See :ref:`scoring_callable` for details.\n- `None`: the `estimator`'s\n  :ref:`default evaluation criterion <scoring_api_overview>` is used.",
+      "effective_default": null,
+      "name": "scoring",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str or callable, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Parameters to pass to the `fit` method of the estimator, the scorer\nand the cv splitter.\n\n- If `enable_metadata_routing=False` (default): Parameters directly passed to\n  the `fit` method of the estimator.\n\n- If `enable_metadata_routing=True`: Parameters safely routed to the `fit`\n  method of the estimator, `cv` object and `scorer`. See :ref:`Metadata Routing\n  User Guide <metadata_routing>` for more details.\n\n.. versionadded:: 1.6",
+      "effective_default": null,
+      "name": "params",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "dict, default=None"
+    }
+  ],
+  "returns": [
+    {
+      "description": "The true score without permuting targets.",
+      "name": "score",
+      "type_doc": "float"
+    },
+    {
+      "description": "The scores obtained for each permutations.",
+      "name": "permutation_scores",
+      "type_doc": "array of shape (n_permutations,)"
+    },
+    {
+      "description": "The p-value, which approximates the probability that the score would\nbe obtained by chance. This is calculated as:\n\n`(C + 1) / (n_permutations + 1)`\n\nWhere C is the number of permutations whose score >= the true score.\n\nThe best possible p-value is 1/(n_permutations + 1), the worst is 1.0.",
+      "name": "pvalue",
+      "type_doc": "float"
+    }
+  ],
+  "signature": "permutation_test_score(estimator, X, y, *, groups=None, cv=None, n_permutations=100, n_jobs=None, random_state=0, verbose=0, scoring=None, params=None)",
+  "summary": "Evaluate the significance of a cross-validated score with permutations.",
+  "warnings": []
+}

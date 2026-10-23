@@ -1,0 +1,205 @@
+{
+  "attributes": [
+    {
+      "description": "The actual number of quantiles used to discretize the cumulative\ndistribution function.",
+      "name": "n_quantiles_",
+      "type_doc": "int"
+    },
+    {
+      "description": "The values corresponding the quantiles of reference.",
+      "name": "quantiles_",
+      "type_doc": "ndarray of shape (n_quantiles, n_features)"
+    },
+    {
+      "description": "Quantiles of references.",
+      "name": "references_",
+      "type_doc": "ndarray of shape (n_quantiles, )"
+    },
+    {
+      "description": "Number of features seen during :term:`fit`.\n\n.. versionadded:: 0.24",
+      "name": "n_features_in_",
+      "type_doc": "int"
+    },
+    {
+      "description": "Names of features seen during :term:`fit`. Defined only when `X`\nhas feature names that are all strings.\n\n.. versionadded:: 1.0",
+      "name": "feature_names_in_",
+      "type_doc": "ndarray of shape (`n_features_in_`,)"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.QuantileTransformer.html",
+  "extractor_version": "1",
+  "id": "sklearn.preprocessing.QuantileTransformer",
+  "import_path": "sklearn.preprocessing.QuantileTransformer",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "fit",
+      "signature": "fit(X, y=None)",
+      "summary": "Compute the quantiles used for transforming."
+    },
+    {
+      "name": "fit_transform",
+      "signature": "fit_transform(X, y=None, **fit_params)",
+      "summary": "Fit to data, then transform it."
+    },
+    {
+      "name": "get_feature_names_out",
+      "signature": "get_feature_names_out(input_features=None)",
+      "summary": "Get output feature names for transformation."
+    },
+    {
+      "name": "get_metadata_routing",
+      "signature": "get_metadata_routing()",
+      "summary": "Get metadata routing of this object."
+    },
+    {
+      "name": "get_params",
+      "signature": "get_params(deep=True)",
+      "summary": "Get parameters for this estimator."
+    },
+    {
+      "name": "inverse_transform",
+      "signature": "inverse_transform(X)",
+      "summary": "Back-projection to the original space."
+    },
+    {
+      "name": "set_output",
+      "signature": "set_output(*, transform=None)",
+      "summary": "Set output container."
+    },
+    {
+      "name": "set_params",
+      "signature": "set_params(**params)",
+      "summary": "Set the parameters of this estimator."
+    },
+    {
+      "name": "transform",
+      "signature": "transform(X)",
+      "summary": "Feature-wise transformation of the data."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "1000",
+      "description": "Number of quantiles to be computed. It corresponds to the number\nof landmarks used to discretize the cumulative distribution function.\nIf n_quantiles is larger than the number of samples, n_quantiles is set\nto the number of samples as a larger number of quantiles does not give\na better approximation of the cumulative distribution function\nestimator.",
+      "effective_default": null,
+      "name": "n_quantiles",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, default=1000 or n_samples"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [
+          "normal",
+          "uniform"
+        ],
+        "source": "constraints",
+        "types": []
+      },
+      "default": "'uniform'",
+      "description": "Marginal distribution for the transformed data. The choices are\n'uniform' (default) or 'normal'.",
+      "effective_default": null,
+      "name": "output_distribution",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "{'uniform', 'normal'}, default='uniform'"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "False",
+      "description": "Only applies to sparse matrices. If True, the sparse entries of the\nmatrix are discarded to compute the quantile statistics, including\nwhen subsampling. If False, these entries are treated as zeros.",
+      "effective_default": null,
+      "name": "ignore_implicit_zeros",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=False"
+    },
+    {
+      "allowed": {
+        "intervals": [
+          {
+            "closed": "left",
+            "left": 1,
+            "right": null,
+            "type": "Integral"
+          }
+        ],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "None"
+        ]
+      },
+      "default": "10000",
+      "description": "Maximum number of samples used to estimate the quantiles for\ncomputational efficiency. Note that the subsampling procedure may\ndiffer for value-identical sparse and dense matrices.\nDisable subsampling by setting `subsample=None`.\n\n.. versionadded:: 1.5\n   The option `None` to disable subsampling was added.",
+      "effective_default": null,
+      "name": "subsample",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int or None, default=10_000"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "random_state"
+        ]
+      },
+      "default": "None",
+      "description": "Determines random number generation for subsampling and smoothing\nnoise.\nPlease see ``subsample`` for more details.\nPass an int for reproducible results across multiple function calls.\nSee :term:`Glossary <random_state>`.",
+      "effective_default": null,
+      "name": "random_state",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "int, RandomState instance or None, default=None"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "constraints",
+        "types": [
+          "boolean"
+        ]
+      },
+      "default": "True",
+      "description": "Set to False to perform inplace transformation and avoid a copy (if the\ninput is already a numpy array).",
+      "effective_default": null,
+      "name": "copy",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "bool, default=True"
+    }
+  ],
+  "returns": [],
+  "signature": "QuantileTransformer(*, n_quantiles=1000, output_distribution='uniform', ignore_implicit_zeros=False, subsample=10000, random_state=None, copy=True)",
+  "summary": "Transform features using quantiles information.",
+  "warnings": []
+}

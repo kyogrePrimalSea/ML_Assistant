@@ -1,0 +1,85 @@
+{
+  "attributes": [
+    {
+      "description": "Image representing the confusion matrix.",
+      "name": "im_",
+      "type_doc": "matplotlib AxesImage"
+    },
+    {
+      "description": "Array of matplotlib axes. `None` if `include_values` is false.",
+      "name": "text_",
+      "type_doc": "ndarray of shape (n_classes, n_classes), dtype=matplotlib Text, or None"
+    },
+    {
+      "description": "Axes with confusion matrix.",
+      "name": "ax_",
+      "type_doc": "matplotlib Axes"
+    },
+    {
+      "description": "Figure containing the confusion matrix.",
+      "name": "figure_",
+      "type_doc": "matplotlib Figure"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.metrics.ConfusionMatrixDisplay.html",
+  "extractor_version": "1",
+  "id": "sklearn.metrics.ConfusionMatrixDisplay",
+  "import_path": "sklearn.metrics.ConfusionMatrixDisplay",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "from_estimator",
+      "signature": "from_estimator(estimator, X, y, *, labels=None, sample_weight=None, normalize=None, display_labels=None, include_values=True, xticks_rotation='horizontal', values_format=None, cmap='viridis', ax=None, colorbar=True, im_kw=None, text_kw=None)",
+      "summary": "Plot Confusion Matrix given an estimator and some data."
+    },
+    {
+      "name": "from_predictions",
+      "signature": "from_predictions(y_true, y_pred, *, labels=None, sample_weight=None, normalize=None, display_labels=None, include_values=True, xticks_rotation='horizontal', values_format=None, cmap='viridis', ax=None, colorbar=True, im_kw=None, text_kw=None)",
+      "summary": "Plot Confusion Matrix given true and predicted labels."
+    },
+    {
+      "name": "plot",
+      "signature": "plot(*, include_values=True, cmap='viridis', xticks_rotation='horizontal', values_format=None, ax=None, colorbar=True, im_kw=None, text_kw=None)",
+      "summary": "Plot visualization."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Confusion matrix.",
+      "effective_default": null,
+      "name": "confusion_matrix",
+      "param_kind": "positional_or_keyword",
+      "required": true,
+      "type_doc": "ndarray of shape (n_classes, n_classes)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "Display labels for plot. If None, display labels are set from 0 to\n`n_classes - 1`.",
+      "effective_default": null,
+      "name": "display_labels",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "ndarray of shape (n_classes,), default=None"
+    }
+  ],
+  "returns": [],
+  "signature": "ConfusionMatrixDisplay(confusion_matrix, *, display_labels=None)",
+  "summary": "Confusion Matrix visualization.",
+  "warnings": []
+}

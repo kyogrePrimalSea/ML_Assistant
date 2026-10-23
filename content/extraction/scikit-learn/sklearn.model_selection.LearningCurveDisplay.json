@@ -1,0 +1,115 @@
+{
+  "attributes": [
+    {
+      "description": "Axes with the learning curve.",
+      "name": "ax_",
+      "type_doc": "matplotlib Axes"
+    },
+    {
+      "description": "Figure containing the learning curve.",
+      "name": "figure_",
+      "type_doc": "matplotlib Figure"
+    },
+    {
+      "description": "When the `std_display_style` is `\"errorbar\"`, this is a list of\n`matplotlib.container.ErrorbarContainer` objects. If another style is\nused, `errorbar_` is `None`.",
+      "name": "errorbar_",
+      "type_doc": "list of matplotlib Artist or None"
+    },
+    {
+      "description": "When the `std_display_style` is `\"fill_between\"`, this is a list of\n`matplotlib.lines.Line2D` objects corresponding to the mean train and\ntest scores. If another style is used, `line_` is `None`.",
+      "name": "lines_",
+      "type_doc": "list of matplotlib Artist or None"
+    },
+    {
+      "description": "When the `std_display_style` is `\"fill_between\"`, this is a list of\n`matplotlib.collections.PolyCollection` objects. If another style is\nused, `fill_between_` is `None`.",
+      "name": "fill_between_",
+      "type_doc": "list of matplotlib Artist or None"
+    }
+  ],
+  "doc_url": "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.LearningCurveDisplay.html",
+  "extractor_version": "1",
+  "id": "sklearn.model_selection.LearningCurveDisplay",
+  "import_path": "sklearn.model_selection.LearningCurveDisplay",
+  "kind": "class",
+  "library": "scikit-learn",
+  "library_version": "1.9.1",
+  "methods": [
+    {
+      "name": "from_estimator",
+      "signature": "from_estimator(estimator, X, y, *, groups=None, train_sizes=array([0.1  , 0.325, 0.55 , 0.775, 1.   ]), cv=None, scoring=None, exploit_incremental_learning=False, n_jobs=None, pre_dispatch='all', verbose=0, shuffle=False, random_state=None, error_score=nan, fit_params=None, ax=None, negate_score=False, score_name=None, score_type='both', std_display_style='fill_between', line_kw=None, fill_between_kw=None, errorbar_kw=None)",
+      "summary": "Create a learning curve display from an estimator."
+    },
+    {
+      "name": "plot",
+      "signature": "plot(ax=None, *, negate_score=False, score_name=None, score_type='both', std_display_style='fill_between', line_kw=None, fill_between_kw=None, errorbar_kw=None)",
+      "summary": "Plot visualization."
+    }
+  ],
+  "overrides_applied": [],
+  "parameters": [
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Numbers of training examples that has been used to generate the\nlearning curve.",
+      "effective_default": null,
+      "name": "train_sizes",
+      "param_kind": "keyword_only",
+      "required": true,
+      "type_doc": "ndarray of shape (n_unique_ticks,)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Scores on training sets.",
+      "effective_default": null,
+      "name": "train_scores",
+      "param_kind": "keyword_only",
+      "required": true,
+      "type_doc": "ndarray of shape (n_ticks, n_cv_folds)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": null,
+      "description": "Scores on test set.",
+      "effective_default": null,
+      "name": "test_scores",
+      "param_kind": "keyword_only",
+      "required": true,
+      "type_doc": "ndarray of shape (n_ticks, n_cv_folds)"
+    },
+    {
+      "allowed": {
+        "intervals": [],
+        "options": [],
+        "source": "none",
+        "types": []
+      },
+      "default": "None",
+      "description": "The name of the score used in `learning_curve`. It will override the name\ninferred from the `scoring` parameter. If `score` is `None`, we use `\"Score\"` if\n`negate_score` is `False` and `\"Negative score\"` otherwise. If `scoring` is a\nstring or a callable, we infer the name. We replace `_` by spaces and capitalize\nthe first letter. We remove `neg_` and replace it by `\"Negative\"` if\n`negate_score` is `False` or just remove it otherwise.",
+      "effective_default": null,
+      "name": "score_name",
+      "param_kind": "keyword_only",
+      "required": false,
+      "type_doc": "str, default=None"
+    }
+  ],
+  "returns": [],
+  "signature": "LearningCurveDisplay(*, train_sizes, train_scores, test_scores, score_name=None)",
+  "summary": "Learning Curve visualization.",
+  "warnings": []
+}
