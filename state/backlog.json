@@ -28,7 +28,7 @@
       "title": "App foundation and Observatory design system",
       "goal": "Static React PWA scaffold, colour and type tokens (light/dark, token-swappable modes), fonts, shadcn/ui restyle, desktop layout shell with panel and bottom sheet, 11-slot item page renderer, code blocks, data-frame diff style, auto-deploy to a free static host.",
       "spec": "\u00a77.4, \u00a710, \u00a712",
-      "status": "In progress",
+      "status": "Done",
       "dependencies": [
         "E02"
       ]
@@ -332,7 +332,7 @@
     "T021": {
       "title": "E03 acceptance and first deploy",
       "file": "tasks/T021-e03-acceptance-and-deploy.md",
-      "status": "In progress",
+      "status": "Done",
       "dependencies": [
         "T020"
       ],
