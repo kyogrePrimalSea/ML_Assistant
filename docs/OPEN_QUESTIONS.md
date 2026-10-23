@@ -40,3 +40,26 @@ default until you confirm or change it. Remove an entry once decided.
     it without a "later wave" note.
 13. **Small schema guesses** where spec §4 only implies the content: hero visual
     parameters, non-model quick facts, and the `data_size` format.
+
+## App (E03–E04) — for your review of the live site
+
+14. **Radial tree shape.** An opened stage shows its families as a column beside the
+    ring, and an opened family shows only itself plus a "+N other families" stub (spec
+    accordion: one path expanded). It's legible and labels stay horizontal, but it is not
+    a classic radial fan. Keep, or try a true fan?
+15. **Stage labels on the ring** are hidden while another stage is open (shown on hover /
+    focus), to keep labels from colliding.
+16. **Star field** dots are 12–30% opacity; spec says "~1–2% opacity", which would be
+    nearly invisible. Was 1–2% meant literally, or as density?
+17. **Two "Model" badges** on model pages (archetype badge + stage badge carry the same
+    word). Keep both (spec asks for both) or hide the stage badge when it repeats?
+18. **Journey globe** labels collide near Model/Evaluate in the demo; E08 rebuilds the
+    journey, so this is parked until then.
+19. **LightGBM early stopping** is a `fit` callback, not a constructor setting, so the
+    schema can't list it as a key setting on the LightGBM page (it's covered on the
+    `early-stopping` page instead).
+20. **Data-size sweet spots** on model pages ("1k to 10M rows") are editorial, not from
+    the docs.
+21. **Demo journey order:** stops follow pipeline stage order, so the encoder (Transform)
+    comes before the split and shows the leakage Warn with its "Wrap in a Pipeline" fix,
+    as spec §8 describes.
