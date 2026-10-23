@@ -271,14 +271,14 @@
     "T015": {
       "title": "App scaffold, dependencies and GitHub Pages deploy",
       "file": "tasks/T015-app-scaffold-and-deploy.md",
-      "status": "In progress",
+      "status": "Done",
       "dependencies": [],
       "epic": "E03"
     },
     "T016": {
       "title": "Observatory tokens, typography, theming and component restyle",
       "file": "tasks/T016-design-tokens-and-theming.md",
-      "status": "Backlog",
+      "status": "In progress",
       "dependencies": [
         "T015"
       ],
@@ -287,7 +287,7 @@
     "T017": {
       "title": "Content data pipeline for the app",
       "file": "tasks/T017-content-data-pipeline.md",
-      "status": "Backlog",
+      "status": "In progress",
       "dependencies": [
         "T015"
       ],

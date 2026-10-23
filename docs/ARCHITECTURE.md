@@ -128,6 +128,7 @@ to functions. Missing sections are empty lists, never omitted.
 - Location: `app/` (Vite + React + TypeScript). Python content tooling stays in
   `tools/`; the app never needs Python to build.
 - Node: v26 via Homebrew (`/home/linuxbrew/.linuxbrew/bin/node`). CI uses the same major.
+- TypeScript is 6.0.3, not 7: typescript-eslint 8.72 does not support TS 7 yet. Revisit when it does.
 - Styling: Tailwind CSS v4 with the Observatory tokens as CSS custom properties;
   components from shadcn/ui on Radix, restyled with the tokens (spec §10.10).
   Icons: `@tabler/icons-react`, outline only.
