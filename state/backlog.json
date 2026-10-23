@@ -109,7 +109,8 @@
       "T009",
       "T010",
       "T011",
-      "T012"
+      "T012",
+      "T013"
     ]
   },
   "tasks": {
@@ -176,7 +177,8 @@
         "T002",
         "T003",
         "T004",
-        "T005"
+        "T005",
+        "T013"
       ],
       "epic": "E01"
     },
@@ -229,6 +231,15 @@
         "T011"
       ],
       "epic": "E02"
+    },
+    "T013": {
+      "title": "Extractor fixes found during extraction runs",
+      "file": "tasks/T013-extractor-fixes.md",
+      "status": "Done",
+      "dependencies": [
+        "T004"
+      ],
+      "epic": "E01"
     }
   }
 }

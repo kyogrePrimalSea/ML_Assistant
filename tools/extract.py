@@ -7,6 +7,7 @@ See docs/ARCHITECTURE.md, "Source extraction approach" and
     .venv/bin/python tools/extract.py [--library SLUG] [--id ID ...]
 """
 import argparse
+import ast
 import importlib
 import inspect
 import json
@@ -204,18 +205,84 @@ def default_from_doc(type_doc):
 
 # --------------------------------------------------------------- introspection
 
+class _Src:
+    """Default value carried as source text; repr() returns that text."""
+
+    def __init__(self, text):
+        self.text = text
+
+    def __repr__(self):
+        return self.text
+
+
+def _sig_from_text(text):
+    """Build an inspect.Signature from '(a, b=1, *, c=2, **kw)' text, or None."""
+    try:
+        a = ast.parse(f"def f{text}: pass").body[0].args
+    except SyntaxError:
+        return None
+    P = inspect.Parameter
+    ps = []
+    pos = a.posonlyargs + a.args
+    defs = [None] * (len(pos) - len(a.defaults)) + list(a.defaults)
+    for i, (arg, d) in enumerate(zip(pos, defs)):
+        kind = P.POSITIONAL_ONLY if i < len(a.posonlyargs) else P.POSITIONAL_OR_KEYWORD
+        ps.append(P(arg.arg, kind, default=P.empty if d is None else _Src(ast.unparse(d))))
+    if a.vararg:
+        ps.append(P(a.vararg.arg, P.VAR_POSITIONAL))
+    for arg, d in zip(a.kwonlyargs, a.kw_defaults):
+        ps.append(P(arg.arg, P.KEYWORD_ONLY,
+                    default=P.empty if d is None else _Src(ast.unparse(d))))
+    if a.kwarg:
+        ps.append(P(a.kwarg.arg, P.VAR_KEYWORD))
+    return inspect.Signature(ps)
+
+
+def fallback_signature(obj, warns):
+    """Signature for objects inspect cannot handle (e.g. Cython classes), or None."""
+    name = getattr(obj, "__name__", "")
+    ts = getattr(obj, "__text_signature__", None)
+    if ts:
+        sig = _sig_from_text(ts)
+        if sig is not None:
+            warns.append("signature: inspect.signature failed; used __text_signature__")
+            return sig
+    for line in (inspect.getdoc(obj) or "").splitlines():
+        line = line.strip()
+        if line:
+            m = re.match(rf"^(?:\w+\.)*{re.escape(name)}(\(.*\))\s*$", line)
+            if m:
+                sig = _sig_from_text(m.group(1))
+                if sig is not None:
+                    warns.append("signature: inspect.signature failed; "
+                                 "used signature line from docstring")
+                    return sig
+            break
+    return None
+
+
 def build_parameters(obj, kind, nd, warns):
+    sig = None
     try:
         sig = inspect.signature(obj)
     except (TypeError, ValueError) as e:
-        raise ExtractError(f"no signature: {e}")
+        sig = fallback_signature(obj, warns)
+        if sig is None:
+            if nd is None or not nd["Parameters"]:
+                raise ExtractError(f"no signature: {e}")
+            warns.append("signature: inspect.signature failed; no text signature; "
+                         "parameters taken from numpydoc Parameters section (documented_only)")
+            sig = inspect.Signature([])
     sig = clean_sig(sig) if kind == "class" else sig
     constraints = getattr(obj, "_parameter_constraints", None) if kind == "class" else None
 
     docs = {}
     for p in section(nd, "Parameters"):
-        for n in [x.strip() for x in p["name"].split(",")]:
-            docs[n.lstrip("*")] = dict(p)
+        pd = dict(p)
+        if ":" in pd["name"] and not pd["type_doc"]:  # "name: type" without space before colon
+            pd["name"], pd["type_doc"] = [x.strip() for x in pd["name"].split(":", 1)]
+        for n in [x.strip() for x in pd["name"].split(",")]:
+            docs[n.lstrip("*")] = dict(pd)
     params, sig_names = [], set()
     for p in sig.parameters.values():
         sig_names.add(p.name)
@@ -234,7 +301,8 @@ def build_parameters(obj, kind, nd, warns):
         if p.name not in docs and p.kind not in (
                 inspect.Parameter.VAR_POSITIONAL, inspect.Parameter.VAR_KEYWORD):
             warns.append(f"parameter {p.name}: not documented in docstring")
-    if any(p.kind == inspect.Parameter.VAR_KEYWORD for p in sig.parameters.values()):
+    if inspect.isclass(obj) and any(
+            p.kind == inspect.Parameter.VAR_KEYWORD for p in sig.parameters.values()):
         for base in obj.__mro__[1:]:
             init = base.__dict__.get("__init__")
             if init is None or base is object:
@@ -244,7 +312,7 @@ def build_parameters(obj, kind, nd, warns):
             except (TypeError, ValueError):
                 continue
             for p in bsig.parameters.values():
-                if p.name in sig_names or p.kind in (
+                if p.name in sig_names or p.name not in docs or p.kind in (
                         inspect.Parameter.VAR_POSITIONAL, inspect.Parameter.VAR_KEYWORD):
                     continue
                 sig_names.add(p.name)
@@ -259,8 +327,6 @@ def build_parameters(obj, kind, nd, warns):
                     "description": d.get("description", ""),
                     "allowed": allowed_for(p.name, d.get("type_doc", ""), constraints, warns),
                 })
-                if p.name not in docs:
-                    warns.append(f"parameter {p.name}: not documented in docstring")
     for name, d in docs.items():
         if name in sig_names:
             continue
@@ -283,6 +349,22 @@ def allowed_for(name, type_doc, constraints, warns):
     if opts:
         return {"source": "docstring", "options": opts, "intervals": [], "types": []}
     return {"source": "none", "options": [], "intervals": [], "types": []}
+
+
+def property_attributes(cls, have):
+    out = []
+    for name in sorted(dir(cls)):
+        if name.startswith("_") or name in have:
+            continue
+        prop = next((c.__dict__[name] for c in cls.__mro__ if name in c.__dict__), None)
+        if not isinstance(prop, property):
+            continue
+        doc = inspect.getdoc(prop)
+        if not doc:
+            continue
+        first = next((l.strip() for l in doc.splitlines() if l.strip()), "")
+        out.append({"name": name, "type_doc": "", "description": first})
+    return out
 
 
 def build_methods(cls, warns):
@@ -327,6 +409,8 @@ def extract_item(entry):
     if not params and kind == "function":
         pass
     attributes = section(nd, "Attributes") if kind == "class" else []
+    if kind == "class":
+        attributes += property_attributes(obj, {a["name"] for a in attributes})
     returns = section(nd, "Returns") if kind == "function" else []
     if kind == "function" and not returns:
         warns.append("no Returns section found")

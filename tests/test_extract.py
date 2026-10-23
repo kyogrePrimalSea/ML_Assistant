@@ -175,3 +175,90 @@ def test_deterministic(tmp_path):
         assert ta == (b / f).read_text() and ta.endswith("}\n")
         assert ta == json.dumps(json.loads(ta), indent=2, sort_keys=True,
                                 ensure_ascii=False) + "\n"
+
+
+# ---------------------------------------------------------------- T013 fixes
+
+def _live(import_path, kind):
+    return extract.extract_item({"id": import_path, "import_path": import_path,
+                                 "library": import_path.split(".")[0], "kind": kind})
+
+
+@pytest.mark.parametrize("path", [
+    "scipy.optimize.curve_fit",
+    "statsmodels.graphics.tsaplots.plot_acf",
+    "statsmodels.graphics.tsaplots.plot_pacf"])
+def test_t013_function_with_kwargs(path):
+    r = _live(path, "function")
+    assert r["parameters"]
+    assert any(p["param_kind"] == "var_keyword" for p in r["parameters"])
+
+
+def test_t013_cython_class_signature_fallback():
+    r = _live("statsmodels.tsa.seasonal.STL", "class")
+    p = pmap(r)
+    assert {"endog", "period", "seasonal", "robust"} <= set(p)
+    assert p["seasonal"]["default"] == "7"
+    assert any(w.startswith("signature:") for w in r["warnings"])
+
+
+def test_t013_signature_text_and_documented_only_fallbacks(monkeypatch):
+    warns = []
+    sig = extract._sig_from_text("(a, b=1, *, c='x', **kw)")
+    assert [p.name for p in sig.parameters.values()] == ["a", "b", "c", "kw"]
+    assert repr(sig.parameters["c"].default) == "'x'"
+
+    class Odd:
+        """No signature line.
+
+        Parameters
+        ----------
+        k : int, default=3
+            A knob.
+        """
+    def boom(*a, **k):
+        raise ValueError("no signature")
+    monkeypatch.setattr(extract.inspect, "signature", boom)
+    sig_str, params = extract.build_parameters(
+        Odd, "class", extract.parse_doc(inspect_getdoc(Odd), warns, "d"), warns)
+    assert params[0]["param_kind"] == "documented_only" and params[0]["default"] == "3"
+    assert any("documented_only" in w for w in warns)
+
+
+def inspect_getdoc(o):
+    import inspect
+    return inspect.getdoc(o)
+
+
+def test_t013_mro_merge_only_documented():
+    r = _live("statsmodels.regression.linear_model.OLS", "class")
+    assert "weights" not in pmap(r)
+    r = _live("statsmodels.tsa.statespace.sarimax.SARIMAX", "class")
+    for n in ("k_states", "dates", "freq", "missing"):
+        assert n not in pmap(r) or pmap(r)[n]["description"]
+
+
+def test_t013_xgboost_full_documented_set():
+    r = _live("xgboost.XGBRegressor", "class")
+    p = pmap(r)
+    assert len(p) == 41  # was 44: 3 bogus documented_only duplicates (booster etc.) merged
+    for n in ("booster", "num_parallel_tree", "importance_type"):
+        assert p[n]["param_kind"] == "keyword_only" and p[n]["description"]
+    assert p["learning_rate"]["default"] == "None" and p["n_estimators"]["default"] == "None"
+
+
+def test_t013_property_attributes():
+    r = _live("statsmodels.tsa.seasonal.STL", "class")
+    names = [a["name"] for a in r["attributes"]]
+    assert len(names) == len(set(names))
+    r = _live("statsmodels.regression.linear_model.OLS", "class")
+    names = [a["name"] for a in r["attributes"]]
+    assert len(names) == len(set(names))
+    import inspect
+    props = [n for n in dir(r and __import__("statsmodels.regression.linear_model", fromlist=["OLS"]).OLS)
+             if isinstance(inspect.getattr_static(
+                 __import__("statsmodels.regression.linear_model", fromlist=["OLS"]).OLS, n, None), property)
+             and not n.startswith("_")]
+    documented = [n for n in props if inspect.getdoc(getattr(
+        __import__("statsmodels.regression.linear_model", fromlist=["OLS"]).OLS, n))]
+    assert documented and set(documented) <= set(names)
