@@ -32,7 +32,7 @@ function Page({ data }: { data: PageData }) {
     <article aria-label={record.plain_name} data-page-id={record.id}>
       <Header record={record} />
       <div className="grid min-w-0 grid-cols-1">
-        <Solves data={s.solves} />
+        <Solves data={s.solves} family={record.family} />
         <QuickFacts record={record} />
         <UseAvoid data={s.use_avoid} />
         <Prep entries={s.prep} />

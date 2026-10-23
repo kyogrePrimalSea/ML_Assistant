@@ -368,7 +368,7 @@
     "T025": {
       "title": "Cutscene engine and the boosting cutscene",
       "file": "tasks/T025-cutscene-engine.md",
-      "status": "In progress",
+      "status": "Done",
       "dependencies": [
         "T020"
       ],

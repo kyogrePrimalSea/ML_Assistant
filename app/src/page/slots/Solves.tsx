@@ -1,6 +1,7 @@
 import { IconPhoto } from '@tabler/icons-react'
 import type { Solves as SolvesData, None as NoneData } from '@/content/types'
 import { useCatalogue } from './context'
+import { CutscenePlayer } from '@/cutscenes/CutscenePlayer'
 import { Frame, None, Slot } from './shared'
 
 function heroDetail(hero: SolvesData['hero']): string | undefined {
@@ -24,7 +25,7 @@ function heroDetail(hero: SolvesData['hero']): string | undefined {
   }
 }
 
-export function Solves({ data }: { data: SolvesData | NoneData }) {
+export function Solves({ data, family }: { data: SolvesData | NoneData; family: string }) {
   const { archetypeName, datasetName } = useCatalogue()
   if ('none' in data) {
     return (
@@ -39,10 +40,16 @@ export function Solves({ data }: { data: SolvesData | NoneData }) {
   return (
     <Slot name="solves" title="Solves">
       <p className="m-0 text-lg">{line}</p>
-      <Frame
-        icon={<IconPhoto className="size-4" aria-hidden />}
-        label={`Hero visual: ${archetypeName(hero.kind).toLowerCase()}`}
-        detail={detail || undefined}
+      <CutscenePlayer
+        hero={hero}
+        family={family}
+        fallback={
+          <Frame
+            icon={<IconPhoto className="size-4" aria-hidden />}
+            label={`Hero visual: ${archetypeName(hero.kind).toLowerCase()}`}
+            detail={detail || undefined}
+          />
+        }
       />
     </Slot>
   )
