@@ -132,7 +132,7 @@
     "T003": {
       "title": "Inventory: supporting cast",
       "file": "tasks/T003-inventory-supporting-cast.md",
-      "status": "In progress",
+      "status": "Done",
       "dependencies": [
         "T001"
       ],
@@ -159,7 +159,7 @@
     "T006": {
       "title": "Extract and verify: scikit-learn",
       "file": "tasks/T006-extract-verify-sklearn.md",
-      "status": "Backlog",
+      "status": "In progress",
       "dependencies": [
         "T002",
         "T003",
@@ -171,7 +171,7 @@
     "T007": {
       "title": "Extract and verify: statsmodels and SciPy",
       "file": "tasks/T007-extract-verify-statsmodels-scipy.md",
-      "status": "Backlog",
+      "status": "In progress",
       "dependencies": [
         "T002",
         "T003",
@@ -183,7 +183,7 @@
     "T008": {
       "title": "Extract and verify: XGBoost, LightGBM, imbalanced-learn, Optuna, SHAP",
       "file": "tasks/T008-extract-verify-boosting-and-supporting-libs.md",
-      "status": "Backlog",
+      "status": "In progress",
       "dependencies": [
         "T002",
         "T003",

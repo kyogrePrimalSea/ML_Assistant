@@ -17,6 +17,10 @@ import warnings
 from pathlib import Path
 
 import yaml
+
+# Experimental scikit-learn estimators (IterativeImputer, Halving*SearchCV) only
+# import after these enable modules have run.
+from sklearn.experimental import enable_halving_search_cv, enable_iterative_imputer  # noqa: F401
 from numpydoc.docscrape import NumpyDocString
 
 EXTRACTOR_VERSION = "1"

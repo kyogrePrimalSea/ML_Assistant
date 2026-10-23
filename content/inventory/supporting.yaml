@@ -1,0 +1,4177 @@
+items:
+- id: sklearn.preprocessing.StandardScaler
+  name: StandardScaler
+  library: scikit-learn
+  import_path: sklearn.preprocessing.StandardScaler
+  kind: class
+  stage: transform
+  family: Scaling
+  tracks:
+  - standard
+  archetype: transformer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html
+  page: standardscaler
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.preprocessing.scale
+  name: scale
+  library: scikit-learn
+  import_path: sklearn.preprocessing.scale
+  kind: function
+  stage: transform
+  family: Scaling
+  tracks:
+  - standard
+  archetype: transformer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.scale.html
+  page: standardscaler
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: Functional shortcut of StandardScaler; shares its page.
+- id: sklearn.preprocessing.MinMaxScaler
+  name: MinMaxScaler
+  library: scikit-learn
+  import_path: sklearn.preprocessing.MinMaxScaler
+  kind: class
+  stage: transform
+  family: Scaling
+  tracks:
+  - standard
+  archetype: transformer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.MinMaxScaler.html
+  page: minmaxscaler
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.preprocessing.minmax_scale
+  name: minmax_scale
+  library: scikit-learn
+  import_path: sklearn.preprocessing.minmax_scale
+  kind: function
+  stage: transform
+  family: Scaling
+  tracks:
+  - standard
+  archetype: transformer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.minmax_scale.html
+  page: minmaxscaler
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: Functional shortcut of MinMaxScaler; shares its page.
+- id: sklearn.preprocessing.MaxAbsScaler
+  name: MaxAbsScaler
+  library: scikit-learn
+  import_path: sklearn.preprocessing.MaxAbsScaler
+  kind: class
+  stage: transform
+  family: Scaling
+  tracks:
+  - standard
+  archetype: transformer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.MaxAbsScaler.html
+  page: maxabsscaler
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.preprocessing.maxabs_scale
+  name: maxabs_scale
+  library: scikit-learn
+  import_path: sklearn.preprocessing.maxabs_scale
+  kind: function
+  stage: transform
+  family: Scaling
+  tracks:
+  - standard
+  archetype: transformer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.maxabs_scale.html
+  page: maxabsscaler
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: Functional shortcut of MaxAbsScaler; shares its page.
+- id: sklearn.preprocessing.RobustScaler
+  name: RobustScaler
+  library: scikit-learn
+  import_path: sklearn.preprocessing.RobustScaler
+  kind: class
+  stage: transform
+  family: Scaling
+  tracks:
+  - standard
+  archetype: transformer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.RobustScaler.html
+  page: robustscaler
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.preprocessing.robust_scale
+  name: robust_scale
+  library: scikit-learn
+  import_path: sklearn.preprocessing.robust_scale
+  kind: function
+  stage: transform
+  family: Scaling
+  tracks:
+  - standard
+  archetype: transformer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.robust_scale.html
+  page: robustscaler
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: Functional shortcut of RobustScaler; shares its page.
+- id: sklearn.preprocessing.Normalizer
+  name: Normalizer
+  library: scikit-learn
+  import_path: sklearn.preprocessing.Normalizer
+  kind: class
+  stage: transform
+  family: Scaling
+  tracks:
+  - standard
+  archetype: transformer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.Normalizer.html
+  page: normalizer
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.preprocessing.normalize
+  name: normalize
+  library: scikit-learn
+  import_path: sklearn.preprocessing.normalize
+  kind: function
+  stage: transform
+  family: Scaling
+  tracks:
+  - standard
+  archetype: transformer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.normalize.html
+  page: normalizer
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: Functional shortcut of Normalizer; shares its page.
+- id: sklearn.preprocessing.KernelCenterer
+  name: KernelCenterer
+  library: scikit-learn
+  import_path: sklearn.preprocessing.KernelCenterer
+  kind: class
+  stage: transform
+  family: Scaling
+  tracks:
+  - standard
+  archetype: transformer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.KernelCenterer.html
+  page: kernelcenterer
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: Centres a kernel matrix; for kernel methods.
+- id: sklearn.preprocessing.PowerTransformer
+  name: PowerTransformer
+  library: scikit-learn
+  import_path: sklearn.preprocessing.PowerTransformer
+  kind: class
+  stage: transform
+  family: Distribution shaping
+  tracks:
+  - standard
+  archetype: transformer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.PowerTransformer.html
+  page: powertransformer
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.preprocessing.power_transform
+  name: power_transform
+  library: scikit-learn
+  import_path: sklearn.preprocessing.power_transform
+  kind: function
+  stage: transform
+  family: Distribution shaping
+  tracks:
+  - standard
+  archetype: transformer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.power_transform.html
+  page: powertransformer
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: Functional shortcut of PowerTransformer; shares its page.
+- id: sklearn.preprocessing.QuantileTransformer
+  name: QuantileTransformer
+  library: scikit-learn
+  import_path: sklearn.preprocessing.QuantileTransformer
+  kind: class
+  stage: transform
+  family: Distribution shaping
+  tracks:
+  - standard
+  archetype: transformer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.QuantileTransformer.html
+  page: quantiletransformer
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.preprocessing.quantile_transform
+  name: quantile_transform
+  library: scikit-learn
+  import_path: sklearn.preprocessing.quantile_transform
+  kind: function
+  stage: transform
+  family: Distribution shaping
+  tracks:
+  - standard
+  archetype: transformer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.quantile_transform.html
+  page: quantiletransformer
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: Functional shortcut of QuantileTransformer; shares its page.
+- id: sklearn.preprocessing.Binarizer
+  name: Binarizer
+  library: scikit-learn
+  import_path: sklearn.preprocessing.Binarizer
+  kind: class
+  stage: transform
+  family: Discretisation
+  tracks:
+  - standard
+  archetype: transformer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.Binarizer.html
+  page: binarizer
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.preprocessing.binarize
+  name: binarize
+  library: scikit-learn
+  import_path: sklearn.preprocessing.binarize
+  kind: function
+  stage: transform
+  family: Discretisation
+  tracks:
+  - standard
+  archetype: transformer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.binarize.html
+  page: binarizer
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: Functional shortcut of Binarizer; shares its page.
+- id: sklearn.preprocessing.KBinsDiscretizer
+  name: KBinsDiscretizer
+  library: scikit-learn
+  import_path: sklearn.preprocessing.KBinsDiscretizer
+  kind: class
+  stage: transform
+  family: Discretisation
+  tracks:
+  - standard
+  archetype: transformer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.KBinsDiscretizer.html
+  page: kbinsdiscretizer
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.preprocessing.PolynomialFeatures
+  name: PolynomialFeatures
+  library: scikit-learn
+  import_path: sklearn.preprocessing.PolynomialFeatures
+  kind: class
+  stage: transform
+  family: Feature expansion
+  tracks:
+  - standard
+  archetype: transformer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.PolynomialFeatures.html
+  page: polynomialfeatures
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.preprocessing.SplineTransformer
+  name: SplineTransformer
+  library: scikit-learn
+  import_path: sklearn.preprocessing.SplineTransformer
+  kind: class
+  stage: transform
+  family: Feature expansion
+  tracks:
+  - standard
+  archetype: transformer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.SplineTransformer.html
+  page: splinetransformer
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.preprocessing.FunctionTransformer
+  name: FunctionTransformer
+  library: scikit-learn
+  import_path: sklearn.preprocessing.FunctionTransformer
+  kind: class
+  stage: transform
+  family: Custom transformation
+  tracks:
+  - standard
+  archetype: transformer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.FunctionTransformer.html
+  page: functiontransformer
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.preprocessing.add_dummy_feature
+  name: add_dummy_feature
+  library: scikit-learn
+  import_path: sklearn.preprocessing.add_dummy_feature
+  kind: function
+  stage: transform
+  family: Feature expansion
+  tracks:
+  - standard
+  archetype: transformer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.add_dummy_feature.html
+  page: add-dummy-feature
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.preprocessing.OneHotEncoder
+  name: OneHotEncoder
+  library: scikit-learn
+  import_path: sklearn.preprocessing.OneHotEncoder
+  kind: class
+  stage: transform
+  family: Categorical encoding
+  tracks:
+  - standard
+  archetype: transformer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OneHotEncoder.html
+  page: onehotencoder
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.preprocessing.OrdinalEncoder
+  name: OrdinalEncoder
+  library: scikit-learn
+  import_path: sklearn.preprocessing.OrdinalEncoder
+  kind: class
+  stage: transform
+  family: Categorical encoding
+  tracks:
+  - standard
+  archetype: transformer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OrdinalEncoder.html
+  page: ordinalencoder
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.preprocessing.TargetEncoder
+  name: TargetEncoder
+  library: scikit-learn
+  import_path: sklearn.preprocessing.TargetEncoder
+  kind: class
+  stage: transform
+  family: Categorical encoding
+  tracks:
+  - standard
+  archetype: transformer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.TargetEncoder.html
+  page: targetencoder
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: 'Target-aware: fits on y, so must sit inside a Pipeline/CV to avoid leakage.'
+- id: sklearn.preprocessing.LabelEncoder
+  name: LabelEncoder
+  library: scikit-learn
+  import_path: sklearn.preprocessing.LabelEncoder
+  kind: class
+  stage: transform
+  family: Label encoding
+  tracks:
+  - standard
+  archetype: transformer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.LabelEncoder.html
+  page: labelencoder
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: For the target y only, not features.
+- id: sklearn.preprocessing.LabelBinarizer
+  name: LabelBinarizer
+  library: scikit-learn
+  import_path: sklearn.preprocessing.LabelBinarizer
+  kind: class
+  stage: transform
+  family: Label encoding
+  tracks:
+  - standard
+  archetype: transformer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.LabelBinarizer.html
+  page: labelbinarizer
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: For the target y only, not features.
+- id: sklearn.preprocessing.label_binarize
+  name: label_binarize
+  library: scikit-learn
+  import_path: sklearn.preprocessing.label_binarize
+  kind: function
+  stage: transform
+  family: Label encoding
+  tracks:
+  - standard
+  archetype: transformer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.label_binarize.html
+  page: label-binarizer
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: Functional shortcut of LabelBinarizer; shares its page.
+- id: sklearn.preprocessing.MultiLabelBinarizer
+  name: MultiLabelBinarizer
+  library: scikit-learn
+  import_path: sklearn.preprocessing.MultiLabelBinarizer
+  kind: class
+  stage: transform
+  family: Label encoding
+  tracks:
+  - standard
+  archetype: transformer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.MultiLabelBinarizer.html
+  page: multilabelbinarizer
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: Multilabel targets.
+- id: sklearn.impute.SimpleImputer
+  name: SimpleImputer
+  library: scikit-learn
+  import_path: sklearn.impute.SimpleImputer
+  kind: class
+  stage: clean
+  family: Imputation
+  tracks:
+  - standard
+  archetype: transformer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.impute.SimpleImputer.html
+  page: simpleimputer
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.impute.KNNImputer
+  name: KNNImputer
+  library: scikit-learn
+  import_path: sklearn.impute.KNNImputer
+  kind: class
+  stage: clean
+  family: Imputation
+  tracks:
+  - standard
+  archetype: transformer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.impute.KNNImputer.html
+  page: knnimputer
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.impute.IterativeImputer
+  name: IterativeImputer
+  library: scikit-learn
+  import_path: sklearn.impute.IterativeImputer
+  kind: class
+  stage: clean
+  family: Imputation
+  tracks:
+  - standard
+  archetype: transformer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.impute.IterativeImputer.html
+  page: iterativeimputer
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: 'Experimental: import fails until ''from sklearn.experimental import enable_iterative_imputer'' has run.'
+- id: sklearn.impute.MissingIndicator
+  name: MissingIndicator
+  library: scikit-learn
+  import_path: sklearn.impute.MissingIndicator
+  kind: class
+  stage: clean
+  family: Imputation
+  tracks:
+  - standard
+  archetype: transformer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.impute.MissingIndicator.html
+  page: missingindicator
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.compose.ColumnTransformer
+  name: ColumnTransformer
+  library: scikit-learn
+  import_path: sklearn.compose.ColumnTransformer
+  kind: class
+  stage: transform
+  family: Composition
+  tracks:
+  - standard
+  archetype: composer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.compose.ColumnTransformer.html
+  page: columntransformer
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.compose.make_column_transformer
+  name: make_column_transformer
+  library: scikit-learn
+  import_path: sklearn.compose.make_column_transformer
+  kind: function
+  stage: transform
+  family: Composition
+  tracks:
+  - standard
+  archetype: composer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.compose.make_column_transformer.html
+  page: column-transformer
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: Shorthand constructor of ColumnTransformer; shares its page.
+- id: sklearn.compose.make_column_selector
+  name: make_column_selector
+  library: scikit-learn
+  import_path: sklearn.compose.make_column_selector
+  kind: class
+  stage: transform
+  family: Composition
+  tracks:
+  - standard
+  archetype: composer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.compose.make_column_selector.html
+  page: make-column-selector
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: Selects columns by dtype/name pattern for a ColumnTransformer.
+- id: sklearn.compose.TransformedTargetRegressor
+  name: TransformedTargetRegressor
+  library: scikit-learn
+  import_path: sklearn.compose.TransformedTargetRegressor
+  kind: class
+  stage: transform
+  family: Composition
+  tracks:
+  - standard
+  archetype: composer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.compose.TransformedTargetRegressor.html
+  page: transformedtargetregressor
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: Transforms y before fitting a regressor and inverts predictions.
+- id: sklearn.pipeline.Pipeline
+  name: Pipeline
+  library: scikit-learn
+  import_path: sklearn.pipeline.Pipeline
+  kind: class
+  stage: transform
+  family: Composition
+  tracks:
+  - standard
+  archetype: composer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html
+  page: pipeline
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: 'Stage is a judgement call: pipelines span transform to model; placed in transform.'
+- id: sklearn.pipeline.make_pipeline
+  name: make_pipeline
+  library: scikit-learn
+  import_path: sklearn.pipeline.make_pipeline
+  kind: function
+  stage: transform
+  family: Composition
+  tracks:
+  - standard
+  archetype: composer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.make_pipeline.html
+  page: pipeline
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: Shorthand constructor of Pipeline; shares its page.
+- id: sklearn.pipeline.FeatureUnion
+  name: FeatureUnion
+  library: scikit-learn
+  import_path: sklearn.pipeline.FeatureUnion
+  kind: class
+  stage: transform
+  family: Composition
+  tracks:
+  - standard
+  archetype: composer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.FeatureUnion.html
+  page: featureunion
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.pipeline.make_union
+  name: make_union
+  library: scikit-learn
+  import_path: sklearn.pipeline.make_union
+  kind: function
+  stage: transform
+  family: Composition
+  tracks:
+  - standard
+  archetype: composer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.make_union.html
+  page: feature-union
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: Shorthand constructor of FeatureUnion; shares its page.
+- id: sklearn.feature_selection.VarianceThreshold
+  name: VarianceThreshold
+  library: scikit-learn
+  import_path: sklearn.feature_selection.VarianceThreshold
+  kind: class
+  stage: select
+  family: Feature selection
+  tracks:
+  - standard
+  archetype: selector
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.VarianceThreshold.html
+  page: variancethreshold
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.feature_selection.SelectKBest
+  name: SelectKBest
+  library: scikit-learn
+  import_path: sklearn.feature_selection.SelectKBest
+  kind: class
+  stage: select
+  family: Feature selection
+  tracks:
+  - standard
+  archetype: selector
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SelectKBest.html
+  page: selectkbest
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.feature_selection.SelectFromModel
+  name: SelectFromModel
+  library: scikit-learn
+  import_path: sklearn.feature_selection.SelectFromModel
+  kind: class
+  stage: select
+  family: Feature selection
+  tracks:
+  - standard
+  archetype: selector
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SelectFromModel.html
+  page: selectfrommodel
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.feature_selection.RFE
+  name: RFE
+  library: scikit-learn
+  import_path: sklearn.feature_selection.RFE
+  kind: class
+  stage: select
+  family: Feature selection
+  tracks:
+  - standard
+  archetype: selector
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.RFE.html
+  page: rfe
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.feature_selection.RFECV
+  name: RFECV
+  library: scikit-learn
+  import_path: sklearn.feature_selection.RFECV
+  kind: class
+  stage: select
+  family: Feature selection
+  tracks:
+  - standard
+  archetype: selector
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.RFECV.html
+  page: rfecv
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.feature_selection.SelectPercentile
+  name: SelectPercentile
+  library: scikit-learn
+  import_path: sklearn.feature_selection.SelectPercentile
+  kind: class
+  stage: select
+  family: Feature selection
+  tracks:
+  - standard
+  archetype: selector
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SelectPercentile.html
+  page: selectpercentile
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.feature_selection.GenericUnivariateSelect
+  name: GenericUnivariateSelect
+  library: scikit-learn
+  import_path: sklearn.feature_selection.GenericUnivariateSelect
+  kind: class
+  stage: select
+  family: Feature selection
+  tracks:
+  - standard
+  archetype: selector
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.GenericUnivariateSelect.html
+  page: genericunivariateselect
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.feature_selection.SelectFpr
+  name: SelectFpr
+  library: scikit-learn
+  import_path: sklearn.feature_selection.SelectFpr
+  kind: class
+  stage: select
+  family: Feature selection
+  tracks:
+  - standard
+  archetype: selector
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SelectFpr.html
+  page: selectfpr
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.feature_selection.SelectFdr
+  name: SelectFdr
+  library: scikit-learn
+  import_path: sklearn.feature_selection.SelectFdr
+  kind: class
+  stage: select
+  family: Feature selection
+  tracks:
+  - standard
+  archetype: selector
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SelectFdr.html
+  page: selectfdr
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.feature_selection.SelectFwe
+  name: SelectFwe
+  library: scikit-learn
+  import_path: sklearn.feature_selection.SelectFwe
+  kind: class
+  stage: select
+  family: Feature selection
+  tracks:
+  - standard
+  archetype: selector
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SelectFwe.html
+  page: selectfwe
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.feature_selection.SequentialFeatureSelector
+  name: SequentialFeatureSelector
+  library: scikit-learn
+  import_path: sklearn.feature_selection.SequentialFeatureSelector
+  kind: class
+  stage: select
+  family: Feature selection
+  tracks:
+  - standard
+  archetype: selector
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SequentialFeatureSelector.html
+  page: sequentialfeatureselector
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.feature_selection.f_classif
+  name: f_classif
+  library: scikit-learn
+  import_path: sklearn.feature_selection.f_classif
+  kind: function
+  stage: select
+  family: Univariate scoring functions
+  tracks:
+  - standard
+  archetype: selector
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.f_classif.html
+  page: f-classif
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: Score function passed to SelectKBest/SelectPercentile etc.
+- id: sklearn.feature_selection.f_regression
+  name: f_regression
+  library: scikit-learn
+  import_path: sklearn.feature_selection.f_regression
+  kind: function
+  stage: select
+  family: Univariate scoring functions
+  tracks:
+  - standard
+  archetype: selector
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.f_regression.html
+  page: f-regression
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: Score function passed to SelectKBest/SelectPercentile etc.
+- id: sklearn.feature_selection.mutual_info_classif
+  name: mutual_info_classif
+  library: scikit-learn
+  import_path: sklearn.feature_selection.mutual_info_classif
+  kind: function
+  stage: select
+  family: Univariate scoring functions
+  tracks:
+  - standard
+  archetype: selector
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.mutual_info_classif.html
+  page: mutual-info-classif
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: Score function passed to SelectKBest/SelectPercentile etc.
+- id: sklearn.feature_selection.mutual_info_regression
+  name: mutual_info_regression
+  library: scikit-learn
+  import_path: sklearn.feature_selection.mutual_info_regression
+  kind: function
+  stage: select
+  family: Univariate scoring functions
+  tracks:
+  - standard
+  archetype: selector
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.mutual_info_regression.html
+  page: mutual-info-regression
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: Score function passed to SelectKBest/SelectPercentile etc.
+- id: sklearn.feature_selection.chi2
+  name: chi2
+  library: scikit-learn
+  import_path: sklearn.feature_selection.chi2
+  kind: function
+  stage: select
+  family: Univariate scoring functions
+  tracks:
+  - standard
+  archetype: selector
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.chi2.html
+  page: chi2
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: Score function passed to SelectKBest/SelectPercentile etc.
+- id: sklearn.feature_selection.r_regression
+  name: r_regression
+  library: scikit-learn
+  import_path: sklearn.feature_selection.r_regression
+  kind: function
+  stage: select
+  family: Univariate scoring functions
+  tracks:
+  - standard
+  archetype: selector
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.r_regression.html
+  page: r-regression
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: Score function passed to SelectKBest/SelectPercentile etc.
+- id: sklearn.decomposition.PCA
+  name: PCA
+  library: scikit-learn
+  import_path: sklearn.decomposition.PCA
+  kind: class
+  stage: select
+  family: Dimensionality reduction
+  tracks:
+  - standard
+  archetype: selector
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html
+  page: pca
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.decomposition.TruncatedSVD
+  name: TruncatedSVD
+  library: scikit-learn
+  import_path: sklearn.decomposition.TruncatedSVD
+  kind: class
+  stage: select
+  family: Dimensionality reduction
+  tracks:
+  - standard
+  archetype: selector
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.TruncatedSVD.html
+  page: truncatedsvd
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: Works on sparse input without centring.
+- id: sklearn.model_selection.train_test_split
+  name: train_test_split
+  library: scikit-learn
+  import_path: sklearn.model_selection.train_test_split
+  kind: function
+  stage: split
+  family: Splitters
+  tracks:
+  - standard
+  archetype: splitter
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html
+  page: train-test-split
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.model_selection.KFold
+  name: KFold
+  library: scikit-learn
+  import_path: sklearn.model_selection.KFold
+  kind: class
+  stage: split
+  family: Splitters
+  tracks:
+  - standard
+  archetype: splitter
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.KFold.html
+  page: kfold
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.model_selection.StratifiedKFold
+  name: StratifiedKFold
+  library: scikit-learn
+  import_path: sklearn.model_selection.StratifiedKFold
+  kind: class
+  stage: split
+  family: Splitters
+  tracks:
+  - standard
+  archetype: splitter
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.StratifiedKFold.html
+  page: stratifiedkfold
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.model_selection.GroupKFold
+  name: GroupKFold
+  library: scikit-learn
+  import_path: sklearn.model_selection.GroupKFold
+  kind: class
+  stage: split
+  family: Splitters
+  tracks:
+  - standard
+  archetype: splitter
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupKFold.html
+  page: groupkfold
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.model_selection.ShuffleSplit
+  name: ShuffleSplit
+  library: scikit-learn
+  import_path: sklearn.model_selection.ShuffleSplit
+  kind: class
+  stage: split
+  family: Splitters
+  tracks:
+  - standard
+  archetype: splitter
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.ShuffleSplit.html
+  page: shufflesplit
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.model_selection.StratifiedShuffleSplit
+  name: StratifiedShuffleSplit
+  library: scikit-learn
+  import_path: sklearn.model_selection.StratifiedShuffleSplit
+  kind: class
+  stage: split
+  family: Splitters
+  tracks:
+  - standard
+  archetype: splitter
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.StratifiedShuffleSplit.html
+  page: stratifiedshufflesplit
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.model_selection.StratifiedGroupKFold
+  name: StratifiedGroupKFold
+  library: scikit-learn
+  import_path: sklearn.model_selection.StratifiedGroupKFold
+  kind: class
+  stage: split
+  family: Splitters
+  tracks:
+  - standard
+  archetype: splitter
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.StratifiedGroupKFold.html
+  page: stratifiedgroupkfold
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.model_selection.GroupShuffleSplit
+  name: GroupShuffleSplit
+  library: scikit-learn
+  import_path: sklearn.model_selection.GroupShuffleSplit
+  kind: class
+  stage: split
+  family: Splitters
+  tracks:
+  - standard
+  archetype: splitter
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupShuffleSplit.html
+  page: groupshufflesplit
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.model_selection.RepeatedKFold
+  name: RepeatedKFold
+  library: scikit-learn
+  import_path: sklearn.model_selection.RepeatedKFold
+  kind: class
+  stage: split
+  family: Splitters
+  tracks:
+  - standard
+  archetype: splitter
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RepeatedKFold.html
+  page: repeatedkfold
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.model_selection.RepeatedStratifiedKFold
+  name: RepeatedStratifiedKFold
+  library: scikit-learn
+  import_path: sklearn.model_selection.RepeatedStratifiedKFold
+  kind: class
+  stage: split
+  family: Splitters
+  tracks:
+  - standard
+  archetype: splitter
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RepeatedStratifiedKFold.html
+  page: repeatedstratifiedkfold
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.model_selection.LeaveOneOut
+  name: LeaveOneOut
+  library: scikit-learn
+  import_path: sklearn.model_selection.LeaveOneOut
+  kind: class
+  stage: split
+  family: Splitters
+  tracks:
+  - standard
+  archetype: splitter
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.LeaveOneOut.html
+  page: leaveoneout
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.model_selection.LeavePOut
+  name: LeavePOut
+  library: scikit-learn
+  import_path: sklearn.model_selection.LeavePOut
+  kind: class
+  stage: split
+  family: Splitters
+  tracks:
+  - standard
+  archetype: splitter
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.LeavePOut.html
+  page: leavepout
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.model_selection.LeaveOneGroupOut
+  name: LeaveOneGroupOut
+  library: scikit-learn
+  import_path: sklearn.model_selection.LeaveOneGroupOut
+  kind: class
+  stage: split
+  family: Splitters
+  tracks:
+  - standard
+  archetype: splitter
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.LeaveOneGroupOut.html
+  page: leaveonegroupout
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.model_selection.LeavePGroupsOut
+  name: LeavePGroupsOut
+  library: scikit-learn
+  import_path: sklearn.model_selection.LeavePGroupsOut
+  kind: class
+  stage: split
+  family: Splitters
+  tracks:
+  - standard
+  archetype: splitter
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.LeavePGroupsOut.html
+  page: leavepgroupsout
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.model_selection.PredefinedSplit
+  name: PredefinedSplit
+  library: scikit-learn
+  import_path: sklearn.model_selection.PredefinedSplit
+  kind: class
+  stage: split
+  family: Splitters
+  tracks:
+  - standard
+  archetype: splitter
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.PredefinedSplit.html
+  page: predefinedsplit
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.model_selection.TimeSeriesSplit
+  name: TimeSeriesSplit
+  library: scikit-learn
+  import_path: sklearn.model_selection.TimeSeriesSplit
+  kind: class
+  stage: split
+  family: Splitters
+  tracks:
+  - time-series
+  archetype: splitter
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html
+  page: timeseriessplit
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.model_selection.cross_val_score
+  name: cross_val_score
+  library: scikit-learn
+  import_path: sklearn.model_selection.cross_val_score
+  kind: function
+  stage: split
+  family: Cross-validation runners
+  tracks:
+  - standard
+  archetype: splitter
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_val_score.html
+  page: cross-val-score
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.model_selection.cross_validate
+  name: cross_validate
+  library: scikit-learn
+  import_path: sklearn.model_selection.cross_validate
+  kind: function
+  stage: split
+  family: Cross-validation runners
+  tracks:
+  - standard
+  archetype: splitter
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_validate.html
+  page: cross-validate
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.model_selection.cross_val_predict
+  name: cross_val_predict
+  library: scikit-learn
+  import_path: sklearn.model_selection.cross_val_predict
+  kind: function
+  stage: split
+  family: Cross-validation runners
+  tracks:
+  - standard
+  archetype: splitter
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_val_predict.html
+  page: cross-val-predict
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.model_selection.learning_curve
+  name: learning_curve
+  library: scikit-learn
+  import_path: sklearn.model_selection.learning_curve
+  kind: function
+  stage: evaluate
+  family: Validation curves
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.learning_curve.html
+  page: learning-curve
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.model_selection.validation_curve
+  name: validation_curve
+  library: scikit-learn
+  import_path: sklearn.model_selection.validation_curve
+  kind: function
+  stage: evaluate
+  family: Validation curves
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.validation_curve.html
+  page: validation-curve
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.model_selection.LearningCurveDisplay
+  name: LearningCurveDisplay
+  library: scikit-learn
+  import_path: sklearn.model_selection.LearningCurveDisplay
+  kind: class
+  stage: evaluate
+  family: Validation curves
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.LearningCurveDisplay.html
+  page: learning-curve
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: Plot class for learning_curve; shares its page.
+- id: sklearn.model_selection.ValidationCurveDisplay
+  name: ValidationCurveDisplay
+  library: scikit-learn
+  import_path: sklearn.model_selection.ValidationCurveDisplay
+  kind: class
+  stage: evaluate
+  family: Validation curves
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.ValidationCurveDisplay.html
+  page: validation-curve
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: Plot class for validation_curve; shares its page.
+- id: sklearn.model_selection.permutation_test_score
+  name: permutation_test_score
+  library: scikit-learn
+  import_path: sklearn.model_selection.permutation_test_score
+  kind: function
+  stage: evaluate
+  family: Validation curves
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.permutation_test_score.html
+  page: permutation-test-score
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.model_selection.GridSearchCV
+  name: GridSearchCV
+  library: scikit-learn
+  import_path: sklearn.model_selection.GridSearchCV
+  kind: class
+  stage: tune
+  family: Search
+  tracks:
+  - standard
+  archetype: tuning
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html
+  page: gridsearchcv
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.model_selection.RandomizedSearchCV
+  name: RandomizedSearchCV
+  library: scikit-learn
+  import_path: sklearn.model_selection.RandomizedSearchCV
+  kind: class
+  stage: tune
+  family: Search
+  tracks:
+  - standard
+  archetype: tuning
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html
+  page: randomizedsearchcv
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.model_selection.HalvingGridSearchCV
+  name: HalvingGridSearchCV
+  library: scikit-learn
+  import_path: sklearn.model_selection.HalvingGridSearchCV
+  kind: class
+  stage: tune
+  family: Search
+  tracks:
+  - standard
+  archetype: tuning
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.HalvingGridSearchCV.html
+  page: halvinggridsearchcv
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: 'Experimental: import fails until ''from sklearn.experimental import enable_halving_search_cv'' has run.'
+- id: sklearn.model_selection.HalvingRandomSearchCV
+  name: HalvingRandomSearchCV
+  library: scikit-learn
+  import_path: sklearn.model_selection.HalvingRandomSearchCV
+  kind: class
+  stage: tune
+  family: Search
+  tracks:
+  - standard
+  archetype: tuning
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.HalvingRandomSearchCV.html
+  page: halvingrandomsearchcv
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: 'Experimental: import fails until ''from sklearn.experimental import enable_halving_search_cv'' has run.'
+- id: sklearn.model_selection.ParameterGrid
+  name: ParameterGrid
+  library: scikit-learn
+  import_path: sklearn.model_selection.ParameterGrid
+  kind: class
+  stage: tune
+  family: Search
+  tracks:
+  - standard
+  archetype: tuning
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.ParameterGrid.html
+  page: parametergrid
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: Helper that enumerates a grid; used by GridSearchCV.
+- id: sklearn.model_selection.ParameterSampler
+  name: ParameterSampler
+  library: scikit-learn
+  import_path: sklearn.model_selection.ParameterSampler
+  kind: class
+  stage: tune
+  family: Search
+  tracks:
+  - standard
+  archetype: tuning
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.ParameterSampler.html
+  page: parametersampler
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: Helper that samples a grid/distributions; used by RandomizedSearchCV.
+- id: sklearn.model_selection.TunedThresholdClassifierCV
+  name: TunedThresholdClassifierCV
+  library: scikit-learn
+  import_path: sklearn.model_selection.TunedThresholdClassifierCV
+  kind: class
+  stage: tune
+  family: Decision threshold
+  tracks:
+  - standard
+  archetype: tuning
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TunedThresholdClassifierCV.html
+  page: tunedthresholdclassifiercv
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.model_selection.FixedThresholdClassifier
+  name: FixedThresholdClassifier
+  library: scikit-learn
+  import_path: sklearn.model_selection.FixedThresholdClassifier
+  kind: class
+  stage: tune
+  family: Decision threshold
+  tracks:
+  - standard
+  archetype: tuning
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.FixedThresholdClassifier.html
+  page: fixedthresholdclassifier
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.metrics.accuracy_score
+  name: accuracy_score
+  library: scikit-learn
+  import_path: sklearn.metrics.accuracy_score
+  kind: function
+  stage: evaluate
+  family: Classification metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.accuracy_score.html
+  page: accuracy-score
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.metrics.precision_score
+  name: precision_score
+  library: scikit-learn
+  import_path: sklearn.metrics.precision_score
+  kind: function
+  stage: evaluate
+  family: Classification metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.precision_score.html
+  page: precision-score
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.metrics.recall_score
+  name: recall_score
+  library: scikit-learn
+  import_path: sklearn.metrics.recall_score
+  kind: function
+  stage: evaluate
+  family: Classification metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.recall_score.html
+  page: recall-score
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.metrics.f1_score
+  name: f1_score
+  library: scikit-learn
+  import_path: sklearn.metrics.f1_score
+  kind: function
+  stage: evaluate
+  family: Classification metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.f1_score.html
+  page: f1-score
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.metrics.roc_auc_score
+  name: roc_auc_score
+  library: scikit-learn
+  import_path: sklearn.metrics.roc_auc_score
+  kind: function
+  stage: evaluate
+  family: Classification metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.roc_auc_score.html
+  page: roc-auc-score
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.metrics.average_precision_score
+  name: average_precision_score
+  library: scikit-learn
+  import_path: sklearn.metrics.average_precision_score
+  kind: function
+  stage: evaluate
+  family: Classification metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.average_precision_score.html
+  page: average-precision-score
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.metrics.balanced_accuracy_score
+  name: balanced_accuracy_score
+  library: scikit-learn
+  import_path: sklearn.metrics.balanced_accuracy_score
+  kind: function
+  stage: evaluate
+  family: Classification metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.balanced_accuracy_score.html
+  page: balanced-accuracy-score
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.metrics.matthews_corrcoef
+  name: matthews_corrcoef
+  library: scikit-learn
+  import_path: sklearn.metrics.matthews_corrcoef
+  kind: function
+  stage: evaluate
+  family: Classification metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.matthews_corrcoef.html
+  page: matthews-corrcoef
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.metrics.fbeta_score
+  name: fbeta_score
+  library: scikit-learn
+  import_path: sklearn.metrics.fbeta_score
+  kind: function
+  stage: evaluate
+  family: Classification metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.fbeta_score.html
+  page: fbeta-score
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.metrics.precision_recall_fscore_support
+  name: precision_recall_fscore_support
+  library: scikit-learn
+  import_path: sklearn.metrics.precision_recall_fscore_support
+  kind: function
+  stage: evaluate
+  family: Classification metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.precision_recall_fscore_support.html
+  page: precision-recall-fscore-support
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.metrics.cohen_kappa_score
+  name: cohen_kappa_score
+  library: scikit-learn
+  import_path: sklearn.metrics.cohen_kappa_score
+  kind: function
+  stage: evaluate
+  family: Classification metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.cohen_kappa_score.html
+  page: cohen-kappa-score
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.metrics.jaccard_score
+  name: jaccard_score
+  library: scikit-learn
+  import_path: sklearn.metrics.jaccard_score
+  kind: function
+  stage: evaluate
+  family: Classification metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.jaccard_score.html
+  page: jaccard-score
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.metrics.hamming_loss
+  name: hamming_loss
+  library: scikit-learn
+  import_path: sklearn.metrics.hamming_loss
+  kind: function
+  stage: evaluate
+  family: Classification metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.hamming_loss.html
+  page: hamming-loss
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.metrics.zero_one_loss
+  name: zero_one_loss
+  library: scikit-learn
+  import_path: sklearn.metrics.zero_one_loss
+  kind: function
+  stage: evaluate
+  family: Classification metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.zero_one_loss.html
+  page: zero-one-loss
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.metrics.hinge_loss
+  name: hinge_loss
+  library: scikit-learn
+  import_path: sklearn.metrics.hinge_loss
+  kind: function
+  stage: evaluate
+  family: Classification metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.hinge_loss.html
+  page: hinge-loss
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.metrics.top_k_accuracy_score
+  name: top_k_accuracy_score
+  library: scikit-learn
+  import_path: sklearn.metrics.top_k_accuracy_score
+  kind: function
+  stage: evaluate
+  family: Classification metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.top_k_accuracy_score.html
+  page: top-k-accuracy-score
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.metrics.class_likelihood_ratios
+  name: class_likelihood_ratios
+  library: scikit-learn
+  import_path: sklearn.metrics.class_likelihood_ratios
+  kind: function
+  stage: evaluate
+  family: Classification metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.class_likelihood_ratios.html
+  page: class-likelihood-ratios
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.metrics.auc
+  name: auc
+  library: scikit-learn
+  import_path: sklearn.metrics.auc
+  kind: function
+  stage: evaluate
+  family: Classification metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.auc.html
+  page: auc
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.metrics.multilabel_confusion_matrix
+  name: multilabel_confusion_matrix
+  library: scikit-learn
+  import_path: sklearn.metrics.multilabel_confusion_matrix
+  kind: function
+  stage: evaluate
+  family: Classification metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.multilabel_confusion_matrix.html
+  page: multilabel-confusion-matrix
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.metrics.confusion_matrix
+  name: confusion_matrix
+  library: scikit-learn
+  import_path: sklearn.metrics.confusion_matrix
+  kind: function
+  stage: evaluate
+  family: Classification metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.confusion_matrix.html
+  page: confusion-matrix
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.metrics.classification_report
+  name: classification_report
+  library: scikit-learn
+  import_path: sklearn.metrics.classification_report
+  kind: function
+  stage: evaluate
+  family: Classification metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.classification_report.html
+  page: classification-report
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.metrics.ConfusionMatrixDisplay
+  name: ConfusionMatrixDisplay
+  library: scikit-learn
+  import_path: sklearn.metrics.ConfusionMatrixDisplay
+  kind: class
+  stage: evaluate
+  family: Classification metrics
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.ConfusionMatrixDisplay.html
+  page: confusion-matrix
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: Plot class for confusion_matrix; shares its page.
+- id: sklearn.metrics.roc_curve
+  name: roc_curve
+  library: scikit-learn
+  import_path: sklearn.metrics.roc_curve
+  kind: function
+  stage: evaluate
+  family: Classification curves
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.roc_curve.html
+  page: roc-curve
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.metrics.precision_recall_curve
+  name: precision_recall_curve
+  library: scikit-learn
+  import_path: sklearn.metrics.precision_recall_curve
+  kind: function
+  stage: evaluate
+  family: Classification curves
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.precision_recall_curve.html
+  page: precision-recall-curve
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.metrics.det_curve
+  name: det_curve
+  library: scikit-learn
+  import_path: sklearn.metrics.det_curve
+  kind: function
+  stage: evaluate
+  family: Classification curves
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.det_curve.html
+  page: det-curve
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.metrics.RocCurveDisplay
+  name: RocCurveDisplay
+  library: scikit-learn
+  import_path: sklearn.metrics.RocCurveDisplay
+  kind: class
+  stage: evaluate
+  family: Classification curves
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.RocCurveDisplay.html
+  page: roc-curve
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: Plot class for roc_curve; shares its page.
+- id: sklearn.metrics.PrecisionRecallDisplay
+  name: PrecisionRecallDisplay
+  library: scikit-learn
+  import_path: sklearn.metrics.PrecisionRecallDisplay
+  kind: class
+  stage: evaluate
+  family: Classification curves
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.PrecisionRecallDisplay.html
+  page: precision-recall-curve
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: Plot class for precision_recall_curve; shares its page.
+- id: sklearn.metrics.DetCurveDisplay
+  name: DetCurveDisplay
+  library: scikit-learn
+  import_path: sklearn.metrics.DetCurveDisplay
+  kind: class
+  stage: evaluate
+  family: Classification curves
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.DetCurveDisplay.html
+  page: det-curve
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: Plot class for det_curve; shares its page.
+- id: sklearn.metrics.confusion_matrix_at_thresholds
+  name: confusion_matrix_at_thresholds
+  library: scikit-learn
+  import_path: sklearn.metrics.confusion_matrix_at_thresholds
+  kind: function
+  stage: evaluate
+  family: Classification curves
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.confusion_matrix_at_thresholds.html
+  page: confusion-matrix-at-thresholds
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: New in scikit-learn 1.9.
+- id: sklearn.metrics.metric_at_thresholds
+  name: metric_at_thresholds
+  library: scikit-learn
+  import_path: sklearn.metrics.metric_at_thresholds
+  kind: function
+  stage: evaluate
+  family: Classification curves
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.metric_at_thresholds.html
+  page: metric-at-thresholds
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: New in scikit-learn 1.9.
+- id: sklearn.metrics.log_loss
+  name: log_loss
+  library: scikit-learn
+  import_path: sklearn.metrics.log_loss
+  kind: function
+  stage: evaluate
+  family: Probabilistic scoring
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.log_loss.html
+  page: log-loss
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.metrics.brier_score_loss
+  name: brier_score_loss
+  library: scikit-learn
+  import_path: sklearn.metrics.brier_score_loss
+  kind: function
+  stage: evaluate
+  family: Probabilistic scoring
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.brier_score_loss.html
+  page: brier-score-loss
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.metrics.d2_log_loss_score
+  name: d2_log_loss_score
+  library: scikit-learn
+  import_path: sklearn.metrics.d2_log_loss_score
+  kind: function
+  stage: evaluate
+  family: Probabilistic scoring
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.d2_log_loss_score.html
+  page: d2-log-loss-score
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.metrics.d2_brier_score
+  name: d2_brier_score
+  library: scikit-learn
+  import_path: sklearn.metrics.d2_brier_score
+  kind: function
+  stage: evaluate
+  family: Probabilistic scoring
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.d2_brier_score.html
+  page: d2-brier-score
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.metrics.mean_absolute_error
+  name: mean_absolute_error
+  library: scikit-learn
+  import_path: sklearn.metrics.mean_absolute_error
+  kind: function
+  stage: evaluate
+  family: Regression metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_absolute_error.html
+  page: mean-absolute-error
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.metrics.mean_squared_error
+  name: mean_squared_error
+  library: scikit-learn
+  import_path: sklearn.metrics.mean_squared_error
+  kind: function
+  stage: evaluate
+  family: Regression metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_squared_error.html
+  page: mean-squared-error
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.metrics.root_mean_squared_error
+  name: root_mean_squared_error
+  library: scikit-learn
+  import_path: sklearn.metrics.root_mean_squared_error
+  kind: function
+  stage: evaluate
+  family: Regression metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.root_mean_squared_error.html
+  page: root-mean-squared-error
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.metrics.r2_score
+  name: r2_score
+  library: scikit-learn
+  import_path: sklearn.metrics.r2_score
+  kind: function
+  stage: evaluate
+  family: Regression metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.r2_score.html
+  page: r2-score
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.metrics.mean_absolute_percentage_error
+  name: mean_absolute_percentage_error
+  library: scikit-learn
+  import_path: sklearn.metrics.mean_absolute_percentage_error
+  kind: function
+  stage: evaluate
+  family: Regression metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_absolute_percentage_error.html
+  page: mean-absolute-percentage-error
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.metrics.median_absolute_error
+  name: median_absolute_error
+  library: scikit-learn
+  import_path: sklearn.metrics.median_absolute_error
+  kind: function
+  stage: evaluate
+  family: Regression metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.median_absolute_error.html
+  page: median-absolute-error
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.metrics.explained_variance_score
+  name: explained_variance_score
+  library: scikit-learn
+  import_path: sklearn.metrics.explained_variance_score
+  kind: function
+  stage: evaluate
+  family: Regression metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.explained_variance_score.html
+  page: explained-variance-score
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.metrics.max_error
+  name: max_error
+  library: scikit-learn
+  import_path: sklearn.metrics.max_error
+  kind: function
+  stage: evaluate
+  family: Regression metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.max_error.html
+  page: max-error
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.metrics.mean_squared_log_error
+  name: mean_squared_log_error
+  library: scikit-learn
+  import_path: sklearn.metrics.mean_squared_log_error
+  kind: function
+  stage: evaluate
+  family: Regression metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_squared_log_error.html
+  page: mean-squared-log-error
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.metrics.root_mean_squared_log_error
+  name: root_mean_squared_log_error
+  library: scikit-learn
+  import_path: sklearn.metrics.root_mean_squared_log_error
+  kind: function
+  stage: evaluate
+  family: Regression metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.root_mean_squared_log_error.html
+  page: root-mean-squared-log-error
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.metrics.mean_pinball_loss
+  name: mean_pinball_loss
+  library: scikit-learn
+  import_path: sklearn.metrics.mean_pinball_loss
+  kind: function
+  stage: evaluate
+  family: Regression metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_pinball_loss.html
+  page: mean-pinball-loss
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.metrics.mean_poisson_deviance
+  name: mean_poisson_deviance
+  library: scikit-learn
+  import_path: sklearn.metrics.mean_poisson_deviance
+  kind: function
+  stage: evaluate
+  family: Regression metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_poisson_deviance.html
+  page: mean-poisson-deviance
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.metrics.mean_gamma_deviance
+  name: mean_gamma_deviance
+  library: scikit-learn
+  import_path: sklearn.metrics.mean_gamma_deviance
+  kind: function
+  stage: evaluate
+  family: Regression metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_gamma_deviance.html
+  page: mean-gamma-deviance
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.metrics.mean_tweedie_deviance
+  name: mean_tweedie_deviance
+  library: scikit-learn
+  import_path: sklearn.metrics.mean_tweedie_deviance
+  kind: function
+  stage: evaluate
+  family: Regression metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_tweedie_deviance.html
+  page: mean-tweedie-deviance
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.metrics.d2_absolute_error_score
+  name: d2_absolute_error_score
+  library: scikit-learn
+  import_path: sklearn.metrics.d2_absolute_error_score
+  kind: function
+  stage: evaluate
+  family: Regression metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.d2_absolute_error_score.html
+  page: d2-absolute-error-score
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.metrics.d2_pinball_score
+  name: d2_pinball_score
+  library: scikit-learn
+  import_path: sklearn.metrics.d2_pinball_score
+  kind: function
+  stage: evaluate
+  family: Regression metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.d2_pinball_score.html
+  page: d2-pinball-score
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.metrics.d2_tweedie_score
+  name: d2_tweedie_score
+  library: scikit-learn
+  import_path: sklearn.metrics.d2_tweedie_score
+  kind: function
+  stage: evaluate
+  family: Regression metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.d2_tweedie_score.html
+  page: d2-tweedie-score
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.metrics.PredictionErrorDisplay
+  name: PredictionErrorDisplay
+  library: scikit-learn
+  import_path: sklearn.metrics.PredictionErrorDisplay
+  kind: class
+  stage: evaluate
+  family: Regression metrics
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.PredictionErrorDisplay.html
+  page: predictionerrordisplay
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: Residual / actual-vs-predicted plot.
+- id: sklearn.metrics.dcg_score
+  name: dcg_score
+  library: scikit-learn
+  import_path: sklearn.metrics.dcg_score
+  kind: function
+  stage: evaluate
+  family: Ranking metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.dcg_score.html
+  page: dcg-score
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: Ranking / multilabel-ranking only.
+- id: sklearn.metrics.ndcg_score
+  name: ndcg_score
+  library: scikit-learn
+  import_path: sklearn.metrics.ndcg_score
+  kind: function
+  stage: evaluate
+  family: Ranking metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.ndcg_score.html
+  page: ndcg-score
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: Ranking / multilabel-ranking only.
+- id: sklearn.metrics.coverage_error
+  name: coverage_error
+  library: scikit-learn
+  import_path: sklearn.metrics.coverage_error
+  kind: function
+  stage: evaluate
+  family: Ranking metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.coverage_error.html
+  page: coverage-error
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: Ranking / multilabel-ranking only.
+- id: sklearn.metrics.label_ranking_average_precision_score
+  name: label_ranking_average_precision_score
+  library: scikit-learn
+  import_path: sklearn.metrics.label_ranking_average_precision_score
+  kind: function
+  stage: evaluate
+  family: Ranking metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.label_ranking_average_precision_score.html
+  page: label-ranking-average-precision-score
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: Ranking / multilabel-ranking only.
+- id: sklearn.metrics.label_ranking_loss
+  name: label_ranking_loss
+  library: scikit-learn
+  import_path: sklearn.metrics.label_ranking_loss
+  kind: function
+  stage: evaluate
+  family: Ranking metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.label_ranking_loss.html
+  page: label-ranking-loss
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: Ranking / multilabel-ranking only.
+- id: sklearn.metrics.make_scorer
+  name: make_scorer
+  library: scikit-learn
+  import_path: sklearn.metrics.make_scorer
+  kind: function
+  stage: evaluate
+  family: Scoring utilities
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.make_scorer.html
+  page: make-scorer
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.metrics.get_scorer
+  name: get_scorer
+  library: scikit-learn
+  import_path: sklearn.metrics.get_scorer
+  kind: function
+  stage: evaluate
+  family: Scoring utilities
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.get_scorer.html
+  page: get-scorer
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.metrics.get_scorer_names
+  name: get_scorer_names
+  library: scikit-learn
+  import_path: sklearn.metrics.get_scorer_names
+  kind: function
+  stage: evaluate
+  family: Scoring utilities
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.get_scorer_names.html
+  page: get-scorer-names
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.metrics.check_scoring
+  name: check_scoring
+  library: scikit-learn
+  import_path: sklearn.metrics.check_scoring
+  kind: function
+  stage: evaluate
+  family: Scoring utilities
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.check_scoring.html
+  page: check-scoring
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.inspection.permutation_importance
+  name: permutation_importance
+  library: scikit-learn
+  import_path: sklearn.inspection.permutation_importance
+  kind: function
+  stage: interpret
+  family: Feature importance
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.inspection.permutation_importance.html
+  page: permutation-importance
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.inspection.partial_dependence
+  name: partial_dependence
+  library: scikit-learn
+  import_path: sklearn.inspection.partial_dependence
+  kind: function
+  stage: interpret
+  family: Partial dependence
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.inspection.partial_dependence.html
+  page: partial-dependence
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.inspection.PartialDependenceDisplay
+  name: PartialDependenceDisplay
+  library: scikit-learn
+  import_path: sklearn.inspection.PartialDependenceDisplay
+  kind: class
+  stage: interpret
+  family: Partial dependence
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.inspection.PartialDependenceDisplay.html
+  page: partial-dependence
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: Plot class for partial_dependence; shares its page.
+- id: sklearn.inspection.DecisionBoundaryDisplay
+  name: DecisionBoundaryDisplay
+  library: scikit-learn
+  import_path: sklearn.inspection.DecisionBoundaryDisplay
+  kind: class
+  stage: interpret
+  family: Decision boundary
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.inspection.DecisionBoundaryDisplay.html
+  page: decisionboundarydisplay
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.calibration.CalibratedClassifierCV
+  name: CalibratedClassifierCV
+  library: scikit-learn
+  import_path: sklearn.calibration.CalibratedClassifierCV
+  kind: class
+  stage: evaluate
+  family: Calibration
+  tracks:
+  - standard
+  archetype: composer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.calibration.CalibratedClassifierCV.html
+  page: calibratedclassifiercv
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: Wraps a classifier to calibrate probabilities; stage/archetype are a judgement call.
+- id: sklearn.calibration.calibration_curve
+  name: calibration_curve
+  library: scikit-learn
+  import_path: sklearn.calibration.calibration_curve
+  kind: function
+  stage: evaluate
+  family: Calibration
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.calibration.calibration_curve.html
+  page: calibration-curve
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: sklearn.calibration.CalibrationDisplay
+  name: CalibrationDisplay
+  library: scikit-learn
+  import_path: sklearn.calibration.CalibrationDisplay
+  kind: class
+  stage: evaluate
+  family: Calibration
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.calibration.CalibrationDisplay.html
+  page: calibration-curve
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: Plot class for calibration_curve; shares its page.
+- id: sklearn.utils.class_weight.compute_class_weight
+  name: compute_class_weight
+  library: scikit-learn
+  import_path: sklearn.utils.class_weight.compute_class_weight
+  kind: function
+  stage: model
+  family: Class weighting
+  tracks:
+  - standard
+  archetype: resampler
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.utils.class_weight.compute_class_weight.html
+  page: compute-class-weight
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: Imbalance handling without resampling; stage/archetype are a judgement call.
+- id: sklearn.utils.class_weight.compute_sample_weight
+  name: compute_sample_weight
+  library: scikit-learn
+  import_path: sklearn.utils.class_weight.compute_sample_weight
+  kind: function
+  stage: model
+  family: Class weighting
+  tracks:
+  - standard
+  archetype: resampler
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.utils.class_weight.compute_sample_weight.html
+  page: compute-class-weight
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: Per-sample variant; stage/archetype are a judgement call.
+- id: sklearn.dummy.DummyClassifier
+  name: DummyClassifier
+  library: scikit-learn
+  import_path: sklearn.dummy.DummyClassifier
+  kind: class
+  stage: model
+  family: Baselines
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.dummy.DummyClassifier.html
+  page: dummyclassifier
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: sklearn.dummy.DummyRegressor
+  name: DummyRegressor
+  library: scikit-learn
+  import_path: sklearn.dummy.DummyRegressor
+  kind: class
+  stage: model
+  family: Baselines
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.dummy.DummyRegressor.html
+  page: dummyregressor
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: imblearn.over_sampling.RandomOverSampler
+  name: RandomOverSampler
+  library: imbalanced-learn
+  import_path: imblearn.over_sampling.RandomOverSampler
+  kind: class
+  stage: transform
+  family: Over-sampling
+  tracks:
+  - standard
+  archetype: resampler
+  doc_url: https://imbalanced-learn.org/stable/references/generated/imblearn.over_sampling.RandomOverSampler.html
+  page: randomoversampler
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: imblearn.over_sampling.SMOTE
+  name: SMOTE
+  library: imbalanced-learn
+  import_path: imblearn.over_sampling.SMOTE
+  kind: class
+  stage: transform
+  family: Over-sampling
+  tracks:
+  - standard
+  archetype: resampler
+  doc_url: https://imbalanced-learn.org/stable/references/generated/imblearn.over_sampling.SMOTE.html
+  page: smote
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: imblearn.over_sampling.ADASYN
+  name: ADASYN
+  library: imbalanced-learn
+  import_path: imblearn.over_sampling.ADASYN
+  kind: class
+  stage: transform
+  family: Over-sampling
+  tracks:
+  - standard
+  archetype: resampler
+  doc_url: https://imbalanced-learn.org/stable/references/generated/imblearn.over_sampling.ADASYN.html
+  page: adasyn
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: imblearn.over_sampling.BorderlineSMOTE
+  name: BorderlineSMOTE
+  library: imbalanced-learn
+  import_path: imblearn.over_sampling.BorderlineSMOTE
+  kind: class
+  stage: transform
+  family: Over-sampling
+  tracks:
+  - standard
+  archetype: resampler
+  doc_url: https://imbalanced-learn.org/stable/references/generated/imblearn.over_sampling.BorderlineSMOTE.html
+  page: borderlinesmote
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: imblearn.over_sampling.KMeansSMOTE
+  name: KMeansSMOTE
+  library: imbalanced-learn
+  import_path: imblearn.over_sampling.KMeansSMOTE
+  kind: class
+  stage: transform
+  family: Over-sampling
+  tracks:
+  - standard
+  archetype: resampler
+  doc_url: https://imbalanced-learn.org/stable/references/generated/imblearn.over_sampling.KMeansSMOTE.html
+  page: kmeanssmote
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: imblearn.over_sampling.SVMSMOTE
+  name: SVMSMOTE
+  library: imbalanced-learn
+  import_path: imblearn.over_sampling.SVMSMOTE
+  kind: class
+  stage: transform
+  family: Over-sampling
+  tracks:
+  - standard
+  archetype: resampler
+  doc_url: https://imbalanced-learn.org/stable/references/generated/imblearn.over_sampling.SVMSMOTE.html
+  page: svmsmote
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: imblearn.over_sampling.SMOTENC
+  name: SMOTENC
+  library: imbalanced-learn
+  import_path: imblearn.over_sampling.SMOTENC
+  kind: class
+  stage: transform
+  family: Over-sampling
+  tracks:
+  - standard
+  archetype: resampler
+  doc_url: https://imbalanced-learn.org/stable/references/generated/imblearn.over_sampling.SMOTENC.html
+  page: smotenc
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: imblearn.over_sampling.SMOTEN
+  name: SMOTEN
+  library: imbalanced-learn
+  import_path: imblearn.over_sampling.SMOTEN
+  kind: class
+  stage: transform
+  family: Over-sampling
+  tracks:
+  - standard
+  archetype: resampler
+  doc_url: https://imbalanced-learn.org/stable/references/generated/imblearn.over_sampling.SMOTEN.html
+  page: smoten
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: imblearn.under_sampling.RandomUnderSampler
+  name: RandomUnderSampler
+  library: imbalanced-learn
+  import_path: imblearn.under_sampling.RandomUnderSampler
+  kind: class
+  stage: transform
+  family: Under-sampling
+  tracks:
+  - standard
+  archetype: resampler
+  doc_url: https://imbalanced-learn.org/stable/references/generated/imblearn.under_sampling.RandomUnderSampler.html
+  page: randomundersampler
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: imblearn.under_sampling.TomekLinks
+  name: TomekLinks
+  library: imbalanced-learn
+  import_path: imblearn.under_sampling.TomekLinks
+  kind: class
+  stage: transform
+  family: Under-sampling
+  tracks:
+  - standard
+  archetype: resampler
+  doc_url: https://imbalanced-learn.org/stable/references/generated/imblearn.under_sampling.TomekLinks.html
+  page: tomeklinks
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: imblearn.under_sampling.NearMiss
+  name: NearMiss
+  library: imbalanced-learn
+  import_path: imblearn.under_sampling.NearMiss
+  kind: class
+  stage: transform
+  family: Under-sampling
+  tracks:
+  - standard
+  archetype: resampler
+  doc_url: https://imbalanced-learn.org/stable/references/generated/imblearn.under_sampling.NearMiss.html
+  page: nearmiss
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: imblearn.under_sampling.EditedNearestNeighbours
+  name: EditedNearestNeighbours
+  library: imbalanced-learn
+  import_path: imblearn.under_sampling.EditedNearestNeighbours
+  kind: class
+  stage: transform
+  family: Under-sampling
+  tracks:
+  - standard
+  archetype: resampler
+  doc_url: https://imbalanced-learn.org/stable/references/generated/imblearn.under_sampling.EditedNearestNeighbours.html
+  page: editednearestneighbours
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: imblearn.under_sampling.RepeatedEditedNearestNeighbours
+  name: RepeatedEditedNearestNeighbours
+  library: imbalanced-learn
+  import_path: imblearn.under_sampling.RepeatedEditedNearestNeighbours
+  kind: class
+  stage: transform
+  family: Under-sampling
+  tracks:
+  - standard
+  archetype: resampler
+  doc_url: https://imbalanced-learn.org/stable/references/generated/imblearn.under_sampling.RepeatedEditedNearestNeighbours.html
+  page: repeatededitednearestneighbours
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: imblearn.under_sampling.AllKNN
+  name: AllKNN
+  library: imbalanced-learn
+  import_path: imblearn.under_sampling.AllKNN
+  kind: class
+  stage: transform
+  family: Under-sampling
+  tracks:
+  - standard
+  archetype: resampler
+  doc_url: https://imbalanced-learn.org/stable/references/generated/imblearn.under_sampling.AllKNN.html
+  page: allknn
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: imblearn.under_sampling.CondensedNearestNeighbour
+  name: CondensedNearestNeighbour
+  library: imbalanced-learn
+  import_path: imblearn.under_sampling.CondensedNearestNeighbour
+  kind: class
+  stage: transform
+  family: Under-sampling
+  tracks:
+  - standard
+  archetype: resampler
+  doc_url: https://imbalanced-learn.org/stable/references/generated/imblearn.under_sampling.CondensedNearestNeighbour.html
+  page: condensednearestneighbour
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: imblearn.under_sampling.OneSidedSelection
+  name: OneSidedSelection
+  library: imbalanced-learn
+  import_path: imblearn.under_sampling.OneSidedSelection
+  kind: class
+  stage: transform
+  family: Under-sampling
+  tracks:
+  - standard
+  archetype: resampler
+  doc_url: https://imbalanced-learn.org/stable/references/generated/imblearn.under_sampling.OneSidedSelection.html
+  page: onesidedselection
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: imblearn.under_sampling.NeighbourhoodCleaningRule
+  name: NeighbourhoodCleaningRule
+  library: imbalanced-learn
+  import_path: imblearn.under_sampling.NeighbourhoodCleaningRule
+  kind: class
+  stage: transform
+  family: Under-sampling
+  tracks:
+  - standard
+  archetype: resampler
+  doc_url: https://imbalanced-learn.org/stable/references/generated/imblearn.under_sampling.NeighbourhoodCleaningRule.html
+  page: neighbourhoodcleaningrule
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: imblearn.under_sampling.InstanceHardnessThreshold
+  name: InstanceHardnessThreshold
+  library: imbalanced-learn
+  import_path: imblearn.under_sampling.InstanceHardnessThreshold
+  kind: class
+  stage: transform
+  family: Under-sampling
+  tracks:
+  - standard
+  archetype: resampler
+  doc_url: https://imbalanced-learn.org/stable/references/generated/imblearn.under_sampling.InstanceHardnessThreshold.html
+  page: instancehardnessthreshold
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: imblearn.under_sampling.ClusterCentroids
+  name: ClusterCentroids
+  library: imbalanced-learn
+  import_path: imblearn.under_sampling.ClusterCentroids
+  kind: class
+  stage: transform
+  family: Under-sampling
+  tracks:
+  - standard
+  archetype: resampler
+  doc_url: https://imbalanced-learn.org/stable/references/generated/imblearn.under_sampling.ClusterCentroids.html
+  page: clustercentroids
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: imblearn.combine.SMOTEENN
+  name: SMOTEENN
+  library: imbalanced-learn
+  import_path: imblearn.combine.SMOTEENN
+  kind: class
+  stage: transform
+  family: Combined sampling
+  tracks:
+  - standard
+  archetype: resampler
+  doc_url: https://imbalanced-learn.org/stable/references/generated/imblearn.combine.SMOTEENN.html
+  page: smoteenn
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: imblearn.combine.SMOTETomek
+  name: SMOTETomek
+  library: imbalanced-learn
+  import_path: imblearn.combine.SMOTETomek
+  kind: class
+  stage: transform
+  family: Combined sampling
+  tracks:
+  - standard
+  archetype: resampler
+  doc_url: https://imbalanced-learn.org/stable/references/generated/imblearn.combine.SMOTETomek.html
+  page: smotetomek
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: imblearn.FunctionSampler
+  name: FunctionSampler
+  library: imbalanced-learn
+  import_path: imblearn.FunctionSampler
+  kind: class
+  stage: transform
+  family: Custom sampling
+  tracks:
+  - standard
+  archetype: resampler
+  doc_url: https://imbalanced-learn.org/stable/references/generated/imblearn.FunctionSampler.html
+  page: functionsampler
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: imblearn.pipeline.Pipeline
+  name: Pipeline
+  library: imbalanced-learn
+  import_path: imblearn.pipeline.Pipeline
+  kind: class
+  stage: transform
+  family: Composition
+  tracks:
+  - standard
+  archetype: composer
+  doc_url: https://imbalanced-learn.org/stable/references/generated/imblearn.pipeline.Pipeline.html
+  page: imblearn-pipeline
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: Pipeline that allows samplers; samplers apply at fit time only.
+- id: imblearn.pipeline.make_pipeline
+  name: make_pipeline
+  library: imbalanced-learn
+  import_path: imblearn.pipeline.make_pipeline
+  kind: function
+  stage: transform
+  family: Composition
+  tracks:
+  - standard
+  archetype: composer
+  doc_url: https://imbalanced-learn.org/stable/references/generated/imblearn.pipeline.make_pipeline.html
+  page: imblearn-pipeline
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: Shorthand constructor; shares the imblearn Pipeline page.
+- id: imblearn.ensemble.BalancedRandomForestClassifier
+  name: BalancedRandomForestClassifier
+  library: imbalanced-learn
+  import_path: imblearn.ensemble.BalancedRandomForestClassifier
+  kind: class
+  stage: model
+  family: Balanced ensembles
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://imbalanced-learn.org/stable/references/generated/imblearn.ensemble.BalancedRandomForestClassifier.html
+  page: balancedrandomforestclassifier
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: imblearn.ensemble.BalancedBaggingClassifier
+  name: BalancedBaggingClassifier
+  library: imbalanced-learn
+  import_path: imblearn.ensemble.BalancedBaggingClassifier
+  kind: class
+  stage: model
+  family: Balanced ensembles
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://imbalanced-learn.org/stable/references/generated/imblearn.ensemble.BalancedBaggingClassifier.html
+  page: balancedbaggingclassifier
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: imblearn.ensemble.EasyEnsembleClassifier
+  name: EasyEnsembleClassifier
+  library: imbalanced-learn
+  import_path: imblearn.ensemble.EasyEnsembleClassifier
+  kind: class
+  stage: model
+  family: Balanced ensembles
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://imbalanced-learn.org/stable/references/generated/imblearn.ensemble.EasyEnsembleClassifier.html
+  page: easyensembleclassifier
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: imblearn.ensemble.RUSBoostClassifier
+  name: RUSBoostClassifier
+  library: imbalanced-learn
+  import_path: imblearn.ensemble.RUSBoostClassifier
+  kind: class
+  stage: model
+  family: Balanced ensembles
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://imbalanced-learn.org/stable/references/generated/imblearn.ensemble.RUSBoostClassifier.html
+  page: rusboostclassifier
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: imblearn.model_selection.InstanceHardnessCV
+  name: InstanceHardnessCV
+  library: imbalanced-learn
+  import_path: imblearn.model_selection.InstanceHardnessCV
+  kind: class
+  stage: split
+  family: Splitters
+  tracks:
+  - standard
+  archetype: splitter
+  doc_url: https://imbalanced-learn.org/stable/references/generated/imblearn.model_selection.InstanceHardnessCV.html
+  page: instancehardnesscv
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: imblearn.metrics.classification_report_imbalanced
+  name: classification_report_imbalanced
+  library: imbalanced-learn
+  import_path: imblearn.metrics.classification_report_imbalanced
+  kind: function
+  stage: evaluate
+  family: Imbalanced-data metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://imbalanced-learn.org/stable/references/generated/imblearn.metrics.classification_report_imbalanced.html
+  page: classification-report-imbalanced
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: imblearn.metrics.geometric_mean_score
+  name: geometric_mean_score
+  library: imbalanced-learn
+  import_path: imblearn.metrics.geometric_mean_score
+  kind: function
+  stage: evaluate
+  family: Imbalanced-data metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://imbalanced-learn.org/stable/references/generated/imblearn.metrics.geometric_mean_score.html
+  page: geometric-mean-score
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: imblearn.metrics.sensitivity_score
+  name: sensitivity_score
+  library: imbalanced-learn
+  import_path: imblearn.metrics.sensitivity_score
+  kind: function
+  stage: evaluate
+  family: Imbalanced-data metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://imbalanced-learn.org/stable/references/generated/imblearn.metrics.sensitivity_score.html
+  page: sensitivity-score
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: imblearn.metrics.specificity_score
+  name: specificity_score
+  library: imbalanced-learn
+  import_path: imblearn.metrics.specificity_score
+  kind: function
+  stage: evaluate
+  family: Imbalanced-data metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://imbalanced-learn.org/stable/references/generated/imblearn.metrics.specificity_score.html
+  page: specificity-score
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: imblearn.metrics.sensitivity_specificity_support
+  name: sensitivity_specificity_support
+  library: imbalanced-learn
+  import_path: imblearn.metrics.sensitivity_specificity_support
+  kind: function
+  stage: evaluate
+  family: Imbalanced-data metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://imbalanced-learn.org/stable/references/generated/imblearn.metrics.sensitivity_specificity_support.html
+  page: sensitivity-specificity-support
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: imblearn.metrics.macro_averaged_mean_absolute_error
+  name: macro_averaged_mean_absolute_error
+  library: imbalanced-learn
+  import_path: imblearn.metrics.macro_averaged_mean_absolute_error
+  kind: function
+  stage: evaluate
+  family: Imbalanced-data metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://imbalanced-learn.org/stable/references/generated/imblearn.metrics.macro_averaged_mean_absolute_error.html
+  page: macro-averaged-mean-absolute-error
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: imblearn.metrics.make_index_balanced_accuracy
+  name: make_index_balanced_accuracy
+  library: imbalanced-learn
+  import_path: imblearn.metrics.make_index_balanced_accuracy
+  kind: function
+  stage: evaluate
+  family: Imbalanced-data metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://imbalanced-learn.org/stable/references/generated/imblearn.metrics.make_index_balanced_accuracy.html
+  page: make-index-balanced-accuracy
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: optuna.create_study
+  name: create_study
+  library: optuna
+  import_path: optuna.create_study
+  kind: function
+  stage: tune
+  family: Study
+  tracks:
+  - standard
+  archetype: tuning
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/generated/optuna.create_study.html
+  page: optuna-study
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: Entry point; shares the Study page.
+- id: optuna.study.Study
+  name: Study
+  library: optuna
+  import_path: optuna.study.Study
+  kind: class
+  stage: tune
+  family: Study
+  tracks:
+  - standard
+  archetype: tuning
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/generated/optuna.study.Study.html
+  page: optuna-study
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: optuna.load_study
+  name: load_study
+  library: optuna
+  import_path: optuna.load_study
+  kind: function
+  stage: tune
+  family: Study
+  tracks:
+  - standard
+  archetype: tuning
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/generated/optuna.load_study.html
+  page: optuna-study
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: Shares the Study page.
+- id: optuna.study.MaxTrialsCallback
+  name: MaxTrialsCallback
+  library: optuna
+  import_path: optuna.study.MaxTrialsCallback
+  kind: class
+  stage: tune
+  family: Study
+  tracks:
+  - standard
+  archetype: tuning
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/generated/optuna.study.MaxTrialsCallback.html
+  page: maxtrialscallback
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: optuna.trial.Trial
+  name: Trial
+  library: optuna
+  import_path: optuna.trial.Trial
+  kind: class
+  stage: tune
+  family: Trial
+  tracks:
+  - standard
+  archetype: tuning
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.Trial.html
+  page: optuna-trial
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: Record Trial only; its suggest_* methods are extracted from this class.
+- id: optuna.trial.FrozenTrial
+  name: FrozenTrial
+  library: optuna
+  import_path: optuna.trial.FrozenTrial
+  kind: class
+  stage: tune
+  family: Trial
+  tracks:
+  - standard
+  archetype: tuning
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.FrozenTrial.html
+  page: frozentrial
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: optuna.TrialPruned
+  name: TrialPruned
+  library: optuna
+  import_path: optuna.TrialPruned
+  kind: class
+  stage: tune
+  family: Trial
+  tracks:
+  - standard
+  archetype: tuning
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/generated/optuna.TrialPruned.html
+  page: trialpruned
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: Exception raised to prune a trial.
+- id: optuna.samplers.TPESampler
+  name: TPESampler
+  library: optuna
+  import_path: optuna.samplers.TPESampler
+  kind: class
+  stage: tune
+  family: Samplers
+  tracks:
+  - standard
+  archetype: tuning
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.TPESampler.html
+  page: tpesampler
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: optuna.samplers.RandomSampler
+  name: RandomSampler
+  library: optuna
+  import_path: optuna.samplers.RandomSampler
+  kind: class
+  stage: tune
+  family: Samplers
+  tracks:
+  - standard
+  archetype: tuning
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.RandomSampler.html
+  page: randomsampler
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: optuna.samplers.GridSampler
+  name: GridSampler
+  library: optuna
+  import_path: optuna.samplers.GridSampler
+  kind: class
+  stage: tune
+  family: Samplers
+  tracks:
+  - standard
+  archetype: tuning
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.GridSampler.html
+  page: gridsampler
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: optuna.samplers.CmaEsSampler
+  name: CmaEsSampler
+  library: optuna
+  import_path: optuna.samplers.CmaEsSampler
+  kind: class
+  stage: tune
+  family: Samplers
+  tracks:
+  - standard
+  archetype: tuning
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.CmaEsSampler.html
+  page: cmaessampler
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: optuna.samplers.GPSampler
+  name: GPSampler
+  library: optuna
+  import_path: optuna.samplers.GPSampler
+  kind: class
+  stage: tune
+  family: Samplers
+  tracks:
+  - standard
+  archetype: tuning
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.GPSampler.html
+  page: gpsampler
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: optuna.samplers.NSGAIISampler
+  name: NSGAIISampler
+  library: optuna
+  import_path: optuna.samplers.NSGAIISampler
+  kind: class
+  stage: tune
+  family: Samplers
+  tracks:
+  - standard
+  archetype: tuning
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.NSGAIISampler.html
+  page: nsgaiisampler
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: optuna.samplers.NSGAIIISampler
+  name: NSGAIIISampler
+  library: optuna
+  import_path: optuna.samplers.NSGAIIISampler
+  kind: class
+  stage: tune
+  family: Samplers
+  tracks:
+  - standard
+  archetype: tuning
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.NSGAIIISampler.html
+  page: nsgaiiisampler
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: optuna.samplers.QMCSampler
+  name: QMCSampler
+  library: optuna
+  import_path: optuna.samplers.QMCSampler
+  kind: class
+  stage: tune
+  family: Samplers
+  tracks:
+  - standard
+  archetype: tuning
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.QMCSampler.html
+  page: qmcsampler
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: optuna.samplers.BruteForceSampler
+  name: BruteForceSampler
+  library: optuna
+  import_path: optuna.samplers.BruteForceSampler
+  kind: class
+  stage: tune
+  family: Samplers
+  tracks:
+  - standard
+  archetype: tuning
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.BruteForceSampler.html
+  page: bruteforcesampler
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: optuna.samplers.PartialFixedSampler
+  name: PartialFixedSampler
+  library: optuna
+  import_path: optuna.samplers.PartialFixedSampler
+  kind: class
+  stage: tune
+  family: Samplers
+  tracks:
+  - standard
+  archetype: tuning
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.PartialFixedSampler.html
+  page: partialfixedsampler
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: optuna.pruners.MedianPruner
+  name: MedianPruner
+  library: optuna
+  import_path: optuna.pruners.MedianPruner
+  kind: class
+  stage: tune
+  family: Pruners
+  tracks:
+  - standard
+  archetype: tuning
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.MedianPruner.html
+  page: medianpruner
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: optuna.pruners.HyperbandPruner
+  name: HyperbandPruner
+  library: optuna
+  import_path: optuna.pruners.HyperbandPruner
+  kind: class
+  stage: tune
+  family: Pruners
+  tracks:
+  - standard
+  archetype: tuning
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.HyperbandPruner.html
+  page: hyperbandpruner
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: optuna.pruners.SuccessiveHalvingPruner
+  name: SuccessiveHalvingPruner
+  library: optuna
+  import_path: optuna.pruners.SuccessiveHalvingPruner
+  kind: class
+  stage: tune
+  family: Pruners
+  tracks:
+  - standard
+  archetype: tuning
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.SuccessiveHalvingPruner.html
+  page: successivehalvingpruner
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: optuna.pruners.PercentilePruner
+  name: PercentilePruner
+  library: optuna
+  import_path: optuna.pruners.PercentilePruner
+  kind: class
+  stage: tune
+  family: Pruners
+  tracks:
+  - standard
+  archetype: tuning
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.PercentilePruner.html
+  page: percentilepruner
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: optuna.pruners.ThresholdPruner
+  name: ThresholdPruner
+  library: optuna
+  import_path: optuna.pruners.ThresholdPruner
+  kind: class
+  stage: tune
+  family: Pruners
+  tracks:
+  - standard
+  archetype: tuning
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.ThresholdPruner.html
+  page: thresholdpruner
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: optuna.pruners.PatientPruner
+  name: PatientPruner
+  library: optuna
+  import_path: optuna.pruners.PatientPruner
+  kind: class
+  stage: tune
+  family: Pruners
+  tracks:
+  - standard
+  archetype: tuning
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.PatientPruner.html
+  page: patientpruner
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: optuna.pruners.WilcoxonPruner
+  name: WilcoxonPruner
+  library: optuna
+  import_path: optuna.pruners.WilcoxonPruner
+  kind: class
+  stage: tune
+  family: Pruners
+  tracks:
+  - standard
+  archetype: tuning
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.WilcoxonPruner.html
+  page: wilcoxonpruner
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: optuna.pruners.NopPruner
+  name: NopPruner
+  library: optuna
+  import_path: optuna.pruners.NopPruner
+  kind: class
+  stage: tune
+  family: Pruners
+  tracks:
+  - standard
+  archetype: tuning
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.NopPruner.html
+  page: noppruner
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: optuna.visualization.plot_optimization_history
+  name: plot_optimization_history
+  library: optuna
+  import_path: optuna.visualization.plot_optimization_history
+  kind: function
+  stage: tune
+  family: Study plots
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_optimization_history.html
+  page: plot-optimization-history
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: optuna.visualization.plot_param_importances
+  name: plot_param_importances
+  library: optuna
+  import_path: optuna.visualization.plot_param_importances
+  kind: function
+  stage: tune
+  family: Study plots
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_param_importances.html
+  page: plot-param-importances
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: optuna.visualization.plot_parallel_coordinate
+  name: plot_parallel_coordinate
+  library: optuna
+  import_path: optuna.visualization.plot_parallel_coordinate
+  kind: function
+  stage: tune
+  family: Study plots
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_parallel_coordinate.html
+  page: plot-parallel-coordinate
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: optuna.visualization.plot_slice
+  name: plot_slice
+  library: optuna
+  import_path: optuna.visualization.plot_slice
+  kind: function
+  stage: tune
+  family: Study plots
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_slice.html
+  page: plot-slice
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: optuna.visualization.plot_contour
+  name: plot_contour
+  library: optuna
+  import_path: optuna.visualization.plot_contour
+  kind: function
+  stage: tune
+  family: Study plots
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_contour.html
+  page: plot-contour
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: optuna.visualization.plot_intermediate_values
+  name: plot_intermediate_values
+  library: optuna
+  import_path: optuna.visualization.plot_intermediate_values
+  kind: function
+  stage: tune
+  family: Study plots
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_intermediate_values.html
+  page: plot-intermediate-values
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: optuna.visualization.plot_edf
+  name: plot_edf
+  library: optuna
+  import_path: optuna.visualization.plot_edf
+  kind: function
+  stage: tune
+  family: Study plots
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_edf.html
+  page: plot-edf
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: optuna.visualization.plot_rank
+  name: plot_rank
+  library: optuna
+  import_path: optuna.visualization.plot_rank
+  kind: function
+  stage: tune
+  family: Study plots
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_rank.html
+  page: plot-rank
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: optuna.visualization.plot_pareto_front
+  name: plot_pareto_front
+  library: optuna
+  import_path: optuna.visualization.plot_pareto_front
+  kind: function
+  stage: tune
+  family: Study plots
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_pareto_front.html
+  page: plot-pareto-front
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: optuna.visualization.plot_hypervolume_history
+  name: plot_hypervolume_history
+  library: optuna
+  import_path: optuna.visualization.plot_hypervolume_history
+  kind: function
+  stage: tune
+  family: Study plots
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_hypervolume_history.html
+  page: plot-hypervolume-history
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: optuna.visualization.plot_timeline
+  name: plot_timeline
+  library: optuna
+  import_path: optuna.visualization.plot_timeline
+  kind: function
+  stage: tune
+  family: Study plots
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_timeline.html
+  page: plot-timeline
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: optuna.visualization.plot_terminator_improvement
+  name: plot_terminator_improvement
+  library: optuna
+  import_path: optuna.visualization.plot_terminator_improvement
+  kind: function
+  stage: tune
+  family: Study plots
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_terminator_improvement.html
+  page: plot-terminator-improvement
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: optuna.importance.get_param_importances
+  name: get_param_importances
+  library: optuna
+  import_path: optuna.importance.get_param_importances
+  kind: function
+  stage: tune
+  family: Study plots
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/generated/optuna.importance.get_param_importances.html
+  page: get-param-importances
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: optuna.terminator.Terminator
+  name: Terminator
+  library: optuna
+  import_path: optuna.terminator.Terminator
+  kind: class
+  stage: tune
+  family: Early stopping
+  tracks:
+  - standard
+  archetype: tuning
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/generated/optuna.terminator.Terminator.html
+  page: terminator
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: optuna.terminator.TerminatorCallback
+  name: TerminatorCallback
+  library: optuna
+  import_path: optuna.terminator.TerminatorCallback
+  kind: class
+  stage: tune
+  family: Early stopping
+  tracks:
+  - standard
+  archetype: tuning
+  doc_url: https://optuna.readthedocs.io/en/stable/reference/generated/optuna.terminator.TerminatorCallback.html
+  page: terminatorcallback
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: shap.Explainer
+  name: Explainer
+  library: shap
+  import_path: shap.Explainer
+  kind: class
+  stage: interpret
+  family: Explainers
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://shap.readthedocs.io/en/latest/generated/shap.Explainer.html
+  page: explainer
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: shap.TreeExplainer
+  name: TreeExplainer
+  library: shap
+  import_path: shap.TreeExplainer
+  kind: class
+  stage: interpret
+  family: Explainers
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://shap.readthedocs.io/en/latest/generated/shap.TreeExplainer.html
+  page: treeexplainer
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: shap.LinearExplainer
+  name: LinearExplainer
+  library: shap
+  import_path: shap.LinearExplainer
+  kind: class
+  stage: interpret
+  family: Explainers
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://shap.readthedocs.io/en/latest/generated/shap.LinearExplainer.html
+  page: linearexplainer
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: shap.KernelExplainer
+  name: KernelExplainer
+  library: shap
+  import_path: shap.KernelExplainer
+  kind: class
+  stage: interpret
+  family: Explainers
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://shap.readthedocs.io/en/latest/generated/shap.KernelExplainer.html
+  page: kernelexplainer
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: shap.PermutationExplainer
+  name: PermutationExplainer
+  library: shap
+  import_path: shap.PermutationExplainer
+  kind: class
+  stage: interpret
+  family: Explainers
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://shap.readthedocs.io/en/latest/generated/shap.PermutationExplainer.html
+  page: permutationexplainer
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: shap.ExactExplainer
+  name: ExactExplainer
+  library: shap
+  import_path: shap.ExactExplainer
+  kind: class
+  stage: interpret
+  family: Explainers
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://shap.readthedocs.io/en/latest/generated/shap.ExactExplainer.html
+  page: exactexplainer
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: shap.PartitionExplainer
+  name: PartitionExplainer
+  library: shap
+  import_path: shap.PartitionExplainer
+  kind: class
+  stage: interpret
+  family: Explainers
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://shap.readthedocs.io/en/latest/generated/shap.PartitionExplainer.html
+  page: partitionexplainer
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: shap.SamplingExplainer
+  name: SamplingExplainer
+  library: shap
+  import_path: shap.SamplingExplainer
+  kind: class
+  stage: interpret
+  family: Explainers
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://shap.readthedocs.io/en/latest/generated/shap.SamplingExplainer.html
+  page: samplingexplainer
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: shap.AdditiveExplainer
+  name: AdditiveExplainer
+  library: shap
+  import_path: shap.AdditiveExplainer
+  kind: class
+  stage: interpret
+  family: Explainers
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://shap.readthedocs.io/en/latest/generated/shap.AdditiveExplainer.html
+  page: additiveexplainer
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: shap.Explanation
+  name: Explanation
+  library: shap
+  import_path: shap.Explanation
+  kind: class
+  stage: interpret
+  family: Explainers
+  tracks:
+  - standard
+  archetype: output
+  doc_url: https://shap.readthedocs.io/en/latest/generated/shap.Explanation.html
+  page: explanation
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: The object explainers return (values, base_values, data).
+- id: shap.plots.beeswarm
+  name: beeswarm
+  library: shap
+  import_path: shap.plots.beeswarm
+  kind: function
+  stage: interpret
+  family: SHAP plots
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://shap.readthedocs.io/en/latest/generated/shap.plots.beeswarm.html
+  page: shap-beeswarm
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: shap.plots.bar
+  name: bar
+  library: shap
+  import_path: shap.plots.bar
+  kind: function
+  stage: interpret
+  family: SHAP plots
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://shap.readthedocs.io/en/latest/generated/shap.plots.bar.html
+  page: shap-bar
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: shap.plots.waterfall
+  name: waterfall
+  library: shap
+  import_path: shap.plots.waterfall
+  kind: function
+  stage: interpret
+  family: SHAP plots
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://shap.readthedocs.io/en/latest/generated/shap.plots.waterfall.html
+  page: shap-waterfall
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: shap.plots.scatter
+  name: scatter
+  library: shap
+  import_path: shap.plots.scatter
+  kind: function
+  stage: interpret
+  family: SHAP plots
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://shap.readthedocs.io/en/latest/generated/shap.plots.scatter.html
+  page: shap-scatter
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: shap.plots.force
+  name: force
+  library: shap
+  import_path: shap.plots.force
+  kind: function
+  stage: interpret
+  family: SHAP plots
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://shap.readthedocs.io/en/latest/generated/shap.plots.force.html
+  page: shap-force
+  page_grouping: proposed
+  source: supporting
+  tier: core
+  notes: ''
+- id: shap.plots.heatmap
+  name: heatmap
+  library: shap
+  import_path: shap.plots.heatmap
+  kind: function
+  stage: interpret
+  family: SHAP plots
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://shap.readthedocs.io/en/latest/generated/shap.plots.heatmap.html
+  page: shap-heatmap
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: shap.plots.decision
+  name: decision
+  library: shap
+  import_path: shap.plots.decision
+  kind: function
+  stage: interpret
+  family: SHAP plots
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://shap.readthedocs.io/en/latest/generated/shap.plots.decision.html
+  page: shap-decision
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: shap.plots.violin
+  name: violin
+  library: shap
+  import_path: shap.plots.violin
+  kind: function
+  stage: interpret
+  family: SHAP plots
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://shap.readthedocs.io/en/latest/generated/shap.plots.violin.html
+  page: shap-violin
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: shap.plots.partial_dependence
+  name: partial_dependence
+  library: shap
+  import_path: shap.plots.partial_dependence
+  kind: function
+  stage: interpret
+  family: SHAP plots
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://shap.readthedocs.io/en/latest/generated/shap.plots.partial_dependence.html
+  page: shap-partial-dependence
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: shap.plots.group_difference
+  name: group_difference
+  library: shap
+  import_path: shap.plots.group_difference
+  kind: function
+  stage: interpret
+  family: SHAP plots
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://shap.readthedocs.io/en/latest/generated/shap.plots.group_difference.html
+  page: shap-group-difference
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''
+- id: shap.plots.monitoring
+  name: monitoring
+  library: shap
+  import_path: shap.plots.monitoring
+  kind: function
+  stage: interpret
+  family: SHAP plots
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://shap.readthedocs.io/en/latest/generated/shap.plots.monitoring.html
+  page: shap-monitoring
+  page_grouping: proposed
+  source: supporting
+  tier: extended
+  notes: ''

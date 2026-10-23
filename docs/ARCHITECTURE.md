@@ -21,6 +21,7 @@ Technical choices the spec leaves open. Product decisions live in `docs/spec.md`
 | imbalanced-learn | `imbalanced-learn` | 0.14.2 |
 | Optuna | `optuna` | 5.0.0 |
 | SHAP | `shap` | 0.54.1 |
+| Matplotlib (plots, Displays) | `matplotlib` | 3.11.2 |
 
 ## Folder layout
 

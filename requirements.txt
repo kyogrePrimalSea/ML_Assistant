@@ -9,6 +9,7 @@ optuna==5.0.0
 shap==0.54.1
 numpy==2.5.4
 pandas==3.1.0
+matplotlib==3.11.2
 # Tooling
 numpydoc==1.11.0
 PyYAML==6.0.3
