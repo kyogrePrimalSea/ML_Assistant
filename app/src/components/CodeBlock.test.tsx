@@ -1,0 +1,18 @@
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { CodeBlock } from './CodeBlock'
+
+const code = '# scikit-learn 1.8\nfrom sklearn.linear_model import Ridge\nm = Ridge(alpha=1.0)  # "ok"'
+
+test('renders the snippet text unchanged, with no extra stamp line', () => {
+  const { container } = render(<CodeBlock code={code} />)
+  expect(container.querySelector('code')?.textContent).toBe(code + '\n')
+})
+
+test('copy button copies the exact snippet and announces Copied', async () => {
+  const user = userEvent.setup()
+  render(<CodeBlock code={code} />)
+  await user.click(screen.getByRole('button', { name: 'Copy code' }))
+  expect(await navigator.clipboard.readText()).toBe(code)
+  expect(screen.getByRole('status')).toHaveTextContent('Copied')
+})

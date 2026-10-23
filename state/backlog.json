@@ -306,7 +306,7 @@
     "T019": {
       "title": "Code block and data-frame diff components",
       "file": "tasks/T019-code-block-and-dataframe-diff.md",
-      "status": "In progress",
+      "status": "Done",
       "dependencies": [
         "T016"
       ],

@@ -6,6 +6,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { Callout } from '@/components/Callout'
 import { StageBadge, STAGES, type Stage } from '@/components/StageBadge'
+import { CodeTabs } from '@/components/CodeTabs'
+import { DataFrameDiff } from '@/components/DataFrameDiff'
 import { StatusChip, type Severity } from '@/components/StatusChip'
 import { useTheme, type ThemePreference } from '@/lib/theme'
 
@@ -53,6 +55,53 @@ const TYPE_SCALE: [string, string, string][] = [
   ['UI small 14', 'text-sm', ''],
   ['Caption 12', 'text-xs', ''],
 ]
+
+const CODE_TABS = [
+  {
+    library: 'scikit-learn',
+    why_this_library: 'Fits inside a Pipeline, so the same steps run on train and test.',
+    code: `# scikit-learn 1.8
+from sklearn.linear_model import Ridge
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+
+model = make_pipeline(StandardScaler(), Ridge(alpha=1.0))
+model.fit(X_train, y_train)  # X_train: 1460 rows
+print(model.score(X_test, y_test))`,
+  },
+  {
+    library: 'statsmodels',
+    why_this_library: 'Gives p-values and confidence intervals for each coefficient.',
+    code: `# statsmodels 0.15
+import statsmodels.api as sm
+
+X = sm.add_constant(X_train)
+result = sm.OLS(y_train, X).fit()
+print(result.summary())`,
+  },
+]
+
+const DIFF = {
+  before: {
+    columns: ['LotArea', 'Street', 'Neighborhood', 'SalePrice'],
+    rows: [
+      [8450, 'Pave', 'CollgCr', 208500],
+      [9600, 'Pave', 'Veenker', 181500],
+      [11250, 'Pave', 'CollgCr', 223500],
+    ],
+  },
+  after: {
+    columns: ['LotArea', 'Neighborhood', 'SalePrice', 'Neighborhood_CollgCr', 'Neighborhood_Veenker'],
+    rows: [
+      [8450, 'CollgCr', 208500, 1, 0],
+      [9600, 'Veenker', 181500, 0, 1],
+      [11250, 'CollgCr', 223500, 1, 0],
+    ],
+  },
+  changed: [[1, 0], [2, 0]] as [number, number][],
+  added: ['Neighborhood_CollgCr', 'Neighborhood_Veenker'],
+  removed: ['Street'],
+}
 
 export default function Styleguide() {
   const { preference, resolved, setTheme } = useTheme()
@@ -245,6 +294,13 @@ X_clean = imputer.fit_transform(X_train)`}</code>
             Second panel.
           </TabsContent>
         </Tabs>
+      </Section>
+      <Section title="Code tabs">
+        <CodeTabs tabs={CODE_TABS} className="max-w-3xl" />
+      </Section>
+
+      <Section title="Data-frame diff">
+        <DataFrameDiff {...DIFF} beforeShape={[1460, 81]} afterShape={[1460, 262]} />
       </Section>
     </main>
   )
