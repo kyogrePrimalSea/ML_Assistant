@@ -37,7 +37,7 @@
       "title": "First slice: Model \u203a Boosting end to end",
       "goal": "GradientBoosting, HistGradientBoosting, XGBoost and LightGBM: schema filled, radial tree, one cutscene, relationship lines, a short journey and notebook output. Proves every system early.",
       "spec": "\u00a713.3",
-      "status": "Backlog",
+      "status": "In progress",
       "dependencies": [
         "E01",
         "E02",
@@ -341,7 +341,7 @@
     "T022": {
       "title": "Boosting family content records",
       "file": "tasks/T022-boosting-content.md",
-      "status": "Backlog",
+      "status": "In progress",
       "dependencies": [
         "T020"
       ],
@@ -350,7 +350,7 @@
     "T023": {
       "title": "Radial tree view (Lookup)",
       "file": "tasks/T023-radial-tree.md",
-      "status": "Backlog",
+      "status": "In progress",
       "dependencies": [
         "T020"
       ],
@@ -368,7 +368,7 @@
     "T025": {
       "title": "Cutscene engine and the boosting cutscene",
       "file": "tasks/T025-cutscene-engine.md",
-      "status": "Backlog",
+      "status": "In progress",
       "dependencies": [
         "T020"
       ],
