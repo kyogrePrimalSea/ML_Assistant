@@ -1,9 +1,10 @@
 {
-  "current_sprint": null,
+  "current_sprint": "Sprint 2 (E03-E04)",
   "notes": [
     "Epic order follows spec \u00a713. E05-E10 can run in parallel once their dependencies are done, subject to write-scope conflicts. Tasks are created per epic by the architect skill.",
     "Sprint 1 parallelism: T002, T003, T004, T005 write disjoint files and may run together. T002 owns tests/test_inventory.py. T006, T007, T008 may run together (per-library outputs; overrides are per-item files).",
-    "T010 dependency relaxed from T009 to T002/T003/T014 by the coordinator: the schema needs the finished inventory, not the audit report; T009 is read-only so they run in parallel."
+    "T010 dependency relaxed from T009 to T002/T003/T014 by the coordinator: the schema needs the finished inventory, not the audit report; T009 is read-only so they run in parallel.",
+    "Sprint 2: T015 installs every npm dependency so parallel tasks never touch package.json. T016+T017 parallel; T018+T019 parallel; T020 then T021 (coordinator pushes and checks the live deploy)."
   ],
   "epics": {
     "E01": {
@@ -26,7 +27,7 @@
       "title": "App foundation and Observatory design system",
       "goal": "Static React PWA scaffold, colour and type tokens (light/dark, token-swappable modes), fonts, shadcn/ui restyle, desktop layout shell with panel and bottom sheet, 11-slot item page renderer, code blocks, data-frame diff style, auto-deploy to a free static host.",
       "spec": "\u00a77.4, \u00a710, \u00a712",
-      "status": "Backlog",
+      "status": "In progress",
       "dependencies": [
         "E02"
       ]
@@ -113,6 +114,15 @@
       "T012",
       "T013",
       "T014"
+    ],
+    "Sprint 2 (E03-E04)": [
+      "T015",
+      "T016",
+      "T017",
+      "T018",
+      "T019",
+      "T020",
+      "T021"
     ]
   },
   "tasks": {
@@ -257,6 +267,69 @@
         "T013"
       ],
       "epic": "E01"
+    },
+    "T015": {
+      "title": "App scaffold, dependencies and GitHub Pages deploy",
+      "file": "tasks/T015-app-scaffold-and-deploy.md",
+      "status": "In progress",
+      "dependencies": [],
+      "epic": "E03"
+    },
+    "T016": {
+      "title": "Observatory tokens, typography, theming and component restyle",
+      "file": "tasks/T016-design-tokens-and-theming.md",
+      "status": "Backlog",
+      "dependencies": [
+        "T015"
+      ],
+      "epic": "E03"
+    },
+    "T017": {
+      "title": "Content data pipeline for the app",
+      "file": "tasks/T017-content-data-pipeline.md",
+      "status": "Backlog",
+      "dependencies": [
+        "T015"
+      ],
+      "epic": "E03"
+    },
+    "T018": {
+      "title": "Desktop layout shell and navigation",
+      "file": "tasks/T018-layout-shell.md",
+      "status": "Backlog",
+      "dependencies": [
+        "T016",
+        "T017"
+      ],
+      "epic": "E03"
+    },
+    "T019": {
+      "title": "Code block and data-frame diff components",
+      "file": "tasks/T019-code-block-and-dataframe-diff.md",
+      "status": "Backlog",
+      "dependencies": [
+        "T016"
+      ],
+      "epic": "E03"
+    },
+    "T020": {
+      "title": "Item page renderer (the 11 slots)",
+      "file": "tasks/T020-item-page-renderer.md",
+      "status": "Backlog",
+      "dependencies": [
+        "T018",
+        "T019"
+      ],
+      "epic": "E03"
+    },
+    "T021": {
+      "title": "E03 acceptance and first deploy",
+      "file": "tasks/T021-e03-acceptance-and-deploy.md",
+      "status": "Backlog",
+      "dependencies": [
+        "T020"
+      ],
+      "epic": "E03"
     }
   }
 }

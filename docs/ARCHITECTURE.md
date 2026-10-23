@@ -122,3 +122,28 @@ JSON `null`.
 `methods` lists public methods (no leading underscore), including inherited
 library methods but excluding those inherited from `object`. `returns` applies
 to functions. Missing sections are empty lists, never omitted.
+
+## Web app (E03 onward)
+
+- Location: `app/` (Vite + React + TypeScript). Python content tooling stays in
+  `tools/`; the app never needs Python to build.
+- Node: v26 via Homebrew (`/home/linuxbrew/.linuxbrew/bin/node`). CI uses the same major.
+- Styling: Tailwind CSS v4 with the Observatory tokens as CSS custom properties;
+  components from shadcn/ui on Radix, restyled with the tokens (spec §10.10).
+  Icons: `@tabler/icons-react`, outline only.
+- Fonts are self-hosted through `@fontsource/*` (offline PWA; no Google Fonts).
+- Routing: `HashRouter` (`#/page/<id>`), because GitHub Pages can't rewrite deep links.
+- Hosting: GitHub Pages from `github.com/kyogrePrimalSea/ML_Assistant`, deployed by
+  GitHub Actions on push to `main`; Vite `base` is `/ML_Assistant/`.
+- PWA: `vite-plugin-pwa`, precaching the app shell and all content data.
+- Content data: `app/scripts/build-content.mjs` runs before `dev` and `build`. It reads
+  `content/items/`, `content/questions/`, `content/derived/`, `content/schema/vocab.yaml`,
+  the inventory and the extraction records, and writes static JSON to
+  `app/public/data/` (generated, git-ignored):
+  - `index.json` — vocab, every inventory page (id, plain name, stage, family,
+    archetype, tracks, targets, has_record, reviewed), questions, relationships.
+  - `pages/<id>.json` — one content record plus the extraction facts its slots
+    reference (defaults, effective defaults for key settings).
+- Tests: Vitest + Testing Library (unit/component); Playwright + axe for
+  end-to-end, screenshots (1440 and 1024 wide, light and dark) and accessibility.
+- Commands (from `app/`): `npm run dev`, `npm run build`, `npm test`, `npm run e2e`.
