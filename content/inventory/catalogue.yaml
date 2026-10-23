@@ -1,0 +1,1953 @@
+items:
+- id: sklearn.linear_model.LinearRegression
+  name: LinearRegression
+  library: scikit-learn
+  import_path: sklearn.linear_model.LinearRegression
+  kind: class
+  stage: model
+  family: Ordinary
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html
+  page: linear-regression
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.linear_model.Ridge
+  name: Ridge
+  library: scikit-learn
+  import_path: sklearn.linear_model.Ridge
+  kind: class
+  stage: model
+  family: Regularised
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html
+  page: ridge
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.linear_model.RidgeCV
+  name: RidgeCV
+  library: scikit-learn
+  import_path: sklearn.linear_model.RidgeCV
+  kind: class
+  stage: model
+  family: Regularised
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.RidgeCV.html
+  page: ridge-cv
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.linear_model.Lasso
+  name: Lasso
+  library: scikit-learn
+  import_path: sklearn.linear_model.Lasso
+  kind: class
+  stage: model
+  family: Regularised
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Lasso.html
+  page: lasso
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.linear_model.LassoCV
+  name: LassoCV
+  library: scikit-learn
+  import_path: sklearn.linear_model.LassoCV
+  kind: class
+  stage: model
+  family: Regularised
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LassoCV.html
+  page: lasso-cv
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.linear_model.ElasticNet
+  name: ElasticNet
+  library: scikit-learn
+  import_path: sklearn.linear_model.ElasticNet
+  kind: class
+  stage: model
+  family: Regularised
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.ElasticNet.html
+  page: elastic-net
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.linear_model.ElasticNetCV
+  name: ElasticNetCV
+  library: scikit-learn
+  import_path: sklearn.linear_model.ElasticNetCV
+  kind: class
+  stage: model
+  family: Regularised
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.ElasticNetCV.html
+  page: elastic-net-cv
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.linear_model.Lars
+  name: Lars
+  library: scikit-learn
+  import_path: sklearn.linear_model.Lars
+  kind: class
+  stage: model
+  family: Regularised
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Lars.html
+  page: lars
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.linear_model.LassoLars
+  name: LassoLars
+  library: scikit-learn
+  import_path: sklearn.linear_model.LassoLars
+  kind: class
+  stage: model
+  family: Regularised
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LassoLars.html
+  page: lasso-lars
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.linear_model.OrthogonalMatchingPursuit
+  name: OrthogonalMatchingPursuit
+  library: scikit-learn
+  import_path: sklearn.linear_model.OrthogonalMatchingPursuit
+  kind: class
+  stage: model
+  family: Regularised
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.OrthogonalMatchingPursuit.html
+  page: orthogonal-matching-pursuit
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.linear_model.BayesianRidge
+  name: BayesianRidge
+  library: scikit-learn
+  import_path: sklearn.linear_model.BayesianRidge
+  kind: class
+  stage: model
+  family: Bayesian
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.BayesianRidge.html
+  page: bayesian-ridge
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.linear_model.ARDRegression
+  name: ARDRegression
+  library: scikit-learn
+  import_path: sklearn.linear_model.ARDRegression
+  kind: class
+  stage: model
+  family: Bayesian
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.ARDRegression.html
+  page: ard-regression
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.linear_model.HuberRegressor
+  name: HuberRegressor
+  library: scikit-learn
+  import_path: sklearn.linear_model.HuberRegressor
+  kind: class
+  stage: model
+  family: Robust to outliers
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.HuberRegressor.html
+  page: huber-regressor
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.linear_model.RANSACRegressor
+  name: RANSACRegressor
+  library: scikit-learn
+  import_path: sklearn.linear_model.RANSACRegressor
+  kind: class
+  stage: model
+  family: Robust to outliers
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.RANSACRegressor.html
+  page: ransac-regressor
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.linear_model.TheilSenRegressor
+  name: TheilSenRegressor
+  library: scikit-learn
+  import_path: sklearn.linear_model.TheilSenRegressor
+  kind: class
+  stage: model
+  family: Robust to outliers
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.TheilSenRegressor.html
+  page: theil-sen-regression
+  page_grouping: proposed
+  source: catalogue
+  tier: core
+  notes: Shares a page with scipy.stats.theilslopes (proposed).
+- id: sklearn.linear_model.QuantileRegressor
+  name: QuantileRegressor
+  library: scikit-learn
+  import_path: sklearn.linear_model.QuantileRegressor
+  kind: class
+  stage: model
+  family: Quantile
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.QuantileRegressor.html
+  page: quantile-regression
+  page_grouping: proposed
+  source: catalogue
+  tier: core
+  notes: Shares a page with statsmodels QuantReg (proposed).
+- id: sklearn.linear_model.PoissonRegressor
+  name: PoissonRegressor
+  library: scikit-learn
+  import_path: sklearn.linear_model.PoissonRegressor
+  kind: class
+  stage: model
+  family: Generalised (GLM)
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.PoissonRegressor.html
+  page: poisson-regression
+  page_grouping: proposed
+  source: catalogue
+  tier: core
+  notes: Shares a page with statsmodels.discrete Poisson (proposed).
+- id: sklearn.linear_model.GammaRegressor
+  name: GammaRegressor
+  library: scikit-learn
+  import_path: sklearn.linear_model.GammaRegressor
+  kind: class
+  stage: model
+  family: Generalised (GLM)
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.GammaRegressor.html
+  page: gamma-regressor
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.linear_model.TweedieRegressor
+  name: TweedieRegressor
+  library: scikit-learn
+  import_path: sklearn.linear_model.TweedieRegressor
+  kind: class
+  stage: model
+  family: Generalised (GLM)
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.TweedieRegressor.html
+  page: tweedie-regressor
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.linear_model.SGDRegressor
+  name: SGDRegressor
+  library: scikit-learn
+  import_path: sklearn.linear_model.SGDRegressor
+  kind: class
+  stage: model
+  family: Online / large data
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.SGDRegressor.html
+  page: sgd-regressor
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.linear_model.PassiveAggressiveRegressor
+  name: PassiveAggressiveRegressor
+  library: scikit-learn
+  import_path: sklearn.linear_model.PassiveAggressiveRegressor
+  kind: class
+  stage: model
+  family: Online / large data
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.PassiveAggressiveRegressor.html
+  page: passive-aggressive-regressor
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.linear_model.LogisticRegression
+  name: LogisticRegression
+  library: scikit-learn
+  import_path: sklearn.linear_model.LogisticRegression
+  kind: class
+  stage: model
+  family: Classification
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html
+  page: logistic-regression
+  page_grouping: proposed
+  source: catalogue
+  tier: core
+  notes: Shares a page with statsmodels Logit (proposed).
+- id: sklearn.linear_model.LogisticRegressionCV
+  name: LogisticRegressionCV
+  library: scikit-learn
+  import_path: sklearn.linear_model.LogisticRegressionCV
+  kind: class
+  stage: model
+  family: Classification
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegressionCV.html
+  page: logistic-regression-cv
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.linear_model.RidgeClassifier
+  name: RidgeClassifier
+  library: scikit-learn
+  import_path: sklearn.linear_model.RidgeClassifier
+  kind: class
+  stage: model
+  family: Classification
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.RidgeClassifier.html
+  page: ridge-classifier
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.linear_model.SGDClassifier
+  name: SGDClassifier
+  library: scikit-learn
+  import_path: sklearn.linear_model.SGDClassifier
+  kind: class
+  stage: model
+  family: Classification
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.SGDClassifier.html
+  page: sgd-classifier
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.linear_model.Perceptron
+  name: Perceptron
+  library: scikit-learn
+  import_path: sklearn.linear_model.Perceptron
+  kind: class
+  stage: model
+  family: Classification
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Perceptron.html
+  page: perceptron
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.kernel_ridge.KernelRidge
+  name: KernelRidge
+  library: scikit-learn
+  import_path: sklearn.kernel_ridge.KernelRidge
+  kind: class
+  stage: model
+  family: Kernel
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.kernel_ridge.KernelRidge.html
+  page: kernel-ridge
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.svm.SVR
+  name: SVR
+  library: scikit-learn
+  import_path: sklearn.svm.SVR
+  kind: class
+  stage: model
+  family: Kernel
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html
+  page: svr
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.svm.LinearSVR
+  name: LinearSVR
+  library: scikit-learn
+  import_path: sklearn.svm.LinearSVR
+  kind: class
+  stage: model
+  family: Kernel
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVR.html
+  page: linear-svr
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.svm.NuSVR
+  name: NuSVR
+  library: scikit-learn
+  import_path: sklearn.svm.NuSVR
+  kind: class
+  stage: model
+  family: Kernel
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.svm.NuSVR.html
+  page: nu-svr
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.svm.SVC
+  name: SVC
+  library: scikit-learn
+  import_path: sklearn.svm.SVC
+  kind: class
+  stage: model
+  family: Kernel
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html
+  page: svc
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.svm.LinearSVC
+  name: LinearSVC
+  library: scikit-learn
+  import_path: sklearn.svm.LinearSVC
+  kind: class
+  stage: model
+  family: Kernel
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html
+  page: linear-svc
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.neighbors.KNeighborsRegressor
+  name: KNeighborsRegressor
+  library: scikit-learn
+  import_path: sklearn.neighbors.KNeighborsRegressor
+  kind: class
+  stage: model
+  family: Neighbours
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsRegressor.html
+  page: k-neighbors-regressor
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.neighbors.KNeighborsClassifier
+  name: KNeighborsClassifier
+  library: scikit-learn
+  import_path: sklearn.neighbors.KNeighborsClassifier
+  kind: class
+  stage: model
+  family: Neighbours
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html
+  page: k-neighbors-classifier
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.neighbors.RadiusNeighborsRegressor
+  name: RadiusNeighborsRegressor
+  library: scikit-learn
+  import_path: sklearn.neighbors.RadiusNeighborsRegressor
+  kind: class
+  stage: model
+  family: Neighbours
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.RadiusNeighborsRegressor.html
+  page: radius-neighbors-regressor
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.gaussian_process.GaussianProcessRegressor
+  name: GaussianProcessRegressor
+  library: scikit-learn
+  import_path: sklearn.gaussian_process.GaussianProcessRegressor
+  kind: class
+  stage: model
+  family: Gaussian process
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.gaussian_process.GaussianProcessRegressor.html
+  page: gaussian-process-regressor
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.gaussian_process.GaussianProcessClassifier
+  name: GaussianProcessClassifier
+  library: scikit-learn
+  import_path: sklearn.gaussian_process.GaussianProcessClassifier
+  kind: class
+  stage: model
+  family: Gaussian process
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.gaussian_process.GaussianProcessClassifier.html
+  page: gaussian-process-classifier
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.cross_decomposition.PLSRegression
+  name: PLSRegression
+  library: scikit-learn
+  import_path: sklearn.cross_decomposition.PLSRegression
+  kind: class
+  stage: model
+  family: Latent / shape-constrained
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.cross_decomposition.PLSRegression.html
+  page: pls-regression
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.isotonic.IsotonicRegression
+  name: IsotonicRegression
+  library: scikit-learn
+  import_path: sklearn.isotonic.IsotonicRegression
+  kind: class
+  stage: model
+  family: Latent / shape-constrained
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.isotonic.IsotonicRegression.html
+  page: isotonic-regression
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.naive_bayes.GaussianNB
+  name: GaussianNB
+  library: scikit-learn
+  import_path: sklearn.naive_bayes.GaussianNB
+  kind: class
+  stage: model
+  family: Probabilistic classifiers
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.GaussianNB.html
+  page: gaussian-nb
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.naive_bayes.MultinomialNB
+  name: MultinomialNB
+  library: scikit-learn
+  import_path: sklearn.naive_bayes.MultinomialNB
+  kind: class
+  stage: model
+  family: Probabilistic classifiers
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.MultinomialNB.html
+  page: multinomial-nb
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.naive_bayes.BernoulliNB
+  name: BernoulliNB
+  library: scikit-learn
+  import_path: sklearn.naive_bayes.BernoulliNB
+  kind: class
+  stage: model
+  family: Probabilistic classifiers
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.BernoulliNB.html
+  page: bernoulli-nb
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.naive_bayes.ComplementNB
+  name: ComplementNB
+  library: scikit-learn
+  import_path: sklearn.naive_bayes.ComplementNB
+  kind: class
+  stage: model
+  family: Probabilistic classifiers
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.ComplementNB.html
+  page: complement-nb
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.naive_bayes.CategoricalNB
+  name: CategoricalNB
+  library: scikit-learn
+  import_path: sklearn.naive_bayes.CategoricalNB
+  kind: class
+  stage: model
+  family: Probabilistic classifiers
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.CategoricalNB.html
+  page: categorical-nb
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.discriminant_analysis.LinearDiscriminantAnalysis
+  name: LinearDiscriminantAnalysis
+  library: scikit-learn
+  import_path: sklearn.discriminant_analysis.LinearDiscriminantAnalysis
+  kind: class
+  stage: model
+  family: Probabilistic classifiers
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.discriminant_analysis.LinearDiscriminantAnalysis.html
+  page: linear-discriminant-analysis
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.discriminant_analysis.QuadraticDiscriminantAnalysis
+  name: QuadraticDiscriminantAnalysis
+  library: scikit-learn
+  import_path: sklearn.discriminant_analysis.QuadraticDiscriminantAnalysis
+  kind: class
+  stage: model
+  family: Probabilistic classifiers
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.discriminant_analysis.QuadraticDiscriminantAnalysis.html
+  page: quadratic-discriminant-analysis
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.tree.DecisionTreeRegressor
+  name: DecisionTreeRegressor
+  library: scikit-learn
+  import_path: sklearn.tree.DecisionTreeRegressor
+  kind: class
+  stage: model
+  family: Single tree
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeRegressor.html
+  page: decision-tree-regressor
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.tree.DecisionTreeClassifier
+  name: DecisionTreeClassifier
+  library: scikit-learn
+  import_path: sklearn.tree.DecisionTreeClassifier
+  kind: class
+  stage: model
+  family: Single tree
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html
+  page: decision-tree-classifier
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.tree.ExtraTreeRegressor
+  name: ExtraTreeRegressor
+  library: scikit-learn
+  import_path: sklearn.tree.ExtraTreeRegressor
+  kind: class
+  stage: model
+  family: Single tree
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.tree.ExtraTreeRegressor.html
+  page: extra-tree-regressor
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.ensemble.RandomForestRegressor
+  name: RandomForestRegressor
+  library: scikit-learn
+  import_path: sklearn.ensemble.RandomForestRegressor
+  kind: class
+  stage: model
+  family: Bagging
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html
+  page: random-forest
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.ensemble.RandomForestClassifier
+  name: RandomForestClassifier
+  library: scikit-learn
+  import_path: sklearn.ensemble.RandomForestClassifier
+  kind: class
+  stage: model
+  family: Bagging
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html
+  page: random-forest
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.ensemble.ExtraTreesRegressor
+  name: ExtraTreesRegressor
+  library: scikit-learn
+  import_path: sklearn.ensemble.ExtraTreesRegressor
+  kind: class
+  stage: model
+  family: Bagging
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.ExtraTreesRegressor.html
+  page: extra-trees
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.ensemble.ExtraTreesClassifier
+  name: ExtraTreesClassifier
+  library: scikit-learn
+  import_path: sklearn.ensemble.ExtraTreesClassifier
+  kind: class
+  stage: model
+  family: Bagging
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.ExtraTreesClassifier.html
+  page: extra-trees
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.ensemble.BaggingRegressor
+  name: BaggingRegressor
+  library: scikit-learn
+  import_path: sklearn.ensemble.BaggingRegressor
+  kind: class
+  stage: model
+  family: Bagging
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.BaggingRegressor.html
+  page: bagging
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.ensemble.BaggingClassifier
+  name: BaggingClassifier
+  library: scikit-learn
+  import_path: sklearn.ensemble.BaggingClassifier
+  kind: class
+  stage: model
+  family: Bagging
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.BaggingClassifier.html
+  page: bagging
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.ensemble.GradientBoostingRegressor
+  name: GradientBoostingRegressor
+  library: scikit-learn
+  import_path: sklearn.ensemble.GradientBoostingRegressor
+  kind: class
+  stage: model
+  family: Boosting (scikit-learn)
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingRegressor.html
+  page: gradient-boosting
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.ensemble.GradientBoostingClassifier
+  name: GradientBoostingClassifier
+  library: scikit-learn
+  import_path: sklearn.ensemble.GradientBoostingClassifier
+  kind: class
+  stage: model
+  family: Boosting (scikit-learn)
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingClassifier.html
+  page: gradient-boosting
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.ensemble.HistGradientBoostingRegressor
+  name: HistGradientBoostingRegressor
+  library: scikit-learn
+  import_path: sklearn.ensemble.HistGradientBoostingRegressor
+  kind: class
+  stage: model
+  family: Boosting (scikit-learn)
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html
+  page: hist-gradient-boosting
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.ensemble.HistGradientBoostingClassifier
+  name: HistGradientBoostingClassifier
+  library: scikit-learn
+  import_path: sklearn.ensemble.HistGradientBoostingClassifier
+  kind: class
+  stage: model
+  family: Boosting (scikit-learn)
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.HistGradientBoostingClassifier.html
+  page: hist-gradient-boosting
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.ensemble.AdaBoostRegressor
+  name: AdaBoostRegressor
+  library: scikit-learn
+  import_path: sklearn.ensemble.AdaBoostRegressor
+  kind: class
+  stage: model
+  family: Boosting (scikit-learn)
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostRegressor.html
+  page: ada-boost
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.ensemble.AdaBoostClassifier
+  name: AdaBoostClassifier
+  library: scikit-learn
+  import_path: sklearn.ensemble.AdaBoostClassifier
+  kind: class
+  stage: model
+  family: Boosting (scikit-learn)
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostClassifier.html
+  page: ada-boost
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: xgboost.XGBRegressor
+  name: XGBRegressor
+  library: xgboost
+  import_path: xgboost.XGBRegressor
+  kind: class
+  stage: model
+  family: Boosting (XGBoost)
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://xgboost.readthedocs.io/en/stable/python/python_api.html#xgboost.XGBRegressor
+  page: xgboost
+  page_grouping: proposed
+  source: catalogue
+  tier: core
+  notes: Spec 5.4 treats XGBoost as one page; Regressor+Classifier combined (proposed).
+- id: xgboost.XGBClassifier
+  name: XGBClassifier
+  library: xgboost
+  import_path: xgboost.XGBClassifier
+  kind: class
+  stage: model
+  family: Boosting (XGBoost)
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://xgboost.readthedocs.io/en/stable/python/python_api.html#xgboost.XGBClassifier
+  page: xgboost
+  page_grouping: proposed
+  source: catalogue
+  tier: core
+  notes: Spec 5.4 treats XGBoost as one page; Regressor+Classifier combined (proposed).
+- id: lightgbm.LGBMRegressor
+  name: LGBMRegressor
+  library: lightgbm
+  import_path: lightgbm.LGBMRegressor
+  kind: class
+  stage: model
+  family: Boosting (LightGBM)
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://lightgbm.readthedocs.io/en/stable/pythonapi/lightgbm.LGBMRegressor.html
+  page: lightgbm
+  page_grouping: proposed
+  source: catalogue
+  tier: core
+  notes: Regressor+Classifier combined, by analogy with XGBoost (proposed).
+- id: lightgbm.LGBMClassifier
+  name: LGBMClassifier
+  library: lightgbm
+  import_path: lightgbm.LGBMClassifier
+  kind: class
+  stage: model
+  family: Boosting (LightGBM)
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://lightgbm.readthedocs.io/en/stable/pythonapi/lightgbm.LGBMClassifier.html
+  page: lightgbm
+  page_grouping: proposed
+  source: catalogue
+  tier: core
+  notes: Regressor+Classifier combined, by analogy with XGBoost (proposed).
+- id: sklearn.ensemble.VotingRegressor
+  name: VotingRegressor
+  library: scikit-learn
+  import_path: sklearn.ensemble.VotingRegressor
+  kind: class
+  stage: model
+  family: Combining models
+  tracks:
+  - standard
+  archetype: composer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.VotingRegressor.html
+  page: voting
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.ensemble.VotingClassifier
+  name: VotingClassifier
+  library: scikit-learn
+  import_path: sklearn.ensemble.VotingClassifier
+  kind: class
+  stage: model
+  family: Combining models
+  tracks:
+  - standard
+  archetype: composer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.VotingClassifier.html
+  page: voting
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.ensemble.StackingRegressor
+  name: StackingRegressor
+  library: scikit-learn
+  import_path: sklearn.ensemble.StackingRegressor
+  kind: class
+  stage: model
+  family: Combining models
+  tracks:
+  - standard
+  archetype: composer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.StackingRegressor.html
+  page: stacking
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.ensemble.StackingClassifier
+  name: StackingClassifier
+  library: scikit-learn
+  import_path: sklearn.ensemble.StackingClassifier
+  kind: class
+  stage: model
+  family: Combining models
+  tracks:
+  - standard
+  archetype: composer
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.StackingClassifier.html
+  page: stacking
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.neural_network.MLPRegressor
+  name: MLPRegressor
+  library: scikit-learn
+  import_path: sklearn.neural_network.MLPRegressor
+  kind: class
+  stage: model
+  family: Neural nets
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPRegressor.html
+  page: mlp-regressor
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.neural_network.MLPClassifier
+  name: MLPClassifier
+  library: scikit-learn
+  import_path: sklearn.neural_network.MLPClassifier
+  kind: class
+  stage: model
+  family: Neural nets
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPClassifier.html
+  page: mlp-classifier
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: statsmodels.regression.linear_model.OLS
+  name: OLS
+  library: statsmodels
+  import_path: statsmodels.regression.linear_model.OLS
+  kind: class
+  stage: model
+  family: Linear
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.OLS.html
+  page: linear-regression
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: statsmodels.regression.linear_model.WLS
+  name: WLS
+  library: statsmodels
+  import_path: statsmodels.regression.linear_model.WLS
+  kind: class
+  stage: model
+  family: Linear
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.WLS.html
+  page: wls
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: statsmodels.regression.linear_model.GLS
+  name: GLS
+  library: statsmodels
+  import_path: statsmodels.regression.linear_model.GLS
+  kind: class
+  stage: model
+  family: Linear
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.GLS.html
+  page: gls
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: statsmodels.genmod.generalized_linear_model.GLM
+  name: GLM
+  library: statsmodels
+  import_path: statsmodels.genmod.generalized_linear_model.GLM
+  kind: class
+  stage: model
+  family: Generalised
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.genmod.generalized_linear_model.GLM.html
+  page: glm
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: statsmodels.genmod.families.family.Gaussian
+  name: Gaussian
+  library: statsmodels
+  import_path: statsmodels.genmod.families.family.Gaussian
+  kind: class
+  stage: model
+  family: Generalised
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.genmod.families.family.Gaussian.html
+  page: glm
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: GLM family class.
+- id: statsmodels.genmod.families.family.Poisson
+  name: Poisson
+  library: statsmodels
+  import_path: statsmodels.genmod.families.family.Poisson
+  kind: class
+  stage: model
+  family: Generalised
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.genmod.families.family.Poisson.html
+  page: glm
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: GLM family class.
+- id: statsmodels.genmod.families.family.Binomial
+  name: Binomial
+  library: statsmodels
+  import_path: statsmodels.genmod.families.family.Binomial
+  kind: class
+  stage: model
+  family: Generalised
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.genmod.families.family.Binomial.html
+  page: glm
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: GLM family class.
+- id: statsmodels.genmod.families.family.Gamma
+  name: Gamma
+  library: statsmodels
+  import_path: statsmodels.genmod.families.family.Gamma
+  kind: class
+  stage: model
+  family: Generalised
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.genmod.families.family.Gamma.html
+  page: glm
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: GLM family class.
+- id: statsmodels.genmod.families.family.Tweedie
+  name: Tweedie
+  library: statsmodels
+  import_path: statsmodels.genmod.families.family.Tweedie
+  kind: class
+  stage: model
+  family: Generalised
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.genmod.families.family.Tweedie.html
+  page: glm
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: GLM family class.
+- id: statsmodels.genmod.families.family.NegativeBinomial
+  name: NegativeBinomial
+  library: statsmodels
+  import_path: statsmodels.genmod.families.family.NegativeBinomial
+  kind: class
+  stage: model
+  family: Generalised
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.genmod.families.family.NegativeBinomial.html
+  page: glm
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: GLM family class.
+- id: statsmodels.discrete.discrete_model.Logit
+  name: Logit
+  library: statsmodels
+  import_path: statsmodels.discrete.discrete_model.Logit
+  kind: class
+  stage: model
+  family: Discrete outcomes
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.discrete.discrete_model.Logit.html
+  page: logistic-regression
+  page_grouping: proposed
+  source: catalogue
+  tier: core
+  notes: Shares a page with sklearn LogisticRegression (proposed).
+- id: statsmodels.discrete.discrete_model.Probit
+  name: Probit
+  library: statsmodels
+  import_path: statsmodels.discrete.discrete_model.Probit
+  kind: class
+  stage: model
+  family: Discrete outcomes
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.discrete.discrete_model.Probit.html
+  page: probit
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: statsmodels.discrete.discrete_model.MNLogit
+  name: MNLogit
+  library: statsmodels
+  import_path: statsmodels.discrete.discrete_model.MNLogit
+  kind: class
+  stage: model
+  family: Discrete outcomes
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.discrete.discrete_model.MNLogit.html
+  page: mn-logit
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: statsmodels.discrete.discrete_model.Poisson
+  name: Poisson
+  library: statsmodels
+  import_path: statsmodels.discrete.discrete_model.Poisson
+  kind: class
+  stage: model
+  family: Discrete outcomes
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.discrete.discrete_model.Poisson.html
+  page: poisson-regression
+  page_grouping: proposed
+  source: catalogue
+  tier: core
+  notes: Shares a page with sklearn PoissonRegressor (proposed). Not the GLM Poisson family.
+- id: statsmodels.discrete.discrete_model.NegativeBinomial
+  name: NegativeBinomial
+  library: statsmodels
+  import_path: statsmodels.discrete.discrete_model.NegativeBinomial
+  kind: class
+  stage: model
+  family: Discrete outcomes
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.discrete.discrete_model.NegativeBinomial.html
+  page: negative-binomial-regression
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: Discrete model, distinct from the GLM NegativeBinomial family class.
+- id: statsmodels.robust.robust_linear_model.RLM
+  name: RLM
+  library: statsmodels
+  import_path: statsmodels.robust.robust_linear_model.RLM
+  kind: class
+  stage: model
+  family: Robust / quantile
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.robust.robust_linear_model.RLM.html
+  page: rlm
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: statsmodels.regression.quantile_regression.QuantReg
+  name: QuantReg
+  library: statsmodels
+  import_path: statsmodels.regression.quantile_regression.QuantReg
+  kind: class
+  stage: model
+  family: Robust / quantile
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.regression.quantile_regression.QuantReg.html
+  page: quantile-regression
+  page_grouping: proposed
+  source: catalogue
+  tier: core
+  notes: Shares a page with sklearn QuantileRegressor (proposed).
+- id: statsmodels.regression.mixed_linear_model.MixedLM
+  name: MixedLM
+  library: statsmodels
+  import_path: statsmodels.regression.mixed_linear_model.MixedLM
+  kind: class
+  stage: model
+  family: Grouped data
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.regression.mixed_linear_model.MixedLM.html
+  page: mixed-lm
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: statsmodels.stats.stattools.jarque_bera
+  name: jarque_bera
+  library: statsmodels
+  import_path: statsmodels.stats.stattools.jarque_bera
+  kind: function
+  stage: evaluate
+  family: Diagnostics
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.stats.stattools.jarque_bera.html
+  page: residual-normality
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: Concrete function for "residual normality" (judgement call).
+- id: statsmodels.stats.stattools.omni_normtest
+  name: omni_normtest
+  library: statsmodels
+  import_path: statsmodels.stats.stattools.omni_normtest
+  kind: function
+  stage: evaluate
+  family: Diagnostics
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.stats.stattools.omni_normtest.html
+  page: residual-normality
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: Concrete function for "residual normality" (judgement call).
+- id: statsmodels.stats.diagnostic.het_breuschpagan
+  name: het_breuschpagan
+  library: statsmodels
+  import_path: statsmodels.stats.diagnostic.het_breuschpagan
+  kind: function
+  stage: evaluate
+  family: Diagnostics
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.stats.diagnostic.het_breuschpagan.html
+  page: breusch-pagan
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: statsmodels.stats.outliers_influence.variance_inflation_factor
+  name: variance_inflation_factor
+  library: statsmodels
+  import_path: statsmodels.stats.outliers_influence.variance_inflation_factor
+  kind: function
+  stage: evaluate
+  family: Diagnostics
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.stats.outliers_influence.variance_inflation_factor.html
+  page: vif
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: statsmodels.stats.outliers_influence.OLSInfluence
+  name: OLSInfluence
+  library: statsmodels
+  import_path: statsmodels.stats.outliers_influence.OLSInfluence
+  kind: class
+  stage: evaluate
+  family: Diagnostics
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.stats.outliers_influence.OLSInfluence.html
+  page: influence
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: statsmodels.tsa.seasonal.seasonal_decompose
+  name: seasonal_decompose
+  library: statsmodels
+  import_path: statsmodels.tsa.seasonal.seasonal_decompose
+  kind: function
+  stage: explore
+  family: Decomposition and seasonality
+  tracks:
+  - time-series
+  archetype: diagnostic
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.tsa.seasonal.seasonal_decompose.html
+  page: seasonal-decompose
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: statsmodels.tsa.seasonal.STL
+  name: STL
+  library: statsmodels
+  import_path: statsmodels.tsa.seasonal.STL
+  kind: class
+  stage: explore
+  family: Decomposition and seasonality
+  tracks:
+  - time-series
+  archetype: diagnostic
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.tsa.seasonal.STL.html
+  page: stl
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: statsmodels.tsa.seasonal.MSTL
+  name: MSTL
+  library: statsmodels
+  import_path: statsmodels.tsa.seasonal.MSTL
+  kind: class
+  stage: explore
+  family: Decomposition and seasonality
+  tracks:
+  - time-series
+  archetype: diagnostic
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.tsa.seasonal.MSTL.html
+  page: mstl
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: statsmodels.tsa.stattools.adfuller
+  name: adfuller
+  library: statsmodels
+  import_path: statsmodels.tsa.stattools.adfuller
+  kind: function
+  stage: explore
+  family: Stationarity checks
+  tracks:
+  - time-series
+  archetype: diagnostic
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.tsa.stattools.adfuller.html
+  page: adf
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: statsmodels.tsa.stattools.kpss
+  name: kpss
+  library: statsmodels
+  import_path: statsmodels.tsa.stattools.kpss
+  kind: function
+  stage: explore
+  family: Stationarity checks
+  tracks:
+  - time-series
+  archetype: diagnostic
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.tsa.stattools.kpss.html
+  page: kpss
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: statsmodels.graphics.tsaplots.plot_acf
+  name: plot_acf
+  library: statsmodels
+  import_path: statsmodels.graphics.tsaplots.plot_acf
+  kind: function
+  stage: explore
+  family: Stationarity checks
+  tracks:
+  - time-series
+  archetype: diagnostic
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.graphics.tsaplots.plot_acf.html
+  page: acf-pacf-plots
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: statsmodels.graphics.tsaplots.plot_pacf
+  name: plot_pacf
+  library: statsmodels
+  import_path: statsmodels.graphics.tsaplots.plot_pacf
+  kind: function
+  stage: explore
+  family: Stationarity checks
+  tracks:
+  - time-series
+  archetype: diagnostic
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.graphics.tsaplots.plot_pacf.html
+  page: acf-pacf-plots
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: statsmodels.stats.diagnostic.acorr_ljungbox
+  name: acorr_ljungbox
+  library: statsmodels
+  import_path: statsmodels.stats.diagnostic.acorr_ljungbox
+  kind: function
+  stage: explore
+  family: Stationarity checks
+  tracks:
+  - time-series
+  archetype: diagnostic
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.stats.diagnostic.acorr_ljungbox.html
+  page: ljung-box
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: statsmodels.tsa.ar_model.AutoReg
+  name: AutoReg
+  library: statsmodels
+  import_path: statsmodels.tsa.ar_model.AutoReg
+  kind: class
+  stage: model
+  family: Autoregressive
+  tracks:
+  - time-series
+  archetype: model
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.tsa.ar_model.AutoReg.html
+  page: auto-reg
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: statsmodels.tsa.arima.model.ARIMA
+  name: ARIMA
+  library: statsmodels
+  import_path: statsmodels.tsa.arima.model.ARIMA
+  kind: class
+  stage: model
+  family: Autoregressive
+  tracks:
+  - time-series
+  archetype: model
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.tsa.arima.model.ARIMA.html
+  page: arima
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: statsmodels.tsa.statespace.sarimax.SARIMAX
+  name: SARIMAX
+  library: statsmodels
+  import_path: statsmodels.tsa.statespace.sarimax.SARIMAX
+  kind: class
+  stage: model
+  family: Autoregressive
+  tracks:
+  - time-series
+  archetype: model
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.tsa.statespace.sarimax.SARIMAX.html
+  page: sarimax
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: statsmodels.tsa.holtwinters.ExponentialSmoothing
+  name: ExponentialSmoothing
+  library: statsmodels
+  import_path: statsmodels.tsa.holtwinters.ExponentialSmoothing
+  kind: class
+  stage: model
+  family: Smoothing
+  tracks:
+  - time-series
+  archetype: model
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.tsa.holtwinters.ExponentialSmoothing.html
+  page: exponential-smoothing
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: statsmodels.tsa.exponential_smoothing.ets.ETSModel
+  name: ETSModel
+  library: statsmodels
+  import_path: statsmodels.tsa.exponential_smoothing.ets.ETSModel
+  kind: class
+  stage: model
+  family: Smoothing
+  tracks:
+  - time-series
+  archetype: model
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.tsa.exponential_smoothing.ets.ETSModel.html
+  page: ets-model
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: statsmodels.tsa.forecasting.theta.ThetaModel
+  name: ThetaModel
+  library: statsmodels
+  import_path: statsmodels.tsa.forecasting.theta.ThetaModel
+  kind: class
+  stage: model
+  family: Smoothing
+  tracks:
+  - time-series
+  archetype: model
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.tsa.forecasting.theta.ThetaModel.html
+  page: theta-model
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: statsmodels.tsa.vector_ar.var_model.VAR
+  name: VAR
+  library: statsmodels
+  import_path: statsmodels.tsa.vector_ar.var_model.VAR
+  kind: class
+  stage: model
+  family: Multivariate
+  tracks:
+  - time-series
+  archetype: model
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.tsa.vector_ar.var_model.VAR.html
+  page: var
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: statsmodels.tsa.statespace.varmax.VARMAX
+  name: VARMAX
+  library: statsmodels
+  import_path: statsmodels.tsa.statespace.varmax.VARMAX
+  kind: class
+  stage: model
+  family: Multivariate
+  tracks:
+  - time-series
+  archetype: model
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.tsa.statespace.varmax.VARMAX.html
+  page: varmax
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: statsmodels.tsa.statespace.structural.UnobservedComponents
+  name: UnobservedComponents
+  library: statsmodels
+  import_path: statsmodels.tsa.statespace.structural.UnobservedComponents
+  kind: class
+  stage: model
+  family: State space / regime
+  tracks:
+  - time-series
+  archetype: model
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.tsa.statespace.structural.UnobservedComponents.html
+  page: unobserved-components
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: statsmodels.tsa.regime_switching.markov_regression.MarkovRegression
+  name: MarkovRegression
+  library: statsmodels
+  import_path: statsmodels.tsa.regime_switching.markov_regression.MarkovRegression
+  kind: class
+  stage: model
+  family: State space / regime
+  tracks:
+  - time-series
+  archetype: model
+  doc_url: https://www.statsmodels.org/stable/generated/statsmodels.tsa.regime_switching.markov_regression.MarkovRegression.html
+  page: markov-regression
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: scipy.stats.linregress
+  name: linregress
+  library: scipy
+  import_path: scipy.stats.linregress
+  kind: function
+  stage: model
+  family: Quick fits
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.linregress.html
+  page: linear-regression
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: scipy.stats.theilslopes
+  name: theilslopes
+  library: scipy
+  import_path: scipy.stats.theilslopes
+  kind: function
+  stage: model
+  family: Quick fits
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.theilslopes.html
+  page: theil-sen-regression
+  page_grouping: proposed
+  source: catalogue
+  tier: core
+  notes: Shares a page with sklearn TheilSenRegressor (proposed).
+- id: scipy.optimize.curve_fit
+  name: curve_fit
+  library: scipy
+  import_path: scipy.optimize.curve_fit
+  kind: function
+  stage: model
+  family: Custom curves
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.curve_fit.html
+  page: curve-fit
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: scipy.optimize.least_squares
+  name: least_squares
+  library: scipy
+  import_path: scipy.optimize.least_squares
+  kind: function
+  stage: model
+  family: Custom curves
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.least_squares.html
+  page: least-squares
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: scipy.signal.periodogram
+  name: periodogram
+  library: scipy
+  import_path: scipy.signal.periodogram
+  kind: function
+  stage: explore
+  family: Seasonality detection
+  tracks:
+  - time-series
+  archetype: diagnostic
+  doc_url: https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.periodogram.html
+  page: periodogram
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: scipy.stats.shapiro
+  name: shapiro
+  library: scipy
+  import_path: scipy.stats.shapiro
+  kind: function
+  stage: explore
+  family: Assumption tests
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.shapiro.html
+  page: shapiro-wilk
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: scipy.stats.normaltest
+  name: normaltest
+  library: scipy
+  import_path: scipy.stats.normaltest
+  kind: function
+  stage: explore
+  family: Assumption tests
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.normaltest.html
+  page: normality-tests
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: scipy.stats.ttest_ind
+  name: ttest_ind
+  library: scipy
+  import_path: scipy.stats.ttest_ind
+  kind: function
+  stage: explore
+  family: Assumption tests
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_ind.html
+  page: ttest-ind
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: scipy.stats.ttest_rel
+  name: ttest_rel
+  library: scipy
+  import_path: scipy.stats.ttest_rel
+  kind: function
+  stage: explore
+  family: Assumption tests
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_rel.html
+  page: ttest-rel
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: scipy.stats.ttest_1samp
+  name: ttest_1samp
+  library: scipy
+  import_path: scipy.stats.ttest_1samp
+  kind: function
+  stage: explore
+  family: Assumption tests
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_1samp.html
+  page: ttest-1samp
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''

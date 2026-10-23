@@ -94,7 +94,7 @@ are `proposed`.
   "signature": "Ridge(alpha=1.0, *, fit_intercept=True, ...)",
   "parameters": [{
     "name": "alpha", "param_kind": "positional_or_keyword|keyword_only|var_positional|var_keyword",
-    "required": false, "default": "1.0",
+    "required": false, "default": "1.0", "effective_default": null,
     "type_doc": "{float, ndarray of shape (n_targets,)}, default=1.0",
     "description": "...",
     "allowed": {"source": "constraints|docstring|none", "options": [], "intervals": [], "types": []}
@@ -106,7 +106,12 @@ are `proposed`.
 }
 ```
 
-`default` is the `repr` of the default, or `null` when `required` is true.
+`default` is the `repr` of the signature default, or `null` when `required` is true.
+Every parameter also has `effective_default` (always `null` from introspection):
+set only by an override citing the docs, for parameters whose signature default
+is a sentinel such as `None` meaning "use the library default" (e.g. XGBoost
+`max_depth=None` → booster default 6). Interval bounds that are unbounded are
+JSON `null`.
 `methods` lists public methods (no leading underscore), including inherited
 library methods but excluding those inherited from `object`. `returns` applies
 to functions. Missing sections are empty lists, never omitted.

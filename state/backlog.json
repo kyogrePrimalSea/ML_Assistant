@@ -123,7 +123,7 @@
     "T002": {
       "title": "Inventory: Wave 1 catalogue items",
       "file": "tasks/T002-inventory-catalogue.md",
-      "status": "Ready",
+      "status": "Done",
       "dependencies": [
         "T001"
       ],
@@ -132,7 +132,7 @@
     "T003": {
       "title": "Inventory: supporting cast",
       "file": "tasks/T003-inventory-supporting-cast.md",
-      "status": "Ready",
+      "status": "In progress",
       "dependencies": [
         "T001"
       ],
@@ -141,7 +141,7 @@
     "T004": {
       "title": "Extraction tool",
       "file": "tasks/T004-extraction-tool.md",
-      "status": "Ready",
+      "status": "In progress",
       "dependencies": [
         "T001"
       ],
@@ -150,7 +150,7 @@
     "T005": {
       "title": "Official docs cross-check tool",
       "file": "tasks/T005-docs-crosscheck-tool.md",
-      "status": "Ready",
+      "status": "In progress",
       "dependencies": [
         "T001"
       ],

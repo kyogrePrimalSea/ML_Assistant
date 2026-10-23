@@ -1,0 +1,8 @@
+{"event":"baseline","sprint":"Sprint 1 (E01-E02)","ts":"2026-10-24","commit":"2a03710","baseline_verification":"pytest: no tests collected (exit 5) - empty project, expected"}
+{"event":"dispatched","task":"T002","role":"developer","model":"sonnet","ts":"2026-10-24","worktree":"shared"}
+{"event":"dispatched","task":"T003","role":"developer","model":"sonnet","ts":"2026-10-24","worktree":"shared"}
+{"event":"dispatched","task":"T004","role":"developer","model":"sonnet","ts":"2026-10-24","worktree":"shared"}
+{"event":"dispatched","task":"T005","role":"developer","model":"sonnet","ts":"2026-10-24","worktree":"shared"}
+{"event":"review","task":"T004","role":"coordinator","status":"rework","ts":"2026-10-24","verification":"10 passed","issues":["unbounded interval as string None","xgboost MRO kwargs defaults lost","add effective_default field"]}
+{"event":"review","task":"T002","role":"coordinator","status":"passed","ts":"2026-10-24","verification":"tests/test_inventory.py 491 passed; 122 imports and 122 doc URLs checked by worker","changed_paths":["content/inventory/catalogue.yaml","content/inventory/catalogue-checklist.md","tests/test_inventory.py"],"notes":"Proposed page groupings and judgement calls to surface in E01 report"}
+{"event":"review","task":"T005","role":"coordinator","status":"rework","ts":"2026-10-24","verification":"23 passed","issues":["param names only from signature; XGBoost needs Parameters-section names","effective_default match handling"]}
