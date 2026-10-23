@@ -1,0 +1,82 @@
+# Shared vocabulary (spec §3, §4, §5.3, §7.3, §8, §9, §10). The enums in
+# item.schema.json / question.schema.json must equal these lists; tests/test_schema.py checks it.
+# Order of `stages` is pipeline order (spec §3.1). Colours: spec §10.4.
+
+stages:
+  - {id: explore,   name: Explore,   icon: ti-telescope,        dark: "#A99CFF", light: "#5B4FC4"}
+  - {id: clean,     name: Clean,     icon: ti-eraser,           dark: "#5DCAA5", light: "#0F6E56"}
+  - {id: transform, name: Transform, icon: ti-transform,        dark: "#F29BD0", light: "#A3367A"}
+  - {id: select,    name: Select,    icon: ti-filter,           dark: "#B5D96B", light: "#4E7A16"}
+  - {id: split,     name: Split,     icon: ti-arrows-split-2,   dark: "#6CCFE6", light: "#0E6E80"}
+  - {id: model,     name: Model,     icon: ti-cube,             dark: "#F2B880", light: "#9A5A1E"}
+  - {id: tune,      name: Tune,      icon: ti-adjustments,      dark: "#C9A0F2", light: "#7A4FB0"}
+  - {id: evaluate,  name: Evaluate,  icon: ti-ruler-measure,    dark: "#F2E27A", light: "#7A6A0E"}
+  - {id: interpret, name: Interpret, icon: ti-eye,              dark: "#9FB2C9", light: "#4A5A70"}
+
+tracks:
+  - {id: standard,      name: Standard (supervised), wave: 1}
+  - {id: time-series,   name: Time series,           wave: 1}
+  - {id: unsupervised,  name: Unsupervised,          wave: later}
+  - {id: causal,        name: Causal,                wave: later}
+  - {id: deep-learning, name: Deep learning,         wave: later}
+
+archetypes:
+  - {id: transformer,  name: Transformer,           icon: ti-transform}
+  - {id: resampler,    name: Resampler,             icon: ti-scale}
+  - {id: selector,     name: Selector / reducer,    icon: ti-filter}
+  - {id: splitter,     name: Splitter,              icon: ti-arrows-split-2}
+  - {id: model,        name: Model,                 icon: ti-cube}
+  - {id: hyperparameter, name: Hyperparameter,      icon: ti-adjustments-horizontal}
+  - {id: tuning,       name: Tuning strategy,       icon: ti-target}
+  - {id: metric,       name: Metric,                icon: ti-ruler-measure}
+  - {id: diagnostic,   name: Diagnostic / explainer, icon: ti-stethoscope}
+  - {id: output,       name: Output / attribute,    icon: ti-database-export}
+  - {id: composer,     name: Composer,              icon: ti-stack-2}
+
+# Line style: spec §10.5. `colour` is a token (--accent, --text-muted) or stage:<id>.
+# `derived_from` says which record field produces the relationship (spec §5.3).
+relationship_types:
+  - {id: needs,          name: Needs,          dash: none,  width: 2, colour: "--accent",     derived_from: "prep status required"}
+  - {id: recommended,    name: Recommended,    dash: "6 4", width: 2, colour: "stage:clean",  derived_from: "prep status recommended"}
+  - {id: clashes,        name: Clashes,        dash: "2 4", width: 2, colour: "--text-muted", marker: ban, derived_from: "prep status not_needed, plus clashes field"}
+  - {id: alternative_to, name: Alternative to, dash: "10 4", width: 2, colour: "stage:interpret", derived_from: "same stage and family"}
+  - {id: pairs_with,     name: Pairs with,     dash: none,  width: 1, colour: "stage:tune", double: true, derived_from: "pairs_with field"}
+
+prep_statuses:
+  - {id: required,    name: Required}
+  - {id: recommended, name: Recommended}
+  - {id: not_needed,  name: Not needed}
+
+severities:
+  - {id: block, name: Block, icon: ti-circle-x}
+  - {id: warn,  name: Warn,  icon: ti-alert-triangle}
+  - {id: tip,   name: Tip,   icon: ti-bulb}
+  - {id: valid, name: Valid, icon: ti-circle-check}
+
+# Passport (spec §7.3). Starting shape is a number pair held by the journey, not a profile flag.
+data_profile:
+  task_type: {kind: enum, values: [regression, classification, forecasting]}
+  track:     {kind: enum, values_from: tracks}
+  has_categoricals: {kind: boolean}
+  has_missing:      {kind: boolean}
+  time_ordered:     {kind: boolean}
+  imbalanced:       {kind: boolean}
+
+# Spec §9. Spec says "Titanic or breast cancer" for classification; both are listed (OPEN).
+toy_datasets:
+  - {id: ames,               name: House prices (Ames),   task_type: regression}
+  - {id: titanic,            name: Titanic,               task_type: classification}
+  - {id: breast-cancer,      name: Breast cancer,         task_type: classification}
+  - {id: airline-passengers, name: Airline passengers,    task_type: forecasting}
+
+# Spec §3.4. Cap enforced by the content validator.
+question_stems:
+  - {id: my_data_is,        name: "My data is…",        max_per_stage: 7}
+  - {id: my_model_is,       name: "My model is…",       max_per_stage: 7}
+  - {id: i_want_to_know,    name: "I want to know…",    max_per_stage: 7}
+
+# Spec §8 shape-effect values (journey ticket: data shape after the step).
+shape_effects: [same, grows, shrinks, expands]
+
+# Library slugs: docs/ARCHITECTURE.md table.
+libraries: [scikit-learn, statsmodels, scipy, xgboost, lightgbm, imbalanced-learn, optuna, shap, matplotlib]

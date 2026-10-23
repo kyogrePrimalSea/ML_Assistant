@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "question.schema.json",
+  "title": "Question file for one stage (spec §3.4)",
+  "type": "object",
+  "properties": {
+    "stage": {
+      "enum": [
+        "explore",
+        "clean",
+        "transform",
+        "select",
+        "split",
+        "model",
+        "tune",
+        "evaluate",
+        "interpret"
+      ]
+    },
+    "questions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/question"
+      },
+      "minItems": 1
+    }
+  },
+  "required": [
+    "stage",
+    "questions"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "page_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "ref": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "$ref": "#/$defs/page_id"
+        },
+        "setting": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "page"
+      ],
+      "additionalProperties": false,
+      "description": "A page, or one setting named in that page's key_settings."
+    },
+    "question": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/page_id"
+        },
+        "stem": {
+          "enum": [
+            "my_data_is",
+            "my_model_is",
+            "i_want_to_know"
+          ]
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80,
+          "description": "User wording, not textbook terms."
+        },
+        "stage": {
+          "enum": [
+            "explore",
+            "clean",
+            "transform",
+            "select",
+            "split",
+            "model",
+            "tune",
+            "evaluate",
+            "interpret"
+          ]
+        },
+        "tracks": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "standard",
+              "time-series",
+              "unsupervised",
+              "causal",
+              "deep-learning"
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "answers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ref"
+          },
+          "minItems": 1
+        },
+        "next": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/page_id"
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "id",
+        "stem",
+        "text",
+        "stage",
+        "tracks",
+        "answers",
+        "next"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,1808 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "item.schema.json",
+  "title": "Content record: one page (spec §5)",
+  "type": "object",
+  "properties": {
+    "id": {
+      "$ref": "#/$defs/page_id"
+    },
+    "plain_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "code_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "aliases": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "stage": {
+      "enum": [
+        "explore",
+        "clean",
+        "transform",
+        "select",
+        "split",
+        "model",
+        "tune",
+        "evaluate",
+        "interpret"
+      ]
+    },
+    "family": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tracks": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "standard",
+          "time-series",
+          "unsupervised",
+          "causal",
+          "deep-learning"
+        ]
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "archetype": {
+      "enum": [
+        "transformer",
+        "resampler",
+        "selector",
+        "splitter",
+        "model",
+        "hyperparameter",
+        "tuning",
+        "metric",
+        "diagnostic",
+        "output",
+        "composer"
+      ]
+    },
+    "question_tags": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/tag"
+      },
+      "uniqueItems": true
+    },
+    "targets": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "applies_to": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/page_id"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "pairs_with": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/page_id"
+      },
+      "uniqueItems": true
+    },
+    "clashes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/page_id"
+      },
+      "uniqueItems": true
+    },
+    "source_urls": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uri",
+        "pattern": "^https?://"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "library_versions": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "enum": [
+          "scikit-learn",
+          "statsmodels",
+          "scipy",
+          "xgboost",
+          "lightgbm",
+          "imbalanced-learn",
+          "optuna",
+          "shap",
+          "matplotlib"
+        ]
+      },
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^[0-9]+(\\.[0-9]+)*$"
+      }
+    },
+    "reviewed": {
+      "type": "boolean"
+    },
+    "rules": {
+      "type": "object",
+      "properties": {
+        "task_types": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "regression",
+              "classification",
+              "forecasting"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "blocked_when": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "when": {
+                "$ref": "#/$defs/condition"
+              },
+              "reason": {
+                "type": "string",
+                "pattern": "^(\\S+\\s+){0,11}\\S+$",
+                "maxLength": 120
+              }
+            },
+            "required": [
+              "when",
+              "reason"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "fits_on_data": {
+          "type": "boolean"
+        },
+        "shape_effect": {
+          "type": "object",
+          "properties": {
+            "rows": {
+              "enum": [
+                "same",
+                "grows",
+                "shrinks",
+                "expands"
+              ]
+            },
+            "columns": {
+              "enum": [
+                "same",
+                "grows",
+                "shrinks",
+                "expands"
+              ]
+            }
+          },
+          "required": [
+            "rows",
+            "columns"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "task_types",
+        "blocked_when",
+        "fits_on_data",
+        "shape_effect"
+      ],
+      "additionalProperties": false
+    },
+    "slots": {
+      "type": "object",
+      "properties": {
+        "header": {
+          "type": "object",
+          "properties": {},
+          "required": [],
+          "additionalProperties": false
+        },
+        "solves": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/none"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "hero": {
+                  "type": "object"
+                },
+                "line": {
+                  "$ref": "#/$defs/one_line"
+                }
+              },
+              "required": [
+                "hero",
+                "line"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "quick_facts": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/none"
+            },
+            {
+              "$ref": "#/$defs/toy_facts"
+            },
+            {
+              "$ref": "#/$defs/hp_facts"
+            },
+            {
+              "$ref": "#/$defs/model_facts"
+            }
+          ]
+        },
+        "use_avoid": {
+          "type": "object",
+          "properties": {
+            "use_when": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/tag"
+              }
+            },
+            "avoid_when": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/tag"
+              }
+            }
+          },
+          "required": [
+            "use_when",
+            "avoid_when"
+          ],
+          "additionalProperties": false
+        },
+        "prep": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/prep_entry"
+          }
+        },
+        "code": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/code_tab"
+          }
+        },
+        "catch_outs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/one_line"
+          }
+        },
+        "key_settings": {
+          "type": "object",
+          "properties": {
+            "tier1": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/setting_ref"
+              }
+            },
+            "tier2": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/setting_ref"
+              }
+            },
+            "tier3": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/setting_ref"
+              }
+            }
+          },
+          "required": [
+            "tier1",
+            "tier2",
+            "tier3"
+          ],
+          "additionalProperties": false
+        },
+        "watch_it_work": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/none"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "dataset": {
+                  "$ref": "#/$defs/dataset"
+                },
+                "control": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "min": {
+                      "type": "number"
+                    },
+                    "max": {
+                      "type": "number"
+                    },
+                    "step": {
+                      "type": "number",
+                      "exclusiveMinimum": 0
+                    },
+                    "default": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "min",
+                    "max",
+                    "step",
+                    "default"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "dataset",
+                "control"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "intuition": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/none"
+            },
+            {
+              "$ref": "#/$defs/short_intuition"
+            },
+            {
+              "$ref": "#/$defs/model_intuition"
+            }
+          ]
+        },
+        "next": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/page_id"
+          },
+          "description": "Question ids (content/questions/<stage>.yaml)."
+        }
+      },
+      "required": [
+        "header",
+        "solves",
+        "quick_facts",
+        "use_avoid",
+        "prep",
+        "code",
+        "catch_outs",
+        "key_settings",
+        "watch_it_work",
+        "intuition",
+        "next"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "id",
+    "plain_name",
+    "code_name",
+    "aliases",
+    "stage",
+    "family",
+    "tracks",
+    "archetype",
+    "question_tags",
+    "targets",
+    "pairs_with",
+    "clashes",
+    "source_urls",
+    "library_versions",
+    "reviewed",
+    "rules",
+    "slots"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "archetype": {
+            "const": "transformer"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "slots": {
+            "properties": {
+              "solves": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/none"
+                  },
+                  {
+                    "required": [
+                      "hero"
+                    ],
+                    "properties": {
+                      "hero": {
+                        "$ref": "#/$defs/hero_transformer"
+                      }
+                    }
+                  }
+                ]
+              },
+              "quick_facts": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/none"
+                  },
+                  {
+                    "$ref": "#/$defs/toy_facts"
+                  }
+                ]
+              },
+              "intuition": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/none"
+                  },
+                  {
+                    "$ref": "#/$defs/short_intuition"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "archetype": {
+            "const": "resampler"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "slots": {
+            "properties": {
+              "solves": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/none"
+                  },
+                  {
+                    "required": [
+                      "hero"
+                    ],
+                    "properties": {
+                      "hero": {
+                        "$ref": "#/$defs/hero_resampler"
+                      }
+                    }
+                  }
+                ]
+              },
+              "quick_facts": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/none"
+                  },
+                  {
+                    "$ref": "#/$defs/toy_facts"
+                  }
+                ]
+              },
+              "intuition": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/none"
+                  },
+                  {
+                    "$ref": "#/$defs/short_intuition"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "archetype": {
+            "const": "selector"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "slots": {
+            "properties": {
+              "solves": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/none"
+                  },
+                  {
+                    "required": [
+                      "hero"
+                    ],
+                    "properties": {
+                      "hero": {
+                        "$ref": "#/$defs/hero_selector"
+                      }
+                    }
+                  }
+                ]
+              },
+              "quick_facts": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/none"
+                  },
+                  {
+                    "$ref": "#/$defs/toy_facts"
+                  }
+                ]
+              },
+              "intuition": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/none"
+                  },
+                  {
+                    "$ref": "#/$defs/short_intuition"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "archetype": {
+            "const": "splitter"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "slots": {
+            "properties": {
+              "solves": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/none"
+                  },
+                  {
+                    "required": [
+                      "hero"
+                    ],
+                    "properties": {
+                      "hero": {
+                        "$ref": "#/$defs/hero_splitter"
+                      }
+                    }
+                  }
+                ]
+              },
+              "quick_facts": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/none"
+                  },
+                  {
+                    "$ref": "#/$defs/toy_facts"
+                  }
+                ]
+              },
+              "intuition": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/none"
+                  },
+                  {
+                    "$ref": "#/$defs/short_intuition"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "archetype": {
+            "const": "model"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "slots": {
+            "properties": {
+              "solves": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/none"
+                  },
+                  {
+                    "required": [
+                      "hero"
+                    ],
+                    "properties": {
+                      "hero": {
+                        "$ref": "#/$defs/hero_model"
+                      }
+                    }
+                  }
+                ]
+              },
+              "quick_facts": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/none"
+                  },
+                  {
+                    "$ref": "#/$defs/model_facts"
+                  }
+                ]
+              },
+              "intuition": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/none"
+                  },
+                  {
+                    "$ref": "#/$defs/model_intuition"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "archetype": {
+            "const": "hyperparameter"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "slots": {
+            "properties": {
+              "solves": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/none"
+                  },
+                  {
+                    "required": [
+                      "hero"
+                    ],
+                    "properties": {
+                      "hero": {
+                        "$ref": "#/$defs/hero_hyperparameter"
+                      }
+                    }
+                  }
+                ]
+              },
+              "quick_facts": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/none"
+                  },
+                  {
+                    "$ref": "#/$defs/hp_facts"
+                  }
+                ]
+              },
+              "intuition": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/none"
+                  },
+                  {
+                    "$ref": "#/$defs/short_intuition"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "archetype": {
+            "const": "tuning"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "slots": {
+            "properties": {
+              "solves": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/none"
+                  },
+                  {
+                    "required": [
+                      "hero"
+                    ],
+                    "properties": {
+                      "hero": {
+                        "$ref": "#/$defs/hero_tuning"
+                      }
+                    }
+                  }
+                ]
+              },
+              "quick_facts": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/none"
+                  },
+                  {
+                    "$ref": "#/$defs/toy_facts"
+                  }
+                ]
+              },
+              "intuition": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/none"
+                  },
+                  {
+                    "$ref": "#/$defs/short_intuition"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "archetype": {
+            "const": "metric"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "slots": {
+            "properties": {
+              "solves": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/none"
+                  },
+                  {
+                    "required": [
+                      "hero"
+                    ],
+                    "properties": {
+                      "hero": {
+                        "$ref": "#/$defs/hero_metric"
+                      }
+                    }
+                  }
+                ]
+              },
+              "quick_facts": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/none"
+                  },
+                  {
+                    "$ref": "#/$defs/toy_facts"
+                  }
+                ]
+              },
+              "intuition": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/none"
+                  },
+                  {
+                    "$ref": "#/$defs/short_intuition"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "archetype": {
+            "const": "diagnostic"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "slots": {
+            "properties": {
+              "solves": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/none"
+                  },
+                  {
+                    "required": [
+                      "hero"
+                    ],
+                    "properties": {
+                      "hero": {
+                        "$ref": "#/$defs/hero_diagnostic"
+                      }
+                    }
+                  }
+                ]
+              },
+              "quick_facts": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/none"
+                  },
+                  {
+                    "$ref": "#/$defs/toy_facts"
+                  }
+                ]
+              },
+              "intuition": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/none"
+                  },
+                  {
+                    "$ref": "#/$defs/short_intuition"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "archetype": {
+            "const": "output"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "slots": {
+            "properties": {
+              "solves": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/none"
+                  },
+                  {
+                    "required": [
+                      "hero"
+                    ],
+                    "properties": {
+                      "hero": {
+                        "$ref": "#/$defs/hero_output"
+                      }
+                    }
+                  }
+                ]
+              },
+              "quick_facts": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/none"
+                  },
+                  {
+                    "$ref": "#/$defs/toy_facts"
+                  }
+                ]
+              },
+              "intuition": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/none"
+                  },
+                  {
+                    "$ref": "#/$defs/short_intuition"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "archetype": {
+            "const": "composer"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "slots": {
+            "properties": {
+              "solves": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/none"
+                  },
+                  {
+                    "required": [
+                      "hero"
+                    ],
+                    "properties": {
+                      "hero": {
+                        "$ref": "#/$defs/hero_composer"
+                      }
+                    }
+                  }
+                ]
+              },
+              "quick_facts": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/none"
+                  },
+                  {
+                    "$ref": "#/$defs/toy_facts"
+                  }
+                ]
+              },
+              "intuition": {
+                "oneOf": [
+                  {
+                    "$ref": "#/$defs/none"
+                  },
+                  {
+                    "$ref": "#/$defs/short_intuition"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "archetype": {
+            "enum": [
+              "hyperparameter",
+              "output"
+            ]
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "applies_to"
+        ]
+      },
+      "else": {
+        "properties": {
+          "applies_to": false
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "archetype": {
+            "not": {
+              "enum": [
+                "hyperparameter",
+                "output"
+              ]
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "targets": {
+            "minItems": 1
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "page_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "tag": {
+      "type": "string",
+      "pattern": "^(\\S+\\s+){0,4}\\S+$",
+      "maxLength": 40
+    },
+    "one_line": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "none": {
+      "type": "object",
+      "properties": {
+        "none": {
+          "const": true
+        }
+      },
+      "required": [
+        "none"
+      ],
+      "additionalProperties": false
+    },
+    "dataset": {
+      "enum": [
+        "ames",
+        "titanic",
+        "breast-cancer",
+        "airline-passengers"
+      ]
+    },
+    "setting_value": {
+      "type": [
+        "string",
+        "number",
+        "boolean"
+      ]
+    },
+    "condition": {
+      "type": "object",
+      "properties": {
+        "task_type": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "regression",
+              "classification",
+              "forecasting"
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "track": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "standard",
+              "time-series",
+              "unsupervised",
+              "causal",
+              "deep-learning"
+            ]
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "has_categoricals": {
+          "type": "boolean"
+        },
+        "has_missing": {
+          "type": "boolean"
+        },
+        "time_ordered": {
+          "type": "boolean"
+        },
+        "imbalanced": {
+          "type": "boolean"
+        }
+      },
+      "required": [],
+      "additionalProperties": false,
+      "minProperties": 1,
+      "description": "Data-profile expression: every key must match (AND); list values match any member."
+    },
+    "prep_entry": {
+      "type": "object",
+      "properties": {
+        "step": {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "page": {
+                  "$ref": "#/$defs/page_id"
+                }
+              },
+              "required": [
+                "page"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "family": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "stage": {
+                  "enum": [
+                    "explore",
+                    "clean",
+                    "transform",
+                    "select",
+                    "split",
+                    "model",
+                    "tune",
+                    "evaluate",
+                    "interpret"
+                  ]
+                }
+              },
+              "required": [
+                "family",
+                "stage"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "status": {
+          "enum": [
+            "required",
+            "recommended",
+            "not_needed"
+          ]
+        },
+        "why": {
+          "type": "string",
+          "pattern": "^(\\S+\\s+){0,11}\\S+$",
+          "maxLength": 120
+        },
+        "condition": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/condition"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "unless": {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "setting": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "value": {
+                  "$ref": "#/$defs/setting_value"
+                }
+              },
+              "required": [
+                "setting",
+                "value"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "step",
+        "status",
+        "why",
+        "condition",
+        "unless"
+      ],
+      "additionalProperties": false
+    },
+    "code_tab": {
+      "type": "object",
+      "properties": {
+        "library": {
+          "enum": [
+            "scikit-learn",
+            "statsmodels",
+            "scipy",
+            "xgboost",
+            "lightgbm",
+            "imbalanced-learn",
+            "optuna",
+            "shap",
+            "matplotlib"
+          ]
+        },
+        "target": {
+          "type": "string",
+          "minLength": 1
+        },
+        "why_this_library": {
+          "$ref": "#/$defs/one_line"
+        },
+        "snippet": {
+          "type": "string",
+          "pattern": "^# [a-z-]+ [0-9][^\\n]*\\n[\\s\\S]+$"
+        }
+      },
+      "required": [
+        "library",
+        "target",
+        "why_this_library",
+        "snippet"
+      ],
+      "additionalProperties": false
+    },
+    "setting_ref": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "page": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/page_id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "page"
+      ],
+      "additionalProperties": false
+    },
+    "ref": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "$ref": "#/$defs/page_id"
+        },
+        "setting": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "page"
+      ],
+      "additionalProperties": false,
+      "description": "A page, or one setting named in that page's key_settings."
+    },
+    "toy_facts": {
+      "type": "object",
+      "properties": {
+        "facts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 30
+              },
+              "value": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
+              }
+            },
+            "required": [
+              "label",
+              "value"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1,
+          "maxItems": 4
+        }
+      },
+      "required": [
+        "facts"
+      ],
+      "additionalProperties": false
+    },
+    "hero_transformer": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "transformer"
+        },
+        "dataset": {
+          "$ref": "#/$defs/dataset"
+        },
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "changed": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "kind",
+        "dataset",
+        "columns",
+        "changed"
+      ],
+      "additionalProperties": false
+    },
+    "hero_resampler": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "resampler"
+        },
+        "dataset": {
+          "$ref": "#/$defs/dataset"
+        },
+        "classes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "before": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "minItems": 2
+        },
+        "after": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "minItems": 2
+        }
+      },
+      "required": [
+        "kind",
+        "dataset",
+        "classes",
+        "before",
+        "after"
+      ],
+      "additionalProperties": false
+    },
+    "hero_selector": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "selector"
+        },
+        "dataset": {
+          "$ref": "#/$defs/dataset"
+        },
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "kept": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "kind",
+        "dataset",
+        "columns",
+        "kept"
+      ],
+      "additionalProperties": false
+    },
+    "hero_splitter": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "splitter"
+        },
+        "rows": {
+          "type": "integer",
+          "minimum": 2
+        },
+        "folds": {
+          "type": "integer",
+          "minimum": 2
+        },
+        "ordered": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "kind",
+        "rows",
+        "folds",
+        "ordered"
+      ],
+      "additionalProperties": false
+    },
+    "hero_model": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "model"
+        },
+        "dataset": {
+          "$ref": "#/$defs/dataset"
+        },
+        "shape": {
+          "enum": [
+            "boundary",
+            "fit_line"
+          ]
+        }
+      },
+      "required": [
+        "kind",
+        "dataset",
+        "shape"
+      ],
+      "additionalProperties": false
+    },
+    "hero_hyperparameter": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "hyperparameter"
+        },
+        "dataset": {
+          "$ref": "#/$defs/dataset"
+        },
+        "sweep": {
+          "type": "array",
+          "items": {
+            "type": [
+              "number",
+              "string"
+            ]
+          },
+          "minItems": 3
+        }
+      },
+      "required": [
+        "kind",
+        "dataset",
+        "sweep"
+      ],
+      "additionalProperties": false
+    },
+    "hero_tuning": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "tuning"
+        },
+        "dims": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3
+        },
+        "trials": {
+          "type": "integer",
+          "minimum": 2
+        }
+      },
+      "required": [
+        "kind",
+        "dims",
+        "trials"
+      ],
+      "additionalProperties": false
+    },
+    "hero_metric": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "metric"
+        },
+        "dataset": {
+          "$ref": "#/$defs/dataset"
+        },
+        "highlight": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "kind",
+        "dataset",
+        "highlight"
+      ],
+      "additionalProperties": false
+    },
+    "hero_diagnostic": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "diagnostic"
+        },
+        "dataset": {
+          "$ref": "#/$defs/dataset"
+        },
+        "chart": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "kind",
+        "dataset",
+        "chart"
+      ],
+      "additionalProperties": false
+    },
+    "hero_output": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "output"
+        },
+        "dataset": {
+          "$ref": "#/$defs/dataset"
+        },
+        "plot": {
+          "enum": [
+            "bar",
+            "line",
+            "matrix"
+          ]
+        }
+      },
+      "required": [
+        "kind",
+        "dataset",
+        "plot"
+      ],
+      "additionalProperties": false
+    },
+    "hero_composer": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "composer"
+        },
+        "boxes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 2
+        }
+      },
+      "required": [
+        "kind",
+        "boxes"
+      ],
+      "additionalProperties": false
+    },
+    "model_intuition": {
+      "type": "object",
+      "properties": {
+        "idea": {
+          "$ref": "#/$defs/one_line"
+        },
+        "analogy": {
+          "$ref": "#/$defs/one_line"
+        },
+        "animation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "good_at": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/tag"
+          }
+        },
+        "bad_at": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/tag"
+          }
+        },
+        "vs_siblings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "page": {
+                "$ref": "#/$defs/page_id"
+              },
+              "note": {
+                "$ref": "#/$defs/one_line"
+              }
+            },
+            "required": [
+              "page",
+              "note"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "read_more": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/one_line"
+          }
+        }
+      },
+      "required": [
+        "idea",
+        "analogy",
+        "animation",
+        "good_at",
+        "bad_at",
+        "vs_siblings",
+        "read_more"
+      ],
+      "additionalProperties": false
+    },
+    "short_intuition": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "$ref": "#/$defs/one_line"
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "hp_facts": {
+      "type": "object",
+      "properties": {
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "page": {
+                "$ref": "#/$defs/page_id"
+              },
+              "default": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
+              },
+              "typical_range": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 30
+              }
+            },
+            "required": [
+              "page",
+              "default",
+              "typical_range"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "values"
+      ],
+      "additionalProperties": false
+    },
+    "model_facts": {
+      "type": "object",
+      "properties": {
+        "data_size": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        }
+      },
+      "required": [
+        "data_size"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

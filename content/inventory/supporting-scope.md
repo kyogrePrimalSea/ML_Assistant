@@ -45,7 +45,7 @@ Index: https://scikit-learn.org/stable/api/sklearn.feature_selection.html
 - Included: VarianceThreshold, SelectKBest, SelectFromModel, RFE, RFECV, f_classif, f_regression,
   mutual_info_classif, mutual_info_regression; (ext) SelectPercentile, GenericUnivariateSelect,
   SelectFpr, SelectFdr, SelectFwe, SequentialFeatureSelector, chi2, r_regression.
-- Excluded: SelectorMixin (base class mixin).
+- Excluded: SelectorMixin (base class mixin); f_oneway (generic ANOVA helper that f_classif wraps; f_classif covers the selection use).
 
 ### decomposition
 Index: https://scikit-learn.org/stable/api/sklearn.decomposition.html

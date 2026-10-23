@@ -7,19 +7,21 @@
   "kind": "class",
   "library": "optuna",
   "library_version": "5.0.0",
-  "methods": [
+  "methods": [],
+  "overrides_applied": [
     {
-      "name": "add_note",
-      "signature": "add_note(note, /)",
-      "summary": "Add a note to the exception"
+      "op": "remove",
+      "path": "methods[name=add_note]",
+      "reason": "Inherited from Python's BaseException; the official page documents no methods for TrialPruned.",
+      "source_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.TrialPruned.html"
     },
     {
-      "name": "with_traceback",
-      "signature": "with_traceback(tb, /)",
-      "summary": "Set self.__traceback__ to tb and return self."
+      "op": "remove",
+      "path": "methods[name=with_traceback]",
+      "reason": "Inherited from Python's BaseException; the official page documents no methods for TrialPruned.",
+      "source_url": "https://optuna.readthedocs.io/en/stable/reference/generated/optuna.TrialPruned.html"
     }
   ],
-  "overrides_applied": [],
   "parameters": [],
   "returns": [],
   "signature": "TrialPruned()",

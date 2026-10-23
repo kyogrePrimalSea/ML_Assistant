@@ -1,0 +1,7 @@
+patches:
+- op: remove
+  path: methods[name=add_note]
+- op: remove
+  path: methods[name=with_traceback]
+source_url: https://optuna.readthedocs.io/en/stable/reference/generated/optuna.TrialPruned.html
+reason: Inherited from Python's BaseException; the official page documents no methods for TrialPruned.

@@ -1,0 +1,20 @@
+stage: model
+questions:
+  - id: model-overfitting
+    stem: my_model_is
+    text: Overfitting
+    stage: model
+    tracks: [standard]
+    answers:
+      - {page: max-depth}
+      - {page: random-forest, setting: min_samples_leaf}
+      - {page: gradient-boosting, setting: ccp_alpha}
+    next: [know-feature-importance]
+  - id: know-feature-importance
+    stem: i_want_to_know
+    text: Which features matter
+    stage: model
+    tracks: [standard]
+    answers:
+      - {page: treeexplainer}
+    next: []
