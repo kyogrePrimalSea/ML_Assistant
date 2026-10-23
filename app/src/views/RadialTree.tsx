@@ -13,6 +13,9 @@ import { useShellState } from '@/shell/ShellState'
 import { ARCHETYPE_ICONS } from './archetypeIcons'
 import CatalogueList from './CatalogueList'
 import { fitCamera, type Camera, type FitPoint } from './radialFit'
+import { EndpointLabels, RelationshipLines, curve, endpointLabel, resolveLines, type LineNode } from './RelationshipLines'
+import { useConnections } from './connections'
+import { RelationshipLegend } from './relationshipStyles'
 import './radial-tree.css'
 
 // ---- layout loading (stored positions; the app never lays out) ----
@@ -69,11 +72,14 @@ interface VNode {
   y: number
   side: 1 | -1
   stage: StageId
+  /** The accordion stub standing in for the families that are closed while one family is open. */
+  more?: number
 }
 
 const sk = (stage: string) => `s:${stage}`
 const fk = (stage: string, family: string) => `f:${stage}/${family}`
 const ik = (id: string) => `i:${id}`
+const mk = (stage: string) => `m:${stage}`
 
 function trackLabel(name: string) {
   return name.replace(/\s*\(.*\)$/, '')
@@ -176,9 +182,11 @@ function Canvas({
       out.push({ key: sk(s.id), level: 1, parent: null, x: s.x, y: s.y, side: s.side, stage: s.id as StageId })
       if (s.id !== openStage) continue
       for (const f of s.families) {
+        if (openFamily && f.name !== openFamily) continue
         out.push({ key: fk(s.id, f.name), level: 2, parent: sk(s.id), x: f.x, y: f.y, side: s.side, stage: s.id as StageId })
         if (f.name !== openFamily) continue
         for (const it of f.items) out.push({ key: ik(it.id), level: 3, parent: fk(s.id, f.name), x: it.x, y: it.y, side: s.side, stage: s.id as StageId })
+        if (s.families.length > 1) out.push({ key: mk(s.id), level: 2, parent: sk(s.id), x: f.x, y: f.y, side: s.side, stage: s.id as StageId, more: s.families.length - 1 })
       }
     }
     return out
@@ -190,6 +198,10 @@ function Canvas({
         const s = stages.find((x) => x.id === v.stage)!
         return { name: stageName.get(v.stage) ?? v.stage, short: stageName.get(v.stage) ?? v.stage, count: s.count, page: undefined as IndexPage | undefined }
       }
+      if (v.more !== undefined) {
+        const name = `${v.more} other ${v.more === 1 ? 'family' : 'families'}`
+        return { name, short: `+${name}`, count: v.more, page: undefined }
+      }
       if (v.level === 2) {
         const f = stages.find((x) => x.id === v.stage)!.families.find((x) => fk(v.stage, x.name) === v.key)!
         return { name: f.name, short: clip(f.name, 26), count: f.count, page: undefined }
@@ -200,19 +212,44 @@ function Canvas({
     [stages, stageName, pageById],
   )
 
+  // Connection lines for the selected page: only the types switched on in the panel.
+  const { on } = useConnections()
+  const lines = useMemo(() => {
+    if (!activeId || on.size === 0) return []
+    const nodes = new Map<string, LineNode>(vis.map((v) => [v.key, { x: v.x, y: v.y, side: v.side }]))
+    return resolveLines(data.relationships, activeId, on, pageById, nodes)
+  }, [activeId, on, vis, data, pageById])
+  const lineTypes = useMemo(() => [...new Set(lines.map((l) => l.type))], [lines])
+  const endNodes = useMemo(() => new Set(lines.flatMap((l) => [l.from.key, l.to.key])), [lines])
+
   // Camera target: fit the opened branch (all stages when nothing is open) with node and label reach.
   const target: Camera = useMemo(() => {
     const reach = (v: VNode): FitPoint => {
       const i = info(v)
-      const r = v.level === 1 ? 20 : v.level === 2 ? 9 : 12
-      const text = r + 10 + (i.short.length + (v.level < 3 ? 4 : 0)) * CHAR_PX
-      return { x: v.x, y: v.y, l: v.side < 0 ? text : r, r: v.side > 0 ? text : r, t: 14, b: 14 }
+      const r = v.level === 1 ? 20 : v.more !== undefined ? 5 : v.level === 2 ? 9 : 12
+      const text = r + 10 + (i.short.length + (v.level < 3 && v.more === undefined ? 4 : 0)) * CHAR_PX
+      return { x: v.x, y: v.y, l: v.side < 0 ? text : r, r: v.side > 0 ? text : r, t: 14, b: v.more !== undefined ? 40 : 14 }
     }
     const branch = openFamily ? vis.filter((v) => v.level > 1) : openStage ? vis.filter((v) => v.level > 1 || v.stage === openStage) : vis
     const pts = branch.map(reach)
+    // With the siblings folded away the branch is small; keep the ring in view so it never zooms past it.
+    if (openFamily) for (const v of vis) if (v.level === 1 && v.stage !== openStage) pts.push({ x: v.x, y: v.y, l: 22, r: 22, t: 22, b: 22 })
+    // Lines that end outside the opened branch pull the camera back so every endpoint and its label stay in view.
+    for (const l of lines) {
+      const apex = curve(l.from, l.to).apex
+      pts.push({ x: apex.x, y: apex.y, l: 0, r: 0, t: 0, b: 0 })
+      for (const n of [l.from, l.to]) {
+        const v = vis.find((x) => x.key === n.key)
+        if (v && !branch.includes(v)) pts.push(reach(v))
+        if (l.hidden && n === l.to) {
+          const w = 34 + (n.key === sk(openStage ?? '') ? 12 * CHAR_PX : 0) + (endpointLabel(l).length + 1) * 6.6
+          pts.push({ x: n.x, y: n.y, l: n.side < 0 ? w : 14, r: n.side > 0 ? w : 14, t: 14, b: 14 })
+        }
+      }
+    }
     if (!openStage) pts.push({ x: 0, y: 0, l: 50, r: 50, t: 50, b: 80 })
-    return fitCamera(pts, size.w, size.h, { l: 28, r: 28, t: 84, b: 64 }, !openStage)
-  }, [vis, info, openStage, openFamily, size])
+    return fitCamera(pts, size.w, size.h, { l: 28, r: 28, t: lines.length > 0 ? 156 : 84, b: 64 }, !openStage, lines.length > 0 ? 0.15 : undefined)
+  }, [vis, info, openStage, openFamily, size, lines])
 
   // Apply the camera: a flight for branch changes; a jump on first paint and with reduced motion.
   const cam = useRef<Camera | null>(null)
@@ -260,6 +297,9 @@ function Canvas({
     return () => ro.disconnect()
   }, [])
 
+  // With a family open, its label rides above its node so the items beside it stay clear.
+  const raisedKey = openStage && openFamily ? fk(openStage, openFamily) : null
+
   // Put each count right after its label's real width.
   useLayoutEffect(() => {
     const svg = svgRef.current
@@ -271,10 +311,16 @@ function Canvas({
       if (len <= 0) continue
       const base = Number(t.dataset.base)
       t.setAttribute('x', String(base + Math.sign(base) * (len + 8)))
-      labelPx.current.set(key, len + 8 + t.getComputedTextLength() + 10)
+      labelPx.current.set(key, key === raisedKey ? 0 : len + 8 + t.getComputedTextLength() + 10)
+    }
+    // Endpoint labels continue the row after a node's own label and count.
+    for (const t of svg.querySelectorAll<SVGTextElement>('[data-ann-for]')) {
+      const px = t.dataset.annFor === (openStage ? sk(openStage) : '') || !t.dataset.annFor!.startsWith('s:') ? (labelPx.current.get(t.dataset.annFor!) ?? 0) : 0
+      const base = Number(t.dataset.base)
+      t.setAttribute('x', String(base + Math.sign(base) * Math.max(0, px - 4)))
     }
     if (cam.current) apply(cam.current)
-  }, [vis, apply])
+  }, [vis, apply, lines, raisedKey, openStage])
 
   // Keyboard focus follows state changes made by keys.
   useEffect(() => {
@@ -291,7 +337,8 @@ function Canvas({
   const activate = (v: VNode) => {
     if (v.level === 1) {
       if (stages.find((s) => s.id === v.stage)!.count > 0) toggleStage(v.stage)
-    } else if (v.level === 2) toggleFamily(info(v).name)
+    } else if (v.more !== undefined) setOpenFamily(null)
+    else if (v.level === 2) toggleFamily(info(v).name)
     else navigate(`/page/${v.key.slice(2)}`)
   }
 
@@ -309,6 +356,12 @@ function Canvas({
     const isOpen = (n: VNode) => (n.level === 1 ? n.stage === openStage : n.level === 2 && info(n).name === openFamily)
     const hasKids = (n: VNode) => n.level === 1 ? stages.find((s) => s.id === n.stage)!.count > 0 : n.level === 2
     let handled = true
+    if (v.more !== undefined && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) {
+      if ((e.key === 'ArrowRight') !== (v.side > 0) && v.parent) move(v.parent)
+      e.preventDefault()
+      e.stopPropagation()
+      return
+    }
     switch (e.key) {
       case 'ArrowDown':
         if (sibs[at + 1]) move(sibs[at + 1].key)
@@ -377,10 +430,11 @@ function Canvas({
     if (stage && stage.families.length > 0) {
       const sx = stage.side * (layout.familyX - layout.spine)
       const id = stage.id as StageId
-      const ys = stage.families.map((f) => f.y)
+      const shown = stage.families.filter((f) => !openFamily || f.name === openFamily)
+      const ys = shown.map((f) => f.y)
       out.push({ d: seg([stage.x, stage.y], [sx, stage.y]), stage: id, key: 'trunk-stage', trunk: { from: sk(stage.id), x: stage.x, y: stage.y, to: sx, side: stage.side, r: 20 } })
       out.push({ d: seg([sx, Math.min(...ys)], [sx, Math.max(...ys)]), stage: null, key: 'spine-f' })
-      for (const f of stage.families) out.push({ d: seg([sx, f.y], [f.x, f.y]), stage: f.name === openFamily ? id : null, key: `tick-${f.name}` })
+      for (const f of shown) out.push({ d: seg([sx, f.y], [f.x, f.y]), stage: f.name === openFamily ? id : null, key: `tick-${f.name}` })
       const fam = stage.families.find((f) => f.name === openFamily)
       if (fam) {
         const ix = stage.side * (layout.itemX - layout.spine)
@@ -410,6 +464,7 @@ function Canvas({
         role="tree"
         aria-label={`${trackLabel(trackName)} pages by stage, family and page`}
         className="rt-svg absolute inset-0 size-full"
+        data-conn={lines.length > 0 ? 'on' : undefined}
         onKeyDown={onKeyDown}
       >
         <g ref={camRef}>
@@ -421,6 +476,8 @@ function Canvas({
                 data-trunk={l.trunk ? JSON.stringify(l.trunk) : undefined} className={l.stage ? 'rt-link rt-link-hot rt-fade' : 'rt-link'} style={l.stage ? ({ '--rt-stage': `var(--stage-${l.stage})` } as React.CSSProperties) : undefined} />
             ))}
           </g>
+
+          <RelationshipLines lines={lines} />
 
           <g aria-hidden>
             <g className="rt-glyph">
@@ -434,13 +491,14 @@ function Canvas({
 
           {vis.map((v) => {
             const i = info(v)
+            const dimmed = v.level === 1 && openStage && v.stage !== openStage
             const color = `var(--stage-${v.stage})`
-            const expanded = v.level === 1 ? v.stage === openStage : v.level === 2 ? i.name === openFamily : undefined
+            const expanded = v.level === 1 ? v.stage === openStage : v.more !== undefined ? undefined : v.level === 2 ? i.name === openFamily : undefined
             const disabled = v.level === 1 && i.count === 0
             const written = i.page?.has_record !== false
             const ArchIcon = i.page ? ARCHETYPE_ICONS[i.page.archetype] : null
             const StageIcon = STAGES[v.stage].Icon
-            const r = v.level === 1 ? 20 : v.level === 2 ? 8 : 12
+            const r = v.level === 1 ? 20 : v.more !== undefined ? 5 : v.level === 2 ? 8 : 12
             const labelX = v.side * (r + 10)
             const anchor = v.side > 0 ? 'start' : 'end'
             const hit = r + 16 + (i.short.length + 4) * CHAR_PX
@@ -448,7 +506,9 @@ function Canvas({
             const label =
               v.level === 1
                 ? `${i.name} stage, ${plural(i.count, 'page')}`
-                : v.level === 2
+                : v.more !== undefined
+                  ? `Show ${i.name}`
+                  : v.level === 2
                   ? `${i.name} family, ${plural(i.count, 'page')}`
                   : `${i.name}, ${archName.get(i.page!.archetype) ?? i.page!.archetype}${written ? '' : ', not written yet'}`
             return (
@@ -457,6 +517,7 @@ function Canvas({
                 role="treeitem"
                 data-key={v.key}
                 data-active={i.page && i.page.id === activeId ? 'true' : undefined}
+                data-end={endNodes.has(v.key) ? 'true' : undefined}
                 aria-label={label}
                 aria-level={v.level}
                 aria-setsize={sibs.length}
@@ -476,6 +537,7 @@ function Canvas({
               >
                 <rect x={v.side > 0 ? -r - 8 : -hit} y={-15} width={hit + r + 8} height={30} fill="transparent" />
                 <g className="rt-glyph">
+                  <g transform={v.more !== undefined ? 'translate(0 26)' : undefined}>
                   <circle className="rt-focus" r={r + 5} />
                   <circle
                     className="rt-disc"
@@ -495,24 +557,27 @@ function Canvas({
                   ) : null}
                   <text
                     x={labelX}
-                    y={5}
+                    y={v.key === raisedKey ? -19 : 5}
                     textAnchor={anchor}
-                    className={`rt-label${written ? '' : ' rt-label-muted'}${v.level === 1 && openStage && v.stage !== openStage ? ' rt-dim' : ''}`}
-                    style={{ fontSize: v.level === 1 ? '1rem' : '0.9375rem', fontWeight: v.level < 3 ? 700 : 400, fontStyle: written ? undefined : 'italic' }}
+                    className={`rt-label${written && v.more === undefined ? '' : ' rt-label-muted'}${dimmed ? ' rt-dim' : ''}`}
+                    style={{ fontSize: v.level === 1 ? '1rem' : '0.9375rem', fontWeight: v.level < 3 && v.more === undefined ? 700 : 400, fontStyle: written ? undefined : 'italic' }}
                   >
                     {i.short}
                     {i.short !== i.name ? <title>{i.name}</title> : null}
                   </text>
+                  </g>
                 </g>
               </g>
             )
           })}
 
+          <EndpointLabels lines={lines} />
+
           {/* Page counts follow each label, outside the tree items, so a node's visible text is
               exactly its name. Their x is corrected to the measured label width after render. */}
           <g aria-hidden pointerEvents="none" ref={countsRef}>
             {vis
-              .filter((v) => v.level < 3)
+              .filter((v) => v.level < 3 && v.more === undefined)
               .map((v) => {
                 const r = v.level === 1 ? 20 : 8
                 const dim = v.level === 1 && openStage && v.stage !== openStage
@@ -523,7 +588,7 @@ function Canvas({
                         data-count-for={v.key}
                         data-base={v.side * (r + 10)}
                         x={v.side * (r + 10 + (info(v).short.length + 1) * CHAR_PX + 4)}
-                        y={5}
+                        y={v.key === raisedKey ? -19 : 5}
                         textAnchor={v.side > 0 ? 'start' : 'end'}
                         className={`rt-label rt-label-muted${dim ? ' rt-dim' : ''}`}
                         style={{ fontSize: '0.875rem' }}
@@ -537,6 +602,12 @@ function Canvas({
           </g>
         </g>
       </svg>
+
+      {lineTypes.length > 0 ? (
+        <div className="pointer-events-none absolute top-4 right-4 z-10">
+          <RelationshipLegend types={lineTypes} />
+        </div>
+      ) : null}
 
       <div className="pointer-events-none absolute bottom-4 left-4 flex items-center gap-2">
         {crumb.length > 0 ? (
@@ -562,6 +633,7 @@ function Canvas({
       </div>
       <p role="status" className="sr-only">
         {status}
+        {lines.length > 0 ? ` Showing ${plural(lines.length, 'connection line')}; the page panel lists them.` : ''}
       </p>
     </div>
   )

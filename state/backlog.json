@@ -359,7 +359,7 @@
     "T024": {
       "title": "Relationship lines on demand (radial tree)",
       "file": "tasks/T024-relationship-lines.md",
-      "status": "In progress",
+      "status": "Done",
       "dependencies": [
         "T023"
       ],
@@ -386,7 +386,7 @@
     "T027": {
       "title": "E04 acceptance and deploy",
       "file": "tasks/T027-e04-acceptance-and-deploy.md",
-      "status": "Backlog",
+      "status": "In progress",
       "dependencies": [
         "T022",
         "T023",

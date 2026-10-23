@@ -3,6 +3,7 @@ import Styleguide from '@/dev/Styleguide'
 import { PagePanel } from '@/page/PagePanel'
 import Layout from '@/shell/Layout'
 import { ShellStateProvider, useShellState } from '@/shell/ShellState'
+import { ConnectionsProvider } from '@/views/connections'
 import Journey from '@/views/Journey'
 import RadialTree from '@/views/RadialTree'
 
@@ -33,6 +34,7 @@ function Shell() {
   const navigate = useNavigate()
   const { view } = useShellState()
   return (
+    <ConnectionsProvider canDraw={view === 'tree'}>
     <Layout panel={id ? <PagePanel id={id} /> : questionId ? <QuestionPlaceholder id={questionId} /> : null} onClosePanel={() => navigate('/')} fill={view === 'tree' || view === 'journey'}>
       {view === 'tree' ? (
         <RadialTree activeId={id} />
@@ -42,6 +44,7 @@ function Shell() {
         <Journey />
       )}
     </Layout>
+    </ConnectionsProvider>
   )
 }
 

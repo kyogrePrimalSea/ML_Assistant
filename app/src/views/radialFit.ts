@@ -33,9 +33,9 @@ export interface Pad {
 export const K_MIN = 0.4
 export const K_MAX = 1.3
 
-function largest(fits: (k: number) => boolean): number {
+function largest(fits: (k: number) => boolean, kMin: number): number {
   if (fits(K_MAX)) return K_MAX
-  let lo = K_MIN
+  let lo = kMin
   let hi = K_MAX
   for (let i = 0; i < 30; i++) {
     const mid = (lo + hi) / 2
@@ -56,7 +56,8 @@ function span(points: FitPoint[], k: number, axis: 'x' | 'y') {
   return { lo, hi }
 }
 
-export function fitCamera(points: FitPoint[], width: number, height: number, pad: Pad, uniform: boolean): Camera {
+/** `kMin` lets the camera pull further back than usual (connection lines can span the whole tree). */
+export function fitCamera(points: FitPoint[], width: number, height: number, pad: Pad, uniform: boolean, kMin = K_MIN): Camera {
   if (points.length === 0) return { x: width / 2, y: height / 2, kx: 1, ky: 1 }
   const availX = width - pad.l - pad.r
   const availY = height - pad.t - pad.b
@@ -68,8 +69,8 @@ export function fitCamera(points: FitPoint[], width: number, height: number, pad
     const e = span(points, k, 'y')
     return e.hi - e.lo <= availY
   }
-  let kx = largest(fitsX)
-  let ky = largest(fitsY)
+  let kx = largest(fitsX, kMin)
+  let ky = largest(fitsY, kMin)
   if (uniform) kx = ky = Math.min(kx, ky)
   const ex = span(points, kx, 'x')
   const ey = span(points, ky, 'y')

@@ -3,6 +3,7 @@ import { Badge } from '@/components/ui/badge'
 import { StageBadge } from '@/components/StageBadge'
 import type { ItemRecord } from '@/content/types'
 import { ARCHETYPE_ICONS } from '@/views/archetypeIcons'
+import { Connections } from './Connections'
 import { useCatalogue } from './context'
 
 /** Slot 1. The slot holds no data: everything comes from the record's metadata. */
@@ -33,6 +34,7 @@ export function Header({ record }: { record: ItemRecord }) {
           </Badge>
         )}
       </div>
+      <Connections id={record.id} />
     </section>
   )
 }
