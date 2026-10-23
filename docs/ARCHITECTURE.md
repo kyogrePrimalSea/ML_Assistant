@@ -145,6 +145,9 @@ to functions. Missing sections are empty lists, never omitted.
     archetype, tracks, targets, has_record, reviewed), questions, relationships.
   - `pages/<id>.json` — one content record plus the extraction facts its slots
     reference (defaults, effective defaults for key settings).
+- Radial tree layout: `app/scripts/layout-radial.mjs` runs after the content build
+  (`predev`/`prebuild`) and writes `content/derived/layout-radial.json` (committed) plus a
+  copy in `public/data/`. The app never computes layout at runtime (spec §7).
 - Tests: Vitest + Testing Library (unit/component); Playwright + axe for
   end-to-end, screenshots (1440 and 1024 wide, light and dark) and accessibility.
 - Commands (from `app/`): `npm run dev`, `npm run build`, `npm test`, `npm run e2e`.

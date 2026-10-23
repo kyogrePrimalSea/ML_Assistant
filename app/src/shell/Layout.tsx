@@ -17,8 +17,11 @@ export default function Layout({
   children,
   panel,
   onClosePanel,
+  fill = false,
 }: {
   children: ReactNode
+  /** Children fill the canvas themselves (the tree), instead of scrolling in a column. */
+  fill?: boolean
   /** Panel content, or null when closed. */
   panel: ReactNode | null
   onClosePanel: () => void
@@ -48,9 +51,13 @@ export default function Layout({
       <div className="flex min-h-0 flex-1">
         <main aria-label="Catalogue" className="relative min-w-0 flex-1 bg-canvas">
           <StarField />
-          <div className="relative h-full overflow-y-auto">
-            <div className="mx-auto max-w-3xl px-6 py-6">{children}</div>
-          </div>
+          {fill ? (
+            <div className="relative h-full">{children}</div>
+          ) : (
+            <div className="relative h-full overflow-y-auto">
+              <div className="mx-auto max-w-3xl px-6 py-6">{children}</div>
+            </div>
+          )}
         </main>
 
         {open && wide ? (

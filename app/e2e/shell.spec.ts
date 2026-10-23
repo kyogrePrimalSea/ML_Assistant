@@ -5,6 +5,7 @@ const shot = (name: string) => `test-results/screens/${name}.png`
 test('open XGBoost from the catalogue; screenshots in both themes', async ({ page }, info) => {
   const w = page.viewportSize()!.width
   await page.goto('./#/')
+  await page.getByRole('radio', { name: 'List' }).click()
   await page.getByRole('button', { name: /Boosting \(XGBoost\)/ }).click()
   await page.getByRole('link', { name: /XGBoost/ }).first().click()
   await expect(page).toHaveURL(/#\/page\/xgboost$/)
@@ -40,6 +41,7 @@ test('search dialog opens with Ctrl+K and reading settings opens', async ({ page
 
 test('later tracks are disabled and the track filter works', async ({ page }) => {
   await page.goto('./#/')
+  await page.getByRole('radio', { name: 'List' }).click()
   await expect(page.getByRole('option', { name: 'Causal (later)' })).toHaveAttribute('disabled', '')
   const before = await page.locator('section[data-stage]').count()
   expect(before).toBe(9)
@@ -50,6 +52,8 @@ test('later tracks are disabled and the track filter works', async ({ page }) =>
 test('below 900px the panel is a bottom sheet', async ({ page }) => {
   await page.setViewportSize({ width: 800, height: 800 })
   await page.goto('./#/')
+  await page.getByRole('radio', { name: 'List' }).click()
+  await page.getByRole('radio', { name: 'List' }).click()
   await page.getByRole('button', { name: /Boosting \(XGBoost\)/ }).click()
   await page.getByRole('link', { name: /XGBoost/ }).first().click()
   const sheet = page.getByRole('dialog', { name: 'Page panel' })

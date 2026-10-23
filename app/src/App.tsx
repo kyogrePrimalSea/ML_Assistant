@@ -3,7 +3,8 @@ import Styleguide from '@/dev/Styleguide'
 import { PagePanel } from '@/page/PagePanel'
 import Layout from '@/shell/Layout'
 import { ShellStateProvider, useShellState } from '@/shell/ShellState'
-import CatalogueList from '@/views/CatalogueList'
+import Journey from '@/views/Journey'
+import RadialTree from '@/views/RadialTree'
 
 function ComingSoon({ name }: { name: string }) {
   return (
@@ -32,13 +33,13 @@ function Shell() {
   const navigate = useNavigate()
   const { view } = useShellState()
   return (
-    <Layout panel={id ? <PagePanel id={id} /> : questionId ? <QuestionPlaceholder id={questionId} /> : null} onClosePanel={() => navigate('/')}>
+    <Layout panel={id ? <PagePanel id={id} /> : questionId ? <QuestionPlaceholder id={questionId} /> : null} onClosePanel={() => navigate('/')} fill={view === 'tree' || view === 'journey'}>
       {view === 'tree' ? (
-        <CatalogueList activeId={id} />
+        <RadialTree activeId={id} />
       ) : view === 'constellation' ? (
         <ComingSoon name="Constellation" />
       ) : (
-        <ComingSoon name="Journey" />
+        <Journey />
       )}
     </Layout>
   )

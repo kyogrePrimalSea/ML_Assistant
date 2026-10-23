@@ -4,9 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "predev": "node scripts/build-content.mjs",
+    "predev": "node scripts/build-content.mjs && node scripts/layout-radial.mjs",
     "dev": "vite",
-    "prebuild": "node scripts/build-content.mjs",
+    "prebuild": "node scripts/build-content.mjs && node scripts/layout-radial.mjs",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "test": "vitest run",

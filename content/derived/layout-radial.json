@@ -1,0 +1,2824 @@
+{
+ "version": 1,
+ "ring": 200,
+ "familyX": 380,
+ "itemX": 860,
+ "spine": 45,
+ "gap": 36,
+ "tracks": {
+  "standard": [
+   {
+    "id": "explore",
+    "angle": -90,
+    "x": 0,
+    "y": -200,
+    "side": 1,
+    "count": 5,
+    "families": [
+     {
+      "name": "Assumption tests",
+      "x": 380,
+      "y": -200,
+      "count": 5,
+      "items": [
+       {
+        "id": "normality-tests",
+        "x": 860,
+        "y": -272
+       },
+       {
+        "id": "shapiro-wilk",
+        "x": 860,
+        "y": -236
+       },
+       {
+        "id": "ttest-1samp",
+        "x": 860,
+        "y": -200
+       },
+       {
+        "id": "ttest-ind",
+        "x": 860,
+        "y": -164
+       },
+       {
+        "id": "ttest-rel",
+        "x": 860,
+        "y": -128
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "clean",
+    "angle": -50,
+    "x": 128.6,
+    "y": -153.2,
+    "side": 1,
+    "count": 4,
+    "families": [
+     {
+      "name": "Imputation",
+      "x": 380,
+      "y": -153.2,
+      "count": 4,
+      "items": [
+       {
+        "id": "iterativeimputer",
+        "x": 860,
+        "y": -207.2
+       },
+       {
+        "id": "knnimputer",
+        "x": 860,
+        "y": -171.2
+       },
+       {
+        "id": "missingindicator",
+        "x": 860,
+        "y": -135.2
+       },
+       {
+        "id": "simpleimputer",
+        "x": 860,
+        "y": -99.2
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "transform",
+    "angle": -10,
+    "x": 197,
+    "y": -34.7,
+    "side": 1,
+    "count": 51,
+    "families": [
+     {
+      "name": "Categorical encoding",
+      "x": 380,
+      "y": -232.7,
+      "count": 3,
+      "items": [
+       {
+        "id": "onehotencoder",
+        "x": 860,
+        "y": -268.7
+       },
+       {
+        "id": "ordinalencoder",
+        "x": 860,
+        "y": -232.7
+       },
+       {
+        "id": "targetencoder",
+        "x": 860,
+        "y": -196.7
+       }
+      ]
+     },
+     {
+      "name": "Combined sampling",
+      "x": 380,
+      "y": -196.7,
+      "count": 2,
+      "items": [
+       {
+        "id": "smoteenn",
+        "x": 860,
+        "y": -214.7
+       },
+       {
+        "id": "smotetomek",
+        "x": 860,
+        "y": -178.7
+       }
+      ]
+     },
+     {
+      "name": "Composition",
+      "x": 380,
+      "y": -160.7,
+      "count": 8,
+      "items": [
+       {
+        "id": "columntransformer",
+        "x": 860,
+        "y": -286.7
+       },
+       {
+        "id": "featureunion",
+        "x": 860,
+        "y": -250.7
+       },
+       {
+        "id": "make-column-selector",
+        "x": 860,
+        "y": -214.7
+       },
+       {
+        "id": "column-transformer",
+        "x": 860,
+        "y": -178.7
+       },
+       {
+        "id": "feature-union",
+        "x": 860,
+        "y": -142.7
+       },
+       {
+        "id": "pipeline",
+        "x": 860,
+        "y": -106.7
+       },
+       {
+        "id": "imblearn-pipeline",
+        "x": 860,
+        "y": -70.7
+       },
+       {
+        "id": "transformedtargetregressor",
+        "x": 860,
+        "y": -34.7
+       }
+      ]
+     },
+     {
+      "name": "Custom sampling",
+      "x": 380,
+      "y": -124.7,
+      "count": 1,
+      "items": [
+       {
+        "id": "functionsampler",
+        "x": 860,
+        "y": -124.7
+       }
+      ]
+     },
+     {
+      "name": "Custom transformation",
+      "x": 380,
+      "y": -88.7,
+      "count": 1,
+      "items": [
+       {
+        "id": "functiontransformer",
+        "x": 860,
+        "y": -88.7
+       }
+      ]
+     },
+     {
+      "name": "Discretisation",
+      "x": 380,
+      "y": -52.7,
+      "count": 2,
+      "items": [
+       {
+        "id": "binarizer",
+        "x": 860,
+        "y": -70.7
+       },
+       {
+        "id": "kbinsdiscretizer",
+        "x": 860,
+        "y": -34.7
+       }
+      ]
+     },
+     {
+      "name": "Distribution shaping",
+      "x": 380,
+      "y": -16.7,
+      "count": 2,
+      "items": [
+       {
+        "id": "powertransformer",
+        "x": 860,
+        "y": -34.7
+       },
+       {
+        "id": "quantiletransformer",
+        "x": 860,
+        "y": 1.3
+       }
+      ]
+     },
+     {
+      "name": "Feature expansion",
+      "x": 380,
+      "y": 19.3,
+      "count": 3,
+      "items": [
+       {
+        "id": "add-dummy-feature",
+        "x": 860,
+        "y": -16.7
+       },
+       {
+        "id": "polynomialfeatures",
+        "x": 860,
+        "y": 19.3
+       },
+       {
+        "id": "splinetransformer",
+        "x": 860,
+        "y": 55.3
+       }
+      ]
+     },
+     {
+      "name": "Label encoding",
+      "x": 380,
+      "y": 55.3,
+      "count": 4,
+      "items": [
+       {
+        "id": "label-binarizer",
+        "x": 860,
+        "y": 1.3
+       },
+       {
+        "id": "labelbinarizer",
+        "x": 860,
+        "y": 37.3
+       },
+       {
+        "id": "labelencoder",
+        "x": 860,
+        "y": 73.3
+       },
+       {
+        "id": "multilabelbinarizer",
+        "x": 860,
+        "y": 109.3
+       }
+      ]
+     },
+     {
+      "name": "Over-sampling",
+      "x": 380,
+      "y": 91.3,
+      "count": 8,
+      "items": [
+       {
+        "id": "adasyn",
+        "x": 860,
+        "y": -34.7
+       },
+       {
+        "id": "borderlinesmote",
+        "x": 860,
+        "y": 1.3
+       },
+       {
+        "id": "kmeanssmote",
+        "x": 860,
+        "y": 37.3
+       },
+       {
+        "id": "randomoversampler",
+        "x": 860,
+        "y": 73.3
+       },
+       {
+        "id": "smote",
+        "x": 860,
+        "y": 109.3
+       },
+       {
+        "id": "smoten",
+        "x": 860,
+        "y": 145.3
+       },
+       {
+        "id": "smotenc",
+        "x": 860,
+        "y": 181.3
+       },
+       {
+        "id": "svmsmote",
+        "x": 860,
+        "y": 217.3
+       }
+      ]
+     },
+     {
+      "name": "Scaling",
+      "x": 380,
+      "y": 127.3,
+      "count": 6,
+      "items": [
+       {
+        "id": "kernelcenterer",
+        "x": 860,
+        "y": 37.3
+       },
+       {
+        "id": "maxabsscaler",
+        "x": 860,
+        "y": 73.3
+       },
+       {
+        "id": "minmaxscaler",
+        "x": 860,
+        "y": 109.3
+       },
+       {
+        "id": "normalizer",
+        "x": 860,
+        "y": 145.3
+       },
+       {
+        "id": "robustscaler",
+        "x": 860,
+        "y": 181.3
+       },
+       {
+        "id": "standardscaler",
+        "x": 860,
+        "y": 217.3
+       }
+      ]
+     },
+     {
+      "name": "Under-sampling",
+      "x": 380,
+      "y": 163.3,
+      "count": 11,
+      "items": [
+       {
+        "id": "allknn",
+        "x": 860,
+        "y": -16.7
+       },
+       {
+        "id": "clustercentroids",
+        "x": 860,
+        "y": 19.3
+       },
+       {
+        "id": "condensednearestneighbour",
+        "x": 860,
+        "y": 55.3
+       },
+       {
+        "id": "editednearestneighbours",
+        "x": 860,
+        "y": 91.3
+       },
+       {
+        "id": "instancehardnessthreshold",
+        "x": 860,
+        "y": 127.3
+       },
+       {
+        "id": "nearmiss",
+        "x": 860,
+        "y": 163.3
+       },
+       {
+        "id": "neighbourhoodcleaningrule",
+        "x": 860,
+        "y": 199.3
+       },
+       {
+        "id": "onesidedselection",
+        "x": 860,
+        "y": 235.3
+       },
+       {
+        "id": "randomundersampler",
+        "x": 860,
+        "y": 271.3
+       },
+       {
+        "id": "repeatededitednearestneighbours",
+        "x": 860,
+        "y": 307.3
+       },
+       {
+        "id": "tomeklinks",
+        "x": 860,
+        "y": 343.3
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "select",
+    "angle": 30,
+    "x": 173.2,
+    "y": 100,
+    "side": 1,
+    "count": 19,
+    "families": [
+     {
+      "name": "Dimensionality reduction",
+      "x": 380,
+      "y": 64,
+      "count": 2,
+      "items": [
+       {
+        "id": "pca",
+        "x": 860,
+        "y": 46
+       },
+       {
+        "id": "truncatedsvd",
+        "x": 860,
+        "y": 82
+       }
+      ]
+     },
+     {
+      "name": "Feature selection",
+      "x": 380,
+      "y": 100,
+      "count": 11,
+      "items": [
+       {
+        "id": "genericunivariateselect",
+        "x": 860,
+        "y": -80
+       },
+       {
+        "id": "selectkbest",
+        "x": 860,
+        "y": -44
+       },
+       {
+        "id": "rfe",
+        "x": 860,
+        "y": -8
+       },
+       {
+        "id": "rfecv",
+        "x": 860,
+        "y": 28
+       },
+       {
+        "id": "selectfdr",
+        "x": 860,
+        "y": 64
+       },
+       {
+        "id": "selectfpr",
+        "x": 860,
+        "y": 100
+       },
+       {
+        "id": "selectfrommodel",
+        "x": 860,
+        "y": 136
+       },
+       {
+        "id": "selectfwe",
+        "x": 860,
+        "y": 172
+       },
+       {
+        "id": "selectpercentile",
+        "x": 860,
+        "y": 208
+       },
+       {
+        "id": "sequentialfeatureselector",
+        "x": 860,
+        "y": 244
+       },
+       {
+        "id": "variancethreshold",
+        "x": 860,
+        "y": 280
+       }
+      ]
+     },
+     {
+      "name": "Univariate scoring functions",
+      "x": 380,
+      "y": 136,
+      "count": 6,
+      "items": [
+       {
+        "id": "chi2",
+        "x": 860,
+        "y": 46
+       },
+       {
+        "id": "f-classif",
+        "x": 860,
+        "y": 82
+       },
+       {
+        "id": "f-regression",
+        "x": 860,
+        "y": 118
+       },
+       {
+        "id": "mutual-info-classif",
+        "x": 860,
+        "y": 154
+       },
+       {
+        "id": "mutual-info-regression",
+        "x": 860,
+        "y": 190
+       },
+       {
+        "id": "r-regression",
+        "x": 860,
+        "y": 226
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "split",
+    "angle": 70,
+    "x": 68.4,
+    "y": 187.9,
+    "side": 1,
+    "count": 19,
+    "families": [
+     {
+      "name": "Cross-validation runners",
+      "x": 380,
+      "y": 169.9,
+      "count": 3,
+      "items": [
+       {
+        "id": "cross-val-predict",
+        "x": 860,
+        "y": 133.9
+       },
+       {
+        "id": "cross-val-score",
+        "x": 860,
+        "y": 169.9
+       },
+       {
+        "id": "cross-validate",
+        "x": 860,
+        "y": 205.9
+       }
+      ]
+     },
+     {
+      "name": "Splitters",
+      "x": 380,
+      "y": 205.9,
+      "count": 16,
+      "items": [
+       {
+        "id": "groupkfold",
+        "x": 860,
+        "y": -64.1
+       },
+       {
+        "id": "groupshufflesplit",
+        "x": 860,
+        "y": -28.1
+       },
+       {
+        "id": "instancehardnesscv",
+        "x": 860,
+        "y": 7.9
+       },
+       {
+        "id": "kfold",
+        "x": 860,
+        "y": 43.9
+       },
+       {
+        "id": "leaveonegroupout",
+        "x": 860,
+        "y": 79.9
+       },
+       {
+        "id": "leaveoneout",
+        "x": 860,
+        "y": 115.9
+       },
+       {
+        "id": "leavepgroupsout",
+        "x": 860,
+        "y": 151.9
+       },
+       {
+        "id": "leavepout",
+        "x": 860,
+        "y": 187.9
+       },
+       {
+        "id": "predefinedsplit",
+        "x": 860,
+        "y": 223.9
+       },
+       {
+        "id": "repeatedkfold",
+        "x": 860,
+        "y": 259.9
+       },
+       {
+        "id": "repeatedstratifiedkfold",
+        "x": 860,
+        "y": 295.9
+       },
+       {
+        "id": "shufflesplit",
+        "x": 860,
+        "y": 331.9
+       },
+       {
+        "id": "stratifiedgroupkfold",
+        "x": 860,
+        "y": 367.9
+       },
+       {
+        "id": "stratifiedkfold",
+        "x": 860,
+        "y": 403.9
+       },
+       {
+        "id": "stratifiedshufflesplit",
+        "x": 860,
+        "y": 439.9
+       },
+       {
+        "id": "train-test-split",
+        "x": 860,
+        "y": 475.9
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "model",
+    "angle": 110,
+    "x": -68.4,
+    "y": 187.9,
+    "side": -1,
+    "count": 78,
+    "families": [
+     {
+      "name": "Bagging",
+      "x": -380,
+      "y": -316.1,
+      "count": 3,
+      "items": [
+       {
+        "id": "bagging",
+        "x": -860,
+        "y": -352.1
+       },
+       {
+        "id": "extra-trees",
+        "x": -860,
+        "y": -316.1
+       },
+       {
+        "id": "random-forest",
+        "x": -860,
+        "y": -280.1
+       }
+      ]
+     },
+     {
+      "name": "Balanced ensembles",
+      "x": -380,
+      "y": -280.1,
+      "count": 4,
+      "items": [
+       {
+        "id": "balancedbaggingclassifier",
+        "x": -860,
+        "y": -334.1
+       },
+       {
+        "id": "balancedrandomforestclassifier",
+        "x": -860,
+        "y": -298.1
+       },
+       {
+        "id": "easyensembleclassifier",
+        "x": -860,
+        "y": -262.1
+       },
+       {
+        "id": "rusboostclassifier",
+        "x": -860,
+        "y": -226.1
+       }
+      ]
+     },
+     {
+      "name": "Baselines",
+      "x": -380,
+      "y": -244.1,
+      "count": 2,
+      "items": [
+       {
+        "id": "dummyclassifier",
+        "x": -860,
+        "y": -262.1
+       },
+       {
+        "id": "dummyregressor",
+        "x": -860,
+        "y": -226.1
+       }
+      ]
+     },
+     {
+      "name": "Bayesian",
+      "x": -380,
+      "y": -208.1,
+      "count": 2,
+      "items": [
+       {
+        "id": "ard-regression",
+        "x": -860,
+        "y": -226.1
+       },
+       {
+        "id": "bayesian-ridge",
+        "x": -860,
+        "y": -190.1
+       }
+      ]
+     },
+     {
+      "name": "Boosting (LightGBM)",
+      "x": -380,
+      "y": -172.1,
+      "count": 1,
+      "items": [
+       {
+        "id": "lightgbm",
+        "x": -860,
+        "y": -172.1
+       }
+      ]
+     },
+     {
+      "name": "Boosting (scikit-learn)",
+      "x": -380,
+      "y": -136.1,
+      "count": 3,
+      "items": [
+       {
+        "id": "ada-boost",
+        "x": -860,
+        "y": -172.1
+       },
+       {
+        "id": "gradient-boosting",
+        "x": -860,
+        "y": -136.1
+       },
+       {
+        "id": "hist-gradient-boosting",
+        "x": -860,
+        "y": -100.1
+       }
+      ]
+     },
+     {
+      "name": "Boosting (XGBoost)",
+      "x": -380,
+      "y": -100.1,
+      "count": 1,
+      "items": [
+       {
+        "id": "xgboost",
+        "x": -860,
+        "y": -100.1
+       }
+      ]
+     },
+     {
+      "name": "Class weighting",
+      "x": -380,
+      "y": -64.1,
+      "count": 1,
+      "items": [
+       {
+        "id": "compute-class-weight",
+        "x": -860,
+        "y": -64.1
+       }
+      ]
+     },
+     {
+      "name": "Classification",
+      "x": -380,
+      "y": -28.1,
+      "count": 5,
+      "items": [
+       {
+        "id": "logistic-regression",
+        "x": -860,
+        "y": -100.1
+       },
+       {
+        "id": "logistic-regression-cv",
+        "x": -860,
+        "y": -64.1
+       },
+       {
+        "id": "perceptron",
+        "x": -860,
+        "y": -28.1
+       },
+       {
+        "id": "ridge-classifier",
+        "x": -860,
+        "y": 7.9
+       },
+       {
+        "id": "sgd-classifier",
+        "x": -860,
+        "y": 43.9
+       }
+      ]
+     },
+     {
+      "name": "Combining models",
+      "x": -380,
+      "y": 7.9,
+      "count": 2,
+      "items": [
+       {
+        "id": "stacking",
+        "x": -860,
+        "y": -10.1
+       },
+       {
+        "id": "voting",
+        "x": -860,
+        "y": 25.9
+       }
+      ]
+     },
+     {
+      "name": "Custom curves",
+      "x": -380,
+      "y": 43.9,
+      "count": 2,
+      "items": [
+       {
+        "id": "curve-fit",
+        "x": -860,
+        "y": 25.9
+       },
+       {
+        "id": "least-squares",
+        "x": -860,
+        "y": 61.9
+       }
+      ]
+     },
+     {
+      "name": "Discrete outcomes",
+      "x": -380,
+      "y": 79.9,
+      "count": 3,
+      "items": [
+       {
+        "id": "mn-logit",
+        "x": -860,
+        "y": 43.9
+       },
+       {
+        "id": "negative-binomial-regression",
+        "x": -860,
+        "y": 79.9
+       },
+       {
+        "id": "probit",
+        "x": -860,
+        "y": 115.9
+       }
+      ]
+     },
+     {
+      "name": "Gaussian process",
+      "x": -380,
+      "y": 115.9,
+      "count": 2,
+      "items": [
+       {
+        "id": "gaussian-process-classifier",
+        "x": -860,
+        "y": 97.9
+       },
+       {
+        "id": "gaussian-process-regressor",
+        "x": -860,
+        "y": 133.9
+       }
+      ]
+     },
+     {
+      "name": "Generalised",
+      "x": -380,
+      "y": 151.9,
+      "count": 1,
+      "items": [
+       {
+        "id": "glm",
+        "x": -860,
+        "y": 151.9
+       }
+      ]
+     },
+     {
+      "name": "Generalised (GLM)",
+      "x": -380,
+      "y": 187.9,
+      "count": 3,
+      "items": [
+       {
+        "id": "gamma-regressor",
+        "x": -860,
+        "y": 151.9
+       },
+       {
+        "id": "poisson-regression",
+        "x": -860,
+        "y": 187.9
+       },
+       {
+        "id": "tweedie-regressor",
+        "x": -860,
+        "y": 223.9
+       }
+      ]
+     },
+     {
+      "name": "Grouped data",
+      "x": -380,
+      "y": 223.9,
+      "count": 1,
+      "items": [
+       {
+        "id": "mixed-lm",
+        "x": -860,
+        "y": 223.9
+       }
+      ]
+     },
+     {
+      "name": "Kernel",
+      "x": -380,
+      "y": 259.9,
+      "count": 6,
+      "items": [
+       {
+        "id": "kernel-ridge",
+        "x": -860,
+        "y": 169.9
+       },
+       {
+        "id": "linear-svc",
+        "x": -860,
+        "y": 205.9
+       },
+       {
+        "id": "linear-svr",
+        "x": -860,
+        "y": 241.9
+       },
+       {
+        "id": "nu-svr",
+        "x": -860,
+        "y": 277.9
+       },
+       {
+        "id": "svc",
+        "x": -860,
+        "y": 313.9
+       },
+       {
+        "id": "svr",
+        "x": -860,
+        "y": 349.9
+       }
+      ]
+     },
+     {
+      "name": "Latent / shape-constrained",
+      "x": -380,
+      "y": 295.9,
+      "count": 2,
+      "items": [
+       {
+        "id": "isotonic-regression",
+        "x": -860,
+        "y": 277.9
+       },
+       {
+        "id": "pls-regression",
+        "x": -860,
+        "y": 313.9
+       }
+      ]
+     },
+     {
+      "name": "Linear",
+      "x": -380,
+      "y": 331.9,
+      "count": 2,
+      "items": [
+       {
+        "id": "gls",
+        "x": -860,
+        "y": 313.9
+       },
+       {
+        "id": "wls",
+        "x": -860,
+        "y": 349.9
+       }
+      ]
+     },
+     {
+      "name": "Neighbours",
+      "x": -380,
+      "y": 367.9,
+      "count": 3,
+      "items": [
+       {
+        "id": "k-neighbors-classifier",
+        "x": -860,
+        "y": 331.9
+       },
+       {
+        "id": "k-neighbors-regressor",
+        "x": -860,
+        "y": 367.9
+       },
+       {
+        "id": "radius-neighbors-regressor",
+        "x": -860,
+        "y": 403.9
+       }
+      ]
+     },
+     {
+      "name": "Neural nets",
+      "x": -380,
+      "y": 403.9,
+      "count": 2,
+      "items": [
+       {
+        "id": "mlp-classifier",
+        "x": -860,
+        "y": 385.9
+       },
+       {
+        "id": "mlp-regressor",
+        "x": -860,
+        "y": 421.9
+       }
+      ]
+     },
+     {
+      "name": "Online / large data",
+      "x": -380,
+      "y": 439.9,
+      "count": 2,
+      "items": [
+       {
+        "id": "passive-aggressive-regressor",
+        "x": -860,
+        "y": 421.9
+       },
+       {
+        "id": "sgd-regressor",
+        "x": -860,
+        "y": 457.9
+       }
+      ]
+     },
+     {
+      "name": "Ordinary",
+      "x": -380,
+      "y": 475.9,
+      "count": 1,
+      "items": [
+       {
+        "id": "linear-regression",
+        "x": -860,
+        "y": 475.9
+       }
+      ]
+     },
+     {
+      "name": "Probabilistic classifiers",
+      "x": -380,
+      "y": 511.9,
+      "count": 7,
+      "items": [
+       {
+        "id": "bernoulli-nb",
+        "x": -860,
+        "y": 403.9
+       },
+       {
+        "id": "categorical-nb",
+        "x": -860,
+        "y": 439.9
+       },
+       {
+        "id": "complement-nb",
+        "x": -860,
+        "y": 475.9
+       },
+       {
+        "id": "gaussian-nb",
+        "x": -860,
+        "y": 511.9
+       },
+       {
+        "id": "linear-discriminant-analysis",
+        "x": -860,
+        "y": 547.9
+       },
+       {
+        "id": "multinomial-nb",
+        "x": -860,
+        "y": 583.9
+       },
+       {
+        "id": "quadratic-discriminant-analysis",
+        "x": -860,
+        "y": 619.9
+       }
+      ]
+     },
+     {
+      "name": "Quantile",
+      "x": -380,
+      "y": 547.9,
+      "count": 1,
+      "items": [
+       {
+        "id": "quantile-regression",
+        "x": -860,
+        "y": 547.9
+       }
+      ]
+     },
+     {
+      "name": "Regularised",
+      "x": -380,
+      "y": 583.9,
+      "count": 9,
+      "items": [
+       {
+        "id": "elastic-net",
+        "x": -860,
+        "y": 439.9
+       },
+       {
+        "id": "elastic-net-cv",
+        "x": -860,
+        "y": 475.9
+       },
+       {
+        "id": "lars",
+        "x": -860,
+        "y": 511.9
+       },
+       {
+        "id": "lasso",
+        "x": -860,
+        "y": 547.9
+       },
+       {
+        "id": "lasso-cv",
+        "x": -860,
+        "y": 583.9
+       },
+       {
+        "id": "lasso-lars",
+        "x": -860,
+        "y": 619.9
+       },
+       {
+        "id": "orthogonal-matching-pursuit",
+        "x": -860,
+        "y": 655.9
+       },
+       {
+        "id": "ridge",
+        "x": -860,
+        "y": 691.9
+       },
+       {
+        "id": "ridge-cv",
+        "x": -860,
+        "y": 727.9
+       }
+      ]
+     },
+     {
+      "name": "Robust / quantile",
+      "x": -380,
+      "y": 619.9,
+      "count": 1,
+      "items": [
+       {
+        "id": "rlm",
+        "x": -860,
+        "y": 619.9
+       }
+      ]
+     },
+     {
+      "name": "Robust to outliers",
+      "x": -380,
+      "y": 655.9,
+      "count": 3,
+      "items": [
+       {
+        "id": "huber-regressor",
+        "x": -860,
+        "y": 619.9
+       },
+       {
+        "id": "ransac-regressor",
+        "x": -860,
+        "y": 655.9
+       },
+       {
+        "id": "theil-sen-regression",
+        "x": -860,
+        "y": 691.9
+       }
+      ]
+     },
+     {
+      "name": "Single tree",
+      "x": -380,
+      "y": 691.9,
+      "count": 3,
+      "items": [
+       {
+        "id": "decision-tree-classifier",
+        "x": -860,
+        "y": 655.9
+       },
+       {
+        "id": "decision-tree-regressor",
+        "x": -860,
+        "y": 691.9
+       },
+       {
+        "id": "extra-tree-regressor",
+        "x": -860,
+        "y": 727.9
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "tune",
+    "angle": 150,
+    "x": -173.2,
+    "y": 100,
+    "side": -1,
+    "count": 50,
+    "families": [
+     {
+      "name": "Boosting rounds",
+      "x": -380,
+      "y": -98,
+      "count": 1,
+      "items": [
+       {
+        "id": "n-estimators",
+        "x": -860,
+        "y": -98
+       }
+      ]
+     },
+     {
+      "name": "Boosting step size",
+      "x": -380,
+      "y": -62,
+      "count": 1,
+      "items": [
+       {
+        "id": "learning-rate",
+        "x": -860,
+        "y": -62
+       }
+      ]
+     },
+     {
+      "name": "Boosting stopping rule",
+      "x": -380,
+      "y": -26,
+      "count": 1,
+      "items": [
+       {
+        "id": "early-stopping",
+        "x": -860,
+        "y": -26
+       }
+      ]
+     },
+     {
+      "name": "Decision threshold",
+      "x": -380,
+      "y": 10,
+      "count": 2,
+      "items": [
+       {
+        "id": "fixedthresholdclassifier",
+        "x": -860,
+        "y": -8
+       },
+       {
+        "id": "tunedthresholdclassifiercv",
+        "x": -860,
+        "y": 28
+       }
+      ]
+     },
+     {
+      "name": "Early stopping",
+      "x": -380,
+      "y": 46,
+      "count": 2,
+      "items": [
+       {
+        "id": "terminator",
+        "x": -860,
+        "y": 28
+       },
+       {
+        "id": "terminatorcallback",
+        "x": -860,
+        "y": 64
+       }
+      ]
+     },
+     {
+      "name": "Pruners",
+      "x": -380,
+      "y": 82,
+      "count": 8,
+      "items": [
+       {
+        "id": "hyperbandpruner",
+        "x": -860,
+        "y": -44
+       },
+       {
+        "id": "medianpruner",
+        "x": -860,
+        "y": -8
+       },
+       {
+        "id": "noppruner",
+        "x": -860,
+        "y": 28
+       },
+       {
+        "id": "patientpruner",
+        "x": -860,
+        "y": 64
+       },
+       {
+        "id": "percentilepruner",
+        "x": -860,
+        "y": 100
+       },
+       {
+        "id": "successivehalvingpruner",
+        "x": -860,
+        "y": 136
+       },
+       {
+        "id": "thresholdpruner",
+        "x": -860,
+        "y": 172
+       },
+       {
+        "id": "wilcoxonpruner",
+        "x": -860,
+        "y": 208
+       }
+      ]
+     },
+     {
+      "name": "Samplers",
+      "x": -380,
+      "y": 118,
+      "count": 10,
+      "items": [
+       {
+        "id": "bruteforcesampler",
+        "x": -860,
+        "y": -44
+       },
+       {
+        "id": "cmaessampler",
+        "x": -860,
+        "y": -8
+       },
+       {
+        "id": "gpsampler",
+        "x": -860,
+        "y": 28
+       },
+       {
+        "id": "gridsampler",
+        "x": -860,
+        "y": 64
+       },
+       {
+        "id": "nsgaiiisampler",
+        "x": -860,
+        "y": 100
+       },
+       {
+        "id": "nsgaiisampler",
+        "x": -860,
+        "y": 136
+       },
+       {
+        "id": "partialfixedsampler",
+        "x": -860,
+        "y": 172
+       },
+       {
+        "id": "qmcsampler",
+        "x": -860,
+        "y": 208
+       },
+       {
+        "id": "randomsampler",
+        "x": -860,
+        "y": 244
+       },
+       {
+        "id": "tpesampler",
+        "x": -860,
+        "y": 280
+       }
+      ]
+     },
+     {
+      "name": "Search",
+      "x": -380,
+      "y": 154,
+      "count": 6,
+      "items": [
+       {
+        "id": "gridsearchcv",
+        "x": -860,
+        "y": 64
+       },
+       {
+        "id": "halvinggridsearchcv",
+        "x": -860,
+        "y": 100
+       },
+       {
+        "id": "halvingrandomsearchcv",
+        "x": -860,
+        "y": 136
+       },
+       {
+        "id": "parametergrid",
+        "x": -860,
+        "y": 172
+       },
+       {
+        "id": "parametersampler",
+        "x": -860,
+        "y": 208
+       },
+       {
+        "id": "randomizedsearchcv",
+        "x": -860,
+        "y": 244
+       }
+      ]
+     },
+     {
+      "name": "Study",
+      "x": -380,
+      "y": 190,
+      "count": 2,
+      "items": [
+       {
+        "id": "optuna-study",
+        "x": -860,
+        "y": 172
+       },
+       {
+        "id": "maxtrialscallback",
+        "x": -860,
+        "y": 208
+       }
+      ]
+     },
+     {
+      "name": "Study plots",
+      "x": -380,
+      "y": 226,
+      "count": 13,
+      "items": [
+       {
+        "id": "get-param-importances",
+        "x": -860,
+        "y": 10
+       },
+       {
+        "id": "plot-contour",
+        "x": -860,
+        "y": 46
+       },
+       {
+        "id": "plot-edf",
+        "x": -860,
+        "y": 82
+       },
+       {
+        "id": "plot-hypervolume-history",
+        "x": -860,
+        "y": 118
+       },
+       {
+        "id": "plot-intermediate-values",
+        "x": -860,
+        "y": 154
+       },
+       {
+        "id": "plot-optimization-history",
+        "x": -860,
+        "y": 190
+       },
+       {
+        "id": "plot-parallel-coordinate",
+        "x": -860,
+        "y": 226
+       },
+       {
+        "id": "plot-param-importances",
+        "x": -860,
+        "y": 262
+       },
+       {
+        "id": "plot-pareto-front",
+        "x": -860,
+        "y": 298
+       },
+       {
+        "id": "plot-rank",
+        "x": -860,
+        "y": 334
+       },
+       {
+        "id": "plot-slice",
+        "x": -860,
+        "y": 370
+       },
+       {
+        "id": "plot-terminator-improvement",
+        "x": -860,
+        "y": 406
+       },
+       {
+        "id": "plot-timeline",
+        "x": -860,
+        "y": 442
+       }
+      ]
+     },
+     {
+      "name": "Tree shape",
+      "x": -380,
+      "y": 262,
+      "count": 1,
+      "items": [
+       {
+        "id": "max-depth",
+        "x": -860,
+        "y": 262
+       }
+      ]
+     },
+     {
+      "name": "Trial",
+      "x": -380,
+      "y": 298,
+      "count": 3,
+      "items": [
+       {
+        "id": "frozentrial",
+        "x": -860,
+        "y": 262
+       },
+       {
+        "id": "optuna-trial",
+        "x": -860,
+        "y": 298
+       },
+       {
+        "id": "trialpruned",
+        "x": -860,
+        "y": 334
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "evaluate",
+    "angle": 190,
+    "x": -197,
+    "y": -34.7,
+    "side": -1,
+    "count": 73,
+    "families": [
+     {
+      "name": "Calibration",
+      "x": -380,
+      "y": -196.7,
+      "count": 2,
+      "items": [
+       {
+        "id": "calibratedclassifiercv",
+        "x": -860,
+        "y": -214.7
+       },
+       {
+        "id": "calibration-curve",
+        "x": -860,
+        "y": -178.7
+       }
+      ]
+     },
+     {
+      "name": "Classification curves",
+      "x": -380,
+      "y": -160.7,
+      "count": 5,
+      "items": [
+       {
+        "id": "confusion-matrix-at-thresholds",
+        "x": -860,
+        "y": -232.7
+       },
+       {
+        "id": "det-curve",
+        "x": -860,
+        "y": -196.7
+       },
+       {
+        "id": "metric-at-thresholds",
+        "x": -860,
+        "y": -160.7
+       },
+       {
+        "id": "precision-recall-curve",
+        "x": -860,
+        "y": -124.7
+       },
+       {
+        "id": "roc-curve",
+        "x": -860,
+        "y": -88.7
+       }
+      ]
+     },
+     {
+      "name": "Classification metrics",
+      "x": -380,
+      "y": -124.7,
+      "count": 21,
+      "items": [
+       {
+        "id": "accuracy-score",
+        "x": -860,
+        "y": -484.7
+       },
+       {
+        "id": "auc",
+        "x": -860,
+        "y": -448.7
+       },
+       {
+        "id": "average-precision-score",
+        "x": -860,
+        "y": -412.7
+       },
+       {
+        "id": "balanced-accuracy-score",
+        "x": -860,
+        "y": -376.7
+       },
+       {
+        "id": "class-likelihood-ratios",
+        "x": -860,
+        "y": -340.7
+       },
+       {
+        "id": "classification-report",
+        "x": -860,
+        "y": -304.7
+       },
+       {
+        "id": "cohen-kappa-score",
+        "x": -860,
+        "y": -268.7
+       },
+       {
+        "id": "confusion-matrix",
+        "x": -860,
+        "y": -232.7
+       },
+       {
+        "id": "f1-score",
+        "x": -860,
+        "y": -196.7
+       },
+       {
+        "id": "fbeta-score",
+        "x": -860,
+        "y": -160.7
+       },
+       {
+        "id": "hamming-loss",
+        "x": -860,
+        "y": -124.7
+       },
+       {
+        "id": "hinge-loss",
+        "x": -860,
+        "y": -88.7
+       },
+       {
+        "id": "jaccard-score",
+        "x": -860,
+        "y": -52.7
+       },
+       {
+        "id": "matthews-corrcoef",
+        "x": -860,
+        "y": -16.7
+       },
+       {
+        "id": "multilabel-confusion-matrix",
+        "x": -860,
+        "y": 19.3
+       },
+       {
+        "id": "precision-score",
+        "x": -860,
+        "y": 55.3
+       },
+       {
+        "id": "precision-recall-fscore-support",
+        "x": -860,
+        "y": 91.3
+       },
+       {
+        "id": "recall-score",
+        "x": -860,
+        "y": 127.3
+       },
+       {
+        "id": "roc-auc-score",
+        "x": -860,
+        "y": 163.3
+       },
+       {
+        "id": "top-k-accuracy-score",
+        "x": -860,
+        "y": 199.3
+       },
+       {
+        "id": "zero-one-loss",
+        "x": -860,
+        "y": 235.3
+       }
+      ]
+     },
+     {
+      "name": "Diagnostics",
+      "x": -380,
+      "y": -88.7,
+      "count": 4,
+      "items": [
+       {
+        "id": "breusch-pagan",
+        "x": -860,
+        "y": -142.7
+       },
+       {
+        "id": "residual-normality",
+        "x": -860,
+        "y": -106.7
+       },
+       {
+        "id": "influence",
+        "x": -860,
+        "y": -70.7
+       },
+       {
+        "id": "vif",
+        "x": -860,
+        "y": -34.7
+       }
+      ]
+     },
+     {
+      "name": "Imbalanced-data metrics",
+      "x": -380,
+      "y": -52.7,
+      "count": 7,
+      "items": [
+       {
+        "id": "classification-report-imbalanced",
+        "x": -860,
+        "y": -160.7
+       },
+       {
+        "id": "geometric-mean-score",
+        "x": -860,
+        "y": -124.7
+       },
+       {
+        "id": "macro-averaged-mean-absolute-error",
+        "x": -860,
+        "y": -88.7
+       },
+       {
+        "id": "make-index-balanced-accuracy",
+        "x": -860,
+        "y": -52.7
+       },
+       {
+        "id": "sensitivity-score",
+        "x": -860,
+        "y": -16.7
+       },
+       {
+        "id": "sensitivity-specificity-support",
+        "x": -860,
+        "y": 19.3
+       },
+       {
+        "id": "specificity-score",
+        "x": -860,
+        "y": 55.3
+       }
+      ]
+     },
+     {
+      "name": "Probabilistic scoring",
+      "x": -380,
+      "y": -16.7,
+      "count": 4,
+      "items": [
+       {
+        "id": "brier-score-loss",
+        "x": -860,
+        "y": -70.7
+       },
+       {
+        "id": "d2-brier-score",
+        "x": -860,
+        "y": -34.7
+       },
+       {
+        "id": "d2-log-loss-score",
+        "x": -860,
+        "y": 1.3
+       },
+       {
+        "id": "log-loss",
+        "x": -860,
+        "y": 37.3
+       }
+      ]
+     },
+     {
+      "name": "Ranking metrics",
+      "x": -380,
+      "y": 19.3,
+      "count": 5,
+      "items": [
+       {
+        "id": "coverage-error",
+        "x": -860,
+        "y": -52.7
+       },
+       {
+        "id": "dcg-score",
+        "x": -860,
+        "y": -16.7
+       },
+       {
+        "id": "label-ranking-average-precision-score",
+        "x": -860,
+        "y": 19.3
+       },
+       {
+        "id": "label-ranking-loss",
+        "x": -860,
+        "y": 55.3
+       },
+       {
+        "id": "ndcg-score",
+        "x": -860,
+        "y": 91.3
+       }
+      ]
+     },
+     {
+      "name": "Regression metrics",
+      "x": -380,
+      "y": 55.3,
+      "count": 18,
+      "items": [
+       {
+        "id": "d2-absolute-error-score",
+        "x": -860,
+        "y": -250.7
+       },
+       {
+        "id": "d2-pinball-score",
+        "x": -860,
+        "y": -214.7
+       },
+       {
+        "id": "d2-tweedie-score",
+        "x": -860,
+        "y": -178.7
+       },
+       {
+        "id": "explained-variance-score",
+        "x": -860,
+        "y": -142.7
+       },
+       {
+        "id": "max-error",
+        "x": -860,
+        "y": -106.7
+       },
+       {
+        "id": "mean-absolute-error",
+        "x": -860,
+        "y": -70.7
+       },
+       {
+        "id": "mean-absolute-percentage-error",
+        "x": -860,
+        "y": -34.7
+       },
+       {
+        "id": "mean-gamma-deviance",
+        "x": -860,
+        "y": 1.3
+       },
+       {
+        "id": "mean-pinball-loss",
+        "x": -860,
+        "y": 37.3
+       },
+       {
+        "id": "mean-poisson-deviance",
+        "x": -860,
+        "y": 73.3
+       },
+       {
+        "id": "mean-squared-error",
+        "x": -860,
+        "y": 109.3
+       },
+       {
+        "id": "mean-squared-log-error",
+        "x": -860,
+        "y": 145.3
+       },
+       {
+        "id": "mean-tweedie-deviance",
+        "x": -860,
+        "y": 181.3
+       },
+       {
+        "id": "median-absolute-error",
+        "x": -860,
+        "y": 217.3
+       },
+       {
+        "id": "predictionerrordisplay",
+        "x": -860,
+        "y": 253.3
+       },
+       {
+        "id": "r2-score",
+        "x": -860,
+        "y": 289.3
+       },
+       {
+        "id": "root-mean-squared-error",
+        "x": -860,
+        "y": 325.3
+       },
+       {
+        "id": "root-mean-squared-log-error",
+        "x": -860,
+        "y": 361.3
+       }
+      ]
+     },
+     {
+      "name": "Scoring utilities",
+      "x": -380,
+      "y": 91.3,
+      "count": 4,
+      "items": [
+       {
+        "id": "check-scoring",
+        "x": -860,
+        "y": 37.3
+       },
+       {
+        "id": "get-scorer",
+        "x": -860,
+        "y": 73.3
+       },
+       {
+        "id": "get-scorer-names",
+        "x": -860,
+        "y": 109.3
+       },
+       {
+        "id": "make-scorer",
+        "x": -860,
+        "y": 145.3
+       }
+      ]
+     },
+     {
+      "name": "Validation curves",
+      "x": -380,
+      "y": 127.3,
+      "count": 3,
+      "items": [
+       {
+        "id": "learning-curve",
+        "x": -860,
+        "y": 91.3
+       },
+       {
+        "id": "permutation-test-score",
+        "x": -860,
+        "y": 127.3
+       },
+       {
+        "id": "validation-curve",
+        "x": -860,
+        "y": 163.3
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "interpret",
+    "angle": 230,
+    "x": -128.6,
+    "y": -153.2,
+    "side": -1,
+    "count": 25,
+    "families": [
+     {
+      "name": "Decision boundary",
+      "x": -380,
+      "y": -243.2,
+      "count": 1,
+      "items": [
+       {
+        "id": "decisionboundarydisplay",
+        "x": -860,
+        "y": -243.2
+       }
+      ]
+     },
+     {
+      "name": "Explainers",
+      "x": -380,
+      "y": -207.2,
+      "count": 10,
+      "items": [
+       {
+        "id": "additiveexplainer",
+        "x": -860,
+        "y": -369.2
+       },
+       {
+        "id": "exactexplainer",
+        "x": -860,
+        "y": -333.2
+       },
+       {
+        "id": "explainer",
+        "x": -860,
+        "y": -297.2
+       },
+       {
+        "id": "explanation",
+        "x": -860,
+        "y": -261.2
+       },
+       {
+        "id": "kernelexplainer",
+        "x": -860,
+        "y": -225.2
+       },
+       {
+        "id": "linearexplainer",
+        "x": -860,
+        "y": -189.2
+       },
+       {
+        "id": "partitionexplainer",
+        "x": -860,
+        "y": -153.2
+       },
+       {
+        "id": "permutationexplainer",
+        "x": -860,
+        "y": -117.2
+       },
+       {
+        "id": "samplingexplainer",
+        "x": -860,
+        "y": -81.2
+       },
+       {
+        "id": "treeexplainer",
+        "x": -860,
+        "y": -45.2
+       }
+      ]
+     },
+     {
+      "name": "Feature importance",
+      "x": -380,
+      "y": -171.2,
+      "count": 1,
+      "items": [
+       {
+        "id": "permutation-importance",
+        "x": -860,
+        "y": -171.2
+       }
+      ]
+     },
+     {
+      "name": "Model attributes",
+      "x": -380,
+      "y": -135.2,
+      "count": 1,
+      "items": [
+       {
+        "id": "feature-importances",
+        "x": -860,
+        "y": -135.2
+       }
+      ]
+     },
+     {
+      "name": "Partial dependence",
+      "x": -380,
+      "y": -99.2,
+      "count": 1,
+      "items": [
+       {
+        "id": "partial-dependence",
+        "x": -860,
+        "y": -99.2
+       }
+      ]
+     },
+     {
+      "name": "SHAP plots",
+      "x": -380,
+      "y": -63.2,
+      "count": 11,
+      "items": [
+       {
+        "id": "shap-bar",
+        "x": -860,
+        "y": -243.2
+       },
+       {
+        "id": "shap-beeswarm",
+        "x": -860,
+        "y": -207.2
+       },
+       {
+        "id": "shap-decision",
+        "x": -860,
+        "y": -171.2
+       },
+       {
+        "id": "shap-force",
+        "x": -860,
+        "y": -135.2
+       },
+       {
+        "id": "shap-group-difference",
+        "x": -860,
+        "y": -99.2
+       },
+       {
+        "id": "shap-heatmap",
+        "x": -860,
+        "y": -63.2
+       },
+       {
+        "id": "shap-monitoring",
+        "x": -860,
+        "y": -27.2
+       },
+       {
+        "id": "shap-partial-dependence",
+        "x": -860,
+        "y": 8.8
+       },
+       {
+        "id": "shap-scatter",
+        "x": -860,
+        "y": 44.8
+       },
+       {
+        "id": "shap-violin",
+        "x": -860,
+        "y": 80.8
+       },
+       {
+        "id": "shap-waterfall",
+        "x": -860,
+        "y": 116.8
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  "time-series": [
+   {
+    "id": "explore",
+    "angle": -90,
+    "x": 0,
+    "y": -200,
+    "side": 1,
+    "count": 8,
+    "families": [
+     {
+      "name": "Decomposition and seasonality",
+      "x": 380,
+      "y": -236,
+      "count": 3,
+      "items": [
+       {
+        "id": "mstl",
+        "x": 860,
+        "y": -272
+       },
+       {
+        "id": "seasonal-decompose",
+        "x": 860,
+        "y": -236
+       },
+       {
+        "id": "stl",
+        "x": 860,
+        "y": -200
+       }
+      ]
+     },
+     {
+      "name": "Seasonality detection",
+      "x": 380,
+      "y": -200,
+      "count": 1,
+      "items": [
+       {
+        "id": "periodogram",
+        "x": 860,
+        "y": -200
+       }
+      ]
+     },
+     {
+      "name": "Stationarity checks",
+      "x": 380,
+      "y": -164,
+      "count": 4,
+      "items": [
+       {
+        "id": "ljung-box",
+        "x": 860,
+        "y": -218
+       },
+       {
+        "id": "adf",
+        "x": 860,
+        "y": -182
+       },
+       {
+        "id": "kpss",
+        "x": 860,
+        "y": -146
+       },
+       {
+        "id": "acf-pacf-plots",
+        "x": 860,
+        "y": -110
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "clean",
+    "angle": -50,
+    "x": 128.6,
+    "y": -153.2,
+    "side": 1,
+    "count": 0,
+    "families": []
+   },
+   {
+    "id": "transform",
+    "angle": -10,
+    "x": 197,
+    "y": -34.7,
+    "side": 1,
+    "count": 0,
+    "families": []
+   },
+   {
+    "id": "select",
+    "angle": 30,
+    "x": 173.2,
+    "y": 100,
+    "side": 1,
+    "count": 0,
+    "families": []
+   },
+   {
+    "id": "split",
+    "angle": 70,
+    "x": 68.4,
+    "y": 187.9,
+    "side": 1,
+    "count": 1,
+    "families": [
+     {
+      "name": "Splitters",
+      "x": 380,
+      "y": 187.9,
+      "count": 1,
+      "items": [
+       {
+        "id": "timeseriessplit",
+        "x": 860,
+        "y": 187.9
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "model",
+    "angle": 110,
+    "x": -68.4,
+    "y": 187.9,
+    "side": -1,
+    "count": 10,
+    "families": [
+     {
+      "name": "Autoregressive",
+      "x": -380,
+      "y": 133.9,
+      "count": 3,
+      "items": [
+       {
+        "id": "arima",
+        "x": -860,
+        "y": 97.9
+       },
+       {
+        "id": "auto-reg",
+        "x": -860,
+        "y": 133.9
+       },
+       {
+        "id": "sarimax",
+        "x": -860,
+        "y": 169.9
+       }
+      ]
+     },
+     {
+      "name": "Multivariate",
+      "x": -380,
+      "y": 169.9,
+      "count": 2,
+      "items": [
+       {
+        "id": "var",
+        "x": -860,
+        "y": 151.9
+       },
+       {
+        "id": "varmax",
+        "x": -860,
+        "y": 187.9
+       }
+      ]
+     },
+     {
+      "name": "Smoothing",
+      "x": -380,
+      "y": 205.9,
+      "count": 3,
+      "items": [
+       {
+        "id": "ets-model",
+        "x": -860,
+        "y": 169.9
+       },
+       {
+        "id": "exponential-smoothing",
+        "x": -860,
+        "y": 205.9
+       },
+       {
+        "id": "theta-model",
+        "x": -860,
+        "y": 241.9
+       }
+      ]
+     },
+     {
+      "name": "State space / regime",
+      "x": -380,
+      "y": 241.9,
+      "count": 2,
+      "items": [
+       {
+        "id": "markov-regression",
+        "x": -860,
+        "y": 223.9
+       },
+       {
+        "id": "unobserved-components",
+        "x": -860,
+        "y": 259.9
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "tune",
+    "angle": 150,
+    "x": -173.2,
+    "y": 100,
+    "side": -1,
+    "count": 0,
+    "families": []
+   },
+   {
+    "id": "evaluate",
+    "angle": 190,
+    "x": -197,
+    "y": -34.7,
+    "side": -1,
+    "count": 0,
+    "families": []
+   },
+   {
+    "id": "interpret",
+    "angle": 230,
+    "x": -128.6,
+    "y": -153.2,
+    "side": -1,
+    "count": 0,
+    "families": []
+   }
+  ],
+  "unsupervised": [
+   {
+    "id": "explore",
+    "angle": -90,
+    "x": 0,
+    "y": -200,
+    "side": 1,
+    "count": 0,
+    "families": []
+   },
+   {
+    "id": "clean",
+    "angle": -50,
+    "x": 128.6,
+    "y": -153.2,
+    "side": 1,
+    "count": 0,
+    "families": []
+   },
+   {
+    "id": "transform",
+    "angle": -10,
+    "x": 197,
+    "y": -34.7,
+    "side": 1,
+    "count": 0,
+    "families": []
+   },
+   {
+    "id": "select",
+    "angle": 30,
+    "x": 173.2,
+    "y": 100,
+    "side": 1,
+    "count": 0,
+    "families": []
+   },
+   {
+    "id": "split",
+    "angle": 70,
+    "x": 68.4,
+    "y": 187.9,
+    "side": 1,
+    "count": 0,
+    "families": []
+   },
+   {
+    "id": "model",
+    "angle": 110,
+    "x": -68.4,
+    "y": 187.9,
+    "side": -1,
+    "count": 0,
+    "families": []
+   },
+   {
+    "id": "tune",
+    "angle": 150,
+    "x": -173.2,
+    "y": 100,
+    "side": -1,
+    "count": 0,
+    "families": []
+   },
+   {
+    "id": "evaluate",
+    "angle": 190,
+    "x": -197,
+    "y": -34.7,
+    "side": -1,
+    "count": 0,
+    "families": []
+   },
+   {
+    "id": "interpret",
+    "angle": 230,
+    "x": -128.6,
+    "y": -153.2,
+    "side": -1,
+    "count": 0,
+    "families": []
+   }
+  ],
+  "causal": [
+   {
+    "id": "explore",
+    "angle": -90,
+    "x": 0,
+    "y": -200,
+    "side": 1,
+    "count": 0,
+    "families": []
+   },
+   {
+    "id": "clean",
+    "angle": -50,
+    "x": 128.6,
+    "y": -153.2,
+    "side": 1,
+    "count": 0,
+    "families": []
+   },
+   {
+    "id": "transform",
+    "angle": -10,
+    "x": 197,
+    "y": -34.7,
+    "side": 1,
+    "count": 0,
+    "families": []
+   },
+   {
+    "id": "select",
+    "angle": 30,
+    "x": 173.2,
+    "y": 100,
+    "side": 1,
+    "count": 0,
+    "families": []
+   },
+   {
+    "id": "split",
+    "angle": 70,
+    "x": 68.4,
+    "y": 187.9,
+    "side": 1,
+    "count": 0,
+    "families": []
+   },
+   {
+    "id": "model",
+    "angle": 110,
+    "x": -68.4,
+    "y": 187.9,
+    "side": -1,
+    "count": 0,
+    "families": []
+   },
+   {
+    "id": "tune",
+    "angle": 150,
+    "x": -173.2,
+    "y": 100,
+    "side": -1,
+    "count": 0,
+    "families": []
+   },
+   {
+    "id": "evaluate",
+    "angle": 190,
+    "x": -197,
+    "y": -34.7,
+    "side": -1,
+    "count": 0,
+    "families": []
+   },
+   {
+    "id": "interpret",
+    "angle": 230,
+    "x": -128.6,
+    "y": -153.2,
+    "side": -1,
+    "count": 0,
+    "families": []
+   }
+  ],
+  "deep-learning": [
+   {
+    "id": "explore",
+    "angle": -90,
+    "x": 0,
+    "y": -200,
+    "side": 1,
+    "count": 0,
+    "families": []
+   },
+   {
+    "id": "clean",
+    "angle": -50,
+    "x": 128.6,
+    "y": -153.2,
+    "side": 1,
+    "count": 0,
+    "families": []
+   },
+   {
+    "id": "transform",
+    "angle": -10,
+    "x": 197,
+    "y": -34.7,
+    "side": 1,
+    "count": 0,
+    "families": []
+   },
+   {
+    "id": "select",
+    "angle": 30,
+    "x": 173.2,
+    "y": 100,
+    "side": 1,
+    "count": 0,
+    "families": []
+   },
+   {
+    "id": "split",
+    "angle": 70,
+    "x": 68.4,
+    "y": 187.9,
+    "side": 1,
+    "count": 0,
+    "families": []
+   },
+   {
+    "id": "model",
+    "angle": 110,
+    "x": -68.4,
+    "y": 187.9,
+    "side": -1,
+    "count": 0,
+    "families": []
+   },
+   {
+    "id": "tune",
+    "angle": 150,
+    "x": -173.2,
+    "y": 100,
+    "side": -1,
+    "count": 0,
+    "families": []
+   },
+   {
+    "id": "evaluate",
+    "angle": 190,
+    "x": -197,
+    "y": -34.7,
+    "side": -1,
+    "count": 0,
+    "families": []
+   },
+   {
+    "id": "interpret",
+    "angle": 230,
+    "x": -128.6,
+    "y": -153.2,
+    "side": -1,
+    "count": 0,
+    "families": []
+   }
+  ]
+ }
+}

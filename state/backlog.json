@@ -350,7 +350,7 @@
     "T023": {
       "title": "Radial tree view (Lookup)",
       "file": "tasks/T023-radial-tree.md",
-      "status": "In progress",
+      "status": "Done",
       "dependencies": [
         "T020"
       ],
@@ -359,7 +359,7 @@
     "T024": {
       "title": "Relationship lines on demand (radial tree)",
       "file": "tasks/T024-relationship-lines.md",
-      "status": "Backlog",
+      "status": "In progress",
       "dependencies": [
         "T023"
       ],
