@@ -296,7 +296,7 @@
     "T018": {
       "title": "Desktop layout shell and navigation",
       "file": "tasks/T018-layout-shell.md",
-      "status": "In progress",
+      "status": "Done",
       "dependencies": [
         "T016",
         "T017"
@@ -315,7 +315,7 @@
     "T020": {
       "title": "Item page renderer (the 11 slots)",
       "file": "tasks/T020-item-page-renderer.md",
-      "status": "Backlog",
+      "status": "In progress",
       "dependencies": [
         "T018",
         "T019"

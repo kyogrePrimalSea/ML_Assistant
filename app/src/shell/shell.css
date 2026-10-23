@@ -1,0 +1,35 @@
+/* Shell motion (spec 10.7): 240ms with the spec easing. Reduced motion is clamped globally in base.css. */
+@keyframes shell-panel-in {
+  from { transform: translateX(24px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes shell-sheet-in {
+  from { transform: translateY(32px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes shell-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes shell-accordion-down {
+  from { height: 0; }
+  to { height: var(--radix-accordion-content-height); }
+}
+@keyframes shell-accordion-up {
+  from { height: var(--radix-accordion-content-height); }
+  to { height: 0; }
+}
+
+.shell-panel-enter { animation: shell-panel-in var(--dur-panel) var(--ease) both; }
+[data-slot="sheet-content"][data-state="open"] { animation: shell-panel-in var(--dur-panel) var(--ease) both; }
+[data-slot="sheet-content"].shell-sheet-bottom[data-state="open"] { animation: shell-sheet-in var(--dur-panel) var(--ease) both; }
+[data-slot="sheet-overlay"][data-state="open"],
+[data-slot="dialog-overlay"][data-state="open"],
+[data-slot="dialog-content"][data-state="open"] { animation: shell-fade-in var(--dur-panel) var(--ease) both; }
+
+.shell-list [data-slot="accordion-content"][data-state="open"] {
+  animation: shell-accordion-down var(--dur-panel) var(--ease);
+}
+.shell-list [data-slot="accordion-content"][data-state="closed"] {
+  animation: shell-accordion-up var(--dur-panel) var(--ease);
+}
