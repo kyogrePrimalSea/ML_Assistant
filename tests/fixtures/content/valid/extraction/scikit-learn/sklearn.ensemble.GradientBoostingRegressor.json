@@ -1,0 +1,11 @@
+{
+ "id": "sklearn.ensemble.GradientBoostingRegressor",
+ "import_path": "sklearn.ensemble.GradientBoostingRegressor",
+ "library": "scikit-learn",
+ "library_version": "1.9.1",
+ "parameters": [
+  {
+   "name": "max_depth"
+  }
+ ]
+}

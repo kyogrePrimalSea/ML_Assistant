@@ -1,0 +1,11 @@
+{
+ "id": "sklearn.preprocessing.StandardScaler",
+ "import_path": "sklearn.preprocessing.StandardScaler",
+ "library": "scikit-learn",
+ "library_version": "1.9.1",
+ "parameters": [
+  {
+   "name": "max_depth"
+  }
+ ]
+}

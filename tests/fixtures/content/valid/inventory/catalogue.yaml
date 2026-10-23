@@ -1,0 +1,209 @@
+items:
+- id: xgboost.XGBRegressor
+  name: XGBRegressor
+  library: xgboost
+  import_path: xgboost.XGBRegressor
+  kind: class
+  stage: model
+  family: Boosting (XGBoost)
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://example.org/xgboost.XGBRegressor
+  page: xgboost
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: xgboost.XGBClassifier
+  name: XGBClassifier
+  library: xgboost
+  import_path: xgboost.XGBClassifier
+  kind: class
+  stage: model
+  family: Boosting (XGBoost)
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://example.org/xgboost.XGBClassifier
+  page: xgboost
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: lightgbm.LGBMRegressor
+  name: LGBMRegressor
+  library: lightgbm
+  import_path: lightgbm.LGBMRegressor
+  kind: class
+  stage: model
+  family: Boosting (LightGBM)
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://example.org/lightgbm.LGBMRegressor
+  page: lightgbm
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.tree.DecisionTreeRegressor
+  name: DecisionTreeRegressor
+  library: scikit-learn
+  import_path: sklearn.tree.DecisionTreeRegressor
+  kind: class
+  stage: model
+  family: Trees
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://example.org/sklearn.tree.DecisionTreeRegressor
+  page: decision-tree-regressor
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.ensemble.RandomForestRegressor
+  name: RandomForestRegressor
+  library: scikit-learn
+  import_path: sklearn.ensemble.RandomForestRegressor
+  kind: class
+  stage: model
+  family: Trees
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://example.org/sklearn.ensemble.RandomForestRegressor
+  page: random-forest
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.ensemble.GradientBoostingRegressor
+  name: GradientBoostingRegressor
+  library: scikit-learn
+  import_path: sklearn.ensemble.GradientBoostingRegressor
+  kind: class
+  stage: model
+  family: Boosting (sklearn)
+  tracks:
+  - standard
+  archetype: model
+  doc_url: https://example.org/sklearn.ensemble.GradientBoostingRegressor
+  page: gradient-boosting
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.preprocessing.StandardScaler
+  name: StandardScaler
+  library: scikit-learn
+  import_path: sklearn.preprocessing.StandardScaler
+  kind: class
+  stage: transform
+  family: Scaling
+  tracks:
+  - standard
+  archetype: transformer
+  doc_url: https://example.org/sklearn.preprocessing.StandardScaler
+  page: standard-scaler
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.preprocessing.MinMaxScaler
+  name: MinMaxScaler
+  library: scikit-learn
+  import_path: sklearn.preprocessing.MinMaxScaler
+  kind: class
+  stage: transform
+  family: Scaling
+  tracks:
+  - standard
+  archetype: transformer
+  doc_url: https://example.org/sklearn.preprocessing.MinMaxScaler
+  page: min-max-scaler
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.preprocessing.OneHotEncoder
+  name: OneHotEncoder
+  library: scikit-learn
+  import_path: sklearn.preprocessing.OneHotEncoder
+  kind: class
+  stage: transform
+  family: Categorical encoding
+  tracks:
+  - standard
+  archetype: transformer
+  doc_url: https://example.org/sklearn.preprocessing.OneHotEncoder
+  page: one-hot-encoder
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.impute.SimpleImputer
+  name: SimpleImputer
+  library: scikit-learn
+  import_path: sklearn.impute.SimpleImputer
+  kind: class
+  stage: clean
+  family: Imputation
+  tracks:
+  - standard
+  archetype: transformer
+  doc_url: https://example.org/sklearn.impute.SimpleImputer
+  page: simple-imputer
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.utils.class_weight.compute_class_weight
+  name: compute_class_weight
+  library: scikit-learn
+  import_path: sklearn.utils.class_weight.compute_class_weight
+  kind: class
+  stage: model
+  family: Class weighting
+  tracks:
+  - standard
+  archetype: transformer
+  doc_url: https://example.org/sklearn.utils.class_weight.compute_class_weight
+  page: class-weighting
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.model_selection.train_test_split
+  name: train_test_split
+  library: scikit-learn
+  import_path: sklearn.model_selection.train_test_split
+  kind: class
+  stage: split
+  family: Holdout
+  tracks:
+  - standard
+  archetype: splitter
+  doc_url: https://example.org/sklearn.model_selection.train_test_split
+  page: train-test-split
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: shap.TreeExplainer
+  name: TreeExplainer
+  library: shap
+  import_path: shap.TreeExplainer
+  kind: class
+  stage: interpret
+  family: SHAP
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://example.org/shap.TreeExplainer
+  page: treeexplainer
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''

@@ -1,0 +1,41 @@
+{
+ "id": "xgboost.XGBClassifier",
+ "import_path": "xgboost.XGBClassifier",
+ "library": "xgboost",
+ "library_version": "3.4.1",
+ "parameters": [
+  {
+   "name": "n_estimators"
+  },
+  {
+   "name": "learning_rate"
+  },
+  {
+   "name": "max_depth"
+  },
+  {
+   "name": "early_stopping_rounds"
+  },
+  {
+   "name": "subsample"
+  },
+  {
+   "name": "colsample_bytree"
+  },
+  {
+   "name": "min_child_weight"
+  },
+  {
+   "name": "reg_lambda"
+  },
+  {
+   "name": "reg_alpha"
+  },
+  {
+   "name": "gamma"
+  },
+  {
+   "name": "enable_categorical"
+  }
+ ]
+}

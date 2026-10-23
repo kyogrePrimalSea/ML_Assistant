@@ -222,7 +222,7 @@
     "T011": {
       "title": "Content validator and relationship derivation",
       "file": "tasks/T011-validator-and-derivation.md",
-      "status": "In progress",
+      "status": "Done",
       "dependencies": [
         "T010"
       ],
@@ -231,7 +231,7 @@
     "T012": {
       "title": "Example content records (one per archetype)",
       "file": "tasks/T012-example-records.md",
-      "status": "Backlog",
+      "status": "In progress",
       "dependencies": [
         "T011"
       ],

@@ -1,0 +1,11 @@
+{
+ "id": "sklearn.utils.class_weight.compute_class_weight",
+ "import_path": "sklearn.utils.class_weight.compute_class_weight",
+ "library": "scikit-learn",
+ "library_version": "1.9.1",
+ "parameters": [
+  {
+   "name": "max_depth"
+  }
+ ]
+}

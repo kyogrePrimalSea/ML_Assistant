@@ -1,0 +1,14 @@
+{
+ "id": "lightgbm.LGBMRegressor",
+ "import_path": "lightgbm.LGBMRegressor",
+ "library": "lightgbm",
+ "library_version": "4.7.0",
+ "parameters": [
+  {
+   "name": "max_depth"
+  },
+  {
+   "name": "num_leaves"
+  }
+ ]
+}
