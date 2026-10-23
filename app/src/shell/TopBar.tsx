@@ -38,7 +38,7 @@ export function TopBar({ onSearch, onSettings }: { onSearch: () => void; onSetti
     <header className="flex h-16 shrink-0 items-center gap-3 overflow-x-auto border-b border-border bg-surface-1 px-4">
       <h1 className="mr-1 shrink-0 text-lg whitespace-nowrap">ML Field Guide</h1>
 
-      <Button variant="outline" onClick={onSearch} aria-label="Search" className="w-36 min-w-0 justify-between px-3 text-text-muted min-[1200px]:w-44">
+      <Button variant="outline" onClick={onSearch} className="w-36 min-w-0 justify-between px-3 text-text-muted min-[1200px]:w-44">
         <span className="flex items-center gap-2">
           <IconSearch aria-hidden /> Search
         </span>

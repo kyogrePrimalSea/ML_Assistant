@@ -10,6 +10,7 @@ test('open XGBoost from the catalogue; screenshots in both themes', async ({ pag
   await expect(page).toHaveURL(/#\/page\/xgboost$/)
   const panel = page.getByRole('complementary', { name: 'Page panel' })
   await expect(panel).toContainText('xgboost')
+  await page.waitForTimeout(400) // let the slide-in finish before measuring
   const box = (await panel.boundingBox())!
   expect(box.width).toBeGreaterThanOrEqual(420)
   expect(box.width).toBeLessThanOrEqual(560)

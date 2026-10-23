@@ -14,12 +14,25 @@ function ComingSoon({ name }: { name: string }) {
   )
 }
 
+/** Placeholder route for follow-up questions; the question view comes later. */
+function QuestionPlaceholder({ id }: { id: string }) {
+  return (
+    <div className="grid gap-2">
+      <h2>Question</h2>
+      <p className="text-text-muted">
+        Question views are coming soon (<code>{id}</code>).
+      </p>
+    </div>
+  )
+}
+
 function Shell() {
   const id = useMatch('/page/:id')?.params.id
+  const questionId = useMatch('/question/:id')?.params.id
   const navigate = useNavigate()
   const { view } = useShellState()
   return (
-    <Layout panel={id ? <PagePanel id={id} /> : null} onClosePanel={() => navigate('/')}>
+    <Layout panel={id ? <PagePanel id={id} /> : questionId ? <QuestionPlaceholder id={questionId} /> : null} onClosePanel={() => navigate('/')}>
       {view === 'tree' ? (
         <CatalogueList activeId={id} />
       ) : view === 'constellation' ? (

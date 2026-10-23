@@ -322,7 +322,7 @@
     "T020": {
       "title": "Item page renderer (the 11 slots)",
       "file": "tasks/T020-item-page-renderer.md",
-      "status": "In progress",
+      "status": "Done",
       "dependencies": [
         "T018",
         "T019"
@@ -332,7 +332,7 @@
     "T021": {
       "title": "E03 acceptance and first deploy",
       "file": "tasks/T021-e03-acceptance-and-deploy.md",
-      "status": "Backlog",
+      "status": "In progress",
       "dependencies": [
         "T020"
       ],
