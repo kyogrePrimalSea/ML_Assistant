@@ -58,28 +58,54 @@ Tracks are not stages; they cut across stages and **filter** what each stage sho
 
 Example: choosing Time series means Split shows only time-aware splits, Explore gains seasonality and decomposition, Model shows ARIMA/SARIMAX/ETS etc.
 
+**Goal question (A1).** The track is not picked directly. The top bar asks the first question, **"What are we trying to do?"**, and each goal sets a track **and** a task, filtering the whole app:
+
+| Goal | Track | Task |
+| --- | --- | --- |
+| Predict a number | standard | regression |
+| Sort things into categories | standard | classification |
+| Forecast what comes next | time-series | regression |
+
+Later-wave goals are listed in `docs/QUESTION_MAP.md` §4 and are not built in v1. The Passport's task type and the goal stay in sync: changing one changes the other. In Names mode the selector shows "Standard · Regression" and so on.
+
 ### 3.3 Hierarchy
 
-`Track › Stage › Family › Item`
+`Goal › Stage › Group › Family › Page` (A2)
 
-- **Family** = siblings that do the same job (e.g. Boosting: GradientBoosting, HistGradientBoosting, XGBoost, LightGBM).
+- **Group** exists only where a stage would otherwise have more than 7 families.
+- **At most 7 children per node, in every goal view. No single-child levels** (skip the level and show its children).
+- **Family** = siblings that do the same job (e.g. Boosting: GradientBoosting, HistGradientBoosting, XGBoost, LightGBM). **Families group by job, never by library.**
+- Every page, including content-only pages, sits in **exactly one family**.
+- **Placement and labels come from `docs/QUESTION_MAP.md`**, converted to the machine-readable `content/taxonomy.yaml` (goals, stages, groups, families, page placements, labels, `pick_when`, task/track tags). The taxonomy is the source of truth for placement; the inventory's `family` field stays as provenance only.
+- The nine stages keep the same ring position in every goal view. A stage that is empty for a goal stays in place, dimmed, labelled "Not used for this goal".
+- Positions are precomputed **per goal view** and stored (§7: nothing re-lays-out on load).
 - **Same model, different library** (e.g. Linear regression in scikit-learn vs statsmodels `OLS` vs SciPy `linregress`) = **one page** with library tabs in the Code slot, each tab with a one-line "why this library" (statsmodels: p-values; scikit-learn: pipelines).
 
-### 3.4 Two doors into the same content
+### 3.4 Questions mode: same tree, second set of labels (A3)
 
-- **By category** (default): stage › family › item, families collapsed by default.
-- **By question** (toggle): fixed stems only:
+The two doors are one radial tree with a **label toggle**: `Names | Questions`, where `Tree | List` used to sit.
+
+- Same nodes, positions, icons, colours and branching. **Only text changes.** Toggling never moves anything.
+- Default: **Questions**. The choice is remembered per viewer (localStorage, wrapped in try/catch; the app must work without it).
+- The centre shows the open node's `question_prompt` in Questions mode, and its name in Names mode.
+- Nodes show `question_label`. Pages keep their real names, with `pick_when` underneath in Questions mode.
+- In Questions mode the breadcrumb reads as a chain of `question_label`s.
+- The accessible name for each node is its full `question_sentence`.
+- Writing rules and length limits: `docs/QUESTION_MAP.md` §2, enforced by the validator.
+
+**Symptom questions** are not tree nodes; they show through search and as relationship lines to their answers. Fixed stems only:
   - "My data is…" (imbalanced, time-ordered, high-dimensional, messy, small…)
   - "My model is…" (overfitting, too slow, underperforming, not reproducible…)
   - "I want to know…" (which features matter, how confident it is, how good it is without a test set…)
+  - "We need…, but…" (`we_need_but`; seed data in `docs/QUESTION_MAP.md` §7)
   - Cap at about 5–7 questions per stem per stage.
-  - Questions use my wording ("overfitting"), not textbook terms ("high variance").
+  - Questions use my wording ("overfitting"), not textbook terms ("high variance"), written as full sentences in the same voice (e.g. "Our model is great on training data, but poor on new data").
 - **Chaining**: each answered question suggests the next one (e.g. "overfitting" → "how good is it now?").
 - Questions can return settings, outputs and methods together (e.g. "My model is overfitting" → `max_depth`, `min_samples_leaf`, `ccp_alpha`, `max_features`).
 
 ### 3.5 Search
 
-Global search above all views. Matches plain names, code names, aliases and questions. Results show stage and track; selecting one flies the current view to it. Client-side fuzzy search (e.g. Fuse.js or MiniSearch).
+Global search above all views. Matches plain names, code names, aliases and questions, plus (A3) Questions labels, `question_sentence`s and `pick_when` lines. Results show stage and track; selecting one flies the current view to it. Client-side fuzzy search (e.g. Fuse.js or MiniSearch).
 
 ### 3.6 Semantic zoom
 
@@ -89,7 +115,7 @@ The map changes *what* it shows as you go deeper, not just its size. Level 1 sho
 
 ## 4. Page archetypes
 
-Every item page uses the **same 11-slot template** (section 5). The archetype decides what the hero visual and toy example look like.
+Every item page uses the **same 12-slot template** (section 5). The archetype decides what the hero visual and toy example look like.
 
 | Archetype | Examples | Hero visual | Icon (Tabler) |
 | --- | --- | --- | --- |
@@ -113,32 +139,51 @@ Note: **parameters** (learned, e.g. `coef_`) are Outputs; **hyperparameters** (s
 
 Every page is a **filled-in form**, not a designed page. The app draws pages from the forms. This makes 150+ pages maintainable, lets the design change in one place, and feeds validation and relationship lines.
 
-### 5.1 The 11 slots (fixed order, on every page)
+### 5.1 The 12 slots (fixed order, on every page)
 
 Slots never move. An empty slot shows "None" rather than disappearing.
 
-1. **Header**: archetype icon, plain English name ("Tree depth limit"), code name underneath (`max_depth`), archetype badge.
+1. **Header**: archetype icon, plain English name ("Tree depth limit"), code name underneath (`max_depth`), archetype badge. (A9) Hide the stage badge when its label repeats the archetype badge (e.g. Model + Model); keep the stage colour as a dot on the archetype badge in that case.
 2. **Solves**: hero visual (cutscene) plus one line.
 3. **Quick facts**: default value and typical range (models: task type, data-size sweet spot).
 4. **Use when / Avoid when**: tags, not sentences.
 5. **Before you use it**: prep checklist; every relevant step marked **Required**, **Recommended** or **Not needed**. "Not needed" matters as much as "Required" (e.g. no scaling before trees). Each item links to that step's page.
 6. **Code**: tabbed by library. Every snippet includes its imports, a library version stamp comment, and must run when pasted into a real notebook.
-7. **Catch-outs**: warning callout, placed right after the code (that's where mistakes happen).
-8. **Key settings**: hyperparameters worth tuning, in tiers (Tier 1 visible, Tier 2 one tap, Tier 3 collapsed), each linking to its own page.
-9. **Watch it work**: toy example with a slider, driven by the shared toy datasets.
-10. **Intuition / How it works**: collapsed. On Model pages this expands into:
+7. **What comes out** (A4): what do I get back, what shape is it, and what do I use next? Contents by archetype in the table below. Always renders ("None" when empty) and has a small visual in the same style as Watch it work:
+    - Classification models: the `predict_proba` table on toy rows, with the class-1 column highlighted as `y_score` and a threshold slider that flips the labels.
+    - Regression models: `y_pred` on toy rows, with an "undo log target" toggle.
+8. **Catch-outs**: warning callout, placed right after the code (that's where mistakes happen).
+9. **Key settings**: hyperparameters worth tuning, in tiers labelled (A10) **Most used** (visible), **Also useful** (one tap) and **Rarely changed** (collapsed), each linking to its own page. Defaults show the **effective** value large ("100"), with "set as None in the signature" in small text only when the signature default differs.
+10. **Watch it work**: toy example with a slider, driven by the shared toy datasets.
+11. **Intuition / How it works**: collapsed. On Model pages this expands into:
     - The one idea (one sentence)
     - Everyday analogy
     - Animation
     - Good at / Bad at (tags)
     - Vs. siblings (short; compare view is v2)
     - *Read more*: step-by-step walkthrough of the algorithm
-11. **Next**: chained follow-up questions.
+12. **Next**: chained follow-up questions.
+
+**What comes out, by archetype (A4).** Every code line follows the snippet rules (imports, version stamp, runs when pasted) and every claim is verified against the E01 extraction.
+
+| Archetype | What comes out |
+| --- | --- |
+| Model | The prediction methods (`predict`, `predict_proba`, `decision_function` where they exist), the shape of each, and the next step. **Classification:** `predict_proba` gives one column per class in `classes_` order; for two classes keep `[:, 1]`; `predict` equals a 0.5 cut-off; ROC AUC and PR curves need the probabilities, not labels; for 3+ classes, one column per class. **Regression:** `predict` gives one value per row; undo any target transform (e.g. `np.expm1` after `np.log1p`) before reporting errors. Plus the fitted attributes people use most (e.g. `feature_importances_`, `coef_`, `best_iteration`). |
+| Transformer | What `transform` returns (NumPy array, sparse matrix, or DataFrame with `set_output(transform="pandas")`), how column names change (`get_feature_names_out()`), shape change, whether `inverse_transform` exists. |
+| Resampler | `fit_resample` returns `X_res, y_res`; training data only; how the shape changes. |
+| Selector / reducer | `get_support()`, `get_feature_names_out()`, shape after `transform`. |
+| Splitter | The return order (e.g. `X_train, X_test, y_train, y_test`), or that `split()` yields index arrays; how to pass it as `cv=`. |
+| Hyperparameter | The fitted attribute that reports the value actually used (e.g. `n_estimators_`, `n_iter_`, `best_iteration`). |
+| Tuning strategy | `best_params_`, `best_score_`, `best_estimator_`, `cv_results_` (as a DataFrame); for Optuna, `study.best_params`, `study.best_value`, `trials_dataframe()`. |
+| Metric | A float, or an array per class with `average=None`; whether higher or lower is better; the range. |
+| Diagnostic / explainer | The object returned (Display with `.plot()`, SHAP `Explanation` with `.values`, `.base_values`, `.data`) and their shapes. |
+| Output / attribute | Its shape, and how to line it up with feature names. |
+| Composer | How predictions pass through, how to reach inner steps (`named_steps`), feature names from a ColumnTransformer. |
 
 ### 5.2 Schema requirements
 
-- One record per item; archetype-specific variants of the same 11 fields.
-- Fields for: plain name, code name, aliases, stage, family, track(s), archetype, question tags, relationships (5.3), source URL(s), library version, `reviewed` flag.
+- One record per item; archetype-specific variants of the same 12 fields.
+- Fields for: plain name, code name, aliases, stage, family (a taxonomy family id, A2), track(s), archetype, question tags, relationships (5.3), source URL(s), library version, `reviewed` flag.
 - Relationship lines and validation rules are **derived from schema fields**, never hand-written separately.
 
 ### 5.3 Relationship types
@@ -148,7 +193,7 @@ Slots never move. An empty slot shows "None" rather than disappearing.
 | Needs | Required prep | Prep checklist: Required |
 | Recommended | Works better with | Prep checklist: Recommended |
 | Clashes | Not needed or harmful together | Prep checklist: Not needed, plus explicit clashes |
-| Alternative to | Siblings that do the same job | Family membership |
+| Alternative to | Siblings that do the same job | Family membership (taxonomy family, A2) |
 | Pairs with | Natural partners (e.g. XGBoost → SHAP) | Explicit field |
 
 ### 5.4 Example: XGBoost
@@ -227,14 +272,16 @@ The design is comprehensive from day one; content is filled in waves. Wave 1: re
 
 ## 7. Views
 
-One content tree, three views, each for one job. All read the same data. **Positions are computed once and stored with the content**, never re-simulated on load, so nothing rearranges between sessions (spatial memory).
+One content tree, three views (radial tree, constellation, route map), each for one job. All read the same data. **Positions are computed once and stored with the content**, never re-simulated on load, so nothing rearranges between sessions (spatial memory).
 
 ### 7.1 Radial tree — Lookup ("what exists and where it lives")
 
-- Centre = current track; stages around it; families and items bloom outward.
+- Centre = current goal; stages around it; groups, families and items bloom outward.
+- (A5) An opened node's children **fan outward from that node**, attached by visible links, around the node's own angle. Never a detached column, and never a comb drawn off to one side of the canvas. This applies at every level (stage → group → family → pages).
+- (A5) Other stages **keep their labels**, dimmed (not hidden). Collisions are resolved in the layout, not by hiding labels.
 - **Labels always horizontal** (never rotated with the branch).
 - **Accordion**: opening a branch closes its siblings, so only one path is ever expanded.
-- **Zoom to fit** the opened branch so nothing runs off-screen.
+- **Zoom to fit** the opened path so nothing runs off-screen.
 - **Relationship lines on demand**: e.g. "What does XGBoost need?" draws curved lines through the centre to the related items, styled by relationship type (Needs, Recommended, Pairs with…), with a legend.
 - Selecting an item opens the panel (desktop: side by side; phone: bottom sheet).
 - Library: D3 (custom), not a charting library, to control labels.
@@ -250,21 +297,48 @@ One content tree, three views, each for one job. All read the same data. **Posit
 - **Filtering dims, never moves.**
 - Library: force-graph (2D canvas), with positions precomputed and fixed.
 
-### 7.3 Globe journey — Build ("the pipeline I'm assembling")
+### 7.3 Route map — Build ("the pipeline I'm assembling") (A6)
 
-- **Passport**: the data profile, shown at the start of the route (task type, track, has categoricals, has missing values, time-ordered, imbalanced, starting shape).
-- **Regions and stops**: stages are regions; picked steps are stops within them. Stop labels appear only when a region is zoomed into.
-- **Legs**: short low hops within a stage, long arcs between stages. Valid legs green; legs touching a warning amber; blocked legs red.
-- **Fly-overs**: skipped stages stay visible and labelled "(skipped)".
-- **Ticket per stop**: stage and stop number, status, why, what it uses (code), **data shape after the step** (e.g. 1,460 × 81 → 1,460 × 262 after one-hot), and a one-tap fix for warnings.
-- **Itinerary**: the same route as a grouped, collapsible list by stage with a status per stage. This is where steps are edited, reordered and removed (editing on the sphere itself is clumsy).
-- **Play journey**: plays once, no loop, respects reduced motion.
-- **Arrival**: the notebook view.
-- Library: globe.gl (Three.js).
+The globe journey is removed. Build is a **flat route map**. Its job: show the pipeline I'm building, answer four questions at a glance, and let me edit it.
+
+1. What's left to pick?
+2. Does it all fit together?
+3. How does my data change shape?
+4. What else could I have picked here?
+
+**Layout**
+
+- Stages run left to right on desktop and top to bottom below 900px. Every stage always appears, in pipeline order.
+- A continuous **band** runs through the stages. **Band width encodes the column count** (square-root scale, minimum 4px), so one-hot visibly widens it and selection narrows it. After Model the band collapses to one column (the predictions); after Evaluate it becomes a single point (one number). Width changes animate over 450ms with the spec easing; with reduced motion they apply instantly.
+- Band colour follows the stage's worst status: Valid (accent tint), Warn (amber tint), Block (red tint). An unpicked stage shows a dashed outline. A skipped stage shows a dashed outline labelled "Skipped", so "skipped" never looks like "forgotten".
+
+**Each stage shows**
+
+- The stage name, icon and a status chip (Valid, Warning, Blocked, Tip, Skipped, Not picked; always icon plus label).
+- **The chosen stop(s)** as solid chips with a remove control. Transform can hold several stops (e.g. encode, then scale).
+- **Alternatives** as faint chips beside the choice: siblings from the same family first, then the family's group. At most 4. Tapping one swaps it in and re-validates immediately.
+- When nothing is picked: the most common options as faint chips, plus "Skip".
+- **Data shape after the stage** (e.g. `1,460 × 262`, `+181 columns`), in Atkinson with tabular figures. Shapes are computed at build time on the goal's toy dataset and labelled "on the sample data". Don't extrapolate to the user's real data.
+- Validation messages for that stage as callouts, each with its fix button and a "Why?" link.
+
+**Top and bottom**
+
+- The **Passport** (goal, starting shape, has categories, has missing values, time-ordered, imbalanced) as editable chips at the top. Editing it re-validates.
+- "Try a sample route" (§8).
+- **Get notebook (N cells)** at the bottom. It opens the notebook view.
+
+**Behaviour examples (the demo must reproduce these)**
+
+- Sample route with XGBoost plus Standard scaling → Transform shows a Warning: "Scaling is not needed before trees", with a "Remove scaling" fix.
+- Swap XGBoost for Ridge → that warning disappears. A Tip appears ("Ridge works best on scaled features"), plus Interpret flags `feature-importances` ("Ridge has coefficients, not importances").
+- Remove the encoder while the Passport says "has categories" → Blocked, unless the model handles categories natively (then a Tip).
+- Choose Early stopping with Random forest → Blocked: "Early stopping needs a boosting model", with a fix.
+
+Rules come from schema data (§8); the schema fields these behaviours need are recorded in `docs/CONTENT_SCHEMA.md`. Keyboard navigation works across stages and chips. `globe.gl` and `three` are removed from the bundle once the route map passes review.
 
 ### 7.4 Desktop layout
 
-- Top bar: search (Ctrl/Cmd+K), track selector, view switcher (Tree / Constellation / Journey), mode toggle (light/dark/system), accessibility settings.
+- Top bar: search (Ctrl/Cmd+K), goal selector ("What are we trying to do?", A1), `Names | Questions` label toggle (A3), view switcher (Tree / Constellation / Journey), mode toggle (light/dark/system), accessibility settings.
 - Main: canvas left (~60%), panel right (~40%, min 420px, max 560px), independent scrolling.
 - Below 900px width: canvas full screen, panel as a bottom sheet.
 - Max reading width in panels: 68 characters.
@@ -276,9 +350,14 @@ One content tree, three views, each for one job. All read the same data. **Posit
 - **Scope v1**: one model per pipeline.
 - **Flow**:
   1. Data profile (3–4 taps) → becomes the Passport.
-  2. Pick per stage, from the radial tree or "Add to pipeline" on any page.
+  2. Pick per stage, from the radial tree or "Add to route" on any page.
   3. Live validation as you pick, not at the end.
   4. Generate → notebook view.
+- **Defaults (A7)**:
+  - The default state is an **empty route** with an editable Passport. A "Try a sample route" button loads the demo route.
+  - "Add to route" appears on every page panel and on every page node in Questions mode.
+  - Every validation message carries a one-tap fix where one exists, and links to the page that explains it.
+  - "Get notebook" is never disabled. If there are blockers, pressing it lists them with their fixes.
 - **Optional stages** (e.g. Select) can be skipped; shown as fly-overs, never as missing.
 - **Override**: Warn and Tip can be dismissed; Block can be overridden with a one-line acknowledgement.
 - **Why did this fire**: every validation message links to the page that explains it.
@@ -308,7 +387,7 @@ One content tree, three views, each for one job. All read the same data. **Posit
 - **Pre-rendered "cutscene" philosophy**: numbers are approximate and illustrative; the point is to show shape changes (rows, columns, distributions, boundaries).
 - **Shared toy datasets everywhere** so the data itself becomes familiar:
   - Regression: house prices (Ames)
-  - Classification: Titanic or breast cancer
+  - Classification: breast cancer (`sklearn.datasets.load_breast_cancer`; decided 2026-10-24)
   - Time series: airline passengers
 - **Motion rules**: plays once on open (≤ ~1.2s), no loops, replay button, respects `prefers-reduced-motion` (replace with a static end frame or a ≤120ms fade).
 
@@ -323,8 +402,8 @@ One content tree, three views, each for one job. All read the same data. **Posit
 | Role | Font | Notes |
 | --- | --- | --- |
 | Headings (18px+ only) | Space Grotesk 500 | Distinctive, geometric; never below 18px |
-| Body and UI | Atkinson Hyperlegible 400 / 700 | Designed for legibility; distinct letterforms |
-| Code | JetBrains Mono 400 | Ligatures **off**; clear 0/O and 1/l/I |
+| Body and UI | Atkinson Hyperlegible 400 / 700 | Designed for legibility; distinct letterforms. Tables, shapes, defaults and numbers in text use it with `font-variant-numeric: tabular-nums` (A8) |
+| Code | JetBrains Mono 400 | Ligatures **off**; clear 0/O and 1/l/I. **Code only** (A8): code blocks, inline code, and data-frame diff cell values |
 | Canvas labels | Atkinson Hyperlegible 400 / 700 | Always horizontal, with a background halo |
 | Dyslexia option | Lexend or OpenDyslexic | User toggle, applies to body and UI |
 
@@ -413,15 +492,16 @@ Each type gets a distinct dash pattern (primary cue) and colour (secondary cue),
 
 ### 10.8 Data-frame diff style
 
-- Monospaced values (JetBrains Mono).
+- Monospaced cell values (JetBrains Mono).
 - Changed cells: accent-tinted background plus a 2px accent left bar.
 - Added columns: Valid-tinted header with a `+` icon.
 - Removed columns: muted, struck through, with a `−` icon.
-- Shape shown above the table: `1,460 × 81 → 1,460 × 262`.
+- Shape shown above the table: `1,460 × 81 → 1,460 × 262`, in Atkinson with tabular figures (A8).
 
 ### 10.9 Code blocks
 
 - JetBrains Mono 13px, line-height 1.6, ligatures off.
+- Long lines soft-wrap by default, with a hanging indent and a continuation marker; the copy button copies the original, unwrapped text. The validator warns on snippet lines over 79 characters.
 - First line: version stamp comment (e.g. `# xgboost 3.x`).
 - Copy button top right.
 - Syntax colours from tokens: keywords `--accent`, strings Clean teal, numbers Transform pink, comments `--text-muted`.
@@ -458,7 +538,7 @@ Build tokens so a mode is a token set swap, not a redesign.
 - **App**: static React web app, installable as a PWA (works offline after first load).
 - **Backend**: none in v1. All content ships as data files inside the app; opening a page reads a local file, not an API. A backend is only needed later for cross-device sync, accounts, or live AI calls.
 - **Hosting**: free static host auto-deploying from GitHub (Cloudflare Pages, Netlify or GitHub Pages).
-- **Libraries**: D3 (radial tree), force-graph (constellation), globe.gl (journey), shadcn/ui + Radix (components), Remotion or GSAP (cutscenes), Fuse.js or MiniSearch (search), a notebook renderer for the output page, `.ipynb` generation from templates.
+- **Libraries**: D3 (radial tree and route map), force-graph (constellation), shadcn/ui + Radix (components), Remotion or GSAP (cutscenes), Fuse.js or MiniSearch (search), a notebook renderer for the output page, `.ipynb` generation from templates.
 - **Library versions**: pin one version per library for v1 (latest stable at build step 1) and stamp it on every snippet.
 
 ---
@@ -466,7 +546,7 @@ Build tokens so a mode is a token set swap, not a redesign.
 ## 13. Build order
 
 1. **Inventory and source extraction (first, before any UI).** List every item in the Wave 1 catalogue. For each, open its official documentation page and extract: signature, every parameter with default and allowed values, attributes, methods, and the documented library version. Record the source URL per item. Never write pages from memory.
-2. **Content schema.** Define the form per archetype from the 11 slots and relationship fields.
+2. **Content schema.** Define the form per archetype from the 12 slots and relationship fields.
 3. **First shippable slice: Model › Boosting end to end** (GradientBoosting, HistGradientBoosting, XGBoost, LightGBM): schema filled, radial tree, one cutscene, relationship lines, a short journey, notebook output. This tests every system early.
 4. **Fill content by stage** using an orchestrator session that dispatches parallel agents to draft pages from step 1's extraction. Pages carry a `reviewed` flag; I review in batches, one stage at a time.
 5. Remaining views (constellation filters, full journey), search, validation rules, accessibility settings.
@@ -478,3 +558,24 @@ Build tokens so a mode is a token set swap, not a redesign.
 - **v2**: compare view for sibling models; return-use features (onboarding, personal notes, saved pipelines); Clean-stage pandas/datetime recipes; alternative visual modes.
 - **Later waves**: unsupervised, causal (DoubleML), deep learning, Prophet, Meridian.
 - **Open**: app name; deep learning framework (PyTorch or Keras) when that wave starts.
+
+---
+
+## Changelog
+
+Amendments from design review round 1 (`docs/BRIEF_DESIGN_REVIEW_1.md`), applied 2026-10-24.
+
+| Id | Date | Amendment | Sections |
+| --- | --- | --- | --- |
+| A1 | 2026-10-24 | The goal question "What are we trying to do?" replaces the track selector; each goal sets track and task. | §3.2, §7.4 |
+| A2 | 2026-10-24 | Hierarchy `Goal › Stage › Group › Family › Page`; at most 7 children, no single-child levels; families by job; placement from `content/taxonomy.yaml` (from `docs/QUESTION_MAP.md`); fixed stage positions; per-goal stored layouts. | §3.3, §5.2, §5.3 |
+| A3 | 2026-10-24 | Questions mode is a `Names | Questions` label toggle on the same tree; symptom questions gain the `we_need_but` stem and become full sentences. | §3.4, §3.5, §7.4 |
+| A4 | 2026-10-24 | New slot 7 "What comes out"; the template goes from 11 to 12 slots. | §4, §5.1, §5.2, §13 |
+| A5 | 2026-10-24 | Radial tree children fan out from their parent, attached; other stages keep dimmed labels; zoom to fit the opened path. | §7.1 |
+| A6 | 2026-10-24 | A flat route map replaces the globe journey. | §7.3, §12 |
+| A7 | 2026-10-24 | Builder starts empty with "Try a sample route"; "Add to route" everywhere; one-tap fixes; "Get notebook" never disabled. | §8 |
+| A8 | 2026-10-24 | JetBrains Mono for code only; numbers in text use Atkinson with tabular figures. Code soft-wraps. | §10.1, §10.8, §10.9 |
+| A9 | 2026-10-24 | Hide a stage badge that repeats the archetype badge; keep a stage-colour dot. | §5.1 |
+| A10 | 2026-10-24 | Key settings tiers "Most used / Also useful / Rarely changed"; effective defaults shown large. | §5.1 |
+
+Also decided 2026-10-24: the classification toy dataset is breast cancer (§9).

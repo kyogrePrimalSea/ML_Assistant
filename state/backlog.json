@@ -1,11 +1,13 @@
 {
-  "current_sprint": null,
+  "current_sprint": "Sprint 3 (E12-E11)",
   "notes": [
     "Epic order follows spec \u00a713. E05-E10 can run in parallel once their dependencies are done, subject to write-scope conflicts. Tasks are created per epic by the architect skill.",
     "Sprint 1 parallelism: T002, T003, T004, T005 write disjoint files and may run together. T002 owns tests/test_inventory.py. T006, T007, T008 may run together (per-library outputs; overrides are per-item files).",
     "T010 dependency relaxed from T009 to T002/T003/T014 by the coordinator: the schema needs the finished inventory, not the audit report; T009 is read-only so they run in parallel.",
     "Sprint 2: T015 installs every npm dependency so parallel tasks never touch package.json. T016+T017 parallel; T018+T019 parallel; T020 then T021 (coordinator pushes and checks the live deploy).",
-    "E04 parallelism: after T021, T022 (content/), T023 (views/RadialTree + layout script), T025 (cutscenes/) run together; T024 after T023; T026 after T022. T023 and T024 both touch the tree view - sequential."
+    "E04 parallelism: after T021, T022 (content/), T023 (views/RadialTree + layout script), T025 (cutscenes/) run together; T024 after T023; T026 after T022. T023 and T024 both touch the tree view - sequential.",
+    "Design review round 1 (2026-10-24, docs/BRIEF_DESIGN_REVIEW_1.md): order E12 -> E11 -> E08 -> E05 (by stage, user review between stages) -> E06, E09, E07, E10. E05 starts only after E11's taxonomy and validator are merged.",
+    "Sprint 3 parallelism: wave 1 T028, T031, T032 (E12) plus T034 (E11, new files only) run together. Then T029+T030 (after T028), T036+T037 (after T034). T035 after T029. T038 -> T039 -> T040 sequential (tree view)."
   ],
   "epics": {
     "E01": {
@@ -44,19 +46,60 @@
         "E03"
       ]
     },
-    "E05": {
-      "title": "Content fill by stage",
-      "goal": "Orchestrated parallel drafting of all Wave 1 pages from E01 extractions, stage by stage, with the reviewed flag and user batch review per stage.",
-      "spec": "\u00a75, \u00a76, \u00a713.4",
-      "status": "Backlog",
+    "E12": {
+      "title": "Review fixes and the What comes out slot",
+      "goal": "F3-F10 from design review round 1, the 12th slot 'What comes out' (A4: schema, renderer, content for the 4 boosting and 4 hyperparameter pages), typography (A8), badges (A9), key settings wording (A10).",
+      "spec": "\u00a75.1, \u00a710.1, \u00a710.9 (A4, A8, A9, A10); docs/BRIEF_DESIGN_REVIEW_1.md \u00a72",
+      "status": "In Progress",
       "dependencies": [
         "E04"
       ]
     },
+    "E11": {
+      "title": "Taxonomy and Questions mode",
+      "goal": "content/taxonomy.yaml from docs/QUESTION_MAP.md, taxonomy validator, record migration to taxonomy family ids, per-goal stored layouts with the A5 fan, goal selector (A1), Names/Questions label toggle (A3), search on both label sets, the we_need_but stem. Fixes F1, F2.",
+      "spec": "\u00a73.2-3.5, \u00a77.1, \u00a77.4 (A1, A2, A3, A5); docs/QUESTION_MAP.md",
+      "status": "Backlog",
+      "dependencies": [
+        "E04",
+        "E12"
+      ]
+    },
+    "E08": {
+      "title": "Pipeline builder and route map",
+      "goal": "A flat route map replaces the globe journey (spec 7.3, A6): passport chips, empty start plus 'Try a sample route', stops and alternatives per stage from taxonomy families, data-shape band, live validation with one-tap fixes, 'Add to route' on pages and Questions-mode page nodes, 'Get notebook' never disabled (A7). The four behaviour examples pass as tests. Globe code removed only after the user's review.",
+      "spec": "\u00a77.3, \u00a78 (A6, A7)",
+      "status": "Backlog",
+      "dependencies": [
+        "E04",
+        "E11"
+      ]
+    },
+    "E05": {
+      "title": "Content fill by stage",
+      "goal": "Orchestrated parallel drafting of all Wave 1 pages from E01 extractions, stage by stage, with the reviewed flag and user batch review per stage. Drafted pages use taxonomy placement (content/taxonomy.yaml) and include the What comes out slot.",
+      "spec": "\u00a75, \u00a76, \u00a713.4",
+      "status": "Backlog",
+      "dependencies": [
+        "E04",
+        "E11",
+        "E12"
+      ]
+    },
     "E06": {
-      "title": "Lookup: radial tree, question door and search",
-      "goal": "Full radial tree (accordion, zoom to fit, horizontal labels, semantic zoom, relationship lines on demand, track filtering), the by-question door with chaining, and global fuzzy search.",
+      "title": "Lookup: relationship lines, semantic zoom and search polish",
+      "goal": "Relationship lines on demand (including we_need_but questions to their answers), semantic zoom and search polish. The question door moved to E11.",
       "spec": "\u00a73, \u00a77.1",
+      "status": "Backlog",
+      "dependencies": [
+        "E04",
+        "E11"
+      ]
+    },
+    "E09": {
+      "title": "Cutscenes and toy data",
+      "goal": "Shared toy datasets (Ames, breast cancer, airline passengers), an archetype-specific hero cutscene for each archetype, and Watch-it-work slider examples, all following the motion rules. The hyperparameter archetype hero moved to E12 (F3).",
+      "spec": "\u00a74, \u00a79, \u00a710.7",
       "status": "Backlog",
       "dependencies": [
         "E04"
@@ -66,24 +109,6 @@
       "title": "Constellation view",
       "goal": "Fixed-position star map with stage clusters, pipeline path, semantic zoom, and relationship / focus / scope filters that dim and never move.",
       "spec": "\u00a77.2",
-      "status": "Backlog",
-      "dependencies": [
-        "E04"
-      ]
-    },
-    "E08": {
-      "title": "Pipeline builder and globe journey",
-      "goal": "Data profile passport, picking per stage, live validation rules derived from schema, overrides, globe journey with legs, tickets, itinerary editing and play journey, then deterministic notebook view and .ipynb download.",
-      "spec": "\u00a77.3, \u00a78",
-      "status": "Backlog",
-      "dependencies": [
-        "E04"
-      ]
-    },
-    "E09": {
-      "title": "Cutscenes and toy data",
-      "goal": "Shared toy datasets (Ames, Titanic or breast cancer, airline passengers), an archetype-specific hero cutscene for each of the 11 archetypes, and Watch-it-work slider examples, all following the motion rules.",
-      "spec": "\u00a74, \u00a79, \u00a710.7",
       "status": "Backlog",
       "dependencies": [
         "E04"
@@ -130,6 +155,22 @@
       "T025",
       "T026",
       "T027"
+    ],
+    "Sprint 3 (E12-E11)": [
+      "T028",
+      "T029",
+      "T030",
+      "T031",
+      "T032",
+      "T033",
+      "T034",
+      "T035",
+      "T036",
+      "T037",
+      "T038",
+      "T039",
+      "T040",
+      "T041"
     ]
   },
   "tasks": {
@@ -395,6 +436,137 @@
         "T026"
       ],
       "epic": "E04"
+    },
+    "T028": {
+      "title": "What comes out: schema, validator, toy outputs",
+      "file": "tasks/T028-what-comes-out-schema-and-data.md",
+      "status": "Ready",
+      "dependencies": [],
+      "epic": "E12"
+    },
+    "T029": {
+      "title": "E12 content: What comes out, hyperparameter prep and pairings, long lines",
+      "file": "tasks/T029-e12-content.md",
+      "status": "Backlog",
+      "dependencies": [
+        "T028"
+      ],
+      "epic": "E12"
+    },
+    "T030": {
+      "title": "What comes out renderer and visuals",
+      "file": "tasks/T030-what-comes-out-renderer.md",
+      "status": "Backlog",
+      "dependencies": [
+        "T028"
+      ],
+      "epic": "E12"
+    },
+    "T031": {
+      "title": "Review UI fixes: code wrap, typography, badges, key settings, sheet title, Used by",
+      "file": "tasks/T031-review-ui-fixes.md",
+      "status": "Ready",
+      "dependencies": [],
+      "epic": "E12"
+    },
+    "T032": {
+      "title": "Hyperparameter hero and slider-driven Watch it work",
+      "file": "tasks/T032-hyperparameter-hero-and-watch-it-work.md",
+      "status": "Ready",
+      "dependencies": [],
+      "epic": "E12"
+    },
+    "T033": {
+      "title": "E12 acceptance and deploy",
+      "file": "tasks/T033-e12-acceptance-and-deploy.md",
+      "status": "Backlog",
+      "dependencies": [
+        "T028",
+        "T029",
+        "T030",
+        "T031",
+        "T032"
+      ],
+      "epic": "E12"
+    },
+    "T034": {
+      "title": "content/taxonomy.yaml from the question map",
+      "file": "tasks/T034-taxonomy-file.md",
+      "status": "Ready",
+      "dependencies": [],
+      "epic": "E11"
+    },
+    "T035": {
+      "title": "Taxonomy validator and record migration",
+      "file": "tasks/T035-taxonomy-validator-and-migration.md",
+      "status": "Backlog",
+      "dependencies": [
+        "T034",
+        "T029"
+      ],
+      "epic": "E11"
+    },
+    "T036": {
+      "title": "we_need_but stem and question rewrite",
+      "file": "tasks/T036-we-need-but-questions.md",
+      "status": "Backlog",
+      "dependencies": [
+        "T034"
+      ],
+      "epic": "E11"
+    },
+    "T037": {
+      "title": "pick_when verification against the docs",
+      "file": "tasks/T037-pick-when-verification.md",
+      "status": "Backlog",
+      "dependencies": [
+        "T034"
+      ],
+      "epic": "E11"
+    },
+    "T038": {
+      "title": "Content index and per-goal radial layouts with the fan",
+      "file": "tasks/T038-per-goal-layout.md",
+      "status": "Backlog",
+      "dependencies": [
+        "T034",
+        "T035"
+      ],
+      "epic": "E11"
+    },
+    "T039": {
+      "title": "Goal selector, Names | Questions toggle, fanned tree",
+      "file": "tasks/T039-goal-selector-and-questions-mode.md",
+      "status": "Backlog",
+      "dependencies": [
+        "T038"
+      ],
+      "epic": "E11"
+    },
+    "T040": {
+      "title": "Search across both label sets and symptom questions",
+      "file": "tasks/T040-search-both-label-sets.md",
+      "status": "Backlog",
+      "dependencies": [
+        "T036",
+        "T039"
+      ],
+      "epic": "E11"
+    },
+    "T041": {
+      "title": "E11 acceptance and deploy",
+      "file": "tasks/T041-e11-acceptance-and-deploy.md",
+      "status": "Backlog",
+      "dependencies": [
+        "T034",
+        "T035",
+        "T036",
+        "T037",
+        "T038",
+        "T039",
+        "T040"
+      ],
+      "epic": "E11"
     }
   }
 }

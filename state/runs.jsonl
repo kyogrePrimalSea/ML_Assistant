@@ -61,3 +61,4 @@
 {"event":"coordinator-fix","task":"T027","ts":"2026-10-24","note":"Deploy run 40025239709 failed: unit tests read generated public/data, absent on clean CI before build. Added pretest hook (build-content + layout-radial); verified with public/data deleted."}
 {"event":"review","task":"T027","role":"coordinator","status":"passed","ts":"2026-10-24","verification":"clean npm ci: lint, 247 unit, build, 48 e2e; pytest 1659; validator 0; coverage 0; deploy run 40025501892 green; live smoke: xgboost page, cutscene, connections, radial tree, journey, notebook download"}
 {"event":"sprint-complete","sprint":"Sprint 2 (E03-E04)","ts":"2026-10-24"}
+{"event":"sprint-start","sprint":"Sprint 3 (E12-E11)","ts":"2026-10-24","note":"Design review round 1 brief applied: spec A1-A10 + changelog, OPEN_QUESTIONS #9 #14 #15 #17 #18 settled (classification dataset: breast cancer), backlog E11/E12 added, E05/E06/E08/E09 adjusted, packets T028-T041 written."}

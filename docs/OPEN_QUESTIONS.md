@@ -2,6 +2,8 @@
 
 Choices agents made where the spec was silent or ambiguous. Each is a working
 default until you confirm or change it. Remove an entry once decided.
+Numbers are kept stable, so gaps mark settled items (#9, #14, #15, #17, #18 were
+settled on 2026-10-24 by design review round 1; see the changelog in `docs/spec.md`).
 
 ## Inventory (E01)
 
@@ -30,8 +32,6 @@ default until you confirm or change it. Remove an entry once decided.
 
 ## Content schema (E02)
 
-9. **Classification toy dataset:** spec says "Titanic or breast cancer". Both are in
-   the vocab; pick one so the data stays familiar.
 10. **Hyperparameter pages** (e.g. `max-depth`) are content-only records (not in the
     inventory) placed in stage `tune`, with `applies_to` listing model pages.
 11. **`question_tags`** are free user-wording tags for search; questions link to
@@ -43,18 +43,8 @@ default until you confirm or change it. Remove an entry once decided.
 
 ## App (E03–E04) — for your review of the live site
 
-14. **Radial tree shape.** An opened stage shows its families as a column beside the
-    ring, and an opened family shows only itself plus a "+N other families" stub (spec
-    accordion: one path expanded). It's legible and labels stay horizontal, but it is not
-    a classic radial fan. Keep, or try a true fan?
-15. **Stage labels on the ring** are hidden while another stage is open (shown on hover /
-    focus), to keep labels from colliding.
 16. **Star field** dots are 12–30% opacity; spec says "~1–2% opacity", which would be
     nearly invisible. Was 1–2% meant literally, or as density?
-17. **Two "Model" badges** on model pages (archetype badge + stage badge carry the same
-    word). Keep both (spec asks for both) or hide the stage badge when it repeats?
-18. **Journey globe** labels collide near Model/Evaluate in the demo; E08 rebuilds the
-    journey, so this is parked until then.
 19. **LightGBM early stopping** is a `fit` callback, not a constructor setting, so the
     schema can't list it as a key setting on the LightGBM page (it's covered on the
     `early-stopping` page instead).
@@ -63,3 +53,8 @@ default until you confirm or change it. Remove an entry once decided.
 21. **Demo journey order:** stops follow pipeline stage order, so the encoder (Transform)
     comes before the split and shows the leakage Warn with its "Wrap in a Pipeline" fix,
     as spec §8 describes.
+
+## Design review round 1 (E11–E12)
+
+Agents add any `pick_when` line or `we_need_but` answer that the docs contradict here,
+with the source URL. Wording is not rewritten silently.
