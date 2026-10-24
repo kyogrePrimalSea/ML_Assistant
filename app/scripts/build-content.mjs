@@ -10,7 +10,8 @@ import { goalView, pagePlacement, sourceNodes } from './goal-view.mjs'
 
 const here = dirname(fileURLToPath(import.meta.url))
 const root = join(here, '..', '..', 'content')
-const out = join(here, '..', 'public', 'data')
+// BUILD_CONTENT_OUT lets tests write elsewhere, so they never wipe public/data under other tests.
+const out = process.env.BUILD_CONTENT_OUT ?? join(here, '..', 'public', 'data')
 
 function fail(msg) {
   console.error(`build-content: ${msg}`)

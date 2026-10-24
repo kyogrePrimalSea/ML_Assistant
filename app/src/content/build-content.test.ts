@@ -1,7 +1,8 @@
 // @vitest-environment node
 /// <reference types="node" />
 import { execFileSync } from 'node:child_process'
-import { readdirSync, readFileSync } from 'node:fs'
+import { mkdtempSync, readdirSync, readFileSync, rmSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { beforeAll, describe, expect, it } from 'vitest'
@@ -16,8 +17,9 @@ const read = <T,>(p: string) => JSON.parse(readFileSync(join(data, p), 'utf8')) 
 
 let index: ContentIndex
 
+// The pretest hook has just run build-content. Re-running it here would wipe public/data while
+// other test files read it in parallel.
 beforeAll(() => {
-  execFileSync('node', ['scripts/build-content.mjs'], { cwd: appDir, stdio: 'pipe' })
   index = read<ContentIndex>('index.json')
 })
 
@@ -55,8 +57,9 @@ describe('build-content output', () => {
   })
 
   it('is deterministic', () => {
-    const before = readFileSync(join(data, 'index.json'), 'utf8')
-    execFileSync('node', ['scripts/build-content.mjs'], { cwd: appDir, stdio: 'pipe' })
-    expect(readFileSync(join(data, 'index.json'), 'utf8')).toBe(before)
-  })
+    const tmp = mkdtempSync(join(tmpdir(), 'build-content-'))
+    execFileSync('node', ['scripts/build-content.mjs'], { cwd: appDir, stdio: 'pipe', env: { ...process.env, BUILD_CONTENT_OUT: tmp } })
+    expect(readFileSync(join(tmp, 'index.json'), 'utf8')).toBe(readFileSync(join(data, 'index.json'), 'utf8'))
+    rmSync(tmp, { recursive: true, force: true })
+  }, 60_000)
 })
