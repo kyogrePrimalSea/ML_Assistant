@@ -121,9 +121,18 @@ test('unknown id shows a friendly not-found', async () => {
 })
 
 test('a catalogue page without a record says not written yet', async () => {
+  // Every page has a record now, so simulate one without: ridge marked unwritten, its JSON missing.
   const idx = JSON.parse(readFileSync(dir + 'index.json', 'utf8'))
-  const missing = idx.pages.find((p: { has_record: boolean }) => !p.has_record)
-  show(missing.id)
+  for (const p of idx.pages) if (p.id === 'ridge') p.has_record = false
+  vi.stubGlobal(
+    'fetch',
+    vi.fn(async (url: string) =>
+      url.endsWith('index.json')
+        ? { ok: true, status: 200, json: async () => idx }
+        : { ok: false, status: 404, json: async () => ({}) },
+    ),
+  )
+  show('ridge')
   expect(await screen.findByText('This page is not written yet.')).toBeInTheDocument()
 })
 

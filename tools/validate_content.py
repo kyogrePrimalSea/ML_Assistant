@@ -283,10 +283,11 @@ def validate(content, warnings=None):
         if ents:
             # Stage and family come from the taxonomy (checked below); the inventory only keeps the
             # archetype, and its tracks must be covered (the taxonomy may widen them).
-            for e in ents:
-                if e.get("archetype") != r["archetype"]:
-                    rep.add(rel, "archetype", f"'{r['archetype']}' disagrees with inventory '{e.get('archetype')}' ({e['id']})")
-                    break
+            # A page can group targets of two archetypes (a metric and its Display, spec 3.3);
+            # its archetype must be one of them.
+            inv_arch = {e.get("archetype") for e in ents}
+            if r["archetype"] not in inv_arch:
+                rep.add(rel, "archetype", f"'{r['archetype']}' is not one of the inventory archetypes {sorted(inv_arch)}")
             inv_tracks = set().union(*(set(e.get("tracks", [])) for e in ents))
             if not inv_tracks <= set(r["tracks"]):
                 rep.add(rel, "tracks", f"{sorted(r['tracks'])} misses inventory tracks {sorted(inv_tracks - set(r['tracks']))}")

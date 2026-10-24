@@ -108,7 +108,7 @@ def test_inventory_agreement(tree, field, value):
             d["slots"]["quick_facts"] = {"none": True}
             d["slots"]["intuition"] = {"none": True}
     edit(tree, XGB, f)
-    has(tree, XGB, field, "disagrees with inventory")
+    has(tree, XGB, field, "is not one of the inventory archetypes")
 
 
 def test_tracks_must_cover_inventory(tree):

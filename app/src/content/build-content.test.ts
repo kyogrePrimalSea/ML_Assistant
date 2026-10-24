@@ -28,9 +28,8 @@ describe('build-content output', () => {
     expect(index.questions.length).toBeGreaterThan(0)
   })
 
-  it('indexes every inventory page, with or without a record', () => {
+  it('indexes every inventory page', () => {
     expect(index.pages.length).toBeGreaterThan(300)
-    expect(index.pages.some((p) => !p.has_record)).toBe(true)
     const ids = index.pages.map((p) => p.id)
     expect(new Set(ids).size).toBe(ids.length)
     expect(ids).toEqual([...ids].sort((a, b) => a.localeCompare(b)))
@@ -41,10 +40,11 @@ describe('build-content output', () => {
     expect(index.relationships.length).toBeGreaterThan(0)
   })
 
-  it('writes page JSON only for records', () => {
+  it('writes page JSON exactly for the pages with records', () => {
     const page = read<PageData>('pages/xgboost.json')
     expect(page.record.id).toBe('xgboost')
-    expect(() => read('pages/ridge.json')).toThrow()
+    const files = new Set(readdirSync(join(data, 'pages')).map((f) => f.replace(/\.json$/, '')))
+    expect(index.pages.filter((p) => p.has_record).map((p) => p.id).sort()).toEqual([...files].sort())
   })
 
   it('attaches XGBoost key-setting defaults, max_depth effective default 6', () => {

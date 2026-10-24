@@ -142,7 +142,7 @@ test('keyboard: arrows, Enter, Esc', async () => {
   expect(screen.getAllByRole('treeitem')).toHaveLength(9)
 })
 
-test('a page that is open expands its branch; unwritten pages say so; pages show pick_when in Questions mode', async () => {
+test('a page that is open expands its branch; written siblings carry no draft note; pages show pick_when in Questions mode', async () => {
   setup('/page/lightgbm')
   const el = await screen.findByRole('treeitem', { name: /^LightGBM, / })
   expect(el).toHaveAttribute('aria-selected', 'true')
@@ -150,7 +150,7 @@ test('a page that is open expands its branch; unwritten pages say so; pages show
   expect(extra('lightgbm').textContent).toContain('The same idea, usually')
   expect(within(el).queryByText(/The same idea/)).toBeNull()
   expect(el.getAttribute('aria-label')).toContain('The same idea, usually faster on large data')
-  expect(screen.getByRole('treeitem', { name: /^AdaBoost, .*not written yet/ })).toBeInTheDocument()
+  expect(screen.getByRole('treeitem', { name: /^AdaBoost, / }).getAttribute('aria-label')).not.toMatch(/not written yet/)
 })
 
 test('Names | Questions changes text only: no node, and not the camera, moves', async () => {
