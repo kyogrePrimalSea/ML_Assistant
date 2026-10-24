@@ -518,7 +518,7 @@
     "T037": {
       "title": "pick_when verification against the docs",
       "file": "tasks/T037-pick-when-verification.md",
-      "status": "In Progress",
+      "status": "Done",
       "dependencies": [
         "T034"
       ],

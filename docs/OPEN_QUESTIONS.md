@@ -58,3 +58,12 @@ settled on 2026-10-24 by design review round 1; see the changelog in `docs/spec.
 
 Agents add any `pick_when` line or `we_need_but` answer that the docs contradict here,
 with the source URL. Wording is not rewritten silently.
+
+- **`pick_when` for `chi2` (T037).** Current wording: "Counts or other non-negative
+  features". The docs say X "must contain only **non-negative integer feature values**
+  such as booleans or frequencies (e.g., term counts in document classification)" and that
+  continuous features need binning first (for example with `KBinsDiscretizer`). "Other
+  non-negative features" suggests any non-negative number works. Source:
+  https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.chi2.html
+  Suggested wording: "Counts, frequencies or yes/no flags (whole numbers, not negative)".
+  Accept or reject? Full table: `content/verification/pick-when.md`.
