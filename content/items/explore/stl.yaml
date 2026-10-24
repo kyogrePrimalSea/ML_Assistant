@@ -1,0 +1,89 @@
+id: stl
+plain_name: STL
+code_name: STL
+aliases: [loess decomposition, robust decomposition, season that drifts]
+stage: explore
+family: explore.decompose
+tracks: [time-series]
+archetype: diagnostic
+question_tags: [season drifts, outliers in series]
+targets: [statsmodels.tsa.seasonal.STL]
+pairs_with: []
+clashes: []
+source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.tsa.seasonal.STL.html']
+library_versions: {statsmodels: 0.15.0}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when:
+    - {when: {time_ordered: false}, reason: Needs rows in time order.}
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: airline-passengers, chart: "trend, seasonal and residual panels"}
+    line: Splits the series into parts when the season can drift.
+  quick_facts:
+    facts:
+      - {label: Default robust, value: "False"}
+      - {label: Seasonal smoother length, value: "7"}
+      - {label: Seasons, value: one}
+  use_avoid:
+    use_when: [one season that drifts, outliers present]
+    avoid_when: [several seasons at once, need plain moving averages]
+  prep:
+    - step: {family: clean.impute}
+      status: required
+      why: One gap turns every output NaN.
+      condition: {has_missing: true}
+      unless: null
+  code:
+    - library: statsmodels
+      target: statsmodels.tsa.seasonal.STL
+      why_this_library: One class; fit() returns the parts.
+      snippet: |
+        # statsmodels 0.15.0
+        import numpy as np
+        import pandas as pd
+        from statsmodels.tsa.seasonal import STL
+
+        rng = np.random.default_rng(0)
+        t = np.arange(120)
+        values = 10 + 0.05 * t + 3 * np.sin(2 * np.pi * t / 12)
+        values = values + rng.normal(0, 0.5, 120)
+        index = pd.date_range("2000-01", periods=120, freq="MS")
+        series = pd.Series(values, index=index)
+
+        result = STL(series, period=12, robust=True).fit()
+        print(round(result.resid.std(), 2))
+  what_comes_out:
+    items:
+      - {name: fit, kind: method, task: null, shape: STL results, note: Runs the decomposition.}
+      - {name: trend, kind: return, task: null, shape: same length as input, note: Slow-moving level of the series.}
+      - {name: seasonal, kind: return, task: null, shape: same length as input, note: Repeating pattern that can drift.}
+      - {name: resid, kind: return, task: null, shape: same length as input, note: What trend and season leave behind.}
+    next_step: Use robust=True if a few outliers distort the parts.
+    visual: null
+  catch_outs:
+    - The seasonal setting is a smoother length; the season length is period.
+    - Without a pandas frequency, period must be set.
+    - Default robust is False, so outliers can bend the parts.
+  key_settings:
+    tier1:
+      - {name: period, page: null}
+      - {name: seasonal, page: null}
+      - {name: robust, page: null}
+    tier2:
+      - {name: trend, page: null}
+      - {name: low_pass, page: null}
+      - {name: seasonal_deg, page: null}
+      - {name: trend_deg, page: null}
+    tier3:
+      - {name: low_pass_deg, page: null}
+      - {name: seasonal_jump, page: null}
+      - {name: trend_jump, page: null}
+      - {name: low_pass_jump, page: null}
+  watch_it_work: {none: true}
+  intuition: {text: "Smooth the season, smooth the trend, and repeat until the two settle."}
+  next: []

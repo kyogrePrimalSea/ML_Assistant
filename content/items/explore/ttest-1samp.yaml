@@ -1,0 +1,74 @@
+id: ttest-1samp
+plain_name: One-sample t-test
+code_name: ttest_1samp
+aliases: [one sample t test, mean against a target, is the mean really]
+stage: explore
+family: explore.compare-means
+tracks: [standard, time-series]
+archetype: diagnostic
+question_tags: [mean vs target, is the average really different]
+targets: [scipy.stats.ttest_1samp]
+pairs_with: []
+clashes: []
+source_urls: ['https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_1samp.html']
+library_versions: {scipy: 1.18.1}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: breast-cancer, chart: sample mean against a target value}
+    line: Checks whether one group's average differs from a set value.
+  quick_facts:
+    facts:
+      - {label: Null hypothesis, value: mean equals popmean}
+      - {label: Default alternative, value: two-sided}
+      - {label: Default NaN handling, value: propagate}
+  use_avoid:
+    use_when: [one group, known target value]
+    avoid_when: [two groups to compare, paired measurements]
+  prep:
+    - step: {family: clean.impute}
+      status: recommended
+      why: NaN in gives NaN out.
+      condition: {has_missing: true}
+      unless: {setting: nan_policy, value: omit}
+  code:
+    - library: scipy
+      target: scipy.stats.ttest_1samp
+      why_this_library: One call; returns the statistic and p-value.
+      snippet: |
+        # scipy 1.18.1
+        from scipy.stats import ttest_1samp
+        from sklearn.datasets import load_breast_cancer
+
+        X, y = load_breast_cancer(return_X_y=True)
+
+        result = ttest_1samp(X[:, 0], popmean=14.0)
+        print(round(result.statistic, 3), round(result.pvalue, 3))
+  what_comes_out:
+    items:
+      - {name: statistic, kind: return, task: null, shape: float, note: Gap from popmean in standard errors.}
+      - {name: pvalue, kind: return, task: null, shape: float, note: Chance of a gap this big if the mean were popmean.}
+      - {name: "confidence_interval()", kind: return, task: null, shape: '(low, high)', note: Range of plausible means.}
+    next_step: Report the gap and its interval, not only the p-value.
+    visual: null
+  catch_outs:
+    - Compares one group with a fixed value, not with another group.
+    - Default alternative is two-sided; set alternative for a one-sided test.
+    - NaN input gives NaN unless nan_policy is set.
+  key_settings:
+    tier1:
+      - {name: popmean, page: null}
+      - {name: alternative, page: null}
+      - {name: nan_policy, page: null}
+    tier2:
+      - {name: axis, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Compare one average with a fixed number and ask how surprising the gap is."}
+  next: []

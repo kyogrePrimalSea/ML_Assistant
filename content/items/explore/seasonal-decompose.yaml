@@ -1,0 +1,82 @@
+id: seasonal-decompose
+plain_name: seasonal_decompose
+code_name: seasonal_decompose
+aliases: [classical decomposition, moving average decomposition, trend and season]
+stage: explore
+family: explore.decompose
+tracks: [time-series]
+archetype: diagnostic
+question_tags: [split trend and season, one season]
+targets: [statsmodels.tsa.seasonal.seasonal_decompose]
+pairs_with: []
+clashes: []
+source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.tsa.seasonal.seasonal_decompose.html']
+library_versions: {statsmodels: 0.15.0}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when:
+    - {when: {time_ordered: false}, reason: Needs rows in time order.}
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: airline-passengers, chart: "observed, trend, seasonal and residual panels"}
+    line: Splits the series into trend, season and leftover noise.
+  quick_facts:
+    facts:
+      - {label: Default model, value: additive}
+      - {label: Needs, value: two full cycles}
+      - {label: Seasons, value: one}
+  use_avoid:
+    use_when: [one fixed season, quick first look]
+    avoid_when: [several seasons, season length drifts]
+  prep:
+    - step: {family: clean.impute}
+      status: required
+      why: Gaps raise an error.
+      condition: {has_missing: true}
+      unless: null
+  code:
+    - library: statsmodels
+      target: statsmodels.tsa.seasonal.seasonal_decompose
+      why_this_library: One call; returns the parts as arrays.
+      snippet: |
+        # statsmodels 0.15.0
+        import numpy as np
+        import pandas as pd
+        from statsmodels.tsa.seasonal import seasonal_decompose
+
+        rng = np.random.default_rng(0)
+        t = np.arange(120)
+        values = 10 + 0.05 * t + 3 * np.sin(2 * np.pi * t / 12)
+        values = values + rng.normal(0, 0.5, 120)
+        index = pd.date_range("2000-01", periods=120, freq="MS")
+        series = pd.Series(values, index=index)
+
+        result = seasonal_decompose(series, model="additive", period=12)
+        print(round(result.seasonal.max() - result.seasonal.min(), 2))
+  what_comes_out:
+    items:
+      - {name: trend, kind: return, task: null, shape: same length as input, note: Slow-moving level of the series.}
+      - {name: seasonal, kind: return, task: null, shape: same length as input, note: Repeating pattern in each period.}
+      - {name: resid, kind: return, task: null, shape: same length as input, note: What trend and season leave behind.}
+    next_step: Check whether the residuals still show a pattern.
+    visual: null
+  catch_outs:
+    - Needs two full cycles of data.
+    - Gaps raise an error; fill them first.
+    - The trend has no values at the ends unless extrapolate_trend is set.
+  key_settings:
+    tier1:
+      - {name: period, page: null}
+      - {name: model, page: null}
+      - {name: extrapolate_trend, page: null}
+    tier2:
+      - {name: two_sided, page: null}
+      - {name: filt, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Average over each season to find the pattern, then take it away to see the rest."}
+  next: []

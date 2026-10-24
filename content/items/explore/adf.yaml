@@ -1,0 +1,65 @@
+id: adf
+plain_name: ADF test
+code_name: adfuller
+aliases: [unit root test, dickey fuller]
+stage: explore
+family: explore.stationarity
+tracks: [time-series]
+archetype: diagnostic
+question_tags: [trend check, is it stable, stationary test]
+targets: [statsmodels.tsa.stattools.adfuller]
+pairs_with: []
+clashes: []
+source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.tsa.stattools.adfuller.html']
+library_versions: {statsmodels: 0.15.0}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: airline-passengers, chart: p-value against critical values}
+    line: Tests whether a series wanders without a steady mean.
+  quick_facts:
+    facts:
+      - {label: Null hypothesis, value: "Unit root, so it wanders"}
+      - {label: Small p, value: Series is stable}
+      - {label: Default regression, value: "c"}
+  use_avoid:
+    use_when: [checking a series before forecasting, trend or drift suspected]
+    avoid_when: [rows not in time order, short series]
+  prep:
+    - {step: {family: transform.scale.rescale}, status: not_needed, why: Scale does not change the result., condition: null, unless: null}
+  code:
+    - library: statsmodels
+      target: statsmodels.tsa.stattools.adfuller
+      why_this_library: Returns a result object with the p-value and lags.
+      snippet: |
+        # statsmodels 0.15.0
+        import numpy as np
+        from statsmodels.tsa.stattools import adfuller
+
+        rng = np.random.default_rng(0)
+        x = np.cumsum(rng.normal(size=200))
+
+        result = adfuller(x, result_object=True)
+        print(f"{result.pvalue:.2e}")
+  what_comes_out:
+    items:
+      - {name: adfuller, kind: return, task: null, shape: "ADFullerResult object", note: Read .pvalue; small p means stable.}
+    next_step: Run KPSS too; agreement of both is clearer.
+    visual: null
+  catch_outs:
+    - The null is a unit root, so small p means stable.
+    - Without result_object the output is a plain tuple.
+    - Changing regression or maxlag can change the answer.
+  key_settings:
+    tier1: [{name: result_object, page: null}, {name: autolag, page: null}, {name: regression, page: null}, {name: maxlag, page: null}]
+    tier2: [{name: store, page: null}, {name: regresults, page: null}]
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: Checks whether the series keeps wandering or settles around a mean.}
+  next: []

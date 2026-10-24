@@ -1,0 +1,65 @@
+id: ljung-box
+plain_name: Ljung–Box test
+code_name: acorr_ljungbox
+aliases: [portmanteau test, residual autocorrelation test]
+stage: explore
+family: explore.memory
+tracks: [time-series]
+archetype: diagnostic
+question_tags: [leftovers are noise, residual check, model fit check]
+targets: [statsmodels.stats.diagnostic.acorr_ljungbox]
+pairs_with: []
+clashes: []
+source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.stats.diagnostic.acorr_ljungbox.html']
+library_versions: {statsmodels: 0.15.0}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: airline-passengers, chart: p-value by lag}
+    line: Tests whether leftovers still follow a pattern across lags.
+  quick_facts:
+    facts:
+      - {label: Null hypothesis, value: No autocorrelation}
+      - {label: Default model_df, value: "0"}
+      - {label: Returns, value: DataFrame}
+  use_avoid:
+    use_when: [checking model leftovers, many lags at once]
+    avoid_when: [need the lag plot, rows not in time order]
+  prep:
+    - {step: {family: transform.scale.rescale}, status: not_needed, why: Scale does not change the result., condition: null, unless: null}
+  code:
+    - library: statsmodels
+      target: statsmodels.stats.diagnostic.acorr_ljungbox
+      why_this_library: Returns a table of statistics and p-values per lag.
+      snippet: |
+        # statsmodels 0.15.0
+        import numpy as np
+        from statsmodels.stats.diagnostic import acorr_ljungbox
+
+        rng = np.random.default_rng(0)
+        x = rng.normal(size=200)
+
+        result = acorr_ljungbox(x, lags=10)
+        print(result["lb_pvalue"].round(3).tail(3))
+  what_comes_out:
+    items:
+      - {name: acorr_ljungbox, kind: return, task: null, shape: "DataFrame, one row per lag", note: Columns lb_stat and lb_pvalue. Small p means leftover pattern.}
+    next_step: Large p at every lag means the leftovers look like noise.
+    visual: null
+  catch_outs:
+    - Set model_df to the number of fitted parameters on residuals.
+    - Lags is the largest lag, not one lag.
+    - The data is demeaned before the test.
+  key_settings:
+    tier1: [{name: lags, page: null}, {name: model_df, page: null}, {name: period, page: null}]
+    tier2: [{name: auto_lag, page: null}, {name: boxpierce, page: null}]
+    tier3: [{name: return_df, page: null}]
+  watch_it_work: {none: true}
+  intuition: {text: Checks whether the leftovers still echo themselves at several lags.}
+  next: []

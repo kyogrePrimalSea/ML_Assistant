@@ -1,0 +1,4 @@
+8     0.916
+9     0.745
+10    0.721
+Name: lb_pvalue, dtype: float64

@@ -1,0 +1,79 @@
+id: periodogram
+plain_name: Periodogram
+code_name: periodogram
+aliases: [power spectrum, find the cycle length, spectrum peak]
+stage: explore
+family: explore.cycle
+tracks: [time-series]
+archetype: diagnostic
+question_tags: [how long is the cycle, season length unknown]
+targets: [scipy.signal.periodogram]
+pairs_with: []
+clashes: []
+source_urls: ['https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.periodogram.html']
+library_versions: {scipy: 1.18.1}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when:
+    - {when: {time_ordered: false}, reason: Needs rows in time order.}
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: airline-passengers, chart: "power by cycle length, peak marked"}
+    line: Finds how long the strongest repeating cycle lasts.
+  quick_facts:
+    facts:
+      - {label: Default detrend, value: constant}
+      - {label: Default scaling, value: density}
+      - {label: Default window, value: boxcar}
+  use_avoid:
+    use_when: [season length unknown, strongest cycles]
+    avoid_when: [rows not in time order]
+  prep:
+    - step: {family: clean.impute}
+      status: required
+      why: One gap turns the whole spectrum NaN.
+      condition: {has_missing: true}
+      unless: null
+  code:
+    - library: scipy
+      target: scipy.signal.periodogram
+      why_this_library: One call; returns frequencies and power.
+      snippet: |
+        # scipy 1.18.1
+        import numpy as np
+        from scipy.signal import periodogram
+
+        rng = np.random.default_rng(0)
+        t = np.arange(240)
+        series = 3 * np.sin(2 * np.pi * t / 12) + rng.normal(0, 1, 240)
+
+        freqs, power = periodogram(series)
+        peak = np.argmax(power[1:]) + 1
+        print(round(1 / freqs[peak], 1))
+  what_comes_out:
+    items:
+      - {name: f, kind: return, task: null, shape: '(n // 2 + 1,)', note: Frequencies in cycles per sample.}
+      - {name: Pxx, kind: return, task: null, shape: '(n // 2 + 1,)', note: Power at each frequency.}
+    next_step: Turn the peak frequency into a period, in samples.
+    visual: null
+  catch_outs:
+    - Periods are in samples unless fs is set.
+    - Default detrend of constant removes only the mean.
+  key_settings:
+    tier1:
+      - {name: window, page: null}
+      - {name: detrend, page: null}
+      - {name: scaling, page: null}
+    tier2:
+      - {name: fs, page: null}
+      - {name: nfft, page: null}
+    tier3:
+      - {name: return_onesided, page: null}
+      - {name: axis, page: null}
+  watch_it_work: {none: true}
+  intuition: {text: "Split the signal into pure waves and see which one carries the most power."}
+  next: []

@@ -1,0 +1,78 @@
+id: ttest-ind
+plain_name: Independent t-test
+code_name: ttest_ind
+aliases: [two sample t test, compare two group means, ttest ind]
+stage: explore
+family: explore.compare-means
+tracks: [standard, time-series]
+archetype: diagnostic
+question_tags: [do groups really differ, control vs treatment]
+targets: [scipy.stats.ttest_ind]
+pairs_with: []
+clashes: []
+source_urls: ['https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_ind.html']
+library_versions: {scipy: 1.18.1}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: breast-cancer, chart: "group means with spread, malignant vs benign"}
+    line: Checks whether two separate groups have different averages.
+  quick_facts:
+    facts:
+      - {label: Default equal_var, value: "True, assumes equal variances"}
+      - {label: Default alternative, value: two-sided}
+      - {label: Default NaN handling, value: propagate}
+  use_avoid:
+    use_when: [two separate groups, control vs treatment]
+    avoid_when: [paired measurements, more than two groups]
+  prep:
+    - step: {family: clean.impute}
+      status: recommended
+      why: NaN in gives NaN out.
+      condition: {has_missing: true}
+      unless: {setting: nan_policy, value: omit}
+  code:
+    - library: scipy
+      target: scipy.stats.ttest_ind
+      why_this_library: Two groups in, one result out.
+      snippet: |
+        # scipy 1.18.1
+        from scipy.stats import ttest_ind
+        from sklearn.datasets import load_breast_cancer
+
+        X, y = load_breast_cancer(return_X_y=True)
+        malignant = X[y == 0, 0]
+        benign = X[y == 1, 0]
+
+        result = ttest_ind(malignant, benign)
+        print(round(result.statistic, 3), f"{result.pvalue:.1e}")
+  what_comes_out:
+    items:
+      - {name: statistic, kind: return, task: null, shape: float, note: Gap between the means in standard errors.}
+      - {name: pvalue, kind: return, task: null, shape: float, note: Chance of a gap this big if the means were equal.}
+      - {name: "confidence_interval()", kind: return, task: null, shape: '(low, high)', note: Range of plausible gaps between the means.}
+    next_step: Report the gap and its interval, not only the p-value.
+    visual: null
+  catch_outs:
+    - Assumes equal variances unless equal_var is False.
+    - Two independent groups only; same rows measured twice need the paired test.
+    - NaN input gives NaN unless nan_policy is set.
+  key_settings:
+    tier1:
+      - {name: equal_var, page: null}
+      - {name: alternative, page: null}
+      - {name: nan_policy, page: null}
+    tier2:
+      - {name: trim, page: null}
+      - {name: method, page: null}
+      - {name: axis, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Compare the gap between two averages with how much the values wobble."}
+  next: []

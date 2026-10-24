@@ -1,0 +1,82 @@
+id: mstl
+plain_name: MSTL
+code_name: MSTL
+aliases: [several seasons decomposition, multiple seasonal periods, daily and weekly]
+stage: explore
+family: explore.decompose
+tracks: [time-series]
+archetype: diagnostic
+question_tags: [several seasons, daily and weekly]
+targets: [statsmodels.tsa.seasonal.MSTL]
+pairs_with: []
+clashes: []
+source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.tsa.seasonal.MSTL.html']
+library_versions: {statsmodels: 0.15.0}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when:
+    - {when: {time_ordered: false}, reason: Needs rows in time order.}
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: airline-passengers, chart: "trend, one season panel each, residual"}
+    line: Splits the series into trend, several seasons and leftover noise.
+  quick_facts:
+    facts:
+      - {label: Periods, value: one per season}
+      - {label: Default iterate, value: "2"}
+      - {label: Default lmbda, value: none}
+  use_avoid:
+    use_when: [several seasons at once, daily and weekly]
+    avoid_when: [one season only]
+  prep:
+    - step: {family: clean.impute}
+      status: required
+      why: One gap turns every output NaN.
+      condition: {has_missing: true}
+      unless: null
+  code:
+    - library: statsmodels
+      target: statsmodels.tsa.seasonal.MSTL
+      why_this_library: One class; fit() returns one part per season.
+      snippet: |
+        # statsmodels 0.15.0
+        import numpy as np
+        import pandas as pd
+        from statsmodels.tsa.seasonal import MSTL
+
+        rng = np.random.default_rng(0)
+        t = np.arange(400)
+        values = 10 + 2 * np.sin(2 * np.pi * t / 7) + 4 * np.sin(2 * np.pi * t / 30)
+        values = values + rng.normal(0, 0.5, 400)
+        series = pd.Series(values, index=pd.date_range("2020-01-01", periods=400))
+
+        result = MSTL(series, periods=[7, 30]).fit()
+        print(list(result.seasonal.columns))
+  what_comes_out:
+    items:
+      - {name: fit, kind: method, task: null, shape: MSTL results, note: Runs the decomposition.}
+      - {name: trend, kind: return, task: null, shape: same length as input, note: Slow-moving level of the series.}
+      - {name: seasonal, kind: return, task: null, shape: 'one column per period', note: Season parts; one column per period given.}
+      - {name: resid, kind: return, task: null, shape: same length as input, note: What trend and seasons leave behind.}
+    next_step: Compare the season columns to see which period matters most.
+    visual: null
+  catch_outs:
+    - Give periods as a list, one entry per season.
+    - Box-Cox runs only if lmbda is set; the default is none.
+    - stl_kwargs passes its settings on to STL.
+  key_settings:
+    tier1:
+      - {name: periods, page: null}
+      - {name: windows, page: null}
+      - {name: lmbda, page: null}
+    tier2:
+      - {name: iterate, page: null}
+      - {name: stl_kwargs, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Peel off one season, then the next, and repeat until the parts settle."}
+  next: []

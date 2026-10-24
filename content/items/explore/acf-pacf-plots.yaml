@@ -1,0 +1,70 @@
+id: acf-pacf-plots
+plain_name: ACF and PACF plots
+code_name: plot_acf / plot_pacf
+aliases: [correlogram, autocorrelation plot, pacf plot]
+stage: explore
+family: explore.memory
+tracks: [time-series]
+archetype: diagnostic
+question_tags: [how far back, arima order, lag pattern]
+targets: [statsmodels.graphics.tsaplots.plot_acf, statsmodels.graphics.tsaplots.plot_pacf]
+pairs_with: []
+clashes: []
+source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.graphics.tsaplots.plot_acf.html',
+  'https://www.statsmodels.org/stable/generated/statsmodels.graphics.tsaplots.plot_pacf.html']
+library_versions: {statsmodels: 0.15.0}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: airline-passengers, chart: ACF and PACF bars by lag}
+    line: Shows how far back each value depends on earlier ones.
+  quick_facts:
+    facts:
+      - {label: Confidence band, value: 95% (alpha 0.05)}
+      - {label: PACF method, value: ywm}
+      - {label: Returns, value: Figure}
+  use_avoid:
+    use_when: [choosing AR and MA orders, spotting repeat lags, ordered series over time]
+    avoid_when: [rows not in time order, need a formal test]
+  prep:
+    - {step: {family: transform.scale.rescale}, status: not_needed, why: Scale does not change the result., condition: null, unless: null}
+  code:
+    - library: statsmodels
+      target: statsmodels.graphics.tsaplots.plot_acf
+      why_this_library: Draws both plots with confidence bands in one call.
+      snippet: |
+        # statsmodels 0.15.0
+        import numpy as np
+        from statsmodels.graphics.tsaplots import plot_acf
+        from statsmodels.tsa.stattools import acf
+
+        rng = np.random.default_rng(0)
+        x = np.zeros(200)
+        for t in range(1, 200):
+            x[t] = 0.7 * x[t - 1] + rng.normal()
+
+        fig = plot_acf(x, lags=20)
+        print(acf(x, nlags=3).round(2))
+  what_comes_out:
+    items:
+      - {name: plot_acf, kind: return, task: null, shape: Matplotlib Figure, note: Bars are autocorrelation by lag; band is 95%.}
+      - {name: plot_pacf, kind: return, task: null, shape: Matplotlib Figure, note: Each lag's link once shorter lags are removed.}
+    next_step: Lags past the band suggest AR or MA orders.
+    visual: null
+  catch_outs:
+    - Rows must be in time order.
+    - Lag 0 is always 1.
+    - Bands are approximate; read them, do not test with them.
+  key_settings:
+    tier1: [{name: lags, page: null}, {name: alpha, page: null}, {name: method, page: null}]
+    tier2: [{name: bartlett_confint, page: null}, {name: missing, page: null}]
+    tier3: [{name: use_vlines, page: null}, {name: zero, page: null}]
+  watch_it_work: {none: true}
+  intuition: {text: Compare each value with the values a few steps before it.}
+  next: []

@@ -1,0 +1,76 @@
+id: ttest-rel
+plain_name: Paired t-test
+code_name: ttest_rel
+aliases: [paired t test, repeated measures t test, before and after]
+stage: explore
+family: explore.compare-means
+tracks: [standard, time-series]
+archetype: diagnostic
+question_tags: [same people measured twice, before vs after]
+targets: [scipy.stats.ttest_rel]
+pairs_with: []
+clashes: []
+source_urls: ['https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.ttest_rel.html']
+library_versions: {scipy: 1.18.1}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: breast-cancer, chart: "paired differences, one per row"}
+    line: Checks whether the average change between paired measures is real.
+  quick_facts:
+    facts:
+      - {label: Input rule, value: both arrays same shape}
+      - {label: Default alternative, value: two-sided}
+      - {label: Default NaN handling, value: propagate}
+  use_avoid:
+    use_when: [same rows measured twice, before vs after]
+    avoid_when: [independent groups, unequal row counts]
+  prep:
+    - step: {family: clean.impute}
+      status: recommended
+      why: NaN in gives NaN out.
+      condition: {has_missing: true}
+      unless: {setting: nan_policy, value: omit}
+  code:
+    - library: scipy
+      target: scipy.stats.ttest_rel
+      why_this_library: Pairs by position; one call.
+      snippet: |
+        # scipy 1.18.1
+        from scipy.stats import ttest_rel
+        from sklearn.datasets import load_breast_cancer
+
+        X, y = load_breast_cancer(return_X_y=True)
+        # Same tumours, two radius measures: the rows are paired.
+        radius_mean = X[:, 0]
+        radius_worst = X[:, 20]
+
+        result = ttest_rel(radius_mean, radius_worst)
+        print(round(result.statistic, 3), f"{result.pvalue:.1e}")
+  what_comes_out:
+    items:
+      - {name: statistic, kind: return, task: null, shape: float, note: Mean change in standard errors.}
+      - {name: pvalue, kind: return, task: null, shape: float, note: Chance of a change this big if the mean change were zero.}
+      - {name: "confidence_interval()", kind: return, task: null, shape: '(low, high)', note: Range of plausible mean changes.}
+    next_step: Report the mean change and its interval, not only the p-value.
+    visual: null
+  catch_outs:
+    - Pairs by position, so both arrays must share the same row order.
+    - Both arrays must have the same shape.
+    - Unrelated groups need the independent test instead.
+  key_settings:
+    tier1:
+      - {name: alternative, page: null}
+      - {name: nan_policy, page: null}
+    tier2:
+      - {name: axis, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Turn each pair into one difference and test whether the average difference is zero."}
+  next: []

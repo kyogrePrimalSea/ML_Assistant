@@ -1,0 +1,65 @@
+id: kpss
+plain_name: KPSS test
+code_name: kpss
+aliases: [stationarity test, kpss stationarity]
+stage: explore
+family: explore.stationarity
+tracks: [time-series]
+archetype: diagnostic
+question_tags: [is it stable, second opinion, steady level]
+targets: [statsmodels.tsa.stattools.kpss]
+pairs_with: []
+clashes: []
+source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.tsa.stattools.kpss.html']
+library_versions: {statsmodels: 0.15.0}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: airline-passengers, chart: p-value against critical values}
+    line: Tests whether a series holds a steady level.
+  quick_facts:
+    facts:
+      - {label: Null hypothesis, value: Series is stable}
+      - {label: Small p, value: Not stable}
+      - {label: Default regression, value: "c"}
+  use_avoid:
+    use_when: [second check after ADF, checking for a steady level]
+    avoid_when: [rows not in time order, short series]
+  prep:
+    - {step: {family: transform.scale.rescale}, status: not_needed, why: Scale does not change the result., condition: null, unless: null}
+  code:
+    - library: statsmodels
+      target: statsmodels.tsa.stattools.kpss
+      why_this_library: Returns a result object with the p-value and lags.
+      snippet: |
+        # statsmodels 0.15.0
+        import numpy as np
+        from statsmodels.tsa.stattools import kpss
+
+        rng = np.random.default_rng(0)
+        x = np.cumsum(rng.normal(size=200))
+
+        result = kpss(x, result_object=True)
+        print(f"{result.pvalue:.2e}")
+  what_comes_out:
+    items:
+      - {name: kpss, kind: return, task: null, shape: "KPSSResult object", note: Read .pvalue; small p means not stable.}
+    next_step: Read with ADF; both agreeing gives a clear answer.
+    visual: null
+  catch_outs:
+    - The null is stable, so small p means not stable.
+    - A p-value warning means p sits past the table edge.
+    - Without result_object the output is a plain tuple.
+  key_settings:
+    tier1: [{name: result_object, page: null}, {name: nlags, page: null}, {name: regression, page: null}, {name: store, page: null}]
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: Checks whether the series keeps a steady level over time.}
+  next: []

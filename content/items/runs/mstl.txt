@@ -1,0 +1,1 @@
+['seasonal_7', 'seasonal_30']

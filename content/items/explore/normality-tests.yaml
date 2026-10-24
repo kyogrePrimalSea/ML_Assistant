@@ -1,0 +1,64 @@
+id: normality-tests
+plain_name: D'Agostino–Pearson (normaltest)
+code_name: normaltest
+aliases: [skew and tail test, k squared test]
+stage: explore
+family: explore.normality
+tracks: [standard, time-series]
+archetype: diagnostic
+question_tags: [bell curve, is it normal, skew check]
+targets: [scipy.stats.normaltest]
+pairs_with: []
+clashes: []
+source_urls: ['https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.normaltest.html']
+library_versions: {scipy: 1.18.1}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: ames, chart: sample values with normal curve}
+    line: Tests whether skew and tail weight match a bell curve.
+  quick_facts:
+    facts:
+      - {label: Null hypothesis, value: Sample is normal}
+      - {label: Minimum rows, value: "8"}
+      - {label: Returns, value: statistic and p-value}
+  use_avoid:
+    use_when: [larger samples, skew and tails together]
+    avoid_when: [fewer than 8 rows, data has missing values]
+  prep:
+    - {step: {family: transform.scale.rescale}, status: not_needed, why: Scale does not change the result., condition: null, unless: null}
+  code:
+    - library: scipy
+      target: scipy.stats.normaltest
+      why_this_library: One call; returns statistic and p-value.
+      snippet: |
+        # scipy 1.18.1
+        from scipy.stats import normaltest
+        from sklearn.datasets import load_diabetes
+
+        X, y = load_diabetes(return_X_y=True)
+
+        stat, p_value = normaltest(y)
+        print(f"{float(p_value):.2e}")
+  what_comes_out:
+    items:
+      - {name: normaltest, kind: return, task: null, shape: "statistic and pvalue", note: Small p-value means the sample is not normal.}
+    next_step: Check a histogram or Q-Q plot before acting on a close call.
+    visual: null
+  catch_outs:
+    - Needs at least eight observations.
+    - NaNs propagate unless nan_policy changes that.
+    - Small p says not normal, not how far off.
+  key_settings:
+    tier1: [{name: nan_policy, page: null}, {name: axis, page: null}]
+    tier2: [{name: keepdims, page: null}]
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: Checks whether skew and tail weight look like a bell curve.}
+  next: []
