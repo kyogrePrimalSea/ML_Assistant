@@ -12,10 +12,28 @@ export interface SceneProps {
   onState: (s: 'playing' | 'done') => void
 }
 
-export type SceneId = 'boosting-fit'
+export const HYPER_PAGES = ['n-estimators', 'max-depth', 'learning-rate', 'early-stopping'] as const
+export type SceneId = 'boosting-fit' | `hyper-${(typeof HYPER_PAGES)[number]}`
 
-/** Which scene (if any) a hero spec has; boosting families only for the boosting scene. Others keep the placeholder. */
-export function sceneFor(hero: Hero, family: string): SceneId | null {
+const isHyperPage = (id: string | undefined): id is (typeof HYPER_PAGES)[number] =>
+  !!id && (HYPER_PAGES as readonly string[]).includes(id)
+
+/**
+ * Which hero scene (if any) a page has. Boosting families get the boosting scene; the four hyperparameter pages
+ * get their own sweep scene. Others keep the placeholder.
+ */
+export function sceneFor(hero: Hero, family: string, pageId?: string): SceneId | null {
   if (hero.kind === 'model' && hero.shape === 'fit_line' && family.startsWith('Boosting')) return 'boosting-fit'
+  if (hero.kind === 'hyperparameter' && isHyperPage(pageId)) return `hyper-${pageId}`
+  return null
+}
+
+/**
+ * Which data file drives a page's Watch it work slider. The hyperparameter pages use their own; the boosting
+ * model pages reuse the n_estimators sweep when their control is the round count.
+ */
+export function watchSceneFor(pageId: string, family: string, controlName: string): SceneId | null {
+  if (isHyperPage(pageId)) return `hyper-${pageId}`
+  if (family.startsWith('Boosting') && (controlName === 'n_estimators' || controlName === 'max_iter')) return 'hyper-n-estimators'
   return null
 }

@@ -472,7 +472,7 @@
     "T032": {
       "title": "Hyperparameter hero and slider-driven Watch it work",
       "file": "tasks/T032-hyperparameter-hero-and-watch-it-work.md",
-      "status": "Ready",
+      "status": "Done",
       "dependencies": [],
       "epic": "E12"
     },

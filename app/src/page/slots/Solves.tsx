@@ -25,7 +25,7 @@ function heroDetail(hero: SolvesData['hero']): string | undefined {
   }
 }
 
-export function Solves({ data, family }: { data: SolvesData | NoneData; family: string }) {
+export function Solves({ data, family, pageId }: { data: SolvesData | NoneData; family: string; pageId?: string }) {
   const { archetypeName, datasetName } = useCatalogue()
   if ('none' in data) {
     return (
@@ -43,6 +43,7 @@ export function Solves({ data, family }: { data: SolvesData | NoneData; family: 
       <CutscenePlayer
         hero={hero}
         family={family}
+        pageId={pageId}
         fallback={
           <Frame
             icon={<IconPhoto className="size-4" aria-hidden />}

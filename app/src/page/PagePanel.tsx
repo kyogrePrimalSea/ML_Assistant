@@ -14,6 +14,7 @@ import { QuickFacts } from './slots/QuickFacts'
 import { Solves } from './slots/Solves'
 import { UseAvoid } from './slots/UseAvoid'
 import { WatchItWork } from './slots/WatchItWork'
+import { WhatComesOut } from './slots/WhatComesOut'
 
 function Message({ title, children }: { title: string; children?: React.ReactNode }) {
   return (
@@ -24,7 +25,7 @@ function Message({ title, children }: { title: string; children?: React.ReactNod
   )
 }
 
-/** The 11 slots, always in this order (spec 5.1). */
+/** The 12 slots, always in this order (spec 5.1). */
 function Page({ data }: { data: PageData }) {
   const { record, key_setting_facts } = data
   const s = record.slots
@@ -32,14 +33,15 @@ function Page({ data }: { data: PageData }) {
     <article aria-label={record.plain_name} data-page-id={record.id}>
       <Header record={record} />
       <div className="grid min-w-0 grid-cols-1">
-        <Solves data={s.solves} family={record.family} />
+        <Solves data={s.solves} family={record.family} pageId={record.id} />
         <QuickFacts record={record} />
         <UseAvoid data={s.use_avoid} />
         <Prep entries={s.prep} />
         <Code tabs={s.code} />
+        <WhatComesOut data={s.what_comes_out} pageId={record.id} />
         <CatchOuts items={s.catch_outs} />
         <KeySettings data={s.key_settings} facts={key_setting_facts} />
-        <WatchItWork data={s.watch_it_work} />
+        <WatchItWork data={s.watch_it_work} pageId={record.id} family={record.family} />
         <Intuition data={s.intuition} />
         <Next ids={s.next} />
       </div>
