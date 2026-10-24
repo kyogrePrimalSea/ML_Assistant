@@ -5,6 +5,7 @@ Schemas are read from the repo's content/schema. Errors print as `file: path: me
 """
 import argparse
 import json
+import re
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -52,6 +53,17 @@ def load_extraction(content, entry):
     if not p.exists():
         return None
     return json.loads(p.read_text())
+
+
+def find_todos(node, path=()):
+    """Paths of every string that holds the word TODO (the scaffolder's placeholder)."""
+    if isinstance(node, str):
+        return [jpath(path)] if re.search(r"\bTODO\b", node) else []
+    if isinstance(node, dict):
+        return [t for k, v in node.items() for t in find_todos(v, path + (k,))]
+    if isinstance(node, list):
+        return [t for i, v in enumerate(node) for t in find_todos(v, path + (i,))]
+    return []
 
 
 LINE_LIMIT = 79
@@ -194,6 +206,11 @@ def validate(content, warnings=None):
     for p in sorted((content / "items").glob("**/*.yaml")):
         rel = p.relative_to(content)
         rec = load_yaml(p)
+        todos = find_todos(rec)
+        if todos:  # unfinished draft (T042): report the placeholders only, not the errors they cause
+            for path in todos:
+                rep.add(rel, path, "unfinished: TODO placeholder")
+            continue
         errs = sorted(item_v.iter_errors(rec), key=lambda e: list(e.absolute_path))
         for e in errs:
             rep.add(rel, jpath(e.absolute_path), e.message)
