@@ -103,7 +103,7 @@ export function BoostingFit({ data, reduced, run, visible, onState }: SceneProps
         strokeLinejoin="round"
         strokeLinecap="round"
       />
-      <text x={PAD.l + 12} y={PAD.t + 12} textAnchor="start" fontSize="13" fontWeight={700} fill="var(--text)" style={{ fontFamily: 'var(--font-code)' }} data-round>
+      <text x={PAD.l + 12} y={PAD.t + 12} textAnchor="start" fontSize="13" fontWeight={700} fill="var(--text)" style={{ fontFamily: 'var(--font-body)', fontVariantNumeric: 'tabular-nums' }} data-round>
         {round === 0 ? 'start: average price' : `tree ${round} of ${last}`}
       </text>
     </svg>
