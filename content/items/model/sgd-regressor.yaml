@@ -1,0 +1,136 @@
+id: sgd-regressor
+plain_name: SGDRegressor
+code_name: SGDRegressor
+aliases: [sgd regressor, stochastic gradient descent regressor]
+stage: model
+family: model.awkward.big
+tracks: [standard]
+archetype: model
+question_tags: [large data, streaming data]
+targets: [sklearn.linear_model.SGDRegressor]
+pairs_with: [linearexplainer]
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.SGDRegressor.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: ames, shape: fit_line}
+    line: Fits a straight line to numbers, a small step at a time.
+  quick_facts:
+    data_size: Millions of rows; can learn in batches
+  use_avoid:
+    use_when: [millions of rows, streaming data, straight-line trend]
+    avoid_when: [small data, curved trend]
+  prep:
+    - step: {family: transform.scale.rescale}
+      status: required
+      why: Unequal column sizes can make the fit diverge.
+      condition: null
+      unless: null
+    - step: {family: clean.impute}
+      status: required
+      why: Linear models reject missing values.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Text categories must become numbers.
+      condition: {has_categoricals: true}
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.linear_model.SGDRegressor
+      why_this_library: Same fit and score API as other scikit-learn models.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_diabetes
+        from sklearn.linear_model import SGDRegressor
+        from sklearn.model_selection import train_test_split
+        from sklearn.pipeline import make_pipeline
+        from sklearn.preprocessing import StandardScaler
+
+        X, y = load_diabetes(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = make_pipeline(StandardScaler(), SGDRegressor(random_state=0))
+        model.fit(X_train, y_train)
+        print(round(model.score(X_test, y_test), 3))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: null, shape: "(n_samples,)",
+         note: "One value per row."}
+      - {name: score, kind: method, task: null, shape: "float",
+         note: "R-squared on the rows you pass in."}
+      - {name: coef_, kind: attribute, task: null, shape: "(n_features,)",
+         note: "One weight per input column."}
+      - {name: intercept_, kind: attribute, task: null, shape: "(1,)",
+         note: "The offset added to every prediction."}
+      - {name: n_iter_, kind: attribute, task: null, shape: "int",
+         note: "Passes used. At max_iter it may not have converged."}
+      - {name: n_features_in_, kind: attribute, task: null, shape: "int",
+         note: "Number of input columns seen in fit."}
+      - {name: feature_names_in_, kind: attribute, task: null, shape: "(n_features_in_,)",
+         note: "Column names. Set only when fit gets a DataFrame."}
+    next_step: Check residuals against fitted values before trusting the line.
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import load_diabetes
+      from sklearn.linear_model import SGDRegressor
+      from sklearn.model_selection import train_test_split
+      from sklearn.pipeline import make_pipeline
+      from sklearn.preprocessing import StandardScaler
+
+      X, y = load_diabetes(return_X_y=True)
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+      model = make_pipeline(StandardScaler(), SGDRegressor(random_state=0))
+      model.fit(X_train, y_train)
+      sgd = model[-1]
+      print(model.predict(X_test).shape)
+      print(sgd.coef_.shape)
+      print(sgd.intercept_.shape)
+      print(sgd.n_iter_)
+      print(sgd.n_features_in_)
+    snippet_library: scikit-learn
+    visual: null
+  catch_outs:
+    - Scale features first. Unequal column sizes can make it diverge.
+    - Stops at max_iter passes, even if not converged.
+    - Missing values and text fail. Impute and encode first.
+  key_settings:
+    tier1:
+      - {name: loss, page: null}
+      - {name: penalty, page: null}
+      - {name: alpha, page: null}
+    tier2:
+      - {name: learning_rate, page: null}
+      - {name: eta0, page: null}
+      - {name: early_stopping, page: null}
+    tier3:
+      - {name: average, page: null}
+      - {name: l1_ratio, page: null}
+      - {name: max_iter, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Fit a line to numbers, nudging it with one batch of rows at a time.
+    analogy: Tuning a radio dial in small turns, checking the sound after each turn.
+    animation: none
+    good_at: [millions of rows, streaming data, straight-line trends]
+    bad_at: [curved trends, small data]
+    vs_siblings:
+      - {page: linear-regression, note: "Same line, fitted all at once. statsmodels adds p-values."}
+      - {page: ridge, note: "Same penalty idea, solved directly rather than in steps."}
+      - {page: linear-svr, note: "Margin-based line for numbers. Fits all rows at once."}
+    read_more:
+      - Start with a flat guess line.
+      - Take one row or a small batch, and measure its error.
+      - Nudge the line to shrink that error.
+      - Repeat until max_iter, or the loss stops improving.
+  next: [know-feature-importance]

@@ -1,0 +1,120 @@
+id: random-forest
+plain_name: Random forest
+code_name: RandomForestRegressor / RandomForestClassifier
+aliases: [random forests]
+stage: model
+family: model.trees.bagging
+tracks: [standard]
+archetype: model
+question_tags: [tabular data, overfitting]
+targets: [sklearn.ensemble.RandomForestRegressor, sklearn.ensemble.RandomForestClassifier]
+pairs_with: [treeexplainer]
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestRegressor.html',
+  'https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: ames, shape: fit_line}
+    line: Many trees, each on a random sample, combined into one.
+  quick_facts: {none: true}
+  use_avoid:
+    use_when: [tabular data, first model to try, need feature importances]
+    avoid_when: [needs one readable model, text or images, needs a formula]
+  prep:
+    - step: {family: clean.impute}
+      status: not_needed
+      why: Trees here take missing values natively.
+      condition: null
+      unless: null
+    - step: {family: transform.scale.rescale}
+      status: not_needed
+      why: Trees split on order, not size.
+      condition: null
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Text categories must become numbers.
+      condition: {has_categoricals: true}
+      unless: null
+    - step: {family: transform.rebalance.weight}
+      status: recommended
+      why: Use class_weight when classes are lopsided.
+      condition: {imbalanced: true, task_type: [classification]}
+      unless: null
+    - step: {page: train-test-split}
+      status: recommended
+      why: Keep a test set. Out-of-bag score needs bootstrap=True.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.ensemble.RandomForestRegressor
+      why_this_library: Native missing values, feature importances and OOB score.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_diabetes
+        from sklearn.ensemble import RandomForestRegressor
+        from sklearn.model_selection import train_test_split
+
+        X, y = load_diabetes(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = RandomForestRegressor(n_estimators=100, random_state=0)
+        model.fit(X_train, y_train)
+        print(round(model.score(X_test, y_test), 3))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: null, shape: "(n_samples,)", note: "Regression values or class labels."}
+      - {name: predict_proba, kind: method, task: classification, shape: "(n_samples, n_classes)", note: "One column per class, in classes_ order."}
+      - {name: predict_log_proba, kind: method, task: classification, shape: "(n_samples, n_classes)", note: "Log of predict_proba, same columns."}
+      - {name: score, kind: method, task: null, shape: "float", note: "R2 for regression, accuracy for classification."}
+      - {name: feature_importances_, kind: attribute, task: null, shape: "(n_features,)", note: "One score per input column."}
+      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)", note: "Class labels, in predict_proba column order."}
+      - {name: n_features_in_, kind: attribute, task: null, shape: "int", note: "Number of input columns seen in fit."}
+      - {name: feature_names_in_, kind: attribute, task: null, shape: "(n_features,)", note: "Column names seen in fit, if any."}
+    next_step: "Check feature_importances_ next, then test on held-out rows."
+    visual: both
+  catch_outs:
+    - oob_score needs bootstrap=True, which is the default here.
+    - Text columns fail. Encode them first.
+  key_settings:
+    tier1:
+      - {name: n_estimators, page: n-estimators}
+      - {name: max_depth, page: max-depth}
+      - {name: max_features, page: null}
+      - {name: min_samples_leaf, page: null}
+    tier2:
+      - {name: class_weight, page: null}
+      - {name: criterion, page: null}
+      - {name: max_samples, page: null}
+      - {name: oob_score, page: null}
+    tier3:
+      - {name: min_samples_split, page: null}
+      - {name: min_weight_fraction_leaf, page: null}
+      - {name: max_leaf_nodes, page: null}
+      - {name: min_impurity_decrease, page: null}
+      - {name: ccp_alpha, page: null}
+      - {name: monotonic_cst, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Many trees, each trained on a random sample of rows.
+    analogy: A panel of experts, each shown a different sample of cases.
+    animation: none
+    good_at: [tabular data, feature importances, missing values]
+    bad_at: [text or images, one readable rule]
+    vs_siblings:
+      - {page: extra-trees, note: "Bootstrap is off by default there, so each tree sees all rows."}
+      - {page: bagging, note: "Bagging takes any base model. Random forest uses trees."}
+      - {page: decision-tree-classifier, note: "One tree. A forest averages many."}
+    read_more:
+      - See the scikit-learn reference pages for both RandomForest classes.
+  next: [model-overfitting, know-feature-importance]
+...

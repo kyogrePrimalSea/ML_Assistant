@@ -1,0 +1,109 @@
+id: lasso
+plain_name: Lasso
+code_name: Lasso
+aliases: [lasso regression, l1 regression]
+stage: model
+family: model.linear.sparse
+tracks: [standard]
+archetype: model
+question_tags: [drop features, few useful features, feature selection]
+targets: [sklearn.linear_model.Lasso]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Lasso.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: ames, shape: fit_line}
+    line: A line with an L1 penalty, which can drop features.
+  quick_facts: {none: true}
+  use_avoid:
+    use_when: [few useful features, drop features]
+    avoid_when: [classification targets, keep every feature]
+  prep:
+    - step: {family: clean.impute}
+      status: required
+      why: Scikit-learn rejects NaN in X.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Text categories must become numbers.
+      condition: {has_categoricals: true}
+      unless: null
+    - step: {family: transform.scale.rescale}
+      status: required
+      why: The penalty depends on units. Scale first.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.linear_model.Lasso
+      why_this_library: Built into scikit-learn. You set alpha yourself.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_diabetes
+        from sklearn.linear_model import Lasso
+        from sklearn.model_selection import train_test_split
+        from sklearn.pipeline import make_pipeline
+        from sklearn.preprocessing import StandardScaler
+
+        X, y = load_diabetes(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, random_state=0
+        )
+
+        model = make_pipeline(StandardScaler(), Lasso(alpha=0.1))
+        model.fit(X_train, y_train)
+        print(int((model[-1].coef_ != 0).sum()))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: null, shape: "(n_samples,)", note: "One predicted value per row."}
+      - {name: score, kind: method, task: null, shape: float, note: "R squared on the data you pass in."}
+      - {name: coef_, kind: attribute, task: null, shape: "(n_features,)", note: "One weight per input column. Zero means dropped."}
+      - {name: sparse_coef_, kind: attribute, task: null, shape: "sparse (n_features,)", note: "The same weights, stored as a sparse matrix."}
+      - {name: intercept_, kind: attribute, task: null, shape: float, note: "Intercept of the fitted line."}
+      - {name: dual_gap_, kind: attribute, task: null, shape: float, note: "Duality gap at the end of the fit."}
+      - {name: n_iter_, kind: attribute, task: null, shape: "int or list of int", note: "Iterations the coordinate descent solver ran."}
+    next_step: Try a few alpha values and compare how many coef_ entries are zero.
+    visual: null
+  catch_outs:
+    - alpha must be zero or more. Negative values raise an error.
+    - Scale the columns first, or the penalty is unfair.
+    - Missing values stop the fit. Impute them first.
+  key_settings:
+    tier1:
+      - {name: alpha, page: null}
+      - {name: positive, page: null}
+      - {name: selection, page: null}
+    tier2:
+      - {name: fit_intercept, page: null}
+      - {name: tol, page: null}
+      - {name: precompute, page: null}
+    tier3:
+      - {name: max_iter, page: null}
+      - {name: copy_X, page: null}
+      - {name: warm_start, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Add a penalty on the sum of the absolute weights.
+    analogy: A budget that makes every extra feature cost something.
+    animation: none
+    good_at: [few useful features, drop features]
+    bad_at: [classification, correlated features]
+    vs_siblings:
+      - {page: ridge, note: "Ridge shrinks every weight. Lasso can set some to zero."}
+      - {page: elastic-net, note: "Adds a ridge part, so correlated features stay together."}
+      - {page: lasso-cv, note: "Same penalty. Cross-validation picks alpha for you."}
+    read_more:
+      - Start with a large alpha, which keeps few features.
+      - Lower alpha and watch more weights come in.
+      - Pick alpha by cross-validation or a test set.
+  next: [know-feature-importance]

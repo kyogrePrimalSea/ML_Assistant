@@ -1,0 +1,108 @@
+id: unobserved-components
+plain_name: UnobservedComponents
+code_name: UnobservedComponents
+aliases: [structural time series, state space]
+stage: model
+family: model.ts-changing
+tracks: [time-series]
+archetype: model
+question_tags: [forecast, trend and seasons, slow drift]
+targets: [statsmodels.tsa.statespace.structural.UnobservedComponents]
+pairs_with: [stl]
+clashes: []
+source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.tsa.statespace.structural.UnobservedComponents.html']
+library_versions: {statsmodels: 0.15.0}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: airline-passengers, shape: fit_line}
+    line: Splits the series into a level, a trend and seasons that can drift.
+  quick_facts: {none: true}
+  use_avoid:
+    use_when: [trend and seasons, slow drift, components]
+    avoid_when: [sudden regime switches, several series at once, very short data]
+  prep:
+    - step: {family: explore.stationarity}
+      status: recommended
+      why: Check stationarity before choosing lags.
+      condition: null
+      unless: null
+    - step: {family: split.time}
+      status: recommended
+      why: Test on the latest rows, never shuffled.
+      condition: null
+      unless: null
+  code:
+    - library: statsmodels
+      target: statsmodels.tsa.statespace.structural.UnobservedComponents
+      why_this_library: The statsmodels class for this model.
+      snippet: |
+        # statsmodels 0.15.0
+        import numpy as np
+        from sklearn.datasets import make_regression
+        from statsmodels.tsa.statespace.structural import UnobservedComponents
+
+        _, noise = make_regression(
+            n_samples=120, n_features=1, noise=2.0, random_state=0
+        )
+        series = 0.1 * np.arange(120) + noise  # a trend plus noise
+
+        model = UnobservedComponents(
+            series,
+            level=True,
+            stochastic_level=True,
+            trend=True,
+            stochastic_trend=True,
+        )
+        res = model.fit(disp=False)
+        print(res.params.round(2))
+  what_comes_out:
+    items:
+      - {name: fit, kind: method, task: null, shape: "results object", note: "Returns the fitted results."}
+      - {name: predict, kind: method, task: null, shape: "(n_obs,)", note: "Fitted values, or forecasts past the sample."}
+      - {name: state_names, kind: attribute, task: null, shape: "list of str", note: "Names of the hidden components, such as level."}
+      - {name: param_names, kind: attribute, task: null, shape: "list of str", note: "Names for each fitted parameter."}
+    next_step: Plot each component to see what the model split out.
+    visual: null
+  catch_outs:
+    - Without a stochastic setting, the model warns and adds an irregular term.
+    - Turn on stochastic_level or stochastic_trend for a component to move.
+    - cycle_period_bounds only matters when a cycle is included.
+  key_settings:
+    tier1:
+      - {name: level, page: null}
+      - {name: trend, page: null}
+      - {name: stochastic_level, page: null}
+      - {name: stochastic_trend, page: null}
+    tier2:
+      - {name: seasonal, page: null}
+      - {name: freq_seasonal, page: null}
+      - {name: stochastic_seasonal, page: null}
+      - {name: irregular, page: null}
+    tier3:
+      - {name: stochastic_freq_seasonal, page: null}
+      - {name: use_exact_diffuse, page: null}
+      - {name: cycle_period_bounds, page: null}
+      - {name: damped_cycle, page: null}
+      - {name: stochastic_cycle, page: null}
+      - {name: mle_regression, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Split the series into slow parts that can each drift.
+    analogy: Like reading a river as a slow current, ripples and waves that change strength.
+    animation: none
+    good_at: [trend and seasons, slow drift, components]
+    bad_at: [sudden regime switches, several series at once, very short data]
+    vs_siblings:
+      - {page: markov-regression, note: "Sudden switches between states, not slow drift."}
+    read_more:
+      - Pick the components, such as level and trend.
+      - Fit the model by maximum likelihood with a Kalman filter.
+      - Read the component estimates, or forecast forward.
+  next: [but-beat-simple, but-intervals]

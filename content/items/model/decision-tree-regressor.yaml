@@ -1,0 +1,133 @@
+id: decision-tree-regressor
+plain_name: DecisionTreeRegressor
+code_name: DecisionTreeRegressor
+aliases: [regression tree]
+stage: model
+family: model.trees.single
+tracks: [standard]
+archetype: model
+question_tags: [readable rules, tabular data, overfitting]
+targets: [sklearn.tree.DecisionTreeRegressor]
+pairs_with: [treeexplainer]
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeRegressor.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: ames, shape: fit_line}
+    line: "One tree of if-then rules that predicts a number."
+  quick_facts:
+    data_size: Tabular data
+  use_avoid:
+    use_when: [rules a person can follow, tabular data, a number to predict]
+    avoid_when: [accuracy is the top goal, smooth predictions needed, images or text]
+  prep:
+    - step: {family: transform.scale.rescale}
+      status: not_needed
+      why: Trees split on order, not size.
+      condition: null
+      unless: null
+    - step: {family: clean.impute}
+      status: not_needed
+      why: Missing values are handled natively.
+      condition: null
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Text categories must become numbers.
+      condition: {has_categoricals: true}
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.tree.DecisionTreeRegressor
+      why_this_library: One tree in scikit-learn, easy to read and to draw.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import make_regression
+        from sklearn.model_selection import train_test_split
+        from sklearn.tree import DecisionTreeRegressor
+
+        X, y = make_regression(
+            n_samples=500, n_features=8, noise=10, random_state=0
+        )
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, random_state=0
+        )
+
+        model = DecisionTreeRegressor(max_depth=4, random_state=0)
+        model.fit(X_train, y_train)
+        print(round(model.score(X_test, y_test), 3))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
+         note: "One value per row, the average of the training rows in its leaf."}
+      - {name: score, kind: method, task: regression, shape: "float",
+         note: "R-squared on the data given. 1 is a perfect fit."}
+      - {name: feature_importances_, kind: attribute, task: null, shape: "(n_features,)",
+         note: "One score per input column."}
+      - {name: n_features_in_, kind: attribute, task: null, shape: "int",
+         note: "Number of input columns seen in fit."}
+      - {name: feature_names_in_, kind: attribute, task: null, shape: "(n_features,)",
+         note: "Column names, only if fit got a DataFrame."}
+    next_step: Predictions take one value per leaf, so check the errors by range.
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import make_regression
+      from sklearn.model_selection import train_test_split
+      from sklearn.tree import DecisionTreeRegressor
+
+      X, y = make_regression(
+          n_samples=500, n_features=8, noise=10, random_state=0
+      )
+      X_train, X_test, y_train, y_test = train_test_split(
+          X, y, random_state=0
+      )
+
+      model = DecisionTreeRegressor(max_depth=4, random_state=0)
+      model.fit(X_train, y_train)
+      print(model.predict(X_test).shape)
+      print(model.feature_importances_.shape)
+    snippet_library: scikit-learn
+    visual: regression_preds
+  catch_outs:
+    - Deep trees overfit. Set max_depth or min_samples_leaf.
+    - Predictions cannot go beyond the range seen in training.
+    - Text columns fail. Encode them first.
+  key_settings:
+    tier1:
+      - {name: max_depth, page: max-depth}
+      - {name: min_samples_leaf, page: null}
+      - {name: criterion, page: null}
+      - {name: min_impurity_decrease, page: null}
+    tier2:
+      - {name: max_features, page: null}
+      - {name: ccp_alpha, page: null}
+      - {name: min_samples_split, page: null}
+      - {name: monotonic_cst, page: null}
+    tier3:
+      - {name: splitter, page: null}
+      - {name: max_leaf_nodes, page: null}
+      - {name: min_weight_fraction_leaf, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Split the rows into groups, then predict each group's average.
+    analogy: Sorting houses into price bands and quoting the band's average.
+    animation: none
+    good_at: [readable rules, tabular data, non-linear effects]
+    bad_at: [overfitting by default, extrapolation, smooth curves]
+    vs_siblings:
+      - {page: decision-tree-classifier, note: "Same tree, predicting a class instead."}
+      - {page: random-forest, note: "Many trees averaged. Smoother, less readable."}
+      - {page: xgboost, note: "Boosted trees. Usually more accurate, less readable."}
+    read_more:
+      - Pick the feature and cut that reduces the error most.
+      - Repeat on each side of the cut.
+      - Stop at max_depth or when a leaf is small.
+  next: [model-overfitting, know-feature-importance]

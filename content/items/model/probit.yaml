@@ -1,0 +1,104 @@
+id: probit
+plain_name: Probit
+code_name: Probit
+aliases: []
+stage: model
+family: model.linear.logit
+tracks: [standard]
+archetype: model
+question_tags: [probabilities, p-values, binary outcome]
+targets: [statsmodels.discrete.discrete_model.Probit]
+pairs_with: []
+clashes: []
+source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.discrete.discrete_model.Probit.html']
+library_versions: {statsmodels: 0.15.0}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: breast-cancer, shape: boundary}
+    line: Yes-no probabilities from a normal curve, with p-values.
+  quick_facts: {none: true}
+  use_avoid:
+    use_when: [probabilities, p-values, binary outcome]
+    avoid_when: [three or more classes, curved boundaries, text inputs]
+  prep:
+    - step: {family: clean.impute}
+      status: required
+      why: Raises on missing values unless missing is drop.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Needs numbers, not text.
+      condition: {has_categoricals: true}
+      unless: null
+  code:
+    - library: statsmodels
+      target: statsmodels.discrete.discrete_model.Probit
+      why_this_library: Gives p-values and a normal-curve link.
+      snippet: |
+        # statsmodels 0.15.0
+        import statsmodels.api as sm
+        from sklearn.datasets import load_breast_cancer
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X = sm.add_constant(X[:, :5])
+        result = sm.Probit(y, X).fit(disp=False)
+        print(result.pvalues.round(3))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: classification, shape: "(n_samples,)",
+         note: "Probability of class 1, not a label."}
+      - {name: score, kind: method, task: null, shape: "(n_params,)",
+         note: "Gradient of the log-likelihood. Not accuracy."}
+      - {name: endog, kind: attribute, task: null, shape: "(n_obs,)",
+         note: "The response vector the model stores."}
+      - {name: exog, kind: attribute, task: null, shape: "(n_obs, n_params)",
+         note: "Design matrix, with the constant if added."}
+      - {name: params, kind: return, task: null, shape: "(n_params,)",
+         note: "Coefficients, on the fitted result."}
+      - {name: pvalues, kind: return, task: null, shape: "(n_params,)",
+         note: "Same order as the exog columns."}
+    next_step: Use predict for probabilities. Choosing a cut-off is up to you.
+    snippet: |
+      # statsmodels 0.15.0
+      import statsmodels.api as sm
+      from sklearn.datasets import load_breast_cancer
+
+      X, y = load_breast_cancer(return_X_y=True)
+      X = sm.add_constant(X[:, :5])
+      result = sm.Probit(y, X).fit(disp=False)
+      print(result.predict(X).mean().round(3))
+    snippet_library: statsmodels
+    visual: proba_table
+  catch_outs:
+    - Missing values raise an error unless missing is drop.
+    - Many correlated columns can make the matrix singular.
+    - Check mle_retvals converged before reading p-values.
+  key_settings:
+    tier1:
+      - {name: missing, page: null}
+    tier2:
+      - {name: offset, page: null}
+      - {name: check_rank, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    idea: Like logit, but the S-curve is the normal curve.
+    analogy: Same yes-no scale as logit, with a bell-shaped weight.
+    animation: none
+    good_at: [probabilities, p-values, binary outcomes]
+    bad_at: [three or more classes, curved boundaries]
+    vs_siblings:
+      - {page: logistic-regression, note: "Logistic curve instead of normal curve."}
+    read_more:
+      - Take the weighted sum of the inputs.
+      - Pass it through the normal curve.
+      - Fit by maximum likelihood, then read p-values.
+  next: []

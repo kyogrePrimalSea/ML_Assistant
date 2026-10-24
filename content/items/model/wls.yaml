@@ -1,0 +1,96 @@
+id: wls
+plain_name: WLS
+code_name: WLS
+aliases: [weighted least squares]
+stage: model
+family: model.linear.ols
+tracks: [standard]
+archetype: model
+question_tags: [noisy rows, unequal weights]
+targets: [statsmodels.regression.linear_model.WLS]
+pairs_with: [breusch-pagan]
+clashes: []
+source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.WLS.html']
+library_versions: {statsmodels: 0.15.0}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: ames, shape: fit_line}
+    line: A straight line where some rows count for more.
+  quick_facts: {none: true}
+  use_avoid:
+    use_when: [rows with known noise levels, weights you can justify]
+    avoid_when: [weights unknown, curved patterns, rows in groups]
+  prep:
+    - step: {family: clean.impute}
+      status: required
+      why: Statsmodels rejects NaN in the inputs.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Text categories must become numbers.
+      condition: {has_categoricals: true}
+      unless: null
+    - step: {family: transform.scale.rescale}
+      status: not_needed
+      why: Scaling changes the coefficients, not the predictions.
+      condition: null
+      unless: null
+    - step: {page: train-test-split}
+      status: recommended
+      why: A held-out set checks the fit on new rows.
+      condition: null
+      unless: null
+  code:
+    - library: statsmodels
+      target: statsmodels.regression.linear_model.WLS
+      why_this_library: Takes a weights array directly.
+      snippet: |
+        # statsmodels 0.15.0
+        import numpy as np
+        import statsmodels.api as sm
+        from sklearn.datasets import make_regression
+
+        X, y = make_regression(n_samples=200, n_features=3, noise=10, random_state=0)
+        weights = np.linspace(0.5, 2.0, num=len(y))
+        results = sm.WLS(y, sm.add_constant(X), weights=weights).fit()
+        print(results.params.round(2))
+  what_comes_out:
+    items:
+    - {name: predict, kind: method, task: regression, shape: "(n_samples,)", note: Predicted values from the design matrix.}
+    - {name: weights, kind: attribute, task: null, shape: "(n_samples,)", note: The row weights you passed in.}
+    - {name: df_model, kind: attribute, task: null, shape: float, note: "Slope count, not counting the constant."}
+    next_step: Weights come from you, not from the fit. Justify them.
+    visual: regression_preds
+  catch_outs:
+    - Missing values stop the fit. Impute them first.
+    - Weights are never learned. A wrong guess gives a wrong fit.
+  key_settings:
+    tier1:
+    - {name: weights, page: null}
+    tier2:
+    - {name: missing, page: null}
+    tier3:
+    - {name: hasconst, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Least squares, where each row's error counts by its weight.
+    analogy: A poll where some answers count for more.
+    animation: none
+    good_at: [rows with known noise levels, explaining each effect, a fast baseline]
+    bad_at: [unknown weights, curved patterns, rows in groups]
+    vs_siblings:
+      - {page: linear-regression, note: "Same line, but every row counts equally."}
+      - {page: gls, note: "Also handles linked errors, not only unequal weights."}
+    read_more:
+      - Each row gets a weight.
+      - Rows with big weights pull the line harder.
+      - Rows with small weights are allowed to miss.
+  next: []

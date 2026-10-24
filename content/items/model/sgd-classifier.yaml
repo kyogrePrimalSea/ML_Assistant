@@ -1,0 +1,148 @@
+id: sgd-classifier
+plain_name: SGDClassifier
+code_name: SGDClassifier
+aliases: [sgd classifier, stochastic gradient descent classifier]
+stage: model
+family: model.awkward.big
+tracks: [standard]
+archetype: model
+question_tags: [large data, streaming data]
+targets: [sklearn.linear_model.SGDClassifier]
+pairs_with: [linearexplainer]
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.SGDClassifier.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: breast-cancer, shape: boundary}
+    line: Learns one straight line in small steps over the rows.
+  quick_facts:
+    data_size: Millions of rows; can learn in batches
+  use_avoid:
+    use_when: [millions of rows, streaming data, straight boundary]
+    avoid_when: [small data, curved boundary]
+  prep:
+    - step: {family: transform.scale.rescale}
+      status: required
+      why: "Unscaled columns stall the fit: 0.71 against 0.94 scaled."
+      condition: null
+      unless: null
+    - step: {family: clean.impute}
+      status: required
+      why: Linear models reject missing values.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Text categories must become numbers.
+      condition: {has_categoricals: true}
+      unless: null
+    - step: {family: transform.rebalance.weight}
+      status: recommended
+      why: Use class_weight when classes are lopsided.
+      condition: {imbalanced: true, task_type: [classification]}
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.linear_model.SGDClassifier
+      why_this_library: "log_loss gives predict_proba. The default hinge loss does not."
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import SGDClassifier
+        from sklearn.model_selection import train_test_split
+        from sklearn.pipeline import make_pipeline
+        from sklearn.preprocessing import StandardScaler
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = make_pipeline(
+            StandardScaler(), SGDClassifier(loss="log_loss", random_state=0)
+        )
+        model.fit(X_train, y_train)
+        print(round(model.score(X_test, y_test), 3))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: null, shape: "(n_samples,)",
+         note: "Class labels for each row."}
+      - {name: predict_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
+         note: "Needs a log_loss fit. The default hinge loss has none."}
+      - {name: decision_function, kind: method, task: classification, shape: "(n_samples,) for two classes",
+         note: "Signed score. Above 0 means classes_[1]."}
+      - {name: predict_log_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
+         note: "Log of predict_proba. Same loss rule."}
+      - {name: score, kind: method, task: null, shape: "float",
+         note: "Accuracy on the rows you pass in."}
+      - {name: coef_, kind: attribute, task: null, shape: "(1, n_features) for two classes",
+         note: "One weight per input column."}
+      - {name: intercept_, kind: attribute, task: null, shape: "(1,) for two classes",
+         note: "The offset added to every score."}
+      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)",
+         note: "Labels, in the order the probability columns use."}
+    next_step: ROC and PR curves take predict_proba or decision_function scores.
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import load_breast_cancer
+      from sklearn.linear_model import SGDClassifier
+      from sklearn.model_selection import train_test_split
+      from sklearn.pipeline import make_pipeline
+      from sklearn.preprocessing import StandardScaler
+
+      X, y = load_breast_cancer(return_X_y=True)
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+      model = make_pipeline(
+          StandardScaler(), SGDClassifier(loss="log_loss", random_state=0)
+      )
+      model.fit(X_train, y_train)
+      sgd = model[-1]
+      print(model.predict(X_test).shape)
+      print(model.predict_proba(X_test).shape)
+      print(model.decision_function(X_test).shape)
+      print(sgd.coef_.shape)
+      print(sgd.intercept_.shape)
+      print(sgd.classes_)
+    snippet_library: scikit-learn
+    visual: null
+  catch_outs:
+    - "The default hinge loss has no predict_proba. Set loss to log_loss."
+    - Stops at max_iter passes, even if not converged.
+    - Missing values and text fail. Impute and encode first.
+  key_settings:
+    tier1:
+      - {name: loss, page: null}
+      - {name: penalty, page: null}
+      - {name: alpha, page: null}
+    tier2:
+      - {name: learning_rate, page: null}
+      - {name: eta0, page: null}
+      - {name: early_stopping, page: null}
+    tier3:
+      - {name: class_weight, page: null}
+      - {name: average, page: null}
+      - {name: l1_ratio, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Nudge the line using one batch of rows at a time.
+    analogy: Adjusting a dartboard aim after each throw, not after all throws.
+    animation: none
+    good_at: [millions of rows, streaming data, linear boundaries]
+    bad_at: [curved boundaries, small data]
+    vs_siblings:
+      - {page: perceptron, note: "Same online training. Perceptron has no penalty by default."}
+      - {page: linear-svc, note: "Same straight line. LinearSVC fits all rows at once."}
+      - {page: logistic-regression, note: "Same probabilities. Fitted all at once, not in batches."}
+    read_more:
+      - Start with any straight line.
+      - Take one row or a small batch, and measure its error.
+      - Nudge the line to shrink that error.
+      - Repeat until max_iter, or the loss stops improving.
+  next: [know-feature-importance]

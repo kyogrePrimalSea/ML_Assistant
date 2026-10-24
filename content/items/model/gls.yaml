@@ -1,0 +1,99 @@
+id: gls
+plain_name: GLS
+code_name: GLS
+aliases: [generalized least squares, correlated errors]
+stage: model
+family: model.linear.ols
+tracks: [standard]
+archetype: model
+question_tags: [correlated errors, time order, autocorrelation]
+targets: [statsmodels.regression.linear_model.GLS]
+pairs_with: [ljung-box]
+clashes: []
+source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.GLS.html']
+library_versions: {statsmodels: 0.15.0}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: airline-passengers, shape: fit_line}
+    line: A straight line where errors can be linked across rows.
+  quick_facts: {none: true}
+  use_avoid:
+    use_when: [errors linked over time, known error structure]
+    avoid_when: [errors look independent, error structure unknown, rows in groups]
+  prep:
+    - step: {family: clean.impute}
+      status: required
+      why: Statsmodels rejects NaN in the inputs.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Text categories must become numbers.
+      condition: {has_categoricals: true}
+      unless: null
+    - step: {family: transform.scale.rescale}
+      status: not_needed
+      why: Scaling changes the coefficients, not the predictions.
+      condition: null
+      unless: null
+    - step: {family: split.time}
+      status: recommended
+      why: Keep rows in time order when splitting.
+      condition: {time_ordered: true}
+      unless: null
+  code:
+    - library: statsmodels
+      target: statsmodels.regression.linear_model.GLS
+      why_this_library: Takes an error covariance matrix directly.
+      snippet: |
+        # statsmodels 0.15.0
+        import numpy as np
+        import statsmodels.api as sm
+        from sklearn.datasets import make_regression
+
+        X, y = make_regression(n_samples=120, n_features=2, noise=10, random_state=0)
+        idx = np.arange(len(y))
+        sigma = 0.5 ** np.abs(np.subtract.outer(idx, idx))
+        results = sm.GLS(y, sm.add_constant(X), sigma=sigma).fit()
+        print(results.params.round(2))
+  what_comes_out:
+    items:
+    - {name: predict, kind: method, task: regression, shape: "(n_samples,)", note: Predicted values from the design matrix.}
+    - {name: sigma, kind: attribute, task: null, shape: "(n_samples, n_samples)", note: The error covariance you passed in. None if not passed.}
+    - {name: cholsigmainv, kind: attribute, task: null, shape: "(n_samples, n_samples)", note: Cholesky factor of the inverse sigma. None without sigma.}
+    - {name: pinv_wexog, kind: attribute, task: null, shape: "(n_features, n_samples)", note: Pseudo-inverse of the whitened design.}
+    next_step: A wrong sigma gives misleading results. Check it matches the data.
+    visual: regression_preds
+  catch_outs:
+    - Sigma must match the row order of the data.
+    - Sigma is supplied, not estimated. A wrong guess misleads.
+    - Missing values stop the fit. Impute them first.
+  key_settings:
+    tier1:
+    - {name: sigma, page: null}
+    tier2:
+    - {name: hasconst, page: null}
+    - {name: missing, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    idea: Least squares that allows errors to be linked across rows.
+    analogy: Counting one complaint once when many people repeat it.
+    animation: none
+    good_at: [errors linked over time, a known error structure, readable effects]
+    bad_at: [unknown error structure, rows in groups]
+    vs_siblings:
+      - {page: linear-regression, note: "Same line, but assumes independent errors."}
+      - {page: wls, note: "Reweights rows, but ignores links between them."}
+    read_more:
+      - Describe how errors link, as sigma.
+      - Whiten the data using that structure.
+      - Fit ordinary least squares on the whitened data.
+  next: []

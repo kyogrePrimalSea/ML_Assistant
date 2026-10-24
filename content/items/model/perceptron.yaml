@@ -1,0 +1,145 @@
+id: perceptron
+plain_name: Perceptron
+code_name: Perceptron
+aliases: [perceptron classifier, online perceptron]
+stage: model
+family: model.awkward.big
+tracks: [standard]
+archetype: model
+question_tags: [simple baseline, streaming data, very large data]
+targets: [sklearn.linear_model.Perceptron]
+pairs_with: [linearexplainer]
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Perceptron.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: breast-cancer, shape: boundary}
+    line: Nudges one straight line each time it gets a row wrong.
+  quick_facts:
+    data_size: Small to very large tables
+  use_avoid:
+    use_when: [simple baseline, streaming data, straight boundary]
+    avoid_when: [needs probabilities, curved boundary]
+  prep:
+    - step: {family: transform.scale.rescale}
+      status: required
+      why: Updates are sized by feature scale; unscaled columns hurt.
+      condition: null
+      unless: null
+    - step: {family: clean.impute}
+      status: required
+      why: Linear models reject missing values.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Text categories must become numbers.
+      condition: {has_categoricals: true}
+      unless: null
+    - step: {family: transform.rebalance.weight}
+      status: recommended
+      why: Use class_weight when classes are lopsided.
+      condition: {imbalanced: true, task_type: [classification]}
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.linear_model.Perceptron
+      why_this_library: Same fit and score API as other scikit-learn models.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import Perceptron
+        from sklearn.model_selection import train_test_split
+        from sklearn.pipeline import make_pipeline
+        from sklearn.preprocessing import StandardScaler
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = make_pipeline(StandardScaler(), Perceptron(random_state=0))
+        model.fit(X_train, y_train)
+        print(round(model.score(X_test, y_test), 3))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: null, shape: "(n_samples,)",
+         note: "Class labels for each row."}
+      - {name: decision_function, kind: method, task: classification, shape: "(n_samples,) for two classes",
+         note: "Signed score. Above 0 means classes_[1]."}
+      - {name: score, kind: method, task: null, shape: "float",
+         note: "Accuracy on the rows you pass in."}
+      - {name: coef_, kind: attribute, task: null, shape: "(1, n_features) for two classes",
+         note: "One weight per input column."}
+      - {name: intercept_, kind: attribute, task: null, shape: "(1,) for two classes",
+         note: "The offset added to every score."}
+      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)",
+         note: "Labels, in the order decision_function uses."}
+      - {name: n_iter_, kind: attribute, task: null, shape: "int",
+         note: "Passes used. At max_iter it may not have converged."}
+      - {name: n_features_in_, kind: attribute, task: null, shape: "int",
+         note: "Number of input columns seen in fit."}
+    next_step: ROC and PR curves take decision scores. There are no probabilities.
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import load_breast_cancer
+      from sklearn.linear_model import Perceptron
+      from sklearn.model_selection import train_test_split
+      from sklearn.pipeline import make_pipeline
+      from sklearn.preprocessing import StandardScaler
+
+      X, y = load_breast_cancer(return_X_y=True)
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+      model = make_pipeline(StandardScaler(), Perceptron(random_state=0))
+      model.fit(X_train, y_train)
+      perc = model[-1]
+      print(model.predict(X_test).shape)
+      print(model.decision_function(X_test).shape)
+      print(perc.coef_.shape)
+      print(perc.intercept_.shape)
+      print(perc.classes_)
+      print(perc.n_iter_)
+      print(perc.n_features_in_)
+    snippet_library: scikit-learn
+    visual: null
+  catch_outs:
+    - No predict_proba. Use decision_function to rank rows.
+    - "Unscaled columns cost accuracy: 0.85 here, 0.97 scaled."
+    - Missing values and text fail. Impute and encode first.
+    - Stops at max_iter passes, even if not converged.
+  key_settings:
+    tier1:
+      - {name: penalty, page: null}
+      - {name: alpha, page: null}
+      - {name: class_weight, page: null}
+    tier2:
+      - {name: max_iter, page: null}
+      - {name: tol, page: null}
+      - {name: early_stopping, page: null}
+    tier3:
+      - {name: eta0, page: null}
+      - {name: shuffle, page: null}
+      - {name: l1_ratio, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Nudge one straight line whenever it gets a row wrong.
+    analogy: A teacher marking homework, correcting only the wrong answers.
+    animation: none
+    good_at: [simple baseline, streaming data, very large data]
+    bad_at: [probabilities, curved boundaries]
+    vs_siblings:
+      - {page: sgd-classifier, note: "Same online training. SGDClassifier has an l2 penalty by default."}
+      - {page: linear-svc, note: "Same straight line. LinearSVC fits all rows at once."}
+    read_more:
+      - Start with any straight line.
+      - "Check each row: is it on the right side?"
+      - Nudge the line on each wrong row, then move on.
+      - Stop after max_iter passes, or sooner when tol is met.
+  next: [know-feature-importance]

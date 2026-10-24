@@ -1,0 +1,102 @@
+id: gaussian-process-classifier
+plain_name: GaussianProcessClassifier
+code_name: GaussianProcessClassifier
+aliases: ["gpc", "gaussian process classification", "gp classifier"]
+stage: model
+family: model.neighbours.gp
+tracks: [standard]
+archetype: model
+question_tags: ["small data", "class probabilities", "uncertainty"]
+targets: ["sklearn.gaussian_process.GaussianProcessClassifier"]
+pairs_with: []
+clashes: []
+source_urls: ["https://scikit-learn.org/stable/modules/generated/sklearn.gaussian_process.GaussianProcessClassifier.html"]
+library_versions: {scikit-learn: "1.9.1"}
+reviewed: false
+rules:
+  task_types: ["classification"]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: breast-cancer, shape: boundary}
+    line: "Gives each class a probability from a smooth Gaussian process."
+  quick_facts:
+    data_size: "Small data"
+  use_avoid:
+    use_when: ["small data", "class probabilities", "smooth boundary"]
+    avoid_when: ["large data", "images or text", "need a simple formula"]
+  prep:
+    - step: {family: transform.scale.rescale}
+      status: recommended
+      why: "Kernel distances need comparable scales."
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.gaussian_process.GaussianProcessClassifier
+      why_this_library: "Built into scikit-learn; no extra install."
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.gaussian_process import GaussianProcessClassifier
+        from sklearn.model_selection import train_test_split
+        from sklearn.pipeline import make_pipeline
+        from sklearn.preprocessing import StandardScaler
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = make_pipeline(
+            StandardScaler(),
+            GaussianProcessClassifier(random_state=0),
+        )
+        model.fit(X_train, y_train)
+        print(round(model.score(X_test, y_test), 3))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: null, shape: "(n_samples,)",
+         note: "Class labels, from the classes_ list."}
+      - {name: predict_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
+         note: "One column per class, in classes_ order."}
+      - {name: score, kind: method, task: null, shape: "float",
+         note: "Accuracy on the data you pass in."}
+      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)",
+         note: "Class labels, in the column order of predict_proba."}
+      - {name: kernel_, kind: attribute, task: null, shape: "fitted kernel object",
+         note: "The kernel after fit, with tuned settings."}
+    next_step: "ROC AUC needs predict_proba, not predict."
+    visual: proba_table
+  catch_outs:
+    - "Default kernel is 1.0 * RBF; set kernel to change the shape."
+    - "n_restarts_optimizer is 0, so the kernel is tuned from one start."
+    - "Stores a copy of the training data by default."
+    - "Built for small data; training slows as rows grow."
+  key_settings:
+    tier1:
+      - {name: kernel, page: null}
+      - {name: n_restarts_optimizer, page: null}
+      - {name: multi_class, page: null}
+    tier2:
+      - {name: optimizer, page: null}
+      - {name: max_iter_predict, page: null}
+    tier3:
+      - {name: copy_X_train, page: null}
+      - {name: warm_start, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: "Fit a smooth curve of scores, then turn the scores into class probabilities."
+    analogy: "A forecaster who also says how sure they are."
+    animation: none
+    good_at: ["small data", "class probabilities", "smooth boundaries"]
+    bad_at: ["large data", "images or text", "fast training"]
+    vs_siblings:
+      - {page: svc, note: "SVC has no probabilities unless you turn them on."}
+      - {page: k-neighbors-classifier, note: "Votes from nearby rows; no fitted curve."}
+    read_more:
+      - "A kernel says how alike two rows are."
+      - "Fitting tunes the kernel to the training rows."
+      - "predict uses Newton steps, capped by max_iter_predict."
+  next: []

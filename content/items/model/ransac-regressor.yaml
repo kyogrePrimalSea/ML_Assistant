@@ -1,0 +1,107 @@
+id: ransac-regressor
+plain_name: RANSACRegressor
+code_name: RANSACRegressor
+aliases: [ransac, random sample consensus]
+stage: model
+family: model.awkward.robust
+tracks: [standard]
+archetype: model
+question_tags: [outliers, robust fit, bad data]
+targets: [sklearn.linear_model.RANSACRegressor]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.RANSACRegressor.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: ames, shape: fit_line}
+    line: Fits a line while ignoring the outlier rows.
+  quick_facts:
+    data_size: Medium to large tables
+  use_avoid:
+    use_when: [many outliers, a clean subset exists, linear shape]
+    avoid_when: [few rows, need every row used, missing values]
+  prep:
+    - step: {family: clean.impute}
+      status: required
+      why: Stops with an error on NaN.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.scale.rescale}
+      status: not_needed
+      why: A linear fit gives the same answer after scaling.
+      condition: null
+      unless: null
+    - step: {page: train-test-split}
+      status: recommended
+      why: Checks the fit on rows it did not see.
+      condition: null
+      unless: null
+  code:
+  - library: scikit-learn
+    target: sklearn.linear_model.RANSACRegressor
+    why_this_library: The scikit-learn estimator with this name.
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import make_regression
+      from sklearn.linear_model import RANSACRegressor
+
+      X, y = make_regression(n_samples=200, n_features=2, noise=4.0,
+                             random_state=0)
+      y[:40] += 200  # 20% gross outliers
+      model = RANSACRegressor(random_state=0).fit(X, y)
+      print(model.inlier_mask_.sum())
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
+         note: "Predictions from the final model, fitted on inliers."}
+      - {name: inlier_mask_, kind: attribute, task: null, shape: "(n_samples,) of bool",
+         note: "True for each row kept as an inlier."}
+      - {name: estimator_, kind: attribute, task: null, shape: "estimator object",
+         note: "The final model, refit on the inliers."}
+      - {name: n_trials_, kind: attribute, task: null, shape: "int",
+         note: "Random draws used before a stop rule hit."}
+    next_step: Check inlier_mask_ before trusting the fit.
+    visual: null
+  catch_outs:
+    - Random draws change the result unless random_state is set.
+    - A non-linear estimator needs min_samples set by hand.
+    - The default threshold is the MAD of y. Set residual_threshold to tune it.
+  key_settings:
+    tier1:
+    - {name: min_samples, page: null}
+    - {name: residual_threshold, page: null}
+    - {name: max_trials, page: null}
+    - {name: loss, page: null}
+    tier2:
+    - {name: estimator, page: null}
+    - {name: stop_probability, page: null}
+    - {name: is_data_valid, page: null}
+    tier3:
+    - {name: stop_score, page: null}
+    - {name: stop_n_inliers, page: null}
+    - {name: max_skips, page: null}
+    - {name: is_model_valid, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Fit small random samples, then keep the line most points agree with.
+    analogy: A judge who hears many small groups and trusts the group that agrees most.
+    animation: none
+    good_at: [many outliers, a clean subset, gross errors]
+    bad_at: [tiny data, results that change without random_state]
+    vs_siblings:
+      - {page: huber-regressor, note: "Down-weights outliers. No random draws. Few outliers."}
+      - {page: theil-sen-regression, note: "Median of slopes. Suited to small data."}
+    read_more:
+      - Draw a small random sample of rows.
+      - Fit a line to just that sample.
+      - Count the rows close to that line as inliers.
+      - Keep the best line, then refit it on its inliers.
+  next: []

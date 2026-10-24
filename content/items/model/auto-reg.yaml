@@ -1,0 +1,99 @@
+id: auto-reg
+plain_name: AutoReg
+code_name: AutoReg
+aliases: [AR model, autoregression]
+stage: model
+family: model.ts-past
+tracks: [time-series]
+archetype: model
+question_tags: [forecast, one series, recent values]
+targets: [statsmodels.tsa.ar_model.AutoReg]
+pairs_with: [acf-pacf-plots, ljung-box]
+clashes: []
+source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.tsa.ar_model.AutoReg.html']
+library_versions: {statsmodels: 0.15.0}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: airline-passengers, shape: fit_line}
+    line: Predicts one series from its own recent values.
+  quick_facts: {none: true}
+  use_avoid:
+    use_when: [one series, short memory, a simple forecast]
+    avoid_when: [several series at once, shifting patterns, tiny data]
+  prep:
+    - step: {family: explore.stationarity}
+      status: recommended
+      why: Check stationarity before choosing lags.
+      condition: null
+      unless: null
+    - step: {family: split.time}
+      status: recommended
+      why: Test on the latest rows, never shuffled.
+      condition: null
+      unless: null
+  code:
+    - library: statsmodels
+      target: statsmodels.tsa.ar_model.AutoReg
+      why_this_library: The statsmodels class for this model.
+      snippet: |
+        # statsmodels 0.15.0
+        import numpy as np
+        from sklearn.datasets import make_regression
+        from statsmodels.tsa.ar_model import AutoReg
+
+        _, shocks = make_regression(
+            n_samples=200, n_features=3, noise=1.0, random_state=0
+        )
+        shocks = shocks / shocks.std()
+        y = np.zeros(200)
+        for t in range(1, 200):
+            y[t] = 0.7 * y[t - 1] + shocks[t]
+
+        res = AutoReg(y, lags=2).fit()
+        print(res.params.round(2))
+  what_comes_out:
+    items:
+      - {name: fit, kind: method, task: null, shape: "results object", note: "Returns the fitted results. Use them to forecast."}
+      - {name: predict, kind: method, task: null, shape: "(n_obs,)", note: "Fitted values, or forecasts past the sample."}
+      - {name: ar_lags, kind: attribute, task: null, shape: "list of int", note: "The lags kept in the model."}
+      - {name: deterministic, kind: attribute, task: null, shape: "object", note: "Trend and seasonal terms added to the model."}
+    next_step: Plot the forecast against the real series before trusting it.
+    visual: null
+  catch_outs:
+    - Estimation drops the first lags of the series, so fewer rows are fitted.
+    - hold_back removes early observations from the estimation sample.
+    - If deterministic is given, it replaces trend and seasonal.
+  key_settings:
+    tier1:
+      - {name: lags, page: null}
+      - {name: trend, page: null}
+      - {name: hold_back, page: null}
+      - {name: missing, page: null}
+    tier2:
+      - {name: seasonal, page: null}
+      - {name: period, page: null}
+      - {name: exog, page: null}
+    tier3:
+      - {name: deterministic, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Predict today from a few past values of the same series.
+    analogy: Like guessing today's weather from the last few days.
+    animation: none
+    good_at: [one series, simple forecasts, recent memory]
+    bad_at: [several series at once, shifting patterns, long memory]
+    vs_siblings:
+      - {page: arima, note: "Adds differencing and moving-average terms."}
+      - {page: sarimax, note: "Adds seasons and outside drivers."}
+    read_more:
+      - Choose the lags to include.
+      - Fit a regression of the series on those lags.
+      - Use the fitted line to predict the next values.
+  next: [but-beat-simple, but-intervals]

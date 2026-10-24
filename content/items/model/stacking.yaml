@@ -1,0 +1,97 @@
+id: stacking
+plain_name: Stacking
+code_name: StackingRegressor / StackingClassifier
+aliases: [stack, stacked ensemble, meta-model]
+stage: model
+family: model.trees.combine
+tracks: [standard]
+archetype: composer
+question_tags: [several good models, combine models, want the best score]
+targets: [sklearn.ensemble.StackingRegressor, sklearn.ensemble.StackingClassifier]
+pairs_with: [pipeline, cross-val-predict]
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.StackingRegressor.html',
+  'https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.StackingClassifier.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: composer, boxes: [Forest, KNN, Final model]}
+    line: A final model learns how to weigh the others.
+  quick_facts:
+    facts:
+      - {label: Final model, value: learns how to combine the others}
+      - {label: Trained on, value: out-of-fold predictions}
+      - {label: Raw columns, value: "optional: passthrough"}
+  use_avoid:
+    use_when: [several good models, need a stronger score]
+    avoid_when: [simple baseline needed, few rows]
+  prep:
+    - step: {page: train-test-split}
+      status: required
+      why: Keep a test set the stack never sees.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.ensemble.StackingClassifier
+      why_this_library: Final model trains on out-of-fold predictions.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.ensemble import RandomForestClassifier, StackingClassifier
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.model_selection import train_test_split
+        from sklearn.neighbors import KNeighborsClassifier
+        from sklearn.pipeline import make_pipeline
+        from sklearn.preprocessing import StandardScaler
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, random_state=0)
+
+        stack = StackingClassifier(
+            estimators=[
+                ("forest", RandomForestClassifier(random_state=0)),
+                ("knn", make_pipeline(StandardScaler(),
+                                      KNeighborsClassifier())),
+            ],
+            final_estimator=LogisticRegression(max_iter=5000),
+            cv=5,
+        )
+        stack.fit(X_train, y_train)  # final model learns from out-of-fold predictions
+        print(round(stack.score(X_test, y_test), 3))
+  what_comes_out:
+    items:
+      - {name: fit, kind: method, task: null, shape: "self", note: "Trains the base models, then the final model."}
+      - {name: predict, kind: method, task: null, shape: "(n_samples,)", note: "Final model's prediction for each row."}
+      - {name: predict_proba, kind: method, task: classification, shape: "(n_samples, n_classes)", note: "Final model's class probabilities."}
+      - {name: transform, kind: method, task: null, shape: "(n_samples, n_outputs)", note: "Base model predictions, side by side."}
+      - {name: get_feature_names_out, kind: method, task: null, shape: "array of names", note: "Names for the transform columns."}
+      - {name: feature_names_in_, kind: attribute, task: null, shape: "array of column names", note: "Column names seen during fit."}
+    next_step: "Score it on held-out rows against one base model."
+    visual: null
+  catch_outs:
+    - The final model trains on out-of-fold predictions, not raw rows.
+    - Set passthrough to add the raw columns for the final model.
+    - Without final_estimator, a default final model is used.
+  key_settings:
+    tier1:
+      - {name: estimators, page: null}
+      - {name: final_estimator, page: null}
+      - {name: cv, page: cross-val-predict}
+      - {name: stack_method, page: null}
+    tier2:
+      - {name: passthrough, page: null}
+    tier3:
+      - {name: n_jobs, page: null}
+      - {name: verbose, page: null}
+  watch_it_work: {none: true}
+  intuition: {text: "A final model learns how much to trust each base model."}
+  next: [but-oof-predictions]

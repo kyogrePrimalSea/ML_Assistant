@@ -1,0 +1,102 @@
+id: k-neighbors-classifier
+plain_name: KNeighborsClassifier
+code_name: KNeighborsClassifier
+aliases: ["knn", "knn classifier", "k nearest neighbours"]
+stage: model
+family: model.neighbours.knn
+tracks: [standard]
+archetype: model
+question_tags: ["few features", "small data", "nearest examples"]
+targets: ["sklearn.neighbors.KNeighborsClassifier"]
+pairs_with: []
+clashes: []
+source_urls: ["https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html"]
+library_versions: {scikit-learn: "1.9.1"}
+reviewed: false
+rules:
+  task_types: ["classification"]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: breast-cancer, shape: boundary}
+    line: "Predicts from the labels of the nearest rows."
+  quick_facts:
+    data_size: "Small data, few features"
+  use_avoid:
+    use_when: ["small data", "few features", "nearest examples"]
+    avoid_when: ["large data", "many features", "images or text"]
+  prep:
+    - step: {family: transform.scale.rescale}
+      status: required
+      why: "Distances need comparable scales; scale first."
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.neighbors.KNeighborsClassifier
+      why_this_library: "Built into scikit-learn; no extra install."
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.model_selection import train_test_split
+        from sklearn.neighbors import KNeighborsClassifier
+        from sklearn.pipeline import make_pipeline
+        from sklearn.preprocessing import StandardScaler
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = make_pipeline(
+            StandardScaler(),
+            KNeighborsClassifier(n_neighbors=5),
+        )
+        model.fit(X_train, y_train)
+        print(round(model.score(X_test, y_test), 3))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: null, shape: "(n_samples,)",
+         note: "Class labels from the nearest rows."}
+      - {name: predict_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
+         note: "Share of the nearest rows in each class."}
+      - {name: kneighbors, kind: method, task: null, shape: "(distances, indices)",
+         note: "Distances and row numbers of the nearest rows."}
+      - {name: score, kind: method, task: null, shape: "float",
+         note: "Accuracy on the data you pass in."}
+      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)",
+         note: "Class labels, in predict_proba column order."}
+    next_step: "Try a few n_neighbors values and compare the scores."
+    visual: proba_table
+  catch_outs:
+    - "Unscaled features scored 0.94 here; scaled features scored 0.95."
+    - "Keeps every training row; there is no fitted formula."
+    - "Distance defaults to Euclidean (minkowski with p=2)."
+  key_settings:
+    tier1:
+      - {name: n_neighbors, page: null}
+      - {name: weights, page: null}
+      - {name: metric, page: null}
+    tier2:
+      - {name: p, page: null}
+      - {name: algorithm, page: null}
+      - {name: leaf_size, page: null}
+    tier3:
+      - {name: metric_params, page: null}
+      - {name: n_jobs, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: "Take the labels of the nearest rows and vote."
+    analogy: "Asking the closest neighbours what they think the answer is."
+    animation: none
+    good_at: ["small data", "few features", "easy to explain"]
+    bad_at: ["large data", "many features", "images or text"]
+    vs_siblings:
+      - {page: k-neighbors-regressor, note: "Same idea; averages the neighbours' values."}
+      - {page: svc, note: "SVC learns a boundary; KNN only looks at rows."}
+    read_more:
+      - "Measure the distance from the new row to every training row."
+      - "Keep the n_neighbors closest rows."
+      - "Vote on their labels, or average them for numbers."
+  next: []

@@ -1,0 +1,108 @@
+id: bagging
+plain_name: Bagging
+code_name: BaggingRegressor / BaggingClassifier
+aliases: [bootstrap aggregating]
+stage: model
+family: model.trees.bagging
+tracks: [standard]
+archetype: model
+question_tags: [overfitting, any base model]
+targets: [sklearn.ensemble.BaggingRegressor, sklearn.ensemble.BaggingClassifier]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.BaggingRegressor.html',
+  'https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.BaggingClassifier.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: ames, shape: fit_line}
+    line: Average many copies of one model, each on a random sample.
+  quick_facts: {none: true}
+  use_avoid:
+    use_when: [noisy predictions, any base model, tabular data]
+    avoid_when: [needs feature importances, needs one readable model]
+  prep:
+    - step: {family: clean.impute}
+      status: not_needed
+      why: Default trees accept missing values.
+      condition: null
+      unless: null
+    - step: {family: transform.scale.rescale}
+      status: not_needed
+      why: Default trees split on order, not size.
+      condition: null
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Text categories must become numbers.
+      condition: {has_categoricals: true}
+      unless: null
+    - step: {page: train-test-split}
+      status: recommended
+      why: Keep a test set. Out-of-bag score needs bootstrap=True.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.ensemble.BaggingRegressor
+      why_this_library: Wraps any base model.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_diabetes
+        from sklearn.ensemble import BaggingRegressor
+        from sklearn.model_selection import train_test_split
+
+        X, y = load_diabetes(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = BaggingRegressor(n_estimators=50, random_state=0)
+        model.fit(X_train, y_train)
+        print(round(model.score(X_test, y_test), 3))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: null, shape: "(n_samples,)", note: "Regression values or class labels."}
+      - {name: predict_proba, kind: method, task: classification, shape: "(n_samples, n_classes)", note: "One column per class, in classes_ order."}
+      - {name: predict_log_proba, kind: method, task: classification, shape: "(n_samples, n_classes)", note: "Log of predict_proba, same columns."}
+      - {name: score, kind: method, task: null, shape: "float", note: "R2 for regression, accuracy for classification."}
+      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)", note: "Class labels, in predict_proba column order."}
+      - {name: estimators_, kind: attribute, task: null, shape: "list of fitted base models", note: "The fitted base models, one per copy."}
+      - {name: oob_score_, kind: attribute, task: null, shape: "float", note: "Only set when oob_score=True."}
+      - {name: n_features_in_, kind: attribute, task: null, shape: "int", note: "Number of input columns seen in fit."}
+    next_step: "Try oob_score=True for a validation score without a split."
+    visual: both
+  catch_outs:
+    - oob_score needs bootstrap=True, which is the default.
+    - No feature_importances_ on this model.
+    - Set estimator to change the base model. The default is a tree.
+  key_settings:
+    tier1:
+      - {name: n_estimators, page: n-estimators}
+      - {name: max_samples, page: null}
+      - {name: max_features, page: null}
+      - {name: estimator, page: null}
+    tier2:
+      - {name: bootstrap, page: null}
+      - {name: oob_score, page: null}
+    tier3:
+      - {name: bootstrap_features, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Fit many copies on random samples, then average them.
+    analogy: Asking many people the same question, then averaging their answers.
+    animation: none
+    good_at: [noisy predictions, any base model]
+    bad_at: [feature importances, one readable model]
+    vs_siblings:
+      - {page: random-forest, note: "Bagged trees that also sample features at each split."}
+      - {page: extra-trees, note: "Trees only. No bootstrap by default."}
+    read_more:
+      - See the scikit-learn reference pages for both Bagging classes.
+  next: [model-overfitting]
+...

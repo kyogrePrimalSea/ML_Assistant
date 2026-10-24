@@ -1,0 +1,107 @@
+id: svc
+plain_name: SVC
+code_name: SVC
+aliases: ["support vector classifier", "svm classifier", "svc"]
+stage: model
+family: model.neighbours.kernel
+tracks: [standard]
+archetype: model
+question_tags: ["curved boundary", "clean scaled data", "small to medium data"]
+targets: ["sklearn.svm.SVC"]
+pairs_with: []
+clashes: []
+source_urls: ["https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html"]
+library_versions: {scikit-learn: "1.9.1"}
+reviewed: false
+rules:
+  task_types: ["classification"]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: breast-cancer, shape: boundary}
+    line: "Draws the widest gap between classes, with a kernel."
+  quick_facts:
+    data_size: "Up to about 10,000 rows"
+  use_avoid:
+    use_when: ["clean scaled data", "curved boundary", "up to 10,000 rows"]
+    avoid_when: ["large data", "probabilities by default", "images or text"]
+  prep:
+    - step: {family: transform.scale.rescale}
+      status: required
+      why: "Margins need comparable scales; strong on scaled data."
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.svm.SVC
+      why_this_library: "Built into scikit-learn; no extra install."
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.model_selection import train_test_split
+        from sklearn.pipeline import make_pipeline
+        from sklearn.preprocessing import StandardScaler
+        from sklearn.svm import SVC
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = make_pipeline(
+            StandardScaler(),
+            SVC(kernel="rbf", C=1.0),
+        )
+        model.fit(X_train, y_train)
+        print(round(model.score(X_test, y_test), 3))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: classification, shape: "(n_samples,)",
+         note: "Class labels."}
+      - {name: decision_function, kind: method, task: classification, shape: "(n_samples,) for two classes",
+         note: "Signed score per row. Above 0 means classes_[1]."}
+      - {name: score, kind: method, task: classification, shape: "float",
+         note: "Accuracy on the data you pass in."}
+      - {name: support_vectors_, kind: attribute, task: null, shape: "(n_SV, n_features)",
+         note: "The rows the model kept as support vectors."}
+      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)",
+         note: "Class labels, in the order decision_function uses."}
+    next_step: "Set probability=True before fit to get predict_proba."
+    visual: null
+  catch_outs:
+    - "predict_proba is missing unless probability=True is set before fit."
+    - "Unscaled features scored 0.94 here; scaled features scored 0.97."
+    - "Up to about 10,000 rows; training slows past that."
+  key_settings:
+    tier1:
+      - {name: kernel, page: null}
+      - {name: C, page: null}
+      - {name: gamma, page: null}
+      - {name: probability, page: null}
+    tier2:
+      - {name: class_weight, page: null}
+      - {name: decision_function_shape, page: null}
+      - {name: break_ties, page: null}
+    tier3:
+      - {name: degree, page: null}
+      - {name: coef0, page: null}
+      - {name: shrinking, page: null}
+      - {name: tol, page: null}
+      - {name: max_iter, page: null}
+      - {name: cache_size, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: "Find the widest gap between the classes, set by the rows at the edge."
+    analogy: "Drawing a road between two towns, with the closest houses as the edges."
+    animation: none
+    good_at: ["clean scaled data", "curved boundaries", "small to medium tables"]
+    bad_at: ["large data", "probabilities by default", "images or text"]
+    vs_siblings:
+      - {page: gaussian-process-classifier, note: "GPC gives probabilities by default."}
+      - {page: k-neighbors-classifier, note: "KNN only looks at rows; no fitted boundary."}
+    read_more:
+      - "Pick a kernel to measure how alike two rows are."
+      - "Keep the widest gap that splits the classes."
+      - "Rows on the margin edge are the support vectors."
+  next: []

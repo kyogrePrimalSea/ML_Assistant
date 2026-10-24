@@ -1,0 +1,102 @@
+id: ridge
+plain_name: Ridge
+code_name: Ridge
+aliases: [ridge regression, l2 regression]
+stage: model
+family: model.linear.shrink
+tracks: [standard]
+archetype: model
+question_tags: [correlated features, shrinkage, stable slopes]
+targets: [sklearn.linear_model.Ridge]
+pairs_with: [vif]
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: ames, shape: fit_line}
+    line: A straight line whose slopes are pulled toward zero.
+  quick_facts: {none: true}
+  use_avoid:
+    use_when: [many correlated features, keep every feature, stable line]
+    avoid_when: [only a few features matter, curved patterns, rows in groups]
+  prep:
+    - step: {family: clean.impute}
+      status: required
+      why: Scikit-learn rejects NaN in X.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Text categories must become numbers.
+      condition: {has_categoricals: true}
+      unless: null
+    - step: {family: transform.scale.rescale}
+      status: required
+      why: The penalty depends on units. Scale first.
+      condition: null
+      unless: null
+    - step: {page: train-test-split}
+      status: recommended
+      why: Tune alpha on rows the fit never saw.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.linear_model.Ridge
+      why_this_library: Takes alpha and solver settings directly.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import make_regression
+        from sklearn.linear_model import Ridge
+        from sklearn.pipeline import make_pipeline
+        from sklearn.preprocessing import StandardScaler
+
+        X, y = make_regression(n_samples=200, n_features=8, noise=10, random_state=0)
+        model = make_pipeline(StandardScaler(), Ridge(alpha=1.0)).fit(X, y)
+        print(round(model.score(X, y), 3))
+  what_comes_out:
+    items:
+    - {name: predict, kind: method, task: regression, shape: "(n_samples,)", note: One predicted value per row.}
+    - {name: score, kind: method, task: regression, shape: float, note: R squared on the data you pass in.}
+    - {name: coef_, kind: attribute, task: null, shape: "(n_features,)", note: One shrunk slope per input column.}
+    - {name: intercept_, kind: attribute, task: null, shape: float, note: Not shrunk when fit_intercept is on.}
+    next_step: Pick alpha on held-out rows, or use RidgeCV to pick it.
+    visual: regression_preds
+  catch_outs:
+    - Scale the columns first, or the penalty is unfair.
+    - Ridge keeps every feature, so it never drops one.
+    - Missing values stop the fit. Impute them first.
+  key_settings:
+    tier1:
+    - {name: alpha, page: null}
+    - {name: solver, page: null}
+    tier2:
+    - {name: fit_intercept, page: null}
+    - {name: positive, page: null}
+    tier3:
+    - {name: max_iter, page: null}
+    - {name: tol, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Least squares with a penalty on large slopes.
+    analogy: A gentle tug on each slope that keeps it from running wild.
+    animation: none
+    good_at: [correlated features, keeping every feature, stable slopes]
+    bad_at: [picking a few features, curved patterns, zero slopes]
+    vs_siblings:
+      - {page: ridge-cv, note: "Same penalty. Picks alpha by cross-validation."}
+      - {page: linear-regression, note: "No penalty. Slopes can swing with correlated features."}
+      - {page: lasso, note: "Sets unhelpful slopes to zero."}
+    read_more:
+      - The error gets alpha times the sum of squared slopes added.
+      - A bigger alpha pulls the slopes closer to zero.
+      - Scale features first so the penalty is fair.
+  next: [but-wobbly-coefs]

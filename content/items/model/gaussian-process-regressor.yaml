@@ -1,0 +1,96 @@
+id: gaussian-process-regressor
+plain_name: GaussianProcessRegressor
+code_name: GaussianProcessRegressor
+aliases: ["gpr", "gaussian process regression", "gp regressor"]
+stage: model
+family: model.neighbours.gp
+tracks: [standard]
+archetype: model
+question_tags: ["small data", "error bars", "uncertainty"]
+targets: ["sklearn.gaussian_process.GaussianProcessRegressor"]
+pairs_with: []
+clashes: []
+source_urls: ["https://scikit-learn.org/stable/modules/generated/sklearn.gaussian_process.GaussianProcessRegressor.html"]
+library_versions: {scikit-learn: "1.9.1"}
+reviewed: false
+rules:
+  task_types: ["regression"]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: ames, shape: fit_line}
+    line: "Predicts a value and a spread for each row."
+  quick_facts:
+    data_size: "Small data"
+  use_avoid:
+    use_when: ["small data", "need error bars", "smooth curves"]
+    avoid_when: ["large data", "images or text", "need a simple formula"]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.gaussian_process.GaussianProcessRegressor
+      why_this_library: "Built into scikit-learn; returns a standard deviation too."
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import make_friedman1
+        from sklearn.gaussian_process import GaussianProcessRegressor
+        from sklearn.model_selection import train_test_split
+        from sklearn.pipeline import make_pipeline
+        from sklearn.preprocessing import StandardScaler
+
+        X, y = make_friedman1(n_samples=300, noise=0.5, random_state=0)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = make_pipeline(
+            StandardScaler(),
+            GaussianProcessRegressor(normalize_y=True, random_state=0),
+        )
+        model.fit(X_train, y_train)
+        mean, std = model.predict(X_test, return_std=True)
+        print(std.shape)
+        print(round(model.score(X_test, y_test), 3))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
+         note: "One value per row. return_std=True adds the spread."}
+      - {name: score, kind: method, task: regression, shape: "float",
+         note: "R squared on the data you pass in."}
+      - {name: sample_y, kind: method, task: regression, shape: "(n_samples, n_draws)",
+         note: "Random curves drawn from the fitted model."}
+      - {name: kernel_, kind: attribute, task: null, shape: "fitted kernel object",
+         note: "The kernel after fit, with tuned length scales."}
+    next_step: "Use predict(X, return_std=True) to get the error bars."
+    visual: regression_preds
+  catch_outs:
+    - "normalize_y is off by default; turn it on to centre the targets."
+    - "alpha is added to the diagonal to avoid numerical errors."
+    - "Stores a copy of the training data by default."
+    - "Built for small data; training slows as rows grow."
+  key_settings:
+    tier1:
+      - {name: kernel, page: null}
+      - {name: alpha, page: null}
+      - {name: normalize_y, page: null}
+      - {name: n_restarts_optimizer, page: null}
+    tier2:
+      - {name: optimizer, page: null}
+    tier3:
+      - {name: copy_X_train, page: null}
+      - {name: n_targets, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: "Learn a smooth curve through the points, and report how sure it is."
+    analogy: "A map with a best-guess line and a shaded zone of doubt."
+    animation: none
+    good_at: ["small data", "error bars", "smooth curves"]
+    bad_at: ["large data", "images or text", "fast training"]
+    vs_siblings:
+      - {page: kernel-ridge, note: "Same kernel idea. Kernel ridge gives no error bars."}
+    read_more:
+      - "A kernel says how alike two rows are."
+      - "Fitting tunes the kernel to the training rows."
+      - "predict adds the spread when return_std is on."
+  next: []

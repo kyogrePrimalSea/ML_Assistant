@@ -1,0 +1,113 @@
+id: lasso-cv
+plain_name: LassoCV
+code_name: LassoCV
+aliases: [lasso cv, cv lasso]
+stage: model
+family: model.linear.sparse
+tracks: [standard]
+archetype: model
+question_tags: [drop features, few useful features, cv picks strength]
+targets: [sklearn.linear_model.LassoCV]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LassoCV.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: ames, shape: fit_line}
+    line: A lasso line that picks its own strength with cross-validation.
+  quick_facts: {none: true}
+  use_avoid:
+    use_when: [few useful features, drop features, strength picked for you]
+    avoid_when: [classification targets, curved patterns]
+  prep:
+    - step: {family: clean.impute}
+      status: required
+      why: Scikit-learn rejects NaN in X.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Text categories must become numbers.
+      condition: {has_categoricals: true}
+      unless: null
+    - step: {family: transform.scale.rescale}
+      status: required
+      why: The penalty depends on units. Scale first.
+      condition: null
+      unless: null
+    - step: {page: train-test-split}
+      status: recommended
+      why: Keep a test set the penalty search never saw.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.linear_model.LassoCV
+      why_this_library: Built into scikit-learn, with cross-validation inside.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_diabetes
+        from sklearn.linear_model import LassoCV
+        from sklearn.model_selection import train_test_split
+        from sklearn.pipeline import make_pipeline
+        from sklearn.preprocessing import StandardScaler
+
+        X, y = load_diabetes(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, random_state=0
+        )
+
+        model = make_pipeline(StandardScaler(), LassoCV(cv=5))
+        model.fit(X_train, y_train)
+        print(int((model[-1].coef_ != 0).sum()))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: null, shape: "(n_samples,)", note: "One predicted value per row."}
+      - {name: score, kind: method, task: null, shape: float, note: "R squared on the data you pass in."}
+      - {name: coef_, kind: attribute, task: null, shape: "(n_features,)", note: "One weight per input column. Zero means dropped."}
+      - {name: intercept_, kind: attribute, task: null, shape: float, note: "Intercept of the fitted line."}
+      - {name: alpha_, kind: attribute, task: null, shape: float, note: "Penalty strength that cross-validation picked."}
+      - {name: mse_path_, kind: attribute, task: null, shape: "(n_alphas, n_folds)", note: "Error for each alpha and fold. Shows the CV curve."}
+    next_step: Refit Lasso with alpha_ to get a fixed-settings model.
+    visual: null
+  catch_outs:
+    - Only the alphas on the path are tried.
+    - Scale the columns first, or the penalty is unfair.
+    - Missing values stop the fit. Impute them first.
+  key_settings:
+    tier1:
+      - {name: cv, page: null}
+      - {name: alphas, page: null}
+    tier2:
+      - {name: tol, page: null}
+      - {name: selection, page: null}
+      - {name: fit_intercept, page: null}
+      - {name: eps, page: null}
+    tier3:
+      - {name: precompute, page: null}
+      - {name: positive, page: null}
+      - {name: copy_X, page: null}
+      - {name: max_iter, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Try many penalty strengths with cross-validation, then keep the best.
+    analogy: A coach who tries several training plans and keeps the one that scores best.
+    animation: none
+    good_at: [few useful features, no hand-tuned strength]
+    bad_at: [classification, curved patterns]
+    vs_siblings:
+      - {page: lasso, note: "Same penalty, but you set alpha yourself."}
+      - {page: elastic-net-cv, note: "Adds an l1_ratio mix to the penalty."}
+    read_more:
+      - Each alpha on the path gets a cross-validated score.
+      - The best alpha is kept as alpha_.
+      - The final weights are fitted at that alpha.
+  next: [model-overfitting, know-feature-importance]

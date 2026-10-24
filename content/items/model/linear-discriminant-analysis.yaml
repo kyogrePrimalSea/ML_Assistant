@@ -1,0 +1,128 @@
+id: linear-discriminant-analysis
+plain_name: LinearDiscriminantAnalysis
+code_name: LinearDiscriminantAnalysis
+aliases: [lda, linear discriminant]
+stage: model
+family: model.probabilistic.da
+tracks: [standard]
+archetype: model
+question_tags: [classes overlap, few features, reduce dimensions]
+targets: [sklearn.discriminant_analysis.LinearDiscriminantAnalysis]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.discriminant_analysis.LinearDiscriminantAnalysis.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: breast-cancer, shape: boundary}
+    line: Draws one straight line that best separates the classes.
+  quick_facts:
+    data_size: Any size table with rows in every class
+  use_avoid:
+    use_when: [classes share a spread, need a straight boundary, want fewer dimensions]
+    avoid_when: [classes differ in spread, non-linear boundaries, categorical inputs]
+  prep:
+    - step: {family: transform.scale.rescale}
+      status: not_needed
+      why: "Predictions do not change when scaled."
+      condition: null
+      unless: null
+    - step: {family: clean.impute}
+      status: required
+      why: Rejects missing values.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Text categories must become numbers.
+      condition: {has_categoricals: true}
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.discriminant_analysis.LinearDiscriminantAnalysis
+      why_this_library: The scikit-learn estimator for this method.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+        from sklearn.model_selection import train_test_split
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, random_state=0
+        )
+
+        model = LinearDiscriminantAnalysis()
+        model.fit(X_train, y_train)
+        print(round(model.score(X_test, y_test), 3))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: classification, shape: "(n_samples,)",
+         note: "Class with the highest probability."}
+      - {name: predict_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
+         note: "One column per class, in classes_ order."}
+      - {name: predict_log_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
+         note: "Log of predict_proba, same column order."}
+      - {name: decision_function, kind: method, task: classification, shape: "(n_samples,) for two classes",
+         note: "Score before the probability. Above 0 means class 1."}
+      - {name: score, kind: method, task: classification, shape: "float",
+         note: "Accuracy on the data given."}
+      - {name: coef_, kind: attribute, task: null, shape: "(1, n_features) for two classes",
+         note: "Weight per column in the linear rule."}
+      - {name: intercept_, kind: attribute, task: null, shape: "(1,) for two classes",
+         note: "Offset of the linear rule."}
+      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)",
+         note: "Labels, in the order of the probability columns."}
+    next_step: "ROC AUC needs predict_proba[:, 1], not the labels."
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import load_breast_cancer
+      from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+
+      data = load_breast_cancer(as_frame=True)
+      model = LinearDiscriminantAnalysis()
+      model.fit(data.data, data.target)
+      print(model.predict_proba(data.data[:3]).shape)
+      print(model.decision_function(data.data[:3]).shape)
+      print(model.coef_.shape)
+      print(model.intercept_.shape)
+      print(model.classes_)
+    snippet_library: scikit-learn
+    visual: null
+  catch_outs:
+    - "Assumes the classes share one spread, so it misses curved boundaries."
+    - "Needs rows in every class to estimate each class mean."
+    - "Shrinkage is off by default (None); 'auto' is one option."
+  key_settings:
+    tier1:
+      - {name: solver, page: null}
+      - {name: shrinkage, page: null}
+      - {name: covariance_estimator, page: null}
+      - {name: n_components, page: null}
+    tier2:
+      - {name: tol, page: null}
+      - {name: store_covariance, page: null}
+      - {name: priors, page: null}
+    tier3:
+      []
+  watch_it_work: {none: true}
+  intuition:
+    idea: Draw the one straight line that best separates the classes.
+    analogy: A single fence across a field that keeps the groups apart.
+    animation: none
+    good_at: [similar spread, small data, reducing dimensions]
+    bad_at: [curved boundaries, different spreads, raw categories]
+    vs_siblings:
+      - {page: quadratic-discriminant-analysis, note: "Same family. Each class gets its own spread."}
+    read_more:
+      - Estimate each class mean.
+      - Pool the spread shared by all classes.
+      - Draw the straight line that separates the class means best.
+  next: []

@@ -1,0 +1,122 @@
+id: linear-regression
+plain_name: Linear regression
+code_name: LinearRegression / OLS / linregress
+aliases: [ols, linear model]
+stage: model
+family: model.linear.ols
+tracks: [standard]
+archetype: model
+question_tags: [p-values, explainable model, baseline]
+targets: [sklearn.linear_model.LinearRegression, statsmodels.regression.linear_model.OLS, scipy.stats.linregress]
+pairs_with: [vif, residual-normality]
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html',
+  'https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.OLS.html', 'https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.linregress.html']
+library_versions: {scikit-learn: 1.9.1, statsmodels: 0.15.0, scipy: 1.18.1}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: ames, shape: fit_line}
+    line: One straight line through the cloud of points.
+  quick_facts: {none: true}
+  use_avoid:
+    use_when: [explain each effect, baseline model, p-values needed]
+    avoid_when: [curved patterns, correlated features, rows in groups]
+  prep:
+    - step: {family: clean.impute}
+      status: required
+      why: Scikit-learn and statsmodels both reject NaN.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Text categories must become numbers.
+      condition: {has_categoricals: true}
+      unless: null
+    - step: {family: transform.scale.rescale}
+      status: not_needed
+      why: Scaling changes the coefficients, not the predictions.
+      condition: null
+      unless: null
+    - step: {page: train-test-split}
+      status: recommended
+      why: A held-out set checks the fit on new rows.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.linear_model.LinearRegression
+      why_this_library: Same fit and predict calls as the other models.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import make_regression
+        from sklearn.linear_model import LinearRegression
+
+        X, y = make_regression(n_samples=200, n_features=5, noise=10, random_state=0)
+        model = LinearRegression().fit(X, y)
+        print(round(model.score(X, y), 3))
+    - library: statsmodels
+      target: statsmodels.regression.linear_model.OLS
+      why_this_library: Gives p-values and standard errors.
+      snippet: |
+        # statsmodels 0.15.0
+        import statsmodels.api as sm
+        from sklearn.datasets import make_regression
+
+        X, y = make_regression(n_samples=200, n_features=5, noise=10, random_state=0)
+        results = sm.OLS(y, sm.add_constant(X)).fit()
+        print(results.pvalues.round(3))
+    - library: scipy
+      target: scipy.stats.linregress
+      why_this_library: One-line fit for a single feature.
+      snippet: |
+        # scipy 1.18.1
+        from scipy.stats import linregress
+        from sklearn.datasets import make_regression
+
+        X, y = make_regression(n_samples=200, n_features=1, noise=10, random_state=0)
+        result = linregress(X[:, 0], y)
+        print(round(result.slope, 3))
+  what_comes_out:
+    items:
+    - {name: predict, kind: method, task: regression, shape: "(n_samples,)", note: One predicted value per row.}
+    - {name: score, kind: method, task: regression, shape: float, note: R squared on the data you pass in.}
+    - {name: coef_, kind: attribute, task: null, shape: "(n_features,)", note: One slope per input column.}
+    - {name: intercept_, kind: attribute, task: null, shape: float, note: Predicted value when every input is zero.}
+    next_step: Check the residuals before trusting the p-values.
+    visual: regression_preds
+  catch_outs:
+    - Missing values stop the fit. Impute them first.
+    - Correlated features make the coefficients unstable.
+    - p-values come from statsmodels, not scikit-learn.
+  key_settings:
+    tier1:
+    - {name: fit_intercept, page: null}
+    - {name: positive, page: null}
+    tier2:
+    - {name: missing, page: null}
+    tier3:
+    - {name: copy_X, page: null}
+    - {name: hasconst, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Pick the straight line with the smallest squared errors.
+    analogy: A ruler laid through a scatter of dots, placed to miss them least.
+    animation: none
+    good_at: [explaining each effect, a fast baseline, p-values]
+    bad_at: [curved patterns, correlated features, rows in groups]
+    vs_siblings:
+      - {page: ridge, note: "Same line, with a penalty on large slopes."}
+      - {page: wls, note: "Same line, but rows can get different weights."}
+      - {page: gls, note: "Same line, but errors may be linked across rows."}
+    read_more:
+      - Start with the mean of y as a flat line.
+      - Tilt the line to shrink the squared errors.
+      - Read each slope as one effect, with the others held fixed.
+  next: [but-wobbly-coefs]

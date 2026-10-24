@@ -1,0 +1,108 @@
+id: lasso-lars
+plain_name: LassoLars
+code_name: LassoLars
+aliases: [lasso lars, lars lasso]
+stage: model
+family: model.linear.sparse
+tracks: [standard]
+archetype: model
+question_tags: [drop features, wide data, lasso path]
+targets: [sklearn.linear_model.LassoLars]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LassoLars.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: ames, shape: fit_line}
+    line: A lasso line fitted with the LARS method, for wide data.
+  quick_facts: {none: true}
+  use_avoid:
+    use_when: [few useful features, wide data]
+    avoid_when: [classification targets, curved patterns]
+  prep:
+    - step: {family: clean.impute}
+      status: required
+      why: Scikit-learn rejects NaN in X.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Text categories must become numbers.
+      condition: {has_categoricals: true}
+      unless: null
+    - step: {family: transform.scale.rescale}
+      status: required
+      why: The penalty depends on units. Scale first.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.linear_model.LassoLars
+      why_this_library: Built into scikit-learn. Lasso penalty, LARS method.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_diabetes
+        from sklearn.linear_model import LassoLars
+        from sklearn.model_selection import train_test_split
+        from sklearn.pipeline import make_pipeline
+        from sklearn.preprocessing import StandardScaler
+
+        X, y = load_diabetes(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, random_state=0
+        )
+
+        model = make_pipeline(StandardScaler(), LassoLars(alpha=0.1))
+        model.fit(X_train, y_train)
+        print(int((model[-1].coef_ != 0).sum()))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: null, shape: "(n_samples,)", note: "One predicted value per row."}
+      - {name: score, kind: method, task: null, shape: float, note: "R squared on the data you pass in."}
+      - {name: coef_, kind: attribute, task: null, shape: "(n_features,)", note: "Weights at the chosen alpha."}
+      - {name: intercept_, kind: attribute, task: null, shape: float, note: "Intercept of the fitted line."}
+      - {name: alphas_, kind: attribute, task: null, shape: "(n_alphas + 1,)", note: "Penalty values the path visits."}
+      - {name: coef_path_, kind: attribute, task: null, shape: "(n_features, n_alphas + 1)", note: "Weights along the path. Needs fit_path=True."}
+    next_step: Plot coef_path_ against alphas_ to see the path.
+    visual: null
+  catch_outs:
+    - positive=True keeps every weight zero or more.
+    - coef_path_ is only stored when fit_path is True.
+    - Scale the columns first, or the penalty is unfair.
+    - Missing values stop the fit. Impute them first.
+  key_settings:
+    tier1:
+      - {name: alpha, page: null}
+      - {name: positive, page: null}
+      - {name: fit_path, page: null}
+    tier2:
+      - {name: fit_intercept, page: null}
+      - {name: max_iter, page: null}
+      - {name: jitter, page: null}
+      - {name: precompute, page: null}
+    tier3:
+      - {name: eps, page: null}
+      - {name: copy_X, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Fit the lasso penalty along the LARS path, one step at a time.
+    analogy: Turning down a row of dials one notch at a time, dropping any that hit zero.
+    animation: none
+    good_at: [wide data, few useful features]
+    bad_at: [classification, curved patterns]
+    vs_siblings:
+      - {page: lasso, note: "Same penalty, fitted with coordinate descent."}
+      - {page: lars, note: "Same path method, with no penalty."}
+    read_more:
+      - Start with all weights at zero.
+      - Add the feature most correlated with the residual.
+      - Track the path as alpha decreases.
+  next: [know-feature-importance]

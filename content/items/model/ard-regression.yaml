@@ -1,0 +1,120 @@
+id: ard-regression
+plain_name: ARDRegression
+code_name: ARDRegression
+aliases: [ARD, automatic relevance determination]
+stage: model
+family: model.linear.bayes
+tracks: [standard]
+archetype: model
+question_tags: [too many features, uncertainty]
+targets: [sklearn.linear_model.ARDRegression]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.ARDRegression.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: ames, shape: fit_line}
+    line: Straight line that switches off features it does not need.
+  quick_facts: {none: true}
+  use_avoid:
+    use_when: [many features, some useless, linear effects]
+    avoid_when: [target is a class label, missing values, curved effects]
+  prep:
+    - step: {family: clean.impute}
+      status: required
+      why: Rejects missing values with an error.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Needs numbers, not text.
+      condition: {has_categoricals: true}
+      unless: null
+    - step: {family: transform.scale.rescale}
+      status: recommended
+      why: Pruning uses weight precision, which depends on scale.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.linear_model.ARDRegression
+      why_this_library: Per-weight priors and pruning are built in.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_diabetes
+        from sklearn.linear_model import ARDRegression
+        from sklearn.model_selection import train_test_split
+
+        X, y = load_diabetes(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, random_state=0
+        )
+
+        model = ARDRegression().fit(X_train, y_train)
+        print(round(model.score(X_test, y_test), 3))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
+         note: "One predicted value per row."}
+      - {name: score, kind: method, task: null, shape: "float",
+         note: "R squared on the data you pass."}
+      - {name: coef_, kind: attribute, task: null, shape: "(n_features,)",
+         note: "One weight per column, in the input scale."}
+      - {name: intercept_, kind: attribute, task: null, shape: "float",
+         note: "Prediction when every input is zero."}
+      - {name: n_iter_, kind: attribute, task: null, shape: "int",
+         note: "Iterations run before it stopped."}
+      - {name: n_features_in_, kind: attribute, task: null, shape: "int",
+         note: "Number of columns seen at fit."}
+      - {name: feature_names_in_, kind: attribute, task: null,
+         shape: "(n_features,)", note: "Only set when fit on a DataFrame."}
+    next_step: Read coef_ against the feature scales before comparing effects.
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import load_diabetes
+      from sklearn.linear_model import ARDRegression
+
+      X, y = load_diabetes(return_X_y=True, as_frame=True)
+      model = ARDRegression().fit(X, y)
+      print(model.predict(X).shape)
+      print(model.coef_.shape)
+      print(model.feature_names_in_)
+    snippet_library: scikit-learn
+    visual: regression_preds
+  catch_outs:
+    - Missing values raise an error. Impute first.
+    - Text columns fail. Encode them first.
+    - Coefficients are only comparable on scaled inputs.
+  key_settings:
+    tier1:
+      - {name: threshold_lambda, page: null}
+      - {name: fit_intercept, page: null}
+    tier2:
+      - {name: max_iter, page: null}
+      - {name: tol, page: null}
+    tier3:
+      - {name: alpha_1, page: null}
+      - {name: lambda_1, page: null}
+      - {name: compute_score, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Each weight gets its own prior, so weak ones are pushed to zero.
+    analogy: A budget review that cuts the line items that never earn their keep.
+    animation: none
+    good_at: [many features, sparse effects, linear effects]
+    bad_at: [curved effects, classification targets]
+    vs_siblings:
+      - {page: bayesian-ridge, note: "BayesianRidge has one weight precision. ARD has one per weight."}
+    read_more:
+      - Give each weight a Gamma prior on its precision.
+      - Prune weights whose precision passes threshold_lambda.
+      - Refit until tol or max_iter stops it.
+  next: [but-wide-data]

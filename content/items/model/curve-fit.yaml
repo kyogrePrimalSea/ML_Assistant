@@ -1,0 +1,101 @@
+id: curve-fit
+plain_name: curve_fit
+code_name: curve_fit
+aliases: [curve fitting, nonlinear least squares]
+stage: model
+family: model.awkward.shape
+tracks: [standard]
+archetype: model
+question_tags: [known formula, curve fit, exponential]
+targets: [scipy.optimize.curve_fit]
+pairs_with: []
+clashes: []
+source_urls: ['https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.curve_fit.html']
+library_versions: {scipy: 1.18.1}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: airline-passengers, shape: fit_line}
+    line: Tunes a formula's numbers until its curve matches the data.
+  quick_facts:
+    data_size: Small to medium tables
+  use_avoid:
+    use_when: [known formula, few parameters, error bars needed]
+    avoid_when: [no formula, many parameters, unknown shape]
+  prep:
+    - step: {family: clean.impute}
+      status: required
+      why: Raises an error on NaN.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.scale.rescale}
+      status: recommended
+      why: Keeps fitted parameters on similar scales.
+      condition: null
+      unless: null
+  code:
+  - library: scipy
+    target: scipy.optimize.curve_fit
+    why_this_library: The scipy fitter for any formula you write.
+    snippet: |
+      # scipy 1.18.1
+      import numpy as np
+      from scipy.optimize import curve_fit
+      from sklearn.datasets import make_regression
+
+
+      def decay(x, a, b, c):
+          return a * np.exp(-b * x) + c
+
+
+      x = np.linspace(0, 4, 50)
+      _, noise = make_regression(n_samples=50, noise=1.0, random_state=0)
+      y = 2.5 * np.exp(-1.3 * x) + 0.5 + 0.05 * noise / noise.std()
+      popt, pcov = curve_fit(decay, x, y, p0=[1, 1, 0])
+      print(np.round(popt, 2))
+  what_comes_out:
+    items:
+      - {name: popt, kind: return, task: null, shape: "(n_params,)",
+         note: "Fitted values, in the order of the formula's arguments."}
+      - {name: pcov, kind: return, task: null, shape: "(n_params, n_params)",
+         note: "Covariance. Its diagonal gives each parameter's variance."}
+    next_step: Take the square root of pcov's diagonal for errors.
+    visual: null
+  catch_outs:
+    - Default p0 is all ones. A poor guess may not converge.
+    - Parameters on very different scales converge badly.
+    - NaN or infinite values raise an error by default.
+  key_settings:
+    tier1:
+    - {name: p0, page: null}
+    - {name: bounds, page: null}
+    - {name: sigma, page: null}
+    - {name: absolute_sigma, page: null}
+    tier2:
+    - {name: method, page: null}
+    - {name: jac, page: null}
+    - {name: check_finite, page: null}
+    tier3:
+    - {name: nan_policy, page: null}
+    - {name: full_output, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Adjust the numbers in a known formula until its curve sits closest to the points.
+    analogy: Turning the dials of a machine you understand until its output matches the readings.
+    animation: none
+    good_at: [known formulas, few parameters, error estimates]
+    bad_at: [unknown shape, many parameters]
+    vs_siblings:
+      - {page: least-squares, note: "Lower-level solver. Adds robust losses."}
+    read_more:
+      - Write the formula with its unknown numbers.
+      - Give a starting guess in p0.
+      - Minimise the squared errors numerically.
+      - Read popt for values and pcov for error bars.
+  next: []

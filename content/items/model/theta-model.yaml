@@ -1,0 +1,94 @@
+id: theta-model
+plain_name: ThetaModel
+code_name: ThetaModel
+aliases: [theta method]
+stage: model
+family: model.ts-smooth
+tracks: [time-series]
+archetype: model
+question_tags: [forecast, benchmark, seasonal]
+targets: [statsmodels.tsa.forecasting.theta.ThetaModel]
+pairs_with: []
+clashes: []
+source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.tsa.forecasting.theta.ThetaModel.html']
+library_versions: {statsmodels: 0.15.0}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: airline-passengers, shape: fit_line}
+    line: "A simple benchmark: remove the season, then a trend."
+  quick_facts:
+    data_size: 2+ seasons, e.g. 24 monthly points
+  use_avoid:
+    use_when: [need a quick benchmark, seasonal series]
+    avoid_when: [outside drivers needed]
+  prep:
+    - step: {family: explore.decompose}
+      status: recommended
+      why: Check the season length to set period.
+      condition: null
+      unless: null
+    - step: {family: split.time}
+      status: recommended
+      why: Test on the latest months, never on random rows.
+      condition: null
+      unless: null
+  code:
+    - library: statsmodels
+      target: statsmodels.tsa.forecasting.theta.ThetaModel
+      why_this_library: Benchmark built in, with season testing.
+      snippet: |
+        # statsmodels 0.15.0
+        import numpy as np
+        from statsmodels.tsa.forecasting.theta import ThetaModel
+
+        rng = np.random.default_rng(0)
+        t = np.arange(144)
+        y = 100 + 0.8 * t + 10 * np.sin(2 * np.pi * t / 12)
+        y = y + rng.normal(0, 2, 144)
+
+        model = ThetaModel(y[:132], period=12)
+        res = model.fit()
+        print(np.round(res.forecast(12), 1).tolist())
+  what_comes_out:
+    items:
+      - {name: forecast, kind: return, task: regression, shape: "(steps,) Series",
+         note: "Forecast from the fitted result. Pass the number of steps."}
+      - {name: deseasonalize, kind: attribute, task: null, shape: "bool",
+         note: "True by default. Season is removed before forecasting."}
+      - {name: difference, kind: attribute, task: null, shape: "bool",
+         note: "False by default. Set True to difference first."}
+    next_step: Use as the benchmark that other models must beat.
+    visual: null
+  catch_outs:
+    - Has no outside drivers. Use sarimax if you have them.
+    - Season length must be set with period when it is not obvious.
+  key_settings:
+    tier1:
+      - {name: period, page: null}
+      - {name: method, page: null}
+      - {name: use_test, page: null}
+      - {name: deseasonalize, page: null}
+    tier2:
+      - {name: difference, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    idea: Remove the season, then forecast with a simple trend model.
+    analogy: Like a quick baseline that a fancy model has to beat.
+    animation: none
+    good_at: [strong simple benchmark, seasonal series]
+    bad_at: [outside drivers]
+    vs_siblings:
+      - {page: exponential-smoothing, note: "Smooths level, trend and season instead."}
+    read_more:
+      - Set period to the season length.
+      - Seasonality is tested before it is removed.
+      - Fit, then forecast a set number of steps.
+  next: []

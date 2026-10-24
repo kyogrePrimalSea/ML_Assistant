@@ -1,0 +1,93 @@
+id: dummyregressor
+plain_name: DummyRegressor
+code_name: DummyRegressor
+aliases: [baseline regressor, mean predictor]
+stage: model
+family: model.baseline
+tracks: [standard]
+archetype: model
+question_tags: [sanity check, baseline, score to beat]
+targets: [sklearn.dummy.DummyRegressor]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.dummy.DummyRegressor.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: ames, shape: fit_line}
+    line: Predicts one fixed number for every row.
+  quick_facts: {none: true}
+  use_avoid:
+    use_when: [a score to beat, sanity check, no features yet]
+    avoid_when: [any real prediction, features should matter]
+  prep:
+    - step: {family: transform.scale.rescale}
+      status: not_needed
+      why: Ignores the features, so scale does not matter.
+      condition: null
+      unless: null
+    - step: {page: train-test-split}
+      status: recommended
+      why: Score the baseline on rows it did not see.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.dummy.DummyRegressor
+      why_this_library: The standard baseline in scikit-learn.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_diabetes
+        from sklearn.dummy import DummyRegressor
+        from sklearn.model_selection import train_test_split
+
+        X, y = load_diabetes(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, random_state=0
+        )
+
+        model = DummyRegressor(strategy="mean")
+        model.fit(X_train, y_train)
+        print(round(model.score(X_test, y_test), 3))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: null, shape: "(n_samples,)",
+         note: "Same value for every row. Mean of training y by default."}
+      - {name: score, kind: method, task: null, shape: float,
+         note: "R squared on the data given. Can be negative."}
+      - {name: constant_, kind: attribute, task: null, shape: "(1, n_outputs)",
+         note: "The value predicted, set during fit."}
+      - {name: n_features_in_, kind: attribute, task: null, shape: int,
+         note: "Input columns seen during fit."}
+    next_step: A real model should beat this score on new data.
+    visual: null
+  catch_outs:
+    - Predicts the same value whatever the features say.
+    - A negative score means worse than predicting the mean.
+  key_settings:
+    tier1:
+      - {name: strategy, page: null}
+      - {name: quantile, page: null}
+      - {name: constant, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    idea: Ignore the features and predict one fixed number.
+    analogy: Guessing the average height of a class without looking at anyone.
+    animation: none
+    good_at: [a sanity check, a score to beat]
+    bad_at: [any real prediction, using feature information]
+    vs_siblings: []
+    read_more:
+      - "Pick a rule: mean, median, constant or quantile."
+      - Fit stores the value; predict repeats it.
+      - Compare your real model's score to this one.
+  next: []

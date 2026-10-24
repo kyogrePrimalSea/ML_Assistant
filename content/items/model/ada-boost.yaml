@@ -1,0 +1,134 @@
+id: ada-boost
+plain_name: AdaBoost
+code_name: AdaBoostRegressor / AdaBoostClassifier
+aliases: [adaptive boosting]
+stage: model
+family: model.trees.boosting
+tracks: [standard]
+archetype: model
+question_tags: [boosting, tabular data, underperforming]
+targets: [sklearn.ensemble.AdaBoostRegressor, sklearn.ensemble.AdaBoostClassifier]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostRegressor.html',
+  'https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostClassifier.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: ames, shape: fit_line}
+    line: "Boosting, where each new learner focuses on the last one's errors."
+  quick_facts:
+    data_size: Tabular data
+  use_avoid:
+    use_when: [tabular data, a boosting baseline, learning how boosting works]
+    avoid_when: [noisy labels, images or text, need the best accuracy]
+  prep:
+    - step: {family: transform.scale.rescale}
+      status: not_needed
+      why: Default learners are trees, which ignore scale.
+      condition: null
+      unless: null
+    - step: {family: clean.impute}
+      status: required
+      why: Missing values stop fit. Impute them first.
+      condition: null
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Text categories must become numbers.
+      condition: {has_categoricals: true}
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.ensemble.AdaBoostRegressor
+      why_this_library: Built into scikit-learn, same API as the classifier.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import make_regression
+        from sklearn.ensemble import AdaBoostRegressor
+        from sklearn.model_selection import train_test_split
+
+        X, y = make_regression(
+            n_samples=500, n_features=8, noise=10, random_state=0
+        )
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, random_state=0
+        )
+
+        model = AdaBoostRegressor(
+            n_estimators=100, learning_rate=0.5, random_state=0
+        )
+        model.fit(X_train, y_train)
+        print(round(model.score(X_test, y_test), 3))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: null, shape: "(n_samples,)",
+         note: "Class labels for classification, one value per row for regression."}
+      - {name: predict_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
+         note: "One column per class, in classes_ order. Keep [:, 1] for two classes."}
+      - {name: decision_function, kind: method, task: classification, shape: "(n_samples,)",
+         note: "Summed vote score. Above 0 means class 1 for two classes."}
+      - {name: predict_log_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
+         note: "Log of the class probabilities, same column order."}
+      - {name: score, kind: method, task: null, shape: "float",
+         note: "Accuracy for classifiers, R-squared for regressors."}
+      - {name: feature_importances_, kind: attribute, task: null, shape: "(n_features,)",
+         note: "One score per input column."}
+      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)",
+         note: "Class labels, in the column order of predict_proba."}
+      - {name: n_features_in_, kind: attribute, task: null, shape: "int",
+         note: "Number of input columns seen in fit."}
+    next_step: "Classifiers only. ROC AUC needs predict_proba, not predict."
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import load_breast_cancer
+      from sklearn.ensemble import AdaBoostClassifier
+      from sklearn.model_selection import train_test_split
+
+      X, y = load_breast_cancer(return_X_y=True)
+      X_train, X_test, y_train, y_test = train_test_split(
+          X, y, random_state=0
+      )
+
+      model = AdaBoostClassifier(n_estimators=50, random_state=0)
+      model.fit(X_train, y_train)
+      print(model.predict_proba(X_test).shape)
+      print(model.decision_function(X_test).shape)
+      print(model.classes_)
+    snippet_library: scikit-learn
+    visual: both
+  catch_outs:
+    - Noisy labels get more weight each round. Check outliers first.
+    - Missing values stop fit. Impute them first.
+    - Pass estimator to change the base learner.
+  key_settings:
+    tier1:
+      - {name: learning_rate, page: learning-rate}
+      - {name: estimator, page: null}
+      - {name: n_estimators, page: n-estimators}
+      - {name: loss, page: null}
+    tier2:
+      - {name: random_state, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    idea: Each new learner focuses on the rows the last ones got wrong.
+    analogy: A tutor who spends more time on the questions students keep missing.
+    animation: none
+    good_at: [tabular data, simple boosting, teaching]
+    bad_at: [noisy labels, images or text, the best accuracy]
+    vs_siblings:
+      - {page: gradient-boosting, note: "Fits each new tree to the remaining errors."}
+      - {page: xgboost, note: "Same boosting family, with more regularisation options."}
+    read_more:
+      - Give every row the same weight.
+      - Fit a weak learner, then count its mistakes.
+      - Raise the weight of the misses, then repeat.
+  next: [model-overfitting, know-feature-importance]

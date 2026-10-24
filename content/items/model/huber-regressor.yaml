@@ -1,0 +1,124 @@
+id: huber-regressor
+plain_name: HuberRegressor
+code_name: HuberRegressor
+aliases: [robust linear regression]
+stage: model
+family: model.awkward.robust
+tracks: [standard]
+archetype: model
+question_tags: [outliers, robust fit, outliers in target]
+targets: [sklearn.linear_model.HuberRegressor]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.HuberRegressor.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: ames, shape: fit_line}
+    line: A line that ignores a few outliers in the target.
+  quick_facts:
+    data_size: Fits in memory
+  use_avoid:
+    use_when: [outliers in the target, a line still needed, few outliers]
+    avoid_when: [many outliers, need p-values, text or images]
+  prep:
+    - step: {family: transform.scale.rescale}
+      status: recommended
+      why: Alpha penalises coefficients, so feature scale changes the fit.
+      condition: null
+      unless: null
+    - step: {family: clean.impute}
+      status: required
+      why: Missing values raise an error here.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Text categories must become numbers.
+      condition: {has_categoricals: true}
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.linear_model.HuberRegressor
+      why_this_library: Scikit-learn API, with epsilon set in the constructor.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import make_regression
+        from sklearn.linear_model import HuberRegressor
+        from sklearn.model_selection import train_test_split
+
+        X, y = make_regression(n_samples=500, n_features=5, noise=10,
+                               random_state=0)
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, random_state=0)
+        y_train[:10] += 500  # ten outliers in the training target
+
+        model = HuberRegressor(epsilon=1.35, max_iter=300)
+        model.fit(X_train, y_train)
+        print(round(model.score(X_test, y_test), 3))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
+         note: "Predicted value per row, from the robust line."}
+      - {name: score, kind: method, task: regression, shape: float,
+         note: "R², the share of variance explained."}
+      - {name: coef_, kind: attribute, task: null, shape: "(n_features,)",
+         note: "One weight per column."}
+      - {name: intercept_, kind: attribute, task: null, shape: float,
+         note: "Intercept of the robust line."}
+      - {name: scale_, kind: attribute, task: null, shape: float,
+         note: "Estimated scale of the errors."}
+      - {name: outliers_, kind: attribute, task: null, shape: "(n_samples,)",
+         note: "True where a row was down-weighted as an outlier."}
+      - {name: n_iter_, kind: attribute, task: null, shape: int,
+         note: "Optimiser steps used."}
+    next_step: Compare with linear-regression. A big gap means outliers mattered.
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import make_regression
+      from sklearn.linear_model import HuberRegressor
+
+      X, y = make_regression(n_samples=200, n_features=3, noise=10,
+                             random_state=0)
+      y[:10] += 500
+      model = HuberRegressor().fit(X, y)
+      print(model.coef_.round(1))
+      print(int(model.outliers_[:10].sum()))  # planted outliers caught
+    snippet_library: scikit-learn
+    visual: regression_preds
+  catch_outs:
+    - epsilon sets how many rows count as outliers.
+    - Missing values raise an error. Impute first.
+    - Many outliers means ransac-regressor, not this page.
+  key_settings:
+    tier1:
+      - {name: epsilon, page: null}
+      - {name: alpha, page: null}
+    tier2:
+      - {name: fit_intercept, page: null}
+      - {name: max_iter, page: null}
+    tier3:
+      - {name: tol, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Errors past a cut-off count less, so outliers pull the line less.
+    analogy: Like a jury that discounts one loud witness.
+    animation: none
+    good_at: [outliers in the target, a clean line, few outliers]
+    bad_at: [many outliers, text or images, need p-values]
+    vs_siblings:
+      - {page: linear-regression, note: "Squared errors. One outlier can pull the line."}
+      - {page: ransac-regressor, note: "For many outliers. Fits on the clean subset."}
+      - {page: theil-sen-regression, note: "Median of slopes. Small data with outliers."}
+    read_more:
+      - Use a loss that is squared near zero and linear far out.
+      - Give rows with large errors less weight, past epsilon.
+      - Stop when the fit barely changes, set by tol.
+  next: [evaluate-how-good]

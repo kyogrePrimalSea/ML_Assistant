@@ -1,0 +1,109 @@
+id: extra-tree-regressor
+plain_name: ExtraTreeRegressor
+code_name: ExtraTreeRegressor
+aliases: [extremely randomized tree, extra tree regressor]
+stage: model
+family: model.trees.single
+tracks: [standard]
+archetype: model
+question_tags: [tabular data, overfitting, one tree]
+targets: [sklearn.tree.ExtraTreeRegressor]
+pairs_with: [treeexplainer]
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.tree.ExtraTreeRegressor.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: ames, shape: fit_line}
+    line: One tree that picks its split points at random.
+  quick_facts: {none: true}
+  use_avoid:
+    use_when: [tabular data, a quick tree baseline, mixed feature types]
+    avoid_when: [images or text, need the most accurate model, tiny data]
+  prep:
+    - step: {family: transform.scale.rescale}
+      status: not_needed
+      why: Trees split on order, not size.
+      condition: null
+      unless: null
+    - step: {family: clean.impute}
+      status: not_needed
+      why: Missing values are handled natively.
+      condition: null
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Text categories must become numbers.
+      condition: {has_categoricals: true}
+      unless: null
+    - step: {page: train-test-split}
+      status: recommended
+      why: A held-out set shows how much the tree overfits.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.tree.ExtraTreeRegressor
+      why_this_library: Same fit and predict API as other scikit-learn regressors.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import make_regression
+        from sklearn.model_selection import train_test_split
+        from sklearn.tree import ExtraTreeRegressor
+
+        X, y = make_regression(n_samples=500, n_features=8, noise=10, random_state=0)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = ExtraTreeRegressor(max_depth=5, random_state=0)
+        model.fit(X_train, y_train)
+        print(model.predict(X_test).shape)
+        print(round(model.score(X_test, y_test), 3))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: regression, shape: "(n_samples,)", note: "One value per row."}
+      - {name: score, kind: method, task: regression, shape: "float", note: "R squared on the data passed in."}
+      - {name: feature_importances_, kind: attribute, task: null, shape: "(n_features,)", note: "One score per input column."}
+      - {name: n_features_in_, kind: attribute, task: null, shape: "int", note: "Columns seen during fit."}
+      - {name: feature_names_in_, kind: attribute, task: null, shape: "(n_features,) of str", note: "Set when fit gets a DataFrame with named columns."}
+    next_step: Plot predictions against the true values to spot the big misses.
+    visual: null
+  catch_outs:
+    - Text columns fail. Encode them first.
+    - Set random_state, or the random splits change between runs.
+    - max_depth None grows the tree until its leaves are pure. Set a limit.
+  key_settings:
+    tier1:
+      - {name: criterion, page: null}
+      - {name: min_impurity_decrease, page: null}
+      - {name: max_features, page: null}
+      - {name: min_samples_leaf, page: null}
+    tier2:
+      - {name: monotonic_cst, page: null}
+      - {name: ccp_alpha, page: null}
+      - {name: min_samples_split, page: null}
+    tier3:
+      - {name: max_leaf_nodes, page: null}
+      - {name: splitter, page: null}
+      - {name: max_depth, page: max-depth}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Grow one tree, drawing a random cut for each feature and keeping the best.
+    analogy: Trying a few random cuts of a cake and keeping the one that splits it best.
+    animation: none
+    good_at: [tabular data, fast fits, one readable tree]
+    bad_at: [tiny data, images or text, smooth curves]
+    vs_siblings:
+      - {page: decision-tree-regressor, note: "Tries every cut. This one draws the cuts at random."}
+      - {page: extra-trees, note: "Many of these trees, averaged together."}
+    read_more:
+      - Draw one random cut for each feature.
+      - Keep the cut that reduces error the most.
+      - Repeat until max_depth or another stop rule.
+  next: [model-overfitting, know-feature-importance]

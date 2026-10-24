@@ -1,0 +1,101 @@
+id: arima
+plain_name: ARIMA
+code_name: ARIMA
+aliases: [ARIMA model, Box-Jenkins]
+stage: model
+family: model.ts-past
+tracks: [time-series]
+archetype: model
+question_tags: [forecast, one series, trend or drift]
+targets: [statsmodels.tsa.arima.model.ARIMA]
+pairs_with: [acf-pacf-plots, ljung-box, adf]
+clashes: []
+source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.tsa.arima.model.ARIMA.html']
+library_versions: {statsmodels: 0.15.0}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: airline-passengers, shape: fit_line}
+    line: Differences the series, then fits autoregressive and moving-average terms.
+  quick_facts: {none: true}
+  use_avoid:
+    use_when: [one series, a trend or drift, short memory]
+    avoid_when: [strong seasons, several series at once, shifting regimes]
+  prep:
+    - step: {family: explore.stationarity}
+      status: recommended
+      why: Check stationarity before choosing lags.
+      condition: null
+      unless: null
+    - step: {family: split.time}
+      status: recommended
+      why: Test on the latest rows, never shuffled.
+      condition: null
+      unless: null
+  code:
+    - library: statsmodels
+      target: statsmodels.tsa.arima.model.ARIMA
+      why_this_library: The statsmodels class for this model.
+      snippet: |
+        # statsmodels 0.15.0
+        import numpy as np
+        from sklearn.datasets import make_regression
+        from statsmodels.tsa.arima.model import ARIMA
+
+        _, noise = make_regression(
+            n_samples=150, n_features=1, noise=1.0, random_state=0
+        )
+        series = 0.2 * np.arange(150) + noise  # a drift plus noise
+
+        model = ARIMA(series, order=(1, 1, 0))
+        res = model.fit()
+        print(round(res.aic, 1))
+  what_comes_out:
+    items:
+      - {name: fit, kind: method, task: null, shape: "results object", note: "Returns the fitted results. Use them to forecast."}
+      - {name: predict, kind: method, task: null, shape: "(n_obs,)", note: "Fitted values, or forecasts past the sample."}
+      - {name: model_orders, kind: attribute, task: null, shape: "dict", note: "The p, d, q and seasonal orders used."}
+      - {name: param_names, kind: attribute, task: null, shape: "list of str", note: "Names for each fitted parameter."}
+    next_step: Check the residuals for leftover patterns before forecasting.
+    visual: null
+  catch_outs:
+    - order is (p, d, q) and is set by hand. Check the series first.
+    - enforce_stationarity and enforce_invertibility are on by default.
+    - seasonal_order is separate from order; leave it at zero without seasons.
+  key_settings:
+    tier1:
+      - {name: trend, page: null}
+      - {name: order, page: null}
+      - {name: seasonal_order, page: null}
+      - {name: concentrate_scale, page: null}
+    tier2:
+      - {name: trend_offset, page: null}
+      - {name: missing, page: null}
+      - {name: validate_exog, page: null}
+      - {name: freq, page: null}
+    tier3:
+      - {name: enforce_stationarity, page: null}
+      - {name: enforce_invertibility, page: null}
+      - {name: validate_specification, page: null}
+      - {name: exog, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Remove the drift by differencing, then model what is left.
+    analogy: Like fixing a slope with differences, then correcting from past errors.
+    animation: none
+    good_at: [one series, a trend or drift, short memory]
+    bad_at: [strong seasons, several series at once, shifting regimes]
+    vs_siblings:
+      - {page: auto-reg, note: "No differencing and no moving-average terms."}
+      - {page: sarimax, note: "Adds seasons and outside drivers."}
+    read_more:
+      - Difference the series until the drift is gone.
+      - Fit AR and MA terms to what is left.
+      - Forecast, then undo the differencing.
+  next: [but-beat-simple, but-intervals]

@@ -1,0 +1,132 @@
+id: tweedie-regressor
+plain_name: TweedieRegressor
+code_name: TweedieRegressor
+aliases: [tweedie glm]
+stage: model
+family: model.awkward.glm
+tracks: [standard]
+archetype: model
+question_tags: [many zeros, amounts, total spend]
+targets: [sklearn.linear_model.TweedieRegressor]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.TweedieRegressor.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: ames, shape: fit_line}
+    line: A line for amounts that are often exactly zero.
+  quick_facts:
+    data_size: Fits in memory
+  use_avoid:
+    use_when: [many exact zeros, amounts, total spend]
+    avoid_when: [need p-values, negative targets, pure counts]
+  prep:
+    - step: {family: transform.scale.rescale}
+      status: recommended
+      why: Alpha penalises coefficients, so feature scale changes the fit.
+      condition: null
+      unless: null
+    - step: {family: clean.impute}
+      status: required
+      why: Missing values raise an error here.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Text categories must become numbers.
+      condition: {has_categoricals: true}
+      unless: null
+    - step: {page: train-test-split}
+      status: recommended
+      why: Hold out rows to check predictions on new data.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.linear_model.TweedieRegressor
+      why_this_library: Scikit-learn Tweedie GLM. The power sets the distribution.
+      snippet: |
+        # scikit-learn 1.9.1
+        import numpy as np
+        from sklearn.datasets import make_regression
+        from sklearn.linear_model import TweedieRegressor
+        from sklearn.model_selection import train_test_split
+
+        X, y = make_regression(n_samples=500, n_features=5, noise=10,
+                               random_state=0)
+        y = np.maximum(y, 0)  # many exact zeros, like total spend
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, random_state=0)
+
+        model = TweedieRegressor(power=1.5, alpha=0.1, max_iter=300)
+        model.fit(X_train, y_train)
+        print(round(model.score(X_test, y_test), 3))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
+         note: "Predicted mean, never negative at power 1.5."}
+      - {name: score, kind: method, task: regression, shape: float,
+         note: "Share of deviance explained, the D² score."}
+      - {name: coef_, kind: attribute, task: null, shape: "(n_features,)",
+         note: "One weight per column, on the link scale."}
+      - {name: intercept_, kind: attribute, task: null, shape: float,
+         note: "Baseline on the link scale."}
+      - {name: n_iter_, kind: attribute, task: null, shape: int,
+         note: "Solver steps used. Compare with max_iter."}
+      - {name: n_features_in_, kind: attribute, task: null, shape: int,
+         note: "Number of columns seen at fit time."}
+    next_step: With a log link, read exp(coef_) as a multiplier.
+    snippet: |
+      # scikit-learn 1.9.1
+      import numpy as np
+      from sklearn.datasets import make_regression
+      from sklearn.linear_model import TweedieRegressor
+
+      X, y = make_regression(n_samples=200, n_features=3, noise=10,
+                             random_state=0)
+      y = np.maximum(y, 0)
+      model = TweedieRegressor(power=1.5).fit(X, y)
+      pred = model.predict(X)
+      print(pred.shape)
+      print(bool(pred.min() >= 0))
+      print(round(model.score(X, y), 3))
+    snippet_library: scikit-learn
+    visual: regression_preds
+  catch_outs:
+    - Target must be zero or above. Negative values raise an error.
+    - Power 2 is the gamma case, and exact zeros then fail.
+    - Missing values raise an error. Impute first.
+  key_settings:
+    tier1:
+      - {name: power, page: null}
+      - {name: alpha, page: null}
+      - {name: link, page: null}
+    tier2:
+      - {name: max_iter, page: null}
+      - {name: fit_intercept, page: null}
+    tier3:
+      - {name: tol, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Model amounts that are often exactly zero, with one power setting.
+    analogy: Like a shop's daily takings, where many days are zero and the rest vary.
+    animation: none
+    good_at: [many exact zeros, skewed amounts, total spend]
+    bad_at: [pure counts, negative targets, need p-values]
+    vs_siblings:
+      - {page: gamma-regressor, note: "Strictly positive amounts only. No exact zeros."}
+      - {page: poisson-regression, note: "Whole counts. Tweedie allows non-whole amounts."}
+      - {page: glm, note: "Statsmodels Tweedie family, with p-values."}
+    read_more:
+      - Power 1.5 allows exact zeros. Power 2 does not.
+      - Log keeps predictions above zero.
+      - Read coefficients as multipliers when the link is log.
+  next: [but-count-zeros]

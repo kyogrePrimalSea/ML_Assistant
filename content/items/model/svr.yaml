@@ -1,0 +1,100 @@
+id: svr
+plain_name: SVR
+code_name: SVR
+aliases: ["support vector regression", "epsilon svr", "svm regressor"]
+stage: model
+family: model.neighbours.kernel
+tracks: [standard]
+archetype: model
+question_tags: ["curved trends", "up to 10,000 rows", "scale first"]
+targets: ["sklearn.svm.SVR"]
+pairs_with: []
+clashes: []
+source_urls: ["https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html"]
+library_versions: {scikit-learn: "1.9.1"}
+reviewed: false
+rules:
+  task_types: ["regression"]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: ames, shape: fit_line}
+    line: "Fits a curve inside a tube around the points."
+  quick_facts:
+    data_size: "Up to about 10,000 rows"
+  use_avoid:
+    use_when: ["curved trends", "up to 10,000 rows", "scaled features"]
+    avoid_when: ["large data", "images or text", "need a simple formula"]
+  prep:
+    - step: {family: transform.scale.rescale}
+      status: required
+      why: "Kernel distances need comparable scales; scale first."
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.svm.SVR
+      why_this_library: "Built into scikit-learn; no extra install."
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import make_friedman1
+        from sklearn.model_selection import train_test_split
+        from sklearn.pipeline import make_pipeline
+        from sklearn.preprocessing import StandardScaler
+        from sklearn.svm import SVR
+
+        X, y = make_friedman1(n_samples=300, noise=0.5, random_state=0)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = make_pipeline(
+            StandardScaler(),
+            SVR(C=10, epsilon=0.1),
+        )
+        model.fit(X_train, y_train)
+        print(round(model.score(X_test, y_test), 3))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
+         note: "One value per row."}
+      - {name: score, kind: method, task: regression, shape: "float",
+         note: "R squared on the data you pass in."}
+      - {name: support_vectors_, kind: attribute, task: null, shape: "(n_SV, n_features)",
+         note: "Rows on or outside the epsilon tube."}
+    next_step: "Try a few epsilon values; the default is 0.1."
+    visual: regression_preds
+  catch_outs:
+    - "SVR does no scaling itself; scale features first."
+    - "coef_ exists only with kernel='linear'."
+    - "On this toy data, C=1 scored 0.62 and C=10 scored 0.83."
+  key_settings:
+    tier1:
+      - {name: C, page: null}
+      - {name: epsilon, page: null}
+      - {name: kernel, page: null}
+      - {name: gamma, page: null}
+    tier2:
+      - {name: degree, page: null}
+      - {name: coef0, page: null}
+    tier3:
+      - {name: shrinking, page: null}
+      - {name: tol, page: null}
+      - {name: max_iter, page: null}
+      - {name: cache_size, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: "Fit a curve so most points sit inside a tube; points outside it set the fit."
+    analogy: "A rope pinned to the points, slack inside a tube."
+    animation: none
+    good_at: ["curved trends", "up to 10,000 rows", "scaled features"]
+    bad_at: ["large data", "images or text", "a simple formula"]
+    vs_siblings:
+      - {page: nu-svr, note: "NuSVR sets nu instead of epsilon."}
+      - {page: kernel-ridge, note: "Kernel ridge has no tube; every point counts."}
+    read_more:
+      - "Pick a kernel to measure how alike two rows are."
+      - "Points inside the epsilon tube cost nothing."
+      - "Points outside it set the curve."
+  next: []

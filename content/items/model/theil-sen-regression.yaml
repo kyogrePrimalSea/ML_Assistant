@@ -1,0 +1,114 @@
+id: theil-sen-regression
+plain_name: Theil–Sen
+code_name: TheilSenRegressor / theilslopes
+aliases: [theil sen, theil-sen estimator, theilslopes]
+stage: model
+family: model.awkward.robust
+tracks: [standard]
+archetype: model
+question_tags: [outliers, small data, median slope]
+targets: [sklearn.linear_model.TheilSenRegressor, scipy.stats.theilslopes]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.TheilSenRegressor.html',
+  'https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.theilslopes.html']
+library_versions: {scikit-learn: 1.9.1, scipy: 1.18.1}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: airline-passengers, shape: fit_line}
+    line: Fits a line from the median slope, not the average.
+  quick_facts:
+    data_size: Small tables
+  use_avoid:
+    use_when: [small data, outliers, median slope]
+    avoid_when: [big data, speed matters, many features]
+  prep:
+    - step: {family: clean.impute}
+      status: required
+      why: Stops with an error on NaN.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.scale.rescale}
+      status: not_needed
+      why: A linear fit gives the same answer after scaling.
+      condition: null
+      unless: null
+  code:
+  - library: scikit-learn
+    target: sklearn.linear_model.TheilSenRegressor
+    why_this_library: The scikit-learn version, with subsampling options.
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import make_regression
+      from sklearn.linear_model import TheilSenRegressor
+
+      X, y = make_regression(n_samples=60, n_features=1, noise=5.0,
+                             random_state=0)
+      y[:6] += 150  # a few gross outliers
+      model = TheilSenRegressor(random_state=0).fit(X, y)
+      print(round(model.coef_[0], 2))
+  - library: scipy
+    target: scipy.stats.theilslopes
+    why_this_library: The scipy version, with a confidence interval on the slope.
+    snippet: |
+      # scipy 1.18.1
+      from scipy.stats import theilslopes
+      from sklearn.datasets import make_regression
+
+      X, y = make_regression(n_samples=60, n_features=1, noise=5.0,
+                             random_state=0)
+      y[:6] += 150  # a few gross outliers
+      res = theilslopes(y, X[:, 0])
+      print(round(res.slope, 2))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
+         note: "Linear predictions from the median-based fit."}
+      - {name: score, kind: method, task: regression, shape: "float",
+         note: "R squared on the data given."}
+      - {name: coef_, kind: attribute, task: null, shape: "(n_features,)",
+         note: "Median-based slopes, one per input column."}
+      - {name: intercept_, kind: attribute, task: null, shape: "float",
+         note: "Intercept of the fitted line."}
+      - {name: breakdown_, kind: attribute, task: null, shape: "float",
+         note: "Approximate share of bad rows it can resist."}
+    next_step: Compare the slope with an ordinary least squares fit.
+    visual: null
+  catch_outs:
+    - Cost grows with the subsets it tries. Cap max_subpopulation.
+    - Set random_state to get the same subsets each run.
+    - NaN inputs stop the fit. Impute first.
+  key_settings:
+    tier1:
+    - {name: n_subsamples, page: null}
+    - {name: max_subpopulation, page: null}
+    - {name: fit_intercept, page: null}
+    tier2:
+    - {name: max_iter, page: null}
+    - {name: tol, page: null}
+    tier3:
+    - {name: random_state, page: null}
+    - {name: n_jobs, page: null}
+    - {name: verbose, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Fit lines through many small subsets, then take the median of them.
+    analogy: Asking every pair of friends for a rough slope and taking the middle answer.
+    animation: none
+    good_at: [small data, outliers, median slopes]
+    bad_at: [big data, many features, speed]
+    vs_siblings:
+      - {page: ransac-regressor, note: "Random subsets. Suited to many outliers."}
+      - {page: huber-regressor, note: "Down-weights outliers rather than taking medians."}
+    read_more:
+      - Fit least squares on many small subsets of rows.
+      - Take the spatial median of those fits.
+      - Use that median as the final line.
+  next: []

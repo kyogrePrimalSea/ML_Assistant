@@ -1,0 +1,105 @@
+id: orthogonal-matching-pursuit
+plain_name: OrthogonalMatchingPursuit
+code_name: OrthogonalMatchingPursuit
+aliases: [omp, orthogonal matching pursuit]
+stage: model
+family: model.linear.sparse
+tracks: [standard]
+archetype: model
+question_tags: [exact feature count, keep k features, fixed feature count]
+targets: [sklearn.linear_model.OrthogonalMatchingPursuit]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.OrthogonalMatchingPursuit.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: ames, shape: fit_line}
+    line: A line built from at most k features.
+  quick_facts: {none: true}
+  use_avoid:
+    use_when: [exact feature count, keep k features]
+    avoid_when: [classification targets, keep every feature]
+  prep:
+    - step: {family: clean.impute}
+      status: required
+      why: Scikit-learn rejects NaN in X.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Text categories must become numbers.
+      condition: {has_categoricals: true}
+      unless: null
+    - step: {family: transform.scale.rescale}
+      status: required
+      why: Units decide which columns are picked first.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.linear_model.OrthogonalMatchingPursuit
+      why_this_library: Built into scikit-learn. You choose k or a tolerance.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_diabetes
+        from sklearn.linear_model import OrthogonalMatchingPursuit
+        from sklearn.model_selection import train_test_split
+        from sklearn.pipeline import make_pipeline
+        from sklearn.preprocessing import StandardScaler
+
+        X, y = load_diabetes(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, random_state=0
+        )
+
+        model = make_pipeline(
+            StandardScaler(),
+            OrthogonalMatchingPursuit(n_nonzero_coefs=3),
+        )
+        model.fit(X_train, y_train)
+        print(int((model[-1].coef_ != 0).sum()))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: null, shape: "(n_samples,)", note: "One predicted value per row."}
+      - {name: score, kind: method, task: null, shape: float, note: "R squared on the data you pass in."}
+      - {name: coef_, kind: attribute, task: null, shape: "(n_features,)", note: "One weight per input column. Zero means not picked."}
+      - {name: intercept_, kind: attribute, task: null, shape: float, note: "Intercept of the fitted line."}
+      - {name: n_nonzero_coefs_, kind: attribute, task: null, shape: "int or None", note: "The k used, or None when tol is set."}
+      - {name: n_iter_, kind: attribute, task: null, shape: "int or array-like", note: "Steps the greedy search took."}
+    next_step: Try a few k values and compare scores on held-out data.
+    visual: null
+  catch_outs:
+    - Setting tol overrides n_nonzero_coefs.
+    - Scale the columns first, or big units get picked first.
+    - Missing values stop the fit. Impute them first.
+  key_settings:
+    tier1:
+      - {name: n_nonzero_coefs, page: null}
+      - {name: tol, page: null}
+    tier2:
+      - {name: fit_intercept, page: null}
+    tier3:
+      - {name: precompute, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Pick the feature that best explains what is left, k times.
+    analogy: Packing a bag by taking, each time, the item that fits the gap best.
+    animation: none
+    good_at: [exact feature count, few features]
+    bad_at: [classification, many features to keep]
+    vs_siblings:
+      - {page: lasso, note: "Lasso sets a penalty. OMP sets a feature count."}
+      - {page: lars, note: "Lars builds a full path. OMP stops at k features."}
+    read_more:
+      - Start with the residual equal to y.
+      - Add the feature most correlated with the residual.
+      - Refit on all chosen features, then repeat until k.
+  next: [know-feature-importance]

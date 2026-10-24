@@ -1,0 +1,98 @@
+id: markov-regression
+plain_name: MarkovRegression
+code_name: MarkovRegression
+aliases: [regime switching, Markov switching]
+stage: model
+family: model.ts-changing
+tracks: [time-series]
+archetype: model
+question_tags: [forecast, regimes, behaviour switches]
+targets: [statsmodels.tsa.regime_switching.markov_regression.MarkovRegression]
+pairs_with: []
+clashes: []
+source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.tsa.regime_switching.markov_regression.MarkovRegression.html']
+library_versions: {statsmodels: 0.15.0}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: airline-passengers, shape: fit_line}
+    line: Switches between regimes, each with its own mean and rules.
+  quick_facts: {none: true}
+  use_avoid:
+    use_when: [behaviour that switches, regime labels, few states]
+    avoid_when: [steady series with no switches, very short data, many regimes]
+  prep:
+    - step: {family: explore.stationarity}
+      status: recommended
+      why: Check stationarity before choosing lags.
+      condition: null
+      unless: null
+    - step: {family: split.time}
+      status: recommended
+      why: Test on the latest rows, never shuffled.
+      condition: null
+      unless: null
+  code:
+    - library: statsmodels
+      target: statsmodels.tsa.regime_switching.markov_regression.MarkovRegression
+      why_this_library: The statsmodels class for this model.
+      snippet: |
+        # statsmodels 0.15.0
+        from sklearn.datasets import make_regression
+        from statsmodels.tsa.regime_switching.markov_regression import (
+            MarkovRegression,
+        )
+
+        _, y = make_regression(n_samples=300, n_features=1, noise=1.0, random_state=0)
+        y = (y - y.mean()) / y.std()
+        y[150:] += 3  # the level jumps halfway through
+
+        model = MarkovRegression(y, k_regimes=2, switching_variance=True)
+        res = model.fit(disp=False)
+        print(res.params.round(2))
+  what_comes_out:
+    items:
+      - {name: fit, kind: method, task: null, shape: "results object", note: "Returns the fitted results, with regime estimates."}
+      - {name: predict, kind: method, task: null, shape: "(n_obs,)", note: "In-sample predictions or forecasts."}
+      - {name: regime_transition_matrix, kind: method, task: null, shape: "(k, k)", note: "Chances of moving between regimes."}
+      - {name: endog_names, kind: attribute, task: null, shape: "list of str", note: "Name of the series."}
+    next_step: Check the regime switches against the series before trusting them.
+    visual: null
+  catch_outs:
+    - k_regimes is an input; the model does not choose it.
+    - switching_variance is off by default.
+    - exog_tvtp makes transition chances depend on other variables.
+  key_settings:
+    tier1:
+      - {name: k_regimes, page: null}
+      - {name: switching_variance, page: null}
+      - {name: switching_exog, page: null}
+      - {name: switching_trend, page: null}
+    tier2:
+      - {name: trend, page: null}
+      - {name: order, page: null}
+      - {name: exog_tvtp, page: null}
+    tier3:
+      - {name: missing, page: null}
+      - {name: freq, page: null}
+      - {name: exog, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Behaviour moves between a few hidden states.
+    analogy: Like a shop with good and quiet months, each with its own sales level.
+    animation: none
+    good_at: [behaviour that switches, regime labels, few states]
+    bad_at: [steady series with no switches, very short data, many regimes]
+    vs_siblings:
+      - {page: unobserved-components, note: "Slow drift in trend and seasons, not sudden switches."}
+    read_more:
+      - Set how many regimes there are.
+      - Fit a regression in each regime.
+      - Estimate the chance of moving between regimes.
+  next: [but-intervals, but-beat-simple]

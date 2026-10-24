@@ -1,0 +1,103 @@
+id: exponential-smoothing
+plain_name: Holt-Winters (ExponentialSmoothing)
+code_name: ExponentialSmoothing
+aliases: [holt-winters]
+stage: model
+family: model.ts-smooth
+tracks: [time-series]
+archetype: model
+question_tags: [forecast, seasonal, trend]
+targets: [statsmodels.tsa.holtwinters.ExponentialSmoothing]
+pairs_with: []
+clashes: []
+source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.tsa.holtwinters.ExponentialSmoothing.html']
+library_versions: {statsmodels: 0.15.0}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: airline-passengers, shape: fit_line}
+    line: Level, trend and season, weighted to recent values.
+  quick_facts:
+    data_size: 2+ seasons, e.g. 24 monthly points
+  use_avoid:
+    use_when: [level, trend and season]
+    avoid_when: [outside drivers needed]
+  prep:
+    - step: {family: explore.stationarity}
+      status: recommended
+      why: Check whether the series keeps a steady mean.
+      condition: null
+      unless: null
+    - step: {family: split.time}
+      status: recommended
+      why: Test on the latest months, never on random rows.
+      condition: null
+      unless: null
+  code:
+    - library: statsmodels
+      target: statsmodels.tsa.holtwinters.ExponentialSmoothing
+      why_this_library: Holt-Winters in one class, with season settings.
+      snippet: |
+        # statsmodels 0.15.0
+        import numpy as np
+        from statsmodels.tsa.holtwinters import ExponentialSmoothing
+
+        rng = np.random.default_rng(0)
+        t = np.arange(144)
+        y = 100 + 0.8 * t + 10 * np.sin(2 * np.pi * t / 12)
+        y = y + rng.normal(0, 2, 144)
+
+        model = ExponentialSmoothing(
+            y[:132], trend="add", seasonal="add", seasonal_periods=12,
+        )
+        res = model.fit()
+        print(np.round(res.predict(132, 143), 1).tolist())
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: regression, shape: "(n_obs,) or (n_steps,)",
+         note: "Fitted values in sample, forecasts past the end."}
+      - {name: endog_names, kind: attribute, task: null, shape: "str",
+         note: "Name of the series. 'y' when the input has no name."}
+      - {name: exog_names, kind: attribute, task: null, shape: "None",
+         note: "None here. Holt-Winters takes no outside drivers."}
+    next_step: null
+    visual: null
+  catch_outs:
+    - Seasonal fits need about two full seasons of history.
+    - No outside drivers. Use sarimax if you have them.
+  key_settings:
+    tier1:
+      - {name: seasonal_periods, page: null}
+      - {name: trend, page: null}
+      - {name: seasonal, page: null}
+      - {name: damped_trend, page: null}
+    tier2:
+      - {name: initialization_method, page: null}
+      - {name: initial_seasonal, page: null}
+      - {name: use_boxcox, page: null}
+      - {name: bounds, page: null}
+    tier3:
+      - {name: initial_level, page: null}
+      - {name: initial_trend, page: null}
+      - {name: missing, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Track level, trend and season, weighting recent values more.
+    analogy: Like a shop manager who trusts this week's numbers more than last year's.
+    animation: none
+    good_at: [trend and season, recent values matter]
+    bad_at: [outside drivers, very short series]
+    vs_siblings:
+      - {page: ets-model, note: "Same idea, built as a state space model."}
+      - {page: theta-model, note: "A simpler benchmark, often hard to beat."}
+    read_more:
+      - Choose the trend and seasonal types.
+      - Set seasonal_periods to the season length.
+      - Fit, then predict past the end of the series.
+  next: []

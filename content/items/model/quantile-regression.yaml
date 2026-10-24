@@ -1,0 +1,136 @@
+id: quantile-regression
+plain_name: Quantile regression
+code_name: QuantileRegressor / QuantReg
+aliases: [median regression]
+stage: model
+family: model.awkward.quantile
+tracks: [standard]
+archetype: model
+question_tags: [percentiles, prediction bands, median]
+targets: [sklearn.linear_model.QuantileRegressor, statsmodels.regression.quantile_regression.QuantReg]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.QuantileRegressor.html',
+  'https://www.statsmodels.org/stable/generated/statsmodels.regression.quantile_regression.QuantReg.html']
+library_versions: {scikit-learn: 1.9.1, statsmodels: 0.15.0}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: ames, shape: fit_line}
+    line: A line for a chosen percentile, not the average.
+  quick_facts:
+    data_size: Fits in memory
+  use_avoid:
+    use_when: [need a percentile, prediction bands, median fit]
+    avoid_when: [need the average, text or images]
+  prep:
+    - step: {family: transform.scale.rescale}
+      status: recommended
+      why: Scikit-learn alpha penalty depends on feature scale.
+      condition: null
+      unless: null
+    - step: {family: clean.impute}
+      status: required
+      why: NaN raises an error in both libraries.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Text categories must become numbers.
+      condition: {has_categoricals: true}
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.linear_model.QuantileRegressor
+      why_this_library: Scikit-learn API, with the quantile set in the constructor.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import make_regression
+        from sklearn.linear_model import QuantileRegressor
+        from sklearn.model_selection import train_test_split
+
+        X, y = make_regression(n_samples=500, n_features=5, noise=10,
+                               random_state=0)
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, random_state=0)
+
+        model = QuantileRegressor(quantile=0.9, alpha=0)
+        model.fit(X_train, y_train)
+        share = (y_test <= model.predict(X_test)).mean()
+        print(round(share, 2))
+    - library: statsmodels
+      target: statsmodels.regression.quantile_regression.QuantReg
+      why_this_library: Statsmodels sets the quantile in fit, not the constructor.
+      snippet: |
+        # statsmodels 0.15.0
+        import statsmodels.api as sm
+        from sklearn.datasets import make_regression
+
+        X, y = make_regression(n_samples=500, n_features=3, noise=10,
+                               random_state=0)
+        model = sm.QuantReg(y, sm.add_constant(X))
+        result = model.fit(q=0.9)
+        print(result.params.round(2))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
+         note: "Predicted value at the chosen quantile."}
+      - {name: score, kind: method, task: regression, shape: float,
+         note: "R², not a quantile score."}
+      - {name: coef_, kind: attribute, task: null, shape: "(n_features,)",
+         note: "One slope per column, at the chosen quantile."}
+      - {name: intercept_, kind: attribute, task: null, shape: float,
+         note: "Intercept at the chosen quantile."}
+      - {name: n_iter_, kind: attribute, task: null, shape: int,
+         note: "Solver steps used."}
+      - {name: n_features_in_, kind: attribute, task: null, shape: int,
+         note: "Number of columns seen at fit time."}
+    next_step: Fit one model per quantile, such as 0.1 and 0.9, for a band.
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import make_regression
+      from sklearn.linear_model import QuantileRegressor
+
+      X, y = make_regression(n_samples=200, n_features=3, noise=10,
+                             random_state=0)
+      model = QuantileRegressor(quantile=0.9, alpha=0).fit(X, y)
+      pred = model.predict(X)
+      print(pred.shape)
+      print(round((y <= pred).mean(), 2))
+      print(model.coef_.round(2))
+    snippet_library: scikit-learn
+    visual: regression_preds
+  catch_outs:
+    - Quantile must be strictly between 0 and 1. The default 0.5 is the median.
+    - Each quantile needs its own fit.
+    - Missing values raise an error here.
+  key_settings:
+    tier1:
+      - {name: quantile, page: null}
+      - {name: alpha, page: null}
+    tier2:
+      - {name: fit_intercept, page: null}
+    tier3:
+      - {name: solver, page: null}
+      - {name: solver_options, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Fit a line that a chosen share of points falls below.
+    analogy: Like a price cut-off, where 90 percent of houses sell below it.
+    animation: none
+    good_at: [prediction bands, the median, skewed targets]
+    bad_at: [the average, text or images]
+    vs_siblings:
+      - {page: linear-regression, note: "Fits the average. Quantile fits a chosen percentile."}
+      - {page: huber-regressor, note: "Robust average. Quantile fits a chosen percentile."}
+    read_more:
+      - Pick a quantile. 0.5 is the median.
+      - "Points above the line cost q. Points below cost 1 minus q."
+      - Solve as a linear program, with the highs solver by default.
+  next: [evaluate-how-good]

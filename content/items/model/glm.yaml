@@ -1,0 +1,129 @@
+id: glm
+plain_name: GLM (statsmodels)
+code_name: GLM / Gaussian / Poisson / Binomial / Gamma / Tweedie / NegativeBinomial
+aliases: [generalised linear model, statsmodels glm]
+stage: model
+family: model.awkward.glm
+tracks: [standard]
+archetype: model
+question_tags: [p-values, count or amount target, statistical inference]
+targets: [statsmodels.genmod.generalized_linear_model.GLM, statsmodels.genmod.families.family.Gaussian,
+  statsmodels.genmod.families.family.Poisson, statsmodels.genmod.families.family.Binomial, statsmodels.genmod.families.family.Gamma,
+  statsmodels.genmod.families.family.Tweedie, statsmodels.genmod.families.family.NegativeBinomial]
+pairs_with: []
+clashes: []
+source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.genmod.generalized_linear_model.GLM.html',
+  'https://www.statsmodels.org/stable/generated/statsmodels.genmod.families.family.Gaussian.html', 'https://www.statsmodels.org/stable/generated/statsmodels.genmod.families.family.Poisson.html',
+  'https://www.statsmodels.org/stable/generated/statsmodels.genmod.families.family.Binomial.html', 'https://www.statsmodels.org/stable/generated/statsmodels.genmod.families.family.Gamma.html',
+  'https://www.statsmodels.org/stable/generated/statsmodels.genmod.families.family.Tweedie.html', 'https://www.statsmodels.org/stable/generated/statsmodels.genmod.families.family.NegativeBinomial.html']
+library_versions: {statsmodels: 0.15.0}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: ames, shape: fit_line}
+    line: A line with p-values, for the distribution you choose.
+  quick_facts:
+    data_size: Fits in memory
+  use_avoid:
+    use_when: [need p-values, count or amount target, statistical inference]
+    avoid_when: [only predictions needed, text or images, data too big for memory]
+  prep:
+    - step: {family: transform.scale.rescale}
+      status: not_needed
+      why: "Unpenalised fit: scaling changes units, not the results."
+      condition: null
+      unless: null
+    - step: {family: clean.impute}
+      status: required
+      why: NaN raises an error. Drop or impute first.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Text categories must become numbers.
+      condition: {has_categoricals: true}
+      unless: null
+  code:
+    - library: statsmodels
+      target: statsmodels.genmod.generalized_linear_model.GLM
+      why_this_library: Statsmodels reports p-values, which scikit-learn does not.
+      snippet: |
+        # statsmodels 0.15.0
+        import numpy as np
+        import statsmodels.api as sm
+        from sklearn.datasets import make_regression
+
+        X, _ = make_regression(n_samples=500, n_features=3, random_state=0)
+        rate = np.exp(0.5 * X[:, 0] - 0.3 * X[:, 1])
+        counts = np.random.default_rng(0).poisson(rate)
+        model = sm.GLM(counts, sm.add_constant(X),
+                       family=sm.families.Poisson())
+        result = model.fit()
+        print(result.pvalues.round(3))
+  what_comes_out:
+    items:
+      - {name: fit, kind: method, task: regression, shape: results object,
+         note: "Holds params and pvalues, one per column."}
+      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
+         note: "Predicted mean per row. Needs the same columns as fit."}
+      - {name: df_resid, kind: attribute, task: null, shape: float,
+         note: "Rows minus parameters, constant included."}
+      - {name: exog, kind: attribute, task: null, shape: "(n_samples, n_features)",
+         note: "The design matrix the model was fit on."}
+      - {name: endog, kind: attribute, task: null, shape: "(n_samples,)",
+         note: "The target the model was fit on."}
+    next_step: For a log link, exp(params) gives multipliers.
+    snippet: |
+      # statsmodels 0.15.0
+      import numpy as np
+      import statsmodels.api as sm
+      from sklearn.datasets import make_regression
+
+      X, _ = make_regression(n_samples=500, n_features=3, random_state=0)
+      rate = np.exp(0.5 * X[:, 0] - 0.3 * X[:, 1])
+      counts = np.random.default_rng(0).poisson(rate)
+      Xc = sm.add_constant(X)
+      result = sm.GLM(counts, Xc, family=sm.families.Poisson()).fit()
+      print(result.params.round(3))
+      print(result.predict(Xc).shape)
+    snippet_library: statsmodels
+    visual: regression_preds
+  catch_outs:
+    - "Pick the family for the target: Poisson for counts, Gamma for amounts."
+    - No intercept unless you add one with sm.add_constant.
+    - NaN raises an error. Drop or impute before fitting.
+    - Binomial needs 0 to 1 targets, not counts or amounts.
+    - The NegativeBinomial family uses alpha 1 unless you set it.
+  key_settings:
+    tier1:
+      - {name: family, page: null}
+      - {name: link, page: null}
+    tier2:
+      - {name: offset, page: null}
+      - {name: exposure, page: null}
+    tier3:
+      - {name: freq_weights, page: null}
+      - {name: var_weights, page: null}
+      - {name: missing, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: One line recipe, with the error shape set by the family.
+    analogy: Like one sewing pattern, cut to different fabrics.
+    animation: none
+    good_at: [p-values, count and amount targets, inference]
+    bad_at: [prediction only, text or images, very large data]
+    vs_siblings:
+      - {page: gamma-regressor, note: "Scikit-learn. Predictions only, no p-values."}
+      - {page: tweedie-regressor, note: "Scikit-learn. Predictions only, allows exact zeros."}
+      - {page: negative-binomial-regression, note: "Same counts. That page estimates alpha for you."}
+    read_more:
+      - Choose the family for the target.
+      - "Poisson defaults to the log link. Gamma defaults to inverse."
+      - Fit, then read p-values from the results.
+  next: [evaluate-how-good]

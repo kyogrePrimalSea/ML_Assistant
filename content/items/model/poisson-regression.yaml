@@ -1,0 +1,149 @@
+id: poisson-regression
+plain_name: Poisson regression
+code_name: PoissonRegressor / Poisson
+aliases: [poisson glm, count regression]
+stage: model
+family: model.awkward.glm
+tracks: [standard]
+archetype: model
+question_tags: [count target, counts, visits or claims]
+targets: [sklearn.linear_model.PoissonRegressor, statsmodels.discrete.discrete_model.Poisson]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.PoissonRegressor.html',
+  'https://www.statsmodels.org/stable/generated/statsmodels.discrete.discrete_model.Poisson.html']
+library_versions: {scikit-learn: 1.9.1, statsmodels: 0.15.0}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: airline-passengers, shape: fit_line}
+    line: A line for counts, on a log scale.
+  quick_facts:
+    data_size: Fits in memory
+  use_avoid:
+    use_when: [count target, visits or claims, rate per exposure]
+    avoid_when: [continuous target, counts spread wide, text or images]
+  prep:
+    - step: {family: transform.scale.rescale}
+      status: recommended
+      why: Scikit-learn alpha penalty depends on feature scale.
+      condition: null
+      unless: null
+    - step: {family: clean.impute}
+      status: required
+      why: NaN raises an error in both libraries.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Text categories must become numbers.
+      condition: {has_categoricals: true}
+      unless: null
+    - step: {page: train-test-split}
+      status: recommended
+      why: Hold out rows to check predictions on new data.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.linear_model.PoissonRegressor
+      why_this_library: Scikit-learn API, with an alpha penalty.
+      snippet: |
+        # scikit-learn 1.9.1
+        import numpy as np
+        from sklearn.datasets import make_regression
+        from sklearn.linear_model import PoissonRegressor
+        from sklearn.model_selection import train_test_split
+
+        X, _ = make_regression(n_samples=500, n_features=5, random_state=0)
+        rate = np.exp(0.5 * X[:, 0] - 0.3 * X[:, 1])
+        counts = np.random.default_rng(0).poisson(rate)
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, counts, random_state=0)
+
+        model = PoissonRegressor(alpha=0.1, max_iter=300)
+        model.fit(X_train, y_train)
+        print(round(model.score(X_test, y_test), 3))
+    - library: statsmodels
+      target: statsmodels.discrete.discrete_model.Poisson
+      why_this_library: Statsmodels gives p-values, which scikit-learn does not.
+      snippet: |
+        # statsmodels 0.15.0
+        import numpy as np
+        import statsmodels.api as sm
+        from sklearn.datasets import make_regression
+
+        X, _ = make_regression(n_samples=500, n_features=3, random_state=0)
+        rate = np.exp(0.5 * X[:, 0] - 0.3 * X[:, 1])
+        counts = np.random.default_rng(0).poisson(rate)
+        model = sm.Poisson(counts, sm.add_constant(X))
+        result = model.fit(disp=False)
+        print(result.pvalues.round(3))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
+         note: "Predicted mean count. Always above zero."}
+      - {name: score, kind: method, task: regression, shape: float,
+         note: "Share of deviance explained, the D² score."}
+      - {name: coef_, kind: attribute, task: null, shape: "(n_features,)",
+         note: "One weight per column, on the log scale."}
+      - {name: intercept_, kind: attribute, task: null, shape: float,
+         note: "Baseline on the log scale."}
+      - {name: n_iter_, kind: attribute, task: null, shape: int,
+         note: "Solver steps used. Compare with max_iter."}
+      - {name: n_features_in_, kind: attribute, task: null, shape: int,
+         note: "Number of columns seen at fit time."}
+    next_step: Read exp(coef_) as a multiplier on the expected count.
+    snippet: |
+      # scikit-learn 1.9.1
+      import numpy as np
+      from sklearn.datasets import make_regression
+      from sklearn.linear_model import PoissonRegressor
+
+      X, _ = make_regression(n_samples=200, n_features=3, random_state=0)
+      rate = np.exp(0.5 * X[:, 0] - 0.3 * X[:, 1])
+      counts = np.random.default_rng(0).poisson(rate)
+      model = PoissonRegressor().fit(X, counts)
+      pred = model.predict(X)
+      print(pred.shape)
+      print(bool(pred.min() > 0))
+      print(np.exp(model.coef_).round(3))
+    snippet_library: scikit-learn
+    visual: regression_preds
+  catch_outs:
+    - Target must be zero or above. Negative values raise an error.
+    - "Counts spread wider than the mean: try negative-binomial-regression."
+    - statsmodels adds no intercept unless you pass sm.add_constant.
+    - Predictions stay above zero.
+  key_settings:
+    tier1:
+      - {name: exposure, page: null}
+      - {name: alpha, page: null}
+    tier2:
+      - {name: fit_intercept, page: null}
+      - {name: max_iter, page: null}
+    tier3:
+      - {name: offset, page: null}
+      - {name: missing, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Model the average count as exp of a line, so predictions stay positive.
+    analogy: Like compound interest, where each step multiplies rather than adds.
+    animation: none
+    good_at: [count targets, rates per exposure, positive predictions]
+    bad_at: [continuous targets, overdispersed counts]
+    vs_siblings:
+      - {page: negative-binomial-regression, note: "Adds a spread term, alpha, for overdispersed counts."}
+      - {page: tweedie-regressor, note: "Allows amounts and exact zeros, not just counts."}
+      - {page: glm, note: "Same Poisson family, through the GLM interface."}
+    read_more:
+      - Start from the log of the average count.
+      - Minimise the deviance in scikit-learn, or maximise likelihood in statsmodels.
+      - Read each coefficient as a multiplier on the count.
+  next: [but-count-zeros, but-pvalues]

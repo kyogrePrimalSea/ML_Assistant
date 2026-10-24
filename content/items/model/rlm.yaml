@@ -1,0 +1,92 @@
+id: rlm
+plain_name: RLM
+code_name: RLM
+aliases: [robust linear model, m-estimator]
+stage: model
+family: model.awkward.robust
+tracks: [standard]
+archetype: model
+question_tags: [outliers, robust fit, statsmodels]
+targets: [statsmodels.robust.robust_linear_model.RLM]
+pairs_with: []
+clashes: []
+source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.robust.robust_linear_model.RLM.html']
+library_versions: {statsmodels: 0.15.0}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: ames, shape: fit_line}
+    line: Fits a line that a few outliers cannot pull far off.
+  quick_facts:
+    data_size: Small to large tables
+  use_avoid:
+    use_when: [outliers in the target, statsmodels output, linear shape]
+    avoid_when: [missing values, non-linear shape, many outliers]
+  prep:
+    - step: {family: clean.impute}
+      status: required
+      why: Stops with an error on NaN.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.scale.rescale}
+      status: not_needed
+      why: A linear fit gives the same answer after scaling.
+      condition: null
+      unless: null
+  code:
+  - library: statsmodels
+    target: statsmodels.robust.robust_linear_model.RLM
+    why_this_library: The statsmodels robust fit, with statsmodels results.
+    snippet: |
+      # statsmodels 0.15.0
+      import statsmodels.api as sm
+      from sklearn.datasets import make_regression
+
+      X, y = make_regression(n_samples=200, n_features=2, noise=4.0,
+                             random_state=0)
+      y[:40] += 200  # gross outliers
+      model = sm.RLM(y, sm.add_constant(X), M=sm.robust.norms.HuberT())
+      results = model.fit()
+      print(model.df_model, model.df_resid)
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
+         note: "Linear predictions. Call it on the results."}
+      - {name: df_model, kind: attribute, task: null, shape: "float",
+         note: "Regressors, not counting the intercept."}
+      - {name: df_resid, kind: attribute, task: null, shape: "float",
+         note: "Observations minus parameters, intercept included."}
+    next_step: Call fit(); the coefficients live on the results.
+    visual: null
+  catch_outs:
+    - Missing values stop the fit. Drop or fill them first.
+    - No intercept by default. Add one with add_constant.
+    - The default M is HuberT, not least squares.
+  key_settings:
+    tier1:
+    - {name: M, page: null}
+    - {name: missing, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    idea: Fit a line, shrink the pull of large residuals, and refit until stable.
+    analogy: A referee who gives less weight to the one wildly out-of-line score.
+    animation: none
+    good_at: [outliers in the target, statsmodels output, linear shape]
+    bad_at: [missing values, non-linear shape]
+    vs_siblings:
+      - {page: huber-regressor, note: "A similar robust loss in scikit-learn. No statsmodels output."}
+      - {page: ransac-regressor, note: "Random samples. Suited to many outliers."}
+    read_more:
+      - Start with an ordinary least squares fit.
+      - Compute the residuals and their scale.
+      - Down-weight large residuals with the M function.
+      - Refit with those weights until the estimates settle.
+  next: []

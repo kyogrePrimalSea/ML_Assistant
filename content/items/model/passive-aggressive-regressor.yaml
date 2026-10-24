@@ -1,0 +1,139 @@
+id: passive-aggressive-regressor
+plain_name: PassiveAggressiveRegressor
+code_name: PassiveAggressiveRegressor
+aliases: [passive aggressive regression, pa regressor]
+stage: model
+family: model.awkward.big
+tracks: [standard]
+archetype: model
+question_tags: [streaming data, updates on each mistake]
+targets: [sklearn.linear_model.PassiveAggressiveRegressor]
+pairs_with: [linearexplainer]
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.PassiveAggressiveRegressor.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: ames, shape: fit_line}
+    line: Fits a straight line, and changes it only after a clear miss.
+  quick_facts: {data_size: Streaming data}
+  use_avoid:
+    use_when: [streaming data, numeric target, straight-line trend]
+    avoid_when: [curved relationships, needs p-values]
+  prep:
+    - step: {family: transform.scale.rescale}
+      status: recommended
+      why: Linear fits behave better on one scale.
+      condition: null
+      unless: null
+    - step: {family: clean.impute}
+      status: required
+      why: Linear models reject missing values.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Text categories must become numbers.
+      condition: {has_categoricals: true}
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.linear_model.PassiveAggressiveRegressor
+      why_this_library: Has partial_fit, so it can learn from streams.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_diabetes
+        from sklearn.linear_model import PassiveAggressiveRegressor
+        from sklearn.model_selection import train_test_split
+        from sklearn.pipeline import make_pipeline
+        from sklearn.preprocessing import StandardScaler
+
+        X, y = load_diabetes(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = make_pipeline(
+            StandardScaler(),
+            PassiveAggressiveRegressor(C=1.0, random_state=0),
+        )
+        model.fit(X_train, y_train)
+        print(round(model.score(X_test, y_test), 3))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: null, shape: "(n_samples,)",
+         note: "One predicted value per row."}
+      - {name: score, kind: method, task: null, shape: "float",
+         note: "R squared. 1 is perfect; 0 is no better than the mean."}
+      - {name: coef_, kind: attribute, task: null, shape: "(n_features,)",
+         note: "One weight per input column. Averaged if average is on."}
+      - {name: intercept_, kind: attribute, task: null, shape: "(1,)",
+         note: "The offset added to every prediction."}
+      - {name: n_iter_, kind: attribute, task: null, shape: "int",
+         note: "Passes over the data used. At max_iter, it stopped early."}
+      - {name: n_features_in_, kind: attribute, task: null, shape: "int",
+         note: "Number of input columns seen in fit."}
+      - {name: feature_names_in_, kind: attribute, task: null, shape: "(n_features_in_,)",
+         note: "Column names. Only set when fit on a DataFrame."}
+    next_step: Undo any log target before reporting errors in original units.
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import load_diabetes
+      from sklearn.linear_model import PassiveAggressiveRegressor
+      from sklearn.model_selection import train_test_split
+      from sklearn.pipeline import make_pipeline
+      from sklearn.preprocessing import StandardScaler
+
+      X, y = load_diabetes(return_X_y=True)
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+      model = make_pipeline(StandardScaler(),
+                            PassiveAggressiveRegressor(random_state=0))
+      model.fit(X_train, y_train)
+      pa = model[-1]
+      print(model.predict(X_test).shape)
+      print(pa.coef_.shape)
+      print(pa.intercept_.shape)
+      print(pa.n_iter_)
+      print(pa.n_features_in_)
+    snippet_library: scikit-learn
+    visual: null
+  catch_outs:
+    - early_stopping is off by default. Turn it on for a validation split.
+    - shuffle is on by default. Set random_state for repeatable runs.
+    - fit starts fresh each call unless warm_start is True.
+  key_settings:
+    tier1:
+      - {name: average, page: null}
+      - {name: early_stopping, page: null}
+      - {name: C, page: null}
+      - {name: max_iter, page: null}
+    tier2:
+      - {name: validation_fraction, page: null}
+      - {name: loss, page: null}
+      - {name: tol, page: null}
+      - {name: fit_intercept, page: null}
+    tier3:
+      - {name: epsilon, page: null}
+      - {name: n_iter_no_change, page: null}
+      - {name: shuffle, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Take a step only when a row misses by more than epsilon.
+    analogy: A coach who changes the plan only after a clear miss.
+    animation: none
+    good_at: [streaming data, numeric targets, one row at a time]
+    bad_at: [curved relationships, needs p-values]
+    vs_siblings:
+      - {page: sgd-regressor, note: "Also linear, learns in small batches. Has a learning rate."}
+      - {page: linear-svr, note: "Also linear. Fits the whole set in one call."}
+    read_more:
+      - Start with a line through the middle of the data.
+      - Step only when a row misses by more than epsilon.
+      - Repeat over the data, shuffled each pass.
+  next: [know-feature-importance]

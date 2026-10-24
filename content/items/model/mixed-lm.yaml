@@ -1,0 +1,101 @@
+id: mixed-lm
+plain_name: MixedLM
+code_name: MixedLM
+aliases: [mixed effects, multilevel model, linear mixed model]
+stage: model
+family: model.linear.mixed
+tracks: [standard]
+archetype: model
+question_tags: [grouped rows, group baselines, hierarchical data]
+targets: [statsmodels.regression.mixed_linear_model.MixedLM]
+pairs_with: []
+clashes: []
+source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.regression.mixed_linear_model.MixedLM.html']
+library_versions: {statsmodels: 0.15.0}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: ames, shape: fit_line}
+    line: A straight line with a separate baseline for each group.
+  quick_facts: {none: true}
+  use_avoid:
+    use_when: [rows come in groups, each group needs a baseline]
+    avoid_when: [groups not labelled, rows are independent]
+  prep:
+    - step: {family: clean.impute}
+      status: required
+      why: Statsmodels rejects NaN in the inputs.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Text categories must become numbers.
+      condition: {has_categoricals: true}
+      unless: null
+    - step: {family: transform.scale.rescale}
+      status: not_needed
+      why: Fixed effects are unchanged by scaling.
+      condition: null
+      unless: null
+    - step: {page: train-test-split}
+      status: recommended
+      why: Keep each group whole when splitting.
+      condition: null
+      unless: null
+  code:
+    - library: statsmodels
+      target: statsmodels.regression.mixed_linear_model.MixedLM
+      why_this_library: Random effects by group, built in.
+      snippet: |
+        # statsmodels 0.15.0
+        import numpy as np
+        import statsmodels.api as sm
+        from sklearn.datasets import make_regression
+
+        X, y = make_regression(n_samples=200, n_features=2, noise=10, random_state=0)
+        rng = np.random.default_rng(0)
+        groups = np.repeat(np.arange(20), 10)
+        y = y + rng.normal(0, 5, size=20)[groups]
+        results = sm.MixedLM(y, sm.add_constant(X), groups=groups).fit()
+        print(results.params.round(2))
+  what_comes_out:
+    items:
+    - {name: predict, kind: method, task: regression, shape: "(n_samples,)", note: Predicted values from a design matrix.}
+    - {name: get_fe_params, kind: method, task: null, shape: "(n_features,)", note: "Fixed-effect estimates, found by GLS."}
+    - {name: get_scale, kind: method, task: null, shape: float, note: Estimated error variance from the fit.}
+    next_step: Group labels must line up with the rows, or the fit is wrong.
+    visual: regression_preds
+  catch_outs:
+    - The last parameter is the group variance, not a slope.
+    - The fit can fail to converge. Read the warnings.
+    - Missing values stop the fit. Impute them first.
+  key_settings:
+    tier1:
+    - {name: groups, page: null}
+    - {name: exog_re, page: null}
+    tier2:
+    - {name: exog_vc, page: null}
+    - {name: use_sqrt, page: null}
+    tier3:
+    - {name: missing, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Each group gets its own baseline, with shared effects.
+    analogy: Every class has its own starting grade, under the same grading rules.
+    animation: none
+    good_at: [rows in groups, group baselines, shared effects]
+    bad_at: [independent rows, unlabelled groups]
+    vs_siblings:
+      - {page: linear-regression, note: "Same line, but it ignores the groups."}
+      - {page: gls, note: "Links errors by a stated structure, not by group."}
+    read_more:
+      - Each group gets its own intercept.
+      - Shared slopes apply to every group.
+      - The group variance says how far the groups spread.
+  next: []

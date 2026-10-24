@@ -1,0 +1,89 @@
+id: voting
+plain_name: Voting
+code_name: VotingRegressor / VotingClassifier
+aliases: [majority vote, soft vote, averaging]
+stage: model
+family: model.trees.combine
+tracks: [standard]
+archetype: composer
+question_tags: [several good models, average predictions, combine models]
+targets: [sklearn.ensemble.VotingRegressor, sklearn.ensemble.VotingClassifier]
+pairs_with: [pipeline, stacking]
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.VotingRegressor.html',
+  'https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.VotingClassifier.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: composer, boxes: [Logit, Forest, Vote]}
+    line: Averages or votes across several models.
+  quick_facts:
+    facts:
+      - {label: Combines, value: labels (hard) or probabilities (soft)}
+      - {label: Fits, value: clones of your models}
+      - {label: Weights, value: optional per model}
+  use_avoid:
+    use_when: [several good models, simple combining rule]
+    avoid_when: [need to learn the weights]
+  prep:
+    - step: {page: train-test-split}
+      status: recommended
+      why: Keep a test set to check the vote.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.ensemble.VotingClassifier
+      why_this_library: Averages each model's probabilities into one vote.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.ensemble import RandomForestClassifier, VotingClassifier
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.model_selection import cross_val_score
+        from sklearn.naive_bayes import GaussianNB
+
+        X, y = load_breast_cancer(return_X_y=True)
+
+        vote = VotingClassifier(
+            estimators=[
+                ("logit", LogisticRegression(max_iter=5000)),
+                ("forest", RandomForestClassifier(random_state=0)),
+                ("nb", GaussianNB()),
+            ],
+            voting="soft",
+        )
+        print(cross_val_score(vote, X, y, cv=5).mean().round(3))
+  what_comes_out:
+    items:
+      - {name: fit, kind: method, task: null, shape: "self", note: "Fits a clone of each model on the rows given."}
+      - {name: predict, kind: method, task: null, shape: "(n_samples,)", note: "The vote or average for each row."}
+      - {name: transform, kind: method, task: null, shape: "(n_samples, n_outputs)", note: "Each model's output, side by side."}
+      - {name: get_feature_names_out, kind: method, task: null, shape: "array of names", note: "Names for the transform columns."}
+      - {name: feature_names_in_, kind: attribute, task: null, shape: "array of column names", note: "Column names seen during fit."}
+    next_step: "Try weights if one model should count more."
+    visual: null
+  catch_outs:
+    - Hard voting uses predicted labels only.
+    - Soft voting needs every model to give probabilities.
+    - Weights multiply each model's vote or average.
+  key_settings:
+    tier1:
+      - {name: estimators, page: null}
+      - {name: voting, page: null}
+      - {name: weights, page: null}
+    tier2:
+      - {name: flatten_transform, page: null}
+    tier3:
+      - {name: n_jobs, page: null}
+      - {name: verbose, page: null}
+  watch_it_work: {none: true}
+  intuition: {text: "Average or vote across models."}
+  next: []

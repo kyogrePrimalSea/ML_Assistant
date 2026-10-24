@@ -1,0 +1,92 @@
+id: kernel-ridge
+plain_name: KernelRidge
+code_name: KernelRidge
+aliases: ["kernel ridge regression", "krr"]
+stage: model
+family: model.neighbours.kernel
+tracks: [standard]
+archetype: model
+question_tags: ["small data", "curved trends", "fast fit"]
+targets: ["sklearn.kernel_ridge.KernelRidge"]
+pairs_with: []
+clashes: []
+source_urls: ["https://scikit-learn.org/stable/modules/generated/sklearn.kernel_ridge.KernelRidge.html"]
+library_versions: {scikit-learn: "1.9.1"}
+reviewed: false
+rules:
+  task_types: ["regression"]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: ames, shape: fit_line}
+    line: "Ridge regression that bends to follow a kernel."
+  quick_facts:
+    data_size: "Small data"
+  use_avoid:
+    use_when: ["small data", "curved trends", "need a fast fit"]
+    avoid_when: ["large data", "images or text", "need a simple formula"]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.kernel_ridge.KernelRidge
+      why_this_library: "Built into scikit-learn; no extra install."
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import make_friedman1
+        from sklearn.kernel_ridge import KernelRidge
+        from sklearn.model_selection import train_test_split
+        from sklearn.pipeline import make_pipeline
+        from sklearn.preprocessing import StandardScaler
+
+        X, y = make_friedman1(n_samples=300, noise=0.5, random_state=0)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = make_pipeline(
+            StandardScaler(),
+            KernelRidge(alpha=0.1, kernel="rbf"),
+        )
+        model.fit(X_train, y_train)
+        print(round(model.score(X_test, y_test), 3))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
+         note: "One value per row."}
+      - {name: score, kind: method, task: regression, shape: "float",
+         note: "R squared on the data you pass in."}
+      - {name: dual_coef_, kind: attribute, task: null, shape: "(n_samples,)",
+         note: "One weight per training row."}
+      - {name: X_fit_, kind: attribute, task: null, shape: "(n_samples, n_features)",
+         note: "Training rows kept for predicting."}
+    next_step: "Try a few alpha values; the default alpha is 1."
+    visual: regression_preds
+  catch_outs:
+    - "kernel defaults to 'linear'; set 'rbf' to fit curves."
+    - "Larger alpha means stronger regularization."
+    - "Keeps every training row, so memory grows with the data."
+  key_settings:
+    tier1:
+      - {name: kernel, page: null}
+      - {name: alpha, page: null}
+      - {name: gamma, page: null}
+    tier2:
+      - {name: degree, page: null}
+      - {name: coef0, page: null}
+    tier3:
+      - {name: kernel_params, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: "Ridge regression on a kernel's view of similarity, so it can fit curves."
+    analogy: "A ruler that can bend to follow the points."
+    animation: none
+    good_at: ["small data", "curved trends", "smooth fits"]
+    bad_at: ["large data", "images or text", "a simple formula"]
+    vs_siblings:
+      - {page: svr, note: "SVR ignores errors inside a tube. Kernel ridge does not."}
+    read_more:
+      - "Start with a kernel that says how alike rows are."
+      - "Solve for one weight per training row."
+      - "Larger alpha means stronger regularization."
+  next: []

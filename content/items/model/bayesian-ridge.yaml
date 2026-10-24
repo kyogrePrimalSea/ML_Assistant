@@ -1,0 +1,124 @@
+id: bayesian-ridge
+plain_name: BayesianRidge
+code_name: BayesianRidge
+aliases: [Bayesian ridge]
+stage: model
+family: model.linear.bayes
+tracks: [standard]
+archetype: model
+question_tags: [uncertainty, self-tuning]
+targets: [sklearn.linear_model.BayesianRidge]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.BayesianRidge.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: ames, shape: fit_line}
+    line: Ridge line that sets its own strength and a spread per prediction.
+  quick_facts: {none: true}
+  use_avoid:
+    use_when: [spread per prediction, linear effects, no tuning wanted]
+    avoid_when: [target is a class label, missing values, curved effects]
+  prep:
+    - step: {family: clean.impute}
+      status: required
+      why: Rejects missing values with an error.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Needs numbers, not text.
+      condition: {has_categoricals: true}
+      unless: null
+    - step: {family: transform.scale.rescale}
+      status: recommended
+      why: One shared weight precision depends on feature scale.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.linear_model.BayesianRidge
+      why_this_library: Sets its own regularisation from the data.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_diabetes
+        from sklearn.linear_model import BayesianRidge
+        from sklearn.model_selection import train_test_split
+
+        X, y = load_diabetes(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, random_state=0
+        )
+
+        model = BayesianRidge().fit(X_train, y_train)
+        mean, std = model.predict(X_test[:3], return_std=True)
+        print(std.round(1))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
+         note: "One value per row. return_std=True adds a spread."}
+      - {name: score, kind: method, task: null, shape: "float",
+         note: "R squared on the data you pass."}
+      - {name: coef_, kind: attribute, task: null, shape: "(n_features,)",
+         note: "One weight per column, in the input scale."}
+      - {name: intercept_, kind: attribute, task: null, shape: "float",
+         note: "Prediction when every input is zero."}
+      - {name: alpha_, kind: attribute, task: null, shape: "float",
+         note: "Estimated noise precision."}
+      - {name: lambda_, kind: attribute, task: null, shape: "float",
+         note: "Estimated precision of the weights."}
+      - {name: sigma_, kind: attribute, task: null, shape: "(n_features, n_features)",
+         note: "Covariance of the weights."}
+      - {name: n_iter_, kind: attribute, task: null, shape: "int",
+         note: "Iterations run before it stopped."}
+    next_step: Compare the spread across rows before trusting one prediction.
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import load_diabetes
+      from sklearn.linear_model import BayesianRidge
+
+      X, y = load_diabetes(return_X_y=True)
+      model = BayesianRidge().fit(X, y)
+      print(model.predict(X).shape)
+      print(model.sigma_.shape)
+      print(model.n_iter_)
+    snippet_library: scikit-learn
+    visual: regression_preds
+  catch_outs:
+    - Missing values raise an error. Impute first.
+    - Text columns fail. Encode them first.
+    - The default predict returns only the mean.
+  key_settings:
+    tier1:
+      - {name: fit_intercept, page: null}
+      - {name: max_iter, page: null}
+    tier2:
+      - {name: alpha_init, page: null}
+      - {name: lambda_init, page: null}
+    tier3:
+      - {name: tol, page: null}
+      - {name: alpha_1, page: null}
+      - {name: lambda_1, page: null}
+      - {name: compute_score, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Ridge where the penalty strength is learned from the data.
+    analogy: A ruler that sets its own stiffness after seeing the wood.
+    animation: none
+    good_at: [spread per prediction, linear effects, self-tuning]
+    bad_at: [curved effects, classification targets]
+    vs_siblings:
+      - {page: ard-regression, note: "ARD gives each weight its own precision, so it can prune."}
+    read_more:
+      - Put a prior on the weights.
+      - Estimate noise and weight precision from the data.
+      - Repeat until tol or max_iter stops it.
+  next: [model-overfitting]

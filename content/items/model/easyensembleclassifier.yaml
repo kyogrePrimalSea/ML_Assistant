@@ -1,0 +1,144 @@
+id: easyensembleclassifier
+plain_name: EasyEnsembleClassifier
+code_name: EasyEnsembleClassifier
+aliases: [easy ensemble]
+stage: model
+family: model.trees.balanced
+tracks: [standard]
+archetype: model
+question_tags: [rare class, imbalanced classes, tabular data]
+targets: [imblearn.ensemble.EasyEnsembleClassifier]
+pairs_with: []
+clashes: []
+source_urls: ['https://imbalanced-learn.org/stable/references/generated/imblearn.ensemble.EasyEnsembleClassifier.html']
+library_versions: {imbalanced-learn: 0.14.2}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: breast-cancer, shape: boundary}
+    line: "Many AdaBoost models, each trained on a balanced sample."
+  quick_facts:
+    data_size: Tabular data, one rare class
+  use_avoid:
+    use_when: [one class is rare, tabular data, want boosted learners]
+    avoid_when: [classes already balanced, images or text, need a simple formula]
+  prep:
+    - step: {family: transform.scale.rescale}
+      status: recommended
+      why: Needed if the inner learner is not a tree.
+      condition: null
+      unless: null
+    - step: {family: clean.impute}
+      status: required
+      why: Missing values stop fit. Impute them first.
+      condition: null
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Text categories must become numbers.
+      condition: {has_categoricals: true}
+      unless: null
+    - step: {family: transform.rebalance.over}
+      status: not_needed
+      why: Each inner learner sees a balanced sample.
+      condition: null
+      unless: null
+    - step: {family: transform.rebalance.under}
+      status: not_needed
+      why: Each inner learner sees a balanced sample.
+      condition: null
+      unless: null
+  code:
+    - library: imbalanced-learn
+      target: imblearn.ensemble.EasyEnsembleClassifier
+      why_this_library: Bag of balanced AdaBoost learners in one call.
+      snippet: |
+        # imbalanced-learn 0.14.2
+        from imblearn.ensemble import EasyEnsembleClassifier
+        from sklearn.datasets import make_classification
+        from sklearn.metrics import balanced_accuracy_score
+        from sklearn.model_selection import train_test_split
+
+        X, y = make_classification(
+            n_samples=1000, weights=[0.9, 0.1], random_state=0
+        )
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, stratify=y, random_state=0
+        )
+
+        model = EasyEnsembleClassifier(n_estimators=10, random_state=0)
+        model.fit(X_train, y_train)
+        print(balanced_accuracy_score(y_test, model.predict(X_test)))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: classification, shape: "(n_samples,)",
+         note: "Class labels, one per row."}
+      - {name: predict_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
+         note: "One column per class, in classes_ order. Keep [:, 1] for two classes."}
+      - {name: decision_function, kind: method, task: classification, shape: "(n_samples,)",
+         note: "Average of the inner learners' scores. Above 0 means class 1."}
+      - {name: predict_log_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
+         note: "Log of the class probabilities, same column order."}
+      - {name: score, kind: method, task: classification, shape: "float",
+         note: "Accuracy on the data given. Misleading when classes are lopsided."}
+      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)",
+         note: "Class labels, in the column order of predict_proba."}
+      - {name: n_features_in_, kind: attribute, task: null, shape: "int",
+         note: "Number of input columns seen in fit."}
+      - {name: feature_names_in_, kind: attribute, task: null, shape: "(n_features,)",
+         note: "Column names, only if fit got a DataFrame."}
+    next_step: ROC AUC and PR curves need predict_proba, not predict.
+    snippet: |
+      # imbalanced-learn 0.14.2
+      from imblearn.ensemble import EasyEnsembleClassifier
+      from sklearn.datasets import make_classification
+      from sklearn.model_selection import train_test_split
+
+      X, y = make_classification(
+          n_samples=1000, weights=[0.9, 0.1], random_state=0
+      )
+      X_train, X_test, y_train, y_test = train_test_split(
+          X, y, stratify=y, random_state=0
+      )
+
+      model = EasyEnsembleClassifier(n_estimators=10, random_state=0)
+      model.fit(X_train, y_train)
+      print(model.predict_proba(X_test).shape)
+      print(model.decision_function(X_test).shape)
+      print(model.classes_)
+    snippet_library: imbalanced-learn
+    visual: proba_table
+  catch_outs:
+    - Missing values stop fit. Impute them first.
+    - Accuracy looks fine on lopsided data. Use balanced accuracy.
+    - Text columns fail. Encode them first.
+  key_settings:
+    tier1:
+      - {name: sampling_strategy, page: null}
+      - {name: estimator, page: null}
+      - {name: replacement, page: null}
+      - {name: n_estimators, page: n-estimators}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    idea: Many AdaBoost models, each trained on a balanced sample of the rows.
+    analogy: Several tutors, each coaching a fair mix of students.
+    animation: none
+    good_at: [rare classes, tabular data, boosted learners]
+    bad_at: [tiny data, images or text, need a simple formula]
+    vs_siblings:
+      - {page: balancedbaggingclassifier, note: "Same bagging idea. Works with any base model."}
+      - {page: ada-boost, note: "One boosted model. This bags many on balanced samples."}
+      - {page: rusboostclassifier, note: "Boosting that under-samples each round."}
+    read_more:
+      - Draw a balanced sample of the rows.
+      - Fit a small AdaBoost model on it.
+      - Repeat, then combine the models.
+  next: [but-imbalanced-score, but-resample-in-cv]

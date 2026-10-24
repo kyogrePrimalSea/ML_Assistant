@@ -1,0 +1,109 @@
+id: elastic-net
+plain_name: ElasticNet
+code_name: ElasticNet
+aliases: [elastic net, elasticnet regression]
+stage: model
+family: model.linear.sparse
+tracks: [standard]
+archetype: model
+question_tags: [drop features, keep correlated features, mixed penalty]
+targets: [sklearn.linear_model.ElasticNet]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.ElasticNet.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: ames, shape: fit_line}
+    line: A line with both lasso and ridge penalties.
+  quick_facts: {none: true}
+  use_avoid:
+    use_when: [drop features, keep correlated ones]
+    avoid_when: [classification targets, curved patterns]
+  prep:
+    - step: {family: clean.impute}
+      status: required
+      why: Scikit-learn rejects NaN in X.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Text categories must become numbers.
+      condition: {has_categoricals: true}
+      unless: null
+    - step: {family: transform.scale.rescale}
+      status: required
+      why: The penalty depends on units. Scale first.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.linear_model.ElasticNet
+      why_this_library: Built into scikit-learn. You set alpha and l1_ratio.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_diabetes
+        from sklearn.linear_model import ElasticNet
+        from sklearn.model_selection import train_test_split
+        from sklearn.pipeline import make_pipeline
+        from sklearn.preprocessing import StandardScaler
+
+        X, y = load_diabetes(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, random_state=0
+        )
+
+        model = make_pipeline(
+            StandardScaler(), ElasticNet(alpha=0.1, l1_ratio=0.5)
+        )
+        model.fit(X_train, y_train)
+        print(int((model[-1].coef_ != 0).sum()))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: null, shape: "(n_samples,)", note: "One predicted value per row."}
+      - {name: score, kind: method, task: null, shape: float, note: "R squared on the data you pass in."}
+      - {name: coef_, kind: attribute, task: null, shape: "(n_features,)", note: "One weight per input column. Zero means dropped."}
+      - {name: sparse_coef_, kind: attribute, task: null, shape: "sparse (n_features,)", note: "The same weights, stored as a sparse matrix."}
+      - {name: intercept_, kind: attribute, task: null, shape: float, note: "Intercept of the fitted line."}
+      - {name: n_iter_, kind: attribute, task: null, shape: "list of int", note: "Iterations the coordinate descent solver ran."}
+    next_step: Compare coef_ across a few alpha values to see what drops out.
+    visual: null
+  catch_outs:
+    - alpha defaults to 1.0 and is not tuned for your data.
+    - Scale the columns first, or the penalty is unfair.
+    - Missing values stop the fit. Impute them first.
+  key_settings:
+    tier1:
+      - {name: alpha, page: null}
+      - {name: l1_ratio, page: null}
+    tier2:
+      - {name: fit_intercept, page: null}
+      - {name: positive, page: null}
+      - {name: selection, page: null}
+    tier3:
+      - {name: precompute, page: null}
+      - {name: tol, page: null}
+      - {name: copy_X, page: null}
+      - {name: max_iter, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Add both a lasso penalty and a ridge penalty to the weights.
+    analogy: Packing a suitcase by dropping some items and folding the rest tighter.
+    animation: none
+    good_at: [drop features, correlated features]
+    bad_at: [classification, curved patterns]
+    vs_siblings:
+      - {page: lasso, note: "Lasso penalty only. No ridge part."}
+      - {page: elastic-net-cv, note: "Same model. Cross-validation picks alpha and l1_ratio."}
+    read_more:
+      - The penalty adds an absolute-value part and a squared part.
+      - l1_ratio sets the mix between the two parts.
+      - alpha sets how strong the whole penalty is.
+  next: [know-feature-importance]

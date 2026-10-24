@@ -1,0 +1,132 @@
+id: gamma-regressor
+plain_name: GammaRegressor
+code_name: GammaRegressor
+aliases: [gamma regression]
+stage: model
+family: model.awkward.glm
+tracks: [standard]
+archetype: model
+question_tags: [positive skewed target, amounts, claim size]
+targets: [sklearn.linear_model.GammaRegressor]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.GammaRegressor.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: ames, shape: fit_line}
+    line: A line for positive amounts that spread wider as they grow.
+  quick_facts:
+    data_size: Fits in memory
+  use_avoid:
+    use_when: [positive skewed target, amounts, spread grows with size]
+    avoid_when: [zero or negative targets, counts, need p-values]
+  prep:
+    - step: {family: transform.scale.rescale}
+      status: recommended
+      why: Alpha penalises coefficients, so feature scale changes the fit.
+      condition: null
+      unless: null
+    - step: {family: clean.impute}
+      status: required
+      why: Missing values raise an error here.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Text categories must become numbers.
+      condition: {has_categoricals: true}
+      unless: null
+    - step: {page: train-test-split}
+      status: recommended
+      why: Hold out rows to check predictions on new data.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.linear_model.GammaRegressor
+      why_this_library: Gamma GLM with a log link, in the scikit-learn API.
+      snippet: |
+        # scikit-learn 1.9.1
+        import numpy as np
+        from sklearn.datasets import make_regression
+        from sklearn.linear_model import GammaRegressor
+        from sklearn.model_selection import train_test_split
+
+        X, y = make_regression(n_samples=500, n_features=5, noise=10,
+                               random_state=0)
+        y = np.exp(y / y.std())  # positive, right-skewed target
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, random_state=0)
+
+        model = GammaRegressor(alpha=0.1, max_iter=300)
+        model.fit(X_train, y_train)
+        print(round(model.score(X_test, y_test), 3))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
+         note: "Always above zero. The log link keeps them positive."}
+      - {name: score, kind: method, task: regression, shape: float,
+         note: "Share of deviance explained, the D² score."}
+      - {name: coef_, kind: attribute, task: null, shape: "(n_features,)",
+         note: "One weight per column, on the log scale."}
+      - {name: intercept_, kind: attribute, task: null, shape: float,
+         note: "Baseline on the log scale."}
+      - {name: n_iter_, kind: attribute, task: null, shape: int,
+         note: "Solver steps used. Compare with max_iter."}
+      - {name: n_features_in_, kind: attribute, task: null, shape: int,
+         note: "Number of columns seen at fit time."}
+    next_step: Use exp(coef_) to read each effect as a multiplier.
+    snippet: |
+      # scikit-learn 1.9.1
+      import numpy as np
+      from sklearn.datasets import make_regression
+      from sklearn.linear_model import GammaRegressor
+
+      X, y = make_regression(n_samples=200, n_features=3, noise=10,
+                             random_state=0)
+      y = np.exp(y / y.std())
+      model = GammaRegressor().fit(X, y)
+      pred = model.predict(X)
+      print(pred.shape)
+      print(bool(pred.min() > 0))
+      print(np.exp(model.coef_).round(3))
+    snippet_library: scikit-learn
+    visual: regression_preds
+  catch_outs:
+    - Target must be above zero. Zero or negative values raise an error.
+    - Missing values raise an error. Impute before fitting.
+    - score returns D², not R². Read it as deviance explained.
+    - alpha is an L2 penalty on the weights, not a learning rate.
+  key_settings:
+    tier1:
+      - {name: alpha, page: null}
+      - {name: max_iter, page: null}
+    tier2:
+      - {name: fit_intercept, page: null}
+      - {name: tol, page: null}
+    tier3:
+      - {name: warm_start, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Model the mean on a log scale. Spread grows with the square of the mean.
+    analogy: Like a bill that varies by a percentage, so bigger bills vary more in dollars.
+    animation: none
+    good_at: [positive amounts, skewed targets, multiplicative effects]
+    bad_at: [zero or negative targets, counts, text or images]
+    vs_siblings:
+      - {page: poisson-regression, note: "Counts, not amounts. Poisson spread equals the mean."}
+      - {page: tweedie-regressor, note: "Allows exact zeros. Gamma needs strictly positive targets."}
+      - {page: glm, note: "Statsmodels version, with p-values."}
+    read_more:
+      - Pick a log link, so the mean is exp of a line.
+      - Minimise the deviance, with an L2 penalty on the weights.
+      - Read each coefficient as a multiplier on the mean.
+  next: [but-fan-errors]

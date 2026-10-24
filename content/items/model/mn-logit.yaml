@@ -1,0 +1,111 @@
+id: mn-logit
+plain_name: MNLogit
+code_name: MNLogit
+aliases: [multinomial logit]
+stage: model
+family: model.linear.logit
+tracks: [standard]
+archetype: model
+question_tags: [several classes, p-values]
+targets: [statsmodels.discrete.discrete_model.MNLogit]
+pairs_with: []
+clashes: []
+source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.discrete.discrete_model.MNLogit.html']
+library_versions: {statsmodels: 0.15.0}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: breast-cancer, shape: boundary}
+    line: Class probabilities for three or more classes, with p-values.
+  quick_facts: {none: true}
+  use_avoid:
+    use_when: [three or more classes, p-values per class, linear effects]
+    avoid_when: [curved boundaries, separable classes, text inputs]
+  prep:
+    - step: {family: clean.impute}
+      status: required
+      why: Raises on missing values unless missing is drop.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Needs numbers, not text.
+      condition: {has_categoricals: true}
+      unless: null
+  code:
+    - library: statsmodels
+      target: statsmodels.discrete.discrete_model.MNLogit
+      why_this_library: Gives p-values for each class against a base class.
+      snippet: |
+        # statsmodels 0.15.0
+        import statsmodels.api as sm
+        from sklearn.datasets import make_classification
+
+        X, y = make_classification(
+            n_samples=300, n_features=4, n_informative=3,
+            n_redundant=0, n_classes=3, random_state=0,
+        )
+        X = sm.add_constant(X)
+        result = sm.MNLogit(y, X).fit(disp=False)
+        print(result.pvalues.round(3))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: classification,
+         shape: "(n_samples, n_classes)",
+         note: "Probability of each class. Rows sum to one."}
+      - {name: score, kind: method, task: null, shape: "(n_params,)",
+         note: "Gradient of the log-likelihood. Not accuracy."}
+      - {name: endog, kind: attribute, task: null, shape: "(n_obs,)",
+         note: "The response the model stores."}
+      - {name: exog, kind: attribute, task: null, shape: "(n_obs, n_params)",
+         note: "Design matrix, with the constant if added."}
+      - {name: params, kind: return, task: null,
+         shape: "(n_params, n_classes - 1)",
+         note: "One column per class, except the base class."}
+      - {name: pvalues, kind: return, task: null,
+         shape: "(n_params, n_classes - 1)",
+         note: "Same layout as params."}
+    next_step: Check mle_retvals converged before reading the p-values.
+    snippet: |
+      # statsmodels 0.15.0
+      import statsmodels.api as sm
+      from sklearn.datasets import make_classification
+
+      X, y = make_classification(
+          n_samples=300, n_features=4, n_informative=3,
+          n_redundant=0, n_classes=3, random_state=0,
+      )
+      X = sm.add_constant(X)
+      result = sm.MNLogit(y, X).fit(disp=False)
+      print(result.predict(X)[:3].round(3))
+    snippet_library: statsmodels
+    visual: proba_table
+  catch_outs:
+    - Missing values raise an error unless missing is drop.
+    - Separable classes can fail to converge. Check mle_retvals.
+  key_settings:
+    tier1:
+      - {name: missing, page: null}
+    tier2:
+      - {name: check_rank, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    idea: One score per class, with one base class fixed at zero.
+    analogy: Ranking several candidates by points, then turning points into shares.
+    animation: none
+    good_at: [several classes, p-values per class]
+    bad_at: [curved boundaries, separable classes]
+    vs_siblings:
+      - {page: logistic-regression, note: "Statsmodels Logit is two classes only. MNLogit takes three or more."}
+    read_more:
+      - Give each class a score, with the base class at zero.
+      - Turn the scores into probabilities with softmax.
+      - Fit by maximum likelihood, then read p-values.
+  next: []

@@ -1,0 +1,107 @@
+id: least-squares
+plain_name: least_squares
+code_name: least_squares
+aliases: [nonlinear least squares, bounded least squares]
+stage: model
+family: model.awkward.shape
+tracks: [standard]
+archetype: model
+question_tags: [bounds, custom formula, robust loss]
+targets: [scipy.optimize.least_squares]
+pairs_with: []
+clashes: []
+source_urls: ['https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.least_squares.html']
+library_versions: {scipy: 1.18.1}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: ames, shape: fit_line}
+    line: Fits any formula, with limits on each number.
+  quick_facts:
+    data_size: Any size
+  use_avoid:
+    use_when: [bounds on values, robust loss, custom formula]
+    avoid_when: [plain linear fit, need p-values, no residual form]
+  prep:
+    - step: {family: clean.impute}
+      status: required
+      why: NaN residuals stop the fit.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.scale.rescale}
+      status: recommended
+      why: Similar input scales help the solver converge.
+      condition: null
+      unless: null
+  code:
+  - library: scipy
+    target: scipy.optimize.least_squares
+    why_this_library: The scipy solver, with bounds and robust losses.
+    snippet: |
+      # scipy 1.18.1
+      import numpy as np
+      from scipy.optimize import least_squares
+      from sklearn.datasets import make_regression
+
+      X, y = make_regression(n_samples=100, n_features=2, noise=5.0,
+                             random_state=0)
+      y[:5] += 100  # a few gross outliers
+
+
+      def residuals(w):
+          return X @ w - y
+
+
+      res = least_squares(residuals, x0=np.zeros(2), bounds=(-200, 200),
+                          loss="soft_l1")
+      print(res.x.round(2))
+  what_comes_out:
+    items:
+      - {name: x, kind: return, task: null, shape: "(n,)",
+         note: "Solution: the fitted parameter values."}
+      - {name: cost, kind: return, task: null, shape: "float",
+         note: "Cost at the solution, using the chosen loss."}
+      - {name: fun, kind: return, task: null, shape: "(m,)",
+         note: "Residuals at the solution."}
+    next_step: Read result.x for the values and result.cost for the loss.
+    visual: null
+  catch_outs:
+    - The default loss is linear. Set loss for robust fits.
+    - The lm method ignores bounds. Use trf or dogbox.
+    - A poor starting point x0 can reach a local minimum.
+  key_settings:
+    tier1:
+    - {name: loss, page: null}
+    - {name: bounds, page: null}
+    - {name: method, page: null}
+    - {name: jac, page: null}
+    tier2:
+    - {name: x_scale, page: null}
+    - {name: max_nfev, page: null}
+    - {name: tr_solver, page: null}
+    - {name: callback, page: null}
+    tier3:
+    - {name: ftol, page: null}
+    - {name: xtol, page: null}
+    - {name: gtol, page: null}
+    - {name: f_scale, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Adjust the numbers to make the residuals as small as possible, within limits.
+    analogy: Tuning knobs that each have a stop at a set limit.
+    animation: none
+    good_at: [bounds on values, robust losses, custom formulas]
+    bad_at: [p-values, poor starting points]
+    vs_siblings:
+      - {page: curve-fit, note: "Simpler interface on top of this solver. Fewer options."}
+    read_more:
+      - Write the residuals as a function of the parameters.
+      - Start from x0 and step to a lower cost.
+      - Stop when the change falls below ftol, xtol or gtol.
+  next: []

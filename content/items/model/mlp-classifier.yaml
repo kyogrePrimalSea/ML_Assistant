@@ -1,0 +1,140 @@
+id: mlp-classifier
+plain_name: MLPClassifier
+code_name: MLPClassifier
+aliases: [neural network classifier, multilayer perceptron, mlp, neural net]
+stage: model
+family: model.neural
+tracks: [standard]
+archetype: model
+question_tags: [complex patterns, lots of data, neural network]
+targets: [sklearn.neural_network.MLPClassifier]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPClassifier.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: breast-cancer, shape: boundary}
+    line: Layers of weighted sums learn a curved decision boundary.
+  quick_facts:
+    data_size: Plenty of rows, scaled inputs
+  use_avoid:
+    use_when: [complex patterns, plenty of data, scaled numeric inputs]
+    avoid_when: [tiny data, need a simple formula, need a quick baseline]
+  prep:
+    - step: {family: transform.scale.rescale}
+      status: required
+      why: "Neural nets need inputs on one scale."
+      condition: null
+      unless: null
+    - step: {family: clean.impute}
+      status: required
+      why: Rejects missing values.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Text categories must become numbers.
+      condition: {has_categoricals: true}
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.neural_network.MLPClassifier
+      why_this_library: The scikit-learn estimator for this method.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.model_selection import train_test_split
+        from sklearn.neural_network import MLPClassifier
+        from sklearn.pipeline import make_pipeline
+        from sklearn.preprocessing import StandardScaler
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, random_state=0
+        )
+
+        model = make_pipeline(
+            StandardScaler(),
+            MLPClassifier(hidden_layer_sizes=(32,), max_iter=500, random_state=0),
+        )
+        model.fit(X_train, y_train)
+        print(round(model.score(X_test, y_test), 3))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: classification, shape: "(n_samples,)",
+         note: "Class labels. The most likely class per row."}
+      - {name: predict_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
+         note: "One column per class, in classes_ order."}
+      - {name: predict_log_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
+         note: "Log of predict_proba, same column order."}
+      - {name: score, kind: method, task: classification, shape: "float",
+         note: "Accuracy on the data given."}
+      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)",
+         note: "Labels, in the order of the probability columns."}
+      - {name: n_iter_, kind: attribute, task: null, shape: "int",
+         note: "Passes over the data before stopping."}
+      - {name: n_features_in_, kind: attribute, task: null, shape: "int",
+         note: "Columns seen during fit."}
+      - {name: feature_names_in_, kind: attribute, task: null, shape: "(n_features,)",
+         note: "Column names. Set only when fit on a DataFrame."}
+    next_step: "ROC AUC needs predict_proba[:, 1], not the labels."
+    snippet: |
+      # scikit-learn 1.9.1
+      import pandas as pd
+      from sklearn.datasets import load_breast_cancer
+      from sklearn.neural_network import MLPClassifier
+      from sklearn.preprocessing import StandardScaler
+
+      data = load_breast_cancer(as_frame=True)
+      X = pd.DataFrame(
+          StandardScaler().fit_transform(data.data),
+          columns=data.feature_names,
+      )
+      model = MLPClassifier(hidden_layer_sizes=(32,), max_iter=500, random_state=0)
+      model.fit(X, data.target)
+      print(model.predict_proba(X[:3]).shape)
+      print(model.predict_log_proba(X[:3]).shape)
+      print(model.classes_)
+      print(model.n_iter_)
+    snippet_library: scikit-learn
+    visual: null
+  catch_outs:
+    - "Fit the scaler on training rows only, or test rows leak in."
+    - "Training stops at max_iter even when it has not converged."
+    - "Early stopping is off by default; set early_stopping=True to use it."
+  key_settings:
+    tier1:
+      - {name: hidden_layer_sizes, page: null}
+      - {name: learning_rate_init, page: learning-rate}
+      - {name: alpha, page: null}
+      - {name: early_stopping, page: null}
+    tier2:
+      - {name: activation, page: null}
+      - {name: solver, page: null}
+      - {name: max_iter, page: null}
+    tier3:
+      - {name: batch_size, page: null}
+      - {name: validation_fraction, page: null}
+      - {name: n_iter_no_change, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Layers of weighted sums, each followed by a bend, learn a curved boundary.
+    analogy: A stack of simple voters, each passing a summary up the chain.
+    animation: none
+    good_at: [complex patterns, plenty of rows, scaled numeric inputs]
+    bad_at: [tiny data, explaining the answer, quick baselines]
+    vs_siblings:
+      - {page: mlp-regressor, note: "Same network. Predicts a number, not a class."}
+    read_more:
+      - Multiply inputs by weights and add a bias.
+      - Pass the result through an activation.
+      - Repeat for each hidden layer, then output class probabilities.
+  next: []

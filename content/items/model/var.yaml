@@ -1,0 +1,96 @@
+id: var
+plain_name: VAR
+code_name: VAR
+aliases: [vector autoregression]
+stage: model
+family: model.ts-multi
+tracks: [time-series]
+archetype: model
+question_tags: [forecast, several series, linked]
+targets: [statsmodels.tsa.vector_ar.var_model.VAR]
+pairs_with: [adf]
+clashes: []
+source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.tsa.vector_ar.var_model.VAR.html']
+library_versions: {statsmodels: 0.15.0}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: airline-passengers, shape: fit_line}
+    line: Predicts each series from past values of all the series.
+  quick_facts: {none: true}
+  use_avoid:
+    use_when: [several linked series, short memory, a simple fit]
+    avoid_when: [one series alone, shifting patterns, moving-average effects]
+  prep:
+    - step: {family: explore.stationarity}
+      status: recommended
+      why: Check stationarity before choosing lags.
+      condition: null
+      unless: null
+    - step: {family: split.time}
+      status: recommended
+      why: Test on the latest rows, never shuffled.
+      condition: null
+      unless: null
+  code:
+    - library: statsmodels
+      target: statsmodels.tsa.vector_ar.var_model.VAR
+      why_this_library: The statsmodels class for this model.
+      snippet: |
+        # statsmodels 0.15.0
+        import numpy as np
+        from sklearn.datasets import make_regression
+        from statsmodels.tsa.vector_ar.var_model import VAR
+
+        _, shocks = make_regression(
+            n_samples=200, n_features=3, n_targets=2, noise=1.0, random_state=0
+        )
+        shocks = shocks / shocks.std(axis=0)
+        data = np.zeros((200, 2))
+        coefs = np.array([[0.5, 0.2], [0.1, 0.4]])
+        for t in range(1, 200):
+            data[t] = coefs @ data[t - 1] + shocks[t]
+
+        res = VAR(data).fit(maxlags=2)
+        print(res.k_ar)
+  what_comes_out:
+    items:
+      - {name: fit, kind: method, task: null, shape: "results object", note: "Returns the fitted results. Use them to forecast."}
+      - {name: predict, kind: method, task: null, shape: "(n_obs, k_series)", note: "Fitted values for every series."}
+      - {name: select_order, kind: method, task: null, shape: "LagOrderResults", note: "Compares lag orders on each criterion."}
+      - {name: endog_names, kind: attribute, task: null, shape: "list of str", note: "Names of the series."}
+    next_step: Compare lag orders with select_order before trusting the fit.
+    visual: null
+  catch_outs:
+    - endog must be 2-D, with one column per series.
+    - Choose the lag order with select_order, not by eye.
+    - Each extra lag adds parameters for every series.
+  key_settings:
+    tier1:
+      - {name: freq, page: null}
+      - {name: missing, page: null}
+    tier2:
+      - {name: exog, page: null}
+    tier3:
+      - {name: dates, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Each series is predicted from past values of all series.
+    analogy: Like several friends whose moods depend on each other's past mood.
+    animation: none
+    good_at: [several linked series, short memory, a simple fit]
+    bad_at: [one series alone, shifting patterns, moving-average effects]
+    vs_siblings:
+      - {page: varmax, note: "Adds moving-average terms and outside drivers."}
+      - {page: sarimax, note: "Forecasts one series, not several."}
+    read_more:
+      - Pick the lag order, the number of past steps.
+      - Fit one regression per series on the lags of all series.
+      - Forecast all series together.
+  next: [but-beat-simple, but-intervals]

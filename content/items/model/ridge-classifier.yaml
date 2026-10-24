@@ -1,0 +1,142 @@
+id: ridge-classifier
+plain_name: RidgeClassifier
+code_name: RidgeClassifier
+aliases: [ridge classifier]
+stage: model
+family: model.awkward.big
+tracks: [standard]
+archetype: model
+question_tags: [many classes, fast baseline]
+targets: [sklearn.linear_model.RidgeClassifier]
+pairs_with: [linearexplainer]
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.RidgeClassifier.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: breast-cancer, shape: boundary}
+    line: Fits a ridge regression to the labels, then picks the top score.
+  quick_facts:
+    data_size: Small to large tables
+  use_avoid:
+    use_when: [many classes, correlated features, fast baseline]
+    avoid_when: [needs probabilities, curved boundary]
+  prep:
+    - step: {family: transform.scale.rescale}
+      status: recommended
+      why: The penalty treats columns of different size unequally.
+      condition: null
+      unless: null
+    - step: {family: clean.impute}
+      status: required
+      why: Linear models reject missing values.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Text categories must become numbers.
+      condition: {has_categoricals: true}
+      unless: null
+    - step: {family: transform.rebalance.weight}
+      status: recommended
+      why: Use class_weight when classes are lopsided.
+      condition: {imbalanced: true, task_type: [classification]}
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.linear_model.RidgeClassifier
+      why_this_library: Same fit and score API as other scikit-learn models.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import RidgeClassifier
+        from sklearn.model_selection import train_test_split
+        from sklearn.pipeline import make_pipeline
+        from sklearn.preprocessing import StandardScaler
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = make_pipeline(StandardScaler(), RidgeClassifier(alpha=1.0))
+        model.fit(X_train, y_train)
+        print(round(model.score(X_test, y_test), 3))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: null, shape: "(n_samples,)",
+         note: "Class labels for each row."}
+      - {name: decision_function, kind: method, task: classification, shape: "(n_samples,) or (n_samples, n_classes)",
+         note: "Score per class. Above 0 means classes_[1] for two classes."}
+      - {name: score, kind: method, task: null, shape: "float",
+         note: "Accuracy on the rows you pass in."}
+      - {name: coef_, kind: attribute, task: null, shape: "(n_features,) or (n_classes, n_features)",
+         note: "One weight per input column, per class if there are many."}
+      - {name: intercept_, kind: attribute, task: null, shape: "float or (n_targets,)",
+         note: "The offset added to every score."}
+      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)",
+         note: "Labels, in the order decision_function uses."}
+      - {name: n_iter_, kind: attribute, task: null, shape: "None or (n_targets,)",
+         note: "Solver iterations. None with the default solver."}
+      - {name: n_features_in_, kind: attribute, task: null, shape: "int",
+         note: "Number of input columns seen in fit."}
+    next_step: ROC and PR curves take decision scores. There are no probabilities.
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import load_breast_cancer
+      from sklearn.linear_model import RidgeClassifier
+      from sklearn.model_selection import train_test_split
+      from sklearn.pipeline import make_pipeline
+      from sklearn.preprocessing import StandardScaler
+
+      X, y = load_breast_cancer(return_X_y=True)
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+      model = make_pipeline(StandardScaler(), RidgeClassifier(alpha=1.0))
+      model.fit(X_train, y_train)
+      clf = model[-1]
+      print(model.predict(X_test).shape)
+      print(model.decision_function(X_test).shape)
+      print(clf.coef_.shape)
+      print(clf.intercept_)
+      print(clf.classes_)
+      print(clf.n_iter_)
+      print(clf.n_features_in_)
+    snippet_library: scikit-learn
+    visual: null
+  catch_outs:
+    - No predict_proba. Use decision_function to rank rows.
+    - Scale features first, so alpha treats each column alike.
+    - Missing values and text fail. Impute and encode first.
+  key_settings:
+    tier1:
+      - {name: alpha, page: null}
+      - {name: class_weight, page: null}
+      - {name: solver, page: null}
+    tier2:
+      - {name: fit_intercept, page: null}
+      - {name: positive, page: null}
+      - {name: max_iter, page: null}
+    tier3:
+      - {name: tol, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Fit a ridge regression to the labels, then pick the top score.
+    analogy: Rating each class on a scale, then taking the highest rating.
+    animation: none
+    good_at: [many classes, correlated features, fast fitting]
+    bad_at: [probabilities, curved boundaries]
+    vs_siblings:
+      - {page: linear-svc, note: "Margin-based line. RidgeClassifier fits to the labels."}
+      - {page: logistic-regression, note: "Gives probabilities. Use it when you need them."}
+      - {page: ridge, note: "Same penalty, for number targets."}
+    read_more:
+      - Turn the labels into -1 and 1 targets, one per class.
+      - Fit one ridge regression to those targets.
+      - Read the scores and pick the highest class.
+  next: [know-feature-importance]

@@ -1,0 +1,149 @@
+id: balancedbaggingclassifier
+plain_name: BalancedBaggingClassifier
+code_name: BalancedBaggingClassifier
+aliases: [balanced bagging]
+stage: model
+family: model.trees.balanced
+tracks: [standard]
+archetype: model
+question_tags: [rare class, imbalanced classes, tabular data]
+targets: [imblearn.ensemble.BalancedBaggingClassifier]
+pairs_with: []
+clashes: []
+source_urls: ['https://imbalanced-learn.org/stable/references/generated/imblearn.ensemble.BalancedBaggingClassifier.html']
+library_versions: {imbalanced-learn: 0.14.2}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: breast-cancer, shape: boundary}
+    line: "Many models, each trained on a balanced sample of rows."
+  quick_facts:
+    data_size: Tabular data, one rare class
+  use_avoid:
+    use_when: [one class is rare, tabular data, choose the base model]
+    avoid_when: [classes already balanced, images or text, need a simple formula]
+  prep:
+    - step: {family: transform.scale.rescale}
+      status: recommended
+      why: Needed for a linear or distance base model.
+      condition: null
+      unless: null
+    - step: {family: clean.impute}
+      status: not_needed
+      why: The default tree base takes gaps natively.
+      condition: null
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Text categories must become numbers.
+      condition: {has_categoricals: true}
+      unless: null
+    - step: {family: transform.rebalance.over}
+      status: not_needed
+      why: Each model already balances its own sample.
+      condition: null
+      unless: null
+    - step: {family: transform.rebalance.under}
+      status: not_needed
+      why: Each model already balances its own sample.
+      condition: null
+      unless: null
+  code:
+    - library: imbalanced-learn
+      target: imblearn.ensemble.BalancedBaggingClassifier
+      why_this_library: Balances each bag of rows around any base model.
+      snippet: |
+        # imbalanced-learn 0.14.2
+        from imblearn.ensemble import BalancedBaggingClassifier
+        from sklearn.datasets import make_classification
+        from sklearn.metrics import balanced_accuracy_score
+        from sklearn.model_selection import train_test_split
+
+        X, y = make_classification(
+            n_samples=1000, weights=[0.9, 0.1], random_state=0
+        )
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, stratify=y, random_state=0
+        )
+
+        model = BalancedBaggingClassifier(n_estimators=50, random_state=0)
+        model.fit(X_train, y_train)
+        print(balanced_accuracy_score(y_test, model.predict(X_test)))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: classification, shape: "(n_samples,)",
+         note: "Class labels, from the combined model votes."}
+      - {name: predict_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
+         note: "One column per class, in classes_ order. Keep [:, 1] for two classes."}
+      - {name: predict_log_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
+         note: "Log of the class probabilities, same column order."}
+      - {name: score, kind: method, task: classification, shape: "float",
+         note: "Accuracy on the data given. Misleading when classes are lopsided."}
+      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)",
+         note: "Class labels, in the column order of predict_proba."}
+      - {name: n_features_in_, kind: attribute, task: null, shape: "int",
+         note: "Number of input columns seen in fit."}
+      - {name: feature_names_in_, kind: attribute, task: null, shape: "(n_features,)",
+         note: "Column names, only if fit got a DataFrame."}
+    next_step: ROC AUC and PR curves need predict_proba, not predict.
+    snippet: |
+      # imbalanced-learn 0.14.2
+      from imblearn.ensemble import BalancedBaggingClassifier
+      from sklearn.datasets import make_classification
+      from sklearn.model_selection import train_test_split
+
+      X, y = make_classification(
+          n_samples=1000, weights=[0.9, 0.1], random_state=0
+      )
+      X_train, X_test, y_train, y_test = train_test_split(
+          X, y, stratify=y, random_state=0
+      )
+
+      model = BalancedBaggingClassifier(n_estimators=50, random_state=0)
+      model.fit(X_train, y_train)
+      print(model.predict_proba(X_test).shape)
+      print(model.classes_)
+      print(model.predict_log_proba(X_test).shape)
+    snippet_library: imbalanced-learn
+    visual: proba_table
+  catch_outs:
+    - Accuracy looks fine on lopsided data. Use balanced accuracy.
+    - Predict gives labels. Use predict_proba for ROC or PR curves.
+    - No decision_function with the default base. Check the base first.
+    - Text columns fail. Encode them first.
+  key_settings:
+    tier1:
+      - {name: sampling_strategy, page: null}
+      - {name: sampler, page: null}
+      - {name: estimator, page: null}
+      - {name: n_estimators, page: n-estimators}
+    tier2:
+      - {name: max_features, page: null}
+      - {name: max_samples, page: null}
+      - {name: replacement, page: null}
+    tier3:
+      - {name: bootstrap, page: null}
+      - {name: bootstrap_features, page: null}
+      - {name: oob_score, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Many models, each fit on a balanced sample of the rows.
+    analogy: Several referees, each shown an even mix of both outcomes.
+    animation: none
+    good_at: [rare classes, tabular data, any base model]
+    bad_at: [tiny data, extrapolation, raw text]
+    vs_siblings:
+      - {page: bagging, note: "Same bagging idea. This one balances each bag."}
+      - {page: balancedrandomforestclassifier, note: "Trees only. Balances each tree's sample."}
+      - {page: easyensembleclassifier, note: "Bags AdaBoost learners on balanced samples."}
+    read_more:
+      - Draw a balanced sample of the rows.
+      - Fit one base model on that sample.
+      - Repeat, then combine the models' votes.
+  next: [but-imbalanced-score, but-resample-in-cv]

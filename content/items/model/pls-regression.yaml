@@ -1,0 +1,99 @@
+id: pls-regression
+plain_name: PLSRegression
+code_name: PLSRegression
+aliases: [partial least squares, pls]
+stage: model
+family: model.linear.shrink
+tracks: [standard]
+archetype: model
+question_tags: [more features than rows, combined features]
+targets: [sklearn.cross_decomposition.PLSRegression]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.cross_decomposition.PLSRegression.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: ames, shape: fit_line}
+    line: Builds a few combined features that predict the target.
+  quick_facts: {none: true}
+  use_avoid:
+    use_when: [more features than rows, features move together]
+    avoid_when: [curved patterns, rows in groups]
+  prep:
+    - step: {family: clean.impute}
+      status: required
+      why: Scikit-learn rejects NaN in X.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Text categories must become numbers.
+      condition: {has_categoricals: true}
+      unless: null
+    - step: {family: transform.scale.rescale}
+      status: not_needed
+      why: scale=True already scales X and y.
+      condition: null
+      unless: null
+    - step: {page: train-test-split}
+      status: recommended
+      why: A held-out set checks the fit on new rows.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.cross_decomposition.PLSRegression
+      why_this_library: Same fit API as the other scikit-learn models.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.cross_decomposition import PLSRegression
+        from sklearn.datasets import make_regression
+
+        X, y = make_regression(n_samples=30, n_features=50, noise=5, random_state=0)
+        model = PLSRegression(n_components=3).fit(X, y)
+        print(round(model.score(X, y), 3))
+  what_comes_out:
+    items:
+    - {name: predict, kind: method, task: regression, shape: "(n_samples, n_targets)", note: Predicted target values from the input columns.}
+    - {name: score, kind: method, task: regression, shape: float, note: R squared on the data you pass in.}
+    - {name: coef_, kind: attribute, task: null, shape: "(n_targets, n_features)", note: "One slope per feature, per target."}
+    - {name: x_weights_, kind: attribute, task: null, shape: "(n_features, n_components)", note: Directions that build the combined features.}
+    - {name: n_iter_, kind: attribute, task: null, shape: "(n_components,)", note: Power-method iterations for each component.}
+    next_step: transform() returns the few combined features, not the originals.
+    visual: regression_preds
+  catch_outs:
+    - n_components must be between 1 and the number of features.
+    - The default n_components is 2. Set it on purpose.
+    - Missing values stop the fit. Impute them first.
+  key_settings:
+    tier1:
+    - {name: n_components, page: null}
+    - {name: scale, page: null}
+    tier2: []
+    tier3:
+    - {name: max_iter, page: null}
+    - {name: tol, page: null}
+    - {name: copy, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Build a few combined features, then fit the target on them.
+    analogy: Summarising many survey questions into a few scores before judging.
+    animation: none
+    good_at: [more features than rows, correlated features, a few combined features]
+    bad_at: [curved patterns, rows in groups]
+    vs_siblings:
+      - {page: ridge, note: "Keeps every feature and shrinks the slopes."}
+      - {page: linear-regression, note: "Plain fit, with no combined features."}
+    read_more:
+      - Pick a few combined features, one at a time.
+      - Each one aims at the inputs and the target together.
+      - Fit the target on those combined features.
+  next: []

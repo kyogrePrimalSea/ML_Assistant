@@ -1,0 +1,94 @@
+id: dummyclassifier
+plain_name: DummyClassifier
+code_name: DummyClassifier
+aliases: [baseline classifier, most frequent class]
+stage: model
+family: model.baseline
+tracks: [standard]
+archetype: model
+question_tags: [baseline, score to beat, sanity check]
+targets: [sklearn.dummy.DummyClassifier]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.dummy.DummyClassifier.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: breast-cancer, shape: boundary}
+    line: Predicts the most common class every time.
+  quick_facts:
+    data_size: Any size
+  use_avoid:
+    use_when: [set a baseline, sanity check, score to beat]
+    avoid_when: [real predictions, need the features, final model]
+  prep:
+    - step: {family: clean.impute}
+      status: not_needed
+      why: Ignores the feature values, so gaps do not matter.
+      condition: null
+      unless: null
+    - step: {family: transform.scale.rescale}
+      status: not_needed
+      why: Predictions ignore the feature values.
+      condition: null
+      unless: null
+  code:
+  - library: scikit-learn
+    target: sklearn.dummy.DummyClassifier
+    why_this_library: The scikit-learn baseline classifier.
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import make_classification
+      from sklearn.dummy import DummyClassifier
+      from sklearn.model_selection import train_test_split
+
+      X, y = make_classification(n_samples=300, weights=[0.8, 0.2],
+                                 random_state=0)
+      X_train, X_test, y_train, y_test = train_test_split(X, y,
+                                                          random_state=0)
+      dummy = DummyClassifier(strategy="prior").fit(X_train, y_train)
+      print(round(dummy.score(X_test, y_test), 3))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: classification, shape: "(n_samples,)",
+         note: "The most common class, for every row."}
+      - {name: predict_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
+         note: "Class frequencies seen in y, same for every row."}
+      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)",
+         note: "Class labels seen in y, in column order."}
+      - {name: class_prior_, kind: attribute, task: classification, shape: "(n_classes,)",
+         note: "Class frequencies seen in y during fit."}
+    next_step: Use its score as the bar every model must beat.
+    visual: null
+  catch_outs:
+    - On skewed data, accuracy is just the majority share.
+    - Strategies stratified and uniform need random_state for repeatable output.
+    - Pick the strategy first. The default prior predicts the majority class.
+  key_settings:
+    tier1:
+    - {name: strategy, page: null}
+    - {name: constant, page: null}
+    tier2:
+    - {name: random_state, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    idea: Ignore the features and always predict the most common class.
+    analogy: Always answering the most popular choice on a multiple-choice quiz.
+    animation: none
+    good_at: [a score to beat, sanity checks, imbalance checks]
+    bad_at: [real predictions, using the features, any learning]
+    vs_siblings:
+      - {page: dummyregressor, note: "Same idea for numbers. Predicts the mean or median."}
+    read_more:
+      - Count the classes in y.
+      - Pick a rule from most frequent, prior, uniform or constant.
+      - Predict with that rule, ignoring X.
+  next: []

@@ -1,0 +1,139 @@
+id: mlp-regressor
+plain_name: MLPRegressor
+code_name: MLPRegressor
+aliases: [neural network regressor, multilayer perceptron regressor, mlp regressor]
+stage: model
+family: model.neural
+tracks: [standard]
+archetype: model
+question_tags: [complex patterns, lots of data, neural network]
+targets: [sklearn.neural_network.MLPRegressor]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPRegressor.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: ames, shape: fit_line}
+    line: Layers of weighted sums learn a curved line through the data.
+  quick_facts:
+    data_size: Plenty of rows, scaled inputs
+  use_avoid:
+    use_when: [complex patterns, plenty of data, scaled numeric inputs]
+    avoid_when: [tiny data, need a simple formula, need a quick baseline]
+  prep:
+    - step: {family: transform.scale.rescale}
+      status: required
+      why: "Neural nets need inputs on one scale."
+      condition: null
+      unless: null
+    - step: {family: clean.impute}
+      status: required
+      why: Rejects missing values.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Text categories must become numbers.
+      condition: {has_categoricals: true}
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.neural_network.MLPRegressor
+      why_this_library: The scikit-learn estimator for this method.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_diabetes
+        from sklearn.model_selection import train_test_split
+        from sklearn.neural_network import MLPRegressor
+        from sklearn.pipeline import make_pipeline
+        from sklearn.preprocessing import StandardScaler
+
+        X, y = load_diabetes(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, random_state=0
+        )
+
+        model = make_pipeline(
+            StandardScaler(),
+            MLPRegressor(hidden_layer_sizes=(32,), max_iter=1000, random_state=0),
+        )
+        model.fit(X_train, y_train)
+        print(round(model.score(X_test, y_test), 3))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
+         note: "One predicted number per row."}
+      - {name: score, kind: method, task: regression, shape: "float",
+         note: "R squared on the data given."}
+      - {name: loss_, kind: attribute, task: null, shape: "float",
+         note: "Training loss after the last pass."}
+      - {name: loss_curve_, kind: attribute, task: null, shape: "(n_iter_,)",
+         note: "Loss after each pass. Check it flattens."}
+      - {name: n_iter_, kind: attribute, task: null, shape: "int",
+         note: "Passes over the data before stopping."}
+      - {name: n_features_in_, kind: attribute, task: null, shape: "int",
+         note: "Columns seen during fit."}
+      - {name: feature_names_in_, kind: attribute, task: null, shape: "(n_features,)",
+         note: "Column names. Set only when fit on a DataFrame."}
+    next_step: "Check loss_curve_ flattens before trusting the score."
+    snippet: |
+      # scikit-learn 1.9.1
+      import pandas as pd
+      from sklearn.datasets import load_diabetes
+      from sklearn.neural_network import MLPRegressor
+      from sklearn.preprocessing import StandardScaler
+
+      data = load_diabetes(as_frame=True)
+      X = pd.DataFrame(
+          StandardScaler().fit_transform(data.data),
+          columns=data.feature_names,
+      )
+      model = MLPRegressor(hidden_layer_sizes=(32,), max_iter=1000, random_state=0)
+      model.fit(X, data.target)
+      print(model.predict(X[:3]).shape)
+      print(round(model.score(X, data.target), 3))
+      print(model.n_features_in_)
+      print(model.n_iter_)
+    snippet_library: scikit-learn
+    visual: null
+  catch_outs:
+    - "Training stops at max_iter even when it has not converged."
+    - "Early stopping is off by default; set early_stopping=True to use it."
+    - "A score on training rows flatters the model."
+  key_settings:
+    tier1:
+      - {name: hidden_layer_sizes, page: null}
+      - {name: learning_rate_init, page: learning-rate}
+      - {name: alpha, page: null}
+      - {name: early_stopping, page: null}
+    tier2:
+      - {name: activation, page: null}
+      - {name: solver, page: null}
+      - {name: max_iter, page: null}
+    tier3:
+      - {name: loss, page: null}
+      - {name: batch_size, page: null}
+      - {name: validation_fraction, page: null}
+      - {name: n_iter_no_change, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Layers of weighted sums, each followed by a bend, learn a curved line.
+    analogy: A chain of simple calculators, each passing its result onward.
+    animation: none
+    good_at: [complex patterns, plenty of rows, non-linear effects]
+    bad_at: [tiny data, extrapolation, explaining the answer]
+    vs_siblings:
+      - {page: mlp-classifier, note: "Same network. Predicts a class, not a number."}
+    read_more:
+      - Multiply inputs by weights and add a bias.
+      - Pass the result through an activation.
+      - Repeat for each hidden layer, then output one number.
+  next: []

@@ -1,0 +1,96 @@
+id: complement-nb
+plain_name: ComplementNB
+code_name: ComplementNB
+aliases: [complement naive bayes, cnb]
+stage: model
+family: model.probabilistic.nb
+tracks: [standard]
+archetype: model
+question_tags: [text, lopsided classes]
+targets: [sklearn.naive_bayes.ComplementNB]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.ComplementNB.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: breast-cancer, shape: boundary}
+    line: Naive Bayes that holds up when classes are lopsided.
+  quick_facts: {none: true}
+  use_avoid:
+    use_when: [text counts, lopsided classes]
+    avoid_when: [negative values, missing values, continuous measurements]
+  prep:
+    - step: {family: clean.impute}
+      status: required
+      why: Rejects NaN. Fill gaps first.
+      condition: null
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Text must become word counts first.
+      condition: null
+      unless: null
+    - step: {family: transform.rebalance.weight}
+      status: not_needed
+      why: Built for lopsided classes. Skip class weights.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.naive_bayes.ComplementNB
+      why_this_library: The variant meant for lopsided text classes.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.model_selection import train_test_split
+        from sklearn.naive_bayes import ComplementNB
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = ComplementNB().fit(X_train, y_train)
+        print(round(model.score(X_test, y_test), 3))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: null, shape: "(n_samples,)", note: "Predicted class labels."}
+      - {name: predict_proba, kind: method, task: classification, shape: "(n_samples, n_classes)", note: "One column per class, in classes_ order."}
+      - {name: predict_log_proba, kind: method, task: classification, shape: "(n_samples, n_classes)", note: "Log of predict_proba, same columns."}
+      - {name: score, kind: method, task: null, shape: "float", note: "Accuracy on the data given."}
+      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)", note: "Class labels, in predict_proba column order."}
+      - {name: n_features_in_, kind: attribute, task: null, shape: "int", note: "Number of input columns seen in fit."}
+      - {name: feature_names_in_, kind: attribute, task: null, shape: "(n_features,)", note: "Column names seen in fit, if any."}
+    next_step: "Accuracy hides lopsided classes. Check a confusion matrix next."
+    visual: proba_table
+  catch_outs:
+    - Negative values fail in fit. Keep features non-negative.
+    - NaN fails in fit. Impute before the model.
+    - class_prior is not used by this model.
+  key_settings:
+    tier1:
+      - {name: alpha, page: null}
+      - {name: norm, page: null}
+    tier2:
+      - {name: force_alpha, page: null}
+    tier3:
+      - {name: fit_prior, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Estimate each class from the counts in all the other classes.
+    analogy: Judge a class by what the other classes do not contain.
+    animation: none
+    good_at: [text counts, lopsided classes]
+    bad_at: [negative values, continuous measurements]
+    vs_siblings:
+      - {page: multinomial-nb, note: "Same counts. ComplementNB uses the other classes."}
+    read_more:
+      - See the scikit-learn reference page for ComplementNB.
+  next: [evaluate-how-good]
+...

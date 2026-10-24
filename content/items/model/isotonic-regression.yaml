@@ -1,0 +1,89 @@
+id: isotonic-regression
+plain_name: IsotonicRegression
+code_name: IsotonicRegression
+aliases: [isotonic, monotone regression, pava]
+stage: model
+family: model.awkward.shape
+tracks: [standard]
+archetype: model
+question_tags: [only goes up, monotone, trend]
+targets: [sklearn.isotonic.IsotonicRegression]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.isotonic.IsotonicRegression.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: ames, shape: fit_line}
+    line: Fits a curve that only goes up, or only down.
+  quick_facts:
+    data_size: Any size
+  use_avoid:
+    use_when: [steady trend, only up or down, no set shape]
+    avoid_when: [wiggly patterns, predictions outside the range, direction changes]
+  prep:
+    - step: {family: clean.impute}
+      status: required
+      why: Stops with an error on NaN.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.scale.rescale}
+      status: not_needed
+      why: Only the order of X matters, not its scale.
+      condition: null
+      unless: null
+  code:
+  - library: scikit-learn
+    target: sklearn.isotonic.IsotonicRegression
+    why_this_library: The scikit-learn fit, with predict and out-of-range control.
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import make_regression
+      from sklearn.isotonic import IsotonicRegression
+
+      X, y = make_regression(n_samples=100, n_features=1, noise=10.0,
+                             random_state=0)
+      iso = IsotonicRegression().fit(X[:, 0], y)
+      print(iso.predict([-1.0, 0.0, 1.0]).round(1))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
+         note: "Linear interpolation. NaN outside the X range by default."}
+      - {name: X_min_, kind: attribute, task: null, shape: "float",
+         note: "Lowest X seen in training."}
+      - {name: X_max_, kind: attribute, task: null, shape: "float",
+         note: "Highest X seen in training."}
+    next_step: Expect NaN for X outside the training range.
+    visual: null
+  catch_outs:
+    - Predictions outside the training X range are NaN.
+    - Only the order of X matters, not its spacing.
+    - Set increasing to False for a curve that goes down.
+  key_settings:
+    tier1:
+    - {name: increasing, page: null}
+    - {name: out_of_bounds, page: null}
+    - {name: y_min, page: null}
+    - {name: y_max, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    idea: Fit steps that never go against the trend, then join them up.
+    analogy: A staircase that never goes down, bent to fit the points.
+    animation: none
+    good_at: [steady trends, monotone rules, no set shape]
+    bad_at: [wiggly patterns, extrapolation, direction changes]
+    vs_siblings: []
+    read_more:
+      - Sort the points by X.
+      - Find the best steps that never go against the trend.
+      - Join the steps with straight lines to predict.
+  next: []

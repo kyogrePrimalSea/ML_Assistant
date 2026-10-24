@@ -1,0 +1,105 @@
+id: sarimax
+plain_name: SARIMAX
+code_name: SARIMAX
+aliases: [seasonal arima]
+stage: model
+family: model.ts-past
+tracks: [time-series]
+archetype: model
+question_tags: [forecast, seasonal, outside drivers]
+targets: [statsmodels.tsa.statespace.sarimax.SARIMAX]
+pairs_with: []
+clashes: []
+source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.tsa.statespace.sarimax.SARIMAX.html']
+library_versions: {statsmodels: 0.15.0}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: airline-passengers, shape: fit_line}
+    line: Past values and outside drivers, with seasons built in.
+  quick_facts:
+    data_size: 2+ seasons, e.g. 24 monthly points
+  use_avoid:
+    use_when: [seasonal series, outside drivers like price]
+    avoid_when: [no seasonal pattern]
+  prep:
+    - step: {family: explore.stationarity}
+      status: recommended
+      why: Check stability first to choose the differencing order.
+      condition: null
+      unless: null
+    - step: {family: split.time}
+      status: recommended
+      why: Test on the latest months, never on random rows.
+      condition: null
+      unless: null
+  code:
+    - library: statsmodels
+      target: statsmodels.tsa.statespace.sarimax.SARIMAX
+      why_this_library: Fit, predict and forecast in one object.
+      snippet: |
+        # statsmodels 0.15.0
+        import numpy as np
+        from statsmodels.tsa.statespace.sarimax import SARIMAX
+
+        rng = np.random.default_rng(0)
+        t = np.arange(144)
+        y = 100 + 0.8 * t + 10 * np.sin(2 * np.pi * t / 12)
+        y = y + rng.normal(0, 2, 144)
+
+        model = SARIMAX(
+            y[:132], order=(1, 0, 0), seasonal_order=(1, 0, 0, 12)
+        )
+        res = model.fit(disp=False)
+        print(np.round(res.predict(132, 143), 1).tolist())
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: regression, shape: "(n_obs,) or (n_steps,)",
+         note: "Fitted values in sample, forecasts past the end."}
+      - {name: score, kind: method, task: null, shape: "(n_params,)",
+         note: "Score function evaluated at the given params."}
+      - {name: measurement_error, kind: attribute, task: null, shape: "bool",
+         note: "False by default. Set True to model noisy observations."}
+      - {name: state_error, kind: attribute, task: null, shape: "bool",
+         note: "True for this model. Read it, do not set it."}
+    next_step: null
+    visual: null
+  catch_outs:
+    - Forecasts need future values of the outside drivers, too.
+    - Pass exog to the model and again to predict.
+  key_settings:
+    tier1:
+      - {name: order, page: null}
+      - {name: seasonal_order, page: null}
+      - {name: trend, page: null}
+      - {name: simple_differencing, page: null}
+    tier2:
+      - {name: mle_regression, page: null}
+      - {name: concentrate_scale, page: null}
+      - {name: trend_offset, page: null}
+      - {name: missing, page: null}
+    tier3:
+      - {name: time_varying_regression, page: null}
+      - {name: enforce_invertibility, page: null}
+      - {name: freq, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Predict from past values and past errors, with seasons and outside drivers.
+    analogy: Like guessing next month's sales from recent months and last year's peak.
+    animation: none
+    good_at: [seasonal patterns, outside drivers]
+    bad_at: [very short series]
+    vs_siblings:
+      - {page: arima, note: "Same idea without seasonal terms."}
+      - {page: exponential-smoothing, note: "Smooths level, trend and season. No outside drivers."}
+    read_more:
+      - Set order (p, d, q) for the lags and differencing.
+      - Set seasonal_order with the season length.
+      - Pass exog to add outside drivers.
+  next: []

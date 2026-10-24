@@ -1,0 +1,127 @@
+id: radius-neighbors-regressor
+plain_name: RadiusNeighborsRegressor
+code_name: RadiusNeighborsRegressor
+aliases: [radius neighbors regressor, radius nn, radius neighbors]
+stage: model
+family: model.neighbours.knn
+tracks: [standard]
+archetype: model
+question_tags: [uneven density, local patterns, distance rule]
+targets: [sklearn.neighbors.RadiusNeighborsRegressor]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.RadiusNeighborsRegressor.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: ames, shape: fit_line}
+    line: Predicts from every training row within a set distance.
+  quick_facts:
+    data_size: Small tables, few features
+  use_avoid:
+    use_when: [uneven density, distance matters, few features]
+    avoid_when: [many features, large tables, need a formula]
+  prep:
+    - step: {family: transform.scale.rescale}
+      status: required
+      why: "Distances need features on one scale."
+      condition: null
+      unless: null
+    - step: {family: clean.impute}
+      status: required
+      why: Rejects missing values.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Text categories must become numbers.
+      condition: {has_categoricals: true}
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.neighbors.RadiusNeighborsRegressor
+      why_this_library: The scikit-learn estimator for this method.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_diabetes
+        from sklearn.model_selection import train_test_split
+        from sklearn.neighbors import RadiusNeighborsRegressor
+        from sklearn.pipeline import make_pipeline
+        from sklearn.preprocessing import StandardScaler
+
+        X, y = load_diabetes(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, random_state=0
+        )
+
+        model = make_pipeline(
+            StandardScaler(),
+            RadiusNeighborsRegressor(radius=3.0),
+        )
+        model.fit(X_train, y_train)
+        print(round(model.score(X_test, y_test), 3))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
+         note: "Average target of the training rows in range."}
+      - {name: radius_neighbors, kind: method, task: null, shape: "2 ragged arrays, one per row",
+         note: "Distances and row numbers within the radius."}
+      - {name: score, kind: method, task: regression, shape: "float",
+         note: "R squared on the data given."}
+      - {name: n_samples_fit_, kind: attribute, task: null, shape: "int",
+         note: "Training rows kept for lookup."}
+      - {name: n_features_in_, kind: attribute, task: null, shape: "int",
+         note: "Columns seen during fit."}
+      - {name: feature_names_in_, kind: attribute, task: null, shape: "(n_features,)",
+         note: "Column names. Set only when fit on a DataFrame."}
+    next_step: "Check for NaN predictions before scoring; they mean no neighbors."
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import load_diabetes
+      from sklearn.neighbors import RadiusNeighborsRegressor
+
+      data = load_diabetes(as_frame=True)
+      model = RadiusNeighborsRegressor(radius=0.1)
+      model.fit(data.data, data.target)
+      print(model.predict(data.data[:3]).shape)
+      print(model.n_samples_fit_)
+      print(model.feature_names_in_[:3])
+    snippet_library: scikit-learn
+    visual: null
+  catch_outs:
+    - "Radius is in the same units as the features, so rescaling changes it."
+    - "Rows with no training row in range get NaN, with a warning."
+    - "Dense areas use many rows and sparse areas use few."
+  key_settings:
+    tier1:
+      - {name: radius, page: null}
+      - {name: weights, page: null}
+      - {name: metric, page: null}
+    tier2:
+      - {name: algorithm, page: null}
+      - {name: leaf_size, page: null}
+      - {name: p, page: null}
+    tier3:
+      - {name: metric_params, page: null}
+      - {name: n_jobs, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Predict from every training row within a set distance.
+    analogy: Asking everyone living within a mile what they paid.
+    animation: none
+    good_at: [uneven density, local patterns, distance rules]
+    bad_at: [many features, large tables, extrapolation]
+    vs_siblings:
+      - {page: k-neighbors-regressor, note: "Fixed count of neighbors instead of a fixed distance."}
+    read_more:
+      - Measure the distance to every training row.
+      - Keep the rows inside the radius.
+      - Average their targets.
+  next: []

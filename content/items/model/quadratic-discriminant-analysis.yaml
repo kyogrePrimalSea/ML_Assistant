@@ -1,0 +1,138 @@
+id: quadratic-discriminant-analysis
+plain_name: QuadraticDiscriminantAnalysis
+code_name: QuadraticDiscriminantAnalysis
+aliases: [qda, quadratic discriminant]
+stage: model
+family: model.probabilistic.da
+tracks: [standard]
+archetype: model
+question_tags: [classes differ in spread, curved boundary, many rows]
+targets: [sklearn.discriminant_analysis.QuadraticDiscriminantAnalysis]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.discriminant_analysis.QuadraticDiscriminantAnalysis.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: breast-cancer, shape: boundary}
+    line: Gives each class its own spread, so the boundary can curve.
+  quick_facts:
+    data_size: Enough rows in every class
+  use_avoid:
+    use_when: [classes differ in spread, curved boundaries, many rows per class]
+    avoid_when: [few rows per class, similar spread, collinear columns]
+  prep:
+    - step: {family: transform.scale.rescale}
+      status: recommended
+      why: "Scale first: reg_param acts on the raw spread."
+      condition: null
+      unless: null
+    - step: {family: clean.impute}
+      status: required
+      why: Rejects missing values.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Text categories must become numbers.
+      condition: {has_categoricals: true}
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.discriminant_analysis.QuadraticDiscriminantAnalysis
+      why_this_library: The scikit-learn estimator for this method.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
+        from sklearn.model_selection import train_test_split
+        from sklearn.pipeline import make_pipeline
+        from sklearn.preprocessing import StandardScaler
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, random_state=0
+        )
+
+        model = make_pipeline(
+            StandardScaler(),
+            QuadraticDiscriminantAnalysis(reg_param=0.3),
+        )
+        model.fit(X_train, y_train)
+        print(round(model.score(X_test, y_test), 3))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: classification, shape: "(n_samples,)",
+         note: "Class with the highest probability."}
+      - {name: predict_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
+         note: "One column per class, in classes_ order."}
+      - {name: predict_log_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
+         note: "Log of predict_proba, same column order."}
+      - {name: decision_function, kind: method, task: classification, shape: "(n_samples,) for two classes",
+         note: "Score before the probability. Above 0 means class 1."}
+      - {name: score, kind: method, task: classification, shape: "float",
+         note: "Accuracy on the data given."}
+      - {name: means_, kind: attribute, task: null, shape: "(n_classes, n_features)",
+         note: "Mean of each class, one row per class."}
+      - {name: n_features_in_, kind: attribute, task: null, shape: "int",
+         note: "Columns seen during fit."}
+      - {name: feature_names_in_, kind: attribute, task: null, shape: "(n_features,)",
+         note: "Column names. Set only when fit on a DataFrame."}
+    next_step: "ROC AUC needs predict_proba[:, 1], not the labels."
+    snippet: |
+      # scikit-learn 1.9.1
+      import pandas as pd
+      from sklearn.datasets import load_breast_cancer
+      from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
+      from sklearn.preprocessing import StandardScaler
+
+      data = load_breast_cancer(as_frame=True)
+      X = pd.DataFrame(
+          StandardScaler().fit_transform(data.data),
+          columns=data.feature_names,
+      )
+      model = QuadraticDiscriminantAnalysis(reg_param=0.3)
+      model.fit(X, data.target)
+      print(model.predict_proba(X[:3]).shape)
+      print(model.decision_function(X[:3]).shape)
+      print(model.n_features_in_)
+      print(model.feature_names_in_[:3])
+    snippet_library: scikit-learn
+    visual: null
+  catch_outs:
+    - "Collinear columns can make a class covariance singular and raise LinAlgError."
+    - "The default reg_param of 0 failed on the breast cancer data."
+    - "Each class has its own spread, so it needs more rows than LDA."
+  key_settings:
+    tier1:
+      - {name: reg_param, page: null}
+      - {name: shrinkage, page: null}
+      - {name: solver, page: null}
+      - {name: covariance_estimator, page: null}
+    tier2:
+      - {name: tol, page: null}
+      - {name: store_covariance, page: null}
+      - {name: priors, page: null}
+    tier3:
+      []
+  watch_it_work: {none: true}
+  intuition:
+    idea: Give each class its own spread, so the boundary can curve.
+    analogy: A separate fence around each group, not one shared fence.
+    animation: none
+    good_at: [different spreads, curved boundaries, many rows]
+    bad_at: [few rows per class, collinear columns, a simple line]
+    vs_siblings:
+      - {page: linear-discriminant-analysis, note: "Same family. One shared spread and a straight boundary."}
+    read_more:
+      - Estimate each class mean and spread.
+      - Score each class with its own shape.
+      - Pick the class with the highest score.
+  next: []

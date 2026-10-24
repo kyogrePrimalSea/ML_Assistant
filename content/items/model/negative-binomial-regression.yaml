@@ -1,0 +1,118 @@
+id: negative-binomial-regression
+plain_name: NegativeBinomial
+code_name: NegativeBinomial
+aliases: [negative binomial, nb2]
+stage: model
+family: model.awkward.glm
+tracks: [standard]
+archetype: model
+question_tags: [overdispersed counts, count target, p-values]
+targets: [statsmodels.discrete.discrete_model.NegativeBinomial]
+pairs_with: []
+clashes: []
+source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.discrete.discrete_model.NegativeBinomial.html']
+library_versions: {statsmodels: 0.15.0}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: airline-passengers, shape: fit_line}
+    line: A line for counts that spread wider than Poisson allows.
+  quick_facts:
+    data_size: Fits in memory
+  use_avoid:
+    use_when: [count target, counts spread wide, need p-values]
+    avoid_when: [continuous target, text or images, only predictions needed]
+  prep:
+    - step: {family: transform.scale.rescale}
+      status: not_needed
+      why: "Unpenalised fit: scaling changes units, not the results."
+      condition: null
+      unless: null
+    - step: {family: clean.impute}
+      status: required
+      why: NaN raises an error. Drop or impute first.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Text categories must become numbers.
+      condition: {has_categoricals: true}
+      unless: null
+  code:
+    - library: statsmodels
+      target: statsmodels.discrete.discrete_model.NegativeBinomial
+      why_this_library: Estimates the extra spread, alpha, from the data.
+      snippet: |
+        # statsmodels 0.15.0
+        import numpy as np
+        import statsmodels.api as sm
+        from sklearn.datasets import make_regression
+
+        X, _ = make_regression(n_samples=500, n_features=3, random_state=0)
+        rate = np.exp(0.5 * X[:, 0] - 0.3 * X[:, 1])
+        rng = np.random.default_rng(0)
+        counts = rng.negative_binomial(n=2, p=2 / (2 + rate))
+        model = sm.NegativeBinomial(counts, sm.add_constant(X))
+        result = model.fit(disp=False)
+        print(result.params.round(3))  # last value is alpha
+  what_comes_out:
+    items:
+      - {name: fit, kind: method, task: regression, shape: results object,
+         note: "Holds params, with alpha as the last one."}
+      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
+         note: "Predicted mean count per row."}
+      - {name: endog, kind: attribute, task: null, shape: "(n_samples,)",
+         note: "The counts the model was fit on."}
+      - {name: exog, kind: attribute, task: null, shape: "(n_samples, n_features)",
+         note: "The design matrix, with the constant if added."}
+    next_step: A dispersion near zero means Poisson would fit as well.
+    snippet: |
+      # statsmodels 0.15.0
+      import numpy as np
+      import statsmodels.api as sm
+      from sklearn.datasets import make_regression
+
+      X, _ = make_regression(n_samples=500, n_features=3, random_state=0)
+      rate = np.exp(0.5 * X[:, 0] - 0.3 * X[:, 1])
+      rng = np.random.default_rng(0)
+      counts = rng.negative_binomial(n=2, p=2 / (2 + rate))
+      Xc = sm.add_constant(X)
+      result = sm.NegativeBinomial(counts, Xc).fit(disp=False)
+      print(result.params.round(3))
+      print(result.predict(Xc).shape)
+    snippet_library: statsmodels
+    visual: regression_preds
+  catch_outs:
+    - The last parameter is alpha, the extra spread. It is not a coefficient.
+    - Add a constant with sm.add_constant, or there is no intercept.
+    - NaN raises an error. Drop or impute before fitting.
+  key_settings:
+    tier1:
+      - {name: loglike_method, page: null}
+    tier2:
+      - {name: offset, page: null}
+      - {name: exposure, page: null}
+      - {name: missing, page: null}
+    tier3:
+      - {name: check_rank, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Counts whose spread can grow faster than the mean, using one extra number.
+    analogy: Like daily sales that swing more than a steady count would.
+    animation: none
+    good_at: [overdispersed counts, count targets, p-values]
+    bad_at: [continuous targets, text or images, only predictions needed]
+    vs_siblings:
+      - {page: poisson-regression, note: "Same counts. Poisson spread equals the mean."}
+      - {page: glm, note: "GLM uses alpha 1 unless you set it. This page estimates it."}
+    read_more:
+      - Start with a Poisson fit as a baseline.
+      - Estimate the extra spread, alpha, from the data.
+      - If alpha is near zero, Poisson was enough.
+  next: [but-pvalues]

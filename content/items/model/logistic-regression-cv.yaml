@@ -1,0 +1,147 @@
+id: logistic-regression-cv
+plain_name: LogisticRegressionCV
+code_name: LogisticRegressionCV
+aliases: [logit, MaxEnt]
+stage: model
+family: model.linear.logit
+tracks: [standard]
+archetype: model
+question_tags: [tuning, probabilities]
+targets: [sklearn.linear_model.LogisticRegressionCV]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegressionCV.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: breast-cancer, shape: boundary}
+    line: Logistic model that picks its own strength by cross-validation.
+  quick_facts: {none: true}
+  use_avoid:
+    use_when: [tuned strength, class probabilities, two classes]
+    avoid_when: [curved boundaries, correlated columns, text inputs]
+  prep:
+    - step: {family: clean.impute}
+      status: required
+      why: Rejects missing values with an error.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Needs numbers, not text.
+      condition: {has_categoricals: true}
+      unless: null
+    - step: {family: transform.scale.rescale}
+      status: recommended
+      why: lbfgs may not converge on raw columns.
+      condition: null
+      unless: null
+    - step: {family: transform.rebalance.weight}
+      status: recommended
+      why: class_weight='balanced' helps lopsided classes.
+      condition: {imbalanced: true, task_type: [classification]}
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.linear_model.LogisticRegressionCV
+      why_this_library: Chooses C with cross-validation, so you do not tune it.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegressionCV
+        from sklearn.model_selection import train_test_split
+        from sklearn.pipeline import make_pipeline
+        from sklearn.preprocessing import StandardScaler
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, random_state=0
+        )
+
+        model = make_pipeline(
+            StandardScaler(),
+            LogisticRegressionCV(cv=5, scoring="accuracy"),
+        )
+        model.fit(X_train, y_train)
+        print(model[-1].C_.round(3))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: classification, shape: "(n_samples,)",
+         note: "Class labels from the chosen C."}
+      - {name: predict_proba, kind: method, task: classification,
+         shape: "(n_samples, n_classes)",
+         note: "One column per class, in classes_ order."}
+      - {name: decision_function, kind: method, task: classification,
+         shape: "(n_samples,)", note: "Raw score before the sigmoid."}
+      - {name: score, kind: method, task: null, shape: "float",
+         note: "Scored with scoring. Accuracy in this setup."}
+      - {name: coef_, kind: attribute, task: null, shape: "(1, n_features)",
+         note: "Weights at the chosen C."}
+      - {name: intercept_, kind: attribute, task: null, shape: "(1,)",
+         note: "Baseline log-odds at the chosen C."}
+      - {name: classes_, kind: attribute, task: classification,
+         shape: "(n_classes,)", note: "Label order used by predict_proba."}
+      - {name: C_, kind: attribute, task: null, shape: "(1,) or (n_classes,)",
+         note: "The strength the cross-validation picked."}
+    next_step: Check C_ and scores_ before trusting the chosen strength.
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import load_breast_cancer
+      from sklearn.linear_model import LogisticRegressionCV
+      from sklearn.model_selection import train_test_split
+      from sklearn.pipeline import make_pipeline
+      from sklearn.preprocessing import StandardScaler
+
+      X, y = load_breast_cancer(return_X_y=True)
+      X_train, X_test, y_train, y_test = train_test_split(
+          X, y, random_state=0
+      )
+
+      model = make_pipeline(
+          StandardScaler(),
+          LogisticRegressionCV(cv=5, scoring="accuracy"),
+      )
+      model.fit(X_train, y_train)
+      print(model.predict_proba(X_test).shape)
+      print(model.predict_proba(X_test)[:3].round(3))
+    snippet_library: scikit-learn
+    visual: proba_table
+  catch_outs:
+    - Missing values raise an error. Impute first.
+    - Pass scoring yourself. Its default changes in 1.11.
+    - Unscaled columns can stop lbfgs converging.
+    - Text columns fail. Encode them first.
+  key_settings:
+    tier1:
+      - {name: Cs, page: null}
+      - {name: cv, page: null}
+      - {name: scoring, page: null}
+    tier2:
+      - {name: solver, page: null}
+      - {name: class_weight, page: null}
+      - {name: refit, page: null}
+    tier3:
+      - {name: l1_ratios, page: null}
+      - {name: tol, page: null}
+      - {name: n_jobs, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Tries a grid of strengths with cross-validation and keeps the best.
+    analogy: Testing several seasonings on a small tasting panel before serving.
+    animation: none
+    good_at: [tuned strength, class probabilities, linear boundaries]
+    bad_at: [curved boundaries, correlated columns]
+    vs_siblings:
+      - {page: logistic-regression, note: "Same model. You pick C yourself."}
+    read_more:
+      - Build a grid of C values.
+      - Score each C on each cross-validation fold.
+      - Refit on all rows with the best C.
+  next: [model-overfitting]

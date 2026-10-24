@@ -1,0 +1,130 @@
+id: k-neighbors-regressor
+plain_name: KNeighborsRegressor
+code_name: KNeighborsRegressor
+aliases: [knn regressor, k-nearest neighbors, knn]
+stage: model
+family: model.neighbours.knn
+tracks: [standard]
+archetype: model
+question_tags: [small data, local patterns, simple model]
+targets: [sklearn.neighbors.KNeighborsRegressor]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsRegressor.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: model, dataset: ames, shape: fit_line}
+    line: Predicts from the average of the nearest training rows.
+  quick_facts:
+    data_size: Small tables, few features
+  use_avoid:
+    use_when: [small data, few features, local patterns]
+    avoid_when: [many features, large tables, need a formula]
+  prep:
+    - step: {family: transform.scale.rescale}
+      status: required
+      why: "Distances need features on one scale."
+      condition: null
+      unless: null
+    - step: {family: clean.impute}
+      status: required
+      why: Rejects missing values.
+      condition: {has_missing: true}
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Text categories must become numbers.
+      condition: {has_categoricals: true}
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.neighbors.KNeighborsRegressor
+      why_this_library: The scikit-learn estimator for this method.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_diabetes
+        from sklearn.model_selection import train_test_split
+        from sklearn.neighbors import KNeighborsRegressor
+        from sklearn.pipeline import make_pipeline
+        from sklearn.preprocessing import StandardScaler
+
+        X, y = load_diabetes(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, random_state=0
+        )
+
+        model = make_pipeline(
+            StandardScaler(),
+            KNeighborsRegressor(n_neighbors=5),
+        )
+        model.fit(X_train, y_train)
+        print(round(model.score(X_test, y_test), 3))
+  what_comes_out:
+    items:
+      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
+         note: "Average target of the k nearest training rows."}
+      - {name: kneighbors, kind: method, task: null, shape: "2 arrays of (n_samples, k)",
+         note: "Distances and row numbers of the k nearest rows."}
+      - {name: score, kind: method, task: regression, shape: "float",
+         note: "R squared. 1.0 is perfect; 0 matches the mean."}
+      - {name: n_samples_fit_, kind: attribute, task: null, shape: "int",
+         note: "Training rows kept for lookup."}
+      - {name: n_features_in_, kind: attribute, task: null, shape: "int",
+         note: "Columns seen during fit."}
+      - {name: feature_names_in_, kind: attribute, task: null, shape: "(n_features,)",
+         note: "Column names. Set only when fit on a DataFrame."}
+    next_step: "Score on held-out rows, not on the rows used to fit."
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import load_diabetes
+      from sklearn.neighbors import KNeighborsRegressor
+
+      data = load_diabetes(as_frame=True)
+      model = KNeighborsRegressor(n_neighbors=5)
+      model.fit(data.data, data.target)
+      print(model.predict(data.data[:3]).shape)
+      dist, idx = model.kneighbors(data.data[:3])
+      print(dist.shape, idx.shape)
+      print(model.n_samples_fit_)
+      print(model.feature_names_in_[:3])
+    snippet_library: scikit-learn
+    visual: null
+  catch_outs:
+    - "Unscaled features let the widest column decide the distances."
+    - "Predictions are averages of training targets, so they stay in that range."
+    - "Fit the scaler on training rows only, or test rows leak in."
+  key_settings:
+    tier1:
+      - {name: n_neighbors, page: null}
+      - {name: weights, page: null}
+      - {name: metric, page: null}
+    tier2:
+      - {name: algorithm, page: null}
+      - {name: leaf_size, page: null}
+      - {name: p, page: null}
+    tier3:
+      - {name: metric_params, page: null}
+      - {name: n_jobs, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    idea: Predict from the training rows closest to the new row.
+    analogy: Asking the five nearest houses what they sold for.
+    animation: none
+    good_at: [small data, local patterns, easy to explain]
+    bad_at: [large tables, many features, extrapolation]
+    vs_siblings:
+      - {page: k-neighbors-classifier, note: "Same neighbors. Votes for a class instead of averaging."}
+      - {page: radius-neighbors-regressor, note: "Fixed distance instead of a fixed count of neighbors."}
+    read_more:
+      - Find the k closest training rows.
+      - Average their targets, weighted if asked.
+      - That average is the prediction.
+  next: []
