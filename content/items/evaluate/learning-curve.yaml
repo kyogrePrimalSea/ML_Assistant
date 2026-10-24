@@ -3,7 +3,7 @@ plain_name: Learning curve
 code_name: learning_curve
 aliases: [more data curve, train vs validation score, bias variance plot]
 stage: evaluate
-family: Validation curves
+family: evaluate.fit
 tracks: [standard]
 archetype: diagnostic
 question_tags: [overfitting, need more data, how good is it]

@@ -499,7 +499,7 @@
     "T035": {
       "title": "Taxonomy validator and record migration",
       "file": "tasks/T035-taxonomy-validator-and-migration.md",
-      "status": "In Progress",
+      "status": "Done",
       "dependencies": [
         "T034",
         "T029"
@@ -527,7 +527,7 @@
     "T038": {
       "title": "Content index and per-goal radial layouts with the fan",
       "file": "tasks/T038-per-goal-layout.md",
-      "status": "Backlog",
+      "status": "In Progress",
       "dependencies": [
         "T034",
         "T035"

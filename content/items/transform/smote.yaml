@@ -3,7 +3,7 @@ plain_name: SMOTE
 code_name: SMOTE
 aliases: [oversampling, synthetic minority, balance classes]
 stage: transform
-family: Over-sampling
+family: transform.rebalance.over
 tracks: [standard]
 archetype: resampler
 question_tags: [imbalanced, rare class]
@@ -38,7 +38,7 @@ slots:
       why: Resample the training rows only.
       condition: null
       unless: null
-    - step: {family: Categorical encoding, stage: transform}
+    - step: {family: transform.encode.features}
       status: required
       why: Plain SMOTE needs all-numeric columns.
       condition: {has_categoricals: true}

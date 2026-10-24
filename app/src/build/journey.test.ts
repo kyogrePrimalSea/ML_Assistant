@@ -4,10 +4,10 @@ import { buildJourney, regionRing, stopPosition } from './journey.ts'
 import { DEMO_PROFILE } from './demoPipeline.ts'
 
 const start = { rows: 1460, columns: 81 }
-const encoder = rec('ohe', 'transform', 'Categorical encoding', { rules: { fits_on_data: true, shape_effect: { rows: 'same', columns: 'expands' } } }).record
+const encoder = rec('ohe', 'transform', 'transform.encode.features', { rules: { fits_on_data: true, shape_effect: { rows: 'same', columns: 'expands' } } }).record
 const split = rec('split', 'split', 'Splitters').record
 const model = rec('xgb', 'model', 'Boosting', {
-  prep: [{ step: { family: 'Categorical encoding', stage: 'transform' }, status: 'required', why: 'Text categories must become numbers.', condition: { has_categoricals: true }, unless: null }],
+  prep: [{ step: { family: 'transform.encode.features' }, status: 'required', why: 'Text categories must become numbers.', condition: { has_categoricals: true }, unless: null }],
 }).record
 const metric = rec('r2', 'evaluate', 'Regression metrics', { rules: { task_types: ['regression'] } }).record
 

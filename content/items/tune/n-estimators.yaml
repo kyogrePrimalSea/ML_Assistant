@@ -2,7 +2,7 @@ id: n-estimators
 plain_name: Number of trees
 code_name: n_estimators
 aliases: [boosting rounds, max_iter, num_boost_round, number of trees]
-family: Boosting rounds
+family: tune.settings.training
 question_tags: [underfitting, overfitting, too slow]
 source_urls:
   - https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingRegressor.html
@@ -10,7 +10,7 @@ source_urls:
   - https://xgboost.readthedocs.io/en/stable/python/python_api.html
   - https://lightgbm.readthedocs.io/en/stable/pythonapi/lightgbm.LGBMRegressor.html
 stage: tune
-tracks: [standard]
+tracks: [standard, time-series]
 archetype: hyperparameter
 targets: []
 applies_to: [gradient-boosting, hist-gradient-boosting, xgboost, lightgbm]

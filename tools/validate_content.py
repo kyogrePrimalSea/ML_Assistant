@@ -12,6 +12,11 @@ from pathlib import Path
 import yaml
 from jsonschema import Draft202012Validator
 
+try:
+    from tools.taxonomy import goal_view, node_text, page_placement, source_nodes, walk_view
+except ImportError:  # run as `python tools/validate_content.py`
+    from taxonomy import goal_view, node_text, page_placement, source_nodes, walk_view
+
 ROOT = Path(__file__).resolve().parent.parent
 SCHEMA = ROOT / "content" / "schema"
 
@@ -50,6 +55,85 @@ def load_extraction(content, entry):
 
 
 LINE_LIMIT = 79
+MAX_CHILDREN = 7
+
+
+def load_exceptions(content):
+    """content/taxonomy-exceptions.yaml: {exceptions: [{rule, node, reason, [goal]}]}; missing means none."""
+    p = Path(content) / "taxonomy-exceptions.yaml"
+    if not p.exists():
+        return [], []
+    doc = load_yaml(p) or {}
+    bad, out = [], []
+    for i, e in enumerate(doc.get("exceptions") or []):
+        if not isinstance(e, dict) or not {"rule", "node", "reason"} <= set(e) or not all(
+                isinstance(e[k], str) and e[k] for k in ("rule", "node", "reason")):
+            bad.append(("taxonomy-exceptions.yaml", f"exceptions.{i}", "needs string keys rule, node and reason"))
+        else:
+            out.append(e)
+    return out, bad
+
+
+def goal_text_checks(field, text):
+    """Yield (rule, message) for one text, given its field name and value. Rules are section 2 of the map."""
+    if text is None:
+        return
+    if "&" in text or "!" in text:
+        yield "forbidden-characters", f"{field} '{text}' has '&' or '!'"
+    if field == "question_prompt":
+        if not text.endswith("?"):
+            yield field, f"question_prompt '{text}' does not end in '?'"
+        if len(text) > 48:
+            yield field, f"question_prompt '{text}' is {len(text)} characters (limit 48)"
+    elif field == "question_label" and len(text) > 40:
+        yield field, f"question_label '{text}' is {len(text)} characters (limit 40)"
+    elif field == "question_sentence":
+        if not text.startswith(("We need", "We have")):
+            yield field, f"question_sentence '{text}' does not start with 'We need' or 'We have'"
+        if len(text) > 110:
+            yield field, f"question_sentence '{text}' is {len(text)} characters (limit 110)"
+    elif field == "pick_when" and len(text) > 60:
+        yield field, f"pick_when '{text}' is {len(text)} characters (limit 60)"
+
+
+def taxonomy_checks(content, tax, report):
+    """Rules on the taxonomy alone. `report(rule, node, message, goal=None)` records a violation."""
+    goals = [g["id"] for g in tax["goals"]]
+    # label limits on every text, resolved per goal
+    def texts(node, node_id):
+        for field in ("question_prompt", "question_label", "question_sentence"):
+            if field in node:
+                seen = set()
+                for g in goals:
+                    t = node_text(node[field], g)
+                    if t is not None and t not in seen:
+                        seen.add(t)
+                        for rule, msg in goal_text_checks(field, t):
+                            report(rule, node_id, msg)
+    texts(tax["root"], "root")
+    for rule, msg in goal_text_checks("question_prompt", tax["goal_prompt"]):
+        report(rule, "goal_prompt", msg)
+    for g in tax["goals"]:
+        for field in ("question_label", "question_sentence"):
+            for rule, msg in goal_text_checks(field, g[field]):
+                report(rule, g["id"], msg)
+    for g in tax["later_goals"]:
+        for rule, msg in goal_text_checks("question_label", g["question_label"]):
+            report(rule, g["id"], msg)
+    for node, _ in source_nodes(tax):
+        texts(node, node["id"])
+        for p in node.get("pages", []):
+            for rule, msg in goal_text_checks("pick_when", p["pick_when"]):
+                report(rule, p["id"], msg)
+    # shape of every goal view
+    for g in goals:
+        for node, parent in walk_view(goal_view(tax, g)):
+            n = len(node["children"])
+            if n > MAX_CHILDREN:
+                report("max-children", node["id"], f"{node['level']} '{node['id']}' has {n} children in goal "
+                       f"'{g}' (limit {MAX_CHILDREN})", g)
+            if node["level"] in ("group", "family") and n == 1:
+                report("single-child", node["id"], f"{node['level']} '{node['id']}' has a single child in goal '{g}'", g)
 
 
 def validate(content, warnings=None):
@@ -68,6 +152,36 @@ def validate(content, warnings=None):
     for e in inv:
         inv_by_page[e.get("page")].append(e)
     ext_cache = {}
+
+    # ---- taxonomy (T035): schema, exceptions, rules on the taxonomy alone
+    tax_path = content / "taxonomy.yaml"
+    tax = None
+    exceptions, bad_exc = load_exceptions(content)
+    for f, p_, m in bad_exc:
+        rep.add(f, p_, m)
+    used_exc = set()
+
+    def tax_report(rule, node, message, goal=None):
+        for i, e in enumerate(exceptions):
+            if e["rule"] == rule and e["node"] == node and e.get("goal") in (None, goal):
+                used_exc.add(i)
+                warns.append(("taxonomy.yaml", node, f"{message} (allow-listed: {e['reason']})"))
+                return
+        rep.add("taxonomy.yaml", node, f"[{rule}] {message}")
+
+    if not tax_path.exists():
+        rep.add("taxonomy.yaml", "(root)", "file is missing")
+    else:
+        tax = load_yaml(tax_path)
+        tax_errs = sorted(Draft202012Validator(json.loads((SCHEMA / "taxonomy.schema.json").read_text()))
+                          .iter_errors(tax), key=lambda e: list(e.absolute_path))
+        for e in tax_errs:
+            rep.add("taxonomy.yaml", jpath(e.absolute_path), e.message)
+        if tax_errs:
+            tax = None
+    place = page_placement(tax) if tax else {}
+    tax_nodes = {n["id"]: n for n, _ in source_nodes(tax)} if tax else {}
+    tax_goals = {g["id"]: g for g in tax["goals"]} if tax else {}
 
     def ext(tid):
         if tid not in ext_cache:
@@ -116,7 +230,7 @@ def validate(content, warnings=None):
         if q["id"] in q_by_id:
             rep.add(rel, f"questions.{i}.id", f"duplicate question id '{q['id']}'")
         q_by_id[q["id"]] = q
-    families = {(e.get("stage"), e.get("family")) for e in inv}
+    families = {n["id"] for n in tax_nodes.values() if n.get("pages")}
 
     def page_ref(rel, path, pid):
         if pid not in page_ids:
@@ -127,21 +241,57 @@ def validate(content, warnings=None):
             if len(line) > LINE_LIMIT:
                 warns.append((str(rel), path, f"{tab}, line {n} is {len(line)} characters (over {LINE_LIMIT})"))
 
+    # ---- taxonomy coverage and rules (QUESTION_MAP section 3, rule 9)
+    if tax:
+        content_only = {rid for rid, (_, r) in rec_by_id.items() if rid not in {e.get("page") for e in inv}}
+        want = {e["page"] for e in inv if e.get("page")} | content_only
+        listed = Counter(p["id"] for n, _ in source_nodes(tax) for p in n.get("pages", []))
+        for pid in sorted(want - set(listed)):
+            rep.add("taxonomy.yaml", pid, "page is in the inventory or content records but not in the taxonomy")
+        for pid in sorted(set(listed) - want):
+            rep.add("taxonomy.yaml", pid, "page is in the taxonomy but not in the inventory or content records")
+        for pid, n in sorted(listed.items()):
+            if n > 1:
+                rep.add("taxonomy.yaml", pid, f"page appears {n} times in the taxonomy")
+        taxonomy_checks(content, tax, tax_report)
+        for i, e in enumerate(exceptions):
+            if i not in used_exc:
+                warns.append(("taxonomy-exceptions.yaml", f"exceptions.{i}",
+                              f"allow-list entry ({e['rule']}, {e['node']}) matches no violation"))
+
     # ---- item checks
     for rel, r in items:
         s = r["slots"]
         ents = inv_by_page.get(r["id"], [])
         if ents:
-            for field in ("stage", "family", "archetype"):
-                for e in ents:
-                    if e.get(field) != r[field]:
-                        rep.add(rel, field, f"'{r[field]}' disagrees with inventory '{e.get(field)}' ({e['id']})")
-                        break
+            # Stage and family come from the taxonomy (checked below); the inventory only keeps the
+            # archetype, and its tracks must be covered (the taxonomy may widen them).
+            for e in ents:
+                if e.get("archetype") != r["archetype"]:
+                    rep.add(rel, "archetype", f"'{r['archetype']}' disagrees with inventory '{e.get('archetype')}' ({e['id']})")
+                    break
             inv_tracks = set().union(*(set(e.get("tracks", [])) for e in ents))
-            if inv_tracks != set(r["tracks"]):
-                rep.add(rel, "tracks", f"{sorted(r['tracks'])} disagrees with inventory {sorted(inv_tracks)}")
+            if not inv_tracks <= set(r["tracks"]):
+                rep.add(rel, "tracks", f"{sorted(r['tracks'])} misses inventory tracks {sorted(inv_tracks - set(r['tracks']))}")
         elif r["archetype"] not in ("hyperparameter", "output"):
             rep.add(rel, "id", f"'{r['id']}' is not an inventory page")
+
+        pl = place.get(r["id"])
+        if tax and pl:
+            t_stage, t_family, t_for = pl
+            if r["stage"] != t_stage:
+                rep.add(rel, "stage", f"'{r['stage']}' differs from taxonomy stage '{t_stage}'")
+            if r["family"] != t_family:
+                rep.add(rel, "family", f"'{r['family']}' differs from taxonomy family '{t_family}'")
+            for g in t_for:
+                goal = tax_goals[g]
+                if goal["track"] not in r["tracks"]:
+                    rep.add(rel, "tracks", f"{sorted(r['tracks'])} lacks track '{goal['track']}' "
+                            f"of goal '{g}' that the taxonomy lists for this page")
+                tts = r["rules"]["task_types"]
+                if tts and goal["task"] not in tts:
+                    tax_report("task-types", r["id"], f"rules.task_types {tts} lacks task '{goal['task']}' "
+                               f"of goal '{g}' that the taxonomy lists for this page", g)
 
         for i, t in enumerate(r["targets"]):
             e = inv_by_id.get(t)
@@ -161,8 +311,8 @@ def validate(content, warnings=None):
             st = p["step"]
             if "page" in st:
                 page_ref(rel, f"slots.prep.{i}.step.page", st["page"])
-            elif (st["stage"], st["family"]) not in families:
-                rep.add(rel, f"slots.prep.{i}.step", f"no inventory family '{st['family']}' in stage '{st['stage']}'")
+            elif st["family"] not in families:
+                rep.add(rel, f"slots.prep.{i}.step", f"'{st['family']}' is not a taxonomy family or group with pages")
 
         for i, tab in enumerate(s["code"]):
             base = f"slots.code.{i}"
@@ -280,6 +430,17 @@ def validate(content, warnings=None):
                 if a["setting"] not in names:
                     rep.add(rel, f"{path}.setting",
                             f"'{a['setting']}' is not in key_settings or the extraction parameters of '{a['page']}'")
+                elif q["stem"] == "we_need_but":
+                    targets = (rec_by_id[a["page"]][1]["targets"] if a["page"] in rec_by_id
+                               else [e["id"] for e in inv_by_page.get(a["page"], [])])
+                    params = set()
+                    for t in targets:
+                        x = ext(t)
+                        if x:
+                            params |= {pm["name"] for pm in x.get("parameters", [])}
+                    if a["setting"] not in params:
+                        rep.add(rel, f"{path}.setting",
+                                f"'{a['setting']}' is not a parameter in the extraction of any target of '{a['page']}'")
         for j, n in enumerate(q["next"]):
             if n not in q_by_id:
                 rep.add(rel, f"questions.{i}.next.{j}", f"question '{n}' does not exist")

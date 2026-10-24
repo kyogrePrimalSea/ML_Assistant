@@ -4,8 +4,8 @@ plain_name: Tree depth limit
 code_name: max_depth
 aliases: [depth, tree depth]
 stage: tune
-family: Tree shape
-tracks: [standard]
+family: tune.settings.complexity
+tracks: [standard, time-series]
 archetype: hyperparameter
 question_tags: [overfitting, too slow]
 targets: []

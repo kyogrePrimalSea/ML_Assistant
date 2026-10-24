@@ -3,8 +3,8 @@ plain_name: Random search
 code_name: RandomizedSearchCV
 aliases: [random search, hyperparameter search, randomised search]
 stage: tune
-family: Search
-tracks: [standard]
+family: tune.search.random
+tracks: [standard, time-series]
 archetype: tuning
 question_tags: [underperforming, too many settings]
 targets: [sklearn.model_selection.RandomizedSearchCV]

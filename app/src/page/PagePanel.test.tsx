@@ -70,7 +70,7 @@ test('XGBoost: header, prep rows (spec 5.4) and max_depth effective default', as
     'not_needed', 'not_needed', 'required', 'recommended', 'recommended',
   ])
   const encoding = rows[2] as HTMLElement
-  expect(encoding).toHaveTextContent('Categorical encoding')
+  expect(encoding).toHaveTextContent('transform.encode.features')
   expect(encoding).toHaveTextContent('Required')
   expect(encoding).toHaveTextContent('if: has categoricals')
   expect(encoding).toHaveTextContent('unless enable_categorical=True')

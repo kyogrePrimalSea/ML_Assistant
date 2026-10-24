@@ -44,11 +44,16 @@ def test_clashes_from_not_needed_and_field(tree):
     assert ("xgboost", "lightgbm", "clashes") in rels(tree)
 
 
-def test_alternative_to_same_stage_and_family(tree):
+def test_alternative_to_same_taxonomy_family(tree):
     r = rels(tree)
-    assert ("decision-tree-regressor", "random-forest", "alternative_to") in r  # Trees
-    assert ("random-forest", "decision-tree-regressor", "alternative_to") not in r  # once, sorted
-    assert not any(t == "alternative_to" and "xgboost" in (s, d) for s, d, t in r)  # alone in family
+    boosting = ["gradient-boosting", "lightgbm", "xgboost"]  # three libraries, one family
+    for i, a in enumerate(boosting):
+        for b in boosting[i + 1:]:
+            assert (a, b, "alternative_to") in r  # once, sorted
+            assert (b, a, "alternative_to") not in r
+    # a single tree and a forest sit in different taxonomy families
+    assert ("decision-tree-regressor", "random-forest", "alternative_to") not in r
+    assert not any(t == "alternative_to" and "treeexplainer" in (s, d) for s, d, t in r)  # alone in its family
 
 
 def test_pairs_with(tree):
@@ -76,7 +81,7 @@ def test_deterministic_order(tree):
 
 def test_family_step_via(tree):
     via = {(r["source"], r["target"], r["type"]): r["via"] for r in derive(tree)}
-    assert via[("xgboost", "one-hot-encoder", "needs")] == "prep:transform/Categorical encoding"
+    assert via[("xgboost", "one-hot-encoder", "needs")] == "prep:transform.encode.features"
     assert via[("xgboost", "train-test-split", "recommended")] == "prep"
 
 

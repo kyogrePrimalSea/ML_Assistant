@@ -1,0 +1,393 @@
+version: 1
+source: 'tests/fixtures: pruned copy of content/taxonomy.yaml (five page ids renamed
+  to the fixture inventory)'
+root:
+  question_prompt: Where are we in the work?
+goal_prompt: What are we trying to do?
+goals:
+- id: predict-number
+  question_label: Predict a number
+  names_label: Standard · Regression
+  question_sentence: We need to predict a number, like a price, a demand or a duration.
+  track: standard
+  task: regression
+- id: predict-category
+  question_label: Sort things into categories
+  names_label: Standard · Classification
+  question_sentence: We need to decide which category something belongs to, like churn
+    or not.
+  track: standard
+  task: classification
+- id: forecast
+  question_label: Forecast what comes next
+  names_label: Time series
+  question_sentence: We need to forecast future values of a series over time.
+  track: time-series
+  task: regression
+later_goals:
+- id: find-structure
+  question_label: Find groups or odd ones out
+  names_label: Unsupervised
+- id: measure-effect
+  question_label: Measure what a change caused
+  names_label: Causal (DoubleML)
+- id: learn-from-media
+  question_label: Learn from images, text or sound
+  names_label: Deep learning
+stages:
+- id: explore
+  names_label: Explore
+  question_label: Understand the data
+  question_sentence: We need to understand the data before modelling.
+  question_prompt:
+    predict-number: What do we need to check?
+    predict-category: What do we need to check?
+    forecast: What do we need to know about the series?
+  children:
+  - id: explore.normality
+    level: family
+    names_label: Normality tests
+    question_label: Check for a bell curve
+    question_sentence: We need to check whether values follow a bell curve.
+    question_prompt: Which check suits our sample?
+    for:
+    - predict-number
+    - predict-category
+    - forecast
+    pages:
+    - id: shapiro-wilk
+      shown_as: Shapiro–Wilk
+      for:
+      - predict-number
+      - predict-category
+      - forecast
+      pick_when: Samples up to a few thousand rows
+- id: clean
+  names_label: Clean
+  question_label: Fix missing values
+  question_sentence: We need to deal with missing values.
+  question_prompt: How should we fill the gaps?
+  children:
+  - id: clean.impute
+    level: family
+    names_label: Imputation
+    question_label: Fill in missing values
+    question_sentence: We need to fill gaps so the model can use every row.
+    question_prompt: null
+    for:
+    - predict-number
+    - predict-category
+    - forecast
+    pages:
+    - id: simple-imputer
+      shown_as: SimpleImputer
+      for:
+      - predict-number
+      - predict-category
+      - forecast
+      pick_when: 'Fast default: mean, median, most frequent or a constant'
+- id: transform
+  names_label: Transform
+  question_label: Get the columns ready
+  question_sentence: We need to turn raw columns into features a model can use.
+  question_prompt: What do the columns need first?
+  children:
+  - id: transform.scale
+    level: group
+    names_label: Scaling and shaping
+    question_label: Put numbers on a fair scale
+    question_sentence: We need numeric columns on comparable scales or shapes.
+    question_prompt: What's wrong with the numbers?
+    for:
+    - predict-number
+    - predict-category
+    - forecast
+    children:
+    - id: transform.scale.rescale
+      level: family
+      names_label: Scalers
+      question_label: Make columns comparable
+      question_sentence: We need columns on the same scale so no column dominates.
+      question_prompt: null
+      for:
+      - predict-number
+      - predict-category
+      - forecast
+      pages:
+      - id: standard-scaler
+        shown_as: StandardScaler
+        for:
+        - predict-number
+        - predict-category
+        - forecast
+        pick_when: Default for linear models, SVMs, k-NN and neural nets
+      - id: min-max-scaler
+        shown_as: MinMaxScaler
+        for:
+        - predict-number
+        - predict-category
+        - forecast
+        pick_when: Values must sit between 0 and 1
+  - id: transform.encode
+    level: group
+    names_label: Encoding
+    question_label: Turn categories into numbers
+    question_sentence: We need text categories turned into numbers a model can use.
+    question_prompt: Which columns hold categories?
+    for:
+    - predict-number
+    - predict-category
+    - forecast
+    children:
+    - id: transform.encode.features
+      level: family
+      names_label: Categorical encoders
+      question_label: Encode the input columns
+      question_sentence: We need to encode the category columns in X.
+      question_prompt: null
+      for:
+      - predict-number
+      - predict-category
+      - forecast
+      pages:
+      - id: one-hot-encoder
+        shown_as: OneHotEncoder
+        for:
+        - predict-number
+        - predict-category
+        - forecast
+        pick_when: Few categories; the safe default for linear models
+  - id: transform.rebalance
+    level: group
+    names_label: Resampling
+    question_label: Rebalance lopsided classes
+    question_sentence: We need to classify, but one class is much rarer than the others.
+    question_prompt: How should we rebalance?
+    for:
+    - predict-category
+    children:
+    - id: transform.rebalance.weight
+      level: family
+      names_label: Class weighting
+      question_label: Weight rare rows more
+      question_sentence: We need the model to care more about the rare class, without
+        changing the data.
+      question_prompt: null
+      for:
+      - predict-category
+      pages:
+      - id: class-weighting
+        shown_as: compute_class_weight
+        for:
+        - predict-category
+        pick_when: Try before resampling; feeds class_weight or sample_weight
+- id: select
+  names_label: Select
+  question_label: Keep the useful features
+  question_sentence: We need fewer, better features.
+  question_prompt: How should we cut down the features?
+  children:
+  - id: select.top-k
+    level: family
+    names_label: Univariate selection
+    question_label: Keep the top-scoring features
+    question_sentence: We need to keep the features that score best, one at a time.
+    question_prompt: null
+    for:
+    - predict-number
+    - predict-category
+    pages:
+    - id: selectkbest
+      shown_as: SelectKBest
+      for:
+      - predict-number
+      - predict-category
+      pick_when: Keep a fixed number of features
+- id: split
+  names_label: Split
+  question_label: Hold data back to test
+  question_sentence: We need to keep some data aside so we can test honestly.
+  question_prompt: How should we hold data back?
+  children:
+  - id: split.holdout
+    level: family
+    names_label: Hold-out splits
+    question_label: Keep one test set aside
+    question_sentence: We need one test set we never train on.
+    question_prompt: null
+    for:
+    - predict-number
+    - predict-category
+    - forecast
+    pages:
+    - id: train-test-split
+      shown_as: train_test_split
+      for:
+      - predict-number
+      - predict-category
+      - forecast
+      pick_when: The usual first split (shuffle=False for time order)
+- id: model
+  names_label: Model
+  question_label:
+    predict-number: Predict the number
+    predict-category: Predict the category
+    forecast: Make the forecast
+  question_sentence: We need a model that makes the prediction.
+  question_prompt:
+    predict-number: How should we predict the number?
+    predict-category: How should we predict the category?
+    forecast: How should we forecast?
+  children:
+  - id: model.trees
+    level: group
+    names_label: Trees and ensembles
+    question_label: Get strong accuracy on tables
+    question_sentence: We need strong accuracy on table-shaped data, and can live
+      with less explanation.
+    question_prompt: How much power do we need?
+    for:
+    - predict-number
+    - predict-category
+    children:
+    - id: model.trees.single
+      level: family
+      names_label: Single tree
+      question_label: Get rules a person can follow
+      question_sentence: We need simple if-then rules that a person can read.
+      question_prompt: null
+      for:
+      - predict-number
+      - predict-category
+      pages:
+      - id: decision-tree-regressor
+        shown_as: DecisionTreeRegressor
+        for:
+        - predict-number
+        pick_when: Readable rules; limit the depth or it overfits
+    - id: model.trees.bagging
+      level: family
+      names_label: Bagging and forests
+      question_label: Get a strong, hard-to-break default
+      question_sentence: We need a strong default that needs little tuning.
+      question_prompt: null
+      for:
+      - predict-number
+      - predict-category
+      pages:
+      - id: random-forest
+        shown_as: Random forest
+        for:
+        - predict-number
+        - predict-category
+        pick_when: The first serious model to try
+    - id: model.trees.boosting
+      level: family
+      names_label: Boosting
+      question_label: Get the best accuracy we can
+      question_sentence: We need the best accuracy, and we can spend time tuning.
+      question_prompt: null
+      for:
+      - predict-number
+      - predict-category
+      pages:
+      - id: xgboost
+        shown_as: XGBoost
+        for:
+        - predict-number
+        - predict-category
+        pick_when: Top accuracy on tabular data; mature and well documented
+      - id: lightgbm
+        shown_as: LightGBM
+        for:
+        - predict-number
+        - predict-category
+        pick_when: The same idea, usually faster on large data
+      - id: gradient-boosting
+        shown_as: GradientBoosting
+        for:
+        - predict-number
+        - predict-category
+        pick_when: Small data only; slower but simple
+- id: tune
+  names_label: Tune
+  question_label: Find better settings
+  question_sentence: We need settings that make the model better.
+  question_prompt: How should we find better settings?
+  children:
+  - id: tune.settings
+    level: group
+    names_label: Hyperparameters
+    question_label: Know which settings matter
+    question_sentence: We need to know which settings to change, and why.
+    question_prompt: What should the settings control?
+    for:
+    - predict-number
+    - predict-category
+    - forecast
+    children:
+    - id: tune.settings.complexity
+      level: family
+      names_label: Complexity
+      question_label: Control how complex it gets
+      question_sentence: We need to stop the model memorising the training data.
+      question_prompt: null
+      for:
+      - predict-number
+      - predict-category
+      - forecast
+      pages:
+      - id: max-depth
+        shown_as: Tree depth limit
+        for:
+        - predict-number
+        - predict-category
+        - forecast
+        pick_when: Trees overfit or underfit
+- id: evaluate
+  names_label: Evaluate
+  question_label: Check how good it is
+  question_sentence: We need to know how good the predictions are.
+  question_prompt:
+    predict-number: How should we judge the numbers?
+    predict-category: How should we judge the categories?
+    forecast: How should we judge the forecast?
+  children:
+  - id: evaluate.explained
+    level: group
+    names_label: Explained variation
+    question_label: Measure how much it explains
+    question_sentence: We need to know how much of the variation the model explains.
+    question_prompt: null
+    for:
+    - predict-number
+    - forecast
+    pages:
+    - id: r2-score
+      shown_as: R²
+      for:
+      - predict-number
+      - forecast
+      pick_when: Share explained; 1 is perfect, 0 matches the mean
+- id: interpret
+  names_label: Interpret
+  question_label: Explain the model
+  question_sentence: We need to explain what the model learned.
+  question_prompt: What do we need to explain?
+  children:
+  - id: interpret.explainer-fast
+    level: family
+    names_label: Model-specific explainers
+    question_label: Get SHAP values for our model type
+    question_sentence: We need SHAP values, quickly, for the kind of model we have.
+    question_prompt: null
+    for:
+    - predict-number
+    - predict-category
+    pages:
+    - id: treeexplainer
+      shown_as: TreeExplainer
+      for:
+      - predict-number
+      - predict-category
+      pick_when: Tree models; fast and exact

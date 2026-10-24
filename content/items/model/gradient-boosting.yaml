@@ -3,7 +3,7 @@ plain_name: Gradient boosting
 code_name: GradientBoostingRegressor / GradientBoostingClassifier
 aliases: [gbm, gbdt, gbrt, sklearn gradient boosting]
 stage: model
-family: Boosting (scikit-learn)
+family: model.trees.boosting
 tracks: [standard]
 archetype: model
 question_tags: [underperforming, tabular data, overfitting]
@@ -32,17 +32,17 @@ slots:
     use_when: [tabular data, non-linear effects, complete data]
     avoid_when: [missing values, images or text, need a simple formula]
   prep:
-    - step: {family: Scaling, stage: transform}
+    - step: {family: transform.scale.rescale}
       status: not_needed
       why: Trees split on order, not size.
       condition: null
       unless: null
-    - step: {family: Imputation, stage: clean}
+    - step: {family: clean.impute}
       status: required
       why: Fit stops on NaN. Fill gaps first.
       condition: {has_missing: true}
       unless: null
-    - step: {family: Categorical encoding, stage: transform}
+    - step: {family: transform.encode.features}
       status: required
       why: Text categories must become numbers.
       condition: {has_categoricals: true}

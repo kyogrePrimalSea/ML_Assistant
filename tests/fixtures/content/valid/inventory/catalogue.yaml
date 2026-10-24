@@ -207,3 +207,51 @@ items:
   source: catalogue
   tier: core
   notes: ''
+- id: scipy.stats.shapiro
+  name: shapiro
+  library: scipy
+  import_path: scipy.stats.shapiro
+  kind: function
+  stage: explore
+  family: Assumption tests
+  tracks:
+  - standard
+  archetype: diagnostic
+  doc_url: https://example.org/scipy.stats.shapiro
+  page: shapiro-wilk
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.feature_selection.SelectKBest
+  name: SelectKBest
+  library: scikit-learn
+  import_path: sklearn.feature_selection.SelectKBest
+  kind: class
+  stage: select
+  family: Feature selection
+  tracks:
+  - standard
+  archetype: selector
+  doc_url: https://example.org/sklearn.feature_selection.SelectKBest
+  page: selectkbest
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''
+- id: sklearn.metrics.r2_score
+  name: r2_score
+  library: scikit-learn
+  import_path: sklearn.metrics.r2_score
+  kind: function
+  stage: evaluate
+  family: Regression metrics
+  tracks:
+  - standard
+  archetype: metric
+  doc_url: https://example.org/sklearn.metrics.r2_score
+  page: r2-score
+  page_grouping: catalogue
+  source: catalogue
+  tier: core
+  notes: ''

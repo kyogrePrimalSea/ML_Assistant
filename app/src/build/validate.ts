@@ -74,7 +74,7 @@ type Step = ItemRecord['slots']['prep'][number]['step']
 
 function stepIsPicked(step: Step, picks: Pick[]): boolean {
   return picks.some((p) =>
-    'page' in step ? p.record.id === step.page : p.record.stage === step.stage && p.record.family === step.family,
+    'page' in step ? p.record.id === step.page : p.record.family === step.family,
   )
 }
 
@@ -83,12 +83,12 @@ function pickedFor(step: Step, picks: Pick[], except: Pick): Pick[] {
   return picks.filter(
     (p) =>
       p !== except &&
-      ('page' in step ? p.record.id === step.page : p.record.stage === step.stage && p.record.family === step.family),
+      ('page' in step ? p.record.id === step.page : p.record.family === step.family),
   )
 }
 
 function stepLabel(step: Step, names: Record<string, string>): string {
-  return 'page' in step ? (names[step.page] ?? step.page) : `a ${step.family.toLowerCase()} step`
+  return 'page' in step ? (names[step.page] ?? step.page) : `a ${step.family} step`
 }
 
 function unlessHolds(pick: Pick, unless: { setting: string; value: unknown } | null): boolean {

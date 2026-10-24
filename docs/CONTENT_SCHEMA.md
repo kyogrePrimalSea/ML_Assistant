@@ -24,7 +24,7 @@ Every key is required (except `applies_to`); nothing is omitted, only empty.
 | --- | --- |
 | `id` | Kebab-case page id; equals the inventory `page`. |
 | `plain_name`, `code_name`, `aliases` | Display name, code name, search aliases. |
-| `stage`, `family`, `tracks`, `archetype` | Placement. Must match the inventory entries of `targets`. Stage, track, archetype ids come from `vocab.yaml`. |
+| `stage`, `family`, `tracks`, `archetype` | Placement. `stage` and `family` must equal the page's place in `content/taxonomy.yaml`: `family` is the id of the taxonomy family, or of the group when the group holds pages directly (`model.trees.boosting`, `model.neural`). `tracks` must contain the track of every goal in the page's taxonomy `for` (the taxonomy wins, so it can be wider than the inventory, never narrower). `archetype` must match the inventory entries of `targets`. Stage, track, archetype ids come from `vocab.yaml`. |
 | `question_tags` | Short user-wording tags (for example "overfitting") used by search (spec §3.5). Questions link to pages through their own `answers`, not through this field. |
 | `targets` | Inventory ids (`sklearn.linear_model.Ridge`) documented on this page. Empty only for `hyperparameter` and `output`. |
 | `applies_to` | Page ids the hyperparameter or output belongs to. Required for those two archetypes, forbidden for the rest. |
@@ -53,7 +53,7 @@ from metadata, so it holds no data.
    defaults differ; all other archetypes `{facts: [{label, value}]}` (at most 4) or none.
 4. **use_avoid**: `{use_when, avoid_when}`, lists of tags (at most 5 words each).
 5. **prep**: entries `{step, status, why, condition, unless}`. `step` is `{page}` or
-   `{family, stage}`. `status` is `required|recommended|not_needed`. `why` is at most 12 words
+   `{family}`, where `family` is a taxonomy family or group id (`transform.scale.rescale`, `clean.impute`); the stage is the id's first segment. `status` is `required|recommended|not_needed`. `why` is at most 12 words
    (pattern-checked). `condition` is a data-profile condition or `null`. `unless` is
    `{setting, value}` or `null`.
 6. **code**: tabs `{library, target, why_this_library, snippet}`. The first snippet line must be
@@ -79,7 +79,7 @@ from metadata, so it holds no data.
 ## Data-profile condition
 
 One object type used by `prep.condition` and `rules.blocked_when[].when`. Keys are the passport
-fields (`task_type`, `track`: lists matching any member; `has_categoricals`, `has_missing`,
+fields (`task_type` is `regression` or `classification`, since the forecast goal is the time-series track plus regression; `task_type`, `track`: lists matching any member; `has_categoricals`, `has_missing`,
 `time_ordered`, `imbalanced`: booleans). All keys must match (AND). For OR, add another entry.
 
 ## Rules block (spec §8 inputs)
@@ -111,24 +111,80 @@ share one cap; `we_need_but` texts start "We need"; notes are 16 words or fewer.
 
 ## Taxonomy
 
-Page placement (`stage`, `family`) and the Names/Questions wording live in
-`content/taxonomy.yaml`, not in item records. See "Taxonomy" in `docs/ARCHITECTURE.md`.
+Page placement and the Names/Questions wording live in `content/taxonomy.yaml`
+(`content/schema/taxonomy.schema.json`). See "Taxonomy" in `docs/ARCHITECTURE.md` and
+`docs/QUESTION_MAP.md`. Item records carry `stage`, `family` and `tracks` copied from it, and the
+validator keeps the two in step.
+The inventory's own `stage` and `family` are the old extraction-era grouping; nothing compares them with
+records any more (the validator still compares `archetype`, and requires the record's `tracks` to cover
+the inventory's).
+
+### Goal views (`tools/taxonomy.py: goal_view`)
+
+`goal_view(taxonomy, goal_id)` returns the nine stage nodes for one goal, after filtering and
+elision. Each node is `{id, level, children, ...}` with its texts (`names_label`, `question_label`,
+`question_sentence`, `question_prompt`) already resolved for the goal; page leaves are
+`{id, level: page, shown_as, pick_when, children: []}`. T037's layout script mirrors it in JS:
+
+1. **Filter.** Keep pages whose `for` contains the goal. Drop every group and family left with no
+   pages. Stages are never dropped, even when empty.
+2. **Elide**, repeating until nothing changes (rule 3 of `docs/QUESTION_MAP.md`):
+   - A group or family with exactly one child that is a page is replaced, in its parent, by that page.
+   - A stage or group with exactly one child that is a family or group loses that child; the
+     child's children attach to the stage or group directly.
+   - Stages are never removed (a stage may end with a single page child).
+3. **Text.** A node's text for a goal is its string value, or the map entry for that goal (`node_text`;
+   `None` if the map has no entry, or the value is `null`).
+
+Examples from the question map: Clean for any goal opens straight to its four imputer pages;
+Transform for classification shows five groups; Model for classification shows seven children
+(five groups plus the two one-page groups `model.neural` and `model.baseline`, each replaced by its
+page); Model for regression shows six; for forecasting, four.
+
+### Taxonomy validator rules
+
+Errors unless noted. `tools/validate_content.py` requires `content/taxonomy.yaml` and runs the
+taxonomy schema first.
+
+- Every inventory page id and every content-only record id (a record that is not an inventory page)
+  appears exactly once in the taxonomy, and the taxonomy has no other page.
+- In every goal view, every node has at most 7 children (stages included), and no group or family
+  has a single child (the elision above guarantees it; the check guards `goal_view`).
+- Label limits (`docs/QUESTION_MAP.md` section 2), checked for every per-goal text of every node, the
+  goals, the root and `goal_prompt`: `question_prompt` ends in "?" and is at most 48 characters;
+  `question_label` at most 40; `question_sentence` at most 110 and starts "We need" or "We have";
+  `pick_when` at most 60. No "&" and no "!" in any of them.
+- A page with a record: the record's `stage` equals the taxonomy stage, its `family` equals the owning
+  family or group id; for each goal in the page's `for`, `tracks` contains the goal's track, and
+  `rules.task_types` is empty or contains the goal's task.
+- A `we_need_but` answer's `page` resolves, and its `setting` is a parameter in the extraction of one of
+  the page's targets (a record's `targets`, or the inventory entries of an inventory page). Other stems
+  also accept a `key_settings` name.
+- Prep `{family}` steps name a taxonomy family or a group that holds pages.
+
+**Allow-list.** A violation of the 7-child, single-child, label or task-type rules caused by the
+question map's own wording is not fixed in the taxonomy. It is listed in `docs/OPEN_QUESTIONS.md`
+under "Design review round 1" and in `content/taxonomy-exceptions.yaml`
+(`exceptions: [{rule, node, reason, [goal]}]`; rules `max-children`, `single-child`, `question_prompt`,
+`question_label`, `question_sentence`, `pick_when`, `forbidden-characters`, `task-types`). An entry
+matching a violation by rule, node (and goal, when given) turns it into a warning; an entry that
+matches nothing is a warning too. The file is empty when there is nothing to report.
 
 ## Relationships (spec §5.3), all derived
 
 | Type | Derived from |
 | --- | --- |
-| Needs | `prep` entries with `status: required` (family step: every page in that stage and family). |
+| Needs | `prep` entries with `status: required` (family step: every page in that taxonomy family or group). |
 | Recommended | `prep` entries with `status: recommended`. |
 | Clashes | `prep` entries with `status: not_needed`, plus `clashes` page ids. |
-| Alternative to | Pages with the same `stage` and `family`. No stored field. |
+| Alternative to | Pages in the same taxonomy family (or the same group, for a group that holds pages). No stored field. |
 | Pairs with | `pairs_with`. |
 
 ## Validation rules (spec §8), all derived
 
 | Rule | Severity | Derived from |
 | --- | --- | --- |
-| Missing requirement | Block | Pipeline contains page P; P's `prep` has a `required` entry whose `condition` matches the passport (or is null), whose `unless` setting is not set in the pick, and whose step (or any page in that family) is absent. |
+| Missing requirement | Block | Pipeline contains page P; P's `prep` has a `required` entry whose `condition` matches the passport (or is null), whose `unless` setting is not set in the pick, and whose step (or any page in that taxonomy family) is absent. |
 | Wrong for the track | Block | A pick's `tracks` excludes the passport track, or any `rules.blocked_when[].when` matches the passport (random K-fold with `time_ordered`). The reason is the message. |
 | Task mismatch | Block | A pick's non-empty `rules.task_types` does not include the passport `task_type` (R² for a classifier). |
 | Leakage risk | Warn | A pick with `rules.fits_on_data: true` sits in a stage before `split` (stage order from `vocab.yaml`). Auto-fix: wrap in a Pipeline. |
@@ -144,7 +200,7 @@ Fixture: `tests/fixtures/schema/xgboost.yaml`. Highlights:
 ```yaml
 id: xgboost
 stage: model
-family: Boosting (XGBoost)
+family: model.trees.boosting
 archetype: model
 targets: [xgboost.XGBRegressor, xgboost.XGBClassifier]
 pairs_with: [treeexplainer]
@@ -152,8 +208,8 @@ rules: {task_types: [regression, classification], blocked_when: [], fits_on_data
         shape_effect: {rows: same, columns: same}}
 slots:
   prep:
-    - {step: {family: Scaling, stage: transform}, status: not_needed, why: Trees split on order, not size., condition: null, unless: null}
-    - {step: {family: Categorical encoding, stage: transform}, status: required, why: Text categories must become numbers.,
+    - {step: {family: transform.scale.rescale}, status: not_needed, why: Trees split on order, not size., condition: null, unless: null}
+    - {step: {family: transform.encode.features}, status: required, why: Text categories must become numbers.,
        condition: {has_categoricals: true}, unless: {setting: enable_categorical, value: true}}
   what_comes_out:        # shape example; the fixture itself holds {none: true} until T029
     items:

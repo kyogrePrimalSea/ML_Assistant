@@ -3,8 +3,8 @@ plain_name: Standard scaler
 code_name: StandardScaler
 aliases: [z-score, standardise, standardize, normalise]
 stage: transform
-family: Scaling
-tracks: [standard]
+family: transform.scale.rescale
+tracks: [standard, time-series]
 archetype: transformer
 question_tags: [features on different scales, messy]
 targets: [sklearn.preprocessing.StandardScaler]

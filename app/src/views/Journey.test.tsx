@@ -11,7 +11,7 @@ vi.mock('globe.gl', () => ({ default: function Globe() { throw new Error('no web
 
 const records: Record<string, ItemRecord> = {
   'train-test-split': rec('train-test-split', 'split', 'Splitters').record,
-  onehotencoder: rec('onehotencoder', 'transform', 'Categorical encoding', {
+  onehotencoder: rec('onehotencoder', 'transform', 'transform.encode.features', {
     rules: { fits_on_data: true, shape_effect: { rows: 'same', columns: 'expands' } },
   }).record,
   xgboost: rec('xgboost', 'model', 'Boosting').record,

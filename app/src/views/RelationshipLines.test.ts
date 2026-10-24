@@ -7,16 +7,16 @@ const pageById = new Map(index.pages.map((p) => [p.id, p]))
 const node = (x: number): LineNode => ({ x, y: 0, side: 1 })
 
 describe('relationship lines', () => {
-  it('XGBoost has Needs, Clashes and Pairs-with connections (either direction)', () => {
+  it('XGBoost has all five connection types (either direction); Alternative to comes from its taxonomy family', () => {
     const types = new Set(connectionsOf(index.relationships, 'xgboost').map((c) => c.type))
-    expect([...types].sort()).toEqual(['clashes', 'needs', 'pairs_with', 'recommended'])
+    expect([...types].sort()).toEqual(['alternative_to', 'clashes', 'needs', 'pairs_with', 'recommended'])
     expect(connectionsOf(index.relationships, 'xgboost').find((c) => c.type === 'pairs_with')?.other).toBe('treeexplainer')
   })
 
   it('draws only the toggled types; collapsed targets end at their stage and share one line', () => {
     const nodes = new Map<string, LineNode>([
       ['i:xgboost', node(-800)],
-      ['f:model/Boosting (XGBoost)', node(-380)],
+      ['f:model/model.trees.boosting', node(-380)],
       ['s:model', node(-200)],
       ['s:transform', node(100)],
       ['s:clean', node(200)],

@@ -3,7 +3,7 @@ plain_name: Precision
 code_name: precision_score
 aliases: [positive predictive value, ppv, how many flagged are right]
 stage: evaluate
-family: Classification metrics
+family: evaluate.counts.pr
 tracks: [standard]
 archetype: metric
 question_tags: [how good is it, false alarms]

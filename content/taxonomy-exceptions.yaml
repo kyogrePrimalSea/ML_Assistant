@@ -1,0 +1,10 @@
+# Allow-list for the taxonomy rules in tools/validate_content.py (T035).
+# An entry downgrades exactly one violation from an error to a warning. Each entry carries:
+#   rule    max-children | single-child | question_prompt | question_label | question_sentence
+#           | pick_when | forbidden-characters | task-types
+#   node    the node, page or goal id the rule fired on
+#   goal    optional goal id, for rules that fire per goal view (max-children, single-child, task-types)
+#   reason  why the question map's own wording causes it
+# Every entry must also be listed in docs/OPEN_QUESTIONS.md under "Design review round 1".
+# A stale entry (matching no violation) shows up as a warning.
+exceptions: []

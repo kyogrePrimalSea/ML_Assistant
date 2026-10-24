@@ -3,7 +3,7 @@ plain_name: Feature importances
 code_name: feature_importances_
 aliases: [variable importance, feature importance, gini importance]
 stage: interpret
-family: Model attributes
+family: interpret.global
 tracks: [standard]
 archetype: output
 question_tags: [which features matter]

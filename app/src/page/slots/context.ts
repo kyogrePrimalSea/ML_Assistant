@@ -12,9 +12,9 @@ export function useCatalogue() {
     questionText: (id: string) => index?.questions.find((q) => q.id === id)?.text ?? id,
     datasetName: (id: string) => index?.vocab.toy_datasets?.find((d) => d.id === id)?.name ?? id,
     archetypeName: (id: string) => index?.vocab.archetypes?.find((a) => a.id === id)?.name ?? id,
-    /** Family step: the first written page of that stage and family, else the first listed, else none. */
-    familyPage: (family: string, stage: string) => {
-      const hits = index?.pages.filter((p) => p.family === family && p.stage === stage) ?? []
+    /** Family step: the first written page of that taxonomy family, else the first listed, else none. */
+    familyPage: (family: string) => {
+      const hits = index?.pages.filter((p) => p.family === family) ?? []
       return (hits.find((p) => p.has_record) ?? hits[0])?.id ?? null
     },
   }

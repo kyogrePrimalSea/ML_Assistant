@@ -10,7 +10,7 @@ const profile: DataProfile = {
 }
 const rules = (r: Record<string, unknown>) => r
 const needsEncoder = {
-  step: { family: 'Categorical encoding', stage: 'transform' as const }, status: 'required' as const,
+  step: { family: 'transform.encode.features' }, status: 'required' as const,
   why: 'Text categories must become numbers.', condition: { has_categoricals: true }, unless: { setting: 'enable_categorical', value: true },
 }
 const ruleIds = (picks: ReturnType<typeof rec>[], p = profile) => validatePipeline(p, picks).map((i) => i.rule)
@@ -29,10 +29,10 @@ describe('missing requirement (Block)', () => {
   it('fires when categoricals are present and no encoder is picked', () => {
     const [i] = validatePipeline(profile, [model()])
     expect(i).toMatchObject({ rule: 'missing_requirement', severity: 'block', pageId: 'xgb', sourceId: 'xgb' })
-    expect(i.message).toContain('categorical encoding')
+    expect(i.message).toContain('transform.encode.features')
   })
   it('is satisfied by any page in the family', () => {
-    const enc = rec('ohe', 'transform', 'Categorical encoding')
+    const enc = rec('ohe', 'transform', 'transform.encode.features')
     expect(ruleIds([model(), enc])).not.toContain('missing_requirement')
   })
   it('is skipped when the condition does not match or `unless` holds', () => {
@@ -41,7 +41,7 @@ describe('missing requirement (Block)', () => {
     expect(ruleIds([picked])).toEqual([])
   })
   it('names a required page step by the supplied display name', () => {
-    const p = rec('scaler', 'transform', 'Scaling', {
+    const p = rec('scaler', 'transform', 'transform.scale.rescale', {
       prep: [{ step: { page: 'train-test-split' }, status: 'required', why: 'Fit on training rows only.', condition: null, unless: null }],
     })
     const [i] = validatePipeline(profile, [p], { pageNames: { 'train-test-split': 'Train/test split' } })
@@ -74,7 +74,7 @@ describe('task mismatch (Block)', () => {
 
 describe('leakage risk (Warn)', () => {
   it('fires for a fitted step in a stage before the split, with a fix', () => {
-    const [i] = validatePipeline(profile, [rec('scaler', 'transform', 'Scaling', { rules: { fits_on_data: true } })])
+    const [i] = validatePipeline(profile, [rec('scaler', 'transform', 'transform.scale.rescale', { rules: { fits_on_data: true } })])
     expect(i).toMatchObject({ rule: 'leakage_risk', severity: 'warn', fix: { label: 'Wrap in a Pipeline' } })
   })
   it('does not fire at or after the split, or for steps that learn nothing', () => {
@@ -85,10 +85,10 @@ describe('leakage risk (Warn)', () => {
 
 describe('redundant step (Warn)', () => {
   const model = rec('xgb', 'model', 'Boosting', {
-    prep: [{ step: { family: 'Scaling', stage: 'transform' }, status: 'not_needed', why: 'Trees split on order, not size.', condition: null, unless: null }],
+    prep: [{ step: { family: 'transform.scale.rescale' }, status: 'not_needed', why: 'Trees split on order, not size.', condition: null, unless: null }],
   })
   it('flags the unneeded step (not the model) and links to the model page', () => {
-    const [i] = validatePipeline(profile, [model, rec('scaler', 'transform', 'Scaling')])
+    const [i] = validatePipeline(profile, [model, rec('scaler', 'transform', 'transform.scale.rescale')])
     expect(i).toMatchObject({ rule: 'redundant_step', severity: 'warn', pageId: 'scaler', sourceId: 'xgb' })
   })
   it('is silent when the step is absent', () => {
@@ -98,7 +98,7 @@ describe('redundant step (Warn)', () => {
 
 describe('missing recommendation (Tip)', () => {
   const model = rec('xgb', 'model', 'Boosting', {
-    prep: [{ step: { family: 'Class weighting', stage: 'model' }, status: 'recommended', why: 'Use scale_pos_weight when classes are lopsided.',
+    prep: [{ step: { family: 'transform.rebalance.weight' }, status: 'recommended', why: 'Use scale_pos_weight when classes are lopsided.',
       condition: { imbalanced: true, task_type: ['classification'] }, unless: null }],
   })
   it('fires when the condition matches and the step is absent', () => {
@@ -121,7 +121,7 @@ describe('statuses', () => {
     expect(legStatus('warn', 'block')).toBe('block')
   })
   it('a fixed issue stops colouring its stop', () => {
-    const issues = validatePipeline(profile, [rec('s', 'transform', 'Scaling', { rules: { fits_on_data: true } })])
+    const issues = validatePipeline(profile, [rec('s', 'transform', 'transform.scale.rescale', { rules: { fits_on_data: true } })])
     expect(stopStatus('s', issues)).toBe('warn')
     expect(stopStatus('s', issues, new Set([issues[0].key]))).toBe('valid')
   })

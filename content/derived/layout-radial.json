@@ -1340,348 +1340,332 @@
     "count": 50,
     "families": [
      {
-      "name": "Boosting rounds",
-      "x": -380,
-      "y": -98,
-      "count": 1,
-      "items": [
-       {
-        "id": "n-estimators",
-        "x": -860,
-        "y": -98
-       }
-      ]
-     },
-     {
-      "name": "Boosting step size",
-      "x": -380,
-      "y": -62,
-      "count": 1,
-      "items": [
-       {
-        "id": "learning-rate",
-        "x": -860,
-        "y": -62
-       }
-      ]
-     },
-     {
-      "name": "Boosting stopping rule",
-      "x": -380,
-      "y": -26,
-      "count": 1,
-      "items": [
-       {
-        "id": "early-stopping",
-        "x": -860,
-        "y": -26
-       }
-      ]
-     },
-     {
       "name": "Decision threshold",
       "x": -380,
-      "y": 10,
+      "y": -62,
       "count": 2,
       "items": [
        {
         "id": "fixedthresholdclassifier",
         "x": -860,
-        "y": -8
+        "y": -80
        },
        {
         "id": "tunedthresholdclassifiercv",
         "x": -860,
-        "y": 28
+        "y": -44
        }
       ]
      },
      {
       "name": "Early stopping",
       "x": -380,
-      "y": 46,
+      "y": -26,
       "count": 2,
       "items": [
        {
         "id": "terminator",
         "x": -860,
-        "y": 28
+        "y": -44
        },
        {
         "id": "terminatorcallback",
         "x": -860,
-        "y": 64
+        "y": -8
        }
       ]
      },
      {
       "name": "Pruners",
       "x": -380,
-      "y": 82,
+      "y": 10,
       "count": 8,
       "items": [
        {
         "id": "hyperbandpruner",
         "x": -860,
-        "y": -44
+        "y": -116
        },
        {
         "id": "medianpruner",
         "x": -860,
-        "y": -8
+        "y": -80
        },
        {
         "id": "noppruner",
         "x": -860,
-        "y": 28
+        "y": -44
        },
        {
         "id": "patientpruner",
         "x": -860,
-        "y": 64
+        "y": -8
        },
        {
         "id": "percentilepruner",
         "x": -860,
-        "y": 100
+        "y": 28
        },
        {
         "id": "successivehalvingpruner",
         "x": -860,
-        "y": 136
+        "y": 64
        },
        {
         "id": "thresholdpruner",
         "x": -860,
-        "y": 172
+        "y": 100
        },
        {
         "id": "wilcoxonpruner",
         "x": -860,
-        "y": 208
+        "y": 136
        }
       ]
      },
      {
       "name": "Samplers",
       "x": -380,
-      "y": 118,
+      "y": 46,
       "count": 10,
       "items": [
        {
         "id": "bruteforcesampler",
         "x": -860,
-        "y": -44
+        "y": -116
        },
        {
         "id": "cmaessampler",
         "x": -860,
-        "y": -8
+        "y": -80
        },
        {
         "id": "gpsampler",
         "x": -860,
-        "y": 28
+        "y": -44
        },
        {
         "id": "gridsampler",
         "x": -860,
-        "y": 64
+        "y": -8
        },
        {
         "id": "nsgaiiisampler",
         "x": -860,
-        "y": 100
+        "y": 28
        },
        {
         "id": "nsgaiisampler",
         "x": -860,
-        "y": 136
+        "y": 64
        },
        {
         "id": "partialfixedsampler",
         "x": -860,
-        "y": 172
+        "y": 100
        },
        {
         "id": "qmcsampler",
         "x": -860,
-        "y": 208
+        "y": 136
        },
        {
         "id": "randomsampler",
         "x": -860,
-        "y": 244
+        "y": 172
        },
        {
         "id": "tpesampler",
         "x": -860,
-        "y": 280
+        "y": 208
        }
       ]
      },
      {
       "name": "Search",
       "x": -380,
-      "y": 154,
+      "y": 82,
       "count": 6,
       "items": [
        {
         "id": "gridsearchcv",
         "x": -860,
-        "y": 64
+        "y": -8
        },
        {
         "id": "halvinggridsearchcv",
         "x": -860,
-        "y": 100
+        "y": 28
        },
        {
         "id": "halvingrandomsearchcv",
         "x": -860,
-        "y": 136
+        "y": 64
        },
        {
         "id": "parametergrid",
         "x": -860,
-        "y": 172
+        "y": 100
        },
        {
         "id": "parametersampler",
         "x": -860,
-        "y": 208
+        "y": 136
        },
        {
         "id": "randomizedsearchcv",
         "x": -860,
-        "y": 244
+        "y": 172
        }
       ]
      },
      {
       "name": "Study",
       "x": -380,
-      "y": 190,
+      "y": 118,
       "count": 2,
       "items": [
        {
         "id": "optuna-study",
         "x": -860,
-        "y": 172
+        "y": 100
        },
        {
         "id": "maxtrialscallback",
         "x": -860,
-        "y": 208
+        "y": 136
        }
       ]
      },
      {
       "name": "Study plots",
       "x": -380,
-      "y": 226,
+      "y": 154,
       "count": 13,
       "items": [
        {
         "id": "get-param-importances",
         "x": -860,
-        "y": 10
+        "y": -62
        },
        {
         "id": "plot-contour",
         "x": -860,
-        "y": 46
+        "y": -26
        },
        {
         "id": "plot-edf",
         "x": -860,
-        "y": 82
+        "y": 10
        },
        {
         "id": "plot-hypervolume-history",
         "x": -860,
-        "y": 118
+        "y": 46
        },
        {
         "id": "plot-intermediate-values",
         "x": -860,
-        "y": 154
+        "y": 82
        },
        {
         "id": "plot-optimization-history",
         "x": -860,
-        "y": 190
+        "y": 118
        },
        {
         "id": "plot-parallel-coordinate",
         "x": -860,
-        "y": 226
+        "y": 154
        },
        {
         "id": "plot-param-importances",
         "x": -860,
-        "y": 262
+        "y": 190
        },
        {
         "id": "plot-pareto-front",
         "x": -860,
-        "y": 298
+        "y": 226
        },
        {
         "id": "plot-rank",
         "x": -860,
-        "y": 334
+        "y": 262
        },
        {
         "id": "plot-slice",
         "x": -860,
-        "y": 370
+        "y": 298
        },
        {
         "id": "plot-terminator-improvement",
         "x": -860,
-        "y": 406
+        "y": 334
        },
        {
         "id": "plot-timeline",
         "x": -860,
-        "y": 442
-       }
-      ]
-     },
-     {
-      "name": "Tree shape",
-      "x": -380,
-      "y": 262,
-      "count": 1,
-      "items": [
-       {
-        "id": "max-depth",
-        "x": -860,
-        "y": 262
+        "y": 370
        }
       ]
      },
      {
       "name": "Trial",
       "x": -380,
-      "y": 298,
+      "y": 190,
       "count": 3,
       "items": [
        {
         "id": "frozentrial",
         "x": -860,
-        "y": 262
+        "y": 154
        },
        {
         "id": "optuna-trial",
         "x": -860,
-        "y": 298
+        "y": 190
        },
        {
         "id": "trialpruned",
         "x": -860,
-        "y": 334
+        "y": 226
+       }
+      ]
+     },
+     {
+      "name": "tune.settings.complexity",
+      "x": -380,
+      "y": 226,
+      "count": 1,
+      "items": [
+       {
+        "id": "max-depth",
+        "x": -860,
+        "y": 226
+       }
+      ]
+     },
+     {
+      "name": "tune.settings.training",
+      "x": -380,
+      "y": 262,
+      "count": 3,
+      "items": [
+       {
+        "id": "early-stopping",
+        "x": -860,
+        "y": 226
+       },
+       {
+        "id": "learning-rate",
+        "x": -860,
+        "y": 262
+       },
+       {
+        "id": "n-estimators",
+        "x": -860,
+        "y": 298
        }
       ]
      }
@@ -2235,7 +2219,7 @@
       ]
      },
      {
-      "name": "Model attributes",
+      "name": "interpret.global",
       "x": -380,
       "y": -135.2,
       "count": 1,
@@ -2549,8 +2533,45 @@
     "x": -173.2,
     "y": 100,
     "side": -1,
-    "count": 0,
-    "families": []
+    "count": 4,
+    "families": [
+     {
+      "name": "tune.settings.complexity",
+      "x": -380,
+      "y": 82,
+      "count": 1,
+      "items": [
+       {
+        "id": "max-depth",
+        "x": -860,
+        "y": 82
+       }
+      ]
+     },
+     {
+      "name": "tune.settings.training",
+      "x": -380,
+      "y": 118,
+      "count": 3,
+      "items": [
+       {
+        "id": "early-stopping",
+        "x": -860,
+        "y": 82
+       },
+       {
+        "id": "learning-rate",
+        "x": -860,
+        "y": 118
+       },
+       {
+        "id": "n-estimators",
+        "x": -860,
+        "y": 154
+       }
+      ]
+     }
+    ]
    },
    {
     "id": "evaluate",

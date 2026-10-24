@@ -7,7 +7,8 @@ export type TrackId = 'standard' | 'time-series' | 'unsupervised' | 'causal' | '
 export type ArchetypeId =
   | 'transformer' | 'resampler' | 'selector' | 'splitter' | 'model' | 'hyperparameter'
   | 'tuning' | 'metric' | 'diagnostic' | 'output' | 'composer'
-export type TaskType = 'regression' | 'classification' | 'forecasting'
+/** Forecasting is the time-series track plus regression (A1), so it is not a task type of its own. */
+export type TaskType = 'regression' | 'classification'
 export type PrepStatus = 'required' | 'recommended' | 'not_needed'
 export type DatasetId = 'ames' | 'breast-cancer' | 'airline-passengers'
 export type ShapeEffectValue = 'same' | 'grows' | 'shrinks' | 'expands'
@@ -57,7 +58,8 @@ export type QuickFacts =
 export interface UseAvoid { use_when: string[]; avoid_when: string[] }
 
 export interface PrepEntry {
-  step: { page: string } | { family: string; stage: StageId }
+  /** `family` is a taxonomy family or group id (`transform.scale.rescale`); the stage is its first segment. */
+  step: { page: string } | { family: string }
   status: PrepStatus
   why: string
   condition: Condition | null

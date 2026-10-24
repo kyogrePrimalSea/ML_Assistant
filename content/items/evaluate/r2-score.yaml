@@ -3,8 +3,8 @@ plain_name: R-squared
 code_name: r2_score
 aliases: [r2, coefficient of determination, explained variance, how much is explained]
 stage: evaluate
-family: Regression metrics
-tracks: [standard]
+family: evaluate.explained
+tracks: [standard, time-series]
 archetype: metric
 question_tags: [how good is it, regression]
 targets: [sklearn.metrics.r2_score]

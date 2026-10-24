@@ -3,8 +3,8 @@ plain_name: Pipeline
 code_name: Pipeline
 aliases: [chain steps, make_pipeline, workflow]
 stage: transform
-family: Composition
-tracks: [standard]
+family: transform.chain.pipeline
+tracks: [standard, time-series]
 archetype: composer
 question_tags: [not reproducible, data leakage]
 targets: [sklearn.pipeline.Pipeline]

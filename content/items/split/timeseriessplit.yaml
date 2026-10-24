@@ -3,8 +3,8 @@ plain_name: Time series split
 code_name: TimeSeriesSplit
 aliases: [walk-forward, rolling origin, forward chaining]
 stage: split
-family: Splitters
-tracks: [time-series]
+family: split.time
+tracks: [standard, time-series]
 archetype: splitter
 question_tags: [time-ordered, forecasting]
 targets: [sklearn.model_selection.TimeSeriesSplit]

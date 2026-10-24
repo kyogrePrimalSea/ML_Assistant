@@ -38,7 +38,7 @@
     },
     "family": {
       "type": "string",
-      "minLength": 1
+      "pattern": "^[a-z0-9-]+(\\.[a-z0-9-]+)+$"
     },
     "tracks": {
       "type": "array",
@@ -148,8 +148,7 @@
           "items": {
             "enum": [
               "regression",
-              "classification",
-              "forecasting"
+              "classification"
             ]
           },
           "uniqueItems": true
@@ -1136,8 +1135,7 @@
           "items": {
             "enum": [
               "regression",
-              "classification",
-              "forecasting"
+              "classification"
             ]
           },
           "minItems": 1,
@@ -1197,25 +1195,11 @@
               "properties": {
                 "family": {
                   "type": "string",
-                  "minLength": 1
-                },
-                "stage": {
-                  "enum": [
-                    "explore",
-                    "clean",
-                    "transform",
-                    "select",
-                    "split",
-                    "model",
-                    "tune",
-                    "evaluate",
-                    "interpret"
-                  ]
+                  "pattern": "^[a-z0-9-]+(\\.[a-z0-9-]+)+$"
                 }
               },
               "required": [
-                "family",
-                "stage"
+                "family"
               ],
               "additionalProperties": false
             }

@@ -3,7 +3,7 @@ plain_name: Keep top K columns
 code_name: SelectKBest
 aliases: [univariate selection, filter selection, k best]
 stage: select
-family: Feature selection
+family: select.top-k
 tracks: [standard]
 archetype: selector
 question_tags: [too many columns, high-dimensional]

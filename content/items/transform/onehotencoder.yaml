@@ -3,8 +3,8 @@ plain_name: One-hot encoder
 code_name: OneHotEncoder
 aliases: [dummy variables, one hot, get_dummies, categorical encoding]
 stage: transform
-family: Categorical encoding
-tracks: [standard]
+family: transform.encode.features
+tracks: [standard, time-series]
 archetype: transformer
 question_tags: [text categories, messy]
 targets: [sklearn.preprocessing.OneHotEncoder]

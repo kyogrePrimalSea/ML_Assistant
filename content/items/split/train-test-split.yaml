@@ -3,8 +3,8 @@ plain_name: Train/test split
 code_name: train_test_split
 aliases: [holdout, hold-out split, random split, train test]
 stage: split
-family: Splitters
-tracks: [standard]
+family: split.holdout
+tracks: [standard, time-series]
 archetype: splitter
 question_tags: [how good is it, overfitting]
 targets: [sklearn.model_selection.train_test_split]

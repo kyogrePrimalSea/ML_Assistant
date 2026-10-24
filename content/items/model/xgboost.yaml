@@ -3,7 +3,7 @@ plain_name: XGBoost
 code_name: XGBRegressor / XGBClassifier
 aliases: [extreme gradient boosting, xgb]
 stage: model
-family: Boosting (XGBoost)
+family: model.trees.boosting
 tracks: [standard]
 archetype: model
 question_tags: [underperforming, tabular data, overfitting]
@@ -33,22 +33,22 @@ slots:
     use_when: [tabular data, non-linear effects, mixed feature types]
     avoid_when: [tiny data, images or text, need a simple formula]
   prep:
-    - step: {family: Scaling, stage: transform}
+    - step: {family: transform.scale.rescale}
       status: not_needed
       why: Trees split on order, not size.
       condition: null
       unless: null
-    - step: {family: Imputation, stage: clean}
+    - step: {family: clean.impute}
       status: not_needed
       why: Missing values are handled natively.
       condition: null
       unless: null
-    - step: {family: Categorical encoding, stage: transform}
+    - step: {family: transform.encode.features}
       status: required
       why: Text categories must become numbers.
       condition: {has_categoricals: true}
       unless: {setting: enable_categorical, value: true}
-    - step: {family: Class weighting, stage: model}
+    - step: {family: transform.rebalance.weight}
       status: recommended
       why: Use scale_pos_weight when classes are lopsided.
       condition: {imbalanced: true, task_type: [classification]}
