@@ -170,7 +170,7 @@ export default function RadialTree({ activeId }: { activeId?: string }) {
 
 function Canvas({ data, goal, layout, activeId, onList }: { data: ContentIndex; goal: TaxGoal; layout: GoalLayout; activeId?: string; onList: () => void }) {
   const navigate = useNavigate()
-  const { labels: mode } = useShellState()
+  const { labels: mode, reveal: revealAsk } = useShellState()
   const wrapRef = useRef<HTMLDivElement>(null)
   const svgRef = useRef<SVGSVGElement>(null)
   const camGRef = useRef<SVGGElement>(null)
@@ -180,6 +180,7 @@ function Canvas({ data, goal, layout, activeId, onList }: { data: ContentIndex; 
   const wantFocus = useRef(false)
   const [syncedId, setSyncedId] = useState<string | undefined>(undefined)
   const [syncedGoal, setSyncedGoal] = useState(goal.id)
+  const [syncedAsk, setSyncedAsk] = useState(revealAsk?.n ?? 0)
 
   const view = data.taxonomy.views[goal.id]
   const info = useMemo(() => indexView(view), [view])
@@ -365,6 +366,17 @@ function Canvas({ data, goal, layout, activeId, onList }: { data: ContentIndex; 
   const framed = useRef<{ openId: string | null; layout: GoalLayout; lines: number } | null>(null)
   const [revealReq, setRevealReq] = useState<{ id: string; n: number } | null>(null)
   const requestReveal = useCallback((id: string) => setRevealReq((r) => ({ id, n: (r?.n ?? 0) + 1 })), [])
+  // Search (or any other caller) asks for a node: open the path to it and bring it into view.
+  if (revealAsk && revealAsk.n !== syncedAsk) {
+    setSyncedAsk(revealAsk.n)
+    const at = info.get(revealAsk.id)
+    if (at) {
+      const opens = at.node.level !== 'page' && layout.fans[at.node.id] ? at.node.id : at.parent
+      setOpenId(opens)
+      setFocusKey(at.node.id)
+      requestReveal(at.node.id)
+    }
+  }
   const focusKeyRef = useRef(focusKey)
   useLayoutEffect(() => {
     focusKeyRef.current = focusKey

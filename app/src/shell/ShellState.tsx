@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo, useState, type ReactNode } from 'react'
+import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react'
 import { useIndex } from '@/content/load'
 import type { TaskType, TrackId } from '@/content/types'
 
@@ -16,6 +16,10 @@ interface ShellState {
   setLabels: (m: LabelMode) => void
   view: ViewId
   setView: (v: ViewId) => void
+  /** Ask the tree to open the path to a node (stage, group, family or page) and bring it into view. */
+  revealNode: (id: string) => void
+  /** The latest `revealNode` request; `n` changes on every call so asking for the same node twice works. */
+  reveal: { id: string; n: number } | null
 }
 
 const Ctx = createContext<ShellState | null>(null)
@@ -39,6 +43,8 @@ export function ShellStateProvider({ children }: { children: ReactNode }) {
   const [goal, setGoal] = useState(DEFAULT_GOAL)
   const [labels, setLabelsState] = useState<LabelMode>(readLabels)
   const [view, setView] = useState<ViewId>('tree')
+  const [reveal, setReveal] = useState<{ id: string; n: number } | null>(null)
+  const revealNode = useCallback((id: string) => setReveal((r) => ({ id, n: (r?.n ?? 0) + 1 })), [])
 
   const setLabels = (m: LabelMode) => {
     setLabelsState(m)
@@ -63,8 +69,10 @@ export function ShellStateProvider({ children }: { children: ReactNode }) {
       setLabels,
       view,
       setView,
+      revealNode,
+      reveal,
     }),
-    [goal, current, labels, view],
+    [goal, current, labels, view, revealNode, reveal],
   )
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>
 }

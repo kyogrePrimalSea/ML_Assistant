@@ -8,3 +8,6 @@ if (typeof globalThis.ResizeObserver === 'undefined') {
     disconnect() {}
   }
 }
+
+// cmdk scrolls the highlighted option into view; jsdom has no scrollIntoView.
+if (typeof Element !== 'undefined') Element.prototype.scrollIntoView ??= () => {}

@@ -546,7 +546,7 @@
     "T040": {
       "title": "Search across both label sets and symptom questions",
       "file": "tasks/T040-search-both-label-sets.md",
-      "status": "In Progress",
+      "status": "Done",
       "dependencies": [
         "T036",
         "T039"

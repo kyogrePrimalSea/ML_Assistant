@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { IconX } from '@tabler/icons-react'
 import { Button } from '@/components/ui/button'
-import { CommandDialog, CommandEmpty, CommandInput, CommandList } from '@/components/ui/command'
+import { SearchDialog } from '@/search/SearchDialog'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { StarField } from './StarField'
 import { TopBar } from './TopBar'
@@ -94,17 +94,7 @@ export default function Layout({
         </Sheet>
       ) : null}
 
-      <CommandDialog
-        open={searchOpen}
-        onOpenChange={setSearchOpen}
-        title="Search"
-        description="Search every page in the guide."
-      >
-        <CommandInput placeholder="Search pages" />
-        <CommandList>
-          <CommandEmpty>Search is coming soon.</CommandEmpty>
-        </CommandList>
-      </CommandDialog>
+      <SearchDialog open={searchOpen} onOpenChange={setSearchOpen} />
 
       <Sheet open={settingsOpen} onOpenChange={setSettingsOpen}>
         <SheetContent side="right" className="w-full max-w-sm">

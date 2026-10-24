@@ -183,6 +183,8 @@ export interface IndexPage {
   id: string
   plain_name: string
   code_name: string
+  /** Alternative names, from the page record; absent when the page has no record or no aliases. */
+  aliases?: string[]
   stage: StageId
   family: string
   archetype: ArchetypeId

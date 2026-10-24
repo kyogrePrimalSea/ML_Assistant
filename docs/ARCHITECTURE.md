@@ -224,3 +224,11 @@ to functions. Missing sections are empty lists, never omitted.
   on import); keep the two in sync. `LGBMRegressor` also sets `min_child_samples=5` (the default 20 never
   splits on ~45 rows). The validator now returns advisory warnings (snippet lines over 79 characters)
   separately from errors; they never change the exit code.
+- Search (T040): no new dependency. `app/src/search/search.ts` is a small matcher (every query word must hit
+  some field by word, prefix, substring or one typo; weights favour labels and names over `pick_when` and ids)
+  over every taxonomy node and page, each in all goals' labels, plus aliases (`build-content.mjs` now copies
+  `aliases` into the index pages) and the symptom questions (`text`, stem name, id words). Questions belong to
+  the goals on their tracks. Results split into the current goal and "Other goals"; picking an other-goal result
+  switches goal first. The tree takes outside requests through shell state `revealNode(id)` / `reveal`
+  (opens the node, or the page's parent, and pans to it); a page result also navigates to `/page/<id>`, a
+  question result to `/question/<id>` (`QuestionPanel`, replacing the placeholder).
