@@ -1,0 +1,84 @@
+id: missingindicator
+plain_name: MissingIndicator
+code_name: MissingIndicator
+aliases: [missing flag, was missing, missingness flag]
+stage: clean
+family: clean.impute
+tracks: [standard, time-series]
+archetype: transformer
+question_tags: [missing values, messy]
+targets: [sklearn.impute.MissingIndicator]
+pairs_with: [pipeline]
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.impute.MissingIndicator.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: shrinks}
+slots:
+  header: {}
+  solves:
+    hero: {kind: transformer, dataset: ames, columns: [LotFrontage], changed: [LotFrontage]}
+    line: Flags where values were missing.
+  quick_facts:
+    facts:
+      - {label: Learns from data, value: "yes: which columns have gaps"}
+      - {label: Output, value: "0/1 flag per column"}
+  use_avoid:
+    use_when: [missingness may predict the target]
+    avoid_when: [gaps are random noise]
+  prep:
+    - step: {page: train-test-split}
+      status: required
+      why: Fit the indicator on training rows only.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.impute.MissingIndicator
+      why_this_library: Fits inside a Pipeline, so it never sees test rows.
+      snippet: |
+        # scikit-learn 1.9.1
+        import numpy as np
+        from sklearn.datasets import make_regression
+        from sklearn.impute import MissingIndicator
+        from sklearn.model_selection import train_test_split
+
+        X, y = make_regression(n_samples=200, n_features=3, random_state=0)
+        rng = np.random.default_rng(0)
+        X[rng.random(X.shape) < 0.1] = np.nan  # knock out about 10% of values
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        indicator = MissingIndicator(features="missing-only")
+        flags_train = indicator.fit_transform(X_train)  # 1 where a value is missing
+        flags_test = indicator.transform(X_test)
+
+        print(flags_test.sum(axis=0))
+  what_comes_out:
+    items:
+    - {name: transform, kind: method, task: null, shape: "(n_samples, n_missing_features)", note: Returns 1 where a value is missing.}
+    - {name: fit_transform, kind: method, task: null, shape: "(n_samples, n_missing_features)", note: Fits and returns the flags in one step.}
+    - {name: get_feature_names_out, kind: method, task: null, shape: "(n_missing_features,)", note: Names of the flag columns.}
+    - {name: set_output, kind: method, task: null, shape: self, note: "Chooses the output container, such as pandas."}
+    - {name: feature_names_in_, kind: attribute, task: null, shape: "(n_features_in_,)", note: Column names seen during fit.}
+    - {name: n_features_in_, kind: attribute, task: null, shape: int, note: Number of columns seen during fit.}
+    - {name: features_, kind: attribute, task: null, shape: "(n_missing_features,) or (n_features,)", note: Columns that get a flag.}
+    next_step: Wrap the indicator and the model in one Pipeline.
+    visual: null
+  catch_outs:
+    - Fit on training rows only; never fit on the test set.
+    - With error_on_new, a column with no gaps at fit raises an error if gaps appear later.
+  key_settings:
+    tier1:
+    - {name: features, page: null}
+    - {name: missing_values, page: null}
+    - {name: sparse, page: null}
+    - {name: error_on_new, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: Record where values were missing as 0/1 flags.}
+  next: []

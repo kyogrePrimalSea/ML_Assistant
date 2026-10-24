@@ -1,0 +1,86 @@
+id: knnimputer
+plain_name: KNNImputer
+code_name: KNNImputer
+aliases: [nearest neighbour imputation, KNN fill, neighbour fill]
+stage: clean
+family: clean.impute
+tracks: [standard, time-series]
+archetype: transformer
+question_tags: [missing values, messy]
+targets: [sklearn.impute.KNNImputer]
+pairs_with: [pipeline]
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.impute.KNNImputer.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: transformer, dataset: ames, columns: [LotFrontage], changed: [LotFrontage]}
+    line: Fills gaps from the most similar rows.
+  quick_facts:
+    facts:
+      - {label: Learns from data, value: "yes: fit on train only"}
+      - {label: Fills with, value: "values from nearby rows"}
+  use_avoid:
+    use_when: [gaps depend on similar rows, numeric columns]
+    avoid_when: [large datasets, speed matters]
+  prep:
+    - step: {page: train-test-split}
+      status: required
+      why: Fit the imputer on training rows only.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.impute.KNNImputer
+      why_this_library: Fits inside a Pipeline, so it never sees test rows.
+      snippet: |
+        # scikit-learn 1.9.1
+        import numpy as np
+        from sklearn.datasets import make_regression
+        from sklearn.impute import KNNImputer
+        from sklearn.model_selection import train_test_split
+
+        X, y = make_regression(n_samples=200, n_features=3, random_state=0)
+        rng = np.random.default_rng(0)
+        X[rng.random(X.shape) < 0.1] = np.nan  # knock out about 10% of values
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        imputer = KNNImputer(n_neighbors=3, weights="distance")
+        X_train_f = imputer.fit_transform(X_train)  # keep train rows as neighbours
+        X_test_f = imputer.transform(X_test)        # borrow from near train rows
+
+        gap_rows = np.isnan(X_test).any(axis=1)
+        print(np.round(X_test_f[gap_rows][0], 2))
+  what_comes_out:
+    items:
+    - {name: transform, kind: method, task: null, shape: "(n_samples, n_features)", note: Fills gaps using the nearest training rows.}
+    - {name: fit_transform, kind: method, task: null, shape: "(n_samples, n_features)", note: Fits and fills in one step.}
+    - {name: get_feature_names_out, kind: method, task: null, shape: "(n_features,)", note: Names of the output columns.}
+    - {name: set_output, kind: method, task: null, shape: self, note: "Chooses the output container, such as pandas."}
+    - {name: feature_names_in_, kind: attribute, task: null, shape: "(n_features_in_,)", note: Column names seen during fit.}
+    - {name: n_features_in_, kind: attribute, task: null, shape: int, note: Number of columns seen during fit.}
+    next_step: Wrap the imputer and the model in one Pipeline.
+    visual: null
+  catch_outs:
+    - Fit on training rows only; never fit on the test set.
+    - Each gap searches the neighbour rows, so large data is slow.
+  key_settings:
+    tier1:
+    - {name: weights, page: null}
+    - {name: add_indicator, page: null}
+    - {name: metric, page: null}
+    - {name: missing_values, page: null}
+    tier2:
+    - {name: keep_empty_features, page: null}
+    - {name: n_neighbors, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: Fill each gap with the average of the most similar rows.}
+  next: []

@@ -1,0 +1,86 @@
+id: simpleimputer
+plain_name: SimpleImputer
+code_name: SimpleImputer
+aliases: [mean imputation, median imputation, fill missing, most frequent]
+stage: clean
+family: clean.impute
+tracks: [standard, time-series]
+archetype: transformer
+question_tags: [missing values, messy]
+targets: [sklearn.impute.SimpleImputer]
+pairs_with: [pipeline]
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.impute.SimpleImputer.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: transformer, dataset: ames, columns: [LotFrontage], changed: [LotFrontage]}
+    line: Fills gaps with a simple column statistic.
+  quick_facts:
+    facts:
+      - {label: Learns from data, value: "yes: fit on train only"}
+      - {label: Fills with, value: "mean, median, most frequent or constant"}
+  use_avoid:
+    use_when: [fast default, mean or median fill, text via most frequent]
+    avoid_when: [gaps depend on other columns]
+  prep:
+    - step: {page: train-test-split}
+      status: required
+      why: Fit the imputer on training rows only.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.impute.SimpleImputer
+      why_this_library: Fits inside a Pipeline, so it never sees test rows.
+      snippet: |
+        # scikit-learn 1.9.1
+        import numpy as np
+        from sklearn.datasets import make_regression
+        from sklearn.impute import SimpleImputer
+        from sklearn.model_selection import train_test_split
+
+        X, y = make_regression(n_samples=200, n_features=3, random_state=0)
+        rng = np.random.default_rng(0)
+        X[rng.random(X.shape) < 0.1] = np.nan  # knock out about 10% of values
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        imputer = SimpleImputer(strategy="median")
+        X_train_f = imputer.fit_transform(X_train)  # learn medians from train only
+        X_test_f = imputer.transform(X_test)        # reuse them, never refit
+
+        print(imputer.statistics_.round(2))
+  what_comes_out:
+    items:
+    - {name: transform, kind: method, task: null, shape: "(n_samples, n_features)", note: Fills gaps with the learned statistic.}
+    - {name: fit_transform, kind: method, task: null, shape: "(n_samples, n_features)", note: Learns the fill values and fills in one step.}
+    - {name: get_feature_names_out, kind: method, task: null, shape: "(n_features,)", note: Names of the output columns.}
+    - {name: set_output, kind: method, task: null, shape: self, note: "Chooses the output container, such as pandas."}
+    - {name: feature_names_in_, kind: attribute, task: null, shape: "(n_features_in_,)", note: Column names seen during fit.}
+    - {name: n_features_in_, kind: attribute, task: null, shape: int, note: Number of columns seen during fit.}
+    - {name: statistics_, kind: attribute, task: null, shape: "(n_features,)", note: The fill value learned for each column.}
+    next_step: Wrap the imputer and the model in one Pipeline.
+    visual: null
+  catch_outs:
+    - Fit on training rows only; never fit on the test set.
+    - A column that is all missing at fit is dropped unless keep_empty_features is True.
+    - With add_indicator, flags appear only for columns that had gaps at fit.
+  key_settings:
+    tier1:
+    - {name: strategy, page: null}
+    - {name: add_indicator, page: null}
+    - {name: fill_value, page: null}
+    - {name: keep_empty_features, page: null}
+    tier2:
+    - {name: missing_values, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Fill each gap with a column statistic, such as the median."}
+  next: []
