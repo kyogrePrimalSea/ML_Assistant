@@ -35,13 +35,13 @@ const show = (id: string) =>
   )
 
 const ORDER = [
-  'header', 'solves', 'quick_facts', 'use_avoid', 'prep', 'code',
+  'header', 'solves', 'quick_facts', 'use_avoid', 'prep', 'code', 'what_comes_out',
   'catch_outs', 'key_settings', 'watch_it_work', 'intuition', 'next',
 ]
 
 test('every record has a built page file', () => expect(ids.length).toBeGreaterThan(0))
 
-test.each(ids)('%s renders all 11 slots in order, each with a heading', async (id) => {
+test.each(ids)('%s renders all 12 slots in order, each with a heading', async (id) => {
   const { container } = show(id)
   await screen.findByRole('article')
   const sections = [...container.querySelectorAll('section[data-slot-name]')]
