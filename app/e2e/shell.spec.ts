@@ -56,7 +56,7 @@ test('below 900px the panel is a bottom sheet', async ({ page }) => {
   await page.getByRole('radio', { name: 'List' }).click()
   await page.getByRole('button', { name: /Boosting \(XGBoost\)/ }).click()
   await page.getByRole('link', { name: /XGBoost/ }).first().click()
-  const sheet = page.getByRole('dialog', { name: 'Page panel' })
+  const sheet = page.getByRole('dialog', { name: 'XGBoost' })
   await expect(sheet).toBeVisible()
   await expect(sheet).toContainText('xgboost')
   const box = (await sheet.boundingBox())!

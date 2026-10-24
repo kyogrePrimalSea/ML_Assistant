@@ -465,7 +465,7 @@
     "T031": {
       "title": "Review UI fixes: code wrap, typography, badges, key settings, sheet title, Used by",
       "file": "tasks/T031-review-ui-fixes.md",
-      "status": "Ready",
+      "status": "Done",
       "dependencies": [],
       "epic": "E12"
     },

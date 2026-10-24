@@ -38,7 +38,7 @@ export function DataFrameDiff({ before, after, changed, added, removed, beforeSh
 
   return (
     <div data-slot="dataframe-diff" className="grid gap-2">
-      <p className="m-0 font-mono text-sm font-bold" data-slot="shape-line">
+      <p className="m-0 text-sm font-bold tabular-nums" data-slot="shape-line">
         {shapeLine}
       </p>
       <div className="overflow-x-auto rounded-md border border-border">

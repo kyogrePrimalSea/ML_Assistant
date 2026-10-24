@@ -1,6 +1,6 @@
 import { useId, useState } from 'react'
 import { Link } from 'react-router'
-import { IconChevronDown, IconTopologyStar } from '@tabler/icons-react'
+import { IconChevronDown, IconTopologyStar, IconUsersGroup } from '@tabler/icons-react'
 import type { Relationship } from '@/content/types'
 import { connectionsOf } from '@/views/RelationshipLines'
 import { useConnections } from '@/views/connections'
@@ -11,14 +11,14 @@ import { useCatalogue } from './context'
  * Panel header control: show this item's connections as lines in the Tree, one type at a time.
  * The names are listed here too, which is the text equivalent of the lines.
  */
-export function Connections({ id }: { id: string }) {
+export function Connections({ id, appliesTo = [] }: { id: string; appliesTo?: string[] }) {
   const { index, pageName } = useCatalogue()
   const { on, toggle, canDraw } = useConnections()
   const [open, setOpen] = useState(false)
   const bodyId = useId()
   const rels: Relationship[] = index?.relationships ?? []
   const all = connectionsOf(rels, id)
-  if (all.length === 0) return null
+  if (all.length === 0 && appliesTo.length === 0) return null
   const shown = REL_STYLES.filter((s) => on.has(s.type)).length
 
   return (
@@ -68,6 +68,23 @@ export function Connections({ id }: { id: string }) {
             </div>
           )
         })}
+        {appliesTo.length > 0 ? (
+          // Used by comes from the record's applies_to. It is not one of the five line types (spec 5.3), so it has no line and no toggle.
+          <div data-rel-group="used_by" className="grid gap-1.5">
+            <p className="m-0 flex min-h-10 w-fit items-center gap-2.5 rounded-md border border-border bg-surface-1 px-3 text-sm font-medium text-text">
+              <IconUsersGroup className="size-4" aria-hidden />
+              Used by
+              <span className="text-text-muted">{appliesTo.length}</span>
+            </p>
+            <ul className="m-0 flex list-none flex-wrap gap-x-3 gap-y-1 p-0 text-sm" aria-label="Used by">
+              {appliesTo.map((other) => (
+                <li key={other} className="m-0">
+                  <Link to={`/page/${other}`}>{pageName(other)}</Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
       </div>
     </div>
   )

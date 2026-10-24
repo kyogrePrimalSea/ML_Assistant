@@ -80,7 +80,10 @@ test('XGBoost: header, prep rows (spec 5.4) and max_depth effective default', as
   const ks = document.querySelector('[data-slot-name="key_settings"]') as HTMLElement
   const maxDepth = within(ks).getByRole('link', { name: 'max_depth' })
   expect(maxDepth).toHaveAttribute('href', '/page/max-depth')
-  expect(maxDepth.closest('li')).toHaveTextContent('None → 6')
+  expect(maxDepth.closest('li')).toHaveTextContent('set as None in the signature')
+  expect(maxDepth.closest('li')).toHaveTextContent('6')
+  expect(maxDepth.closest('li')).not.toHaveTextContent('→')
+  expect(maxDepth.closest('li')).not.toHaveTextContent('effective default')
 })
 
 test('tiers 2 and 3 are hidden until opened; intuition is collapsed', async () => {
@@ -88,11 +91,13 @@ test('tiers 2 and 3 are hidden until opened; intuition is collapsed', async () =
   show('xgboost')
   await screen.findByRole('article')
   expect(screen.queryByText('subsample')).not.toBeInTheDocument()
-  await user.click(screen.getByRole('button', { name: /More settings/ }))
+  await user.click(screen.getByRole('button', { name: /Also useful/ }))
   expect(screen.getByText('subsample')).toBeInTheDocument()
   expect(screen.queryByText('reg_lambda')).not.toBeInTheDocument()
-  await user.click(screen.getByRole('button', { name: /Tier 3 settings/ }))
+  await user.click(screen.getByRole('button', { name: /Rarely changed/ }))
   expect(screen.getByText('reg_lambda')).toBeInTheDocument()
+  expect(screen.getByText('Most used')).toBeInTheDocument()
+  expect(screen.queryByText(/Tier \d|More settings/)).not.toBeInTheDocument()
 
   expect(screen.queryByText('The one idea')).not.toBeInTheDocument()
   await user.click(screen.getByRole('button', { name: 'Intuition' }))
@@ -131,8 +136,36 @@ test('helpers', () => {
     default: d,
     effective_default: e,
   })
-  expect(defaultText(f(null, '6'))).toEqual({ text: 'None → 6', effective: true })
-  expect(defaultText(f('None', null))?.text).toBe('None')
+  expect(defaultText(f(null, '6'))).toEqual({ text: '6', note: 'set as None in the signature' })
+  expect(defaultText(f('None', '100'))).toEqual({ text: '100', note: 'set as None in the signature' })
+  expect(defaultText(f('1.0', '1.0'))).toEqual({ text: '1.0', note: null })
+  expect(defaultText(f('None', null))).toEqual({ text: 'None', note: null })
   expect(defaultText({ by_target: { a: f('1', null), b: f('2', null) } })?.text).toBe('varies by library')
   expect(defaultText(undefined)).toBeNull()
+})
+
+test('Header: a model page hides the duplicate stage badge and keeps a stage dot', async () => {
+  show('xgboost')
+  await screen.findByRole('article')
+  expect(document.querySelector('[data-slot="stage-badge"]')).toBeNull()
+  const badge = document.querySelector('[data-slot="archetype-badge"]') as HTMLElement
+  expect(badge.querySelector('[data-stage-dot]')).not.toBeNull()
+  expect(badge).toHaveTextContent('Model, stage Model')
+})
+
+test('Header: a transformer page shows both badges', async () => {
+  show('standardscaler')
+  await screen.findByRole('article')
+  expect(document.querySelector('[data-slot="stage-badge"]')).not.toBeNull()
+  expect(document.querySelector('[data-slot="archetype-badge"] [data-stage-dot]')).toBeNull()
+})
+
+test('Show connections lists Used by for n-estimators, linking to the pages', async () => {
+  const user = userEvent.setup()
+  show('n-estimators')
+  await screen.findByRole('article')
+  await user.click(screen.getByRole('button', { name: /Show connections/ }))
+  const group = document.querySelector('[data-rel-group="used_by"]') as HTMLElement
+  expect(within(group).getByText('Used by')).toBeInTheDocument()
+  expect(within(group).getByRole('link', { name: 'XGBoost' })).toHaveAttribute('href', '/page/xgboost')
 })

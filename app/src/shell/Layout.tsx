@@ -16,6 +16,7 @@ import './shell.css'
 export default function Layout({
   children,
   panel,
+  panelTitle = 'Page',
   onClosePanel,
   fill = false,
 }: {
@@ -24,6 +25,8 @@ export default function Layout({
   fill?: boolean
   /** Panel content, or null when closed. */
   panel: ReactNode | null
+  /** Bottom-sheet title and accessible name below 900px: the open page's plain name. */
+  panelTitle?: string
   onClosePanel: () => void
 }) {
   const wide = useMediaQuery('(min-width: 900px)')
@@ -81,7 +84,7 @@ export default function Layout({
         <Sheet open={open} onOpenChange={(o) => !o && onClosePanel()}>
           <SheetContent side="bottom" className="shell-sheet-bottom max-h-[80dvh] gap-0 rounded-t-lg">
             <SheetHeader className="border-b border-border px-6 py-4">
-              <SheetTitle>Page panel</SheetTitle>
+              <SheetTitle>{panelTitle}</SheetTitle>
               <SheetDescription className="sr-only">Details for the selected page.</SheetDescription>
             </SheetHeader>
             <div className="overflow-y-auto px-6 py-6">

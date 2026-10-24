@@ -1,5 +1,6 @@
 import { Route, Routes, useMatch, useNavigate } from 'react-router'
 import Styleguide from '@/dev/Styleguide'
+import { useIndex } from '@/content/load'
 import { PagePanel } from '@/page/PagePanel'
 import Layout from '@/shell/Layout'
 import { ShellStateProvider, useShellState } from '@/shell/ShellState'
@@ -33,9 +34,15 @@ function Shell() {
   const questionId = useMatch('/question/:id')?.params.id
   const navigate = useNavigate()
   const { view } = useShellState()
+  const index = useIndex()
+  const panelTitle = id
+    ? (index.data?.pages.find((p) => p.id === id)?.plain_name ?? 'Page')
+    : questionId
+      ? 'Question'
+      : 'Page'
   return (
     <ConnectionsProvider canDraw={view === 'tree'}>
-    <Layout panel={id ? <PagePanel id={id} /> : questionId ? <QuestionPlaceholder id={questionId} /> : null} onClosePanel={() => navigate('/')} fill={view === 'tree' || view === 'journey'}>
+    <Layout panelTitle={panelTitle} panel={id ? <PagePanel id={id} /> : questionId ? <QuestionPlaceholder id={questionId} /> : null} onClosePanel={() => navigate('/')} fill={view === 'tree' || view === 'journey'}>
       {view === 'tree' ? (
         <RadialTree activeId={id} />
       ) : view === 'constellation' ? (

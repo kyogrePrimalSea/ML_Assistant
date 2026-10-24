@@ -37,9 +37,9 @@ test('XGBoost page shows the prep rows and effective default; axe finds nothing 
   const panel = page.getByRole('complementary', { name: 'Page panel' })
   await expect(panel.getByRole('heading', { level: 2, name: 'XGBoost' })).toBeVisible()
   await expect(panel.getByText('unless enable_categorical=True')).toBeVisible()
-  await expect(panel.getByRole('link', { name: 'max_depth' }).locator('xpath=ancestor::li')).toContainText('None → 6')
-  await panel.getByRole('button', { name: /More settings/ }).click()
-  await panel.getByRole('button', { name: /Tier 3 settings/ }).click()
+  await expect(panel.getByRole('link', { name: 'max_depth' }).locator('xpath=ancestor::li')).toContainText('set as None in the signature')
+  await panel.getByRole('button', { name: /Also useful/ }).click()
+  await panel.getByRole('button', { name: /Rarely changed/ }).click()
   await panel.getByRole('button', { name: 'Intuition' }).click()
   await panel.getByRole('button', { name: 'Read more' }).click()
   for (const theme of ['Light', 'Dark'] as const) {
@@ -72,4 +72,32 @@ test('code block stays inside the panel and scrolls inside itself', async ({ pag
     expect(b.x + b.width).toBeLessThanOrEqual(p.x + p.width)
     expect(b.x).toBeGreaterThanOrEqual(p.x)
   }
+})
+
+test('no horizontal overflow in code blocks; numbers are not in the code font', async ({ page }) => {
+  for (const id of ['xgboost', 'n-estimators']) {
+    await page.goto(`./#/page/${id}`)
+    const panel = page.getByRole('complementary', { name: 'Page panel' })
+    await expect(panel.getByRole('article')).toBeVisible()
+    await page.waitForTimeout(300)
+    const over = await panel.locator('[data-slot="code-block"] pre').evaluateAll((els) =>
+      els.map((el) => el.scrollWidth - el.clientWidth),
+    )
+    expect(over.length).toBeGreaterThan(0)
+    for (const o of over) expect(o).toBeLessThanOrEqual(1)
+  }
+  await page.goto('./#/page/n-estimators')
+  const cell = page.getByRole('complementary', { name: 'Page panel' }).locator('[data-slot-name="quick_facts"] td').first()
+  await expect(cell).toBeVisible()
+  expect(await cell.evaluate((el) => (el.ownerDocument.defaultView as unknown as { getComputedStyle(e: unknown): { fontFamily: string } }).getComputedStyle(el).fontFamily)).not.toMatch(/JetBrains/i)
+  await page.goto('./#/page/xgboost')
+  const ks = page.getByRole('complementary', { name: 'Page panel' }).locator('[data-slot-name="key_settings"] li span.tabular-nums').first()
+  await expect(ks).toBeVisible()
+  expect(await ks.evaluate((el) => (el.ownerDocument.defaultView as unknown as { getComputedStyle(e: unknown): { fontFamily: string } }).getComputedStyle(el).fontFamily)).not.toMatch(/JetBrains/i)
+})
+
+test('phone sheet is named for the page', async ({ page }) => {
+  await page.setViewportSize({ width: 600, height: 800 })
+  await page.goto('./#/page/xgboost')
+  await expect(page.getByRole('dialog', { name: 'XGBoost' })).toBeVisible()
 })

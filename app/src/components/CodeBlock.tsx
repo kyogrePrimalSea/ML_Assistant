@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react'
 import { Highlight, type PrismTheme } from 'prism-react-renderer'
 import { IconCheck, IconCopy } from '@tabler/icons-react'
 import { cn } from '@/lib/utils'
@@ -28,6 +28,24 @@ export function CodeBlock({
   const [copied, setCopied] = useState(false)
   const timer = useRef<number | undefined>(undefined)
   useEffect(() => () => window.clearTimeout(timer.current), [])
+
+  // Mark lines that wrapped so the gutter marker shows on them. Purely visual, so it never touches the text.
+  const pre = useRef<HTMLPreElement>(null)
+  useLayoutEffect(() => {
+    const el = pre.current
+    if (!el) return
+    const mark = () => {
+      for (const line of el.querySelectorAll<HTMLElement>('[data-code-line]')) {
+        const lh = parseFloat(getComputedStyle(line).lineHeight)
+        line.toggleAttribute('data-wrapped', Number.isFinite(lh) && line.getBoundingClientRect().height > lh * 1.5)
+      }
+    }
+    mark()
+    if (typeof ResizeObserver === 'undefined') return
+    const ro = new ResizeObserver(mark)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [code])
 
   async function copy() {
     try {
@@ -60,20 +78,38 @@ export function CodeBlock({
       <Highlight theme={theme} code={code.replace(/\n$/, '')} language={language}>
         {({ tokens, getLineProps, getTokenProps }) => (
           <pre
+            ref={pre}
             tabIndex={0}
             aria-label="Code"
-            className="m-0 overflow-x-auto rounded-md border-0 bg-transparent py-3 pr-24 pl-4 text-[13px] leading-[1.6]"
+            data-code-wrap
+            className="m-0 overflow-x-hidden rounded-md border-0 bg-transparent py-3 pr-4 pl-4 text-[13px] leading-[1.6]"
             style={{ fontVariantLigatures: 'none' }}
           >
-            <code className="block w-max min-w-full border-0 bg-transparent p-0 text-[13px]">
-              {tokens.map((line, i) => (
-                <div key={i} {...getLineProps({ line })}>
+            <code className="block min-w-0 border-0 bg-transparent p-0 text-[13px]">
+              {tokens.map((line, i) => {
+                // Hanging indent: continuation lines sit two characters in from where the code starts.
+                const lead = (line.map((t) => t.content).join('').match(/^ */) ?? [''])[0].length
+                const props = getLineProps({ line })
+                return (
+                <div
+                  key={i}
+                  data-code-line
+                  {...props}
+                  className={cn(props.className, 'code-line')}
+                  style={{
+                    ...props.style,
+                    '--lead': lead,
+                    // The copy button sits over the first line's right end.
+                    ...(i === 0 ? { paddingRight: '6rem' } : null),
+                  } as CSSProperties}
+                >
                   {line.map((token, k) => (
                     <span key={k} {...getTokenProps({ token })} />
                   ))}
                   {'\n'}
                 </div>
-              ))}
+                )
+              })}
             </code>
           </pre>
         )}

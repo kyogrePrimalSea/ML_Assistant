@@ -5,19 +5,21 @@ import type { KeySetting, KeySettingFacts, KeySettings as KeySettingsData } from
 import { cn } from '@/lib/utils'
 import { None, PageLink, Slot } from './shared'
 
-/** "None → 6" when the signature default is None but the library resolves it. Null when the facts are missing. */
-export function defaultText(facts: KeySettingFacts | undefined): { text: string; effective: boolean } | null {
+/**
+ * What a default row shows: the effective value large, plus a note when the signature says something else
+ * (`None` in the signature, 6 in practice). Null when the facts are missing.
+ */
+export function defaultText(facts: KeySettingFacts | undefined): { text: string; note: string | null } | null {
   if (!facts) return null
   const list = 'by_target' in facts ? Object.values(facts.by_target) : [facts]
-  const texts = new Set(
-    list.map((f) => {
-      const d = f.default ?? 'None'
-      return f.effective_default != null && f.effective_default !== d ? `${d} → ${f.effective_default}` : d
-    }),
-  )
-  if (texts.size !== 1) return { text: 'varies by library', effective: false }
-  const text = [...texts][0]
-  return { text, effective: text.includes('→') }
+  const shown = list.map((f) => {
+    const signature = f.default ?? 'None'
+    const effective = f.effective_default != null && f.effective_default !== signature ? f.effective_default : null
+    return { text: effective ?? signature, note: effective ? `set as ${signature} in the signature` : null }
+  })
+  const keys = new Set(shown.map((d) => `${d.text}|${d.note}`))
+  if (keys.size !== 1) return { text: 'varies by library', note: null }
+  return shown[0]
 }
 
 function Row({ s, facts }: { s: KeySetting; facts: KeySettingFacts | undefined }) {
@@ -30,8 +32,8 @@ function Row({ s, facts }: { s: KeySetting; facts: KeySettingFacts | undefined }
       <span className="grid gap-0.5">
         {d ? (
           <>
-            <span className="font-code text-sm">{d.text}</span>
-            {d.effective ? <span className="text-xs text-text-muted">effective default</span> : null}
+            <span className="text-lg leading-tight font-bold tabular-nums">{d.text}</span>
+            {d.note ? <span className="text-xs text-text-muted">{d.note}</span> : null}
           </>
         ) : (
           <span className="text-sm text-text-muted">Not listed</span>
@@ -77,15 +79,15 @@ export function KeySettings({ data, facts }: { data: KeySettingsData; facts: Rec
         <>
           <div className="grid gap-1">
             <div className="grid grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] gap-x-4 text-sm text-text-muted">
-              <span>Tier 1</span>
+              <span>Most used</span>
               <span>Default</span>
             </div>
             <List items={data.tier1} facts={facts} />
           </div>
-          <Reveal label="More settings" count={data.tier2.length}>
+          <Reveal label="Also useful" count={data.tier2.length}>
             <List items={data.tier2} facts={facts} />
           </Reveal>
-          <Reveal label="Tier 3 settings" count={data.tier3.length}>
+          <Reveal label="Rarely changed" count={data.tier3.length}>
             <List items={data.tier3} facts={facts} />
           </Reveal>
         </>

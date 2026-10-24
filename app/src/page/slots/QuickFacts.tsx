@@ -4,7 +4,7 @@ import { None, PageLink, Slot } from './shared'
 
 function Facts({ rows }: { rows: [string, string][] }) {
   return (
-    <dl className="m-0 grid grid-cols-[minmax(7rem,9rem)_minmax(0,1fr)] gap-x-4 gap-y-2">
+    <dl className="m-0 grid grid-cols-[minmax(7rem,9rem)_minmax(0,1fr)] gap-x-4 gap-y-2 tabular-nums">
       {rows.map(([k, v]) => (
         <div key={k} className="contents">
           <dt className="text-text-muted">{k}</dt>
@@ -40,8 +40,8 @@ export function QuickFacts({ record }: { record: ItemRecord }) {
               <th scope="row" className="py-2 pr-3 text-left font-bold">
                 <PageLink id={v.page}>{pageName(v.page)}</PageLink>
               </th>
-              <td className="py-2 pr-3 font-code text-sm">{v.default}</td>
-              <td className="py-2 text-sm">{v.typical_range}</td>
+              <td className="py-2 pr-3 text-sm tabular-nums">{v.default}</td>
+              <td className="py-2 text-sm tabular-nums">{v.typical_range}</td>
             </tr>
           ))}
         </tbody>

@@ -157,3 +157,23 @@
     }
   }
 }
+
+/* Code blocks soft-wrap (spec 10.9, A8): continuation lines hang two characters in from where the code starts. */
+.code-line {
+  position: relative;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding-left: calc((var(--lead, 0) + 2) * 1ch);
+  text-indent: calc((var(--lead, 0) + 2) * -1ch);
+}
+/* Visual-only continuation marker in the hanging gutter of the second row; empty alt keeps it out of the accessibility tree. */
+.code-line[data-wrapped]::after {
+  content: "↪" / "";
+  position: absolute;
+  top: 1lh;
+  left: calc(var(--lead, 0) * 1ch);
+  color: var(--code-comment);
+  text-indent: 0;
+  user-select: none;
+  pointer-events: none;
+}
