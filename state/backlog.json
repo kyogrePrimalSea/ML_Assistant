@@ -492,7 +492,7 @@
     "T034": {
       "title": "content/taxonomy.yaml from the question map",
       "file": "tasks/T034-taxonomy-file.md",
-      "status": "Ready",
+      "status": "Done",
       "dependencies": [],
       "epic": "E11"
     },
@@ -518,7 +518,7 @@
     "T037": {
       "title": "pick_when verification against the docs",
       "file": "tasks/T037-pick-when-verification.md",
-      "status": "Backlog",
+      "status": "In Progress",
       "dependencies": [
         "T034"
       ],

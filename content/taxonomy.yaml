@@ -1,0 +1,2427 @@
+version: 1
+source: docs/QUESTION_MAP.md
+root:
+  question_prompt: Where are we in the work?
+goal_prompt: What are we trying to do?
+goals:
+- id: predict-number
+  question_label: Predict a number
+  names_label: Standard · Regression
+  question_sentence: We need to predict a number, like a price, a demand or a duration.
+  track: standard
+  task: regression
+- id: predict-category
+  question_label: Sort things into categories
+  names_label: Standard · Classification
+  question_sentence: We need to decide which category something belongs to, like churn or not.
+  track: standard
+  task: classification
+- id: forecast
+  question_label: Forecast what comes next
+  names_label: Time series
+  question_sentence: We need to forecast future values of a series over time.
+  track: time-series
+  task: regression
+later_goals:
+- id: find-structure
+  question_label: Find groups or odd ones out
+  names_label: Unsupervised
+- id: measure-effect
+  question_label: Measure what a change caused
+  names_label: Causal (DoubleML)
+- id: learn-from-media
+  question_label: Learn from images, text or sound
+  names_label: Deep learning
+stages:
+- id: explore
+  names_label: Explore
+  question_label: Understand the data
+  question_sentence: We need to understand the data before modelling.
+  question_prompt:
+    predict-number: What do we need to check?
+    predict-category: What do we need to check?
+    forecast: What do we need to know about the series?
+  children:
+  - id: explore.normality
+    level: family
+    names_label: Normality tests
+    question_label: Check for a bell curve
+    question_sentence: We need to check whether values follow a bell curve.
+    question_prompt: Which check suits our sample?
+    for: [predict-number, predict-category, forecast]
+    pages:
+    - id: shapiro-wilk
+      shown_as: Shapiro–Wilk
+      for: [predict-number, predict-category, forecast]
+      pick_when: Samples up to a few thousand rows
+    - id: normality-tests
+      shown_as: D'Agostino–Pearson (normaltest)
+      for: [predict-number, predict-category, forecast]
+      pick_when: Larger samples; checks skew and tails together
+  - id: explore.compare-means
+    level: family
+    names_label: t-tests
+    question_label: Check if groups really differ
+    question_sentence: We need to know whether a difference in averages is real or just noise.
+    question_prompt: How were the groups measured?
+    for: [predict-number, predict-category, forecast]
+    pages:
+    - id: ttest-ind
+      shown_as: Independent t-test
+      for: [predict-number, predict-category, forecast]
+      pick_when: Two separate groups, like control vs treatment
+    - id: ttest-rel
+      shown_as: Paired t-test
+      for: [predict-number, predict-category, forecast]
+      pick_when: The same rows measured twice, like before vs after
+    - id: ttest-1samp
+      shown_as: One-sample t-test
+      for: [predict-number, predict-category, forecast]
+      pick_when: One group against a target value
+  - id: explore.decompose
+    level: family
+    names_label: Decomposition
+    question_label: Split the series into parts
+    question_sentence: We need to see trend, seasonality and noise separately.
+    question_prompt: How many seasons does the series have?
+    for: [forecast]
+    pages:
+    - id: seasonal-decompose
+      shown_as: seasonal_decompose
+      for: [forecast]
+      pick_when: A quick first look with one fixed season
+    - id: stl
+      shown_as: STL
+      for: [forecast]
+      pick_when: One season that can drift; robust to outliers
+    - id: mstl
+      shown_as: MSTL
+      for: [forecast]
+      pick_when: Several seasons at once, like daily and weekly
+  - id: explore.cycle
+    level: family
+    names_label: Seasonality detection
+    question_label: Find how long a cycle lasts
+    question_sentence: We need to find the length of the repeating cycle.
+    question_prompt: null
+    for: [forecast]
+    pages:
+    - id: periodogram
+      shown_as: Periodogram
+      for: [forecast]
+      pick_when: Season length unknown; shows the strongest cycles
+  - id: explore.stationarity
+    level: family
+    names_label: Stationarity tests
+    question_label: Check if the series is stable
+    question_sentence: We need to know whether the series keeps a steady mean and spread over time.
+    question_prompt: Which way round should the test be?
+    for: [forecast]
+    pages:
+    - id: adf
+      shown_as: ADF test
+      for: [forecast]
+      pick_when: Testing for a wandering trend; small p means stable
+    - id: kpss
+      shown_as: KPSS test
+      for: [forecast]
+      pick_when: The opposite check to ADF; small p means not stable
+  - id: explore.memory
+    level: family
+    names_label: Autocorrelation
+    question_label: See how the past shapes today
+    question_sentence: We need to see how strongly each value depends on earlier ones.
+    question_prompt: null
+    for: [forecast]
+    pages:
+    - id: acf-pacf-plots
+      shown_as: ACF and PACF plots
+      for: [forecast]
+      pick_when: Choosing AR and MA orders for ARIMA
+    - id: ljung-box
+      shown_as: Ljung–Box test
+      for: [forecast]
+      pick_when: Checking that leftovers are just noise
+- id: clean
+  names_label: Clean
+  question_label: Fix missing values
+  question_sentence: We need to deal with missing values.
+  question_prompt: How should we fill the gaps?
+  children:
+  - id: clean.impute
+    level: family
+    names_label: Imputation
+    question_label: Fill in missing values
+    question_sentence: We need to fill gaps so the model can use every row.
+    question_prompt: null
+    for: [predict-number, predict-category, forecast]
+    pages:
+    - id: simpleimputer
+      shown_as: SimpleImputer
+      for: [predict-number, predict-category, forecast]
+      pick_when: 'Fast default: mean, median, most frequent or a constant'
+    - id: knnimputer
+      shown_as: KNNImputer
+      for: [predict-number, predict-category, forecast]
+      pick_when: Borrow values from the most similar rows
+    - id: iterativeimputer
+      shown_as: IterativeImputer
+      for: [predict-number, predict-category, forecast]
+      pick_when: Predict each gap from the other columns; slower
+    - id: missingindicator
+      shown_as: MissingIndicator
+      for: [predict-number, predict-category, forecast]
+      pick_when: The fact that a value is missing is itself useful
+- id: transform
+  names_label: Transform
+  question_label: Get the columns ready
+  question_sentence: We need to turn raw columns into features a model can use.
+  question_prompt: What do the columns need first?
+  children:
+  - id: transform.scale
+    level: group
+    names_label: Scaling and shaping
+    question_label: Put numbers on a fair scale
+    question_sentence: We need numeric columns on comparable scales or shapes.
+    question_prompt: What's wrong with the numbers?
+    for: [predict-number, predict-category, forecast]
+    children:
+    - id: transform.scale.rescale
+      level: family
+      names_label: Scalers
+      question_label: Make columns comparable
+      question_sentence: We need columns on the same scale so no column dominates.
+      question_prompt: null
+      for: [predict-number, predict-category, forecast]
+      pages:
+      - id: standardscaler
+        shown_as: StandardScaler
+        for: [predict-number, predict-category, forecast]
+        pick_when: Default for linear models, SVMs, k-NN and neural nets
+      - id: minmaxscaler
+        shown_as: MinMaxScaler
+        for: [predict-number, predict-category, forecast]
+        pick_when: Values must sit between 0 and 1
+      - id: robustscaler
+        shown_as: RobustScaler
+        for: [predict-number, predict-category, forecast]
+        pick_when: Outliers would distort the mean and spread
+      - id: maxabsscaler
+        shown_as: MaxAbsScaler
+        for: [predict-number, predict-category, forecast]
+        pick_when: Sparse data where zeros must stay zero
+      - id: normalizer
+        shown_as: Normalizer
+        for: [predict-number, predict-category, forecast]
+        pick_when: Each row should have length 1, like text vectors
+      - id: kernelcenterer
+        shown_as: KernelCenterer
+        for: [predict-number, predict-category, forecast]
+        pick_when: Centring a precomputed kernel matrix
+    - id: transform.scale.reshape
+      level: family
+      names_label: Distribution shaping
+      question_label: Make skewed columns behave
+      question_sentence: We need skewed columns to look closer to a bell curve.
+      question_prompt: null
+      for: [predict-number, predict-category, forecast]
+      pages:
+      - id: powertransformer
+        shown_as: PowerTransformer
+        for: [predict-number, predict-category, forecast]
+        pick_when: Skewed columns; Yeo-Johnson handles zeros and negatives
+      - id: quantiletransformer
+        shown_as: QuantileTransformer
+        for: [predict-number, predict-category, forecast]
+        pick_when: Heavy outliers; forces a uniform or normal shape
+    - id: transform.scale.bin
+      level: family
+      names_label: Discretisation
+      question_label: Turn numbers into bands or flags
+      question_sentence: We need to turn a number into ranges or on/off flags.
+      question_prompt: null
+      for: [predict-number, predict-category, forecast]
+      pages:
+      - id: kbinsdiscretizer
+        shown_as: KBinsDiscretizer
+        for: [predict-number, predict-category, forecast]
+        pick_when: Group a number into ranges, like age bands
+      - id: binarizer
+        shown_as: Binarizer
+        for: [predict-number, predict-category, forecast]
+        pick_when: Turn a number into 0 or 1 at a cut-off
+  - id: transform.encode
+    level: group
+    names_label: Encoding
+    question_label: Turn categories into numbers
+    question_sentence: We need text categories turned into numbers a model can use.
+    question_prompt: Which columns hold categories?
+    for: [predict-number, predict-category, forecast]
+    children:
+    - id: transform.encode.features
+      level: family
+      names_label: Categorical encoders
+      question_label: Encode the input columns
+      question_sentence: We need to encode the category columns in X.
+      question_prompt: null
+      for: [predict-number, predict-category, forecast]
+      pages:
+      - id: onehotencoder
+        shown_as: OneHotEncoder
+        for: [predict-number, predict-category, forecast]
+        pick_when: Few categories; the safe default for linear models
+      - id: ordinalencoder
+        shown_as: OrdinalEncoder
+        for: [predict-number, predict-category, forecast]
+        pick_when: Categories with a real order, or for tree models
+      - id: targetencoder
+        shown_as: TargetEncoder
+        for: [predict-number, predict-category, forecast]
+        pick_when: Hundreds of categories, like postcodes
+    - id: transform.encode.target
+      level: family
+      names_label: Label encoders
+      question_label: Encode the target column
+      question_sentence: We need to encode y, the thing we predict.
+      question_prompt: null
+      for: [predict-category]
+      pages:
+      - id: labelencoder
+        shown_as: LabelEncoder
+        for: [predict-category]
+        pick_when: Turn class names in y into 0, 1, 2 (never for X)
+      - id: labelbinarizer
+        shown_as: LabelBinarizer
+        for: [predict-category]
+        pick_when: Turn y into one 0/1 column per class
+      - id: label-binarizer
+        shown_as: label_binarize
+        for: [predict-category]
+        pick_when: The same, as a one-off function
+      - id: multilabelbinarizer
+        shown_as: MultiLabelBinarizer
+        for: [predict-category]
+        pick_when: Each row can have several labels
+  - id: transform.create
+    level: group
+    names_label: Feature creation
+    question_label: Create new features
+    question_sentence: We need features the raw columns don't give us.
+    question_prompt: What should the new features capture?
+    for: [predict-number, predict-category, forecast]
+    children:
+    - id: transform.create.expand
+      level: family
+      names_label: Feature expansion
+      question_label: Add curves and interactions
+      question_sentence: We need a straight-line model to capture curves or interactions.
+      question_prompt: null
+      for: [predict-number, predict-category, forecast]
+      pages:
+      - id: polynomialfeatures
+        shown_as: PolynomialFeatures
+        for: [predict-number, predict-category, forecast]
+        pick_when: Add squares and products; few columns only
+      - id: splinetransformer
+        shown_as: SplineTransformer
+        for: [predict-number, predict-category, forecast]
+        pick_when: Smooth curves without the blow-up of high powers
+      - id: add-dummy-feature
+        shown_as: add_dummy_feature
+        for: [predict-number, predict-category, forecast]
+        pick_when: Add a constant column of ones
+    - id: transform.create.custom
+      level: family
+      names_label: Custom transformation
+      question_label: Apply our own function
+      question_sentence: We need to apply our own function inside a pipeline.
+      question_prompt: null
+      for: [predict-number, predict-category, forecast]
+      pages:
+      - id: functiontransformer
+        shown_as: FunctionTransformer
+        for: [predict-number, predict-category, forecast]
+        pick_when: Wrap a function like np.log1p as a pipeline step
+  - id: transform.rebalance
+    level: group
+    names_label: Resampling
+    question_label: Rebalance lopsided classes
+    question_sentence: We need to classify, but one class is much rarer than the others.
+    question_prompt: How should we rebalance?
+    for: [predict-category]
+    children:
+    - id: transform.rebalance.weight
+      level: family
+      names_label: Class weighting
+      question_label: Weight rare rows more
+      question_sentence: We need the model to care more about the rare class, without changing the data.
+      question_prompt: null
+      for: [predict-category]
+      pages:
+      - id: compute-class-weight
+        shown_as: compute_class_weight
+        for: [predict-category]
+        pick_when: Try before resampling; feeds class_weight or sample_weight
+    - id: transform.rebalance.over
+      level: family
+      names_label: Over-sampling
+      question_label: Make more rare rows
+      question_sentence: We need more rows of the rare class.
+      question_prompt: null
+      for: [predict-category]
+      pages:
+      - id: randomoversampler
+        shown_as: RandomOverSampler
+        for: [predict-category]
+        pick_when: 'Simplest: copy rare rows'
+      - id: smote
+        shown_as: SMOTE
+        for: [predict-category]
+        pick_when: Make new rare rows between neighbours; numeric data
+      - id: smotenc
+        shown_as: SMOTENC
+        for: [predict-category]
+        pick_when: Like SMOTE, for numeric and category columns mixed
+      - id: smoten
+        shown_as: SMOTEN
+        for: [predict-category]
+        pick_when: Like SMOTE, for category columns only
+    - id: transform.rebalance.over-hard
+      level: family
+      names_label: Boundary over-sampling
+      question_label: Make rare rows near the hard cases
+      question_sentence: We need more rare rows, but mostly where the classes overlap.
+      question_prompt: null
+      for: [predict-category]
+      pages:
+      - id: borderlinesmote
+        shown_as: BorderlineSMOTE
+        for: [predict-category]
+        pick_when: Focus on rare rows next to the other class
+      - id: svmsmote
+        shown_as: SVMSMOTE
+        for: [predict-category]
+        pick_when: Use an SVM to find the boundary first
+      - id: adasyn
+        shown_as: ADASYN
+        for: [predict-category]
+        pick_when: More new rows where rare rows are hardest to learn
+      - id: kmeanssmote
+        shown_as: KMeansSMOTE
+        for: [predict-category]
+        pick_when: Cluster first, then fill thin rare areas
+    - id: transform.rebalance.under
+      level: family
+      names_label: Under-sampling
+      question_label: Use fewer common rows
+      question_sentence: We need fewer rows of the common class.
+      question_prompt: null
+      for: [predict-category]
+      pages:
+      - id: randomundersampler
+        shown_as: RandomUnderSampler
+        for: [predict-category]
+        pick_when: 'Simplest: drop common rows at random'
+      - id: nearmiss
+        shown_as: NearMiss
+        for: [predict-category]
+        pick_when: Keep the common rows closest to the rare ones
+      - id: clustercentroids
+        shown_as: ClusterCentroids
+        for: [predict-category]
+        pick_when: Replace common rows with cluster centres
+      - id: condensednearestneighbour
+        shown_as: CondensedNearestNeighbour
+        for: [predict-category]
+        pick_when: Keep only the common rows needed for the boundary
+      - id: instancehardnessthreshold
+        shown_as: InstanceHardnessThreshold
+        for: [predict-category]
+        pick_when: Drop common rows a model finds hard to classify
+    - id: transform.rebalance.clean
+      level: family
+      names_label: Cleaning under-samplers
+      question_label: Remove overlapping rows
+      question_sentence: We need fewer common rows, but only the noisy ones near the boundary.
+      question_prompt: null
+      for: [predict-category]
+      pages:
+      - id: tomeklinks
+        shown_as: TomekLinks
+        for: [predict-category]
+        pick_when: Remove pairs of opposite-class neighbours
+      - id: editednearestneighbours
+        shown_as: EditedNearestNeighbours
+        for: [predict-category]
+        pick_when: Remove rows that disagree with their neighbours
+      - id: repeatededitednearestneighbours
+        shown_as: RepeatedEditedNearestNeighbours
+        for: [predict-category]
+        pick_when: Repeat that cleaning until nothing changes
+      - id: allknn
+        shown_as: AllKNN
+        for: [predict-category]
+        pick_when: Clean with growing neighbourhood sizes
+      - id: neighbourhoodcleaningrule
+        shown_as: NeighbourhoodCleaningRule
+        for: [predict-category]
+        pick_when: Gentler cleaning that protects the rare class
+      - id: onesidedselection
+        shown_as: OneSidedSelection
+        for: [predict-category]
+        pick_when: Drop redundant and noisy common rows together
+    - id: transform.rebalance.combine
+      level: family
+      names_label: Combined sampling
+      question_label: Make rare rows, then clean up
+      question_sentence: We need to over-sample, then remove the noise that creates.
+      question_prompt: null
+      for: [predict-category]
+      pages:
+      - id: smoteenn
+        shown_as: SMOTEENN
+        for: [predict-category]
+        pick_when: SMOTE, then stronger cleaning
+      - id: smotetomek
+        shown_as: SMOTETomek
+        for: [predict-category]
+        pick_when: SMOTE, then light cleaning
+    - id: transform.rebalance.custom
+      level: family
+      names_label: Custom sampling
+      question_label: Use our own sampler
+      question_sentence: We need a resampling rule the library doesn't have.
+      question_prompt: null
+      for: [predict-category]
+      pages:
+      - id: functionsampler
+        shown_as: FunctionSampler
+        for: [predict-category]
+        pick_when: Wrap our own function as a sampler step
+  - id: transform.chain
+    level: group
+    names_label: Pipelines and composition
+    question_label: Chain steps without leaks
+    question_sentence: We need steps to run in order, fitted only on training data.
+    question_prompt: What do we need to chain?
+    for: [predict-number, predict-category, forecast]
+    children:
+    - id: transform.chain.pipeline
+      level: family
+      names_label: Pipelines
+      question_label: Run steps in order
+      question_sentence: We need steps that run in order and learn only from training data.
+      question_prompt: null
+      for: [predict-number, predict-category, forecast]
+      pages:
+      - id: pipeline
+        shown_as: Pipeline
+        for: [predict-number, predict-category, forecast]
+        pick_when: Any multi-step model; stops leakage in cross-validation
+      - id: imblearn-pipeline
+        shown_as: Pipeline (imbalanced-learn)
+        for: [predict-category]
+        pick_when: The steps include a sampler like SMOTE
+    - id: transform.chain.columns
+      level: family
+      names_label: Column transformers
+      question_label: Treat columns differently
+      question_sentence: We need different steps for different columns.
+      question_prompt: null
+      for: [predict-number, predict-category, forecast]
+      pages:
+      - id: columntransformer
+        shown_as: ColumnTransformer
+        for: [predict-number, predict-category, forecast]
+        pick_when: Scale numbers and encode categories in one step
+      - id: column-transformer
+        shown_as: make_column_transformer
+        for: [predict-number, predict-category, forecast]
+        pick_when: The same, with step names filled in
+      - id: make-column-selector
+        shown_as: make_column_selector
+        for: [predict-number, predict-category, forecast]
+        pick_when: Pick columns by type or name pattern
+    - id: transform.chain.target
+      level: family
+      names_label: Target transformation
+      question_label: Transform the target, then undo it
+      question_sentence: We need to model a transformed target, but report in the original units.
+      question_prompt: null
+      for: [predict-number, forecast]
+      pages:
+      - id: transformedtargetregressor
+        shown_as: TransformedTargetRegressor
+        for: [predict-number, forecast]
+        pick_when: Train on a log target; predict in real units
+    - id: transform.chain.union
+      level: family
+      names_label: Feature unions
+      question_label: Run transforms side by side
+      question_sentence: We need several transforms of the same columns, joined together.
+      question_prompt: null
+      for: [predict-number, predict-category, forecast]
+      pages:
+      - id: featureunion
+        shown_as: FeatureUnion
+        for: [predict-number, predict-category, forecast]
+        pick_when: Join the outputs of several transformers
+      - id: feature-union
+        shown_as: make_union
+        for: [predict-number, predict-category, forecast]
+        pick_when: The same, with step names filled in
+- id: select
+  names_label: Select
+  question_label: Keep the useful features
+  question_sentence: We need fewer, better features.
+  question_prompt: How should we cut down the features?
+  children:
+  - id: select.variance
+    level: family
+    names_label: Variance filter
+    question_label: Drop columns that barely change
+    question_sentence: We need to drop columns that are nearly constant.
+    question_prompt: null
+    for: [predict-number, predict-category, forecast]
+    pages:
+    - id: variancethreshold
+      shown_as: VarianceThreshold
+      for: [predict-number, predict-category, forecast]
+      pick_when: A quick clean-up that needs no target
+  - id: select.top-k
+    level: family
+    names_label: Univariate selection
+    question_label: Keep the top-scoring features
+    question_sentence: We need to keep the features that score best, one at a time.
+    question_prompt: null
+    for: [predict-number, predict-category]
+    pages:
+    - id: selectkbest
+      shown_as: SelectKBest
+      for: [predict-number, predict-category]
+      pick_when: Keep a fixed number of features
+    - id: selectpercentile
+      shown_as: SelectPercentile
+      for: [predict-number, predict-category]
+      pick_when: Keep a fixed share of features
+    - id: genericunivariateselect
+      shown_as: GenericUnivariateSelect
+      for: [predict-number, predict-category]
+      pick_when: Switch the rule with one setting, for tuning
+  - id: select.significance
+    level: family
+    names_label: Statistical tests
+    question_label: Keep features that pass a test
+    question_sentence: We need features that pass a significance test, with control over false picks.
+    question_prompt: null
+    for: [predict-number, predict-category]
+    pages:
+    - id: selectfdr
+      shown_as: SelectFdr
+      for: [predict-number, predict-category]
+      pick_when: Many features; cap the share of false discoveries
+    - id: selectfpr
+      shown_as: SelectFpr
+      for: [predict-number, predict-category]
+      pick_when: Cap false positives per feature
+    - id: selectfwe
+      shown_as: SelectFwe
+      for: [predict-number, predict-category]
+      pick_when: 'Strictest: cap the chance of any false pick'
+  - id: select.scores
+    level: family
+    names_label: Scoring functions
+    question_label: Score each feature against the target
+    question_sentence: We need a score for how much each feature tells us about the target.
+    question_prompt: null
+    for: [predict-number, predict-category]
+    pages:
+    - id: f-regression
+      shown_as: f_regression
+      for: [predict-number]
+      pick_when: Straight-line link to a numeric target
+    - id: r-regression
+      shown_as: r_regression
+      for: [predict-number]
+      pick_when: Signed correlation with a numeric target
+    - id: mutual-info-regression
+      shown_as: mutual_info_regression
+      for: [predict-number]
+      pick_when: Any link, including curves; numeric target
+    - id: f-classif
+      shown_as: f_classif
+      for: [predict-category]
+      pick_when: Numeric features against a category target
+    - id: chi2
+      shown_as: chi2
+      for: [predict-category]
+      pick_when: Counts or other non-negative features
+    - id: mutual-info-classif
+      shown_as: mutual_info_classif
+      for: [predict-category]
+      pick_when: Any link, including curves; category target
+  - id: select.model-based
+    level: family
+    names_label: Model-based selection
+    question_label: Let a model choose
+    question_sentence: We need a model to decide which features earn their place.
+    question_prompt: null
+    for: [predict-number, predict-category]
+    pages:
+    - id: selectfrommodel
+      shown_as: SelectFromModel
+      for: [predict-number, predict-category]
+      pick_when: Keep features above an importance or coefficient cut-off
+    - id: rfe
+      shown_as: RFE
+      for: [predict-number, predict-category]
+      pick_when: Drop the weakest feature, refit, repeat
+    - id: rfecv
+      shown_as: RFECV
+      for: [predict-number, predict-category]
+      pick_when: Like RFE, and picks how many to keep by cross-validation
+    - id: sequentialfeatureselector
+      shown_as: SequentialFeatureSelector
+      for: [predict-number, predict-category]
+      pick_when: Add or remove one feature at a time; slow but thorough
+  - id: select.compress
+    level: family
+    names_label: Dimensionality reduction
+    question_label: Compress into fewer columns
+    question_sentence: We need fewer columns, even if each one mixes the originals.
+    question_prompt: null
+    for: [predict-number, predict-category, forecast]
+    pages:
+    - id: pca
+      shown_as: PCA
+      for: [predict-number, predict-category, forecast]
+      pick_when: Dense numeric data; scale first
+    - id: truncatedsvd
+      shown_as: TruncatedSVD
+      for: [predict-number, predict-category, forecast]
+      pick_when: Sparse data, like text or one-hot columns
+- id: split
+  names_label: Split
+  question_label: Hold data back to test
+  question_sentence: We need to keep some data aside so we can test honestly.
+  question_prompt: How should we hold data back?
+  children:
+  - id: split.holdout
+    level: family
+    names_label: Hold-out splits
+    question_label: Keep one test set aside
+    question_sentence: We need one test set we never train on.
+    question_prompt: null
+    for: [predict-number, predict-category, forecast]
+    pages:
+    - id: train-test-split
+      shown_as: train_test_split
+      for: [predict-number, predict-category, forecast]
+      pick_when: The usual first split (shuffle=False for time order)
+    - id: shufflesplit
+      shown_as: ShuffleSplit
+      for: [predict-number, predict-category]
+      pick_when: Several random hold-outs, as a cv splitter
+    - id: predefinedsplit
+      shown_as: PredefinedSplit
+      for: [predict-number, predict-category, forecast]
+      pick_when: We already have a fixed validation set
+  - id: split.rotate
+    level: family
+    names_label: K-fold
+    question_label: Rotate the test set
+    question_sentence: We need every row tested once, so the score is steadier.
+    question_prompt: null
+    for: [predict-number, predict-category]
+    pages:
+    - id: kfold
+      shown_as: KFold
+      for: [predict-number, predict-category]
+      pick_when: Rows are independent; 5 folds is the default
+    - id: repeatedkfold
+      shown_as: RepeatedKFold
+      for: [predict-number, predict-category]
+      pick_when: Small data; repeat with fresh shuffles
+    - id: leaveoneout
+      shown_as: LeaveOneOut
+      for: [predict-number, predict-category]
+      pick_when: Very small data; test one row at a time
+    - id: leavepout
+      shown_as: LeavePOut
+      for: [predict-number, predict-category]
+      pick_when: Tiny data; every set of p rows (slow)
+  - id: split.stratified
+    level: family
+    names_label: Stratified splits
+    question_label: Rotate, but keep class balance
+    question_sentence: We need test sets, but one class is rare, so every fold must keep the same mix.
+    question_prompt: null
+    for: [predict-category]
+    pages:
+    - id: stratifiedkfold
+      shown_as: StratifiedKFold
+      for: [predict-category]
+      pick_when: The default for classification
+    - id: repeatedstratifiedkfold
+      shown_as: RepeatedStratifiedKFold
+      for: [predict-category]
+      pick_when: Small, imbalanced data; repeat it
+    - id: stratifiedshufflesplit
+      shown_as: StratifiedShuffleSplit
+      for: [predict-category]
+      pick_when: Random hold-outs that keep the mix
+    - id: instancehardnesscv
+      shown_as: InstanceHardnessCV
+      for: [predict-category]
+      pick_when: Spread hard-to-classify rows evenly across folds
+  - id: split.grouped
+    level: family
+    names_label: Group splits
+    question_label: Rotate, but keep groups together
+    question_sentence: We need test sets, but the same customer or patient appears many times.
+    question_prompt: null
+    for: [predict-number, predict-category]
+    pages:
+    - id: groupkfold
+      shown_as: GroupKFold
+      for: [predict-number, predict-category]
+      pick_when: A group is never in both train and test
+    - id: stratifiedgroupkfold
+      shown_as: StratifiedGroupKFold
+      for: [predict-category]
+      pick_when: Groups and a rare class at once
+    - id: groupshufflesplit
+      shown_as: GroupShuffleSplit
+      for: [predict-number, predict-category]
+      pick_when: Random hold-outs by group
+    - id: leaveonegroupout
+      shown_as: LeaveOneGroupOut
+      for: [predict-number, predict-category]
+      pick_when: Test on one whole group at a time, like one store
+    - id: leavepgroupsout
+      shown_as: LeavePGroupsOut
+      for: [predict-number, predict-category]
+      pick_when: Test on every set of p groups
+  - id: split.time
+    level: family
+    names_label: Time series split
+    question_label: Rotate, but respect time order
+    question_sentence: We need test sets, but rows are in time order, so we must never train on the future.
+    question_prompt: null
+    for: [predict-number, predict-category, forecast]
+    pages:
+    - id: timeseriessplit
+      shown_as: TimeSeriesSplit
+      for: [predict-number, predict-category, forecast]
+      pick_when: Train on the past, test on what comes next
+  - id: split.run
+    level: family
+    names_label: Cross-validation runners
+    question_label: Run the folds and get scores
+    question_sentence: We need to run cross-validation and collect the results.
+    question_prompt: null
+    for: [predict-number, predict-category, forecast]
+    pages:
+    - id: cross-val-score
+      shown_as: cross_val_score
+      for: [predict-number, predict-category, forecast]
+      pick_when: One metric, one number per fold
+    - id: cross-validate
+      shown_as: cross_validate
+      for: [predict-number, predict-category, forecast]
+      pick_when: Several metrics, plus fit times and train scores
+    - id: cross-val-predict
+      shown_as: cross_val_predict
+      for: [predict-number, predict-category]
+      pick_when: An out-of-fold prediction for every row; not for scoring
+- id: model
+  names_label: Model
+  question_label:
+    predict-number: Predict the number
+    predict-category: Predict the category
+    forecast: Make the forecast
+  question_sentence: We need a model that makes the prediction.
+  question_prompt:
+    predict-number: How should we predict the number?
+    predict-category: How should we predict the category?
+    forecast: How should we forecast?
+  children:
+  - id: model.linear
+    level: group
+    names_label: Linear models
+    question_label:
+      predict-number: Fit a line we can explain
+      predict-category: Get probabilities we can explain
+    question_sentence:
+      predict-number: We need a model whose effects we can read and explain.
+      predict-category: We need class probabilities we can read and explain.
+    question_prompt:
+      predict-number: What do we need from the line?
+    for: [predict-number, predict-category]
+    children:
+    - id: model.linear.ols
+      level: family
+      names_label: Ordinary least squares
+      question_label: Fit a plain straight line
+      question_sentence: We need the simplest line, with readable coefficients and p-values.
+      question_prompt: null
+      for: [predict-number]
+      pages:
+      - id: linear-regression
+        shown_as: Linear regression
+        for: [predict-number]
+        pick_when: Baseline; the statsmodels tab gives p-values
+      - id: wls
+        shown_as: WLS
+        for: [predict-number]
+        pick_when: Some rows are noisier than others
+      - id: gls
+        shown_as: GLS
+        for: [predict-number]
+        pick_when: Errors are correlated, for example over time
+    - id: model.linear.shrink
+      level: family
+      names_label: Shrinkage (ridge-type)
+      question_label: Fit a line, but features move together
+      question_sentence: We need a line, but many features are correlated.
+      question_prompt: null
+      for: [predict-number]
+      pages:
+      - id: ridge
+        shown_as: Ridge
+        for: [predict-number]
+        pick_when: Many correlated features; keeps them all, shrinks them
+      - id: ridge-cv
+        shown_as: RidgeCV
+        for: [predict-number]
+        pick_when: Ridge that picks its own strength
+      - id: pls-regression
+        shown_as: PLSRegression
+        for: [predict-number]
+        pick_when: More features than rows; builds a few combined ones
+    - id: model.linear.sparse
+      level: family
+      names_label: Sparse (feature-dropping)
+      question_label: Fit a line, and drop useless features
+      question_sentence: We need a line that sets unhelpful features to zero.
+      question_prompt: null
+      for: [predict-number]
+      pages:
+      - id: lasso
+        shown_as: Lasso
+        for: [predict-number]
+        pick_when: Only a few features are expected to matter
+      - id: lasso-cv
+        shown_as: LassoCV
+        for: [predict-number]
+        pick_when: Lasso that picks its own strength
+      - id: elastic-net
+        shown_as: ElasticNet
+        for: [predict-number]
+        pick_when: Drop features, but keep correlated ones together
+      - id: elastic-net-cv
+        shown_as: ElasticNetCV
+        for: [predict-number]
+        pick_when: ElasticNet that picks its own settings
+      - id: lars
+        shown_as: Lars
+        for: [predict-number]
+        pick_when: Far more features than rows; fast
+      - id: lasso-lars
+        shown_as: LassoLars
+        for: [predict-number]
+        pick_when: Lasso fitted the LARS way; very wide data
+      - id: orthogonal-matching-pursuit
+        shown_as: OrthogonalMatchingPursuit
+        for: [predict-number]
+        pick_when: Keep exactly k features
+    - id: model.linear.bayes
+      level: family
+      names_label: Bayesian linear
+      question_label: Fit a line, with uncertainty
+      question_sentence: We need a line, plus how unsure we are about each effect.
+      question_prompt: null
+      for: [predict-number]
+      pages:
+      - id: bayesian-ridge
+        shown_as: BayesianRidge
+        for: [predict-number]
+        pick_when: Ridge that tunes itself and gives a spread per prediction
+      - id: ard-regression
+        shown_as: ARDRegression
+        for: [predict-number]
+        pick_when: The same, and switches off unhelpful features
+    - id: model.linear.mixed
+      level: family
+      names_label: Mixed effects
+      question_label: Fit a line, but rows come in groups
+      question_sentence: We need a line, but rows come in groups like stores or patients.
+      question_prompt: null
+      for: [predict-number]
+      pages:
+      - id: mixed-lm
+        shown_as: MixedLM
+        for: [predict-number]
+        pick_when: Each group gets its own baseline
+    - id: model.linear.logit
+      level: family
+      names_label: Logistic and probit
+      question_label: Get probabilities we can explain
+      question_sentence: We need class probabilities with effects we can read.
+      question_prompt: null
+      for: [predict-category]
+      pages:
+      - id: logistic-regression
+        shown_as: Logistic regression
+        for: [predict-category]
+        pick_when: The default classifier; the statsmodels tab gives p-values
+      - id: logistic-regression-cv
+        shown_as: LogisticRegressionCV
+        for: [predict-category]
+        pick_when: Picks its own strength by cross-validation
+      - id: probit
+        shown_as: Probit
+        for: [predict-category]
+        pick_when: Like logit, assuming a normal curve; common in economics
+      - id: mn-logit
+        shown_as: MNLogit
+        for: [predict-category]
+        pick_when: Three or more classes, with p-values
+  - id: model.awkward
+    level: group
+    names_label: Robust and generalised linear
+    question_label:
+      predict-number: Fit a line, but the data is awkward
+      predict-category: Classify linearly on huge data
+    question_sentence:
+      predict-number: We need a line, but the target or the data breaks the usual rules.
+      predict-category: We need a fast linear classifier for data too big for memory.
+    question_prompt:
+      predict-number: What makes it awkward?
+    for: [predict-number, predict-category]
+    children:
+    - id: model.awkward.robust
+      level: family
+      names_label: Robust regression
+      question_label: We have outliers
+      question_sentence: We need a line, but outliers we can't remove would pull it off course.
+      question_prompt: null
+      for: [predict-number]
+      pages:
+      - id: huber-regressor
+        shown_as: HuberRegressor
+        for: [predict-number]
+        pick_when: A few outliers in the target; down-weights them
+      - id: ransac-regressor
+        shown_as: RANSACRegressor
+        for: [predict-number]
+        pick_when: Many outliers; fits on the clean subset
+      - id: theil-sen-regression
+        shown_as: Theil–Sen
+        for: [predict-number]
+        pick_when: Small data with outliers; median of slopes
+      - id: rlm
+        shown_as: RLM
+        for: [predict-number]
+        pick_when: A robust fit with statsmodels output
+    - id: model.awkward.quantile
+      level: family
+      names_label: Quantile regression
+      question_label: We need a range, not an average
+      question_sentence: We need a line for the median or a percentile, not the mean.
+      question_prompt: null
+      for: [predict-number]
+      pages:
+      - id: quantile-regression
+        shown_as: Quantile regression
+        for: [predict-number]
+        pick_when: Prediction bands, or the median
+    - id: model.awkward.glm
+      level: family
+      names_label: Generalised linear (GLM)
+      question_label: The target is a count or amount
+      question_sentence: We need a line, but the target is a count, a rate or a skewed positive amount.
+      question_prompt: null
+      for: [predict-number]
+      pages:
+      - id: poisson-regression
+        shown_as: Poisson regression
+        for: [predict-number]
+        pick_when: Counts, like visits or claims
+      - id: negative-binomial-regression
+        shown_as: NegativeBinomial
+        for: [predict-number]
+        pick_when: Counts that vary more than Poisson allows
+      - id: gamma-regressor
+        shown_as: GammaRegressor
+        for: [predict-number]
+        pick_when: Positive, right-skewed amounts, like claim size
+      - id: tweedie-regressor
+        shown_as: TweedieRegressor
+        for: [predict-number]
+        pick_when: Amounts with many exact zeros, like total spend
+      - id: glm
+        shown_as: GLM (statsmodels)
+        for: [predict-number]
+        pick_when: Any of these families, with p-values
+    - id: model.awkward.big
+      level: family
+      names_label: Online / large data
+      question_label: The data is too big for memory
+      question_sentence: We need a line, but the data is too big for memory or keeps arriving.
+      question_prompt: null
+      for: [predict-number, predict-category]
+      pages:
+      - id: sgd-regressor
+        shown_as: SGDRegressor
+        for: [predict-number]
+        pick_when: Millions of rows; learns in small batches
+      - id: passive-aggressive-regressor
+        shown_as: PassiveAggressiveRegressor
+        for: [predict-number]
+        pick_when: Streaming data; updates on each mistake
+      - id: linear-svr
+        shown_as: LinearSVR
+        for: [predict-number]
+        pick_when: Large data; a margin-based line
+      - id: sgd-classifier
+        shown_as: SGDClassifier
+        for: [predict-category]
+        pick_when: Millions of rows; logistic or SVM loss
+      - id: perceptron
+        shown_as: Perceptron
+        for: [predict-category]
+        pick_when: The simplest online classifier; a baseline
+      - id: ridge-classifier
+        shown_as: RidgeClassifier
+        for: [predict-category]
+        pick_when: A fast linear classifier for many classes
+      - id: linear-svc
+        shown_as: LinearSVC
+        for: [predict-category]
+        pick_when: Large or text data; margin-based
+    - id: model.awkward.shape
+      level: family
+      names_label: Curve fitting and shape
+      question_label: We know the curve's shape
+      question_sentence: We need a curve, and we already know its formula or direction.
+      question_prompt: null
+      for: [predict-number]
+      pages:
+      - id: curve-fit
+        shown_as: curve_fit
+        for: [predict-number]
+        pick_when: We know the formula, like exponential decay
+      - id: least-squares
+        shown_as: least_squares
+        for: [predict-number]
+        pick_when: The same, with bounds or a robust loss
+      - id: isotonic-regression
+        shown_as: IsotonicRegression
+        for: [predict-number]
+        pick_when: The curve can only go up (or only down)
+  - id: model.trees
+    level: group
+    names_label: Trees and ensembles
+    question_label: Get strong accuracy on tables
+    question_sentence: We need strong accuracy on table-shaped data, and can live with less explanation.
+    question_prompt: How much power do we need?
+    for: [predict-number, predict-category]
+    children:
+    - id: model.trees.single
+      level: family
+      names_label: Single tree
+      question_label: Get rules a person can follow
+      question_sentence: We need simple if-then rules that a person can read.
+      question_prompt: null
+      for: [predict-number, predict-category]
+      pages:
+      - id: decision-tree-regressor
+        shown_as: DecisionTreeRegressor
+        for: [predict-number]
+        pick_when: Readable rules; limit the depth or it overfits
+      - id: decision-tree-classifier
+        shown_as: DecisionTreeClassifier
+        for: [predict-category]
+        pick_when: Readable rules; limit the depth or it overfits
+      - id: extra-tree-regressor
+        shown_as: ExtraTreeRegressor
+        for: [predict-number]
+        pick_when: One very random tree; mainly a building block
+    - id: model.trees.bagging
+      level: family
+      names_label: Bagging and forests
+      question_label: Get a strong, hard-to-break default
+      question_sentence: We need a strong default that needs little tuning.
+      question_prompt: null
+      for: [predict-number, predict-category]
+      pages:
+      - id: random-forest
+        shown_as: Random forest
+        for: [predict-number, predict-category]
+        pick_when: The first serious model to try
+      - id: extra-trees
+        shown_as: Extra trees
+        for: [predict-number, predict-category]
+        pick_when: Faster than a forest, a bit more random
+      - id: bagging
+        shown_as: Bagging
+        for: [predict-number, predict-category]
+        pick_when: Average many copies of any base model
+    - id: model.trees.boosting
+      level: family
+      names_label: Boosting
+      question_label: Get the best accuracy we can
+      question_sentence: We need the best accuracy, and we can spend time tuning.
+      question_prompt: null
+      for: [predict-number, predict-category]
+      pages:
+      - id: xgboost
+        shown_as: XGBoost
+        for: [predict-number, predict-category]
+        pick_when: Top accuracy on tabular data; mature and well documented
+      - id: lightgbm
+        shown_as: LightGBM
+        for: [predict-number, predict-category]
+        pick_when: The same idea, usually faster on large data
+      - id: hist-gradient-boosting
+        shown_as: HistGradientBoosting
+        for: [predict-number, predict-category]
+        pick_when: Fast boosting with no extra install; handles gaps
+      - id: gradient-boosting
+        shown_as: GradientBoosting
+        for: [predict-number, predict-category]
+        pick_when: Small data only; slower but simple
+      - id: ada-boost
+        shown_as: AdaBoost
+        for: [predict-number, predict-category]
+        pick_when: Classic boosting; mostly a teaching baseline today
+    - id: model.trees.balanced
+      level: family
+      names_label: Balanced ensembles
+      question_label: But one class is rare
+      question_sentence: We need tree power, but one class is much rarer than the others.
+      question_prompt: null
+      for: [predict-category]
+      pages:
+      - id: balancedrandomforestclassifier
+        shown_as: BalancedRandomForestClassifier
+        for: [predict-category]
+        pick_when: A random forest that balances each tree's sample
+      - id: balancedbaggingclassifier
+        shown_as: BalancedBaggingClassifier
+        for: [predict-category]
+        pick_when: Balanced bagging around any base model
+      - id: easyensembleclassifier
+        shown_as: EasyEnsembleClassifier
+        for: [predict-category]
+        pick_when: Many AdaBoost models on balanced samples
+      - id: rusboostclassifier
+        shown_as: RUSBoostClassifier
+        for: [predict-category]
+        pick_when: Boosting with under-sampling each round
+    - id: model.trees.combine
+      level: family
+      names_label: Model ensembles
+      question_label: Combine several good models
+      question_sentence: We have several good models and want them to work together.
+      question_prompt: null
+      for: [predict-number, predict-category]
+      pages:
+      - id: voting
+        shown_as: Voting
+        for: [predict-number, predict-category]
+        pick_when: Average or vote across models
+      - id: stacking
+        shown_as: Stacking
+        for: [predict-number, predict-category]
+        pick_when: A final model learns how to weigh the others
+  - id: model.neighbours
+    level: group
+    names_label: Neighbours and kernels
+    question_label: Learn from similar examples
+    question_sentence: We need predictions based on how close a row is to rows we've seen.
+    question_prompt: What matters most here?
+    for: [predict-number, predict-category]
+    children:
+    - id: model.neighbours.knn
+      level: family
+      names_label: Nearest neighbours
+      question_label: Copy the nearest rows
+      question_sentence: We need to predict from the most similar rows we've seen.
+      question_prompt: null
+      for: [predict-number, predict-category]
+      pages:
+      - id: k-neighbors-regressor
+        shown_as: KNeighborsRegressor
+        for: [predict-number]
+        pick_when: Small data, few features; scale first
+      - id: k-neighbors-classifier
+        shown_as: KNeighborsClassifier
+        for: [predict-category]
+        pick_when: Small data, few features; scale first
+      - id: radius-neighbors-regressor
+        shown_as: RadiusNeighborsRegressor
+        for: [predict-number]
+        pick_when: Uneven density; use every neighbour within a distance
+    - id: model.neighbours.kernel
+      level: family
+      names_label: Kernel methods
+      question_label: Fit flexible curves on small data
+      question_sentence: We need a flexible curve, and the data is small to medium.
+      question_prompt: null
+      for: [predict-number, predict-category]
+      pages:
+      - id: svr
+        shown_as: SVR
+        for: [predict-number]
+        pick_when: Up to about 10,000 rows; scale first
+      - id: nu-svr
+        shown_as: NuSVR
+        for: [predict-number]
+        pick_when: SVR, controlling the share of support vectors
+      - id: kernel-ridge
+        shown_as: KernelRidge
+        for: [predict-number]
+        pick_when: Ridge with curves; fast on small data
+      - id: svc
+        shown_as: SVC
+        for: [predict-category]
+        pick_when: Up to about 10,000 rows; strong on clean, scaled data
+    - id: model.neighbours.gp
+      level: family
+      names_label: Gaussian processes
+      question_label: Get predictions with error bars
+      question_sentence: We need predictions with honest error bars, and the data is small.
+      question_prompt: null
+      for: [predict-number, predict-category]
+      pages:
+      - id: gaussian-process-regressor
+        shown_as: GaussianProcessRegressor
+        for: [predict-number]
+        pick_when: Small data; returns a standard deviation
+      - id: gaussian-process-classifier
+        shown_as: GaussianProcessClassifier
+        for: [predict-category]
+        pick_when: Small data; probabilistic classes
+  - id: model.probabilistic
+    level: group
+    names_label: Probabilistic classifiers
+    question_label: Weigh up evidence for each class
+    question_sentence: We need a fast classifier built on simple probability rules.
+    question_prompt: What kind of features do we have?
+    for: [predict-category]
+    children:
+    - id: model.probabilistic.nb
+      level: family
+      names_label: Naive Bayes
+      question_label: Classify fast with simple rules
+      question_sentence: We need a very fast classifier, even if it treats features as independent.
+      question_prompt: null
+      for: [predict-category]
+      pages:
+      - id: gaussian-nb
+        shown_as: GaussianNB
+        for: [predict-category]
+        pick_when: Numeric features; a quick baseline
+      - id: multinomial-nb
+        shown_as: MultinomialNB
+        for: [predict-category]
+        pick_when: Word counts or other counts
+      - id: complement-nb
+        shown_as: ComplementNB
+        for: [predict-category]
+        pick_when: Text with lopsided classes
+      - id: bernoulli-nb
+        shown_as: BernoulliNB
+        for: [predict-category]
+        pick_when: Yes/no features, like word present or not
+      - id: categorical-nb
+        shown_as: CategoricalNB
+        for: [predict-category]
+        pick_when: Category features, encoded as integers
+    - id: model.probabilistic.da
+      level: family
+      names_label: Discriminant analysis
+      question_label: Model each class's spread
+      question_sentence: We need to classify by modelling how each class is spread out.
+      question_prompt: null
+      for: [predict-category]
+      pages:
+      - id: linear-discriminant-analysis
+        shown_as: LinearDiscriminantAnalysis
+        for: [predict-category]
+        pick_when: Classes share a similar spread; also reduces dimensions
+      - id: quadratic-discriminant-analysis
+        shown_as: QuadraticDiscriminantAnalysis
+        for: [predict-category]
+        pick_when: Each class has its own spread; needs more rows
+  - id: model.neural
+    level: group
+    names_label: Neural nets
+    question_label: Learn complex patterns
+    question_sentence: We need to learn complex patterns, and we have plenty of data.
+    question_prompt: null
+    for: [predict-number, predict-category]
+    pages:
+    - id: mlp-regressor
+      shown_as: MLPRegressor
+      for: [predict-number]
+      pick_when: Plenty of data and scaled inputs
+    - id: mlp-classifier
+      shown_as: MLPClassifier
+      for: [predict-category]
+      pick_when: Plenty of data and scaled inputs
+  - id: model.baseline
+    level: group
+    names_label: Baselines
+    question_label: Set a score to beat
+    question_sentence: We need a simple score that any real model must beat.
+    question_prompt: null
+    for: [predict-number, predict-category]
+    pages:
+    - id: dummyregressor
+      shown_as: DummyRegressor
+      for: [predict-number]
+      pick_when: Predict the mean or median every time
+    - id: dummyclassifier
+      shown_as: DummyClassifier
+      for: [predict-category]
+      pick_when: Predict the most common class every time
+  - id: model.ts-past
+    level: group
+    names_label: Autoregressive
+    question_label: Forecast from the series' own past
+    question_sentence: We need to forecast one series from its own past values.
+    question_prompt: What patterns does the series have?
+    for: [forecast]
+    pages:
+    - id: auto-reg
+      shown_as: AutoReg
+      for: [forecast]
+      pick_when: 'Simple: today depends on recent values'
+    - id: arima
+      shown_as: ARIMA
+      for: [forecast]
+      pick_when: A trend or drift, no strong season
+    - id: sarimax
+      shown_as: SARIMAX
+      for: [forecast]
+      pick_when: Seasons, plus outside drivers like price or holidays
+  - id: model.ts-smooth
+    level: group
+    names_label: Exponential smoothing
+    question_label: Forecast by smoothing recent values
+    question_sentence: We need a forecast that weights recent values more.
+    question_prompt: null
+    for: [forecast]
+    pages:
+    - id: exponential-smoothing
+      shown_as: Holt-Winters (ExponentialSmoothing)
+      for: [forecast]
+      pick_when: Level, trend and season, weighted to recent values
+    - id: ets-model
+      shown_as: ETSModel
+      for: [forecast]
+      pick_when: The same idea, with prediction intervals
+    - id: theta-model
+      shown_as: ThetaModel
+      for: [forecast]
+      pick_when: A strong simple benchmark; hard to beat
+  - id: model.ts-multi
+    level: group
+    names_label: Multivariate
+    question_label: Forecast series that move together
+    question_sentence: We need to forecast several series that influence each other.
+    question_prompt: null
+    for: [forecast]
+    pages:
+    - id: var
+      shown_as: VAR
+      for: [forecast]
+      pick_when: Several stable series, each driving the others
+    - id: varmax
+      shown_as: VARMAX
+      for: [forecast]
+      pick_when: The same, plus moving-average terms and outside drivers
+  - id: model.ts-changing
+    level: group
+    names_label: State space and regimes
+    question_label: Forecast, but the pattern shifts
+    question_sentence: We need to forecast, but the trend or behaviour changes over time.
+    question_prompt: null
+    for: [forecast]
+    pages:
+    - id: unobserved-components
+      shown_as: UnobservedComponents
+      for: [forecast]
+      pick_when: Trend and seasons that drift slowly
+    - id: markov-regression
+      shown_as: MarkovRegression
+      for: [forecast]
+      pick_when: Behaviour switches between states, like boom and bust
+- id: tune
+  names_label: Tune
+  question_label: Find better settings
+  question_sentence: We need settings that make the model better.
+  question_prompt: How should we find better settings?
+  children:
+  - id: tune.settings
+    level: group
+    names_label: Hyperparameters
+    question_label: Know which settings matter
+    question_sentence: We need to know which settings to change, and why.
+    question_prompt: What should the settings control?
+    for: [predict-number, predict-category, forecast]
+    children:
+    - id: tune.settings.complexity
+      level: family
+      names_label: Complexity
+      question_label: Control how complex it gets
+      question_sentence: We need to stop the model memorising the training data.
+      question_prompt: null
+      for: [predict-number, predict-category, forecast]
+      pages:
+      - id: max-depth
+        shown_as: Tree depth limit
+        for: [predict-number, predict-category, forecast]
+        pick_when: Trees overfit or underfit
+    - id: tune.settings.training
+      level: family
+      names_label: Training length
+      question_label: Control how long it learns
+      question_sentence: We need to balance learning enough against learning noise.
+      question_prompt: null
+      for: [predict-number, predict-category, forecast]
+      pages:
+      - id: n-estimators
+        shown_as: Number of trees
+        for: [predict-number, predict-category, forecast]
+        pick_when: Boosting underfits, or we use early stopping
+      - id: learning-rate
+        shown_as: Learning rate
+        for: [predict-number, predict-category, forecast]
+        pick_when: Trading speed against accuracy in boosting
+      - id: early-stopping
+        shown_as: Early stopping
+        for: [predict-number, predict-category, forecast]
+        pick_when: A validation set should decide when to stop
+  - id: tune.search
+    level: group
+    names_label: Search (scikit-learn)
+    question_label: Search through settings
+    question_sentence: We need to try settings and keep the best by cross-validation.
+    question_prompt: How big is the search space?
+    for: [predict-number, predict-category, forecast]
+    children:
+    - id: tune.search.grid
+      level: family
+      names_label: Grid search
+      question_label: Try every combination
+      question_sentence: We need to try every combination of a small set of options.
+      question_prompt: null
+      for: [predict-number, predict-category, forecast]
+      pages:
+      - id: gridsearchcv
+        shown_as: GridSearchCV
+        for: [predict-number, predict-category, forecast]
+        pick_when: Few settings, few values each
+      - id: parametergrid
+        shown_as: ParameterGrid
+        for: [predict-number, predict-category, forecast]
+        pick_when: List the grid ourselves for a custom loop
+    - id: tune.search.random
+      level: family
+      names_label: Random search
+      question_label: Try random combinations
+      question_sentence: We need to sample combinations from a large space.
+      question_prompt: null
+      for: [predict-number, predict-category, forecast]
+      pages:
+      - id: randomizedsearchcv
+        shown_as: RandomizedSearchCV
+        for: [predict-number, predict-category, forecast]
+        pick_when: Many settings, or continuous ranges
+      - id: parametersampler
+        shown_as: ParameterSampler
+        for: [predict-number, predict-category, forecast]
+        pick_when: Draw samples ourselves for a custom loop
+    - id: tune.search.halving
+      level: family
+      names_label: Successive halving
+      question_label: Search, but each fit is slow
+      question_sentence: We need to search, but fits are slow, so weak candidates must drop out early.
+      question_prompt: null
+      for: [predict-number, predict-category, forecast]
+      pages:
+      - id: halvinggridsearchcv
+        shown_as: HalvingGridSearchCV
+        for: [predict-number, predict-category, forecast]
+        pick_when: Grid search that cuts weak options early
+      - id: halvingrandomsearchcv
+        shown_as: HalvingRandomSearchCV
+        for: [predict-number, predict-category, forecast]
+        pick_when: Random search that cuts weak options early
+  - id: tune.optuna
+    level: group
+    names_label: Optuna
+    question_label: Search smarter
+    question_sentence: We need a search that learns where good settings are.
+    question_prompt: What do we need from the search?
+    for: [predict-number, predict-category, forecast]
+    children:
+    - id: tune.optuna.setup
+      level: family
+      names_label: Studies and trials
+      question_label: Set up the search
+      question_sentence: We need to define what to search and what to optimise.
+      question_prompt: null
+      for: [predict-number, predict-category, forecast]
+      pages:
+      - id: optuna-study
+        shown_as: Study (create_study)
+        for: [predict-number, predict-category, forecast]
+        pick_when: Start, save or reload a search
+      - id: optuna-trial
+        shown_as: Trial
+        for: [predict-number, predict-category, forecast]
+        pick_when: Suggest values inside the objective function
+      - id: frozentrial
+        shown_as: FrozenTrial
+        for: [predict-number, predict-category, forecast]
+        pick_when: Read a finished trial's settings and score
+      - id: partialfixedsampler
+        shown_as: PartialFixedSampler
+        for: [predict-number, predict-category, forecast]
+        pick_when: Keep some settings fixed while searching the rest
+    - id: tune.optuna.sampler
+      level: family
+      names_label: Samplers
+      question_label: Choose how it picks the next try
+      question_sentence: We need to choose the strategy for the next settings to try.
+      question_prompt: null
+      for: [predict-number, predict-category, forecast]
+      pages:
+      - id: tpesampler
+        shown_as: TPESampler
+        for: [predict-number, predict-category, forecast]
+        pick_when: The default; good for most searches
+      - id: gpsampler
+        shown_as: GPSampler
+        for: [predict-number, predict-category, forecast]
+        pick_when: Few trials, because each fit is expensive
+      - id: cmaessampler
+        shown_as: CmaEsSampler
+        for: [predict-number, predict-category, forecast]
+        pick_when: Mostly continuous settings, many trials
+      - id: randomsampler
+        shown_as: RandomSampler
+        for: [predict-number, predict-category, forecast]
+        pick_when: A baseline, or a wide first look
+      - id: qmcsampler
+        shown_as: QMCSampler
+        for: [predict-number, predict-category, forecast]
+        pick_when: Cover the space evenly; tidier than random
+      - id: gridsampler
+        shown_as: GridSampler
+        for: [predict-number, predict-category, forecast]
+        pick_when: Every combination, inside Optuna
+      - id: bruteforcesampler
+        shown_as: BruteForceSampler
+        for: [predict-number, predict-category, forecast]
+        pick_when: Small discrete spaces; tries everything once
+    - id: tune.optuna.multi
+      level: family
+      names_label: Multi-objective
+      question_label: Balance several goals at once
+      question_sentence: We need to balance goals like accuracy and speed together.
+      question_prompt: null
+      for: [predict-number, predict-category, forecast]
+      pages:
+      - id: nsgaiisampler
+        shown_as: NSGAIISampler
+        for: [predict-number, predict-category, forecast]
+        pick_when: Two or three goals
+      - id: nsgaiiisampler
+        shown_as: NSGAIIISampler
+        for: [predict-number, predict-category, forecast]
+        pick_when: Many goals at once
+      - id: plot-pareto-front
+        shown_as: plot_pareto_front
+        for: [predict-number, predict-category, forecast]
+        pick_when: See the best trade-offs
+      - id: plot-hypervolume-history
+        shown_as: plot_hypervolume_history
+        for: [predict-number, predict-category, forecast]
+        pick_when: See whether the trade-offs are still improving
+  - id: tune.watch
+    level: group
+    names_label: Optuna pruning and plots
+    question_label: Watch and steer the search
+    question_sentence: We need to stop wasting time, and see what the search found.
+    question_prompt: What do we need to see or stop?
+    for: [predict-number, predict-category, forecast]
+    children:
+    - id: tune.watch.prune-relative
+      level: family
+      names_label: Relative pruners
+      question_label: Stop trials that lag behind
+      question_sentence: We need to stop trials doing worse than earlier ones.
+      question_prompt: null
+      for: [predict-number, predict-category, forecast]
+      pages:
+      - id: medianpruner
+        shown_as: MedianPruner
+        for: [predict-number, predict-category, forecast]
+        pick_when: The default; stop if worse than the median so far
+      - id: percentilepruner
+        shown_as: PercentilePruner
+        for: [predict-number, predict-category, forecast]
+        pick_when: The same idea, with our own cut-off
+      - id: successivehalvingpruner
+        shown_as: SuccessiveHalvingPruner
+        for: [predict-number, predict-category, forecast]
+        pick_when: Keep only the top share at each checkpoint
+      - id: hyperbandpruner
+        shown_as: HyperbandPruner
+        for: [predict-number, predict-category, forecast]
+        pick_when: Many cheap trials; balances budgets automatically
+      - id: wilcoxonpruner
+        shown_as: WilcoxonPruner
+        for: [predict-number, predict-category, forecast]
+        pick_when: Each trial is scored on many folds or instances
+    - id: tune.watch.prune-rule
+      level: family
+      names_label: Rule-based pruning
+      question_label: Stop trials by a fixed rule
+      question_sentence: We need to stop trials when they cross a line we set.
+      question_prompt: null
+      for: [predict-number, predict-category, forecast]
+      pages:
+      - id: thresholdpruner
+        shown_as: ThresholdPruner
+        for: [predict-number, predict-category, forecast]
+        pick_when: Stop if a score crosses a fixed value
+      - id: patientpruner
+        shown_as: PatientPruner
+        for: [predict-number, predict-category, forecast]
+        pick_when: Wait a few steps before another pruner acts
+      - id: noppruner
+        shown_as: NopPruner
+        for: [predict-number, predict-category, forecast]
+        pick_when: Turn pruning off
+      - id: trialpruned
+        shown_as: TrialPruned
+        for: [predict-number, predict-category, forecast]
+        pick_when: Raise this to stop a trial ourselves
+    - id: tune.watch.stop
+      level: family
+      names_label: Stopping the study
+      question_label: Know when to stop searching
+      question_sentence: We need to know when more trials won't help.
+      question_prompt: null
+      for: [predict-number, predict-category, forecast]
+      pages:
+      - id: terminator
+        shown_as: Terminator
+        for: [predict-number, predict-category, forecast]
+        pick_when: Estimate whether more trials can still improve
+      - id: terminatorcallback
+        shown_as: TerminatorCallback
+        for: [predict-number, predict-category, forecast]
+        pick_when: Stop the study automatically
+      - id: maxtrialscallback
+        shown_as: MaxTrialsCallback
+        for: [predict-number, predict-category, forecast]
+        pick_when: Stop after a total number of trials
+      - id: plot-terminator-improvement
+        shown_as: plot_terminator_improvement
+        for: [predict-number, predict-category, forecast]
+        pick_when: See how much room is left to improve
+    - id: tune.watch.importance
+      level: family
+      names_label: Settings plots
+      question_label: See which settings mattered
+      question_sentence: We need to see which settings changed the score most.
+      question_prompt: null
+      for: [predict-number, predict-category, forecast]
+      pages:
+      - id: plot-param-importances
+        shown_as: plot_param_importances
+        for: [predict-number, predict-category, forecast]
+        pick_when: Rank settings by impact
+      - id: get-param-importances
+        shown_as: get_param_importances
+        for: [predict-number, predict-category, forecast]
+        pick_when: The same ranking, as numbers
+      - id: plot-slice
+        shown_as: plot_slice
+        for: [predict-number, predict-category, forecast]
+        pick_when: Score against each setting
+      - id: plot-contour
+        shown_as: plot_contour
+        for: [predict-number, predict-category, forecast]
+        pick_when: How two settings interact
+      - id: plot-parallel-coordinate
+        shown_as: plot_parallel_coordinate
+        for: [predict-number, predict-category, forecast]
+        pick_when: Every setting of every trial at once
+      - id: plot-rank
+        shown_as: plot_rank
+        for: [predict-number, predict-category, forecast]
+        pick_when: Where the best trials sit in the space
+    - id: tune.watch.history
+      level: family
+      names_label: Progress plots
+      question_label: See how the search went
+      question_sentence: We need to see whether the search is still finding better settings.
+      question_prompt: null
+      for: [predict-number, predict-category, forecast]
+      pages:
+      - id: plot-optimization-history
+        shown_as: plot_optimization_history
+        for: [predict-number, predict-category, forecast]
+        pick_when: The best score over trials
+      - id: plot-intermediate-values
+        shown_as: plot_intermediate_values
+        for: [predict-number, predict-category, forecast]
+        pick_when: Each trial's learning curve, for pruning
+      - id: plot-timeline
+        shown_as: plot_timeline
+        for: [predict-number, predict-category, forecast]
+        pick_when: When each trial ran and how long it took
+      - id: plot-edf
+        shown_as: plot_edf
+        for: [predict-number, predict-category, forecast]
+        pick_when: Compare score spreads between studies
+  - id: tune.threshold
+    level: group
+    names_label: Decision threshold
+    question_label: Pick the cut-off for a yes/no call
+    question_sentence: We need to choose the probability cut-off that turns scores into decisions.
+    question_prompt: null
+    for: [predict-category]
+    pages:
+    - id: tunedthresholdclassifiercv
+      shown_as: TunedThresholdClassifierCV
+      for: [predict-category]
+      pick_when: Find the cut-off that maximises a metric
+    - id: fixedthresholdclassifier
+      shown_as: FixedThresholdClassifier
+      for: [predict-category]
+      pick_when: Use a cut-off we already chose
+- id: evaluate
+  names_label: Evaluate
+  question_label: Check how good it is
+  question_sentence: We need to know how good the predictions are.
+  question_prompt:
+    predict-number: How should we judge the numbers?
+    predict-category: How should we judge the categories?
+    forecast: How should we judge the forecast?
+  children:
+  - id: evaluate.error
+    level: group
+    names_label: Error metrics
+    question_label: Measure how big the misses are
+    question_sentence: We need to know how far off the predictions are.
+    question_prompt: In what units should we measure the misses?
+    for: [predict-number, forecast]
+    children:
+    - id: evaluate.error.units
+      level: family
+      names_label: Absolute and squared error
+      question_label: In the target's own units
+      question_sentence: We need the error in the same units as the target, like dollars.
+      question_prompt: null
+      for: [predict-number, forecast]
+      pages:
+      - id: mean-absolute-error
+        shown_as: MAE
+        for: [predict-number, forecast]
+        pick_when: The typical miss; easy to explain
+      - id: root-mean-squared-error
+        shown_as: RMSE
+        for: [predict-number, forecast]
+        pick_when: Big misses should count more
+      - id: mean-squared-error
+        shown_as: MSE
+        for: [predict-number, forecast]
+        pick_when: RMSE squared; common as a training loss
+      - id: median-absolute-error
+        shown_as: Median absolute error
+        for: [predict-number, forecast]
+        pick_when: Ignore a few huge misses
+      - id: max-error
+        shown_as: Max error
+        for: [predict-number, forecast]
+        pick_when: The single worst miss
+    - id: evaluate.error.relative
+      level: family
+      names_label: Percentage and log error
+      question_label: As a percentage or ratio
+      question_sentence: We need errors relative to size, so big and small targets compare fairly.
+      question_prompt: null
+      for: [predict-number, forecast]
+      pages:
+      - id: mean-absolute-percentage-error
+        shown_as: MAPE
+        for: [predict-number, forecast]
+        pick_when: Misses as a percentage; avoid when targets are near zero
+      - id: mean-squared-log-error
+        shown_as: MSLE
+        for: [predict-number, forecast]
+        pick_when: Targets span orders of magnitude
+      - id: root-mean-squared-log-error
+        shown_as: RMSLE
+        for: [predict-number, forecast]
+        pick_when: The same, in log units
+    - id: evaluate.error.deviance
+      level: family
+      names_label: Deviance metrics
+      question_label: For counts and skewed amounts
+      question_sentence: We need to score a Poisson, Gamma or Tweedie model on its own terms.
+      question_prompt: null
+      for: [predict-number]
+      pages:
+      - id: mean-poisson-deviance
+        shown_as: Mean Poisson deviance
+        for: [predict-number]
+        pick_when: Count targets
+      - id: mean-gamma-deviance
+        shown_as: Mean Gamma deviance
+        for: [predict-number]
+        pick_when: Positive, skewed amounts
+      - id: mean-tweedie-deviance
+        shown_as: Mean Tweedie deviance
+        for: [predict-number]
+        pick_when: Amounts with many zeros
+      - id: d2-tweedie-score
+        shown_as: D² Tweedie score
+        for: [predict-number]
+        pick_when: Share of deviance explained, like R²
+    - id: evaluate.error.quantile
+      level: family
+      names_label: Quantile loss
+      question_label: For a predicted range
+      question_sentence: We need to score a quantile prediction, not a mean.
+      question_prompt: null
+      for: [predict-number]
+      pages:
+      - id: mean-pinball-loss
+        shown_as: Pinball loss
+        for: [predict-number]
+        pick_when: Scoring a quantile model
+      - id: d2-pinball-score
+        shown_as: D² pinball score
+        for: [predict-number]
+        pick_when: Share explained, for a quantile model
+  - id: evaluate.explained
+    level: group
+    names_label: Explained variation
+    question_label: Measure how much it explains
+    question_sentence: We need to know how much of the variation the model explains.
+    question_prompt: null
+    for: [predict-number, forecast]
+    pages:
+    - id: r2-score
+      shown_as: R²
+      for: [predict-number, forecast]
+      pick_when: Share explained; 1 is perfect, 0 matches the mean
+    - id: explained-variance-score
+      shown_as: Explained variance
+      for: [predict-number, forecast]
+      pick_when: Like R², but ignores a constant offset
+    - id: d2-absolute-error-score
+      shown_as: D² absolute error
+      for: [predict-number, forecast]
+      pick_when: An R²-style score built on absolute error
+  - id: evaluate.diagnostics
+    level: group
+    names_label: Regression diagnostics
+    question_label: Check the errors look healthy
+    question_sentence: We need to check the model's assumptions before we trust it.
+    question_prompt: What might be wrong?
+    for: [predict-number]
+    pages:
+    - id: predictionerrordisplay
+      shown_as: PredictionErrorDisplay
+      for: [predict-number]
+      pick_when: Plot predicted against actual, or the residuals
+    - id: residual-normality
+      shown_as: Residual normality tests
+      for: [predict-number]
+      pick_when: We need p-values or intervals from OLS
+    - id: breusch-pagan
+      shown_as: Breusch–Pagan test
+      for: [predict-number]
+      pick_when: Errors grow with the prediction (a fan shape)
+    - id: vif
+      shown_as: VIF
+      for: [predict-number]
+      pick_when: Features overlap so much that coefficients wobble
+    - id: influence
+      shown_as: Influence measures
+      for: [predict-number]
+      pick_when: A few rows pull the line too hard
+  - id: evaluate.counts
+    level: group
+    names_label: Classification metrics
+    question_label: Count right and wrong answers
+    question_sentence: We need to know how often the predicted labels are right.
+    question_prompt: What kind of mistake matters most?
+    for: [predict-category]
+    children:
+    - id: evaluate.counts.overall
+      level: family
+      names_label: Overall scores
+      question_label: One overall score
+      question_sentence: We need one number for how often it's right.
+      question_prompt: null
+      for: [predict-category]
+      pages:
+      - id: accuracy-score
+        shown_as: Accuracy
+        for: [predict-category]
+        pick_when: Classes are balanced
+      - id: balanced-accuracy-score
+        shown_as: Balanced accuracy
+        for: [predict-category]
+        pick_when: Classes are lopsided
+      - id: matthews-corrcoef
+        shown_as: Matthews correlation
+        for: [predict-category]
+        pick_when: One fair number, even when imbalanced
+      - id: cohen-kappa-score
+        shown_as: Cohen's kappa
+        for: [predict-category]
+        pick_when: Agreement beyond chance, like between raters
+      - id: top-k-accuracy-score
+        shown_as: Top-k accuracy
+        for: [predict-category]
+        pick_when: Counts as right if the true class is in the top k
+      - id: zero-one-loss
+        shown_as: Zero-one loss
+        for: [predict-category]
+        pick_when: The share wrong (1 minus accuracy)
+      - id: hinge-loss
+        shown_as: Hinge loss
+        for: [predict-category]
+        pick_when: Margin-based loss for SVM-style scores
+    - id: evaluate.counts.pr
+      level: family
+      names_label: Precision and recall
+      question_label: Weigh false alarms against misses
+      question_sentence: We need to balance false alarms against missed cases.
+      question_prompt: null
+      for: [predict-category]
+      pages:
+      - id: precision-score
+        shown_as: Precision
+        for: [predict-category]
+        pick_when: False alarms are costly
+      - id: recall-score
+        shown_as: Recall
+        for: [predict-category]
+        pick_when: Missing a real case is costly
+      - id: f1-score
+        shown_as: F1
+        for: [predict-category]
+        pick_when: Both matter equally
+      - id: fbeta-score
+        shown_as: F-beta
+        for: [predict-category]
+        pick_when: Lean towards precision or recall
+      - id: precision-recall-fscore-support
+        shown_as: precision_recall_fscore_support
+        for: [predict-category]
+        pick_when: All of them per class, in one call
+      - id: jaccard-score
+        shown_as: Jaccard
+        for: [predict-category]
+        pick_when: Overlap between predicted and true labels
+    - id: evaluate.counts.breakdown
+      level: family
+      names_label: Breakdowns
+      question_label: See every kind of mistake
+      question_sentence: We need to see exactly which classes get confused.
+      question_prompt: null
+      for: [predict-category]
+      pages:
+      - id: confusion-matrix
+        shown_as: Confusion matrix
+        for: [predict-category]
+        pick_when: See right and wrong for each class
+      - id: classification-report
+        shown_as: Classification report
+        for: [predict-category]
+        pick_when: Precision, recall and F1 per class, as a table
+      - id: multilabel-confusion-matrix
+        shown_as: Multilabel confusion matrix
+        for: [predict-category]
+        pick_when: One matrix per label
+      - id: class-likelihood-ratios
+        shown_as: Likelihood ratios
+        for: [predict-category]
+        pick_when: How much a positive shifts the odds, like a test
+  - id: evaluate.prob
+    level: group
+    names_label: Probability metrics
+    question_label: Judge the probabilities
+    question_sentence: We need to judge the probabilities, not just the labels.
+    question_prompt: What should the probabilities do well?
+    for: [predict-category]
+    children:
+    - id: evaluate.prob.ranking
+      level: family
+      names_label: Ranking curves
+      question_label: Rank yes above no
+      question_sentence: We need positives scored higher than negatives, whatever the cut-off.
+      question_prompt: null
+      for: [predict-category]
+      pages:
+      - id: roc-auc-score
+        shown_as: ROC AUC
+        for: [predict-category]
+        pick_when: Classes not too lopsided; ignores the cut-off
+      - id: average-precision-score
+        shown_as: Average precision
+        for: [predict-category]
+        pick_when: Rare positives (PR-AUC)
+      - id: roc-curve
+        shown_as: ROC curve
+        for: [predict-category]
+        pick_when: See the trade-off at every cut-off
+      - id: precision-recall-curve
+        shown_as: Precision-recall curve
+        for: [predict-category]
+        pick_when: The same, for rare positives
+      - id: det-curve
+        shown_as: DET curve
+        for: [predict-category]
+        pick_when: Compare error rates on a stretched scale
+      - id: auc
+        shown_as: auc
+        for: [predict-category]
+        pick_when: Area under a curve we already computed
+    - id: evaluate.prob.calibration
+      level: family
+      names_label: Calibration and probabilistic loss
+      question_label: Check the probabilities are honest
+      question_sentence: We need a 70% prediction to come true about 70% of the time.
+      question_prompt: null
+      for: [predict-category]
+      pages:
+      - id: log-loss
+        shown_as: Log loss
+        for: [predict-category]
+        pick_when: Punish confident wrong answers
+      - id: brier-score-loss
+        shown_as: Brier score
+        for: [predict-category]
+        pick_when: The squared error of the probabilities
+      - id: calibration-curve
+        shown_as: Calibration curve
+        for: [predict-category]
+        pick_when: See whether probabilities match reality
+      - id: calibratedclassifiercv
+        shown_as: CalibratedClassifierCV
+        for: [predict-category]
+        pick_when: Fix over- or under-confident probabilities
+      - id: d2-log-loss-score
+        shown_as: D² log loss
+        for: [predict-category]
+        pick_when: Log loss as a share explained
+      - id: d2-brier-score
+        shown_as: D² Brier score
+        for: [predict-category]
+        pick_when: Brier score as a share explained
+    - id: evaluate.prob.thresholds
+      level: family
+      names_label: Threshold analysis
+      question_label: See scores at every cut-off
+      question_sentence: We need to see how the metrics change as the cut-off moves.
+      question_prompt: null
+      for: [predict-category]
+      pages:
+      - id: confusion-matrix-at-thresholds
+        shown_as: confusion_matrix_at_thresholds
+        for: [predict-category]
+        pick_when: Right and wrong counts at each cut-off
+      - id: metric-at-thresholds
+        shown_as: metric_at_thresholds
+        for: [predict-category]
+        pick_when: Any metric across cut-offs
+  - id: evaluate.imbalanced
+    level: group
+    names_label: Imbalanced-data metrics
+    question_label: Judge it, but one class is rare
+    question_sentence: We need a fair score, but one class is much rarer.
+    question_prompt: null
+    for: [predict-category]
+    pages:
+    - id: classification-report-imbalanced
+      shown_as: Imbalanced classification report
+      for: [predict-category]
+      pick_when: Per-class report with sensitivity, specificity and G-mean
+    - id: geometric-mean-score
+      shown_as: G-mean
+      for: [predict-category]
+      pick_when: Balance how well each class is found
+    - id: sensitivity-score
+      shown_as: Sensitivity
+      for: [predict-category]
+      pick_when: How many real positives we catch
+    - id: specificity-score
+      shown_as: Specificity
+      for: [predict-category]
+      pick_when: How many real negatives we keep
+    - id: sensitivity-specificity-support
+      shown_as: sensitivity_specificity_support
+      for: [predict-category]
+      pick_when: Both per class, in one call
+    - id: make-index-balanced-accuracy
+      shown_as: Index balanced accuracy
+      for: [predict-category]
+      pick_when: Adjust another metric for imbalance
+    - id: macro-averaged-mean-absolute-error
+      shown_as: Macro-averaged MAE
+      for: [predict-category]
+      pick_when: Ordered classes, like star ratings, with imbalance
+  - id: evaluate.multilabel
+    level: group
+    names_label: Ranking and multilabel metrics
+    question_label: Judge several labels per row
+    question_sentence: We need to score rows with several labels, or ranked results.
+    question_prompt: null
+    for: [predict-category]
+    pages:
+    - id: hamming-loss
+      shown_as: Hamming loss
+      for: [predict-category]
+      pick_when: The share of labels wrong
+    - id: coverage-error
+      shown_as: Coverage error
+      for: [predict-category]
+      pick_when: How far down the list until every true label appears
+    - id: label-ranking-average-precision-score
+      shown_as: Label ranking average precision
+      for: [predict-category]
+      pick_when: Are true labels ranked near the top?
+    - id: label-ranking-loss
+      shown_as: Ranking loss
+      for: [predict-category]
+      pick_when: How often a wrong label outranks a true one
+    - id: dcg-score
+      shown_as: DCG
+      for: [predict-category]
+      pick_when: Quality of a ranked list, top-weighted
+    - id: ndcg-score
+      shown_as: NDCG
+      for: [predict-category]
+      pick_when: DCG scaled to 0–1, to compare lists
+  - id: evaluate.fit
+    level: group
+    names_label: Validation curves
+    question_label: Check for over- or underfitting
+    question_sentence: We need to see whether more data or a different setting would help.
+    question_prompt: null
+    for: [predict-number, predict-category]
+    pages:
+    - id: learning-curve
+      shown_as: Learning curve
+      for: [predict-number, predict-category]
+      pick_when: Would more data help?
+    - id: validation-curve
+      shown_as: Validation curve
+      for: [predict-number, predict-category]
+      pick_when: Where a setting starts to overfit
+    - id: permutation-test-score
+      shown_as: Permutation test score
+      for: [predict-number, predict-category]
+      pick_when: Is the score better than chance?
+  - id: evaluate.scoring
+    level: group
+    names_label: Scoring utilities
+    question_label: Use a metric in search or CV
+    question_sentence: We need a metric in a form that cross-validation and search can use.
+    question_prompt: null
+    for: [predict-number, predict-category, forecast]
+    pages:
+    - id: make-scorer
+      shown_as: make_scorer
+      for: [predict-number, predict-category, forecast]
+      pick_when: Turn any metric into a scorer
+    - id: get-scorer
+      shown_as: get_scorer
+      for: [predict-number, predict-category, forecast]
+      pick_when: Get a built-in scorer by name
+    - id: get-scorer-names
+      shown_as: get_scorer_names
+      for: [predict-number, predict-category, forecast]
+      pick_when: List the names that scoring= accepts
+    - id: check-scoring
+      shown_as: check_scoring
+      for: [predict-number, predict-category, forecast]
+      pick_when: See which scorer an estimator will use
+- id: interpret
+  names_label: Interpret
+  question_label: Explain the model
+  question_sentence: We need to explain what the model learned.
+  question_prompt: What do we need to explain?
+  children:
+  - id: interpret.global
+    level: family
+    names_label: Global importance
+    question_label: See which features matter most
+    question_sentence: We need to know which features the model relies on overall.
+    question_prompt: null
+    for: [predict-number, predict-category]
+    pages:
+    - id: permutation-importance
+      shown_as: permutation_importance
+      for: [predict-number, predict-category]
+      pick_when: Any model; score drop when a feature is shuffled
+    - id: feature-importances
+      shown_as: feature_importances_
+      for: [predict-number, predict-category]
+      pick_when: A quick look from a tree model; can mislead
+    - id: shap-bar
+      shown_as: SHAP bar plot
+      for: [predict-number, predict-category]
+      pick_when: Average impact per feature
+    - id: shap-beeswarm
+      shown_as: SHAP beeswarm
+      for: [predict-number, predict-category]
+      pick_when: Impact and direction for every row
+    - id: shap-violin
+      shown_as: SHAP violin
+      for: [predict-number, predict-category]
+      pick_when: The beeswarm as density shapes
+    - id: shap-heatmap
+      shown_as: SHAP heatmap
+      for: [predict-number, predict-category]
+      pick_when: Patterns of impact across rows
+  - id: interpret.effect
+    level: family
+    names_label: Feature effects
+    question_label: See how one feature moves it
+    question_sentence: We need to see how the prediction changes as one feature changes.
+    question_prompt: null
+    for: [predict-number, predict-category]
+    pages:
+    - id: partial-dependence
+      shown_as: Partial dependence
+      for: [predict-number, predict-category]
+      pick_when: The average effect of one or two features
+    - id: shap-scatter
+      shown_as: SHAP scatter
+      for: [predict-number, predict-category]
+      pick_when: One feature's effect, coloured by another
+    - id: shap-partial-dependence
+      shown_as: SHAP partial dependence plot
+      for: [predict-number, predict-category]
+      pick_when: Partial dependence with SHAP values overlaid
+  - id: interpret.local
+    level: family
+    names_label: Single predictions
+    question_label: Explain one prediction
+    question_sentence: We need to explain why one particular row got its prediction.
+    question_prompt: null
+    for: [predict-number, predict-category]
+    pages:
+    - id: shap-waterfall
+      shown_as: SHAP waterfall
+      for: [predict-number, predict-category]
+      pick_when: One row, feature by feature
+    - id: shap-force
+      shown_as: SHAP force plot
+      for: [predict-number, predict-category]
+      pick_when: One row (or many) as pushes and pulls
+    - id: shap-decision
+      shown_as: SHAP decision plot
+      for: [predict-number, predict-category]
+      pick_when: Many rows' paths from base value to prediction
+  - id: interpret.explainer-fast
+    level: family
+    names_label: Model-specific explainers
+    question_label: Get SHAP values for our model type
+    question_sentence: We need SHAP values, quickly, for the kind of model we have.
+    question_prompt: null
+    for: [predict-number, predict-category]
+    pages:
+    - id: explainer
+      shown_as: Explainer
+      for: [predict-number, predict-category]
+      pick_when: Start here; picks the right method for us
+    - id: treeexplainer
+      shown_as: TreeExplainer
+      for: [predict-number, predict-category]
+      pick_when: Tree models; fast and exact
+    - id: linearexplainer
+      shown_as: LinearExplainer
+      for: [predict-number, predict-category]
+      pick_when: Linear models
+    - id: additiveexplainer
+      shown_as: AdditiveExplainer
+      for: [predict-number, predict-category]
+      pick_when: Additive models without interactions
+    - id: explanation
+      shown_as: Explanation
+      for: [predict-number, predict-category]
+      pick_when: 'The object we get back: values, base values, data'
+  - id: interpret.explainer-any
+    level: family
+    names_label: Model-agnostic explainers
+    question_label: Get SHAP values for any model
+    question_sentence: We need SHAP values, but our model is a black box.
+    question_prompt: null
+    for: [predict-number, predict-category]
+    pages:
+    - id: permutationexplainer
+      shown_as: PermutationExplainer
+      for: [predict-number, predict-category]
+      pick_when: Any model; faster than Kernel
+    - id: kernelexplainer
+      shown_as: KernelExplainer
+      for: [predict-number, predict-category]
+      pick_when: Any model; slow, so use a small background set
+    - id: exactexplainer
+      shown_as: ExactExplainer
+      for: [predict-number, predict-category]
+      pick_when: Few features; exact but slow
+    - id: partitionexplainer
+      shown_as: PartitionExplainer
+      for: [predict-number, predict-category]
+      pick_when: Correlated features, text or images; groups features
+    - id: samplingexplainer
+      shown_as: SamplingExplainer
+      for: [predict-number, predict-category]
+      pick_when: Any model; a sampling-based estimate
+  - id: interpret.boundary
+    level: family
+    names_label: Decision boundaries
+    question_label: See the decision regions
+    question_sentence: We need to see where the model switches class across two features.
+    question_prompt: null
+    for: [predict-category]
+    pages:
+    - id: decisionboundarydisplay
+      shown_as: DecisionBoundaryDisplay
+      for: [predict-category]
+      pick_when: Two features; a picture of each class's region
+  - id: interpret.monitor
+    level: family
+    names_label: Group comparison and monitoring
+    question_label: Compare groups or track drift
+    question_sentence: We need to compare explanations between groups, or over time.
+    question_prompt: null
+    for: [predict-number, predict-category]
+    pages:
+    - id: shap-group-difference
+      shown_as: SHAP group difference
+      for: [predict-number, predict-category]
+      pick_when: Do explanations differ between two groups?
+    - id: shap-monitoring
+      shown_as: SHAP monitoring
+      for: [predict-number, predict-category]
+      pick_when: Does a feature's impact drift over time?
