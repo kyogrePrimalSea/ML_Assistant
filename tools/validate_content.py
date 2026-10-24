@@ -49,9 +49,14 @@ def load_extraction(content, entry):
     return json.loads(p.read_text())
 
 
-def validate(content):
+LINE_LIMIT = 79
+
+
+def validate(content, warnings=None):
+    """Return (errors, stats). If `warnings` is a list, advisory (file, path, message) rows are appended."""
     content = Path(content)
     rep = Report()
+    warns = warnings if warnings is not None else []
     vocab = load_yaml(SCHEMA / "vocab.yaml")
     item_v = Draft202012Validator(json.loads((SCHEMA / "item.schema.json").read_text()))
     q_v = Draft202012Validator(json.loads((SCHEMA / "question.schema.json").read_text()))
@@ -117,6 +122,11 @@ def validate(content):
         if pid not in page_ids:
             rep.add(rel, path, f"page '{pid}' is not an inventory page or content record")
 
+    def long_lines(rel, path, tab, snippet):
+        for n, line in enumerate(snippet.split("\n"), 1):
+            if len(line) > LINE_LIMIT:
+                warns.append((str(rel), path, f"{tab}, line {n} is {len(line)} characters (over {LINE_LIMIT})"))
+
     # ---- item checks
     for rel, r in items:
         s = r["slots"]
@@ -171,6 +181,42 @@ def validate(content):
             if e is not None and e.get("library_version") != pinned:
                 rep.add(rel, f"{base}.snippet",
                         f"pinned version '{pinned}' differs from extraction record '{e.get('library_version')}'")
+            long_lines(rel, f"{base}.snippet", f"code tab {i} ({tab['library']})", tab["snippet"])
+
+        woc = s["what_comes_out"]
+        if "items" in woc:
+            pool = [t for t in r["targets"]]
+            for pid in r.get("applies_to", []):
+                pool += [e["id"] for e in inv_by_page.get(pid, [])]
+            names = {"method": set(), "attribute": set()}
+            for t in pool:
+                x = ext(t)
+                if x:
+                    names["method"] |= {m["name"] for m in x.get("methods", [])}
+                    names["attribute"] |= {a["name"] for a in x.get("attributes", [])}
+            for i, it in enumerate(woc["items"]):
+                if it["kind"] in names and it["name"] not in names[it["kind"]]:
+                    rep.add(rel, f"slots.what_comes_out.items.{i}.name",
+                            f"{it['kind']} '{it['name']}' is not in the extraction record of any target"
+                            + (" or applies_to page" if r.get("applies_to") else ""))
+            vis = woc["visual"]
+            tt = set(r["rules"]["task_types"])
+            need = {"proba_table": {"classification"}, "regression_preds": {"regression"},
+                    "both": {"classification", "regression"}}.get(vis, set())
+            if not need <= tt:
+                rep.add(rel, "slots.what_comes_out.visual",
+                        f"visual '{vis}' needs task types {sorted(need)} but rules.task_types is {sorted(tt)}")
+            if "snippet" in woc:
+                lib = woc["snippet_library"]
+                pinned = r["library_versions"].get(lib)
+                if pinned is None:
+                    rep.add(rel, "slots.what_comes_out.snippet_library", f"'{lib}' missing from library_versions")
+                else:
+                    first = woc["snippet"].split("\n", 1)[0]
+                    if first.strip() != f"# {lib} {pinned}":
+                        rep.add(rel, "slots.what_comes_out.snippet",
+                                f"first line '{first}' should be '# {lib} {pinned}'")
+                long_lines(rel, "slots.what_comes_out.snippet", "what comes out", woc["snippet"])
         for lib, ver in r["library_versions"].items():
             for t in r["targets"]:
                 e = inv_by_id.get(t)
@@ -242,11 +288,16 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--content", default=str(ROOT / "content"))
     args = ap.parse_args(argv)
-    errors, stats = validate(args.content)
+    warnings = []
+    errors, stats = validate(args.content, warnings)
     for f, p, m in errors:
         print(f"{f}: {p}: {m}")
+    if warnings:
+        print(f"warnings ({len(warnings)}, do not affect the exit code):")
+        for f, p, m in warnings:
+            print(f"  {f}: {p}: {m}")
     print(f"records: {stats['records']} (reviewed {stats['reviewed']}, unreviewed {stats['unreviewed']}); "
-          f"questions: {stats['questions']}; errors: {len(errors)}")
+          f"questions: {stats['questions']}; errors: {len(errors)}; warnings: {len(warnings)}")
     return 1 if errors else 0
 
 

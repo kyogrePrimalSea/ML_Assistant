@@ -39,6 +39,7 @@ export function rec(
         use_avoid: { use_when: [], avoid_when: [] },
         prep: o.prep ?? [],
         code: [],
+        what_comes_out: { none: true },
         catch_outs: [],
         key_settings: { tier1: [], tier2: [], tier3: [] },
         watch_it_work: { none: true },

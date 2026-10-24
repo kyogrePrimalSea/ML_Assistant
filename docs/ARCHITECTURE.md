@@ -158,3 +158,29 @@ to functions. Missing sections are empty lists, never omitted.
   positional cell ids (byte-identical output). `app/scripts/export-demo-notebook.mjs` writes the
   demo notebook for `tests/test_notebook_demo.py`. Stops are sorted into stage order, so a fitted
   encoder (Transform) sits before the split and raises the leakage Warn the spec describes.
+
+## Taxonomy
+
+- File: `content/taxonomy.yaml` (goals, 9 stages, groups, families, pages; labels, prompts,
+  `For` tags, `shown_as`, `pick_when`). Schema: `content/schema/taxonomy.schema.json`.
+- Generated once from `docs/QUESTION_MAP.md` by `tools/gen_taxonomy.py` (T034). **From now on
+  the YAML is maintained directly.** The generator is not part of the build, and re-running it
+  would overwrite hand edits.
+- Owner of page placement: every page sits in exactly one family (or in a group with pages
+  directly, whose id then serves as the family id). Text fields are a string or a map from
+  goal id to string.
+- Sync test: `tests/test_taxonomy_sync.py` compares the page tables in `QUESTION_MAP.md` section 6
+  with the YAML (page id, family or group id, stage, `shown_as`, `For`, `pick_when`).
+  `tests/test_taxonomy_schema.py` validates the YAML against the schema. Edit both files
+  together, or retire the markdown copy deliberately.
+- Length and structure rules (7 children, no single-child levels, label limits) are checked
+  by the validator (T035), not by these tests.
+- What comes out data (T028): `tools/gen_what_comes_out.py` (seeded, `n_jobs=1`, byte-identical reruns)
+  writes `content/cutscenes/outputs/<page>.json` for the four boosting pages (breast-cancer
+  classification probabilities in `predict_proba` column order, and Ames-like log1p regression
+  predictions, eight rows each). `build-content.mjs` already copies `content/cutscenes/` recursively, so
+  the files appear at `app/public/data/cutscenes/outputs/<page>.json`; the T030 renderer fetches them there.
+  The Ames sample generation is copied from `tools/gen_boosting_cutscene.py` (that script writes its file
+  on import); keep the two in sync. `LGBMRegressor` also sets `min_child_samples=5` (the default 20 never
+  splits on ~45 rows). The validator now returns advisory warnings (snippet lines over 79 characters)
+  separately from errors; they never change the exit code.

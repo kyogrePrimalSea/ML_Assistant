@@ -11,7 +11,7 @@ SCHEMA = ROOT / "content" / "schema"
 FIX = Path(__file__).resolve().parent / "fixtures" / "schema"
 
 SLOT_ORDER = ["header", "solves", "quick_facts", "use_avoid", "prep", "code",
-              "catch_outs", "key_settings", "watch_it_work", "intuition", "next"]
+              "what_comes_out", "catch_outs", "key_settings", "watch_it_work", "intuition", "next"]
 VOCAB_LISTS = ["stages", "tracks", "archetypes", "relationship_types", "prep_statuses",
                "severities", "toy_datasets", "question_stems", "shape_effects", "libraries"]
 
@@ -114,7 +114,7 @@ def test_missing_slot_rejected(item_validator):
 def test_empty_slots_explicit(item_validator):
     rec = _xgb()
     rec["slots"].update(solves={"none": True}, quick_facts={"none": True}, prep=[], code=[],
-                        catch_outs=[], watch_it_work={"none": True}, intuition={"none": True}, next=[])
+                        what_comes_out={"none": True}, catch_outs=[], watch_it_work={"none": True}, intuition={"none": True}, next=[])
     assert not list(item_validator.iter_errors(rec))
 
 

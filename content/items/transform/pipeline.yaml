@@ -52,6 +52,7 @@ slots:
             ("model", Ridge()),
         ])
         print(cross_val_score(pipe, X, y, cv=5).round(3))
+  what_comes_out: {none: true}
   catch_outs:
     - Samplers like SMOTE need imblearn's Pipeline instead.
     - Tune step settings as stepname__setting.

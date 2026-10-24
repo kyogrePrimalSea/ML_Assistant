@@ -55,6 +55,7 @@ slots:
 
         print(X.shape, "->", X_small.shape)
         print(data.feature_names[selector.get_support()].tolist())
+  what_comes_out: {none: true}
   catch_outs:
     - Default score_func f_classif only works for classification.
     - For regression, pass f_regression.

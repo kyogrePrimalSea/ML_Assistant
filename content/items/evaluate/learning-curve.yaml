@@ -51,6 +51,7 @@ slots:
         print(sizes)
         print(train_scores.mean(axis=1).round(2))
         print(val_scores.mean(axis=1).round(2))
+  what_comes_out: {none: true}
   catch_outs:
     - Fits the model once per size per fold.
     - Gap between lines means overfitting.

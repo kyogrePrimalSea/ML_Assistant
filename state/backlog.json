@@ -440,14 +440,14 @@
     "T028": {
       "title": "What comes out: schema, validator, toy outputs",
       "file": "tasks/T028-what-comes-out-schema-and-data.md",
-      "status": "Ready",
+      "status": "Done",
       "dependencies": [],
       "epic": "E12"
     },
     "T029": {
       "title": "E12 content: What comes out, hyperparameter prep and pairings, long lines",
       "file": "tasks/T029-e12-content.md",
-      "status": "Backlog",
+      "status": "In Progress",
       "dependencies": [
         "T028"
       ],
@@ -456,7 +456,7 @@
     "T030": {
       "title": "What comes out renderer and visuals",
       "file": "tasks/T030-what-comes-out-renderer.md",
-      "status": "Backlog",
+      "status": "In Progress",
       "dependencies": [
         "T028"
       ],
@@ -509,7 +509,7 @@
     "T036": {
       "title": "we_need_but stem and question rewrite",
       "file": "tasks/T036-we-need-but-questions.md",
-      "status": "Backlog",
+      "status": "In Progress",
       "dependencies": [
         "T034"
       ],

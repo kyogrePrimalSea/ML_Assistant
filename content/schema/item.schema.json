@@ -295,6 +295,16 @@
             "$ref": "#/$defs/code_tab"
           }
         },
+        "what_comes_out": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/none"
+            },
+            {
+              "$ref": "#/$defs/what_comes_out_body"
+            }
+          ]
+        },
         "catch_outs": {
           "type": "array",
           "items": {
@@ -408,6 +418,7 @@
         "use_avoid",
         "prep",
         "code",
+        "what_comes_out",
         "catch_outs",
         "key_settings",
         "watch_it_work",
@@ -1106,7 +1117,6 @@
     "dataset": {
       "enum": [
         "ames",
-        "titanic",
         "breast-cancer",
         "airline-passengers"
       ]
@@ -1802,6 +1812,109 @@
       "required": [
         "data_size"
       ],
+      "additionalProperties": false
+    },
+    "what_comes_out_item": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "enum": [
+            "method",
+            "attribute",
+            "return"
+          ]
+        },
+        "task": {
+          "enum": [
+            "classification",
+            "regression",
+            null
+          ]
+        },
+        "shape": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "note": {
+          "type": "string",
+          "pattern": "^(\\S+\\s+){0,15}\\S+$"
+        }
+      },
+      "required": [
+        "name",
+        "kind",
+        "task",
+        "shape",
+        "note"
+      ],
+      "additionalProperties": false
+    },
+    "what_comes_out_body": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "items": {
+            "$ref": "#/$defs/what_comes_out_item"
+          }
+        },
+        "next_step": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^(\\S+\\s+){0,15}\\S+$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "snippet": {
+          "type": "string",
+          "pattern": "^# [a-z-]+ [0-9][^\\n]*\\n[\\s\\S]+$"
+        },
+        "snippet_library": {
+          "enum": [
+            "scikit-learn",
+            "statsmodels",
+            "scipy",
+            "xgboost",
+            "lightgbm",
+            "imbalanced-learn",
+            "optuna",
+            "shap",
+            "matplotlib"
+          ]
+        },
+        "visual": {
+          "enum": [
+            "proba_table",
+            "regression_preds",
+            "both",
+            null
+          ]
+        }
+      },
+      "required": [
+        "items",
+        "next_step",
+        "visual"
+      ],
+      "dependentRequired": {
+        "snippet": [
+          "snippet_library"
+        ],
+        "snippet_library": [
+          "snippet"
+        ]
+      },
       "additionalProperties": false
     }
   }

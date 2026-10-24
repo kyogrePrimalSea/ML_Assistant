@@ -62,10 +62,9 @@ data_profile:
   time_ordered:     {kind: boolean}
   imbalanced:       {kind: boolean}
 
-# Spec §9. Spec says "Titanic or breast cancer" for classification; both are listed (OPEN).
+# Spec §9. Classification toy dataset is breast cancer (user decision 2026-10-24); Titanic dropped.
 toy_datasets:
   - {id: ames,               name: House prices (Ames),   task_type: regression}
-  - {id: titanic,            name: Titanic,               task_type: classification}
   - {id: breast-cancer,      name: Breast cancer,         task_type: classification}
   - {id: airline-passengers, name: Airline passengers,    task_type: forecasting}
 

@@ -9,7 +9,7 @@ export type ArchetypeId =
   | 'tuning' | 'metric' | 'diagnostic' | 'output' | 'composer'
 export type TaskType = 'regression' | 'classification' | 'forecasting'
 export type PrepStatus = 'required' | 'recommended' | 'not_needed'
-export type DatasetId = 'ames' | 'titanic' | 'breast-cancer' | 'airline-passengers'
+export type DatasetId = 'ames' | 'breast-cancer' | 'airline-passengers'
 export type ShapeEffectValue = 'same' | 'grows' | 'shrinks' | 'expands'
 export type QuestionStem = 'my_data_is' | 'my_model_is' | 'i_want_to_know'
 export type RelationshipType = 'needs' | 'recommended' | 'clashes' | 'alternative_to' | 'pairs_with'
@@ -91,6 +91,24 @@ export type Intuition =
       read_more: string[]
     }
 
+export interface WhatComesOutItem {
+  name: string
+  kind: 'method' | 'attribute' | 'return'
+  task: 'classification' | 'regression' | null
+  shape: string
+  note: string
+}
+
+export interface WhatComesOutBody {
+  items: WhatComesOutItem[]
+  next_step: string | null
+  snippet?: string
+  snippet_library?: string
+  visual: 'proba_table' | 'regression_preds' | 'both' | null
+}
+
+export type WhatComesOut = None | WhatComesOutBody
+
 export interface Slots {
   header: Record<string, never>
   solves: Solves | None
@@ -98,6 +116,7 @@ export interface Slots {
   use_avoid: UseAvoid
   prep: PrepEntry[]
   code: CodeTab[]
+  what_comes_out: WhatComesOut
   catch_outs: string[]
   key_settings: KeySettings
   watch_it_work: WatchItWork

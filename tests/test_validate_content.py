@@ -254,3 +254,109 @@ def test_stem_cap_exactly_seven_ok(tree):
                                    "answers": [{"page": "xgboost"}], "next": []})
     edit(tree, QS, f)
     assert errs(tree) == []
+
+
+# ---- T028: What comes out slot
+
+WOC = {
+    "items": [
+        {"name": "predict_proba", "kind": "method", "task": "classification",
+         "shape": "(n_samples, n_classes)", "note": "One column per class, in classes_ order."},
+        {"name": "best_iteration", "kind": "attribute", "task": None,
+         "shape": "int", "note": "Round that scored best on the validation set."},
+    ],
+    "next_step": "Keep [:, 1] as y_score for ROC AUC.",
+    "snippet": "# xgboost 3.4.1\nprint(1)\n",
+    "snippet_library": "xgboost",
+    "visual": "proba_table",
+}
+XGB_CLF = "extraction/xgboost/xgboost.XGBClassifier.json"
+
+
+def with_woc(tree, **over):
+    def f(d):
+        d["slots"]["what_comes_out"] = {**WOC, **over}
+    edit(tree, XGB, f)
+    edit(tree, XGB_CLF, lambda d: d.update(methods=[{"name": "predict_proba"}], attributes=[{"name": "best_iteration"}]))
+
+
+def test_what_comes_out_valid(tree):
+    with_woc(tree)
+    assert errs(tree) == []
+
+
+def test_what_comes_out_unknown_name(tree):
+    with_woc(tree)
+    edit(tree, XGB, lambda d: d["slots"]["what_comes_out"]["items"][0].update(name="predict_probaa"))
+    has(tree, XGB, "what_comes_out.items.0.name", "predict_probaa")
+    edit(tree, XGB, lambda d: d["slots"]["what_comes_out"]["items"].__setitem__(
+        0, {**WOC["items"][0], "kind": "return", "name": "anything"}))
+    assert errs(tree) == []  # `return` entries are not checked against the extraction
+
+
+def test_what_comes_out_name_via_applies_to(tree):
+    def f(d):
+        d["slots"]["what_comes_out"] = {"items": [{"name": "predict_proba", "kind": "method", "task": None,
+                                                   "shape": "array", "note": "Probabilities."}],
+                                        "next_step": None, "visual": None}
+    edit(tree, MAXD, f)
+    has(tree, MAXD, "what_comes_out.items.0.name")
+    edit(tree, XGB_CLF, lambda d: d.update(methods=[{"name": "predict_proba"}]))
+    assert errs(tree) == []
+
+
+@pytest.mark.parametrize("visual,task_types,ok", [
+    ("proba_table", ["regression"], False),
+    ("regression_preds", ["classification"], False),
+    ("both", ["classification"], False),
+    ("both", ["classification", "regression"], True),
+    ("regression_preds", ["regression", "classification"], True),
+])
+def test_what_comes_out_visual_vs_task_type(tree, visual, task_types, ok):
+    with_woc(tree, visual=visual)
+    edit(tree, XGB, lambda d: d["rules"].update(task_types=task_types))
+    if ok:
+        assert errs(tree) == []
+    else:
+        has(tree, XGB, "what_comes_out.visual", visual)
+
+
+def test_what_comes_out_snippet_checks(tree):
+    with_woc(tree, snippet="# xgboost 9.9\nprint(1)\n")
+    has(tree, XGB, "what_comes_out.snippet", "should be '# xgboost 3.4.1'")
+    with_woc(tree, snippet_library="lightgbm", snippet="# lightgbm 4.7.0\nprint(1)\n")
+    has(tree, XGB, "snippet_library", "missing from library_versions")
+    with_woc(tree)
+    edit(tree, XGB, lambda d: d["slots"]["what_comes_out"].pop("snippet_library"))
+    has(tree, XGB, "slots.what_comes_out")  # snippet without snippet_library fails the schema
+
+
+def test_what_comes_out_schema_rejections(tree):
+    edit(tree, XGB, lambda d: d["slots"].pop("what_comes_out"))
+    has(tree, XGB, "what_comes_out")
+    with_woc(tree)
+    edit(tree, XGB, lambda d: d["slots"]["what_comes_out"]["items"][0].update(note=" ".join(["w"] * 17)))
+    has(tree, XGB, "slots.what_comes_out", "not valid under any")
+    with_woc(tree)
+    edit(tree, XGB, lambda d: d["slots"]["what_comes_out"]["items"][0].update(kind="function"))
+    has(tree, XGB, "slots.what_comes_out", "not valid under any")
+    with_woc(tree)
+    edit(tree, XGB, lambda d: d["slots"]["what_comes_out"].update(items=[]))
+    has(tree, XGB, "slots.what_comes_out", "not valid under any")
+
+
+def test_long_lines_warn_without_failing(tree, capsys):
+    long = "x = '" + "a" * 80 + "'"
+    with_woc(tree, snippet="# xgboost 3.4.1\n" + long + "\n")
+    edit(tree, XGB, lambda d: d["slots"]["code"][0].update(snippet="# xgboost 3.4.1\n" + "y" * 80 + "\n\n" + long + "\n"))
+    warnings = []
+    errors, _ = validate(tree, warnings)
+    assert errors == []
+    msgs = [f"{f}: {p}: {m}" for f, p, m in warnings]
+    assert any("slots.code.0.snippet" in m and "code tab 0" in m and "line 2 " in m for m in msgs), msgs
+    assert any("slots.code.0.snippet" in m and "line 4 " in m for m in msgs), msgs
+    assert any("what_comes_out.snippet" in m and "line 2 " in m for m in msgs), msgs
+    assert all(XGB in m for m in msgs)
+    assert main(["--content", str(tree)]) == 0
+    out = capsys.readouterr().out
+    assert "warnings (3" in out and "errors: 0" in out

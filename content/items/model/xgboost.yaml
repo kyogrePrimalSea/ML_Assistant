@@ -79,6 +79,7 @@ slots:
         )
         model.fit(X_train, y_train, eval_set=[(X_val, y_val)], verbose=False)
         print(model.best_iteration)
+  what_comes_out: {none: true}
   catch_outs:
     - Without early_stopping_rounds, n_estimators alone will overfit.
     - Pass a validation set to fit, or early stopping does nothing.

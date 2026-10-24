@@ -51,6 +51,7 @@ slots:
         y_pred = model.predict(X_test)
 
         print(r2_score(y_test, y_pred))
+  what_comes_out: {none: true}
   catch_outs:
     - Argument order matters; y_true goes first, then y_pred.
     - Score on the test set, not the training set.

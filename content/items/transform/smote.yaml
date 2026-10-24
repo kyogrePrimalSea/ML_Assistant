@@ -23,7 +23,7 @@ rules:
 slots:
   header: {}
   solves:
-    hero: {kind: resampler, dataset: titanic, classes: [died, survived], before: [549, 342], after: [549, 549]}
+    hero: {kind: resampler, dataset: breast-cancer, classes: [malignant, benign], before: [212, 357], after: [357, 357]}
     line: Adds synthetic rows to the rare class.
   quick_facts:
     facts:
@@ -61,6 +61,7 @@ slots:
 
         X_res, y_res = SMOTE(k_neighbors=5, random_state=0).fit_resample(X, y)
         print("after", Counter(y_res))
+  what_comes_out: {none: true}
   catch_outs:
     - Resample after the split, on training rows only.
     - Never resample the test set.
@@ -73,7 +74,7 @@ slots:
       - {name: random_state, page: null}
     tier3: []
   watch_it_work:
-    dataset: titanic
+    dataset: breast-cancer
     control: {name: k_neighbors, min: 1, max: 10, step: 1, default: 5}
   intuition:
     text: Pick a rare row, pick a close neighbour, add a new row between them.

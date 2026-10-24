@@ -50,6 +50,7 @@ slots:
         )
 
         print(X_train.shape, X_test.shape)
+  what_comes_out: {none: true}
   catch_outs:
     - Fit scalers and encoders after the split, on training rows only.
     - Set random_state, or the split changes every run.

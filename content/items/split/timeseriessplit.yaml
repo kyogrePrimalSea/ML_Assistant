@@ -47,6 +47,7 @@ slots:
         tscv = TimeSeriesSplit(n_splits=3)
         for fold, (train_idx, test_idx) in enumerate(tscv.split(X)):
             print(fold, "train", train_idx, "test", test_idx)
+  what_comes_out: {none: true}
   catch_outs:
     - Rows must already be sorted oldest to newest.
     - Early folds train on little data.

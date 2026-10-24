@@ -80,6 +80,7 @@ slots:
         model.fit(X_train, y_train)
         print(model.n_iter_)
         print(model.score(X_test, y_test))
+  what_comes_out: {none: true}
   catch_outs:
     - The tree count is max_iter, not n_estimators.
     - Early stopping is automatic only above 10,000 rows.

@@ -97,6 +97,7 @@ slots:
             callbacks=[lgb.early_stopping(10, verbose=False)],
         )
         print(model.best_iteration_)
+  what_comes_out: {none: true}
   catch_outs:
     - XGBoost needs eval_set in fit. LightGBM needs eval_X and eval_y.
     - With several eval sets, XGBoost watches the last one.

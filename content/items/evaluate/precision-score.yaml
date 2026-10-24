@@ -23,7 +23,7 @@ rules:
 slots:
   header: {}
   solves:
-    hero: {kind: metric, dataset: titanic, highlight: [TP, FP]}
+    hero: {kind: metric, dataset: breast-cancer, highlight: [TP, FP]}
     line: Of the rows flagged positive, how many really are.
   quick_facts:
     facts:
@@ -52,6 +52,7 @@ slots:
         y_pred = model.predict(X_test)
 
         print(precision_score(y_test, y_pred))
+  what_comes_out: {none: true}
   catch_outs:
     - Ignores missed positives; check recall too.
     - Multiclass needs average set (not binary).
@@ -66,7 +67,7 @@ slots:
       - {name: sample_weight, page: null}
       - {name: labels, page: null}
   watch_it_work:
-    dataset: titanic
+    dataset: breast-cancer
     control: {name: threshold, min: 0, max: 1, step: 0.05, default: 0.5}
   intuition:
     text: Count the right flags, divide by all flags.

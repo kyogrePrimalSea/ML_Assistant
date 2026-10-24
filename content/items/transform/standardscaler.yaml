@@ -58,6 +58,7 @@ slots:
 
         print(X_train_s.mean(axis=0).round(2))
         print(X_train_s.std(axis=0).round(2))
+  what_comes_out: {none: true}
   catch_outs:
     - Fit on training rows only; never fit on the test set.
     - Outliers shift the mean and spread.

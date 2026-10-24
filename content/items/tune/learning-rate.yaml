@@ -90,6 +90,7 @@ slots:
             model = LGBMRegressor(learning_rate=lr, n_estimators=100, verbose=-1)
             model.fit(X_train, y_train)
             print(lr, round(model.score(X_test, y_test), 3))
+  what_comes_out: {none: true}
   catch_outs:
     - XGBoost defaults to 0.3. The others default to 0.1.
     - Lower learning_rate needs more trees (n_estimators).

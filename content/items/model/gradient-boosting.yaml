@@ -75,6 +75,7 @@ slots:
         model.fit(X_train, y_train)
         print(model.n_estimators_)
         print(model.score(X_test, y_test))
+  what_comes_out: {none: true}
   catch_outs:
     - NaN in X raises an error. Impute first.
     - Early stopping is off until n_iter_no_change is set.

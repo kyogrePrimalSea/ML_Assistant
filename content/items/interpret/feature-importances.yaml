@@ -62,6 +62,7 @@ slots:
 
         model = XGBRegressor(n_estimators=50).fit(X, y)
         print(model.feature_importances_.round(2))
+  what_comes_out: {none: true}
   catch_outs:
     - Impurity importances can mislead for many-valued columns.
     - Try permutation_importance as a cross-check.

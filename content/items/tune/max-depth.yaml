@@ -83,6 +83,7 @@ slots:
         model = LGBMRegressor(max_depth=5, num_leaves=24, n_estimators=50, verbose=-1)
         model.fit(X, y)
         print(model.get_params()["max_depth"])
+  what_comes_out: {none: true}
   catch_outs:
     - Defaults differ a lot between libraries.
     - In LightGBM, num_leaves limits the tree before max_depth does.

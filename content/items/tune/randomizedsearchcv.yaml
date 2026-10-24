@@ -64,6 +64,7 @@ slots:
         search.fit(X, y)
         print(search.best_params_)
         print(round(search.best_score_, 3))
+  what_comes_out: {none: true}
   catch_outs:
     - Set random_state or results change every run.
     - The best score is from cross-validation, not a test set.

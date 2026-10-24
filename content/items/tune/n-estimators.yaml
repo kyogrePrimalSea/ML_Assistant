@@ -79,6 +79,7 @@ slots:
 
         model = LGBMRegressor(n_estimators=50, verbose=-1).fit(X, y)
         print(model.n_estimators_)
+  what_comes_out: {none: true}
   catch_outs:
     - In HistGradientBoosting the name is max_iter.
     - More trees without early stopping can overfit.

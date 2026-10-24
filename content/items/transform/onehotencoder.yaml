@@ -56,6 +56,7 @@ slots:
 
         print(encoder.get_feature_names_out())
         print(test_encoded)
+  what_comes_out: {none: true}
   catch_outs:
     - Fit on training rows only; never fit on the test set.
     - Unseen categories raise an error unless handle_unknown is ignore.
