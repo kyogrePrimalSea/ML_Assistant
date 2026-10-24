@@ -1,0 +1,66 @@
+id: hinge-loss
+plain_name: Hinge loss
+code_name: hinge_loss
+aliases: [SVM loss, margin loss]
+stage: evaluate
+family: evaluate.counts.overall
+tracks: [standard]
+archetype: metric
+question_tags: [how good is it, margin, svm]
+targets: [sklearn.metrics.hinge_loss]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.metrics.hinge_loss.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [margin]}
+    line: Penalises scores on the wrong side of the margin.
+  quick_facts:
+    facts:
+      - {label: Best score, value: "0"}
+      - {label: Input, value: decision_function scores}
+      - {label: Upper limit, value: No upper limit}
+  use_avoid:
+    use_when: [svm or margin models, scores from decision_function]
+    avoid_when: [probabilities are the only scores, regression]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.hinge_loss
+      why_this_library: One call on decision scores, labels first.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.metrics import hinge_loss
+        from sklearn.model_selection import train_test_split
+        from sklearn.svm import LinearSVC
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = LinearSVC(max_iter=10000).fit(X_train, y_train)
+        scores = model.decision_function(X_test)
+
+        print(hinge_loss(y_test, scores))
+  what_comes_out: {none: true}
+  catch_outs:
+    - Pass decision_function scores, not labels or probabilities.
+    - Probabilities run without error and give a wrong number.
+    - Multiclass with classes missing from y_true needs labels.
+  key_settings:
+    tier1:
+      - {name: labels, page: null}
+    tier2:
+      - {name: sample_weight, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: Each wrong-side score costs how far it sits past the margin.}
+  next: []

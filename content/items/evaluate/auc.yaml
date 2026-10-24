@@ -1,0 +1,65 @@
+id: auc
+plain_name: AUC
+code_name: auc
+aliases: [area under curve, trapezoidal area, area under a curve]
+stage: evaluate
+family: evaluate.prob.ranking
+tracks: [standard]
+archetype: metric
+question_tags: [one number, area under curve]
+targets: [sklearn.metrics.auc]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.metrics.auc.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [area]}
+    line: Area under any curve you already computed, using trapezoids.
+  quick_facts:
+    facts:
+      - {label: Needs, value: monotonic x values}
+      - {label: Returns, value: one float}
+  use_avoid:
+    use_when: [curve already computed, custom curve area]
+    avoid_when: [you have labels and scores]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.auc
+      why_this_library: One call on the x and y you already have.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.model_selection import train_test_split
+        from sklearn.metrics import auc, roc_curve
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = LogisticRegression(max_iter=5000).fit(X_train, y_train)
+        y_score = model.predict_proba(X_test)[:, 1]
+
+        fpr, tpr, _ = roc_curve(y_test, y_score)
+        print(auc(fpr, tpr))
+  what_comes_out: {none: true}
+  catch_outs:
+    - x must be monotonic, increasing or decreasing; otherwise it raises.
+    - Pass x first, then y.
+    - For labels and scores, use roc-auc-score.
+  key_settings:
+    tier1: []
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: Add up the trapezoids under the curve.
+  next: []

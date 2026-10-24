@@ -1,0 +1,66 @@
+id: get-scorer-names
+plain_name: get_scorer_names
+code_name: get_scorer_names
+aliases: [list of scorer names, scoring names]
+stage: evaluate
+family: evaluate.scoring
+tracks: [standard, time-series]
+archetype: metric
+question_tags: [valid scoring names, what scoring names exist]
+targets: [sklearn.metrics.get_scorer_names]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.metrics.get_scorer_names.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [names]}
+    line: Lists the names scoring= accepts.
+  quick_facts:
+    facts:
+      - {label: Arguments, value: none}
+      - {label: Returns, value: a list of names}
+  use_avoid:
+    use_when: [finding a valid scoring= name, metric search by keyword]
+    avoid_when: [you already know the name, you need a custom metric]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.get_scorer_names
+      why_this_library: One call lists every built-in name.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.metrics import get_scorer_names
+        from sklearn.model_selection import cross_val_score
+
+        X, y = load_breast_cancer(return_X_y=True)
+        model = LogisticRegression(max_iter=5000)
+
+        names = get_scorer_names()
+        f1_names = [name for name in names if name.startswith("f1")]
+        scores = cross_val_score(model, X, y, cv=5, scoring=f1_names[0])
+        print(f1_names, round(scores.mean(), 3))
+  what_comes_out:
+    items:
+      - {name: names, kind: return, task: null, shape: "list of str", note: Each name works as a scoring= string.}
+    next_step: Pick a name from the list and pass it to scoring=.
+    visual: null
+  catch_outs:
+    - Names are strings, not scorer objects; use get_scorer for one.
+    - Not every name fits every task; match the name to your task.
+  key_settings:
+    tier1: []
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: A menu of the scoring names the library knows.}
+  next: []

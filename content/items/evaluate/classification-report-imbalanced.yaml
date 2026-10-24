@@ -1,0 +1,73 @@
+id: classification-report-imbalanced
+plain_name: Imbalanced classification report
+code_name: classification_report_imbalanced
+aliases: [imbalanced report, per class sensitivity]
+stage: evaluate
+family: evaluate.imbalanced
+tracks: [standard]
+archetype: metric
+question_tags: [imbalanced classes, per class results, how good is it]
+targets: [imblearn.metrics.classification_report_imbalanced]
+pairs_with: []
+clashes: []
+source_urls:
+  - https://imbalanced-learn.org/stable/references/generated/imblearn.metrics.classification_report_imbalanced.html
+library_versions:
+  imbalanced-learn: "0.14.2"
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [per-class recall, per-class specificity]}
+    line: Per-class report with sensitivity, specificity and G-mean.
+  quick_facts:
+    facts:
+      - {label: Columns, value: "pre, rec, spe, f1, geo, iba, sup"}
+      - {label: Default digits, value: "2"}
+      - {label: Returns, value: "text, or a dict if output_dict"}
+  use_avoid:
+    use_when: [imbalanced classes, per class results]
+    avoid_when: [regression, one number is enough]
+  prep: []
+  code:
+    - library: imbalanced-learn
+      target: imblearn.metrics.classification_report_imbalanced
+      why_this_library: One call; each class gets its own row.
+      snippet: |
+        # imbalanced-learn 0.14.2
+        from imblearn.metrics import classification_report_imbalanced
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.model_selection import train_test_split
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = LogisticRegression(max_iter=5000).fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+
+        print(classification_report_imbalanced(y_test, y_pred))
+  what_comes_out: {none: true}
+  catch_outs:
+    - Default zero_division='warn' acts as 0 and warns.
+    - Use labels to limit the class rows shown.
+  key_settings:
+    tier1:
+      - {name: digits, page: null}
+      - {name: zero_division, page: null}
+      - {name: labels, page: null}
+      - {name: target_names, page: null}
+    tier2:
+      - {name: output_dict, page: null}
+      - {name: alpha, page: null}
+      - {name: sample_weight, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: A classification report, widened with balance-aware columns.
+  next: []

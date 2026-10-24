@@ -1,0 +1,75 @@
+id: precision-recall-curve
+plain_name: Precision-recall curve
+code_name: precision_recall_curve / PrecisionRecallDisplay
+aliases: [pr curve, precision against recall, rare positives curve]
+stage: evaluate
+family: evaluate.prob.ranking
+tracks: [standard]
+archetype: metric
+question_tags: [trade-off, rare positives]
+targets: [sklearn.metrics.precision_recall_curve, sklearn.metrics.PrecisionRecallDisplay]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.metrics.precision_recall_curve.html', 'https://scikit-learn.org/stable/modules/generated/sklearn.metrics.PrecisionRecallDisplay.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [precision, recall]}
+    line: Precision against recall, at every cut-off.
+  quick_facts:
+    facts:
+      - {label: Points, value: one more than thresholds}
+      - {label: Drops, value: nothing by default}
+  use_avoid:
+    use_when: [rare positives, positives matter most]
+    avoid_when: [true negatives matter, comparing across positive rates]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.precision_recall_curve
+      why_this_library: One call; returns the points you plot.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.model_selection import train_test_split
+        from sklearn.metrics import precision_recall_curve
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = LogisticRegression(max_iter=5000).fit(X_train, y_train)
+        y_score = model.predict_proba(X_test)[:, 1]
+
+        precision, recall, thresholds = precision_recall_curve(y_test, y_score)
+        print(precision.shape, recall.shape, thresholds.shape)
+  what_comes_out:
+    items:
+      - {name: precision, kind: return, task: classification, shape: "array, one more than thresholds", note: Precision at each point; one extra at the end.}
+      - {name: recall, kind: return, task: classification, shape: "array, one more than thresholds", note: Recall at each point; same length as precision.}
+      - {name: thresholds, kind: return, task: classification, shape: "array, one per threshold", note: Cut-off behind each point but the last.}
+    next_step: Plot recall on x, precision on y, or use average-precision-score.
+    visual: null
+  catch_outs:
+    - Pass scores or probabilities, not predicted labels.
+    - Set pos_label when the positive class is not 1.
+    - Does not use true negatives at all.
+  key_settings:
+    tier1:
+      - {name: pos_label, page: null}
+    tier2:
+      - {name: drop_intermediate, page: null}
+      - {name: sample_weight, page: null}
+    tier3:
+      - {name: prevalence_pos_label, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    text: Trace precision against recall as the cut-off moves.
+  next: []

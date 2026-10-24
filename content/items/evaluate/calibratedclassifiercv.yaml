@@ -1,0 +1,78 @@
+id: calibratedclassifiercv
+plain_name: CalibratedClassifierCV
+code_name: CalibratedClassifierCV
+aliases: [probability calibration, sigmoid calibration, isotonic calibration]
+stage: evaluate
+family: evaluate.prob.calibration
+tracks: [standard]
+archetype: composer
+question_tags: [overconfident, fix probabilities, honest probabilities]
+targets: [sklearn.calibration.CalibratedClassifierCV]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.calibration.CalibratedClassifierCV.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero:
+      kind: composer
+      boxes: [Model, Calibrator]
+    line: Adjusts probabilities so they match real outcome rates.
+  quick_facts:
+    facts:
+    - {label: Default method, value: sigmoid}
+    - {label: Default ensemble, value: auto}
+  use_avoid:
+    use_when: [probabilities look overconfident, need calibrated probabilities]
+    avoid_when: [only labels matter, no probabilities needed]
+  prep: []
+  code:
+  - library: scikit-learn
+    target: sklearn.calibration.CalibratedClassifierCV
+    why_this_library: Wraps any classifier and calibrates its probabilities.
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.calibration import CalibratedClassifierCV
+      from sklearn.datasets import load_breast_cancer
+      from sklearn.linear_model import LogisticRegression
+      from sklearn.metrics import brier_score_loss
+      from sklearn.model_selection import train_test_split
+
+      X, y = load_breast_cancer(return_X_y=True)
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+      base = LogisticRegression(max_iter=5000).fit(X_train, y_train)
+      before = base.predict_proba(X_test)[:, 1]
+      calibrated = CalibratedClassifierCV(
+          estimator=LogisticRegression(max_iter=5000),
+          method="sigmoid", cv=5,
+      ).fit(X_train, y_train)
+      after = calibrated.predict_proba(X_test)[:, 1]
+      print(round(brier_score_loss(y_test, before), 4),
+            round(brier_score_loss(y_test, after), 4))
+  what_comes_out:
+    items:
+    - {name: predict_proba, kind: method, task: null, shape: '(n_samples, n_classes)', note: Calibrated probability for each class.}
+    - {name: predict, kind: method, task: null, shape: '(n_samples,)', note: Class label from the calibrated probabilities.}
+    - {name: classes_, kind: attribute, task: null, shape: '(n_classes,)', note: Class labels the model knows.}
+    - {name: calibrated_classifiers_, kind: attribute, task: null, shape: list, note: 'One per cv fold, or one if ensemble is False.'}
+    next_step: Check the result with the calibration curve.
+    visual: null
+  catch_outs: [A calibrated model can score worse on one split., 'method can be sigmoid, isotonic or temperature scaling.']
+  key_settings:
+    tier1:
+    - {name: method, page: null}
+    - {name: cv, page: null}
+    - {name: ensemble, page: null}
+    tier2:
+    - {name: estimator, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: Learns a map from raw scores to honest probabilities.}
+  next: [but-overconfident]

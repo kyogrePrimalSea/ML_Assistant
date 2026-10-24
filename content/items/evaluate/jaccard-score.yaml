@@ -1,0 +1,69 @@
+id: jaccard-score
+plain_name: Jaccard
+code_name: jaccard_score
+aliases: [Jaccard similarity, Jaccard index]
+stage: evaluate
+family: evaluate.counts.pr
+tracks: [standard]
+archetype: metric
+question_tags: [how good is it, overlap, strict score]
+targets: [sklearn.metrics.jaccard_score]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.metrics.jaccard_score.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [TP, FP, FN]}
+    line: Overlap of predicted and true positives, over their union.
+  quick_facts:
+    facts:
+      - {label: Formula, value: TP / (TP + FP + FN)}
+      - {label: Best score, value: "1"}
+      - {label: Range, value: "0 to 1"}
+  use_avoid:
+    use_when: [strict overlap score wanted]
+    avoid_when: [regression, comparing with F1 scores]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.jaccard_score
+      why_this_library: One call on predicted and true labels.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.metrics import jaccard_score
+        from sklearn.model_selection import train_test_split
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = LogisticRegression(max_iter=5000).fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+
+        print(jaccard_score(y_test, y_pred))
+  what_comes_out: {none: true}
+  catch_outs:
+    - Always lower than F1 on the same predictions.
+    - Multiclass needs average set; binary is the default.
+    - No true or predicted positives gives 0 with a warning.
+  key_settings:
+    tier1:
+      - {name: average, page: null}
+      - {name: pos_label, page: null}
+    tier2:
+      - {name: labels, page: null}
+      - {name: zero_division, page: null}
+    tier3:
+      - {name: sample_weight, page: null}
+  watch_it_work: {none: true}
+  intuition: {text: Shared positives divided by everything either one flagged.}
+  next: []

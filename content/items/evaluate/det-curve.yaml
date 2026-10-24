@@ -1,0 +1,75 @@
+id: det-curve
+plain_name: DET curve
+code_name: det_curve / DetCurveDisplay
+aliases: [detection error tradeoff, det, miss rate against false alarms]
+stage: evaluate
+family: evaluate.prob.ranking
+tracks: [standard]
+archetype: metric
+question_tags: [trade-off, error rates]
+targets: [sklearn.metrics.det_curve, sklearn.metrics.DetCurveDisplay]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.metrics.det_curve.html', 'https://scikit-learn.org/stable/modules/generated/sklearn.metrics.DetCurveDisplay.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [FPR, FNR]}
+    line: Miss rate against false alarm rate, at every cut-off.
+  quick_facts:
+    facts:
+      - {label: Axes, value: false positive and miss rates}
+      - {label: Drops, value: nothing by default}
+  use_avoid:
+    use_when: [comparing error rates, both error types matter]
+    avoid_when: [one number is needed, unfamiliar audience]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.det_curve
+      why_this_library: One call; returns the points you plot.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.model_selection import train_test_split
+        from sklearn.metrics import det_curve
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = LogisticRegression(max_iter=5000).fit(X_train, y_train)
+        y_score = model.predict_proba(X_test)[:, 1]
+
+        fpr, fnr, thresholds = det_curve(y_test, y_score)
+        print(fpr.shape, fnr.shape, thresholds.shape)
+  what_comes_out:
+    items:
+      - {name: fpr, kind: return, task: classification, shape: "array, one per threshold", note: False positive rate at each cut-off.}
+      - {name: fnr, kind: return, task: classification, shape: "array, one per threshold", note: False negative rate at each cut-off.}
+      - {name: thresholds, kind: return, task: classification, shape: "array, one per threshold", note: Cut-off behind each point.}
+    next_step: Plot fnr against fpr, or use DetCurveDisplay.
+    visual: null
+  catch_outs:
+    - Pass scores or probabilities, not predicted labels.
+    - Set pos_label when the positive class is not 1.
+    - Drops nothing by default; drop_intermediate=True trims points.
+  key_settings:
+    tier1:
+      - {name: pos_label, page: null}
+      - {name: drop_intermediate, page: null}
+    tier2:
+      - {name: estimator_name, page: null}
+      - {name: sample_weight, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: Trace the misses you accept against the false alarms you allow.
+  next: []

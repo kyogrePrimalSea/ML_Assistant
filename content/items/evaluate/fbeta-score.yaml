@@ -1,0 +1,70 @@
+id: fbeta-score
+plain_name: F-beta
+code_name: fbeta_score
+aliases: [F-beta, F-measure]
+stage: evaluate
+family: evaluate.counts.pr
+tracks: [standard]
+archetype: metric
+question_tags: [how good is it, false alarms, misses]
+targets: [sklearn.metrics.fbeta_score]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.metrics.fbeta_score.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [FP, FN]}
+    line: F1 with a dial that leans towards precision or recall.
+  quick_facts:
+    facts:
+      - {label: Formula, value: (1 + b²) × P × R / (b² × P + R)}
+      - {label: Required setting, value: "beta, no default"}
+      - {label: Best score, value: "1"}
+  use_avoid:
+    use_when: [one error type costs more, a tilt towards recall]
+    avoid_when: [equal weights wanted, regression]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.fbeta_score
+      why_this_library: One call; beta is required.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.metrics import fbeta_score
+        from sklearn.model_selection import train_test_split
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = LogisticRegression(max_iter=5000).fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+
+        print(fbeta_score(y_test, y_pred, beta=2))
+  what_comes_out: {none: true}
+  catch_outs:
+    - beta has no default; the call fails without it.
+    - beta of 1 gives the same score as F1.
+    - Multiclass needs average set, as with F1.
+  key_settings:
+    tier1:
+      - {name: beta, page: null}
+      - {name: average, page: null}
+    tier2:
+      - {name: pos_label, page: null}
+      - {name: zero_division, page: null}
+      - {name: labels, page: null}
+    tier3:
+      - {name: sample_weight, page: null}
+  watch_it_work: {none: true}
+  intuition: {text: F1 with a dial; beta sets how much recall counts.}
+  next: []

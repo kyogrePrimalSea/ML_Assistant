@@ -1,0 +1,71 @@
+id: geometric-mean-score
+plain_name: G-mean
+code_name: geometric_mean_score
+aliases: [g-mean, sensitivity and specificity mix]
+stage: evaluate
+family: evaluate.imbalanced
+tracks: [standard]
+archetype: metric
+question_tags: [imbalanced classes, how good is it]
+targets: [imblearn.metrics.geometric_mean_score]
+pairs_with: []
+clashes: []
+source_urls:
+  - https://imbalanced-learn.org/stable/references/generated/imblearn.metrics.geometric_mean_score.html
+library_versions:
+  imbalanced-learn: "0.14.2"
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [sensitivity, specificity]}
+    line: Balances how well each class is found, in one number.
+  quick_facts:
+    facts:
+      - {label: Best value, value: "1"}
+      - {label: Worst value, value: "0"}
+      - {label: Default average, value: "multiclass"}
+  use_avoid:
+    use_when: [imbalanced classes, every class matters]
+    avoid_when: [regression, only one class matters]
+  prep: []
+  code:
+    - library: imbalanced-learn
+      target: imblearn.metrics.geometric_mean_score
+      why_this_library: One call; works for binary and multiclass.
+      snippet: |
+        # imbalanced-learn 0.14.2
+        from imblearn.metrics import geometric_mean_score
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.model_selection import train_test_split
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = LogisticRegression(max_iter=5000).fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+
+        print(round(geometric_mean_score(y_test, y_pred), 3))
+  what_comes_out: {none: true}
+  catch_outs:
+    - One unrecognised class drives the score to zero unless correction is set.
+    - correction only applies when average is multiclass.
+  key_settings:
+    tier1:
+      - {name: average, page: null}
+      - {name: pos_label, page: null}
+      - {name: correction, page: null}
+    tier2:
+      - {name: labels, page: null}
+      - {name: sample_weight, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: Multiply how well each class is found, then take the root.
+  next: []

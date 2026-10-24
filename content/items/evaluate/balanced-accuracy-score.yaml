@@ -1,0 +1,69 @@
+id: balanced-accuracy-score
+plain_name: Balanced accuracy
+code_name: balanced_accuracy_score
+aliases: [mean class recall, macro recall]
+stage: evaluate
+family: evaluate.counts.overall
+tracks: [standard]
+archetype: metric
+question_tags: [imbalanced classes, how good is it]
+targets: [sklearn.metrics.balanced_accuracy_score]
+pairs_with: []
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.metrics.balanced_accuracy_score.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [recall per class]}
+    line: Average of how well each class is found.
+  quick_facts:
+    facts:
+      - {label: Range, value: 0 to 1}
+      - {label: Best score, value: "1.0"}
+      - {label: Default adjusted, value: "False"}
+  use_avoid:
+    use_when: [classes are lopsided, every class matters]
+    avoid_when: [classes are balanced, regression]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.balanced_accuracy_score
+      why_this_library: One call; same inputs as accuracy.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.metrics import balanced_accuracy_score
+        from sklearn.model_selection import train_test_split
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = LogisticRegression(max_iter=5000).fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+
+        print(round(balanced_accuracy_score(y_test, y_pred), 3))
+  what_comes_out: {none: true}
+  catch_outs:
+    - Equals accuracy only when the classes are equal in size.
+    - Adjusted for chance, random guessing scores 0.
+    - Takes predicted labels, not probabilities.
+  key_settings:
+    tier1:
+      - {name: adjusted, page: null}
+      - {name: sample_weight, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: Score each class on its own, then average the scores.
+  next: []

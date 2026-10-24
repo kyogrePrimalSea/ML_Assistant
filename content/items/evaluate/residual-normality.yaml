@@ -1,0 +1,63 @@
+id: residual-normality
+plain_name: Residual normality tests
+code_name: jarque_bera / omni_normtest
+aliases: [Jarque-Bera test, omnibus test, normality test]
+stage: evaluate
+family: evaluate.diagnostics
+tracks: [standard]
+archetype: diagnostic
+question_tags: [normal residuals, p-values from OLS, check assumptions]
+targets: [statsmodels.stats.stattools.jarque_bera, statsmodels.stats.stattools.omni_normtest]
+pairs_with: []
+clashes: []
+source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.stats.stattools.jarque_bera.html', 'https://www.statsmodels.org/stable/generated/statsmodels.stats.stattools.omni_normtest.html']
+library_versions: {statsmodels: 0.15.0}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: ames, chart: residuals with test p-values}
+    line: Checks if residuals look normal, with p-values.
+  quick_facts:
+    facts:
+    - {label: Input, value: Regression residuals}
+    - {label: Default axis, value: '0'}
+  use_avoid:
+    use_when: [need p-values from OLS, checking normal residuals]
+    avoid_when: [no residuals, not a regression]
+  prep: []
+  code:
+  - library: statsmodels
+    target: statsmodels.stats.stattools.jarque_bera
+    why_this_library: Returns the statistic and p-value for residuals.
+    snippet: |
+      # statsmodels 0.15.0
+      import statsmodels.api as sm
+      from sklearn.datasets import load_diabetes
+      from statsmodels.stats.stattools import jarque_bera, omni_normtest
+
+      X, y = load_diabetes(return_X_y=True)
+      resid = sm.OLS(y, sm.add_constant(X)).fit().resid
+      jb, jb_pvalue, skew, kurtosis = jarque_bera(resid)
+      stat, pvalue = omni_normtest(resid)
+      print(round(jb_pvalue, 4), round(pvalue, 4))
+  what_comes_out:
+    items:
+    - {name: JBpv, kind: return, task: null, shape: float, note: Small p-value means residuals look non-normal.}
+    - {name: pvalue, kind: return, task: null, shape: float, note: Omnibus test p-value; small means non-normal.}
+    next_step: 'Small p-values: check outliers with influence measures.'
+    visual: null
+  catch_outs: ['Tests residuals, not the target values.', jarque_bera also returns skew and kurtosis., axis picks the dimension tested; default 0.]
+  key_settings:
+    tier1: []
+    tier2:
+    - {name: axis, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: Compares the residual shape with a normal curve.}
+  next: []

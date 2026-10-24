@@ -1,0 +1,72 @@
+id: dcg-score
+plain_name: DCG
+code_name: dcg_score
+aliases: [discounted cumulative gain, ranking quality]
+stage: evaluate
+family: evaluate.multilabel
+tracks: [standard]
+archetype: metric
+question_tags: [ranked results, top results matter most]
+targets: [sklearn.metrics.dcg_score]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.metrics.dcg_score.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [top ranks]}
+    line: Scores a ranked list, with the top ranks counting most.
+  quick_facts:
+    facts:
+      - {label: Default log base, value: "2"}
+      - {label: Default k, value: "all results"}
+  use_avoid:
+    use_when: [ranked results, top positions matter most]
+    avoid_when: [no ranking, only 0/1 predictions]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.dcg_score
+      why_this_library: One call on true labels and scores.
+      snippet: |
+        # scikit-learn 1.9.1
+        import numpy as np
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.metrics import dcg_score
+        from sklearn.model_selection import train_test_split
+        from sklearn.multiclass import OneVsRestClassifier
+
+        X, y = load_breast_cancer(return_X_y=True)
+        # Two labels per row: the diagnosis, and whether feature 0 is large.
+        Y = np.column_stack([y, X[:, 0] > np.median(X[:, 0])]).astype(int)
+        X_train, X_test, Y_train, Y_test = train_test_split(X, Y, random_state=0)
+
+        model = OneVsRestClassifier(LogisticRegression(max_iter=5000))
+        model.fit(X_train, Y_train)
+        y_score = model.predict_proba(X_test)
+
+        print(dcg_score(Y_test, y_score))
+  what_comes_out: {none: true}
+  catch_outs:
+    - Scores set the order; pass scores, not predicted labels.
+    - A lower log_base gives a sharper discount for lower ranks.
+    - ignore_ties True assumes no tied scores.
+  key_settings:
+    tier1:
+      - {name: k, page: null}
+      - {name: log_base, page: null}
+    tier2:
+      - {name: ignore_ties, page: null}
+    tier3:
+      - {name: sample_weight, page: null}
+  watch_it_work: {none: true}
+  intuition: {text: "Reward correct labels, and reward them more when they sit near the top."}
+  next: []

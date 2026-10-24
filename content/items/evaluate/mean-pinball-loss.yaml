@@ -1,0 +1,68 @@
+id: mean-pinball-loss
+plain_name: Pinball loss
+code_name: mean_pinball_loss
+aliases: ["quantile loss", "pinball"]
+stage: evaluate
+family: evaluate.error.quantile
+tracks: [standard]
+archetype: metric
+question_tags: ["predicted range", "quantile model"]
+targets: [sklearn.metrics.mean_pinball_loss]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_pinball_loss.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: ames, highlight: ["residual"]}
+    line: "How well a predicted quantile matches the true values."
+  quick_facts:
+    facts:
+    - {label: "Best score", value: "0 (perfect)"}
+    - {label: "Alpha range", value: "0 to 1"}
+    - {label: "At alpha 0.5", value: "Half the MAE"}
+  use_avoid:
+    use_when: ["quantile regression", "predicted range"]
+    avoid_when: ["mean prediction", "classification"]
+  prep: []
+  code:
+  - library: scikit-learn
+    target: sklearn.metrics.mean_pinball_loss
+    why_this_library: One call; y_true first, then y_pred.
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import load_diabetes
+      from sklearn.linear_model import QuantileRegressor
+      from sklearn.metrics import mean_pinball_loss
+      from sklearn.model_selection import train_test_split
+
+      X, y = load_diabetes(return_X_y=True)
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+      model = QuantileRegressor(quantile=0.9, alpha=0.0, solver="highs")
+      model = model.fit(X_train, y_train)
+      y_pred = model.predict(X_test)
+
+      print(mean_pinball_loss(y_test, y_pred, alpha=0.9))
+  what_comes_out: {none: true}
+  catch_outs:
+  - "Alpha must be between 0 and 1."
+  - "Alpha 0.9 punishes under-predictions more than over-predictions."
+  key_settings:
+    tier1:
+    - {name: alpha, page: null}
+    tier2:
+    - {name: multioutput, page: null}
+    tier3:
+    - {name: sample_weight, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    text: "Misses below and above count with different weights."
+  next: []

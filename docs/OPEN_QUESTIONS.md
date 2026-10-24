@@ -97,12 +97,14 @@ with the source URL. Wording is not rewritten silently.
   GradientBoostingClassifier (breast cancer, run in `.venv`). `decision_function` is the raw
   log-odds there (sigmoid of it equals `predict_proba[:, 1]`). XGBoost has none.
 
-- **`confusion-matrix` page mixes two archetypes (E05).** The inventory gives the page id
-  `confusion-matrix` two targets with different archetypes: `sklearn.metrics.confusion_matrix`
-  (metric) and `sklearn.metrics.ConfusionMatrixDisplay` (diagnostic). The validator requires the
-  record's archetype to match every inventory entry of the page, so one error stays until the map
-  is changed (split the page, or re-label one entry). The record is written as `metric` and
-  covers both targets; nothing in the map was altered.
+- **Four evaluate pages mix a metric and a diagnostic archetype (E05).** The inventory gives
+  `confusion-matrix`, `roc-curve`, `precision-recall-curve` and `det-curve` a function target
+  (metric: `confusion_matrix`, `roc_curve`, `precision_recall_curve`, `det_curve`) and a Display
+  class target (diagnostic: `ConfusionMatrixDisplay`, `RocCurveDisplay`, `PrecisionRecallDisplay`,
+  `DetCurveDisplay`). The validator requires the record's archetype to match every inventory entry
+  of the page, so one error per page stays until the map changes (split the page, or re-label one
+  entry). The records are written as `metric` and cover both targets; nothing in the map was
+  altered. Also: the taxonomy `shown_as` for `auc` is "auc"; the record uses "AUC".
 - **`optuna.visualization` plot pages and two Optuna samplers cannot run in `.venv` (E05).**
   `plotly` is not pinned or installed, so every `plot-*` snippet fails with ImportError after
   its study-level lines (those lines were run). `plot-terminator-improvement` also needs

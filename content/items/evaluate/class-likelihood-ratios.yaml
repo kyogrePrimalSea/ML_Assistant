@@ -1,0 +1,75 @@
+id: class-likelihood-ratios
+plain_name: Likelihood ratios
+code_name: class_likelihood_ratios
+aliases: [LR+ and LR-, likelihood ratio]
+stage: evaluate
+family: evaluate.counts.breakdown
+tracks: [standard]
+archetype: metric
+question_tags: [how much a flag helps, test quality]
+targets: [sklearn.metrics.class_likelihood_ratios]
+pairs_with: []
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.metrics.class_likelihood_ratios.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [sensitivity, specificity]}
+    line: How much a positive or negative call shifts the odds.
+  quick_facts:
+    facts:
+      - {label: Task, value: Binary only}
+      - {label: Returns, value: "LR+ then LR-"}
+      - {label: Division by zero, value: "nan by default"}
+  use_avoid:
+    use_when: [binary classes, test-style thinking]
+    avoid_when: [more than two classes, regression]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.class_likelihood_ratios
+      why_this_library: One call; returns both ratios as a pair.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.metrics import class_likelihood_ratios
+        from sklearn.model_selection import train_test_split
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = LogisticRegression(max_iter=5000).fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+
+        lr_pos, lr_neg = class_likelihood_ratios(y_test, y_pred)
+        print(round(lr_pos, 2), round(lr_neg, 2))
+  what_comes_out:
+    items:
+      - {name: class_likelihood_ratios, kind: return, task: classification, shape: tuple of 2 floats, note: "LR+ first, then LR-."}
+    next_step: Compare the two ratios with the confusion matrix counts.
+    visual: null
+  catch_outs:
+    - Binary only; more than two classes raises an error.
+    - A division by zero gives nan unless replace_undefined_by is set.
+    - Takes predicted labels, so the threshold is already applied.
+  key_settings:
+    tier1:
+      - {name: replace_undefined_by, page: null}
+      - {name: labels, page: null}
+      - {name: sample_weight, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: How much a positive result multiplies the odds.
+  next: []

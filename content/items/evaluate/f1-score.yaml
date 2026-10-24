@@ -1,0 +1,70 @@
+id: f1-score
+plain_name: F1
+code_name: f1_score
+aliases: [F-measure, balanced F-score]
+stage: evaluate
+family: evaluate.counts.pr
+tracks: [standard]
+archetype: metric
+question_tags: [how good is it, false alarms, misses]
+targets: [sklearn.metrics.f1_score]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.metrics.f1_score.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [TP, FP, FN]}
+    line: Balances precision and recall into one score.
+  quick_facts:
+    facts:
+      - {label: Formula, value: 2 * P * R / (P + R)}
+      - {label: Best score, value: "1"}
+      - {label: Range, value: "0 to 1"}
+      - {label: Default average, value: binary}
+  use_avoid:
+    use_when: [both error types matter, one score wanted]
+    avoid_when: [regression, one error type matters more]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.f1_score
+      why_this_library: One call; handles binary and multiclass.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.metrics import f1_score
+        from sklearn.model_selection import train_test_split
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = LogisticRegression(max_iter=5000).fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+
+        print(f1_score(y_test, y_pred))
+  what_comes_out: {none: true}
+  catch_outs:
+    - Multiclass needs average set; binary is the default.
+    - No true or predicted positives gives 0 with a warning.
+    - Ignores true negatives entirely.
+  key_settings:
+    tier1:
+      - {name: average, page: null}
+      - {name: pos_label, page: null}
+    tier2:
+      - {name: zero_division, page: null}
+      - {name: labels, page: null}
+    tier3:
+      - {name: sample_weight, page: null}
+  watch_it_work: {none: true}
+  intuition: {text: An average that punishes a big gap between the two.}
+  next: []

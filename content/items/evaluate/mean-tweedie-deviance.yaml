@@ -1,0 +1,71 @@
+id: mean-tweedie-deviance
+plain_name: Mean Tweedie deviance
+code_name: mean_tweedie_deviance
+aliases: [tweedie loss, tweedie deviance]
+stage: evaluate
+family: evaluate.error.deviance
+tracks: [standard]
+archetype: metric
+question_tags: [many zeros, amounts with zeros]
+targets: [sklearn.metrics.mean_tweedie_deviance]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_tweedie_deviance.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: ames, highlight: [zeros]}
+    line: Average Tweedie loss; power sets its shape, lower is better.
+  quick_facts:
+    facts:
+      - {label: Best value, value: "0.0 (lower is better)"}
+      - {label: Default power, value: "0: same as squared error"}
+      - {label: Power 1, value: "Poisson shape"}
+  use_avoid:
+    use_when: [amounts with many zeros, comparing models on one target]
+    avoid_when: [classification, negative targets]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.mean_tweedie_deviance
+      why_this_library: One call; power picks the distribution.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_diabetes
+        from sklearn.linear_model import TweedieRegressor
+        from sklearn.metrics import mean_tweedie_deviance
+        from sklearn.model_selection import train_test_split
+
+        X, y = load_diabetes(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = TweedieRegressor(power=1.5, max_iter=1000)
+        model.fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+
+        print(mean_tweedie_deviance(y_test, y_pred, power=1.5))
+  what_comes_out:
+    items:
+      - {name: mean_tweedie_deviance, kind: return, task: regression, shape: float, note: "Lower is better; power sets the loss shape."}
+    next_step: Try power 1 or 2 to match your data.
+    visual: null
+  catch_outs:
+    - Power between 0 and 1 is not allowed.
+    - Power 1 needs y_true of 0 or more; power 2 needs y_true above 0.
+    - Lower is better, so do not maximise it.
+  key_settings:
+    tier1:
+      - {name: power, page: null}
+    tier2:
+      - {name: sample_weight, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "One loss that covers Poisson, Gamma and normal shapes, set by power."}
+  next: []

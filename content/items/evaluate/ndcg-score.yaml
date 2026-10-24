@@ -1,0 +1,73 @@
+id: ndcg-score
+plain_name: NDCG
+code_name: ndcg_score
+aliases: [normalized DCG]
+family: evaluate.multilabel
+question_tags: [are top results right, ranking quality]
+targets: [sklearn.metrics.ndcg_score]
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.metrics.ndcg_score.html']
+library_versions: {scikit-learn: 1.9.1}
+stage: evaluate
+tracks: [standard]
+archetype: metric
+pairs_with: []
+clashes: []
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [top ranks]}
+    line: Scores the ranking, with the top ranks counting most.
+  quick_facts:
+    facts:
+      - {label: Range, value: "0 to 1"}
+      - {label: Best score, value: "1.0"}
+  use_avoid:
+    use_when: [ranking results, top ranks matter]
+    avoid_when: [all positions equal, negative true scores]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.ndcg_score
+      why_this_library: One call; true labels first, scores second.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import make_multilabel_classification
+        from sklearn.linear_model import Ridge
+        from sklearn.metrics import ndcg_score
+        from sklearn.model_selection import train_test_split
+
+        X, Y = make_multilabel_classification(
+            n_samples=300, n_classes=4, random_state=0
+        )
+        X_train, X_test, Y_train, Y_test = train_test_split(X, Y, random_state=0)
+
+        # One continuous score per label (higher means more likely).
+        model = Ridge().fit(X_train, Y_train)
+        y_score = model.predict(X_test)
+
+        print(ndcg_score(Y_test, y_score, k=3))
+  what_comes_out:
+    items:
+      - {name: normalized_discounted_cumulative_gain, kind: return, task: classification, shape: "float in [0, 1]", note: Averaged over rows; 1.0 is the ideal order.}
+    next_step: null
+    visual: null
+  catch_outs:
+    - Negative values in true scores can push it outside 0 to 1.
+    - Use ignore_ties only when scores have no ties.
+    - k keeps the top k ranks and ignores the rest.
+  key_settings:
+    tier1:
+      - {name: k, page: null}
+    tier2:
+      - {name: ignore_ties, page: null}
+      - {name: sample_weight, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Reward true labels near the top, scaled to the best possible order."}
+  next: []

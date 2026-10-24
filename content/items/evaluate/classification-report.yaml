@@ -1,0 +1,78 @@
+id: classification-report
+plain_name: Classification report
+code_name: classification_report
+aliases: [precision recall f1 table, per class report]
+stage: evaluate
+family: evaluate.counts.breakdown
+tracks: [standard]
+archetype: metric
+question_tags: [per class scores, how good is it]
+targets: [sklearn.metrics.classification_report]
+pairs_with: []
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.metrics.classification_report.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [precision, recall]}
+    line: Precision, recall and F1 for each class, in one table.
+  quick_facts:
+    facts:
+      - {label: Default digits, value: "2"}
+      - {label: Output, value: "Text table, or a dict"}
+      - {label: Zero division, value: "warn (acts as 0)"}
+  use_avoid:
+    use_when: [several classes to compare, need per class scores]
+    avoid_when: [regression, one number is enough]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.classification_report
+      why_this_library: One call; prints a table ready to read.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.metrics import classification_report
+        from sklearn.model_selection import train_test_split
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = LogisticRegression(max_iter=5000).fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+
+        print(classification_report(y_test, y_pred,
+                                    target_names=["malignant", "benign"]))
+  what_comes_out:
+    items:
+      - {name: classification_report, kind: return, task: classification, shape: "str, or dict", note: A dict when output_dict is True.}
+    next_step: Find the weakest class, then check its confusion matrix.
+    visual: null
+  catch_outs:
+    - A class with no predicted samples scores 0 and warns.
+    - Digits only change the formatting, not the scores.
+    - Pass target_names to show class names instead of numbers.
+  key_settings:
+    tier1:
+      - {name: zero_division, page: null}
+      - {name: digits, page: null}
+      - {name: labels, page: null}
+      - {name: target_names, page: null}
+    tier2:
+      - {name: output_dict, page: null}
+      - {name: sample_weight, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: One row per class, showing how often it is right and how much it finds.
+  next: []

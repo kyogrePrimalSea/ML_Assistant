@@ -1,0 +1,68 @@
+id: predictionerrordisplay
+plain_name: PredictionErrorDisplay
+code_name: PredictionErrorDisplay
+aliases: [prediction error plot, residual plot, actual vs predicted]
+stage: evaluate
+family: evaluate.diagnostics
+tracks: [standard]
+archetype: diagnostic
+question_tags: [predicted vs actual, where errors are, residual plot]
+targets: [sklearn.metrics.PredictionErrorDisplay]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.metrics.PredictionErrorDisplay.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: ames, chart: predicted against actual values}
+    line: Plots predictions against actual values to show errors.
+  quick_facts:
+    facts:
+    - {label: Inputs, value: True and predicted values}
+  use_avoid:
+    use_when: [checking predictions by eye, spotting error patterns]
+    avoid_when: [classification problems, no predictions yet]
+  prep: []
+  code:
+  - library: scikit-learn
+    target: sklearn.metrics.PredictionErrorDisplay
+    why_this_library: Draws the plot from predictions you already have.
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import load_diabetes
+      from sklearn.linear_model import Ridge
+      from sklearn.metrics import PredictionErrorDisplay
+      from sklearn.model_selection import train_test_split
+
+      X, y = load_diabetes(return_X_y=True)
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+      model = Ridge().fit(X_train, y_train)
+      y_pred = model.predict(X_test)
+      display = PredictionErrorDisplay.from_predictions(
+          y_true=y_test, y_pred=y_pred, kind="residual_vs_predicted"
+      )
+      print(round(abs(y_test - y_pred).mean(), 2))
+  what_comes_out:
+    items:
+    - {name: from_predictions, kind: method, task: null, shape: display object, note: Builds the plot from true and predicted values.}
+    - {name: from_estimator, kind: method, task: null, shape: display object, note: 'Predicts with a fitted regressor, then plots.'}
+    - {name: plot, kind: method, task: null, shape: display object, note: Draws the figure on axes.}
+    - {name: figure_, kind: attribute, task: null, shape: matplotlib Figure, note: The figure the plot is drawn on.}
+    - {name: ax_, kind: attribute, task: null, shape: matplotlib Axes, note: The axes holding the scatter.}
+    next_step: null
+    visual: null
+  catch_outs: [Needs both true and predicted values., 'Draws with matplotlib, so the plot needs it installed.']
+  key_settings:
+    tier1: []
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: Plot what the model predicted against what was true.}
+  next: []

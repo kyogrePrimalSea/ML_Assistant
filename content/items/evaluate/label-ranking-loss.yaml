@@ -1,0 +1,70 @@
+id: label-ranking-loss
+plain_name: Ranking loss
+code_name: label_ranking_loss
+aliases: [misordered label pairs]
+family: evaluate.multilabel
+question_tags: [how many pairs are wrong, multilabel ranking]
+targets: [sklearn.metrics.label_ranking_loss]
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.metrics.label_ranking_loss.html']
+library_versions: {scikit-learn: 1.9.1}
+stage: evaluate
+tracks: [standard]
+archetype: metric
+pairs_with: []
+clashes: []
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [misordered pairs]}
+    line: How often a wrong label is scored above a true one.
+  quick_facts:
+    facts:
+      - {label: Best score, value: "0"}
+      - {label: Direction, value: Lower is better}
+  use_avoid:
+    use_when: [several labels per row, ordering matters]
+    avoid_when: [one label per row, hard yes or no only]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.label_ranking_loss
+      why_this_library: One call; scores in, ranking loss out.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import make_multilabel_classification
+        from sklearn.linear_model import Ridge
+        from sklearn.metrics import label_ranking_loss
+        from sklearn.model_selection import train_test_split
+
+        X, Y = make_multilabel_classification(
+            n_samples=300, n_classes=4, random_state=0
+        )
+        X_train, X_test, Y_train, Y_test = train_test_split(X, Y, random_state=0)
+
+        # One continuous score per label (higher means more likely).
+        model = Ridge().fit(X_train, Y_train)
+        y_score = model.predict(X_test)
+
+        print(label_ranking_loss(Y_test, y_score))
+  what_comes_out:
+    items:
+      - {name: loss, kind: return, task: classification, shape: float, note: Weighted count of misordered label pairs.}
+    next_step: Compare with label ranking average precision, which rewards the top ranks.
+    visual: null
+  catch_outs:
+    - Needs scores per label, not 0 or 1 predictions.
+    - Zero is perfect; lower is better.
+  key_settings:
+    tier1:
+      - {name: sample_weight, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: Count the label pairs where a wrong label is scored above a right one.}
+  next: []

@@ -1,0 +1,75 @@
+id: cohen-kappa-score
+plain_name: Cohen's kappa
+code_name: cohen_kappa_score
+aliases: [kappa, inter-rater agreement]
+stage: evaluate
+family: evaluate.counts.overall
+tracks: [standard]
+archetype: metric
+question_tags: [agreement, two raters]
+targets: [sklearn.metrics.cohen_kappa_score]
+pairs_with: []
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.metrics.cohen_kappa_score.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [agreement]}
+    line: Agreement between two labelings, beyond chance.
+  quick_facts:
+    facts:
+      - {label: Range, value: -1 to 1}
+      - {label: Best score, value: "1.0"}
+      - {label: Default weights, value: "None (unweighted)"}
+  use_avoid:
+    use_when: [two raters, unordered categories]
+    avoid_when: [one model's score alone, regression]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.cohen_kappa_score
+      why_this_library: One call; takes two label lists, no model needed.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.metrics import cohen_kappa_score
+        from sklearn.model_selection import train_test_split
+        from sklearn.tree import DecisionTreeClassifier
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        rater_a = LogisticRegression(max_iter=5000).fit(X_train, y_train)
+        rater_b = DecisionTreeClassifier(max_depth=3, random_state=0)
+        rater_b.fit(X_train, y_train)
+
+        kappa = cohen_kappa_score(rater_a.predict(X_test),
+                                  rater_b.predict(X_test))
+        print(round(kappa, 3))
+  what_comes_out: {none: true}
+  catch_outs:
+    - Swapping the two raters changes nothing; the score is symmetric.
+    - For ordered labels, set weights to linear or quadratic.
+    - Can be undefined; replace_undefined_by sets the value.
+  key_settings:
+    tier1:
+      - {name: weights, page: null}
+      - {name: labels, page: null}
+      - {name: replace_undefined_by, page: null}
+    tier2:
+      - {name: sample_weight, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: Agreement that goes beyond what luck alone would give.
+  next: []

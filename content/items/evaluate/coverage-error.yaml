@@ -1,0 +1,68 @@
+id: coverage-error
+plain_name: Coverage error
+code_name: coverage_error
+aliases: [coverage, label depth]
+stage: evaluate
+family: evaluate.multilabel
+tracks: [standard]
+archetype: metric
+question_tags: [several labels per row, ranked labels]
+targets: [sklearn.metrics.coverage_error]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.metrics.coverage_error.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [last true label]}
+    line: How far down the ranking we must go to find every true label.
+  quick_facts:
+    facts:
+      - {label: Labels, value: "one 0/1 column per label"}
+      - {label: Scores, value: "probabilities or decision values"}
+  use_avoid:
+    use_when: [several true labels per row, ranked label scores]
+    avoid_when: [one label per row, only 0/1 predictions]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.coverage_error
+      why_this_library: One call on label indicators and scores.
+      snippet: |
+        # scikit-learn 1.9.1
+        import numpy as np
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.metrics import coverage_error
+        from sklearn.model_selection import train_test_split
+        from sklearn.multiclass import OneVsRestClassifier
+
+        X, y = load_breast_cancer(return_X_y=True)
+        # Two labels per row: the diagnosis, and whether feature 0 is large.
+        Y = np.column_stack([y, X[:, 0] > np.median(X[:, 0])]).astype(int)
+        X_train, X_test, Y_train, Y_test = train_test_split(X, Y, random_state=0)
+
+        model = OneVsRestClassifier(LogisticRegression(max_iter=5000))
+        model.fit(X_train, Y_train)
+        y_score = model.predict_proba(X_test)
+
+        print(coverage_error(Y_test, y_score))
+  what_comes_out: {none: true}
+  catch_outs:
+    - Needs label indicator format, one 0/1 column per label.
+    - Pass scores, not 0/1 predictions.
+  key_settings:
+    tier1:
+      - {name: sample_weight, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Walk down the ranked list until every true label has appeared."}
+  next: []

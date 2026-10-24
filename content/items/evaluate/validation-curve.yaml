@@ -1,0 +1,75 @@
+id: validation-curve
+plain_name: Validation curve
+code_name: validation_curve / ValidationCurveDisplay
+aliases: [validation curve, setting sweep, score by setting]
+stage: evaluate
+family: evaluate.fit
+tracks: [standard]
+archetype: diagnostic
+question_tags: [overfitting, tuning a setting, underfitting]
+targets: [sklearn.model_selection.validation_curve, sklearn.model_selection.ValidationCurveDisplay]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.validation_curve.html', 'https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.ValidationCurveDisplay.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: ames, chart: train and test score by setting value}
+    line: Shows how one setting trades underfitting for overfitting.
+  quick_facts:
+    facts:
+    - {label: Default error_score, value: nan}
+    - {label: Default pre_dispatch, value: all}
+  use_avoid:
+    use_when: [tuning one setting, spotting overfitting]
+    avoid_when: [several settings at once, slow fits]
+  prep: []
+  code:
+  - library: scikit-learn
+    target: sklearn.model_selection.validation_curve
+    why_this_library: Returns scores for every setting value and fold.
+    snippet: |
+      # scikit-learn 1.9.1
+      import numpy as np
+      from sklearn.datasets import load_diabetes
+      from sklearn.model_selection import validation_curve
+      from sklearn.tree import DecisionTreeRegressor
+
+      X, y = load_diabetes(return_X_y=True)
+      depths = [1, 2, 3, 4, 5, 6, 8, 10]
+      train, test = validation_curve(
+          DecisionTreeRegressor(random_state=0), X, y,
+          param_name="max_depth", param_range=depths, cv=5,
+      )
+      print(depths[np.argmax(test.mean(axis=1))])
+  what_comes_out:
+    items:
+    - {name: train_scores, kind: return, task: null, shape: '(n_ticks, n_cv_folds)', note: Training scores for each value and fold.}
+    - {name: test_scores, kind: return, task: null, shape: '(n_ticks, n_cv_folds)', note: Held-out scores for each value and fold.}
+    - {name: from_estimator, kind: method, task: null, shape: display object, note: Runs the sweep and draws the curve.}
+    - {name: plot, kind: method, task: null, shape: display object, note: Draws the curve from existing scores.}
+    next_step: Pick the setting where the test score peaks.
+    visual: null
+  catch_outs: [Refits the estimator for every value and fold., Varies one parameter; other settings stay fixed., A failed fit gives nan unless error_score is 'raise'.]
+  key_settings:
+    tier1:
+    - {name: param_name, page: null}
+    - {name: param_range, page: null}
+    - {name: cv, page: null}
+    tier2:
+    - {name: scoring, page: null}
+    - {name: error_score, page: null}
+    tier3:
+    - {name: groups, page: null}
+    - {name: pre_dispatch, page: null}
+    - {name: params, page: null}
+  watch_it_work: {none: true}
+  intuition: {text: Try each setting value and see where test scores stop improving.}
+  next: []

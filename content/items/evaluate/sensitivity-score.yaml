@@ -1,0 +1,68 @@
+id: sensitivity-score
+plain_name: Sensitivity
+code_name: sensitivity_score
+aliases: [recall, true positive rate]
+stage: evaluate
+family: evaluate.imbalanced
+tracks: [standard]
+archetype: metric
+question_tags: [missed positives, how many we catch]
+targets: [imblearn.metrics.sensitivity_score]
+pairs_with: []
+clashes: []
+source_urls: ['https://imbalanced-learn.org/stable/references/generated/imblearn.metrics.sensitivity_score.html']
+library_versions: {imbalanced-learn: 0.14.2}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [TP, FN]}
+    line: Of the real positives, how many we catch.
+  quick_facts:
+    facts:
+      - {label: Formula, value: TP / (TP + FN)}
+      - {label: Default average, value: binary}
+      - {label: Positive class, value: "pos_label, default 1"}
+  use_avoid:
+    use_when: [missed cases are costly, binary classification]
+    avoid_when: [regression, false alarms are costly]
+  prep: []
+  code:
+    - library: imbalanced-learn
+      target: imblearn.metrics.sensitivity_score
+      why_this_library: One call; binary by default, pos_label picks the class.
+      snippet: |
+        # imbalanced-learn 0.14.2
+        from imblearn.metrics import sensitivity_score
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.model_selection import train_test_split
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = LogisticRegression(max_iter=5000).fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+
+        print(sensitivity_score(y_test, y_pred))
+  what_comes_out: {none: true}
+  catch_outs:
+    - Ignores false alarms; check precision too.
+    - In breast cancer, pos_label 1 is benign, not malignant.
+    - Average defaults to binary; set it for more than two classes.
+  key_settings:
+    tier1:
+      - {name: average, page: null}
+      - {name: pos_label, page: null}
+    tier2: []
+    tier3:
+      - {name: labels, page: null}
+      - {name: sample_weight, page: null}
+  watch_it_work: {none: true}
+  intuition: {text: "Look only at the real positives, and ask how many we caught."}
+  next: []

@@ -1,0 +1,75 @@
+id: confusion-matrix
+plain_name: Confusion matrix
+code_name: confusion_matrix / ConfusionMatrixDisplay
+aliases: [error table, truth vs predicted]
+stage: evaluate
+family: evaluate.counts.breakdown
+tracks: [standard]
+archetype: metric
+question_tags: [where it goes wrong, which classes mix]
+targets: [sklearn.metrics.confusion_matrix, sklearn.metrics.ConfusionMatrixDisplay]
+pairs_with: []
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.metrics.confusion_matrix.html
+  - https://scikit-learn.org/stable/modules/generated/sklearn.metrics.ConfusionMatrixDisplay.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [correct, wrong]}
+    line: Counts of right and wrong answers for each pair of classes.
+  quick_facts:
+    facts:
+      - {label: Shape, value: "(n_classes, n_classes)"}
+      - {label: Rows, value: True labels}
+      - {label: Columns, value: Predicted labels}
+  use_avoid:
+    use_when: [more than one class, see which classes mix]
+    avoid_when: [regression, one number is enough]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.confusion_matrix
+      why_this_library: One call; returns a plain array you can print.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.metrics import confusion_matrix
+        from sklearn.model_selection import train_test_split
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = LogisticRegression(max_iter=5000).fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+
+        print(confusion_matrix(y_test, y_pred))
+  what_comes_out:
+    items:
+      - {name: confusion_matrix, kind: return, task: classification, shape: "(n_classes, n_classes)", note: "Rows are true labels, columns predicted."}
+    next_step: Check precision and recall for the classes that mix.
+    visual: null
+  catch_outs:
+    - Raw counts favour big classes; set normalize to compare.
+    - Labels set the row and column order; pass labels to fix it.
+  key_settings:
+    tier1:
+      - {name: labels, page: null}
+      - {name: normalize, page: null}
+      - {name: display_labels, page: null}
+      - {name: sample_weight, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: A grid where each cell counts one kind of answer.
+  next: []

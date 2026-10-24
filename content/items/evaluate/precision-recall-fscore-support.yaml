@@ -1,0 +1,81 @@
+id: precision-recall-fscore-support
+plain_name: precision_recall_fscore_support
+code_name: precision_recall_fscore_support
+aliases: [per class scores, precision recall f1 table]
+stage: evaluate
+family: evaluate.counts.pr
+tracks: [standard]
+archetype: metric
+question_tags: [all scores per class, one call]
+targets: [sklearn.metrics.precision_recall_fscore_support]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.metrics.precision_recall_fscore_support.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [TP, FP, FN]}
+    line: Precision, recall and F-beta for each class, in one call.
+  quick_facts:
+    facts:
+      - {label: Returns, value: "Precision, recall, F-beta, support"}
+      - {label: Default average, value: "None: one value per class"}
+      - {label: Default beta, value: "1.0: equal weight to both"}
+  use_avoid:
+    use_when: [per class view, several scores at once]
+    avoid_when: [regression, one number is enough]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.precision_recall_fscore_support
+      why_this_library: One call returns all four scores, per class or averaged.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.metrics import precision_recall_fscore_support
+        from sklearn.model_selection import train_test_split
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = LogisticRegression(max_iter=5000).fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+
+        precision, recall, fbeta, support = precision_recall_fscore_support(
+            y_test, y_pred, average=None
+        )
+        print(precision, recall, fbeta, support)
+  what_comes_out:
+    items:
+      - {name: precision, kind: return, task: classification, shape: "(n_classes,) if average=None", note: "Share of flagged rows that are right, per class."}
+      - {name: recall, kind: return, task: classification, shape: "(n_classes,) if average=None", note: "Share of real cases found, per class."}
+      - {name: fbeta_score, kind: return, task: classification, shape: "(n_classes,) if average=None", note: "F-beta, a blend of precision and recall."}
+      - {name: support, kind: return, task: classification, shape: "(n_classes,) if average=None", note: "How many true rows sit in each class."}
+    next_step: Read the per-class rows before picking one average.
+    visual: null
+  catch_outs:
+    - Returns four values, not one; unpack them or keep the one you need.
+    - Default average is None, so you get arrays, not one number.
+    - Support is None when average is set.
+    - No predicted positives gives 0 and a warning; set zero_division.
+  key_settings:
+    tier1:
+      - {name: average, page: null}
+      - {name: labels, page: null}
+      - {name: zero_division, page: null}
+    tier2:
+      - {name: beta, page: null}
+      - {name: pos_label, page: null}
+    tier3:
+      - {name: sample_weight, page: null}
+  watch_it_work: {none: true}
+  intuition: {text: "Four scores in one pass, so every class shows at once."}
+  next: []

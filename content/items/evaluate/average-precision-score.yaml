@@ -1,0 +1,67 @@
+id: average-precision-score
+plain_name: Average precision
+code_name: average_precision_score
+aliases: [ap, pr auc, average precision score]
+stage: evaluate
+family: evaluate.prob.ranking
+tracks: [standard]
+archetype: metric
+question_tags: [how good is it, rare positives]
+targets: [sklearn.metrics.average_precision_score]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.metrics.average_precision_score.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [precision, recall]}
+    line: Precision averaged over every level of recall.
+  quick_facts:
+    facts:
+      - {label: Default average, value: macro}
+      - {label: Input, value: "scores, not labels"}
+  use_avoid:
+    use_when: [rare positives, comparing models on scores]
+    avoid_when: [one fixed cut-off matters, regression]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.average_precision_score
+      why_this_library: One call; takes scores, not predicted labels.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.model_selection import train_test_split
+        from sklearn.metrics import average_precision_score
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = LogisticRegression(max_iter=5000).fit(X_train, y_train)
+        y_score = model.predict_proba(X_test)[:, 1]
+
+        print(average_precision_score(y_test, y_score))
+  what_comes_out: {none: true}
+  catch_outs:
+    - Pass scores or probabilities, not predicted labels.
+    - Default average is macro; average=None gives one score per class.
+    - Set pos_label when the positive class is not 1.
+  key_settings:
+    tier1:
+      - {name: average, page: null}
+      - {name: pos_label, page: null}
+    tier2:
+      - {name: sample_weight, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: Average how precise the flags stay as you catch more positives.
+  next: []

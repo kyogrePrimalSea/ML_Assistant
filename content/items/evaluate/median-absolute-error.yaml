@@ -1,0 +1,68 @@
+id: median-absolute-error
+plain_name: Median absolute error
+code_name: median_absolute_error
+aliases: [typical miss, median error, robust error]
+stage: evaluate
+family: evaluate.error.units
+tracks: [standard, time-series]
+archetype: metric
+question_tags: [typical error, huge misses, regression]
+targets: [sklearn.metrics.median_absolute_error]
+pairs_with: []
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.metrics.median_absolute_error.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: ames, highlight: [median residual]}
+    line: Typical size of a miss, ignoring a few huge ones.
+  quick_facts:
+    facts:
+      - {label: Best value, value: "0.0"}
+      - {label: Range, value: "0 or more"}
+      - {label: Units, value: "same as the target"}
+  use_avoid:
+    use_when: [regression, a few huge misses, errors in target units]
+    avoid_when: [classification, big misses must count more]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.median_absolute_error
+      why_this_library: One call; true values first, then predictions.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.metrics import median_absolute_error
+        from sklearn.datasets import make_regression
+        from sklearn.linear_model import LinearRegression
+        from sklearn.model_selection import train_test_split
+
+        X, y = make_regression(n_samples=200, n_features=3, noise=10, random_state=0)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = LinearRegression().fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+
+        print(round(median_absolute_error(y_test, y_pred), 3))
+  what_comes_out: {none: true}
+  catch_outs:
+    - Ignores a few huge misses by design; check RMSE too.
+    - Score is in target units; do not compare across targets.
+  key_settings:
+    tier1:
+      - {name: multioutput, page: null}
+      - {name: sample_weight, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: Take the middle miss, not the average miss.
+  next: []

@@ -1,0 +1,69 @@
+id: calibration-curve
+plain_name: Calibration curve
+code_name: calibration_curve / CalibrationDisplay
+aliases: [reliability diagram, calibration plot]
+stage: evaluate
+family: evaluate.prob.calibration
+tracks: [standard]
+archetype: diagnostic
+question_tags: [overconfident, honest probabilities, probability check]
+targets: [sklearn.calibration.calibration_curve, sklearn.calibration.CalibrationDisplay]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.calibration.calibration_curve.html', 'https://scikit-learn.org/stable/modules/generated/sklearn.calibration.CalibrationDisplay.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: breast-cancer, chart: predicted against observed rate per bin}
+    line: Shows if predicted probabilities match real outcome rates.
+  quick_facts:
+    facts:
+    - {label: Default bins, value: '5'}
+    - {label: Default strategy, value: uniform}
+  use_avoid:
+    use_when: [checking predicted probabilities, want a reliability diagram]
+    avoid_when: [only labels matter, too little data for bins]
+  prep: []
+  code:
+  - library: scikit-learn
+    target: sklearn.calibration.calibration_curve
+    why_this_library: Returns bin values for you to plot.
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.calibration import calibration_curve
+      from sklearn.datasets import load_breast_cancer
+      from sklearn.linear_model import LogisticRegression
+      from sklearn.model_selection import train_test_split
+
+      X, y = load_breast_cancer(return_X_y=True)
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+      model = LogisticRegression(max_iter=5000).fit(X_train, y_train)
+      y_prob = model.predict_proba(X_test)[:, 1]
+      prob_true, prob_pred = calibration_curve(y_test, y_prob, n_bins=5)
+      print(list(zip(prob_pred.round(2).tolist(), prob_true.round(2).tolist())))
+  what_comes_out:
+    items:
+    - {name: prob_pred, kind: return, task: null, shape: '(n_bins,) or fewer', note: Mean predicted probability in each bin.}
+    - {name: prob_true, kind: return, task: null, shape: '(n_bins,) or fewer', note: Share of positives in each bin.}
+    - {name: from_predictions, kind: method, task: null, shape: display object, note: Draws the curve from labels and probabilities.}
+    next_step: If the curve drifts off the diagonal, calibrate the model.
+    visual: null
+  catch_outs: ['Empty bins are not returned, so you can get fewer points.', More bins need more data., Takes probabilities for the positive class only.]
+  key_settings:
+    tier1:
+    - {name: n_bins, page: null}
+    - {name: strategy, page: null}
+    tier2:
+    - {name: pos_label, page: null}
+    - {name: estimator_name, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: Group predictions by confidence and compare with real outcomes.}
+  next: [but-overconfident]

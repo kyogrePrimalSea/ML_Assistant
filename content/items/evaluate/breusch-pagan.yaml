@@ -1,0 +1,65 @@
+id: breusch-pagan
+plain_name: Breusch–Pagan test
+code_name: het_breuschpagan
+aliases: [heteroscedasticity test, Koenker test, het test]
+stage: evaluate
+family: evaluate.diagnostics
+tracks: [standard]
+archetype: diagnostic
+question_tags: [errors fan out, unequal spread, trust the line]
+targets: [statsmodels.stats.diagnostic.het_breuschpagan]
+pairs_with: []
+clashes: []
+source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.stats.diagnostic.het_breuschpagan.html']
+library_versions: {statsmodels: 0.15.0}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: ames, chart: residual spread against predicted values}
+    line: Checks whether errors spread out as predictions grow.
+  quick_facts:
+    facts:
+    - {label: Default variant, value: Koenker (robust)}
+  use_avoid:
+    use_when: [errors fan out, checking the fitted line]
+    avoid_when: [not a regression, no residuals]
+  prep: []
+  code:
+  - library: statsmodels
+    target: statsmodels.stats.diagnostic.het_breuschpagan
+    why_this_library: Gives the test statistic and p-value.
+    snippet: |
+      # statsmodels 0.15.0
+      import statsmodels.api as sm
+      from sklearn.datasets import load_diabetes
+      from statsmodels.stats.diagnostic import het_breuschpagan
+
+      X, y = load_diabetes(return_X_y=True)
+      X = sm.add_constant(X)
+      resid = sm.OLS(y, X).fit().resid
+      lm, lm_pvalue, fvalue, f_pvalue = het_breuschpagan(resid, X)
+      print(round(lm_pvalue, 4))
+  what_comes_out:
+    items:
+    - {name: lm, kind: return, task: null, shape: float, note: Lagrange multiplier test statistic.}
+    - {name: lm_pvalue, kind: return, task: null, shape: float, note: Small values mean the spread changes.}
+    - {name: fvalue, kind: return, task: null, shape: float, note: F-version of the test statistic.}
+    - {name: f_pvalue, kind: return, task: null, shape: float, note: P-value for the F-version.}
+    next_step: 'Small p-value: look at WLS or a gamma regressor.'
+    visual: null
+  catch_outs: [Needs residuals from a fitted regression., 'Tests unequal spread only, not a bent line.', Robust (Koenker) is the default and is kept on.]
+  key_settings:
+    tier1:
+    - {name: robust, page: null}
+    tier2:
+    - {name: exog_het, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: Plot errors against predictions and look for a fan shape.}
+  next: [but-fan-errors]

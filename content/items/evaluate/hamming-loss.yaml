@@ -1,0 +1,68 @@
+id: hamming-loss
+plain_name: Hamming loss
+code_name: hamming_loss
+aliases: [label error rate]
+stage: evaluate
+family: evaluate.multilabel
+tracks: [standard]
+archetype: metric
+question_tags: [several labels per row, label errors]
+targets: [sklearn.metrics.hamming_loss]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.metrics.hamming_loss.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [wrong labels]}
+    line: Of all the label slots, how many are wrong.
+  quick_facts:
+    facts:
+      - {label: Input, value: "predicted labels, not scores"}
+      - {label: Counts, value: "every label in every row"}
+  use_avoid:
+    use_when: [several labels per row, each label matters]
+    avoid_when: [one label per row, only scores available]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.hamming_loss
+      why_this_library: One call on true and predicted label matrices.
+      snippet: |
+        # scikit-learn 1.9.1
+        import numpy as np
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.metrics import hamming_loss
+        from sklearn.model_selection import train_test_split
+        from sklearn.multiclass import OneVsRestClassifier
+
+        X, y = load_breast_cancer(return_X_y=True)
+        # Two labels per row: the diagnosis, and whether feature 0 is large.
+        Y = np.column_stack([y, X[:, 0] > np.median(X[:, 0])]).astype(int)
+        X_train, X_test, Y_train, Y_test = train_test_split(X, Y, random_state=0)
+
+        model = OneVsRestClassifier(LogisticRegression(max_iter=5000))
+        model.fit(X_train, Y_train)
+        y_pred = model.predict(X_test)
+
+        print(hamming_loss(Y_test, y_pred))
+  what_comes_out: {none: true}
+  catch_outs:
+    - Needs predicted labels; threshold scores first.
+    - Every label slot counts equally, rare labels too.
+  key_settings:
+    tier1:
+      - {name: sample_weight, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Count the label slots that are wrong, out of all the slots."}
+  next: []

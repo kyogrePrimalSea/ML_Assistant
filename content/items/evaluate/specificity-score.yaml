@@ -1,0 +1,68 @@
+id: specificity-score
+plain_name: Specificity
+code_name: specificity_score
+aliases: [true negative rate, selectivity]
+stage: evaluate
+family: evaluate.imbalanced
+tracks: [standard]
+archetype: metric
+question_tags: [false alarms, correct negatives]
+targets: [imblearn.metrics.specificity_score]
+pairs_with: []
+clashes: []
+source_urls: ['https://imbalanced-learn.org/stable/references/generated/imblearn.metrics.specificity_score.html']
+library_versions: {imbalanced-learn: 0.14.2}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [TN, FP]}
+    line: Of the real negatives, how many we keep.
+  quick_facts:
+    facts:
+      - {label: Formula, value: TN / (TN + FP)}
+      - {label: Default average, value: binary}
+      - {label: Positive class, value: "pos_label, default 1"}
+  use_avoid:
+    use_when: [false alarms are costly, binary classification]
+    avoid_when: [regression, missed cases are costly]
+  prep: []
+  code:
+    - library: imbalanced-learn
+      target: imblearn.metrics.specificity_score
+      why_this_library: One call; binary by default, pos_label picks the class.
+      snippet: |
+        # imbalanced-learn 0.14.2
+        from imblearn.metrics import specificity_score
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.model_selection import train_test_split
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = LogisticRegression(max_iter=5000).fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+
+        print(specificity_score(y_test, y_pred))
+  what_comes_out: {none: true}
+  catch_outs:
+    - Ignores missed positives; check sensitivity too.
+    - With pos_label 1, the negatives are class 0 (malignant in breast cancer).
+    - Average defaults to binary; set it for more than two classes.
+  key_settings:
+    tier1:
+      - {name: average, page: null}
+      - {name: pos_label, page: null}
+    tier2: []
+    tier3:
+      - {name: labels, page: null}
+      - {name: sample_weight, page: null}
+  watch_it_work: {none: true}
+  intuition: {text: "Look only at the real negatives, and ask how many we kept."}
+  next: []

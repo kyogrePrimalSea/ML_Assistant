@@ -1,0 +1,65 @@
+id: matthews-corrcoef
+plain_name: Matthews correlation
+code_name: matthews_corrcoef
+aliases: [MCC]
+stage: evaluate
+family: evaluate.counts.overall
+tracks: [standard]
+archetype: metric
+question_tags: [how good is it, imbalanced, one number]
+targets: [sklearn.metrics.matthews_corrcoef]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.metrics.matthews_corrcoef.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [TP, TN, FP, FN]}
+    line: One correlation score that uses all four outcomes.
+  quick_facts:
+    facts:
+      - {label: Range, value: "-1 to 1"}
+      - {label: Best score, value: "1"}
+      - {label: Predicts one class only, value: "0"}
+  use_avoid:
+    use_when: [classes are imbalanced, one fair number wanted]
+    avoid_when: [regression, probabilities are needed]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.matthews_corrcoef
+      why_this_library: One call on predicted labels.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.metrics import matthews_corrcoef
+        from sklearn.model_selection import train_test_split
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = LogisticRegression(max_iter=5000).fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+
+        print(matthews_corrcoef(y_test, y_pred))
+  what_comes_out: {none: true}
+  catch_outs:
+    - Scores hard labels only, not probabilities.
+    - Returns 0 when the model predicts one class only.
+    - Works for multiclass too, with no average setting.
+  key_settings:
+    tier1:
+      - {name: sample_weight, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: Counts all four outcomes; guessing one class scores zero.}
+  next: []

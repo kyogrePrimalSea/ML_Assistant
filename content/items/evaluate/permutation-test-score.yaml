@@ -1,0 +1,71 @@
+id: permutation-test-score
+plain_name: Permutation test score
+code_name: permutation_test_score
+aliases: [permutation test, chance check, label shuffle test]
+stage: evaluate
+family: evaluate.fit
+tracks: [standard]
+archetype: diagnostic
+question_tags: [is the score real, beat chance, luck or skill]
+targets: [sklearn.model_selection.permutation_test_score]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.permutation_test_score.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: breast-cancer, chart: real score against permuted scores}
+    line: Checks if a cross-validated score beats chance.
+  quick_facts:
+    facts:
+    - {label: Default permutations, value: '100'}
+    - {label: Default random_state, value: '0'}
+  use_avoid:
+    use_when: [is the score real, comparing with chance]
+    avoid_when: [no time for many fits, huge data]
+  prep: []
+  code:
+  - library: scikit-learn
+    target: sklearn.model_selection.permutation_test_score
+    why_this_library: Reruns cross-validation on shuffled targets.
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import load_breast_cancer
+      from sklearn.linear_model import LogisticRegression
+      from sklearn.model_selection import permutation_test_score
+      from sklearn.pipeline import make_pipeline
+      from sklearn.preprocessing import StandardScaler
+
+      X, y = load_breast_cancer(return_X_y=True)
+      model = make_pipeline(StandardScaler(), LogisticRegression())
+      score, perm_scores, pvalue = permutation_test_score(
+          model, X, y, scoring="accuracy", cv=5, n_permutations=100,
+      )
+      print(round(score, 3), round(pvalue, 3))
+  what_comes_out:
+    items:
+    - {name: score, kind: return, task: null, shape: float, note: Cross-validated score on real labels.}
+    - {name: permutation_scores, kind: return, task: null, shape: one per permutation, note: One score per shuffle of the targets.}
+    - {name: pvalue, kind: return, task: null, shape: float, note: 'Chance of a score this good, from the shuffles.'}
+    next_step: 'Small p-value: the model learns more than chance.'
+    visual: null
+  catch_outs: [Each permutation reruns the full cross-validation., groups limits shuffling to within each group.]
+  key_settings:
+    tier1:
+    - {name: cv, page: null}
+    - {name: scoring, page: null}
+    - {name: n_permutations, page: null}
+    tier2:
+    - {name: groups, page: null}
+    - {name: params, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: Shuffle the labels many times and see how often the score holds.}
+  next: [but-beat-chance]

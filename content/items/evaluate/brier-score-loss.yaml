@@ -1,0 +1,70 @@
+id: brier-score-loss
+plain_name: Brier score
+code_name: brier_score_loss
+aliases: [Brier score loss, squared probability error]
+family: evaluate.prob.calibration
+question_tags: [are probabilities honest, probability accuracy]
+targets: [sklearn.metrics.brier_score_loss]
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.metrics.brier_score_loss.html']
+library_versions: {scikit-learn: 1.9.1}
+stage: evaluate
+tracks: [standard]
+archetype: metric
+pairs_with: []
+clashes: []
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [squared error]}
+    line: How far each probability sits from what actually happened.
+  quick_facts:
+    facts:
+      - {label: Best score, value: "0"}
+      - {label: Range, value: "0 to 1 (binary)"}
+  use_avoid:
+    use_when: [binary outcomes, probabilities to judge]
+    avoid_when: [hard labels only, ranking only]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.brier_score_loss
+      why_this_library: One call; probabilities for the positive class.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.metrics import brier_score_loss
+        from sklearn.model_selection import train_test_split
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = LogisticRegression(max_iter=5000).fit(X_train, y_train)
+        y_proba = model.predict_proba(X_test)[:, 1]
+
+        print(brier_score_loss(y_test, y_proba))
+  what_comes_out:
+    items:
+      - {name: score, kind: return, task: classification, shape: float, note: Mean squared gap; lower is better.}
+    next_step: Compare with log loss, which punishes confident misses harder.
+    visual: null
+  catch_outs:
+    - Multiclass keeps the 0 to 2 range under the default setting.
+    - Pass probabilities, not predicted labels.
+  key_settings:
+    tier1:
+      - {name: scale_by_half, page: null}
+      - {name: pos_label, page: null}
+    tier2:
+      - {name: labels, page: null}
+      - {name: sample_weight, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: Average squared gap between each probability and the 0 or 1 outcome.}
+  next: []

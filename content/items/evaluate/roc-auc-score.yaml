@@ -1,0 +1,69 @@
+id: roc-auc-score
+plain_name: ROC AUC
+code_name: roc_auc_score
+aliases: [area under roc, auc, how well it ranks]
+stage: evaluate
+family: evaluate.prob.ranking
+tracks: [standard]
+archetype: metric
+question_tags: [how good is it, ranking]
+targets: [sklearn.metrics.roc_auc_score]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.metrics.roc_auc_score.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [TPR, FPR]}
+    line: Chance that a random positive scores above a random negative.
+  quick_facts:
+    facts:
+      - {label: Default average, value: macro}
+      - {label: Multiclass, value: set multi_class}
+  use_avoid:
+    use_when: [classes not too lopsided, comparing models on scores]
+    avoid_when: [rare positives, one fixed cut-off matters]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.roc_auc_score
+      why_this_library: One call; takes scores, not predicted labels.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.model_selection import train_test_split
+        from sklearn.metrics import roc_auc_score
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = LogisticRegression(max_iter=5000).fit(X_train, y_train)
+        y_score = model.predict_proba(X_test)[:, 1]
+
+        print(roc_auc_score(y_test, y_score))
+  what_comes_out: {none: true}
+  catch_outs:
+    - Pass scores or probabilities, not predicted labels.
+    - Multiclass needs multi_class set; the default raises.
+    - Ignores the cut-off; check threshold metrics too.
+  key_settings:
+    tier1:
+      - {name: average, page: null}
+      - {name: multi_class, page: null}
+    tier2:
+      - {name: labels, page: null}
+      - {name: sample_weight, page: null}
+    tier3:
+      - {name: max_fpr, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    text: Score how often a random positive outranks a random negative.
+  next: []

@@ -1,0 +1,72 @@
+id: macro-averaged-mean-absolute-error
+plain_name: Macro-averaged MAE
+code_name: macro_averaged_mean_absolute_error
+aliases: [macro mae, per class mae]
+stage: evaluate
+family: evaluate.imbalanced
+tracks: [standard]
+archetype: metric
+question_tags: [ordered classes, imbalanced classes, how far off]
+targets: [imblearn.metrics.macro_averaged_mean_absolute_error]
+pairs_with: []
+clashes: []
+source_urls:
+  - https://imbalanced-learn.org/stable/references/generated/imblearn.metrics.macro_averaged_mean_absolute_error.html
+library_versions:
+  imbalanced-learn: "0.14.2"
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [per-class error]}
+    line: Average miss in class steps, with each class weighted equally.
+  quick_facts:
+    facts:
+      - {label: Best value, value: "0"}
+      - {label: Range, value: "0 or more"}
+      - {label: Unit, value: "label distance"}
+  use_avoid:
+    use_when: [ordered classes, imbalanced classes]
+    avoid_when: [unordered classes, regression]
+  prep: []
+  code:
+    - library: imbalanced-learn
+      target: imblearn.metrics.macro_averaged_mean_absolute_error
+      why_this_library: One call; class labels must be ordered numbers.
+      snippet: |
+        # imbalanced-learn 0.14.2
+        from imblearn.metrics import macro_averaged_mean_absolute_error
+        from sklearn.datasets import make_classification
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.model_selection import train_test_split
+
+        X, y = make_classification(
+            n_samples=400, n_classes=4, n_informative=4, n_redundant=0,
+            weights=[0.5, 0.3, 0.15, 0.05], random_state=0,
+        )
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, random_state=0, stratify=y,
+        )
+
+        model = LogisticRegression(max_iter=5000).fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+
+        print(round(macro_averaged_mean_absolute_error(y_test, y_pred), 3))
+  what_comes_out: {none: true}
+  catch_outs:
+    - Assumes labels are ordered; unordered classes give meaningless distances.
+    - Each class counts equally, so rare classes weigh as much as common ones.
+  key_settings:
+    tier1:
+      - {name: sample_weight, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: Find each class's average miss in steps, then average those.
+  next: []

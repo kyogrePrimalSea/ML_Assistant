@@ -1,0 +1,70 @@
+id: d2-brier-score
+plain_name: D² Brier score
+code_name: d2_brier_score
+aliases: [Brier skill score, BSS]
+family: evaluate.prob.calibration
+question_tags: [better than class share guess, probability skill]
+targets: [sklearn.metrics.d2_brier_score]
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.metrics.d2_brier_score.html']
+library_versions: {scikit-learn: 1.9.1}
+stage: evaluate
+tracks: [standard]
+archetype: metric
+pairs_with: []
+clashes: []
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [null model, model]}
+    line: How much better the probabilities are than guessing class shares.
+  quick_facts:
+    facts:
+      - {label: Best score, value: "1.0"}
+      - {label: Null model, value: "0.0 (class shares)"}
+      - {label: Can go below zero, value: "yes"}
+  use_avoid:
+    use_when: [probabilities to judge, compare to class share]
+    avoid_when: [hard labels only, need a raw error size]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.d2_brier_score
+      why_this_library: One call; probabilities for the positive class.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.metrics import d2_brier_score
+        from sklearn.model_selection import train_test_split
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = LogisticRegression(max_iter=5000).fit(X_train, y_train)
+        y_proba = model.predict_proba(X_test)[:, 1]
+
+        print(d2_brier_score(y_test, y_proba))
+  what_comes_out:
+    items:
+      - {name: d2, kind: return, task: classification, shape: float, note: "1.0 is best; 0.0 matches the class-share guess."}
+    next_step: Check the plain Brier score for the raw error size.
+    visual: null
+  catch_outs:
+    - The baseline is the class shares, not zero error.
+    - Can be negative when worse than the baseline.
+  key_settings:
+    tier1:
+      - {name: pos_label, page: null}
+    tier2:
+      - {name: labels, page: null}
+      - {name: sample_weight, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: The share of Brier error removed compared with guessing class shares.}
+  next: []

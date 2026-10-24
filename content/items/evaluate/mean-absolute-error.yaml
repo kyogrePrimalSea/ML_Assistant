@@ -1,0 +1,65 @@
+id: mean-absolute-error
+plain_name: MAE
+code_name: mean_absolute_error
+aliases: ["mae", "average miss", "typical miss"]
+stage: evaluate
+family: evaluate.error.units
+tracks: [standard, time-series]
+archetype: metric
+question_tags: ["how big are the misses", "regression error"]
+targets: [sklearn.metrics.mean_absolute_error]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_absolute_error.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: ames, highlight: ["residual"]}
+    line: "Average size of the misses, in the target's units."
+  quick_facts:
+    facts:
+    - {label: "Best score", value: "0 (perfect)"}
+    - {label: "Units", value: "Same as the target"}
+  use_avoid:
+    use_when: ["regression", "error in target units"]
+    avoid_when: ["classification", "big misses must cost more"]
+  prep: []
+  code:
+  - library: scikit-learn
+    target: sklearn.metrics.mean_absolute_error
+    why_this_library: One call; y_true first, then y_pred.
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import load_diabetes
+      from sklearn.linear_model import LinearRegression
+      from sklearn.metrics import mean_absolute_error
+      from sklearn.model_selection import train_test_split
+
+      X, y = load_diabetes(return_X_y=True)
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+      model = LinearRegression().fit(X_train, y_train)
+      y_pred = model.predict(X_test)
+
+      print(mean_absolute_error(y_test, y_pred))
+  what_comes_out: {none: true}
+  catch_outs:
+  - "Hides one big miss; check max error too."
+  - "Scale depends on the target; compare only on the same target."
+  key_settings:
+    tier1:
+    - {name: multioutput, page: null}
+    tier2:
+    - {name: sample_weight, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: "Average the size of the misses, ignoring direction."
+  next: []

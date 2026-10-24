@@ -1,0 +1,70 @@
+id: label-ranking-average-precision-score
+plain_name: Label ranking average precision
+code_name: label_ranking_average_precision_score
+aliases: [LRAP]
+family: evaluate.multilabel
+question_tags: [which labels rank first, multilabel ranking]
+targets: [sklearn.metrics.label_ranking_average_precision_score]
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.metrics.label_ranking_average_precision_score.html']
+library_versions: {scikit-learn: 1.9.1}
+stage: evaluate
+tracks: [standard]
+archetype: metric
+pairs_with: []
+clashes: []
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [true labels]}
+    line: Are the true labels ranked near the top of each row?
+  quick_facts:
+    facts:
+      - {label: Range, value: "0 to 1"}
+      - {label: Best score, value: "1.0"}
+  use_avoid:
+    use_when: [several labels per row, ordering matters]
+    avoid_when: [one label per row, hard yes or no only]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.label_ranking_average_precision_score
+      why_this_library: One call; scores in, ranking score out.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import make_multilabel_classification
+        from sklearn.linear_model import Ridge
+        from sklearn.metrics import label_ranking_average_precision_score
+        from sklearn.model_selection import train_test_split
+
+        X, Y = make_multilabel_classification(
+            n_samples=300, n_classes=4, random_state=0
+        )
+        X_train, X_test, Y_train, Y_test = train_test_split(X, Y, random_state=0)
+
+        # One continuous score per label (higher means more likely).
+        model = Ridge().fit(X_train, Y_train)
+        y_score = model.predict(X_test)
+
+        print(label_ranking_average_precision_score(Y_test, y_score))
+  what_comes_out:
+    items:
+      - {name: score, kind: return, task: classification, shape: float, note: Ranking-based average precision over all rows.}
+    next_step: Check ranking loss too; it counts the wrong pairs.
+    visual: null
+  catch_outs:
+    - Needs scores per label, not 0 or 1 predictions.
+    - Higher is better; 1.0 means every true label ranks first.
+  key_settings:
+    tier1:
+      - {name: sample_weight, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "For each true label, how much of the ranking above it is true labels."}
+  next: []

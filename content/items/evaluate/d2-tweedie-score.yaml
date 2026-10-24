@@ -1,0 +1,71 @@
+id: d2-tweedie-score
+plain_name: D² Tweedie score
+code_name: d2_tweedie_score
+aliases: [deviance explained, tweedie r2]
+stage: evaluate
+family: evaluate.error.deviance
+tracks: [standard]
+archetype: metric
+question_tags: [how good is it, skewed amounts]
+targets: [sklearn.metrics.d2_tweedie_score]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.metrics.d2_tweedie_score.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: ames, highlight: [deviance]}
+    line: Share of the Tweedie deviance that the model explains.
+  quick_facts:
+    facts:
+      - {label: Best score, value: "1.0"}
+      - {label: Can go below zero, value: "yes: worse than the mean guess"}
+      - {label: Default power, value: "0: same as R-squared"}
+  use_avoid:
+    use_when: [regression, skewed amounts with zeros]
+    avoid_when: [classification, comparing different targets]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.d2_tweedie_score
+      why_this_library: One call; set power to match the loss.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_diabetes
+        from sklearn.linear_model import TweedieRegressor
+        from sklearn.metrics import d2_tweedie_score
+        from sklearn.model_selection import train_test_split
+
+        X, y = load_diabetes(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = TweedieRegressor(power=1.5, max_iter=1000)
+        model.fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+
+        print(d2_tweedie_score(y_test, y_pred, power=1.5))
+  what_comes_out:
+    items:
+      - {name: d2_tweedie_score, kind: return, task: regression, shape: float, note: "1.0 is perfect; 0 matches always predicting the mean."}
+    next_step: Read it like R-squared, on the deviance scale.
+    visual: null
+  catch_outs:
+    - Power sets the distribution; power 0 gives plain R-squared.
+    - Power 1 needs y_true of 0 or more and y_pred above 0.
+    - Score on the test set, not the training set.
+  key_settings:
+    tier1:
+      - {name: power, page: null}
+    tier2:
+      - {name: sample_weight, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Like R-squared, but it scores the deviance instead of squared error."}
+  next: []

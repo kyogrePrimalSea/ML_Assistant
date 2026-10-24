@@ -1,0 +1,65 @@
+id: mean-absolute-percentage-error
+plain_name: MAPE
+code_name: mean_absolute_percentage_error
+aliases: ["mape", "percentage error"]
+stage: evaluate
+family: evaluate.error.relative
+tracks: [standard, time-series]
+archetype: metric
+question_tags: ["how big are the misses", "as a percentage"]
+targets: [sklearn.metrics.mean_absolute_percentage_error]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.metrics.mean_absolute_percentage_error.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: ames, highlight: ["residual"]}
+    line: "Average miss as a share of the true value."
+  quick_facts:
+    facts:
+    - {label: "Best score", value: "0 (perfect)"}
+    - {label: "Units", value: "Ratio: 0.1 means 10% off"}
+  use_avoid:
+    use_when: ["regression", "misses as a percentage"]
+    avoid_when: ["targets near zero", "classification"]
+  prep: []
+  code:
+  - library: scikit-learn
+    target: sklearn.metrics.mean_absolute_percentage_error
+    why_this_library: One call; y_true first, then y_pred.
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import load_diabetes
+      from sklearn.linear_model import LinearRegression
+      from sklearn.metrics import mean_absolute_percentage_error
+      from sklearn.model_selection import train_test_split
+
+      X, y = load_diabetes(return_X_y=True)
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+      model = LinearRegression().fit(X_train, y_train)
+      y_pred = model.predict(X_test)
+
+      print(mean_absolute_percentage_error(y_test, y_pred))
+  what_comes_out: {none: true}
+  catch_outs:
+  - "Blows up when a true value is zero or near zero."
+  - "Over-predictions cost more than equal under-predictions."
+  key_settings:
+    tier1:
+    - {name: multioutput, page: null}
+    tier2:
+    - {name: sample_weight, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: "Each miss as a share of the value it should have been."
+  next: []

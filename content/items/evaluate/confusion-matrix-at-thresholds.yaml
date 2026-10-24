@@ -1,0 +1,79 @@
+id: confusion-matrix-at-thresholds
+plain_name: Confusion matrix at thresholds
+code_name: confusion_matrix_at_thresholds
+aliases: [counts at each cut-off, true and false counts, threshold counts]
+stage: evaluate
+family: evaluate.prob.thresholds
+tracks: [standard]
+archetype: metric
+question_tags: [cut-off, right and wrong counts]
+targets: [sklearn.metrics.confusion_matrix_at_thresholds]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.metrics.confusion_matrix_at_thresholds.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [TP, FP]}
+    line: Right and wrong counts for every cut-off.
+  quick_facts:
+    facts:
+      - {label: Returns, value: "tns, fps, fns, tps, thresholds"}
+      - {label: Counts, value: one row per threshold}
+  use_avoid:
+    use_when: [see counts at each cut-off, picking a cut-off]
+    avoid_when: [one score is needed, regression]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.confusion_matrix_at_thresholds
+      why_this_library: One call; gives the four counts for every cut-off.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.model_selection import train_test_split
+        import numpy as np
+        from sklearn.metrics import confusion_matrix_at_thresholds
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = LogisticRegression(max_iter=5000).fit(X_train, y_train)
+        y_score = model.predict_proba(X_test)[:, 1]
+
+        tns, fps, fns, tps, thresholds = confusion_matrix_at_thresholds(
+            y_test, y_score
+        )
+        i = int(np.argmin(np.abs(thresholds - 0.5)))
+        print(thresholds[i], tns[i], fps[i], fns[i], tps[i])
+  what_comes_out:
+    items:
+      - {name: tns, kind: return, task: classification, shape: "array, one per threshold", note: True negatives at each cut-off.}
+      - {name: fps, kind: return, task: classification, shape: "array, one per threshold", note: False positives at each cut-off.}
+      - {name: fns, kind: return, task: classification, shape: "array, one per threshold", note: False negatives at each cut-off.}
+      - {name: tps, kind: return, task: classification, shape: "array, one per threshold", note: True positives at each cut-off.}
+      - {name: thresholds, kind: return, task: classification, shape: "array, one per threshold", note: Cut-off behind each row.}
+    next_step: Divide the counts to get precision or recall per cut-off.
+    visual: null
+  catch_outs:
+    - Pass scores or probabilities, not predicted labels.
+    - Binary only; multiclass is not supported.
+    - Set pos_label to name the positive class.
+  key_settings:
+    tier1:
+      - {name: pos_label, page: null}
+    tier2:
+      - {name: sample_weight, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: Count the right and wrong calls at every cut-off.
+  next: []

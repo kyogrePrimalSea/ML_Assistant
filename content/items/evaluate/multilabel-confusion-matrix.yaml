@@ -1,0 +1,75 @@
+id: multilabel-confusion-matrix
+plain_name: Multilabel confusion matrix
+code_name: multilabel_confusion_matrix
+aliases: [per label matrices, one matrix per label]
+stage: evaluate
+family: evaluate.counts.breakdown
+tracks: [standard]
+archetype: metric
+question_tags: [several labels, per label errors]
+targets: [sklearn.metrics.multilabel_confusion_matrix]
+pairs_with: []
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.metrics.multilabel_confusion_matrix.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [correct, wrong]}
+    line: One right and wrong grid for each label.
+  quick_facts:
+    facts:
+      - {label: Returns, value: "One 2x2 matrix per label"}
+      - {label: Samplewise, value: "One 2x2 per sample, off by default"}
+  use_avoid:
+    use_when: [rows can carry several labels, per label errors]
+    avoid_when: [one label per row, regression]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.multilabel_confusion_matrix
+      why_this_library: One call; one 2x2 grid per label.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import make_multilabel_classification
+        from sklearn.metrics import multilabel_confusion_matrix
+        from sklearn.model_selection import train_test_split
+        from sklearn.tree import DecisionTreeClassifier
+
+        X, y = make_multilabel_classification(n_samples=300, n_classes=3,
+                                              random_state=0)
+        X_train, X_test, y_train, y_test = train_test_split(X, y,
+                                                            random_state=0)
+
+        model = DecisionTreeClassifier(max_depth=4, random_state=0)
+        model.fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+
+        print(multilabel_confusion_matrix(y_test, y_pred))
+  what_comes_out:
+    items:
+      - {name: multilabel_confusion_matrix, kind: return, task: classification, shape: "(n_outputs, 2, 2)", note: "One 2x2 per label, in label order."}
+    next_step: Pick the label with the most wrong cells, then check its precision.
+    visual: null
+  catch_outs:
+    - "Each grid reads [[TN, FP], [FN, TP]]."
+    - Samplewise only applies to multilabel input.
+  key_settings:
+    tier1:
+      - {name: labels, page: null}
+      - {name: samplewise, page: null}
+      - {name: sample_weight, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: Each label gets its own yes or no grid.
+  next: []

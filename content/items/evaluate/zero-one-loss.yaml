@@ -1,0 +1,67 @@
+id: zero-one-loss
+plain_name: Zero-one loss
+code_name: zero_one_loss
+aliases: [misclassification rate, error rate]
+stage: evaluate
+family: evaluate.counts.overall
+tracks: [standard]
+archetype: metric
+question_tags: [how good is it, errors, share wrong]
+targets: [sklearn.metrics.zero_one_loss]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.metrics.zero_one_loss.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [wrong]}
+    line: Share of predictions that are wrong.
+  quick_facts:
+    facts:
+      - {label: Best score, value: "0"}
+      - {label: Range, value: "0 to 1"}
+      - {label: Equals, value: "1 minus accuracy"}
+  use_avoid:
+    use_when: [share wrong is wanted, plain classification errors]
+    avoid_when: [regression, errors differ in cost]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.zero_one_loss
+      why_this_library: One call on predicted labels.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.metrics import zero_one_loss
+        from sklearn.model_selection import train_test_split
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = LogisticRegression(max_iter=5000).fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+
+        print(zero_one_loss(y_test, y_pred))
+        print(zero_one_loss(y_test, y_pred, normalize=False))
+  what_comes_out: {none: true}
+  catch_outs:
+    - Same number as 1 minus accuracy; no new information.
+    - normalize=False returns a count of wrong rows.
+    - Every error counts the same, whatever it costs.
+  key_settings:
+    tier1:
+      - {name: normalize, page: null}
+    tier2:
+      - {name: sample_weight, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Count the wrong answers, then divide by all answers."}
+  next: []

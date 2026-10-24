@@ -1,0 +1,70 @@
+id: top-k-accuracy-score
+plain_name: Top-k accuracy
+code_name: top_k_accuracy_score
+aliases: [top n accuracy, top k]
+stage: evaluate
+family: evaluate.counts.overall
+tracks: [standard]
+archetype: metric
+question_tags: [how good is it, many classes, ranking]
+targets: [sklearn.metrics.top_k_accuracy_score]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.metrics.top_k_accuracy_score.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [top k]}
+    line: Share of rows where the true class is in the top k guesses.
+  quick_facts:
+    facts:
+      - {label: Default k, value: "2"}
+      - {label: Range, value: "0 to 1"}
+      - {label: Best score, value: "1"}
+  use_avoid:
+    use_when: [many classes, short list of likely classes]
+    avoid_when: [binary targets, only predicted labels available]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.top_k_accuracy_score
+      why_this_library: One call; scores need one column per class.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_iris
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.metrics import top_k_accuracy_score
+        from sklearn.model_selection import train_test_split
+
+        X, y = load_iris(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = LogisticRegression(max_iter=5000).fit(X_train, y_train)
+        y_score = model.predict_proba(X_test)
+
+        for k in (1, 2):
+            print(k, top_k_accuracy_score(y_test, y_score, k=k))
+  what_comes_out: {none: true}
+  catch_outs:
+    - Needs one score column per class, not just predicted labels.
+    - k at or above the number of classes gives a perfect 1, with a warning.
+    - k of 1 is ordinary accuracy on the top class.
+    - normalize=False returns a count of rows, not a share.
+  key_settings:
+    tier1:
+      - {name: k, page: null}
+      - {name: normalize, page: null}
+    tier2:
+      - {name: labels, page: null}
+      - {name: sample_weight, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: Counts a hit when the answer is in the short list.}
+  next: []

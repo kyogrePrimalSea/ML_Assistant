@@ -1,0 +1,70 @@
+id: check-scoring
+plain_name: check_scoring
+code_name: check_scoring
+aliases: [which scorer applies, default scorer]
+stage: evaluate
+family: evaluate.scoring
+tracks: [standard, time-series]
+archetype: metric
+question_tags: [which scorer is used, default scoring]
+targets: [sklearn.metrics.check_scoring]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.metrics.check_scoring.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [scorer]}
+    line: Finds the scorer a search or CV will use.
+  quick_facts:
+    facts:
+      - {label: Returns, value: a scorer callable}
+      - {label: Default when scoring is None, value: the estimator's own score}
+  use_avoid:
+    use_when: [scorer a search will use, default scoring of an estimator]
+    avoid_when: [a built-in name is enough, a custom metric]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.check_scoring
+      why_this_library: One call resolves any scoring option.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.metrics import check_scoring
+        from sklearn.model_selection import train_test_split
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = LogisticRegression(max_iter=5000).fit(X_train, y_train)
+
+        scorer = check_scoring(model, scoring="roc_auc")
+        print(round(scorer(model, X_test, y_test), 3))
+  what_comes_out:
+    items:
+      - {name: scorer, kind: return, task: null, shape: "callable(estimator, X, y)", note: Call it with the fitted estimator and data.}
+    next_step: Call it on the fitted model and held-out data to get a score.
+    visual: null
+  catch_outs:
+    - With scoring None and no score method, it raises unless allow_none is True.
+    - estimator=None can raise; allow_none decides.
+  key_settings:
+    tier1:
+      - {name: scoring, page: null}
+      - {name: estimator, page: null}
+    tier2:
+      - {name: allow_none, page: null}
+    tier3:
+      - {name: raise_exc, page: null}
+  watch_it_work: {none: true}
+  intuition: {text: "Ask which scorer applies, or take the one you named."}
+  next: []

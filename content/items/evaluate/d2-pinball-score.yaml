@@ -1,0 +1,72 @@
+id: d2-pinball-score
+plain_name: D² pinball score
+code_name: d2_pinball_score
+aliases: [d2 pinball, quantile score, pinball explained]
+stage: evaluate
+family: evaluate.error.quantile
+tracks: [standard]
+archetype: metric
+question_tags: [quantile prediction, prediction range]
+targets: [sklearn.metrics.d2_pinball_score]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.metrics.d2_pinball_score.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: ames, highlight: [quantile]}
+    line: Share of the pinball loss that a quantile model explains.
+  quick_facts:
+    facts:
+      - {label: Best score, value: "1.0"}
+      - {label: Can go below zero, value: "yes: worse than the quantile guess"}
+      - {label: Default alpha, value: "0.5: same as absolute error"}
+  use_avoid:
+    use_when: [quantile model, predicted range]
+    avoid_when: [mean prediction, classification]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.d2_pinball_score
+      why_this_library: One call; set alpha to the quantile you predicted.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_diabetes
+        from sklearn.linear_model import QuantileRegressor
+        from sklearn.metrics import d2_pinball_score
+        from sklearn.model_selection import train_test_split
+
+        X, y = load_diabetes(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = QuantileRegressor(quantile=0.9, alpha=0)
+        model.fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+
+        print(d2_pinball_score(y_test, y_pred, alpha=0.9))
+  what_comes_out:
+    items:
+      - {name: d2_pinball_score, kind: return, task: regression, shape: "float (or one per output)", note: "1.0 is perfect; 0 matches the alpha-quantile guess."}
+    next_step: Read it with the pinball loss it is built on.
+    visual: null
+  catch_outs:
+    - Alpha must match the quantile your model predicts.
+    - Default alpha 0.5 scores the median, not your quantile.
+    - Score on the test set, not the training set.
+  key_settings:
+    tier1:
+      - {name: alpha, page: null}
+      - {name: multioutput, page: null}
+    tier2:
+      - {name: sample_weight, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Like R-squared, but for a model that predicts a quantile."}
+  next: []

@@ -1,0 +1,63 @@
+id: influence
+plain_name: Influence measures
+code_name: OLSInfluence
+aliases: [Cook's distance, outlier check, leverage]
+stage: evaluate
+family: evaluate.diagnostics
+tracks: [standard]
+archetype: diagnostic
+question_tags: [outliers, one row too strong, influential points]
+targets: [statsmodels.stats.outliers_influence.OLSInfluence]
+pairs_with: []
+clashes: []
+source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.stats.outliers_influence.OLSInfluence.html']
+library_versions: {statsmodels: 0.15.0}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: ames, chart: Cook's distance for each row}
+    line: Finds rows that pull the fitted line too hard.
+  quick_facts:
+    facts:
+    - {label: Input, value: Fitted OLS results}
+  use_avoid:
+    use_when: [rows pull the line, checking for outliers]
+    avoid_when: [models other than OLS, no fitted results]
+  prep: []
+  code:
+  - library: statsmodels
+    target: statsmodels.stats.outliers_influence.OLSInfluence
+    why_this_library: Gives per-row influence measures from one fit.
+    snippet: |
+      # statsmodels 0.15.0
+      import statsmodels.api as sm
+      from sklearn.datasets import load_diabetes
+      from statsmodels.stats.outliers_influence import OLSInfluence
+
+      X, y = load_diabetes(return_X_y=True)
+      X = sm.add_constant(X)
+      results = sm.OLS(y, X).fit()
+      influence = OLSInfluence(results)
+      cooks_d = influence.cooks_distance[0]
+      print(cooks_d.argmax(), round(cooks_d.max(), 3))
+  what_comes_out:
+    items:
+    - {name: cooks_distance, kind: attribute, task: null, shape: two arrays, note: 'Distance per row, with p-values.'}
+    - {name: dffits, kind: attribute, task: null, shape: 'array, one per row', note: Change in a row's fit when it is left out.}
+    - {name: summary_frame, kind: method, task: null, shape: DataFrame, note: All influence measures in one table.}
+    next_step: Check the largest values before dropping any rows.
+    visual: null
+  catch_outs: [Built for OLS results only., A flagged row is not automatically wrong., Cook's distance comes back as two arrays.]
+  key_settings:
+    tier1: []
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: Leave each row out in turn and see how far the fit moves.}
+  next: []

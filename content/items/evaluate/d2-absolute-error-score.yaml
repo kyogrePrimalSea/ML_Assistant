@@ -1,0 +1,67 @@
+id: d2-absolute-error-score
+plain_name: D² absolute error
+code_name: d2_absolute_error_score
+aliases: [median baseline score, absolute error skill]
+stage: evaluate
+family: evaluate.explained
+tracks: [standard, time-series]
+archetype: metric
+question_tags: [how good is it, regression, beats median guess]
+targets: [sklearn.metrics.d2_absolute_error_score]
+pairs_with: []
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.metrics.d2_absolute_error_score.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: ames, highlight: [absolute error]}
+    line: Share of absolute error removed versus always guessing the median.
+  quick_facts:
+    facts:
+      - {label: Best score, value: "1.0"}
+      - {label: Can go below zero, value: "yes: worse than the median guess"}
+  use_avoid:
+    use_when: [regression, outliers present, comparing models on one target]
+    avoid_when: [classification, comparing different targets]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.d2_absolute_error_score
+      why_this_library: One call; true values first, then predictions.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.metrics import d2_absolute_error_score
+        from sklearn.datasets import make_regression
+        from sklearn.linear_model import LinearRegression
+        from sklearn.model_selection import train_test_split
+
+        X, y = make_regression(n_samples=200, n_features=3, noise=10, random_state=0)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = LinearRegression().fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+
+        print(round(d2_absolute_error_score(y_test, y_pred), 3))
+  what_comes_out: {none: true}
+  catch_outs:
+    - Can be negative; a model worse than the median guess scores below 0.
+    - Baseline is the median of y_true, not the mean.
+  key_settings:
+    tier1:
+      - {name: multioutput, page: null}
+    tier2:
+      - {name: sample_weight, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: Compare your errors with the errors of always guessing the median.
+  next: []

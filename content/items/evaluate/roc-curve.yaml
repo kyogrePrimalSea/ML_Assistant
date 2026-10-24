@@ -1,0 +1,74 @@
+id: roc-curve
+plain_name: ROC curve
+code_name: roc_curve / RocCurveDisplay
+aliases: [roc, receiver operating characteristic, tpr against fpr]
+stage: evaluate
+family: evaluate.prob.ranking
+tracks: [standard]
+archetype: metric
+question_tags: [trade-off, cut-off]
+targets: [sklearn.metrics.roc_curve, sklearn.metrics.RocCurveDisplay]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.metrics.roc_curve.html', 'https://scikit-learn.org/stable/modules/generated/sklearn.metrics.RocCurveDisplay.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [TPR, FPR]}
+    line: Hit rate against false alarm rate, at every cut-off.
+  quick_facts:
+    facts:
+      - {label: Points, value: one per threshold}
+      - {label: Drops, value: collinear points by default}
+  use_avoid:
+    use_when: [see trade-off at each cut-off, classes not too lopsided]
+    avoid_when: [rare positives, one number is needed]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.roc_curve
+      why_this_library: One call; returns the points you plot.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.model_selection import train_test_split
+        from sklearn.metrics import roc_curve
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = LogisticRegression(max_iter=5000).fit(X_train, y_train)
+        y_score = model.predict_proba(X_test)[:, 1]
+
+        fpr, tpr, thresholds = roc_curve(y_test, y_score)
+        print(fpr.shape, tpr.shape, thresholds.shape)
+  what_comes_out:
+    items:
+      - {name: fpr, kind: return, task: classification, shape: "array, one per point", note: False positive rate at each point.}
+      - {name: tpr, kind: return, task: classification, shape: "array, one per point", note: True positive rate at each point.}
+      - {name: thresholds, kind: return, task: classification, shape: "array, one per threshold", note: Cut-off behind each point.}
+    next_step: Plot tpr against fpr, or use roc-auc-score.
+    visual: null
+  catch_outs:
+    - Pass scores or probabilities, not predicted labels.
+    - Set pos_label when the positive class is not 1.
+    - Drops collinear points by default; set drop_intermediate=False to keep them.
+  key_settings:
+    tier1:
+      - {name: pos_label, page: null}
+    tier2:
+      - {name: drop_intermediate, page: null}
+      - {name: sample_weight, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: Slide the cut-off and track hits against false alarms.
+  next: []

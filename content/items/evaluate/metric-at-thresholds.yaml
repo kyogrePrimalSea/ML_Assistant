@@ -1,0 +1,73 @@
+id: metric-at-thresholds
+plain_name: metric_at_thresholds
+code_name: metric_at_thresholds
+aliases: [threshold scores, metric by cut-off]
+stage: evaluate
+family: evaluate.prob.thresholds
+tracks: [standard]
+archetype: metric
+question_tags: [pick a cut-off, scores at every cut-off]
+targets: [sklearn.metrics.metric_at_thresholds]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.metrics.metric_at_thresholds.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [cut-off]}
+    line: Scores a metric at every cut-off in one call.
+  quick_facts:
+    facts:
+      - {label: Input, value: scores and a metric function}
+      - {label: Data, value: binary only}
+      - {label: Returns, value: metric values and cut-offs}
+  use_avoid:
+    use_when: [choosing a cut-off, comparing cut-offs]
+    avoid_when: [multiclass data, regression]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.metric_at_thresholds
+      why_this_library: One call scores every cut-off.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.metrics import f1_score, metric_at_thresholds
+        from sklearn.model_selection import train_test_split
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = LogisticRegression(max_iter=5000).fit(X_train, y_train)
+        scores = model.predict_proba(X_test)[:, 1]
+
+        values, thresholds = metric_at_thresholds(y_test, scores, f1_score)
+        best = values.argmax()
+        print(f"best cut-off {thresholds[best]:.2f} gives F1 {values[best]:.3f}")
+  what_comes_out:
+    items:
+      - {name: metric_values, kind: return, task: classification, shape: "(n_thresholds,)", note: Metric value at each cut-off.}
+      - {name: thresholds, kind: return, task: classification, shape: "(n_thresholds,)", note: The cut-offs that were tried.}
+    next_step: Take the cut-off with the best value, then check it on new data.
+    visual: null
+  catch_outs:
+    - Binary data only; it does not cover multiclass.
+    - Choosing the cut-off on test data is optimistic; use validation data.
+  key_settings:
+    tier1:
+      - {name: metric_func, page: null}
+    tier2:
+      - {name: sample_weight, page: null}
+      - {name: metric_params, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: Slide the cut-off along the scores and re-score at each step.}
+  next: []

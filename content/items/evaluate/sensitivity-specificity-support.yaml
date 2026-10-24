@@ -1,0 +1,74 @@
+id: sensitivity-specificity-support
+plain_name: sensitivity_specificity_support
+code_name: sensitivity_specificity_support
+aliases: [sensitivity and specificity together, class counts]
+stage: evaluate
+family: evaluate.imbalanced
+tracks: [standard]
+archetype: metric
+question_tags: [sensitivity and specificity, scores per class]
+targets: [imblearn.metrics.sensitivity_specificity_support]
+pairs_with: []
+clashes: []
+source_urls: ['https://imbalanced-learn.org/stable/references/generated/imblearn.metrics.sensitivity_specificity_support.html']
+library_versions: {imbalanced-learn: 0.14.2}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [sensitivity, specificity]}
+    line: Both scores for every class, in one call.
+  quick_facts:
+    facts:
+      - {label: Default average, value: "None, one value per class"}
+      - {label: Returns, value: "sensitivity, specificity, support"}
+  use_avoid:
+    use_when: [per-class scores needed, imbalanced classes]
+    avoid_when: [regression, one number is enough]
+  prep: []
+  code:
+    - library: imbalanced-learn
+      target: imblearn.metrics.sensitivity_specificity_support
+      why_this_library: One call returns both scores and the class counts.
+      snippet: |
+        # imbalanced-learn 0.14.2
+        from imblearn.metrics import sensitivity_specificity_support
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.model_selection import train_test_split
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = LogisticRegression(max_iter=5000).fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+
+        sens, spec, support = sensitivity_specificity_support(y_test, y_pred)
+        print(sens, spec, support, sep="\n")
+  what_comes_out:
+    items:
+      - {name: sensitivity, kind: return, task: null, shape: "array, one value per class", note: "Share of each class's real members caught, in label order."}
+      - {name: specificity, kind: return, task: null, shape: "array, one value per class", note: Share of each class's non-members correctly rejected.}
+      - {name: support, kind: return, task: null, shape: "int array, one value per class", note: Number of real samples in each class.}
+    next_step: null
+    visual: null
+  catch_outs:
+    - With average None you get one value per class, not one number.
+    - warn_for only changes which warnings appear, not the values.
+  key_settings:
+    tier1:
+      - {name: average, page: null}
+      - {name: labels, page: null}
+      - {name: pos_label, page: null}
+      - {name: warn_for, page: null}
+    tier2:
+      - {name: sample_weight, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Both scores for every class, plus how many samples each class has."}
+  next: []

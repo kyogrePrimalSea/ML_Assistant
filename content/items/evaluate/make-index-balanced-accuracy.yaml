@@ -1,0 +1,71 @@
+id: make-index-balanced-accuracy
+plain_name: Index balanced accuracy
+code_name: make_index_balanced_accuracy
+aliases: [iba, imbalance-adjusted score]
+stage: evaluate
+family: evaluate.imbalanced
+tracks: [standard]
+archetype: metric
+question_tags: [imbalanced classes, fair score]
+targets: [imblearn.metrics.make_index_balanced_accuracy]
+pairs_with: []
+clashes: []
+source_urls: ['https://imbalanced-learn.org/stable/references/generated/imblearn.metrics.make_index_balanced_accuracy.html']
+library_versions: {imbalanced-learn: 0.14.2}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [inner metric]}
+    line: Adjusts another metric for class imbalance.
+  quick_facts:
+    facts:
+      - {label: Default alpha, value: "0.1"}
+      - {label: Squared by default, value: "yes"}
+  use_avoid:
+    use_when: [imbalanced classes, wrapping another scorer]
+    avoid_when: [balanced classes, regression]
+  prep: []
+  code:
+    - library: imbalanced-learn
+      target: imblearn.metrics.make_index_balanced_accuracy
+      why_this_library: Wraps any scoring function you already use.
+      snippet: |
+        # imbalanced-learn 0.14.2
+        from imblearn.metrics import make_index_balanced_accuracy
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.metrics import recall_score
+        from sklearn.model_selection import train_test_split
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = LogisticRegression(max_iter=5000).fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+
+        iba_recall = make_index_balanced_accuracy()(recall_score)
+        print(iba_recall(y_test, y_pred))
+  what_comes_out:
+    items:
+      - {name: iba_scoring_func, kind: return, task: null, shape: callable, note: Wraps a scoring function; call it with y_true and y_pred.}
+    next_step: null
+    visual: null
+  catch_outs:
+    - It adjusts a metric; pass it the scoring function to wrap.
+    - squared=True squares the inner score before weighting.
+    - alpha is the weighting factor; the default is 0.1.
+  key_settings:
+    tier1:
+      - {name: alpha, page: null}
+      - {name: squared, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Wraps a score so that class imbalance is taken into account."}
+  next: []

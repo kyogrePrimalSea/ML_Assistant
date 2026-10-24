@@ -1,0 +1,64 @@
+id: vif
+plain_name: VIF
+code_name: variance_inflation_factor
+aliases: [variance inflation factor, multicollinearity check]
+stage: evaluate
+family: evaluate.diagnostics
+tracks: [standard]
+archetype: diagnostic
+question_tags: [overlapping features, unstable coefficients, multicollinearity]
+targets: [statsmodels.stats.outliers_influence.variance_inflation_factor]
+pairs_with: []
+clashes: []
+source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.stats.outliers_influence.variance_inflation_factor.html']
+library_versions: {statsmodels: 0.15.0}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: ames, chart: VIF value for each feature}
+    line: Measures how much each feature overlaps the others.
+  quick_facts:
+    facts:
+    - {label: Default standardize, value: 'True'}
+    - {label: Input, value: Full design matrix}
+  use_avoid:
+    use_when: [features overlap, coefficients look unstable]
+    avoid_when: [only one feature, no design matrix]
+  prep: []
+  code:
+  - library: statsmodels
+    target: statsmodels.stats.outliers_influence.variance_inflation_factor
+    why_this_library: Computes one VIF per column.
+    snippet: |
+      # statsmodels 0.15.0
+      import numpy as np
+      import statsmodels.api as sm
+      from sklearn.datasets import load_diabetes
+      from statsmodels.stats.outliers_influence import (
+          variance_inflation_factor,
+      )
+
+      X, y = load_diabetes(return_X_y=True)
+      X = sm.add_constant(X)
+      vifs = [variance_inflation_factor(X, i) for i in range(1, X.shape[1])]
+      print(np.round(vifs, 2))
+  what_comes_out:
+    items:
+    - {name: variance_inflation_factor, kind: return, task: null, shape: float per column, note: Higher means more overlap with the other columns.}
+    next_step: 'High values: consider dropping or combining overlapping features.'
+    visual: null
+  catch_outs: ['Works on one column at a time, set by exog_idx.', Columns are standardized by default.]
+  key_settings:
+    tier1:
+    - {name: standardize, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: Predict each feature from the others and read the fit.}
+  next: [but-wobbly-coefs]

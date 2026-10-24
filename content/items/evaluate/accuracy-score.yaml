@@ -1,0 +1,68 @@
+id: accuracy-score
+plain_name: Accuracy
+code_name: accuracy_score
+aliases: [percent correct, hit rate]
+stage: evaluate
+family: evaluate.counts.overall
+tracks: [standard]
+archetype: metric
+question_tags: [how good is it, overall score]
+targets: [sklearn.metrics.accuracy_score]
+pairs_with: []
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.metrics.accuracy_score.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: metric, dataset: breast-cancer, highlight: [correct, wrong]}
+    line: Share of predictions that match the true label.
+  quick_facts:
+    facts:
+      - {label: Range, value: 0 to 1}
+      - {label: Best score, value: "1.0"}
+      - {label: Default, value: "Fraction (normalize is True)"}
+  use_avoid:
+    use_when: [classes are balanced, one quick overall score]
+    avoid_when: [classes are lopsided, regression]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.metrics.accuracy_score
+      why_this_library: One call; true labels first, then predictions.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.metrics import accuracy_score
+        from sklearn.model_selection import train_test_split
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = LogisticRegression(max_iter=5000).fit(X_train, y_train)
+        y_pred = model.predict(X_test)
+
+        print(round(accuracy_score(y_test, y_pred), 3))
+  what_comes_out: {none: true}
+  catch_outs:
+    - One dominant class can hide a weak model; check balanced accuracy.
+    - Takes predicted labels, not probabilities.
+  key_settings:
+    tier1:
+      - {name: normalize, page: null}
+      - {name: sample_weight, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: Count the right answers, divide by all answers.
+  next: []
