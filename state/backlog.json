@@ -50,7 +50,7 @@
       "title": "Review fixes and the What comes out slot",
       "goal": "F3-F10 from design review round 1, the 12th slot 'What comes out' (A4: schema, renderer, content for the 4 boosting and 4 hyperparameter pages), typography (A8), badges (A9), key settings wording (A10).",
       "spec": "\u00a75.1, \u00a710.1, \u00a710.9 (A4, A8, A9, A10); docs/BRIEF_DESIGN_REVIEW_1.md \u00a72",
-      "status": "In Progress",
+      "status": "Done",
       "dependencies": [
         "E04"
       ]
@@ -59,7 +59,7 @@
       "title": "Taxonomy and Questions mode",
       "goal": "content/taxonomy.yaml from docs/QUESTION_MAP.md, taxonomy validator, record migration to taxonomy family ids, per-goal stored layouts with the A5 fan, goal selector (A1), Names/Questions label toggle (A3), search on both label sets, the we_need_but stem. Fixes F1, F2.",
       "spec": "\u00a73.2-3.5, \u00a77.1, \u00a77.4 (A1, A2, A3, A5); docs/QUESTION_MAP.md",
-      "status": "Backlog",
+      "status": "In Progress",
       "dependencies": [
         "E04",
         "E12"
@@ -456,7 +456,7 @@
     "T030": {
       "title": "What comes out renderer and visuals",
       "file": "tasks/T030-what-comes-out-renderer.md",
-      "status": "In Progress",
+      "status": "Done",
       "dependencies": [
         "T028"
       ],
@@ -479,7 +479,7 @@
     "T033": {
       "title": "E12 acceptance and deploy",
       "file": "tasks/T033-e12-acceptance-and-deploy.md",
-      "status": "Backlog",
+      "status": "Done",
       "dependencies": [
         "T028",
         "T029",
