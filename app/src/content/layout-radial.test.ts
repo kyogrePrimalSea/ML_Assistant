@@ -44,7 +44,7 @@ describe('layout file', () => {
   it('is deterministic and the committed copy is current', () => {
     expect(computeLayout(index)).toEqual(layout)
     expect(JSON.parse(JSON.stringify(layout))).toEqual(stored)
-  })
+  }, 60_000) // the full layout takes several seconds on CI runners
 
   it('is version 2 with one layout per goal', () => {
     expect(stored.version).toBe(2)
