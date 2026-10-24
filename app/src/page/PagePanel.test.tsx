@@ -43,12 +43,12 @@ test('every record has a built page file', () => expect(ids.length).toBeGreaterT
 
 test.each(ids)('%s renders all 12 slots in order, each with a heading', async (id) => {
   const { container } = show(id)
-  await screen.findByRole('article')
+  await screen.findByRole('article', {}, { timeout: 5000 }) // 343 pages; CI runners are slow
   const sections = [...container.querySelectorAll('section[data-slot-name]')]
   expect(sections.map((s) => s.getAttribute('data-slot-name'))).toEqual(ORDER)
   for (const s of sections) expect(within(s as HTMLElement).getAllByRole('heading').length).toBeGreaterThan(0)
   expect(screen.getByRole('heading', { name: 'Intuition' })).toBeInTheDocument()
-})
+}, 15_000)
 
 test('empty slots say None', async () => {
   show('max-depth')
