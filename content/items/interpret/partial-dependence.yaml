@@ -1,0 +1,75 @@
+id: partial-dependence
+plain_name: Partial dependence
+code_name: PartialDependenceDisplay
+aliases: [PDP, partial dependence plot, average effect plot]
+stage: interpret
+family: interpret.effect
+tracks: [standard]
+archetype: diagnostic
+question_tags: [how one feature moves prediction, average effect]
+targets: [sklearn.inspection.PartialDependenceDisplay]
+pairs_with: [shap-partial-dependence]
+clashes: []
+source_urls:
+  - 'https://scikit-learn.org/stable/modules/generated/sklearn.inspection.partial_dependence.html'
+  - 'https://scikit-learn.org/stable/modules/generated/sklearn.inspection.PartialDependenceDisplay.html'
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: ames, chart: average prediction as one feature changes}
+    line: Shows how the average prediction moves as one feature changes.
+  quick_facts:
+    facts:
+      - {label: "Default percentiles", value: "5% to 95%"}
+      - {label: "Default grid", value: "100 points"}
+      - {label: "Default kind", value: "average"}
+  use_avoid:
+    use_when: [one feature's average effect, checking direction]
+    avoid_when: [more than two features, one row's explanation]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.inspection.PartialDependenceDisplay
+      why_this_library: "Draws average and individual curves for any fitted model."
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import make_regression
+        from sklearn.ensemble import GradientBoostingRegressor
+        from sklearn.inspection import PartialDependenceDisplay
+
+        X, y = make_regression(n_samples=300, n_features=3, noise=10, random_state=0)
+        model = GradientBoostingRegressor(random_state=0).fit(X, y)
+
+        display = PartialDependenceDisplay.from_estimator(model, X, features=[0, 1])
+        print(display.lines_.shape)
+  what_comes_out:
+    items:
+      - {name: from_estimator, kind: method, task: null, shape: "PartialDependenceDisplay", note: "Draws the curves and returns the display."}
+      - {name: plot, kind: method, task: null, shape: "PartialDependenceDisplay", note: "Redraws the curves and returns the display."}
+      - {name: lines_, kind: attribute, task: null, shape: "array of matplotlib Artists", note: "One entry per feature plotted."}
+      - {name: figure_, kind: attribute, task: null, shape: "matplotlib Figure", note: "Figure the curves are drawn on."}
+    next_step: "Check the same curve with SHAP values overlaid."
+    visual: null
+  catch_outs:
+    - "Averages hide individual rows; use kind='individual' to see them."
+    - "Mark categorical columns with categorical_features."
+  key_settings:
+    tier1:
+      - {name: kind, page: null}
+      - {name: subsample, page: null}
+    tier2:
+      - {name: feature_names, page: null}
+      - {name: random_state, page: null}
+    tier3:
+      - {name: is_categorical, page: null}
+  watch_it_work: {none: true}
+  intuition: {text: "Hold one feature at each value and average the model's answers."}
+  next: []

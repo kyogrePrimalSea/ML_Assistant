@@ -1,0 +1,81 @@
+id: explanation
+plain_name: Explanation
+code_name: Explanation
+aliases: [SHAP Explanation object, explanation object]
+stage: interpret
+family: interpret.explainer-fast
+tracks: [standard]
+archetype: output
+question_tags: [what an explainer returns, what the plots read]
+targets: [shap.Explanation]
+applies_to: [treeexplainer]
+pairs_with: []
+clashes: []
+source_urls: ['https://shap.readthedocs.io/en/latest/generated/shap.Explanation.html']
+library_versions: {shap: 0.54.1}
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: output, dataset: ames, plot: bar}
+    line: One set of SHAP values per row and feature.
+  quick_facts:
+    facts:
+      - {label: Shape, value: rows by features}
+      - {label: Made by, value: an explainer}
+  use_avoid:
+    use_when: [passing SHAP values to plots, keeping values with their data]
+    avoid_when: [no SHAP values computed yet]
+  prep: []
+  code:
+    - library: shap
+      target: shap.Explanation
+      why_this_library: The object the SHAP plots accept.
+      snippet: |
+        # shap 0.54.1
+        import shap
+        from sklearn.datasets import load_diabetes
+        from sklearn.ensemble import RandomForestRegressor
+
+        X, y = load_diabetes(return_X_y=True, as_frame=True)
+        model = RandomForestRegressor(n_estimators=50, random_state=0).fit(X, y)
+
+        explainer = shap.TreeExplainer(model)
+        explanation = explainer(X.iloc[:20])
+        print(explanation.shape)
+  what_comes_out:
+    items:
+      - {name: values, kind: attribute, task: null, shape: rows by features, note: The SHAP values themselves}
+      - {name: base_values, kind: attribute, task: null, shape: one per row, note: Starting point for each row}
+      - {name: data, kind: attribute, task: null, shape: rows by features, note: Feature values the SHAP values explain}
+    next_step: Pass it straight to a shap.plots function.
+    visual: null
+  catch_outs:
+    - Built by an explainer, not by hand.
+    - Keep rows and features aligned when slicing.
+  key_settings:
+    tier1:
+      - {name: values, page: null}
+      - {name: base_values, page: null}
+      - {name: data, page: null}
+      - {name: display_data, page: null}
+    tier2:
+      - {name: instance_names, page: null}
+      - {name: feature_names, page: null}
+      - {name: output_names, page: null}
+      - {name: output_indexes, page: null}
+    tier3:
+      - {name: lower_bounds, page: null}
+      - {name: upper_bounds, page: null}
+      - {name: error_std, page: null}
+      - {name: main_effects, page: null}
+      - {name: hierarchical_values, page: null}
+      - {name: clustering, page: null}
+  watch_it_work: {none: true}
+  intuition: {text: A table of SHAP values with each row's starting point attached.}
+  next: []

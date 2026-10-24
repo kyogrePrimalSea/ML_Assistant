@@ -1,0 +1,66 @@
+id: shap-waterfall
+plain_name: SHAP waterfall
+code_name: waterfall
+aliases: [feature by feature, one row breakdown]
+stage: interpret
+family: interpret.local
+tracks: [standard]
+archetype: diagnostic
+question_tags: [why this one prediction, one row explained]
+targets: [shap.plots.waterfall]
+pairs_with: []
+clashes: []
+source_urls: ['https://shap.readthedocs.io/en/latest/generated/shap.plots.waterfall.html']
+library_versions: {shap: 0.54.1}
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: ames, chart: feature-by-feature steps for one prediction}
+    line: Walks one prediction through each feature, step by step.
+  quick_facts:
+    facts:
+      - {label: Rows, value: one at a time}
+      - {label: Features shown, value: 10 by default}
+  use_avoid:
+    use_when: [explaining one prediction, stepping through features]
+    avoid_when: [many rows at once, summary across rows]
+  prep:
+    - {step: {page: explainer}, status: required, why: Needs SHAP values from an explainer, condition: null, unless: null}
+  code:
+    - library: shap
+      target: shap.plots.waterfall
+      why_this_library: Step-by-step view of one prediction's SHAP values.
+      snippet: |
+        # shap 0.54.1
+        import shap
+        from sklearn.datasets import load_diabetes
+        from sklearn.ensemble import RandomForestRegressor
+
+        X, y = load_diabetes(return_X_y=True, as_frame=True)
+        model = RandomForestRegressor(n_estimators=50, random_state=0).fit(X, y)
+
+        explainer = shap.TreeExplainer(model)
+        shap_values = explainer(X.iloc[:100])
+        shap.plots.waterfall(shap_values[0], max_display=10, show=False)
+        row = shap_values[0]
+        print(round(float(row.base_values + row.values.sum()), 1))
+  what_comes_out: {none: true}
+  catch_outs:
+    - Needs a one-dimensional Explanation, one row at a time.
+    - Only 10 features show unless max_display changes.
+  key_settings:
+    tier1:
+      - {name: show, page: null}
+      - {name: shap_values, page: null}
+      - {name: max_display, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: Start at the base value and add each feature's push.}
+  next: []

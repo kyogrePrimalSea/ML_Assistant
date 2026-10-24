@@ -1,0 +1,76 @@
+id: shap-heatmap
+plain_name: SHAP heatmap
+code_name: heatmap
+aliases: [impact heatmap, rows by features]
+stage: interpret
+family: interpret.global
+tracks: [standard]
+archetype: diagnostic
+question_tags: [patterns across rows, which rows act alike]
+targets: [shap.plots.heatmap]
+pairs_with: []
+clashes: []
+source_urls: ['https://shap.readthedocs.io/en/latest/generated/shap.plots.heatmap.html']
+library_versions: {shap: 0.54.1}
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: ames, chart: SHAP values per row and feature as colours}
+    line: Shows impact patterns across many rows at once.
+  quick_facts:
+    facts:
+      - {label: Features shown, value: 10 by default}
+      - {label: Row order, value: clustered by default}
+  use_avoid:
+    use_when: [many rows at once, spotting row groups]
+    avoid_when: [one row only, exact values needed]
+  prep:
+    - {step: {page: explainer}, status: required, why: Needs SHAP values from an explainer, condition: null, unless: null}
+  code:
+    - library: shap
+      target: shap.plots.heatmap
+      why_this_library: Plots SHAP values as a colour grid.
+      snippet: |
+        # shap 0.54.1
+        import shap
+        from sklearn.datasets import load_diabetes
+        from sklearn.ensemble import RandomForestRegressor
+
+        X, y = load_diabetes(return_X_y=True, as_frame=True)
+        model = RandomForestRegressor(n_estimators=50, random_state=0).fit(X, y)
+
+        explainer = shap.TreeExplainer(model)
+        shap_values = explainer(X.iloc[:100])
+        shap.plots.heatmap(shap_values, show=False)
+        print(shap_values.abs.mean(0).values.round(1))
+  what_comes_out:
+    items:
+      - {name: ax, kind: return, task: null, shape: matplotlib Axes, note: Axes the heatmap is drawn on}
+    next_step: null
+    visual: null
+  catch_outs:
+    - Rows are clustered by default, not kept in dataset order.
+    - Only 10 features show unless max_display changes.
+    - Needs a multi-row Explanation object.
+  key_settings:
+    tier1:
+      - {name: feature_order, page: null}
+      - {name: show, page: null}
+      - {name: instance_order, page: null}
+      - {name: feature_values, page: null}
+    tier2:
+      - {name: shap_values, page: null}
+      - {name: ax, page: null}
+      - {name: max_display, page: null}
+      - {name: plot_width, page: null}
+    tier3:
+      - {name: cmap, page: null}
+  watch_it_work: {none: true}
+  intuition: {text: "Stack each row's impacts, then group rows that look alike."}
+  next: []

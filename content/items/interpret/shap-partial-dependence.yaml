@@ -1,0 +1,75 @@
+id: shap-partial-dependence
+plain_name: SHAP partial dependence plot
+code_name: partial_dependence
+aliases: [SHAP PDP, SHAP partial dependence]
+stage: interpret
+family: interpret.effect
+tracks: [standard]
+archetype: diagnostic
+question_tags: [how one feature moves prediction, SHAP view]
+targets: [shap.plots.partial_dependence]
+pairs_with: [partial-dependence]
+clashes: []
+source_urls: ['https://shap.readthedocs.io/en/latest/generated/shap.plots.partial_dependence.html']
+library_versions:
+  shap: "0.54.1"
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: ames, chart: average curve over one feature}
+    line: Partial dependence drawn with SHAP's own plot function.
+  quick_facts:
+    facts:
+      - {label: "Default range", value: "0th to 100th percentile"}
+      - {label: "Default histogram", value: "shown"}
+  use_avoid:
+    use_when: [one feature's average effect, SHAP overlays]
+    avoid_when: [two features at once]
+  prep: []
+  code:
+    - library: shap
+      target: shap.plots.partial_dependence
+      why_this_library: "Plots any callable model with SHAP's own partial dependence."
+      snippet: |
+        # shap 0.54.1
+        import shap
+        from sklearn.datasets import make_regression
+        from sklearn.ensemble import RandomForestRegressor
+
+        X, y = make_regression(n_samples=300, n_features=4, noise=10, random_state=0)
+        model = RandomForestRegressor(n_estimators=50, random_state=0).fit(X, y)
+
+        fig, ax = shap.plots.partial_dependence(0, model.predict, X, show=False)
+        print(ax.get_ylabel())
+  what_comes_out:
+    items:
+      - {name: "figure, axes", kind: return, task: null, shape: "tuple", note: "Returns None unless show is False."}
+    next_step: "Compare the curve with scikit-learn's partial dependence."
+    visual: null
+  catch_outs:
+    - "Takes one feature index per call."
+    - "Returns nothing when show is True, so set show to False to get axes."
+  key_settings:
+    tier1:
+      - {name: ice, page: null}
+      - {name: hist, page: null}
+      - {name: shap_values, page: null}
+    tier2:
+      - {name: xmin, page: null}
+      - {name: xmax, page: null}
+      - {name: npoints, page: null}
+      - {name: feature_names, page: null}
+    tier3:
+      - {name: model_expected_value, page: null}
+      - {name: feature_expected_value, page: null}
+      - {name: ylabel, page: null}
+      - {name: ace_opacity, page: null}
+  watch_it_work: {none: true}
+  intuition: {text: "Slide one feature across its range and track the average answer."}
+  next: []

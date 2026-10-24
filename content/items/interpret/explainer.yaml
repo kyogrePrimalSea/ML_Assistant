@@ -1,0 +1,77 @@
+id: explainer
+plain_name: Explainer
+code_name: Explainer
+aliases: [shap explainer, auto shap, shap entry point]
+stage: interpret
+family: interpret.explainer-fast
+tracks: [standard]
+archetype: diagnostic
+question_tags: [shap values, which shap explainer]
+targets: [shap.Explainer]
+pairs_with: []
+clashes: []
+source_urls: ['https://shap.readthedocs.io/en/latest/generated/shap.Explainer.html']
+library_versions: {shap: 0.54.1}
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: ames, chart: SHAP values picked by model type}
+    line: Picks a SHAP method for your model and returns its values.
+  quick_facts:
+    facts:
+      - {label: Default algorithm, value: auto}
+      - {label: Picks, value: method by model type}
+  use_avoid:
+    use_when: [not sure which explainer, any model shap]
+    avoid_when: [you already know the method]
+  prep: []
+  code:
+    - library: shap
+      target: shap.Explainer
+      why_this_library: Chooses the algorithm for you.
+      snippet: |
+        # shap 0.54.1
+        import numpy as np
+        import shap
+        from sklearn.datasets import make_regression
+        from sklearn.linear_model import LinearRegression
+
+        np.set_printoptions(precision=2, suppress=True)
+
+        X, y = make_regression(n_samples=200, n_features=4, noise=10, random_state=0)
+        model = LinearRegression().fit(X, y)
+
+        explainer = shap.Explainer(model, X[:100])
+        shap_values = explainer(X[:5])
+        print(type(explainer).__name__)
+        print(shap_values.values.round(2))
+  what_comes_out:
+    items:
+      - {name: Explanation, kind: return, task: null, shape: "(n_rows, n_features)", note: "Values, base values and data together."}
+    next_step: Check which method was picked with type(explainer).
+    visual: null
+  catch_outs:
+    - The chosen method decides speed and exactness.
+    - Background data over 100 rows is subsampled to 100.
+    - Set seed for repeatable results with sampling methods.
+  key_settings:
+    tier1:
+      - {name: masker, page: null}
+      - {name: algorithm, page: null}
+      - {name: link, page: null}
+      - {name: output_names, page: null}
+    tier2:
+      - {name: model, page: null}
+      - {name: seed, page: null}
+      - {name: feature_names, page: null}
+      - {name: linearize_link, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: Looks at the model and picks the SHAP method that fits it.}
+  next: []

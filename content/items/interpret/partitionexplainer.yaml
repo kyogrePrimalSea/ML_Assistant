@@ -1,0 +1,76 @@
+id: partitionexplainer
+plain_name: PartitionExplainer
+code_name: PartitionExplainer
+aliases: [Owen values, grouped SHAP]
+stage: interpret
+family: interpret.explainer-any
+tracks: [standard]
+archetype: diagnostic
+question_tags: [correlated features, text or images]
+targets: [shap.PartitionExplainer]
+pairs_with: []
+clashes: []
+source_urls: ['https://shap.readthedocs.io/en/latest/generated/shap.PartitionExplainer.html']
+library_versions:
+  shap: "0.54.1"
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: breast-cancer, chart: grouped feature values for a few rows}
+    line: Gives SHAP values for groups of correlated features.
+  quick_facts:
+    facts:
+      - {label: "Groups features", value: "by a partition tree"}
+      - {label: "Suited to", value: "text and images"}
+  use_avoid:
+    use_when: [correlated features, text or images]
+    avoid_when: [features are independent]
+  prep: []
+  code:
+    - library: shap
+      target: shap.PartitionExplainer
+      why_this_library: "Groups correlated features into a tree first."
+      snippet: |
+        # shap 0.54.1
+        import shap
+        from sklearn.datasets import make_classification
+        from sklearn.linear_model import LogisticRegression
+
+        X, y = make_classification(n_samples=200, n_features=6, random_state=0)
+        model = LogisticRegression().fit(X, y)
+
+
+        def predict(data):
+            return model.predict_proba(data)[:, 1]
+
+
+        masker = shap.maskers.Partition(X, max_samples=200)
+        explainer = shap.PartitionExplainer(predict, masker)
+        explanation = explainer(X[:5])
+        print(explanation.values.shape)
+  what_comes_out:
+    items:
+      - {name: "explainer(X)", kind: return, task: null, shape: "Explanation: (rows, features)", note: "Values, base values and data."}
+    next_step: "Compare with a SHAP beeswarm on the same rows."
+    visual: null
+  catch_outs:
+    - "The partition tree decides which features group together."
+    - "Use it for features that move together."
+  key_settings:
+    tier1:
+      - {name: link, page: null}
+      - {name: linearize_link, page: null}
+    tier2:
+      - {name: output_names, page: null}
+      - {name: feature_names, page: null}
+      - {name: call_args, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Group similar features, then split the credit between the groups."}
+  next: []

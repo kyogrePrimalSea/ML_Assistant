@@ -1,0 +1,77 @@
+id: shap-beeswarm
+plain_name: SHAP beeswarm
+code_name: beeswarm
+aliases: [beeswarm plot, shap summary plot]
+stage: interpret
+family: interpret.global
+tracks: [standard]
+archetype: diagnostic
+question_tags: [feature direction, every row impact]
+targets: [shap.plots.beeswarm]
+pairs_with: [shap-bar]
+clashes: []
+source_urls: ['https://shap.readthedocs.io/en/latest/generated/shap.plots.beeswarm.html']
+library_versions: {shap: 0.54.1}
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: ames, chart: "SHAP dots per feature, coloured by value"}
+    line: Shows each row's SHAP value for every feature.
+  quick_facts:
+    facts:
+      - {label: Each dot, value: one row}
+      - {label: Colour, value: feature value when given}
+  use_avoid:
+    use_when: [impact and direction, spread per feature]
+    avoid_when: [one row, one number per feature]
+  prep: []
+  code:
+    - library: shap
+      target: shap.plots.beeswarm
+      why_this_library: Plots SHAP values you already computed.
+      snippet: |
+        # shap 0.54.1
+        import numpy as np
+        import shap
+        from sklearn.datasets import make_regression
+        from sklearn.linear_model import LinearRegression
+
+        X, y = make_regression(n_samples=200, n_features=4, noise=10, random_state=0)
+        model = LinearRegression().fit(X, y)
+
+        explainer = shap.Explainer(model, X[:100])
+        shap_values = explainer(X[:100])
+        shap.plots.beeswarm(shap_values)
+        print(np.abs(shap_values.values).mean(axis=0).round(2))
+  what_comes_out:
+    items:
+      - {name: beeswarm, kind: return, task: null, shape: Matplotlib Axes, note: The axes the plot is drawn on.}
+    next_step: Use shap-bar for a plain ranking.
+    visual: null
+  catch_outs:
+    - Takes an Explanation, not a raw array.
+    - Features past max_display are summed into one row.
+    - Shows only the top 10 features by default.
+  key_settings:
+    tier1:
+      - {name: plot_size, page: null}
+      - {name: show, page: null}
+      - {name: group_remaining_features, page: null}
+      - {name: s, page: null}
+    tier2:
+      - {name: max_display, page: null}
+      - {name: color_bar, page: null}
+      - {name: ax, page: null}
+    tier3:
+      - {name: order, page: null}
+      - {name: color, page: null}
+      - {name: alpha, page: null}
+  watch_it_work: {none: true}
+  intuition: {text: Each dot is one row's push on one feature.}
+  next: []

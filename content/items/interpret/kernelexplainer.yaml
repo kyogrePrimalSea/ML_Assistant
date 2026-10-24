@@ -1,0 +1,73 @@
+id: kernelexplainer
+plain_name: KernelExplainer
+code_name: KernelExplainer
+aliases: [Kernel SHAP, model-agnostic SHAP]
+stage: interpret
+family: interpret.explainer-any
+tracks: [standard]
+archetype: diagnostic
+question_tags: [SHAP for any model, black box SHAP]
+targets: [shap.KernelExplainer]
+pairs_with: []
+clashes: []
+source_urls: ['https://shap.readthedocs.io/en/latest/generated/shap.KernelExplainer.html']
+library_versions:
+  shap: "0.54.1"
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: breast-cancer, chart: estimated SHAP values for a few rows}
+    line: Estimates SHAP values for any model, which is slow.
+  quick_facts:
+    facts:
+      - {label: "Default link", value: "identity"}
+      - {label: "Background", value: "a small set of rows"}
+  use_avoid:
+    use_when: [any model, no faster option]
+    avoid_when: [large background set, many rows]
+  prep: []
+  code:
+    - library: shap
+      target: shap.KernelExplainer
+      why_this_library: "Works on any function, at a cost in speed."
+      snippet: |
+        # shap 0.54.1
+        import shap
+        from sklearn.datasets import make_classification
+        from sklearn.linear_model import LogisticRegression
+
+        X, y = make_classification(n_samples=200, n_features=6, random_state=0)
+        model = LogisticRegression().fit(X, y)
+
+
+        def predict(data):
+            return model.predict_proba(data)[:, 1]
+
+
+        background = shap.kmeans(X, 10)
+        explainer = shap.KernelExplainer(predict, background)
+        shap_values = explainer.shap_values(X[:5], nsamples=100)
+        print(shap_values.shape)
+  what_comes_out:
+    items:
+      - {name: shap_values, kind: method, task: null, shape: "(rows, features)", note: "Estimated values for each row and feature."}
+    next_step: "Try PermutationExplainer, which is faster."
+    visual: null
+  catch_outs:
+    - "Slow, so use a small background set."
+    - "Results are estimates, not exact values."
+  key_settings:
+    tier1:
+      - {name: link, page: null}
+    tier2:
+      - {name: feature_names, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Ask the model many what-if questions and fit a simple model to the answers."}
+  next: []

@@ -1,0 +1,79 @@
+id: shap-force
+plain_name: SHAP force plot
+code_name: force
+aliases: [push and pull plot, additive force plot]
+stage: interpret
+family: interpret.local
+tracks: [standard]
+archetype: diagnostic
+question_tags: [why this one prediction, what pushed it]
+targets: [shap.plots.force]
+pairs_with: []
+clashes: []
+source_urls: ['https://shap.readthedocs.io/en/latest/generated/shap.plots.force.html']
+library_versions: {shap: 0.54.1}
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: ames, chart: feature pushes that move one prediction up or down}
+    line: Shows which features pushed one prediction up or down.
+  quick_facts:
+    facts:
+      - {label: Rows, value: one or many}
+      - {label: Default output, value: JavaScript}
+  use_avoid:
+    use_when: [explaining one decision, showing push and pull]
+    avoid_when: [many rows at once]
+  prep:
+    - {step: {page: explainer}, status: required, why: Needs SHAP values from an explainer, condition: null, unless: null}
+  code:
+    - library: shap
+      target: shap.plots.force
+      why_this_library: Additive push and pull view from the SHAP library.
+      snippet: |
+        # shap 0.54.1
+        import shap
+        from sklearn.datasets import load_diabetes
+        from sklearn.ensemble import RandomForestRegressor
+
+        X, y = load_diabetes(return_X_y=True, as_frame=True)
+        model = RandomForestRegressor(n_estimators=50, random_state=0).fit(X, y)
+
+        explainer = shap.TreeExplainer(model)
+        shap_values = explainer(X.iloc[:100])
+        shap.plots.force(
+            explainer.expected_value, shap_values.values[0], X.iloc[0],
+            matplotlib=True, show=False,
+        )
+        print(model.predict(X.iloc[[0]]).round(1))
+  what_comes_out: {none: true}
+  catch_outs:
+    - Features below contribution_threshold are not labelled.
+    - Default output is JavaScript; set matplotlib for a figure.
+  key_settings:
+    tier1:
+      - {name: base_value, page: null}
+      - {name: show, page: null}
+      - {name: matplotlib, page: null}
+      - {name: contribution_threshold, page: null}
+    tier2:
+      - {name: shap_values, page: null}
+      - {name: features, page: null}
+      - {name: link, page: null}
+      - {name: out_names, page: null}
+    tier3:
+      - {name: plot_cmap, page: null}
+      - {name: figsize, page: null}
+      - {name: feature_names, page: null}
+      - {name: ordering_keys, page: null}
+      - {name: ordering_keys_time_format, page: null}
+      - {name: text_rotation, page: null}
+  watch_it_work: {none: true}
+  intuition: {text: Each feature pushes the prediction up or down from the base.}
+  next: []

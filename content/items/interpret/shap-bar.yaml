@@ -1,0 +1,74 @@
+id: shap-bar
+plain_name: SHAP bar plot
+code_name: bar
+aliases: [average shap, global shap bar]
+stage: interpret
+family: interpret.global
+tracks: [standard]
+archetype: diagnostic
+question_tags: [which features matter, average impact]
+targets: [shap.plots.bar]
+pairs_with: [shap-beeswarm]
+clashes: []
+source_urls: ['https://shap.readthedocs.io/en/latest/generated/shap.plots.bar.html']
+library_versions: {shap: 0.54.1}
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: ames, chart: mean absolute SHAP value per feature}
+    line: Shows the average size of each feature's SHAP values.
+  quick_facts:
+    facts:
+      - {label: Shows, value: mean absolute SHAP}
+      - {label: Default features, value: "10"}
+  use_avoid:
+    use_when: [average impact, ranking features]
+    avoid_when: [one row, direction of effect]
+  prep: []
+  code:
+    - library: shap
+      target: shap.plots.bar
+      why_this_library: Plots SHAP values you already computed.
+      snippet: |
+        # shap 0.54.1
+        import numpy as np
+        import shap
+        from sklearn.datasets import make_regression
+        from sklearn.linear_model import LinearRegression
+
+        X, y = make_regression(n_samples=200, n_features=4, noise=10, random_state=0)
+        model = LinearRegression().fit(X, y)
+
+        explainer = shap.Explainer(model, X[:100])
+        shap_values = explainer(X[:100])
+        shap.plots.bar(shap_values)
+        print(np.abs(shap_values.values).mean(axis=0).round(2))
+  what_comes_out:
+    items:
+      - {name: bar, kind: return, task: null, shape: Matplotlib Axes, note: The axes the plot is drawn on.}
+    next_step: Use shap-beeswarm to see direction and spread.
+    visual: null
+  catch_outs:
+    - Mean absolute values hide direction.
+    - Shows only the top 10 features by default.
+    - Needs a multi-row Explanation for a global view.
+  key_settings:
+    tier1:
+      - {name: order, page: null}
+      - {name: show_data, page: null}
+      - {name: show, page: null}
+    tier2:
+      - {name: max_display, page: null}
+      - {name: ax, page: null}
+    tier3:
+      - {name: clustering, page: null}
+      - {name: clustering_cutoff, page: null}
+  watch_it_work: {none: true}
+  intuition: {text: "Average the size of each feature's push, ignoring direction."}
+  next: []

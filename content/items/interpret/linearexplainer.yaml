@@ -1,0 +1,73 @@
+id: linearexplainer
+plain_name: LinearExplainer
+code_name: LinearExplainer
+aliases: [linear shap, linear model shap]
+stage: interpret
+family: interpret.explainer-fast
+tracks: [standard]
+archetype: diagnostic
+question_tags: [linear model shap, correlated features]
+targets: [shap.LinearExplainer]
+pairs_with: []
+clashes: []
+source_urls: ['https://shap.readthedocs.io/en/latest/generated/shap.LinearExplainer.html']
+library_versions: {shap: 0.54.1}
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: ames, chart: SHAP values for a linear model}
+    line: Gives SHAP values for a linear model, with correlations optional.
+  quick_facts:
+    facts:
+      - {label: Model type, value: linear}
+      - {label: Correlations, value: optional}
+  use_avoid:
+    use_when: [linear model, correlated features]
+    avoid_when: [tree models, nonlinear models]
+  prep: []
+  code:
+    - library: shap
+      target: shap.LinearExplainer
+      why_this_library: Built for linear models.
+      snippet: |
+        # shap 0.54.1
+        import numpy as np
+        import shap
+        from sklearn.datasets import make_regression
+        from sklearn.linear_model import LinearRegression
+
+        np.set_printoptions(precision=2, suppress=True)
+
+        X, y = make_regression(n_samples=200, n_features=4, noise=10, random_state=0)
+        model = LinearRegression().fit(X, y)
+
+        explainer = shap.LinearExplainer(model, X[:100])
+        shap_values = explainer.shap_values(X[:5])
+        print(shap_values.round(2))
+  what_comes_out:
+    items:
+      - {name: shap_values, kind: method, task: null, shape: "(n_rows, n_features)", note: SHAP values for each row and feature.}
+    next_step: Plot them with shap-bar or shap-beeswarm.
+    visual: null
+  catch_outs:
+    - Only for linear models; tree models need TreeExplainer.
+    - feature_perturbation is deprecated; set the masker instead.
+    - Background data over 100 rows is subsampled to 100.
+  key_settings:
+    tier1:
+      - {name: masker, page: null}
+      - {name: data, page: null}
+      - {name: nsamples, page: null}
+    tier2:
+      - {name: model, page: null}
+      - {name: link, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: Each feature's share is its coefficient times its distance from the average.}
+  next: []

@@ -4459,6 +4459,12 @@
   },
   {
     "source": "partial-dependence",
+    "target": "shap-partial-dependence",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "partial-dependence",
     "target": "shap-scatter",
     "type": "alternative_to",
     "via": "interpret.effect"
@@ -5701,6 +5707,12 @@
   },
   {
     "source": "shap-bar",
+    "target": "shap-beeswarm",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "shap-bar",
     "target": "shap-heatmap",
     "type": "alternative_to",
     "via": "interpret.global"
@@ -5725,6 +5737,12 @@
   },
   {
     "source": "shap-decision",
+    "target": "explainer",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
+    "source": "shap-decision",
     "target": "shap-force",
     "type": "alternative_to",
     "via": "interpret.local"
@@ -5737,9 +5755,21 @@
   },
   {
     "source": "shap-force",
+    "target": "explainer",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
+    "source": "shap-force",
     "target": "shap-waterfall",
     "type": "alternative_to",
     "via": "interpret.local"
+  },
+  {
+    "source": "shap-group-difference",
+    "target": "explainer",
+    "type": "needs",
+    "via": "prep"
   },
   {
     "source": "shap-group-difference",
@@ -5749,15 +5779,45 @@
   },
   {
     "source": "shap-heatmap",
+    "target": "explainer",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
+    "source": "shap-heatmap",
     "target": "shap-violin",
     "type": "alternative_to",
     "via": "interpret.global"
+  },
+  {
+    "source": "shap-monitoring",
+    "target": "explainer",
+    "type": "needs",
+    "via": "prep"
   },
   {
     "source": "shap-partial-dependence",
     "target": "shap-scatter",
     "type": "alternative_to",
     "via": "interpret.effect"
+  },
+  {
+    "source": "shap-partial-dependence",
+    "target": "shap-scatter",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "shap-violin",
+    "target": "explainer",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
+    "source": "shap-waterfall",
+    "target": "explainer",
+    "type": "needs",
+    "via": "prep"
   },
   {
     "source": "shapiro-wilk",
@@ -6256,6 +6316,42 @@
     "target": "train-test-split",
     "type": "needs",
     "via": "prep"
+  },
+  {
+    "source": "treeexplainer",
+    "target": "kernelcenterer",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "treeexplainer",
+    "target": "maxabsscaler",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "treeexplainer",
+    "target": "minmaxscaler",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "treeexplainer",
+    "target": "normalizer",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "treeexplainer",
+    "target": "robustscaler",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "treeexplainer",
+    "target": "standardscaler",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
   },
   {
     "source": "treeexplainer",

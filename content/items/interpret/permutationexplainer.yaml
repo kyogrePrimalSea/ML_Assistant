@@ -1,0 +1,76 @@
+id: permutationexplainer
+plain_name: PermutationExplainer
+code_name: PermutationExplainer
+aliases: [permutation SHAP, faster model-agnostic SHAP]
+stage: interpret
+family: interpret.explainer-any
+tracks: [standard]
+archetype: diagnostic
+question_tags: [SHAP for any model, faster SHAP]
+targets: [shap.PermutationExplainer]
+pairs_with: []
+clashes: []
+source_urls: ['https://shap.readthedocs.io/en/latest/generated/shap.PermutationExplainer.html']
+library_versions:
+  shap: "0.54.1"
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: breast-cancer, chart: estimated SHAP values for a few rows}
+    line: Estimates SHAP values for any model, faster than KernelExplainer.
+  quick_facts:
+    facts:
+      - {label: "Default seed", value: "None"}
+      - {label: "Default link", value: "identity"}
+  use_avoid:
+    use_when: [any model, faster than KernelExplainer]
+    avoid_when: [need exact values]
+  prep: []
+  code:
+    - library: shap
+      target: shap.PermutationExplainer
+      why_this_library: "Any model, with a seed for repeatable values."
+      snippet: |
+        # shap 0.54.1
+        import shap
+        from sklearn.datasets import make_classification
+        from sklearn.linear_model import LogisticRegression
+
+        X, y = make_classification(n_samples=200, n_features=6, random_state=0)
+        model = LogisticRegression().fit(X, y)
+
+
+        def predict(data):
+            return model.predict_proba(data)[:, 1]
+
+
+        masker = shap.maskers.Independent(X, max_samples=200)
+        explainer = shap.PermutationExplainer(predict, masker, seed=0)
+        explanation = explainer(X[:5])
+        print(explanation.values.shape)
+  what_comes_out:
+    items:
+      - {name: "explainer(X)", kind: return, task: null, shape: "Explanation: (rows, features)", note: "Values, base values and data."}
+    next_step: "Compare with KernelExplainer on a few rows."
+    visual: null
+  catch_outs:
+    - "Set seed to get the same values on each run."
+    - "call_args set defaults for each call, such as max_evals."
+  key_settings:
+    tier1:
+      - {name: seed, page: null}
+      - {name: call_args, page: null}
+    tier2:
+      - {name: link, page: null}
+      - {name: linearize_link, page: null}
+      - {name: feature_names, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Try feature orders and average each feature's added effect."}
+  next: []

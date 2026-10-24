@@ -1,0 +1,75 @@
+id: exactexplainer
+plain_name: ExactExplainer
+code_name: ExactExplainer
+aliases: [exact SHAP, exact Shapley values]
+stage: interpret
+family: interpret.explainer-any
+tracks: [standard]
+archetype: diagnostic
+question_tags: [exact SHAP values, few features]
+targets: [shap.ExactExplainer]
+pairs_with: []
+clashes: []
+source_urls: ['https://shap.readthedocs.io/en/latest/generated/shap.ExactExplainer.html']
+library_versions:
+  shap: "0.54.1"
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: breast-cancer, chart: exact SHAP values for a few rows}
+    line: Gives exact SHAP values when there are only a few features.
+  quick_facts:
+    facts:
+      - {label: "Best for", value: "few features"}
+      - {label: "Default link", value: "identity"}
+      - {label: "Default linearize_link", value: "True"}
+  use_avoid:
+    use_when: [few features, need exact values]
+    avoid_when: [many features, tight time budget]
+  prep: []
+  code:
+    - library: shap
+      target: shap.ExactExplainer
+      why_this_library: "Exact values, but cost grows fast with features."
+      snippet: |
+        # shap 0.54.1
+        import shap
+        from sklearn.datasets import make_classification
+        from sklearn.linear_model import LogisticRegression
+
+        X, y = make_classification(n_samples=200, n_features=6, random_state=0)
+        model = LogisticRegression().fit(X, y)
+
+
+        def predict(data):
+            return model.predict_proba(data)[:, 1]
+
+
+        masker = shap.maskers.Independent(X, max_samples=200)
+        explainer = shap.ExactExplainer(predict, masker)
+        explanation = explainer(X[:5])
+        print(explanation.values.shape)
+  what_comes_out:
+    items:
+      - {name: "explainer(X)", kind: return, task: null, shape: "Explanation: (rows, features)", note: "Values, base values and data."}
+    next_step: "Plot the values with a SHAP bar or beeswarm plot."
+    visual: null
+  catch_outs:
+    - "Slow with many features; use it for a few."
+    - "The masker sets what replaces hidden features."
+  key_settings:
+    tier1:
+      - {name: link, page: null}
+      - {name: linearize_link, page: null}
+    tier2:
+      - {name: feature_names, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Try every feature combination and split the credit exactly."}
+  next: []

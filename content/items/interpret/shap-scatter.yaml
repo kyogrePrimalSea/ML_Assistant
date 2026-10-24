@@ -1,0 +1,79 @@
+id: shap-scatter
+plain_name: SHAP scatter
+code_name: scatter
+aliases: [SHAP dependence plot, feature effect scatter]
+stage: interpret
+family: interpret.effect
+tracks: [standard]
+archetype: diagnostic
+question_tags: [how one feature moves prediction, interactions]
+targets: [shap.plots.scatter]
+pairs_with: [shap-partial-dependence]
+clashes: []
+source_urls: ['https://shap.readthedocs.io/en/latest/generated/shap.plots.scatter.html']
+library_versions:
+  shap: "0.54.1"
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: ames, chart: "SHAP value by feature value, coloured by a second feature"}
+    line: Shows one feature's effect, coloured by another feature.
+  quick_facts:
+    facts:
+      - {label: "Default colour", value: "one blue"}
+      - {label: "Default histogram", value: "shown"}
+      - {label: "Default jitter", value: "auto"}
+  use_avoid:
+    use_when: [one feature's effect, spotting interactions]
+    avoid_when: [whole-model overview]
+  prep: []
+  code:
+    - library: shap
+      target: shap.plots.scatter
+      why_this_library: "Colours points by a second feature in one call."
+      snippet: |
+        # shap 0.54.1
+        import shap
+        from sklearn.datasets import make_regression
+        from sklearn.ensemble import RandomForestRegressor
+
+        X, y = make_regression(n_samples=300, n_features=4, noise=10, random_state=0)
+        model = RandomForestRegressor(n_estimators=50, random_state=0).fit(X, y)
+
+        names = ["age", "income", "tenure", "score"]
+        explainer = shap.TreeExplainer(model, feature_names=names)
+        shap_values = explainer(X)
+        ax = shap.plots.scatter(shap_values[:, 0], color=shap_values[:, 1], show=False)
+        print(ax.get_xlabel())
+  what_comes_out:
+    items:
+      - {name: ax, kind: return, task: null, shape: "matplotlib Axes", note: "Axes the scatter is drawn on."}
+    next_step: "Compare with the partial dependence plot for this feature."
+    visual: null
+  catch_outs:
+    - "Pass one feature column, not the whole Explanation."
+    - "x_jitter adds random noise to aid readability."
+  key_settings:
+    tier1:
+      - {name: color, page: null}
+      - {name: x_jitter, page: null}
+      - {name: hist, page: null}
+    tier2:
+      - {name: alpha, page: null}
+      - {name: xmin, page: null}
+      - {name: xmax, page: null}
+      - {name: ymin, page: null}
+      - {name: ymax, page: null}
+    tier3:
+      - {name: title, page: null}
+      - {name: axis_color, page: null}
+      - {name: overlay, page: null}
+  watch_it_work: {none: true}
+  intuition: {text: "Plot a feature's value against its push, coloured by another feature."}
+  next: []

@@ -1,0 +1,69 @@
+id: samplingexplainer
+plain_name: SamplingExplainer
+code_name: SamplingExplainer
+aliases: [sampling shap, shapley sampling]
+stage: interpret
+family: interpret.explainer-any
+tracks: [standard]
+archetype: diagnostic
+question_tags: [black box shap, any model shap]
+targets: [shap.SamplingExplainer]
+pairs_with: []
+clashes: []
+source_urls: ['https://shap.readthedocs.io/en/latest/generated/shap.SamplingExplainer.html']
+library_versions: {shap: 0.54.1}
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: ames, chart: SHAP values for a few rows}
+    line: Estimates SHAP values for any model by sampling.
+  quick_facts:
+    facts:
+      - {label: Model, value: any function}
+      - {label: Background, value: a sample of rows}
+  use_avoid:
+    use_when: [any model, an estimate is enough]
+    avoid_when: [tree models, need exact values]
+  prep: []
+  code:
+    - library: shap
+      target: shap.SamplingExplainer
+      why_this_library: Works with any model function.
+      snippet: |
+        # shap 0.54.1
+        import numpy as np
+        import shap
+        from sklearn.datasets import make_regression
+        from sklearn.linear_model import LinearRegression
+
+        X, y = make_regression(n_samples=200, n_features=4, noise=10, random_state=0)
+        model = LinearRegression().fit(X, y)
+
+        explainer = shap.SamplingExplainer(model.predict, X[:100])
+        np.random.seed(0)
+        shap_values = explainer.shap_values(X[:5])
+        print(shap_values.shape)
+        print(shap_values.round(2))
+  what_comes_out:
+    items:
+      - {name: shap_values, kind: method, task: null, shape: "(n_rows, n_features)", note: "Estimated SHAP values, one per row and feature."}
+    next_step: Plot them with shap-bar or shap-beeswarm.
+    visual: null
+  catch_outs:
+    - Results change between runs unless numpy is seeded.
+    - An estimate, not exact values.
+  key_settings:
+    tier1:
+      - {name: data, page: null}
+      - {name: model, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: Average each feature's effect over random orderings of the others.}
+  next: []

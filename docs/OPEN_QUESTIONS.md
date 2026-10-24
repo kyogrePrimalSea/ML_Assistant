@@ -105,6 +105,12 @@ with the source URL. Wording is not rewritten silently.
   of the page, so one error per page stays until the map changes (split the page, or re-label one
   entry). The records are written as `metric` and cover both targets; nothing in the map was
   altered. Also: the taxonomy `shown_as` for `auc` is "auc"; the record uses "AUC".
+- **`key_settings` accepts constructor parameters only (E05).** The validator checks every
+  `key_settings` name against the target's parameters, so settings that belong to a method or a
+  helper call (for example `from_estimator` arguments on a Display class, or `shap_values`
+  options on an explainer) were dropped from those pages. Decide whether such settings should be
+  allowed (for example by naming the method in the entry) or stay out. The validator was not
+  changed.
 - **`optuna.visualization` plot pages and two Optuna samplers cannot run in `.venv` (E05).**
   `plotly` is not pinned or installed, so every `plot-*` snippet fails with ImportError after
   its study-level lines (those lines were run). `plot-terminator-improvement` also needs

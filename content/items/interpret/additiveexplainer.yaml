@@ -1,0 +1,74 @@
+id: additiveexplainer
+plain_name: AdditiveExplainer
+code_name: AdditiveExplainer
+aliases: [additive shap, additive model shap]
+stage: interpret
+family: interpret.explainer-fast
+tracks: [standard]
+archetype: diagnostic
+question_tags: [additive model, fast shap]
+targets: [shap.AdditiveExplainer]
+pairs_with: []
+clashes: []
+source_urls: ['https://shap.readthedocs.io/en/latest/generated/shap.AdditiveExplainer.html']
+library_versions: {shap: 0.54.1}
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: ames, chart: SHAP values for a linear model}
+    line: Gives SHAP values for additive models, without interactions.
+  quick_facts:
+    facts:
+      - {label: Model type, value: additive}
+      - {label: Masker, value: required}
+  use_avoid:
+    use_when: [additive model, fast SHAP values]
+    avoid_when: [feature interactions, tree models]
+  prep: []
+  code:
+    - library: shap
+      target: shap.AdditiveExplainer
+      why_this_library: Needs a masker built from the data.
+      snippet: |
+        # shap 0.54.1
+        import numpy as np
+        import shap
+        from sklearn.datasets import make_regression
+        from sklearn.linear_model import LinearRegression
+
+        np.set_printoptions(precision=2, suppress=True)
+
+        X, y = make_regression(n_samples=200, n_features=4, noise=10, random_state=0)
+        model = LinearRegression().fit(X, y)
+
+        masker = shap.maskers.Independent(X[:100])
+        explainer = shap.AdditiveExplainer(model.predict, masker)
+        shap_values = explainer(X[:5])
+        print(shap_values.values.round(2))
+  what_comes_out:
+    items:
+      - {name: Explanation, kind: return, task: null, shape: "(n_rows, n_features)", note: Returned when the explainer is called on rows.}
+    next_step: Plot it with shap-bar or shap-beeswarm.
+    visual: null
+  catch_outs:
+    - Needs a masker, or the explainer cannot be built.
+    - Assumes no interactions between features.
+    - Masker data over 100 rows is subsampled to 100.
+  key_settings:
+    tier1:
+      - {name: masker, page: null}
+      - {name: model, page: null}
+      - {name: link, page: null}
+      - {name: feature_names, page: null}
+    tier2:
+      - {name: linearize_link, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: Each feature's effect is added up to make the prediction.}
+  next: []

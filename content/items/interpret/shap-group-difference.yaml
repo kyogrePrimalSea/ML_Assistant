@@ -1,0 +1,77 @@
+id: shap-group-difference
+plain_name: SHAP group difference
+code_name: group_difference
+aliases: [group gap, mean SHAP gap]
+stage: interpret
+family: interpret.monitor
+tracks: [standard]
+archetype: diagnostic
+question_tags: [do groups differ, why groups differ]
+targets: [shap.plots.group_difference]
+pairs_with: []
+clashes: []
+source_urls: ['https://shap.readthedocs.io/en/latest/generated/shap.plots.group_difference.html']
+library_versions: {shap: 0.54.1}
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: ames, chart: mean SHAP difference per feature between two groups}
+    line: Shows which features drive predictions differently in two groups.
+  quick_facts:
+    facts:
+      - {label: Groups, value: "two, set by a boolean mask"}
+      - {label: Shows, value: mean SHAP gap}
+  use_avoid:
+    use_when: [comparing two groups, spotting group-specific drivers]
+    avoid_when: [more than two groups, one group only]
+  prep:
+    - {step: {page: explainer}, status: required, why: Needs SHAP values from an explainer, condition: null, unless: null}
+  code:
+    - library: shap
+      target: shap.plots.group_difference
+      why_this_library: Compares mean SHAP values across two groups.
+      snippet: |
+        # shap 0.54.1
+        import shap
+        from sklearn.datasets import load_diabetes
+        from sklearn.ensemble import RandomForestRegressor
+
+        X, y = load_diabetes(return_X_y=True, as_frame=True)
+        model = RandomForestRegressor(n_estimators=50, random_state=0).fit(X, y)
+
+        explainer = shap.TreeExplainer(model)
+        shap_values = explainer(X)
+        high_bmi = (X["bmi"] > X["bmi"].median()).values
+        shap.plots.group_difference(
+            shap_values.values, high_bmi, feature_names=X.columns, show=False,
+        )
+        diff = shap_values.values[high_bmi].mean(0)
+        diff = diff - shap_values.values[~high_bmi].mean(0)
+        print(diff.round(1))
+  what_comes_out: {none: true}
+  catch_outs:
+    - True in the mask is the first group.
+    - No significance test; a gap is not proof of a real difference.
+  key_settings:
+    tier1:
+      - {name: shap_values, page: null}
+      - {name: group_mask, page: null}
+      - {name: feature_names, page: null}
+      - {name: xlabel, page: null}
+    tier2:
+      - {name: xmin, page: null}
+      - {name: xmax, page: null}
+      - {name: max_display, page: null}
+      - {name: sort, page: null}
+    tier3:
+      - {name: show, page: null}
+      - {name: ax, page: null}
+  watch_it_work: {none: true}
+  intuition: {text: Compare the average push in one group against the other.}
+  next: []

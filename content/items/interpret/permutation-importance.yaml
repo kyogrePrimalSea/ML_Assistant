@@ -1,0 +1,76 @@
+id: permutation-importance
+plain_name: permutation_importance
+code_name: permutation_importance
+aliases: [permutation importance, shuffle importance]
+stage: interpret
+family: interpret.global
+tracks: [standard]
+archetype: diagnostic
+question_tags: [which features matter, black box importance]
+targets: [sklearn.inspection.permutation_importance]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.inspection.permutation_importance.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: ames, chart: score drop per shuffled feature}
+    line: Shows how much the score drops when each feature is shuffled.
+  quick_facts:
+    facts:
+      - {label: Score, value: drop when shuffled}
+      - {label: Repeats, value: 5 by default}
+  use_avoid:
+    use_when: [any fitted model, which features matter]
+    avoid_when: [correlated features, causal claims]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.inspection.permutation_importance
+      why_this_library: Works with any fitted model.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import make_regression
+        from sklearn.ensemble import RandomForestRegressor
+        from sklearn.inspection import permutation_importance
+        from sklearn.model_selection import train_test_split
+
+        X, y = make_regression(n_samples=300, n_features=5, n_informative=3,
+                               noise=20, random_state=0)
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, random_state=0)
+        model = RandomForestRegressor(n_estimators=50, random_state=0)
+        model.fit(X_train, y_train)
+
+        result = permutation_importance(
+            model, X_test, y_test, n_repeats=10, random_state=0
+        )
+        print(result.importances_mean.round(2))
+  what_comes_out:
+    items:
+      - {name: result, kind: return, task: null, shape: Bunch of arrays, note: Holds importances_mean and importances_std.}
+    next_step: Cross-check correlated features with a second method.
+    visual: null
+  catch_outs:
+    - Correlated features can understate each other's importance.
+    - Scores on training data can overstate importance.
+    - Random seed changes results unless random_state is set.
+  key_settings:
+    tier1:
+      - {name: scoring, page: null}
+      - {name: max_samples, page: null}
+      - {name: estimator, page: null}
+      - {name: sample_weight, page: null}
+    tier2:
+      - {name: n_repeats, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: Shuffle one column and see how much the score falls.}
+  next: [but-correlated-importance]

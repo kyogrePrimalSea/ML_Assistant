@@ -1,0 +1,71 @@
+id: shap-monitoring
+plain_name: SHAP monitoring
+code_name: monitoring
+aliases: [impact drift, drift over time]
+stage: interpret
+family: interpret.monitor
+tracks: [standard]
+archetype: diagnostic
+question_tags: [does impact drift, feature over time]
+targets: [shap.plots.monitoring]
+pairs_with: []
+clashes: []
+source_urls: ['https://shap.readthedocs.io/en/latest/generated/shap.plots.monitoring.html']
+library_versions: {shap: 0.54.1}
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: airline-passengers, chart: one feature's SHAP values in row order}
+    line: Tracks one feature's impact across rows, in the order given.
+  quick_facts:
+    facts:
+      - {label: Feature, value: chosen by index}
+      - {label: Row order, value: as given}
+  use_avoid:
+    use_when: [checking impact drift, watching one feature over time]
+    avoid_when: [rows have no order, all features at once]
+  prep:
+    - {step: {page: explainer}, status: required, why: Needs SHAP values from an explainer, condition: null, unless: null}
+  code:
+    - library: shap
+      target: shap.plots.monitoring
+      why_this_library: Plots one feature's SHAP values across rows.
+      snippet: |
+        # shap 0.54.1
+        import numpy as np
+        import shap
+        from sklearn.datasets import load_diabetes
+        from sklearn.ensemble import RandomForestRegressor
+
+        X, y = load_diabetes(return_X_y=True, as_frame=True)
+        model = RandomForestRegressor(n_estimators=50, random_state=0).fit(X, y)
+
+        explainer = shap.TreeExplainer(model)
+        shap_values = explainer(X).values
+        shap.plots.monitoring(2, shap_values, X.values, feature_names=X.columns,
+                              show=False)
+        half = len(X) // 2
+        print(np.abs(shap_values[:half, 2]).mean().round(2),
+              np.abs(shap_values[half:, 2]).mean().round(2))
+  what_comes_out: {none: true}
+  catch_outs:
+    - Rows are plotted in the order you pass them.
+    - Shows one feature at a time; pass its index as ind.
+  key_settings:
+    tier1:
+      - {name: features, page: null}
+      - {name: shap_values, page: null}
+      - {name: feature_names, page: null}
+      - {name: ind, page: null}
+    tier2:
+      - {name: show, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Watch one feature's impact across rows, looking for a shift."}
+  next: []

@@ -1,0 +1,80 @@
+id: shap-violin
+plain_name: SHAP violin
+code_name: violin
+aliases: [beeswarm density, impact violin]
+stage: interpret
+family: interpret.global
+tracks: [standard]
+archetype: diagnostic
+question_tags: [spread of impacts, how a feature pushes]
+targets: [shap.plots.violin]
+pairs_with: []
+clashes: []
+source_urls: ['https://shap.readthedocs.io/en/latest/generated/shap.plots.violin.html']
+library_versions: {shap: 0.54.1}
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: ames, chart: SHAP values per feature as density shapes}
+    line: Shows each feature's impact as a density shape.
+  quick_facts:
+    facts:
+      - {label: Features shown, value: 20 by default}
+      - {label: Colour by, value: feature value}
+  use_avoid:
+    use_when: [spread of impacts per feature, many rows per feature]
+    avoid_when: [one row only, exact per-row values]
+  prep:
+    - {step: {page: explainer}, status: required, why: Needs SHAP values from an explainer, condition: null, unless: null}
+  code:
+    - library: shap
+      target: shap.plots.violin
+      why_this_library: Density view of SHAP values for each feature.
+      snippet: |
+        # shap 0.54.1
+        import shap
+        from sklearn.datasets import load_diabetes
+        from sklearn.ensemble import RandomForestRegressor
+
+        X, y = load_diabetes(return_X_y=True, as_frame=True)
+        model = RandomForestRegressor(n_estimators=50, random_state=0).fit(X, y)
+
+        explainer = shap.TreeExplainer(model)
+        shap_values = explainer(X.iloc[:100])
+        shap.plots.violin(shap_values.values, features=X.iloc[:100], show=False)
+        print(shap_values.abs.mean(0).values.round(1))
+  what_comes_out:
+    items:
+      - {name: ax, kind: return, task: null, shape: matplotlib Axes, note: Axes the violin plot is drawn on}
+    next_step: null
+    visual: null
+  catch_outs:
+    - Features are sorted by total impact by default.
+    - Colour is drawn only when feature values are given.
+  key_settings:
+    tier1:
+      - {name: plot_size, page: null}
+      - {name: plot_type, page: null}
+      - {name: show, page: null}
+      - {name: features, page: null}
+    tier2:
+      - {name: shap_values, page: null}
+      - {name: color, page: null}
+      - {name: ax, page: null}
+      - {name: sort, page: null}
+    tier3:
+      - {name: max_display, page: null}
+      - {name: cmap, page: null}
+      - {name: use_log_scale, page: null}
+      - {name: color_bar_label_size, page: null}
+      - {name: color_bar_tick_size, page: null}
+      - {name: layered_violin_max_num_bins, page: null}
+  watch_it_work: {none: true}
+  intuition: {text: "Each feature becomes a cloud of impacts, drawn as a density."}
+  next: []

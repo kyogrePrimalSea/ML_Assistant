@@ -1,0 +1,77 @@
+id: decisionboundarydisplay
+plain_name: DecisionBoundaryDisplay
+code_name: DecisionBoundaryDisplay
+aliases: [decision regions, decision surface, class boundary]
+stage: interpret
+family: interpret.boundary
+tracks: [standard]
+archetype: diagnostic
+question_tags: [where the classes split, two features, see the regions]
+targets: [sklearn.inspection.DecisionBoundaryDisplay]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.inspection.DecisionBoundaryDisplay.html']
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: breast-cancer, chart: class regions over two features}
+    line: Shows where the model switches class across two features.
+  quick_facts:
+    facts:
+      - {label: "Features", value: "Two"}
+      - {label: "Default grid", value: "100 points"}
+      - {label: "Default response", value: "auto"}
+  use_avoid:
+    use_when: [see class regions, two features at once]
+    avoid_when: [more than two features, regression task]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.inspection.DecisionBoundaryDisplay
+      why_this_library: "Draws regions for any fitted classifier in one call."
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import make_classification
+        from sklearn.inspection import DecisionBoundaryDisplay
+        from sklearn.linear_model import LogisticRegression
+
+        X, y = make_classification(
+            n_samples=200, n_features=2, n_informative=2, n_redundant=0,
+            random_state=0,
+        )
+        model = LogisticRegression().fit(X, y)
+
+        display = DecisionBoundaryDisplay.from_estimator(
+            model, X, xlabel="feature 0", ylabel="feature 1"
+        )
+        print(type(display.surface_).__name__)
+  what_comes_out:
+    items:
+      - {name: from_estimator, kind: method, task: classification, shape: "DecisionBoundaryDisplay", note: "Draws the regions and returns the display."}
+      - {name: plot, kind: method, task: classification, shape: "DecisionBoundaryDisplay", note: "Redraws the regions and returns the display."}
+      - {name: surface_, kind: attribute, task: null, shape: "contour set", note: "The drawn region surface."}
+      - {name: figure_, kind: attribute, task: null, shape: "matplotlib Figure", note: "Figure the regions are drawn on."}
+      - {name: ax_, kind: attribute, task: null, shape: "matplotlib Axes", note: "Axes to add points or labels to."}
+    next_step: "Overlay the training points on ax_ to check the fit."
+    visual: null
+  catch_outs:
+    - "Needs exactly two features in X."
+    - "response_method picks which model output is drawn."
+  key_settings:
+    tier1:
+      - {name: multiclass_colors, page: null}
+    tier2:
+      - {name: xlabel, page: null}
+      - {name: ylabel, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Colour the plane by the class the model picks at each point."}
+  next: []

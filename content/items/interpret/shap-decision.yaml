@@ -1,0 +1,83 @@
+id: shap-decision
+plain_name: SHAP decision plot
+code_name: decision
+aliases: [cumulative SHAP plot, decision path plot]
+stage: interpret
+family: interpret.local
+tracks: [standard]
+archetype: diagnostic
+question_tags: [path to each prediction, many rows at once]
+targets: [shap.plots.decision]
+pairs_with: []
+clashes: []
+source_urls: ['https://shap.readthedocs.io/en/latest/generated/shap.plots.decision.html']
+library_versions: {shap: 0.54.1}
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: ames, chart: cumulative SHAP path from the base value per row}
+    line: Shows each row's path from the base value to its prediction.
+  quick_facts:
+    facts:
+      - {label: Starts at, value: base value}
+      - {label: Feature order, value: importance by default}
+  use_avoid:
+    use_when: [many rows at once, where predictions diverge]
+    avoid_when: [one row only, many overlapping lines]
+  prep:
+    - {step: {page: explainer}, status: required, why: Needs SHAP values from an explainer, condition: null, unless: null}
+  code:
+    - library: shap
+      target: shap.plots.decision
+      why_this_library: Draws many rows as cumulative SHAP paths.
+      snippet: |
+        # shap 0.54.1
+        import shap
+        from sklearn.datasets import load_diabetes
+        from sklearn.ensemble import RandomForestRegressor
+
+        X, y = load_diabetes(return_X_y=True, as_frame=True)
+        model = RandomForestRegressor(n_estimators=50, random_state=0).fit(X, y)
+
+        explainer = shap.TreeExplainer(model)
+        shap_values = explainer(X.iloc[:50])
+        result = shap.plots.decision(
+            explainer.expected_value, shap_values.values, X.iloc[:50],
+            return_objects=True, show=False,
+        )
+        print(type(result).__name__, len(result.feature_idx))
+  what_comes_out:
+    items:
+      - {name: DecisionPlotResult, kind: return, task: null, shape: object or None, note: Only returned when return_objects is True}
+    next_step: null
+    visual: null
+  catch_outs:
+    - Many rows or features can be slow to draw.
+    - Returns an object only when return_objects is True.
+  key_settings:
+    tier1:
+      - {name: feature_display_range, page: null}
+      - {name: xlim, page: null}
+      - {name: new_base_value, page: null}
+      - {name: shap_values, page: null}
+    tier2:
+      - {name: ignore_warnings, page: null}
+      - {name: return_objects, page: null}
+      - {name: feature_names, page: null}
+      - {name: show, page: null}
+    tier3:
+      - {name: auto_size_plot, page: null}
+      - {name: legend_location, page: null}
+      - {name: highlight, page: null}
+      - {name: features, page: null}
+      - {name: link, page: null}
+      - {name: base_value, page: null}
+  watch_it_work: {none: true}
+  intuition: {text: Draw each row as a line from the base value to its prediction.}
+  next: []
