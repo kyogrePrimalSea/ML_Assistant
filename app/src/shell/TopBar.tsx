@@ -9,11 +9,10 @@ import {
   IconTopologyStar3,
 } from '@tabler/icons-react'
 import { useIndex } from '@/content/load'
-import type { TrackId } from '@/content/types'
 import { Button } from '@/components/ui/button'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { useTheme, type ThemePreference } from '@/lib/theme'
-import { useShellState, type ViewId } from './ShellState'
+import { useShellState, type LabelMode, type ViewId } from './ShellState'
 
 const VIEWS: { id: ViewId; label: string; Icon: typeof IconBinaryTree2 }[] = [
   { id: 'tree', label: 'Tree', Icon: IconBinaryTree2 },
@@ -31,36 +30,51 @@ const isMac = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigat
 
 export function TopBar({ onSearch, onSettings }: { onSearch: () => void; onSettings: () => void }) {
   const { data } = useIndex()
-  const { track, setTrack, view, setView } = useShellState()
+  const { goal, setGoal, labels, setLabels, view, setView } = useShellState()
   const { preference, setTheme } = useTheme()
 
   return (
     <header className="flex h-16 shrink-0 items-center gap-3 overflow-x-auto border-b border-border bg-surface-1 px-4">
       <h1 className="mr-1 shrink-0 text-lg whitespace-nowrap">ML Field Guide</h1>
 
-      <Button variant="outline" onClick={onSearch} className="w-36 min-w-0 justify-between px-3 text-text-muted min-[1200px]:w-44">
+      <Button variant="outline" onClick={onSearch} title="Search" className="w-10 min-w-0 shrink-0 justify-center px-0 text-text-muted min-[1200px]:w-40 min-[1200px]:justify-between min-[1200px]:px-3">
         <span className="flex items-center gap-2">
-          <IconSearch aria-hidden /> Search
+          <IconSearch aria-hidden /> <span className="sr-only min-[1200px]:not-sr-only">Search</span>
         </span>
         <kbd className="hidden rounded-sm min-[1200px]:inline border border-border px-1.5 text-xs">{isMac ? '⌘K' : 'Ctrl K'}</kbd>
       </Button>
 
-      <label className="flex items-center gap-2 text-sm text-text-muted">
-        <span className="sr-only">Track</span>
+      <label className="flex shrink-0 items-center gap-2 text-sm text-text-muted">
+        <span className="sr-only min-[1200px]:not-sr-only min-[1200px]:whitespace-nowrap">What are we trying to do?</span>
         <select
-          value={track}
-          onChange={(e) => setTrack(e.target.value as TrackId)}
-          aria-label="Track"
-          className="h-10 rounded-md border border-border-strong bg-surface-1 px-3 text-sm font-bold text-text"
+          value={goal}
+          onChange={(e) => setGoal(e.target.value)}
+          aria-label="What are we trying to do?"
+          className="h-10 w-[13.5rem] rounded-md border border-border-strong bg-surface-1 px-2 text-sm font-bold text-text"
         >
-          {(data?.vocab.tracks ?? [{ id: 'standard', name: 'Standard (supervised)', wave: 1 }]).map((t) => (
-            <option key={t.id} value={t.id} disabled={t.wave === 'later'}>
-              {t.name}
-              {t.wave === 'later' ? ' (later)' : ''}
+          {(data?.taxonomy?.goals ?? [{ id: goal, names_label: 'Standard · Regression', question_label: 'Predict a number' }]).map((g) => (
+            <option key={g.id} value={g.id}>
+              {labels === 'questions' ? g.question_label : g.names_label}
             </option>
           ))}
         </select>
       </label>
+
+      <ToggleGroup
+        type="single"
+        variant="outline"
+        value={labels}
+        onValueChange={(v) => v && setLabels(v as LabelMode)}
+        aria-label="Labels"
+        className="shrink-0"
+      >
+        <ToggleGroupItem value="names" aria-label="Names" className="h-10 px-2.5 min-[1200px]:px-3">
+          Names
+        </ToggleGroupItem>
+        <ToggleGroupItem value="questions" aria-label="Questions" className="h-10 px-2.5 min-[1200px]:px-3">
+          Questions
+        </ToggleGroupItem>
+      </ToggleGroup>
 
       <div className="flex-1" />
 

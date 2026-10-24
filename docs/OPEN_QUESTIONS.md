@@ -110,3 +110,33 @@ with the source URL. Wording is not rewritten silently.
   https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.shapiro.html
   Suggested note: "catch-out: p-value unreliable above 5,000 rows; with big samples every
   test says 'not normal'; plot it too" (too long, 19 words; needs trimming). Keep as is or change?
+
+### From T039 (goal selector, Questions mode, fanned tree)
+
+Working defaults; each stands until you confirm or change it.
+
+- **"Show as list" link.** `Tree | List` left the top bar. The tree canvas has a "Show as list"
+  button in its top-left corner (and "Show as tree" in the list), as the keyboard and
+  screen-reader fallback. It swaps the view; it does not remember the choice.
+- **Centre fallback "Which one fits?"** When an open node has no `question_prompt` (every
+  family and several groups have none), the centre shows "Which one fits?". At the root it
+  shows `root.question_prompt` ("Where are we in the work?").
+- **Pan and edge indicators.** Text never scales below 0.85 (about 13px), so a fan wider than the
+  canvas is reached by panning: drag, wheel or trackpad. A node that gets keyboard focus or is
+  selected is panned fully into view. Opening a branch frames the open node and as many
+  children as fit, centred on the children's arc. A pill with an arrow and "N more" appears on
+  any canvas side where children of the open node are cut off; clicking it pans there. No wheel
+  zoom, no zoom buttons.
+- **Connection lines keep an overview camera.** With "Show connections" on, the whole ring has
+  to stay in view for the lines to make sense, so the camera may scale down to 0.25 there (text
+  below 13px). The page panel lists the same connections as text. Keep this, or pan instead?
+- **Breadcrumb has no goal prefix.** It lists the opened nodes only ("Predict the number › Get
+  strong accuracy on tables › Get the best accuracy we can › XGBoost"); the goal is in the top
+  bar. The brief's example began with the goal's label, which repeats the Model stage's label.
+- **Accessible names start with the visible label.** "Get the best accuracy we can. We need the
+  best accuracy, and we can spend time tuning." (label, then the full `question_sentence`),
+  because WCAG label-in-name (axe `label-content-name-mismatch`) needs the visible text inside
+  the name. Pages read "XGBoost, model. Top accuracy on tabular data".
+- **The Names | Questions toggle sits in the top bar** next to the goal selector (spec 7.4),
+  not in the canvas. The goal selector's visible prompt shows from 1200px wide; below that it is
+  the accessible name only.

@@ -1,8 +1,6 @@
-/* Radial tree (spec 7.1, 10.6, 10.7). Nodes and labels keep a fixed screen size: --rt-ix and --rt-iy are 1/zoom. */
-.rt-svg { user-select: none; }
-.rt-glyph { transform: scale(var(--rt-ix, 1), var(--rt-iy, 1)); }
-.rt-dim { opacity: 0; transition: opacity var(--dur-hover) var(--ease); }
-.rt-node:hover .rt-dim, .rt-node:focus-visible .rt-dim { opacity: 1; }
+/* Radial tree (spec 7.1, 10.6, 10.7). Positions come from the stored layout; the camera is a transform on .rt-cam. */
+.rt-svg { user-select: none; touch-action: none; cursor: grab; }
+.rt-svg[data-dragging] { cursor: grabbing; }
 .rt-label {
   fill: var(--text);
   font-family: var(--font-body);
@@ -11,21 +9,36 @@
   stroke-width: 5px;
   stroke-linejoin: round;
 }
-.rt-label-muted { fill: var(--text-muted); }
+.rt-label-muted, .rt-count { fill: var(--text-muted); }
 .rt-node { cursor: pointer; outline: none; }
 .rt-node .rt-disc { fill: var(--surface-1); transition: fill var(--dur-hover) var(--ease); }
 .rt-node:hover .rt-disc { fill: var(--surface-2); }
 .rt-node[aria-expanded="true"] .rt-disc { fill: color-mix(in srgb, var(--rt-stage) 22%, var(--surface-1)); }
 .rt-node[data-active="true"] .rt-disc { fill: color-mix(in srgb, var(--accent) 30%, var(--surface-1)); }
+/* Other stages are dimmed, never hidden: muted label, ring and icon at 78% (3:1 or better on the canvas in both themes). */
+.rt-node[data-dim] .rt-disc { stroke-opacity: 0.78; }
+.rt-node[data-dim] .rt-icon { opacity: 0.78; }
 .rt-focus { fill: none; stroke: var(--accent-strong); stroke-width: 3; opacity: 0; }
 .rt-node:focus-visible .rt-focus { opacity: 1; }
-.rt-node:focus-visible .rt-glyph { filter: drop-shadow(0 0 6px color-mix(in srgb, var(--accent) 60%, transparent)); }
 .rt-link { fill: none; stroke: var(--border-strong); stroke-width: 1.25; vector-effect: non-scaling-stroke; }
 .rt-link-hot { stroke: var(--rt-stage); stroke-width: 1.75; opacity: 0.85; }
 .rt-fade { animation: rt-fade var(--dur-panel) var(--ease) both; }
 @keyframes rt-fade { from { opacity: 0; } to { opacity: 1; } }
-/* While connection lines show, the tree steps back so the lines and their endpoint labels read first. */
-.rt-svg[data-conn] .rt-node:not([data-end]) .rt-label:not(.rt-dim) { opacity: 0.4; }
-/* The camera moves the whole world; labels scale with it (interim adapter, T038). */
-.rt-cam { transition: transform 600ms var(--ease); }
-@media (prefers-reduced-motion: reduce) { .rt-cam { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .rt-fade { animation: none; } }
+/* While connection lines show, the tree steps back so the lines and their endpoint labels read first
+   (the pick_when lines are left out; the page panel lists the connections). */
+.rt-svg[data-conn] .rt-node:not([data-end]) .rt-label, .rt-svg[data-conn] [data-extra-for]:not([data-end]) .rt-label { opacity: 0.4; }
+
+/* Canvas corner link and edge indicators. */
+.rt-switch, .rt-more {
+  display: inline-flex; align-items: center; gap: 0.5rem; min-height: 2.5rem; padding: 0 0.75rem;
+  border: 1px solid var(--border-strong); border-radius: 6px; background: var(--surface-1); color: var(--text);
+  font-size: 0.875rem; font-weight: 700; cursor: pointer;
+}
+.rt-switch:hover, .rt-more:hover { background: var(--surface-2); }
+.rt-switch:focus-visible, .rt-more:focus-visible { outline: 3px solid var(--accent-strong); outline-offset: 2px; }
+.rt-more { position: absolute; z-index: 10; border-color: var(--accent); }
+.rt-more-left { left: 0.5rem; top: 50%; transform: translateY(-50%); }
+.rt-more-right { right: 0.5rem; top: 50%; transform: translateY(-50%); }
+.rt-more-top { top: 4.25rem; left: 50%; transform: translateX(-50%); }
+.rt-more-bottom { bottom: 4.25rem; left: 50%; transform: translateX(-50%); }

@@ -170,8 +170,23 @@ to functions. Missing sections are empty lists, never omitted.
   - Label boxes are estimated from text length (`METRICS`) for both Names and Questions; the larger is stored
     (`w`, `h`, centre offset `dx`, `dy`).
   - `fits[id]` frames the tail of the open path (its stage, its parent, itself and its children). `fits.root`
-    frames the whole ring. The camera scales the box to the canvas but never below 0.85 for an open path
-    (13px text); far-side stages may be off-screen when deep. Scales reached are in the T038 run log.
+    frames the whole ring. Scales reached are in the T038 run log.
+  - Camera and rendering (T039; `app/src/views/camera.ts`, `RadialTree.tsx`): the camera is `screen = world * k + (x, y)`
+    on one `<g class="rt-cam">`, moved imperatively (GSAP flights of 600 to 900ms on `cubic-bezier(0.22, 1, 0.36, 1)`,
+    jumps with reduced motion; a drag or wheel pan cancels a flight). k is the stored fit box scaled to the canvas,
+    kept in 0.85 to 1.2, so text never drops below about 13px. Where the box is still larger than the canvas, the
+    camera frames the open node and as many children as fit, centred on the children's arc (`frameTail`); the rest is
+    reached by drag, wheel or trackpad panning (clamped to stay near the shown nodes), by keyboard focus or selection
+    (`reveal`: the least pan that puts the whole label inside the canvas) and by edge indicators ("N more", one per
+    canvas side where children of the open node are cut off; a click pans toward them). A canvas resize (the page panel
+    opening) refits as a jump unless the view was panned by hand. With connection lines on, k may go down to 0.25 so the
+    whole ring and the line endpoints stay in view. Labels are drawn with `wrapText` and `METRICS` from the layout, so
+    they fit the stored boxes in both label sets; counts, `pick_when` lines and the "Not used for this goal" note are drawn
+    beside the tree items (`[data-extra-for]`), so an item's visible text is exactly its label. Dimmed stages keep their
+    labels in `--text-muted`, with ring and icon at 78% opacity (3:1 or better on the canvas in both themes, tested in
+    `dimming.test.ts`).
+  - The goal selector, the Names | Questions toggle (`mlfg.labels` in localStorage, read and written in try/catch) and
+    the derived `track` and `task` live in `ShellState`.
   - Invariants are tested in `app/src/content/layout-radial.test.ts`.
 - Tests: Vitest + Testing Library (unit/component); Playwright + axe for
   end-to-end, screenshots (1440 and 1024 wide, light and dark) and accessibility.

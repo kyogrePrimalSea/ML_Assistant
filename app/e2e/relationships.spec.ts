@@ -49,12 +49,16 @@ async function labelBoxes(page: import('@playwright/test').Page) {
     const svg = document.querySelector('svg.rt-svg')
     const c = svg.getBoundingClientRect()
     const out = []
-    for (const el of svg.querySelectorAll('text')) {
-      const t = el.textContent.trim()
-      if (!t || Number(getComputedStyle(el).opacity) < 0.05) continue
-      const b = el.getBoundingClientRect()
-      if (b.width === 0) continue
-      out.push({ t, x1: b.left - c.left, y1: b.top - c.top, x2: b.right - c.left, y2: b.bottom - c.top })
+    for (const text of svg.querySelectorAll('text')) {
+      if (Number(getComputedStyle(text).opacity) < 0.05) continue
+      // One box per wrapped line (a tspan), so a count beside a short last line is not "overlapping" its name.
+      const lines = text.querySelectorAll(':scope > tspan')
+      for (const el of lines.length ? lines : [text]) {
+        const t = el.textContent.trim()
+        const b = el.getBoundingClientRect()
+        if (!t || b.width === 0) continue
+        out.push({ t, x1: b.left - c.left, y1: b.top - c.top, x2: b.right - c.left, y2: b.bottom - c.top })
+      }
     }
     const lg = document.querySelector('[aria-label="Line legend"]')
     if (lg) {
@@ -90,7 +94,7 @@ for (const theme of ['Light', 'Dark']) {
     const w = page.viewportSize()!.width
     await page.goto('./#/')
     await page.getByRole('radio', { name: theme }).click()
-    await page.getByRole('treeitem', { name: /^Model stage/ }).click()
+    await page.locator('[data-key="model"]').click()
     await page.waitForTimeout(1200)
     await page.screenshot({ path: shot(`legible-${w}-${theme}-a`) })
     await expectLegible(page)

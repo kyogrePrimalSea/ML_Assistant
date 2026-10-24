@@ -537,7 +537,7 @@
     "T039": {
       "title": "Goal selector, Names | Questions toggle, fanned tree",
       "file": "tasks/T039-goal-selector-and-questions-mode.md",
-      "status": "In Progress",
+      "status": "Done",
       "dependencies": [
         "T038"
       ],
@@ -546,7 +546,7 @@
     "T040": {
       "title": "Search across both label sets and symptom questions",
       "file": "tasks/T040-search-both-label-sets.md",
-      "status": "Backlog",
+      "status": "In Progress",
       "dependencies": [
         "T036",
         "T039"
