@@ -1,5 +1,5 @@
 {
-  "current_sprint": "Sprint 3 (E12-E11)",
+  "current_sprint": null,
   "notes": [
     "Epic order follows spec \u00a713. E05-E10 can run in parallel once their dependencies are done, subject to write-scope conflicts. Tasks are created per epic by the architect skill.",
     "Sprint 1 parallelism: T002, T003, T004, T005 write disjoint files and may run together. T002 owns tests/test_inventory.py. T006, T007, T008 may run together (per-library outputs; overrides are per-item files).",
@@ -59,7 +59,7 @@
       "title": "Taxonomy and Questions mode",
       "goal": "content/taxonomy.yaml from docs/QUESTION_MAP.md, taxonomy validator, record migration to taxonomy family ids, per-goal stored layouts with the A5 fan, goal selector (A1), Names/Questions label toggle (A3), search on both label sets, the we_need_but stem. Fixes F1, F2.",
       "spec": "\u00a73.2-3.5, \u00a77.1, \u00a77.4 (A1, A2, A3, A5); docs/QUESTION_MAP.md",
-      "status": "In Progress",
+      "status": "Done",
       "dependencies": [
         "E04",
         "E12"
@@ -556,7 +556,7 @@
     "T041": {
       "title": "E11 acceptance and deploy",
       "file": "tasks/T041-e11-acceptance-and-deploy.md",
-      "status": "Backlog",
+      "status": "Done",
       "dependencies": [
         "T034",
         "T035",
