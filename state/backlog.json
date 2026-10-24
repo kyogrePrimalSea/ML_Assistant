@@ -1,5 +1,5 @@
 {
-  "current_sprint": null,
+  "current_sprint": "Sprint 4 (E05)",
   "notes": [
     "Epic order follows spec \u00a713. E05-E10 can run in parallel once their dependencies are done, subject to write-scope conflicts. Tasks are created per epic by the architect skill.",
     "Sprint 1 parallelism: T002, T003, T004, T005 write disjoint files and may run together. T002 owns tests/test_inventory.py. T006, T007, T008 may run together (per-library outputs; overrides are per-item files).",
@@ -7,7 +7,8 @@
     "Sprint 2: T015 installs every npm dependency so parallel tasks never touch package.json. T016+T017 parallel; T018+T019 parallel; T020 then T021 (coordinator pushes and checks the live deploy).",
     "E04 parallelism: after T021, T022 (content/), T023 (views/RadialTree + layout script), T025 (cutscenes/) run together; T024 after T023; T026 after T022. T023 and T024 both touch the tree view - sequential.",
     "Design review round 1 (2026-10-24, docs/BRIEF_DESIGN_REVIEW_1.md): order E12 -> E11 -> E08 -> E05 (by stage, user review between stages) -> E06, E09, E07, E10. E05 starts only after E11's taxonomy and validator are merged.",
-    "Sprint 3 parallelism: wave 1 T028, T031, T032 (E12) plus T034 (E11, new files only) run together. Then T029+T030 (after T028), T036+T037 (after T034). T035 after T029. T038 -> T039 -> T040 sequential (tree view)."
+    "Sprint 3 parallelism: wave 1 T028, T031, T032 (E12) plus T034 (E11, new files only) run together. Then T029+T030 (after T028), T036+T037 (after T034). T035 after T029. T038 -> T039 -> T040 sequential (tree view).",
+    "2026-10-24: the user asked to fill the remaining 323 pages now (E05 before E08), using a Sonnet coordinator subagent dispatching Haiku writers, token-efficient. Commits per stage; the user reviews stages afterwards."
   ],
   "epics": {
     "E01": {
@@ -79,7 +80,7 @@
       "title": "Content fill by stage",
       "goal": "Orchestrated parallel drafting of all Wave 1 pages from E01 extractions, stage by stage, with the reviewed flag and user batch review per stage. Drafted pages use taxonomy placement (content/taxonomy.yaml) and include the What comes out slot.",
       "spec": "\u00a75, \u00a76, \u00a713.4",
-      "status": "Backlog",
+      "status": "In Progress",
       "dependencies": [
         "E04",
         "E11",
@@ -171,6 +172,11 @@
       "T039",
       "T040",
       "T041"
+    ],
+    "Sprint 4 (E05)": [
+      "T042",
+      "T043",
+      "T044"
     ]
   },
   "tasks": {
@@ -567,6 +573,31 @@
         "T040"
       ],
       "epic": "E11"
+    },
+    "T042": {
+      "title": "Record scaffolder",
+      "file": "tasks/T042-record-scaffolder.md",
+      "status": "Ready",
+      "dependencies": [],
+      "epic": "E05"
+    },
+    "T043": {
+      "title": "Content fill, stage by stage (Haiku writer batches)",
+      "file": "tasks/T043-content-fill.md",
+      "status": "Backlog",
+      "dependencies": [
+        "T042"
+      ],
+      "epic": "E05"
+    },
+    "T044": {
+      "title": "E05 acceptance and deploy",
+      "file": "tasks/T044-e05-acceptance.md",
+      "status": "Backlog",
+      "dependencies": [
+        "T043"
+      ],
+      "epic": "E05"
     }
   }
 }

@@ -81,3 +81,4 @@
 {"event":"epic-complete","epic":"E11","ts":"2026-10-24"}
 {"event":"sprint-complete","sprint":"Sprint 3 (E12-E11)","ts":"2026-10-24"}
 {"event":"coordinator-fix","task":"T041","ts":"2026-10-24","note":"Deploy run 40078888756 failed: layout determinism unit test timed out at 5s on CI. Timeout raised to 60s; redeploy green."}
+{"event":"sprint-start","sprint":"Sprint 4 (E05)","ts":"2026-10-24","note":"Sonnet coordinator + Haiku writers; scaffolder pre-fills mechanical fields."}
