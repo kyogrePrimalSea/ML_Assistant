@@ -14,7 +14,7 @@ tracks: [standard]
 archetype: hyperparameter
 targets: []
 applies_to: [gradient-boosting, hist-gradient-boosting, xgboost, lightgbm]
-pairs_with: []
+pairs_with: [n-estimators, early-stopping]
 clashes: []
 library_versions:
   scikit-learn: "1.9.1"
@@ -55,7 +55,9 @@ slots:
         X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
 
         for lr in [0.01, 0.1, 0.5]:
-            model = GradientBoostingRegressor(learning_rate=lr, n_estimators=100, random_state=0)
+            model = GradientBoostingRegressor(
+                learning_rate=lr, n_estimators=100, random_state=0
+            )
             model.fit(X_train, y_train)
             print(lr, round(model.score(X_test, y_test), 3))
     - library: xgboost

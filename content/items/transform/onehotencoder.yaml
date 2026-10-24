@@ -52,7 +52,7 @@ slots:
 
         encoder = OneHotEncoder(handle_unknown="ignore", sparse_output=False)
         train_encoded = encoder.fit_transform(train)  # learn categories here
-        test_encoded = encoder.transform(test)        # unseen "Alley" becomes all zeros
+        test_encoded = encoder.transform(test)  # unseen "Alley" is all zeros
 
         print(encoder.get_feature_names_out())
         print(test_encoded)

@@ -447,7 +447,7 @@
     "T029": {
       "title": "E12 content: What comes out, hyperparameter prep and pairings, long lines",
       "file": "tasks/T029-e12-content.md",
-      "status": "In Progress",
+      "status": "Done",
       "dependencies": [
         "T028"
       ],
@@ -499,7 +499,7 @@
     "T035": {
       "title": "Taxonomy validator and record migration",
       "file": "tasks/T035-taxonomy-validator-and-migration.md",
-      "status": "Backlog",
+      "status": "In Progress",
       "dependencies": [
         "T034",
         "T029"

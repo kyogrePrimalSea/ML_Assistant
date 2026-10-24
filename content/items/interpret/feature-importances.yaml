@@ -46,7 +46,9 @@ slots:
         from sklearn.datasets import make_regression
         from sklearn.ensemble import RandomForestRegressor
 
-        X, y = make_regression(n_samples=300, n_features=5, n_informative=3, noise=20, random_state=0)
+        X, y = make_regression(
+            n_samples=300, n_features=5, n_informative=3, noise=20, random_state=0
+        )
 
         model = RandomForestRegressor(n_estimators=50, random_state=0).fit(X, y)
         print(model.feature_importances_.round(2))
@@ -58,7 +60,9 @@ slots:
         from sklearn.datasets import make_regression
         from xgboost import XGBRegressor
 
-        X, y = make_regression(n_samples=300, n_features=5, n_informative=3, noise=20, random_state=0)
+        X, y = make_regression(
+            n_samples=300, n_features=5, n_informative=3, noise=20, random_state=0
+        )
 
         model = XGBRegressor(n_estimators=50).fit(X, y)
         print(model.feature_importances_.round(2))

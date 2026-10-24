@@ -207,3 +207,163 @@ after Counter({np.int64(0): 897, np.int64(1): 897})
 ```text
 152
 ```
+
+## T029 re-runs (2026-10-24)
+
+Re-run after what_comes_out and long-line edits; each snippet alone, as pasted, in an empty directory (`python -I -W ignore`). All PASS.
+
+## xgboost / xgboost (T029)
+
+```text
+498
+```
+
+## xgboost / what comes out (xgboost) (T029)
+
+```text
+(143, 2)
+(143,)
+(442,)
+```
+
+## lightgbm / lightgbm (T029)
+
+```text
+300
+```
+
+## lightgbm / what comes out (lightgbm) (T029)
+
+```text
+(143, 2)
+(143,)
+(442,)
+```
+
+## hist-gradient-boosting / scikit-learn (T029)
+
+```text
+290
+0.8818508462404138
+```
+
+## hist-gradient-boosting / what comes out (scikit-learn) (T029)
+
+```text
+(143, 2)
+(143,)
+(442,)
+```
+
+## gradient-boosting / scikit-learn (T029)
+
+```text
+203
+0.8874156441098768
+```
+
+## gradient-boosting / what comes out (scikit-learn) (T029)
+
+```text
+(143, 2)
+(143,)
+(442,)
+```
+
+## n-estimators / scikit-learn (T029)
+
+```text
+50 50
+```
+
+## n-estimators / xgboost (T029)
+
+```text
+50
+```
+
+## n-estimators / lightgbm (T029)
+
+```text
+50
+```
+
+## early-stopping / scikit-learn (T029)
+
+```text
+334 237
+```
+
+## early-stopping / xgboost (T029)
+
+```text
+57
+```
+
+## early-stopping / lightgbm (T029)
+
+```text
+152
+```
+
+## learning-rate / scikit-learn (T029)
+
+```text
+0.01 0.438
+0.1 0.86
+0.5 0.79
+```
+
+## learning-rate / xgboost (T029)
+
+```text
+0.01 0.507
+0.1 0.801
+0.5 0.715
+```
+
+## learning-rate / lightgbm (T029)
+
+```text
+0.01 0.513
+0.1 0.883
+0.5 0.848
+```
+
+## max-depth / scikit-learn (T029)
+
+```text
+5
+```
+
+## max-depth / xgboost (T029)
+
+```text
+4
+```
+
+## max-depth / lightgbm (T029)
+
+```text
+5
+```
+
+## feature-importances / scikit-learn (T029)
+
+```text
+[0.03 0.03 0.03 0.04 0.88]
+```
+
+## feature-importances / xgboost (T029)
+
+```text
+[0.02 0.02 0.02 0.04 0.91]
+```
+
+## onehotencoder / scikit-learn (T029)
+
+```text
+['Street_Grvl' 'Street_Pave']
+[[0. 1.]
+ [0. 0.]]
+```

@@ -14,7 +14,7 @@ tracks: [standard]
 archetype: hyperparameter
 targets: []
 applies_to: [gradient-boosting, hist-gradient-boosting, xgboost, lightgbm]
-pairs_with: []
+pairs_with: [n-estimators, learning-rate]
 clashes: []
 library_versions:
   scikit-learn: "1.9.1"
@@ -42,8 +42,8 @@ slots:
     avoid_when: [no validation data, tiny data]
   prep:
     - step: {page: train-test-split}
-      status: recommended
-      why: Needs held-out rows to watch the score.
+      status: required
+      why: Early stopping needs a validation set to watch.
       condition: null
       unless: null
   code:
@@ -53,13 +53,20 @@ slots:
       snippet: |
         # scikit-learn 1.9.1
         from sklearn.datasets import make_regression
-        from sklearn.ensemble import GradientBoostingRegressor, HistGradientBoostingRegressor
+        from sklearn.ensemble import (
+            GradientBoostingRegressor,
+            HistGradientBoostingRegressor,
+        )
 
         X, y = make_regression(n_samples=500, n_features=8, noise=10, random_state=0)
 
-        gb = GradientBoostingRegressor(n_estimators=500, n_iter_no_change=10, random_state=0)
+        gb = GradientBoostingRegressor(
+            n_estimators=500, n_iter_no_change=10, random_state=0
+        )
         gb.fit(X, y)
-        hgb = HistGradientBoostingRegressor(max_iter=500, early_stopping=True, n_iter_no_change=10, random_state=0)
+        hgb = HistGradientBoostingRegressor(
+            max_iter=500, early_stopping=True, n_iter_no_change=10, random_state=0
+        )
         hgb.fit(X, y)
         print(gb.n_estimators_, hgb.n_iter_)
     - library: xgboost
@@ -97,7 +104,18 @@ slots:
             callbacks=[lgb.early_stopping(10, verbose=False)],
         )
         print(model.best_iteration_)
-  what_comes_out: {none: true}
+  what_comes_out:
+    items:
+      - {name: best_iteration, kind: attribute, task: null, shape: "int",
+         note: "XGBoost. Best round, counted from 0. Only set when early stopping runs."}
+      - {name: best_iteration_, kind: attribute, task: null, shape: "int",
+         note: "LightGBM. Best round from the early_stopping callback."}
+      - {name: n_iter_, kind: attribute, task: null, shape: "int",
+         note: "HistGradientBoosting. Rounds kept when early stopping ran. Otherwise max_iter."}
+      - {name: n_estimators_, kind: attribute, task: null, shape: "int",
+         note: "GradientBoosting. Trees kept when n_iter_no_change is set. Otherwise n_estimators."}
+    next_step: null
+    visual: null
   catch_outs:
     - XGBoost needs eval_set in fit. LightGBM needs eval_X and eval_y.
     - With several eval sets, XGBoost watches the last one.

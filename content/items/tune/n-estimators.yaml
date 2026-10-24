@@ -14,7 +14,7 @@ tracks: [standard]
 archetype: hyperparameter
 targets: []
 applies_to: [gradient-boosting, hist-gradient-boosting, xgboost, lightgbm]
-pairs_with: []
+pairs_with: [learning-rate, early-stopping]
 clashes: []
 library_versions:
   scikit-learn: "1.9.1"
@@ -48,7 +48,10 @@ slots:
       snippet: |
         # scikit-learn 1.9.1
         from sklearn.datasets import make_regression
-        from sklearn.ensemble import GradientBoostingRegressor, HistGradientBoostingRegressor
+        from sklearn.ensemble import (
+            GradientBoostingRegressor,
+            HistGradientBoostingRegressor,
+        )
 
         X, y = make_regression(n_samples=300, n_features=5, noise=20, random_state=0)
 
@@ -79,7 +82,16 @@ slots:
 
         model = LGBMRegressor(n_estimators=50, verbose=-1).fit(X, y)
         print(model.n_estimators_)
-  what_comes_out: {none: true}
+  what_comes_out:
+    items:
+      - {name: n_estimators_, kind: attribute, task: null, shape: "int",
+         note: "GradientBoosting, LightGBM. Trees actually fitted; less if early stopping ran."}
+      - {name: n_iter_, kind: attribute, task: null, shape: "int",
+         note: "HistGradientBoosting. Rounds fitted; early stopping can make it less than max_iter."}
+      - {name: get_num_boosting_rounds, kind: method, task: null, shape: "int",
+         note: "XGBoost. Echoes n_estimators, even after early stopping cut training short."}
+    next_step: null
+    visual: null
   catch_outs:
     - In HistGradientBoosting the name is max_iter.
     - More trees without early stopping can overfit.

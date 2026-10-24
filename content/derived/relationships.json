@@ -2047,8 +2047,20 @@
   },
   {
     "source": "early-stopping",
+    "target": "learning-rate",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "early-stopping",
+    "target": "n-estimators",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "early-stopping",
     "target": "train-test-split",
-    "type": "recommended",
+    "type": "needs",
     "via": "prep"
   },
   {
@@ -4222,6 +4234,12 @@
     "target": "validation-curve",
     "type": "alternative_to",
     "via": "evaluate/Validation curves"
+  },
+  {
+    "source": "learning-rate",
+    "target": "n-estimators",
+    "type": "pairs_with",
+    "via": "pairs_with"
   },
   {
     "source": "leaveonegroupout",

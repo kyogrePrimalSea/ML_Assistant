@@ -83,7 +83,46 @@ slots:
             callbacks=[lgb.early_stopping(20, verbose=False)],
         )
         print(model.best_iteration_)
-  what_comes_out: {none: true}
+  what_comes_out:
+    items:
+      - {name: predict_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
+         note: "One column per class, in classes_ order. Keep [:, 1] for two classes."}
+      - {name: predict, kind: method, task: classification, shape: "(n_samples,)",
+         note: "Class labels. Same as a 0.5 cut-off on predict_proba[:, 1]."}
+      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
+         note: "One value per row. Undo a log target before reporting errors."}
+      - {name: decision_function, kind: method, task: classification, shape: "(n_samples,) for two classes",
+         note: "Raw score before the sigmoid. Above 0 means class 1."}
+      - {name: feature_importances_, kind: attribute, task: null, shape: "(n_features,)",
+         note: "One score per input column. Default counts splits."}
+      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)",
+         note: "Class labels, in the column order of predict_proba."}
+      - {name: best_iteration_, kind: attribute, task: null, shape: "int",
+         note: "Best round from the early_stopping callback."}
+    next_step: ROC AUC and PR curves need probabilities, not labels. Undo a log target first.
+    snippet: |
+      # lightgbm 4.7.0
+      import numpy as np
+      from sklearn.datasets import load_breast_cancer, load_diabetes
+      from sklearn.model_selection import train_test_split
+      from lightgbm import LGBMClassifier, LGBMRegressor
+
+      X, y = load_breast_cancer(return_X_y=True)
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+      model = LGBMClassifier(n_estimators=50, verbose=-1).fit(X_train, y_train)
+      proba = model.predict_proba(X_test)
+      print(proba.shape)
+      y_score = proba[:, 1]
+      print(y_score.shape)
+
+      # Regression on a log target: undo it before reporting errors.
+      Xd, yd = load_diabetes(return_X_y=True)
+      reg = LGBMRegressor(n_estimators=50, verbose=-1).fit(Xd, np.log1p(yd))
+      y_pred = np.expm1(reg.predict(Xd))
+      print(y_pred.shape)
+    snippet_library: lightgbm
+    visual: both
   catch_outs:
     - Early stopping needs eval_X, eval_y and the early_stopping callback.
     - num_leaves (31) limits the tree before max_depth (-1) does.
