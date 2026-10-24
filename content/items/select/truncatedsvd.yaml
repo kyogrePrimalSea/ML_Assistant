@@ -1,0 +1,81 @@
+id: truncatedsvd
+plain_name: Compress sparse columns
+code_name: TruncatedSVD
+aliases: [LSA]
+stage: select
+family: select.compress
+tracks: [standard, time-series]
+archetype: selector
+question_tags: [sparse data, too many columns]
+targets: [sklearn.decomposition.TruncatedSVD]
+pairs_with: [pipeline]
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.TruncatedSVD.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: shrinks}
+slots:
+  header: {}
+  solves:
+    hero: {kind: selector, dataset: breast-cancer, columns: [mean radius, mean texture, mean area], kept: [component 1, component 2]}
+    line: Packs many sparse columns into a few new ones.
+  quick_facts:
+    facts:
+      - {label: Default n_components, value: "2"}
+      - {label: Learns from data, value: "yes: fit on train only"}
+  use_avoid:
+    use_when: [sparse data, text counts, one-hot columns]
+    avoid_when: [dense numeric data, original columns must stay]
+  prep:
+    - step: {page: train-test-split}
+      status: required
+      why: Fit the components on training rows only.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.decomposition.TruncatedSVD
+      why_this_library: Accepts sparse matrices directly.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.decomposition import TruncatedSVD
+        from sklearn.preprocessing import KBinsDiscretizer
+
+        X, y = load_breast_cancer(return_X_y=True)
+        bins = KBinsDiscretizer(n_bins=5, encode="onehot")
+        X_sparse = bins.fit_transform(X)  # sparse one-hot columns
+
+        svd = TruncatedSVD(n_components=2, random_state=0)
+        X_small = svd.fit_transform(X_sparse)
+
+        print(X_sparse.shape, "->", X_small.shape)
+        print(svd.singular_values_.round(2).tolist())
+  what_comes_out:
+    items:
+      - {name: transform, kind: method, task: null, shape: "(n_samples, n_components)", note: Projects each row onto the new components.}
+      - {name: singular_values_, kind: attribute, task: null, shape: "(n_components,)", note: Strength of each kept component.}
+      - {name: explained_variance_ratio_, kind: attribute, task: null, shape: "(n_components,)", note: Share of spread each component keeps.}
+      - {name: components_, kind: attribute, task: null, shape: "(n_components, n_features)", note: Weights that mix the original columns.}
+    next_step: Feed the components to a model.
+    visual: null
+  catch_outs:
+    - Components mix the original columns, so their meaning is lost.
+    - Fit on training rows only.
+    - Use PCA instead for dense numeric data.
+  key_settings:
+    tier1:
+      - {name: n_components, page: null}
+      - {name: algorithm, page: null}
+    tier2:
+      - {name: n_iter, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Squeezes many sparse columns into a few new ones."}
+  next: []

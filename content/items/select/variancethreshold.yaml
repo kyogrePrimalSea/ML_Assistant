@@ -1,0 +1,78 @@
+id: variancethreshold
+plain_name: VarianceThreshold
+code_name: VarianceThreshold
+aliases: [low variance filter, constant columns]
+stage: select
+family: select.variance
+tracks: [standard, time-series]
+archetype: selector
+question_tags: [constant columns, useless columns]
+targets: [sklearn.feature_selection.VarianceThreshold]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.VarianceThreshold.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: shrinks}
+slots:
+  header: {}
+  solves:
+    hero: {kind: selector, dataset: breast-cancer, columns: [mean radius, mean texture, mean area, mean smoothness], kept: [mean radius, mean texture, mean area, mean smoothness]}
+    line: Drops the columns that barely change.
+  quick_facts:
+    facts:
+      - {label: Default threshold, value: "0.0"}
+      - {label: Needs a target, value: "no"}
+  use_avoid:
+    use_when: [constant columns, quick clean-up]
+    avoid_when: [need scores against a target]
+  prep:
+    - step: {page: train-test-split}
+      status: recommended
+      why: Learn variances on training rows only.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.feature_selection.VarianceThreshold
+      why_this_library: Needs no target, so it runs without labels.
+      snippet: |
+        # scikit-learn 1.9.1
+        import numpy as np
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.feature_selection import VarianceThreshold
+
+        data = load_breast_cancer()
+        # Add a column that never changes, to see it go
+        X = np.column_stack([data.data, np.ones(len(data.data))])
+
+        selector = VarianceThreshold()
+        X_small = selector.fit_transform(X)
+
+        print(X.shape, "->", X_small.shape)
+  what_comes_out:
+    items:
+      - {name: get_support, kind: method, task: null, shape: '(n_features,)', note: True for each column kept.}
+      - {name: transform, kind: method, task: null, shape: '(n_samples, n_kept)', note: Keeps only the kept columns.}
+      - {name: get_feature_names_out, kind: method, task: null, shape: '(n_kept,)', note: Names of the kept columns.}
+      - {name: inverse_transform, kind: method, task: null, shape: '(n_samples, n_features)', note: Puts dropped columns back as zeros.}
+      - {name: variances_, kind: attribute, task: null, shape: '(n_features,)', note: Variance of each column in the fitted data.}
+    next_step: Fit on training rows, then pass the kept columns to a model.
+    visual: null
+  catch_outs:
+    - The default drops only columns that never change.
+    - Variance depends on units, so a threshold does not carry over.
+    - Learn variances on training rows only, or the cut sees test data.
+  key_settings:
+    tier1:
+      - {name: threshold, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: Drop columns whose values hardly change between rows.
+  next: []

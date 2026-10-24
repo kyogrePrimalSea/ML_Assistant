@@ -1,0 +1,95 @@
+id: sequentialfeatureselector
+plain_name: Add or remove one at a time
+code_name: SequentialFeatureSelector
+aliases: [sequential selection]
+stage: select
+family: select.model-based
+tracks: [standard]
+archetype: selector
+question_tags: [slow but thorough, too many columns]
+targets: [sklearn.feature_selection.SequentialFeatureSelector]
+pairs_with: [pipeline]
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SequentialFeatureSelector.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: shrinks}
+slots:
+  header: {}
+  solves:
+    hero: {kind: selector, dataset: breast-cancer, columns: [worst radius, worst texture, worst area], kept: [worst radius, worst texture]}
+    line: Adds or removes one column at a time, scoring each step.
+  quick_facts:
+    facts:
+      - {label: Default direction, value: forward}
+      - {label: Default cv, value: "5"}
+      - {label: Learns from data, value: "yes: fit on train only"}
+  use_avoid:
+    use_when: [small to medium data, thorough search affordable]
+    avoid_when: [many columns, tight time budget]
+  prep:
+    - step: {page: train-test-split}
+      status: required
+      why: Score columns on training rows only.
+      condition: null
+      unless: null
+    - step: {family: transform.scale.rescale}
+      status: recommended
+      why: Scale columns if the estimator uses distances or coefficients.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.feature_selection.SequentialFeatureSelector
+      why_this_library: Fits inside a Pipeline, so no leakage.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.feature_selection import SequentialFeatureSelector
+        from sklearn.neighbors import KNeighborsClassifier
+        from sklearn.pipeline import make_pipeline
+        from sklearn.preprocessing import StandardScaler
+
+        data = load_breast_cancer()
+        X, y = data.data, data.target
+
+        pipe = make_pipeline(
+            StandardScaler(),
+            SequentialFeatureSelector(
+                KNeighborsClassifier(), n_features_to_select=5, cv=5
+            ),
+        )
+        X_small = pipe.fit_transform(X, y)
+
+        print(X.shape, "->", X_small.shape)
+        print(data.feature_names[pipe[-1].get_support()].tolist())
+  what_comes_out:
+    items:
+      - {name: get_support, kind: method, task: null, shape: "(n_features,)", note: Mask of the kept columns.}
+      - {name: transform, kind: method, task: null, shape: "(n_samples, n_selected)", note: Keeps only the selected columns.}
+      - {name: n_features_to_select_, kind: attribute, task: null, shape: int, note: Number of columns chosen.}
+    next_step: Train the model on the kept columns.
+    visual: null
+  catch_outs:
+    - Refits the estimator at every step, so it is slow.
+    - Forward is the default direction.
+    - Fit on training rows only.
+  key_settings:
+    tier1:
+      - {name: n_features_to_select, page: null}
+      - {name: cv, page: null}
+      - {name: scoring, page: null}
+    tier2:
+      - {name: direction, page: null}
+      - {name: tol, page: null}
+      - {name: estimator, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Grows or shrinks the column set one step at a time, keeping what scores best."}
+  next: []

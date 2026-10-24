@@ -1,0 +1,89 @@
+id: selectfrommodel
+plain_name: Keep features above a cut-off
+code_name: SelectFromModel
+aliases: [model-based selection, importance cut-off]
+stage: select
+family: select.model-based
+tracks: [standard]
+archetype: selector
+question_tags: [too many columns, keep the strongest]
+targets: [sklearn.feature_selection.SelectFromModel]
+pairs_with: [pipeline]
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SelectFromModel.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: shrinks}
+slots:
+  header: {}
+  solves:
+    hero: {kind: selector, dataset: breast-cancer, columns: [worst radius, worst texture, worst area], kept: [worst radius, worst area]}
+    line: Keeps the columns whose importance clears a cut-off.
+  quick_facts:
+    facts:
+      - {label: Default max_features, value: "None (no cap)"}
+      - {label: Learns from data, value: "yes: fit on train only"}
+  use_avoid:
+    use_when: [model with coefficients or importances, many columns]
+    avoid_when: [no coefficients or importances, exact count needed]
+  prep:
+    - step: {page: train-test-split}
+      status: required
+      why: Rank columns on training rows only.
+      condition: null
+      unless: null
+    - step: {family: transform.scale.rescale}
+      status: recommended
+      why: Needed when the model uses coefficients.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.feature_selection.SelectFromModel
+      why_this_library: Works with any model that gives importances.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.ensemble import RandomForestClassifier
+        from sklearn.feature_selection import SelectFromModel
+
+        data = load_breast_cancer()
+        X, y = data.data, data.target
+
+        selector = SelectFromModel(
+            RandomForestClassifier(n_estimators=100, random_state=0),
+            max_features=5,
+        )
+        X_small = selector.fit_transform(X, y)
+
+        print(X.shape, "->", X_small.shape)
+        print(data.feature_names[selector.get_support()].tolist())
+  what_comes_out:
+    items:
+      - {name: get_support, kind: method, task: null, shape: "(n_features,)", note: Mask of the kept columns.}
+      - {name: transform, kind: method, task: null, shape: "(n_samples, n_selected)", note: Keeps only the selected columns.}
+      - {name: threshold_, kind: attribute, task: null, shape: float, note: Cut-off used to pick columns.}
+    next_step: Train the model on the kept columns.
+    visual: null
+  catch_outs:
+    - Columns above the cut-off are kept, so the count varies.
+    - Fit on training rows only.
+  key_settings:
+    tier1:
+      - {name: threshold, page: null}
+      - {name: max_features, page: null}
+      - {name: estimator, page: null}
+    tier2:
+      - {name: importance_getter, page: null}
+      - {name: norm_order, page: null}
+      - {name: prefit, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Keep the columns the model rates above a line you set."}
+  next: []

@@ -1,0 +1,80 @@
+id: selectfwe
+plain_name: SelectFwe
+code_name: SelectFwe
+aliases: [family-wise error, fwe filter]
+stage: select
+family: select.significance
+tracks: [standard]
+archetype: selector
+question_tags: [strict selection, too many false picks]
+targets: [sklearn.feature_selection.SelectFwe]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SelectFwe.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: shrinks}
+slots:
+  header: {}
+  solves:
+    hero: {kind: selector, dataset: breast-cancer, columns: [mean radius, mean texture, mean fractal dimension, mean smoothness], kept: [mean radius, mean texture, mean smoothness]}
+    line: Keeps only the columns that pass a strict any-false-pick cut.
+  quick_facts:
+    facts:
+      - {label: Default alpha, value: "0.05"}
+      - {label: Default score, value: f_classif}
+      - {label: Controls, value: chance of any false pick}
+  use_avoid:
+    use_when: [strict selection, few false picks]
+    avoid_when: [need more columns kept, need an exact count]
+  prep:
+    - step: {page: train-test-split}
+      status: required
+      why: Score columns on training rows only.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.feature_selection.SelectFwe
+      why_this_library: Filter that fits inside a Pipeline.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.feature_selection import SelectFwe, f_classif
+
+        data = load_breast_cancer()
+        X, y = data.data, data.target
+
+        selector = SelectFwe(score_func=f_classif, alpha=0.05)
+        X_small = selector.fit_transform(X, y)
+
+        print(X.shape, "->", X_small.shape)
+  what_comes_out:
+    items:
+      - {name: get_support, kind: method, task: null, shape: '(n_features,)', note: True for each column kept.}
+      - {name: transform, kind: method, task: null, shape: '(n_samples, n_kept)', note: Keeps only the kept columns.}
+      - {name: get_feature_names_out, kind: method, task: null, shape: '(n_kept,)', note: Names of the kept columns.}
+      - {name: inverse_transform, kind: method, task: null, shape: '(n_samples, n_features)', note: Puts dropped columns back as zeros.}
+      - {name: scores_, kind: attribute, task: null, shape: '(n_features,)', note: Score per column. Higher means a stronger link.}
+      - {name: pvalues_, kind: attribute, task: null, shape: '(n_features,)', note: Chance of a score this high with no real link.}
+    next_step: Fit on training rows, then pass the kept columns to a model.
+    visual: null
+  catch_outs:
+    - Strictest of the three, so it may keep fewer columns.
+    - On breast cancer at default alpha, 25 of 30 columns pass.
+    - Default score_func f_classif only works for classification.
+    - Fit on training rows only, or scores leak.
+  key_settings:
+    tier1:
+      - {name: alpha, page: null}
+      - {name: score_func, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: Score each column, then keep those that pass a strict cut for any false pick.
+  next: []

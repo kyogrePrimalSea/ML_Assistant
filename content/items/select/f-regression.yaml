@@ -1,0 +1,82 @@
+id: f-regression
+plain_name: F-score for numbers
+code_name: f_regression
+aliases: [linear regression F-test]
+stage: select
+family: select.scores
+tracks: [standard]
+archetype: selector
+question_tags: [numeric features, numeric target]
+targets: [sklearn.feature_selection.f_regression]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.f_regression.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when:
+  - when: {has_categoricals: true}
+    reason: Needs numeric columns; encode categories first.
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero:
+      kind: selector
+      dataset: ames
+      columns: [LotArea, YearBuilt, GrLivArea, BedroomAbvGr]
+      kept: [GrLivArea, YearBuilt]
+    line: Scores each numeric column against a numeric target.
+  quick_facts:
+    facts:
+    - {label: Scores, value: F-value and p-value}
+    - {label: Needs, value: numeric columns}
+  use_avoid:
+    use_when: [numeric features, numeric target]
+    avoid_when: [curved links, categorical columns]
+  prep:
+  - step: {page: train-test-split}
+    status: required
+    why: Score columns on training rows only.
+    condition: null
+    unless: null
+  - step: {family: transform.scale.rescale}
+    status: not_needed
+    why: Scores do not change when columns are rescaled.
+    condition: null
+    unless: null
+  code:
+  - library: scikit-learn
+    target: sklearn.feature_selection.f_regression
+    why_this_library: Standard F-test; plugs into SelectKBest.
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import load_diabetes
+      from sklearn.feature_selection import f_regression
+      from sklearn.model_selection import train_test_split
+
+      data = load_diabetes()
+      X_train, X_test, y_train, y_test = train_test_split(
+          data.data, data.target, random_state=0)
+
+      scores, p_values = f_regression(X_train, y_train)
+      top = scores.argsort()[::-1][:3]
+      print([str(data.feature_names[i]) for i in top])
+  what_comes_out:
+    items:
+    - {name: f_statistic, kind: return, task: regression, shape: '(n_features,)', note: Score per column. Higher means a stronger straight-line link.}
+    - {name: p_values, kind: return, task: regression, shape: '(n_features,)', note: Chance of a score this high with no real link.}
+    next_step: Sort by score and keep the top columns.
+    visual: null
+  catch_outs: ['Each column is scored alone, so pairs can be missed.', 'Fit on training rows only, or scores leak.', Misses curved links; mutual information catches them.]
+  key_settings:
+    tier1:
+    - {name: force_finite, page: null}
+    - {name: center, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: Checks how well a straight line fits each column against the target.}
+  next: [but-how-many-features]

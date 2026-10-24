@@ -1,0 +1,79 @@
+id: selectpercentile
+plain_name: SelectPercentile
+code_name: SelectPercentile
+aliases: [top percent, percentile filter]
+stage: select
+family: select.top-k
+tracks: [standard]
+archetype: selector
+question_tags: [keep a share of columns, too many columns]
+targets: [sklearn.feature_selection.SelectPercentile]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.SelectPercentile.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: shrinks}
+slots:
+  header: {}
+  solves:
+    hero: {kind: selector, dataset: breast-cancer, columns: [mean radius, mean concave points, worst perimeter, mean smoothness], kept: [mean concave points, worst perimeter]}
+    line: Keeps the top share of columns by score.
+  quick_facts:
+    facts:
+      - {label: Default percentile, value: "10"}
+      - {label: Default score, value: f_classif}
+  use_avoid:
+    use_when: [keep a share, many columns]
+    avoid_when: [need an exact count]
+  prep:
+    - step: {page: train-test-split}
+      status: required
+      why: Score columns on training rows only.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.feature_selection.SelectPercentile
+      why_this_library: Filter that fits inside a Pipeline.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.feature_selection import SelectPercentile, f_classif
+
+        data = load_breast_cancer()
+        X, y = data.data, data.target
+
+        selector = SelectPercentile(score_func=f_classif, percentile=10)
+        X_small = selector.fit_transform(X, y)
+
+        print(X.shape, "->", X_small.shape)
+  what_comes_out:
+    items:
+      - {name: get_support, kind: method, task: null, shape: '(n_features,)', note: True for each column kept.}
+      - {name: transform, kind: method, task: null, shape: '(n_samples, n_kept)', note: Keeps only the kept columns.}
+      - {name: get_feature_names_out, kind: method, task: null, shape: '(n_kept,)', note: Names of the kept columns.}
+      - {name: inverse_transform, kind: method, task: null, shape: '(n_samples, n_features)', note: Puts dropped columns back as zeros.}
+      - {name: scores_, kind: attribute, task: null, shape: '(n_features,)', note: Score per column. Higher means a stronger link.}
+      - {name: pvalues_, kind: attribute, task: null, shape: '(n_features,)', note: Chance of a score this high with no real link.}
+    next_step: Fit on training rows, then pass the kept columns to a model.
+    visual: null
+  catch_outs:
+    - The kept count is a share, so it moves with the column count.
+    - At percentile 10, breast cancer keeps 3 of 30 columns.
+    - Default score_func f_classif only works for classification.
+    - Fit on training rows only, or scores leak.
+  key_settings:
+    tier1:
+      - {name: percentile, page: null}
+      - {name: score_func, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: Score each column, then keep the top share.
+  next: []

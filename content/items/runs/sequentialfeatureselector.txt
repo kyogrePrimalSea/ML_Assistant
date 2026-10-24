@@ -1,0 +1,2 @@
+(569, 30) -> (569, 5)
+['worst radius', 'worst texture', 'worst perimeter', 'worst smoothness', 'worst concavity']

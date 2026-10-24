@@ -1,0 +1,92 @@
+id: rfecv
+plain_name: Recursive elimination with CV
+code_name: RFECV
+aliases: [RFE with cross-validation]
+stage: select
+family: select.model-based
+tracks: [standard]
+archetype: selector
+question_tags: [how many to keep, too many columns]
+targets: [sklearn.feature_selection.RFECV]
+pairs_with: [pipeline]
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.RFECV.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: shrinks}
+slots:
+  header: {}
+  solves:
+    hero: {kind: selector, dataset: breast-cancer, columns: [mean radius, mean texture, mean area, mean compactness], kept: [mean radius, mean texture, mean area]}
+    line: Drops columns and picks how many to keep by cross-validation.
+  quick_facts:
+    facts:
+      - {label: Default min_features_to_select, value: "1"}
+      - {label: Learns from data, value: "yes: fit on train only"}
+  use_avoid:
+    use_when: [unknown how many to keep, many columns]
+    avoid_when: [no coefficients or importances, slow fits on big data]
+  prep:
+    - step: {page: train-test-split}
+      status: required
+      why: Rank columns on training rows only.
+      condition: null
+      unless: null
+    - step: {family: transform.scale.rescale}
+      status: recommended
+      why: Coefficient-based estimators need scaled columns.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.feature_selection.RFECV
+      why_this_library: Fits inside a Pipeline, so no leakage.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.feature_selection import RFECV
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.pipeline import make_pipeline
+        from sklearn.preprocessing import StandardScaler
+
+        data = load_breast_cancer()
+        X, y = data.data[:, :10], data.target  # ten mean-value columns
+
+        pipe = make_pipeline(
+            StandardScaler(),
+            RFECV(LogisticRegression(max_iter=5000), cv=5),
+        )
+        X_small = pipe.fit_transform(X, y)
+
+        print(X.shape, "->", X_small.shape)
+        print(pipe[-1].n_features_)
+  what_comes_out:
+    items:
+      - {name: get_support, kind: method, task: null, shape: "(n_features,)", note: Mask of the kept columns.}
+      - {name: transform, kind: method, task: null, shape: "(n_samples, n_selected)", note: Keeps only the selected columns.}
+      - {name: n_features_, kind: attribute, task: null, shape: int, note: Number of columns the search kept.}
+      - {name: cv_results_, kind: attribute, task: null, shape: dict, note: Cross-validation scores from the search.}
+    next_step: Train the model on the kept columns.
+    visual: null
+  catch_outs:
+    - Cross-validation runs at each step, so fits take longer.
+    - Ranks columns with the estimator's own importances.
+    - Fit on training rows only.
+  key_settings:
+    tier1:
+      - {name: cv, page: null}
+      - {name: scoring, page: null}
+      - {name: step, page: null}
+    tier2:
+      - {name: min_features_to_select, page: null}
+      - {name: estimator, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Like RFE, but picks how many columns to keep by cross-validation."}
+  next: []

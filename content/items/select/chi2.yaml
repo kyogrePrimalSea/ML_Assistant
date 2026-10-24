@@ -1,0 +1,73 @@
+id: chi2
+plain_name: Chi-squared score
+code_name: chi2
+aliases: [chi-squared test]
+stage: select
+family: select.scores
+tracks: [standard]
+archetype: selector
+question_tags: [count features, non-negative features]
+targets: [sklearn.feature_selection.chi2]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.chi2.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero:
+      kind: selector
+      dataset: breast-cancer
+      columns: [mean radius, mean texture, mean area, mean smoothness]
+      kept: [mean area, mean radius]
+    line: Scores each non-negative column against a category target.
+  quick_facts:
+    facts:
+    - {label: Scores, value: chi-squared and p-value}
+    - {label: Needs, value: non-negative columns}
+  use_avoid:
+    use_when: [counts, non-negative features]
+    avoid_when: [negative values, numeric target]
+  prep:
+  - step: {page: train-test-split}
+    status: required
+    why: Score columns on training rows only.
+    condition: null
+    unless: null
+  code:
+  - library: scikit-learn
+    target: sklearn.feature_selection.chi2
+    why_this_library: Standard score; plugs into SelectKBest.
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import load_breast_cancer
+      from sklearn.feature_selection import chi2
+      from sklearn.model_selection import train_test_split
+
+      data = load_breast_cancer()
+      X_train, X_test, y_train, y_test = train_test_split(
+          data.data, data.target, random_state=0)
+
+      scores, p_values = chi2(X_train, y_train)
+      top = scores.argsort()[::-1][:3]
+      print([str(data.feature_names[i]) for i in top])
+  what_comes_out:
+    items:
+    - {name: chi2, kind: return, task: classification, shape: '(n_features,)', note: Score per column. Higher means a stronger link.}
+    - {name: p_values, kind: return, task: classification, shape: '(n_features,)', note: Chance of a score this high with no real link.}
+    next_step: Sort by score and keep the top columns.
+    visual: null
+  catch_outs: [Negative values raise an error; use non-negative columns only., 'Each column is scored alone, so pairs can be missed.', 'Fit on training rows only, or scores leak.']
+  key_settings:
+    tier1: []
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: Compares each column's counts with what chance would give.}
+  next: [but-how-many-features]

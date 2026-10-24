@@ -1,0 +1,85 @@
+id: pca
+plain_name: Principal components
+code_name: PCA
+aliases: [principal component analysis, principal components]
+stage: select
+family: select.compress
+tracks: [standard, time-series]
+archetype: selector
+question_tags: [too many columns, high-dimensional]
+targets: [sklearn.decomposition.PCA]
+pairs_with: [pipeline]
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: shrinks}
+slots:
+  header: {}
+  solves:
+    hero: {kind: selector, dataset: breast-cancer, columns: [mean radius, mean texture, mean area], kept: [PC1, PC2]}
+    line: Packs many columns into a few new ones.
+  quick_facts:
+    facts:
+      - {label: Default n_components, value: "all components kept"}
+      - {label: Learns from data, value: "yes: fit on train only"}
+  use_avoid:
+    use_when: [dense numeric data, many columns, fewer columns needed]
+    avoid_when: [original columns must stay, sparse data]
+  prep:
+    - step: {page: train-test-split}
+      status: required
+      why: Fit the components on training rows only.
+      condition: null
+      unless: null
+    - step: {family: transform.scale.rescale}
+      status: required
+      why: Scale first, or large columns dominate.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.decomposition.PCA
+      why_this_library: Fits inside a Pipeline, so no leakage.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.decomposition import PCA
+        from sklearn.pipeline import make_pipeline
+        from sklearn.preprocessing import StandardScaler
+
+        X, y = load_breast_cancer(return_X_y=True)
+
+        pipe = make_pipeline(StandardScaler(), PCA(n_components=2))
+        X_small = pipe.fit_transform(X)  # scale first, then compress
+
+        print(X.shape, "->", X_small.shape)
+        print(pipe[-1].explained_variance_ratio_.round(3).tolist())
+  what_comes_out:
+    items:
+      - {name: transform, kind: method, task: null, shape: "(n_samples, n_components)", note: Projects each row onto the new components.}
+      - {name: explained_variance_ratio_, kind: attribute, task: null, shape: "(n_components,)", note: Share of spread each component keeps.}
+      - {name: components_, kind: attribute, task: null, shape: "(n_components, n_features)", note: Weights that mix the original columns.}
+      - {name: inverse_transform, kind: method, task: null, shape: "(n_samples, n_features)", note: Maps components back to the original space.}
+    next_step: Feed the components to a model.
+    visual: null
+  catch_outs:
+    - Components mix the original columns, so their meaning is lost.
+    - Scale columns first, or large ones dominate.
+    - Fit on training rows only.
+  key_settings:
+    tier1:
+      - {name: n_components, page: null}
+      - {name: svd_solver, page: null}
+    tier2:
+      - {name: whiten, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Builds new columns, each keeping as much spread as it can."}
+  next: []
