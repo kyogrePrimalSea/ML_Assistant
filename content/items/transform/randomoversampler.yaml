@@ -1,0 +1,85 @@
+id: randomoversampler
+plain_name: RandomOverSampler
+code_name: RandomOverSampler
+aliases: ["copy rare rows", "duplicate minority", "oversampling"]
+stage: transform
+family: transform.rebalance.over
+tracks: [standard]
+archetype: resampler
+question_tags: ["imbalanced", "rare class", "duplicate rows"]
+targets: [imblearn.over_sampling.RandomOverSampler]
+pairs_with: [imblearn-pipeline]
+clashes: []
+source_urls:
+  - https://imbalanced-learn.org/stable/references/generated/imblearn.over_sampling.RandomOverSampler.html
+library_versions:
+  imbalanced-learn: "0.14.2"
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: grows, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: resampler, dataset: breast-cancer, classes: [malignant, benign], before: [212, 357], after: [357, 357]}
+    line: "Copies rare rows until the classes match."
+  quick_facts:
+    facts:
+      - {label: "Adds", value: "copies of rare rows"}
+      - {label: "Columns", value: "any type, copied as is"}
+  use_avoid:
+    use_when: ["imbalanced classes", "a simple baseline"]
+    avoid_when: ["exact copies are a problem", "regression"]
+  prep:
+    - step: {page: train-test-split}
+      status: required
+      why: "Resample the training rows only."
+      condition: null
+      unless: null
+    - step: {family: transform.encode.features}
+      status: not_needed
+      why: "Copies rows, so text columns are fine."
+      condition: {has_categoricals: true}
+      unless: null
+  code:
+    - library: imbalanced-learn
+      target: imblearn.over_sampling.RandomOverSampler
+      why_this_library: "The imbalanced-learn sampler; scikit-learn has none."
+      snippet: |
+        # imbalanced-learn 0.14.2
+        from collections import Counter
+
+        from imblearn.over_sampling import RandomOverSampler
+        from sklearn.datasets import make_classification
+
+        X, y = make_classification(
+            n_samples=1000, weights=[0.9, 0.1], random_state=0
+        )
+        print("before", Counter(y.tolist()))
+
+        X_res, y_res = RandomOverSampler(random_state=0).fit_resample(X, y)
+        print("after", Counter(y_res.tolist()))
+  what_comes_out:
+    items:
+      - {name: fit_resample, kind: method, task: null, shape: "X (more rows), y (rows,)", note: "Returns new X and y; training rows only."}
+      - {name: sampling_strategy_, kind: attribute, task: null, shape: "dict: class to count", note: "Rows to add per class, set at fit time."}
+      - {name: sample_indices_, kind: attribute, task: null, shape: "(n_new,)", note: "Which original rows were copied."}
+    next_step: "Train on X_res and y_res; the test set stays as it is."
+    visual: null
+  catch_outs:
+    - "Resample after the split, on training rows only."
+    - "Never resample the test set."
+    - "Copies are exact duplicates of rare rows."
+  key_settings:
+    tier1:
+      - {name: sampling_strategy, page: null}
+    tier2:
+      - {name: random_state, page: null}
+    tier3:
+      - {name: shrinkage, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    text: "Pick a rare row, copy it, repeat until the classes match."
+  next: []

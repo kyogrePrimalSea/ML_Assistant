@@ -1,0 +1,72 @@
+id: make-column-selector
+plain_name: make_column_selector
+code_name: make_column_selector
+aliases: [select columns by type, column selector]
+stage: transform
+family: transform.chain.columns
+tracks: [standard, time-series]
+archetype: composer
+question_tags: [pick columns by type, pick columns by name]
+targets: [sklearn.compose.make_column_selector]
+pairs_with: [column-transformer, columntransformer]
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.compose.make_column_selector.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: composer, boxes: [Numbers, Categories]}
+    line: Picks columns by name pattern or by data type.
+  quick_facts:
+    facts:
+      - {label: Returns, value: "a function that takes a DataFrame"}
+      - {label: Output, value: "list of column names"}
+  use_avoid:
+    use_when: [mixed column types, many similar columns, name patterns]
+    avoid_when: [few columns, columns picked by hand]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.compose.make_column_selector
+      why_this_library: Picks columns by name or type inside a transformer.
+      snippet: |
+        # scikit-learn 1.9.1
+        import pandas as pd
+        from sklearn.compose import make_column_selector as selector
+        from sklearn.compose import make_column_transformer
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.preprocessing import OneHotEncoder, StandardScaler
+
+        X, y = load_breast_cancer(return_X_y=True, as_frame=True)
+        X["size"] = pd.qcut(X["mean radius"], 3, labels=["low", "mid", "high"])
+
+        ct = make_column_transformer(
+            (StandardScaler(), selector(pattern="^mean")),  # by name
+            (OneHotEncoder(), selector(dtype_include="category")),  # by type
+        )
+        print(ct.fit_transform(X).shape)
+  what_comes_out:
+    items:
+      - {name: make_column_selector, kind: return, task: null, shape: "callable", note: "Call it on a DataFrame to get column names."}
+    next_step: "Pass it as the columns in a ColumnTransformer."
+    visual: null
+  catch_outs:
+    - Name matching uses a regex on column names.
+    - Type choices follow pandas select_dtypes rules.
+    - Pass the selector itself, not its result, to the transformer.
+  key_settings:
+    tier1:
+      - {name: pattern, page: null}
+      - {name: dtype_include, page: null}
+      - {name: dtype_exclude, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "A rule that says which columns to pick, applied later."}
+  next: []

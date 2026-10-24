@@ -1,0 +1,87 @@
+id: borderlinesmote
+plain_name: BorderlineSMOTE
+code_name: BorderlineSMOTE
+aliases: ["borderline", "hard boundary rows", "oversampling"]
+stage: transform
+family: transform.rebalance.over-hard
+tracks: [standard]
+archetype: resampler
+question_tags: ["imbalanced", "rare class", "boundary"]
+targets: [imblearn.over_sampling.BorderlineSMOTE]
+pairs_with: [imblearn-pipeline]
+clashes: []
+source_urls:
+  - https://imbalanced-learn.org/stable/references/generated/imblearn.over_sampling.BorderlineSMOTE.html
+library_versions:
+  imbalanced-learn: "0.14.2"
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: grows, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: resampler, dataset: breast-cancer, classes: [malignant, benign], before: [212, 357], after: [357, 357]}
+    line: "Adds new rare rows near the other class."
+  quick_facts:
+    facts:
+      - {label: "Adds", value: "new rare rows near the boundary"}
+      - {label: "Columns", value: "numbers only"}
+  use_avoid:
+    use_when: ["rare rows near other class", "imbalanced classes"]
+    avoid_when: ["text columns unencoded", "regression"]
+  prep:
+    - step: {family: transform.encode.features}
+      status: required
+      why: "Needs all-numeric columns."
+      condition: {has_categoricals: true}
+      unless: null
+    - step: {page: train-test-split}
+      status: required
+      why: "Resample the training rows only."
+      condition: null
+      unless: null
+  code:
+    - library: imbalanced-learn
+      target: imblearn.over_sampling.BorderlineSMOTE
+      why_this_library: "The imbalanced-learn sampler; scikit-learn has none."
+      snippet: |
+        # imbalanced-learn 0.14.2
+        from collections import Counter
+
+        from imblearn.over_sampling import BorderlineSMOTE
+        from sklearn.datasets import make_classification
+
+        X, y = make_classification(
+            n_samples=1000, weights=[0.9, 0.1], random_state=0
+        )
+        print("before", Counter(y.tolist()))
+
+        X_res, y_res = BorderlineSMOTE(random_state=0).fit_resample(X, y)
+        print("after", Counter(y_res.tolist()))
+  what_comes_out:
+    items:
+      - {name: fit_resample, kind: method, task: null, shape: "X (more rows), y (rows,)", note: "Returns new X and y; training rows only."}
+      - {name: sampling_strategy_, kind: attribute, task: null, shape: "dict: class to count", note: "Rows to add per class, set at fit time."}
+      - {name: in_danger_indices, kind: attribute, task: null, shape: "dict of arrays", note: "Rare rows picked as near the boundary."}
+    next_step: "Train on X_res and y_res; the test set stays as it is."
+    visual: null
+  catch_outs:
+    - "Resample after the split, on training rows only."
+    - "Never resample the test set."
+    - "Numeric columns only; text columns fail."
+  key_settings:
+    tier1:
+      - {name: sampling_strategy, page: null}
+      - {name: k_neighbors, page: null}
+      - {name: m_neighbors, page: null}
+    tier2:
+      - {name: kind, page: null}
+      - {name: random_state, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: "Pick rare rows next to the other class and add rows near them."
+  next: []

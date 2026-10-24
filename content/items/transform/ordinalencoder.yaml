@@ -1,0 +1,85 @@
+id: ordinalencoder
+plain_name: OrdinalEncoder
+code_name: OrdinalEncoder
+aliases: [ordinal encoding, integer codes]
+stage: transform
+family: transform.encode.features
+tracks: [standard, time-series]
+archetype: transformer
+question_tags: [ordered categories, text categories]
+targets: [sklearn.preprocessing.OrdinalEncoder]
+pairs_with: [pipeline]
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.OrdinalEncoder.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: transformer, dataset: ames, columns: [ExterQual], changed: [ExterQual]}
+    line: Turns each category into a whole number.
+  quick_facts:
+    facts:
+      - {label: Learns from data, value: "yes: fit on train only"}
+      - {label: Output, value: "one whole number per category"}
+  use_avoid:
+    use_when: [ordered categories, tree models]
+    avoid_when: [no order in categories, linear models]
+  prep:
+    - step: {page: train-test-split}
+      status: required
+      why: Learn the categories from training rows only.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.preprocessing.OrdinalEncoder
+      why_this_library: Fits inside a Pipeline and remembers its categories.
+      snippet: |
+        # scikit-learn 1.9.1
+        import numpy as np
+        from sklearn.datasets import make_classification
+        from sklearn.preprocessing import OrdinalEncoder
+
+        _, y = make_classification(
+            n_samples=200, n_classes=3, n_informative=3, n_redundant=0, random_state=0
+        )
+        size = np.array(["small", "medium", "large"])[y].reshape(-1, 1)
+
+        encoder = OrdinalEncoder(categories=[["small", "medium", "large"]])
+        codes = encoder.fit_transform(size)  # order given: small=0, large=2
+
+        print(codes[:5].ravel())
+  what_comes_out:
+    items:
+      - {name: transform, kind: method, task: null, shape: "(n_samples, n_features)", note: One integer code per category.}
+      - {name: inverse_transform, kind: method, task: null, shape: "(n_samples, n_features)", note: Turns codes back into categories.}
+      - {name: categories_, kind: attribute, task: null, shape: "list of arrays", note: Categories learned for each column.}
+    next_step: Pass the codes to a tree model.
+    visual: null
+  catch_outs:
+    - Codes follow the order in categories; 'auto' picks that order.
+    - Unseen categories raise an error unless handle_unknown is set.
+    - Missing values stay NaN by default.
+  key_settings:
+    tier1:
+      - {name: categories, page: null}
+      - {name: handle_unknown, page: null}
+    tier2:
+      - {name: unknown_value, page: null}
+      - {name: min_frequency, page: null}
+      - {name: max_categories, page: null}
+    tier3:
+      - {name: encoded_missing_value, page: null}
+      - {name: dtype, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    text: Replace each category with a number, in a set order.
+  next: []

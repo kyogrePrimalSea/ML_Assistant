@@ -1,0 +1,87 @@
+id: nearmiss
+plain_name: NearMiss
+code_name: NearMiss
+aliases: [undersampling, near miss, nearest common rows]
+stage: transform
+family: transform.rebalance.under
+tracks: [standard]
+archetype: resampler
+question_tags: [imbalanced, too many common rows]
+targets: [imblearn.under_sampling.NearMiss]
+pairs_with: [imblearn-pipeline]
+clashes: []
+source_urls: ['https://imbalanced-learn.org/stable/references/generated/imblearn.under_sampling.NearMiss.html']
+library_versions: {imbalanced-learn: 0.14.2}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: shrinks, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: resampler, dataset: breast-cancer, classes: [malignant, benign], before: [212, 357], after: [212, 212]}
+    line: Keeps the common rows nearest the rare ones.
+  quick_facts:
+    facts:
+      - {label: Keeps, value: "common rows near the rare ones"}
+      - {label: Learns from data, value: "yes: neighbour distances"}
+  use_avoid:
+    use_when: [imbalanced classes, numeric columns, too many common rows]
+    avoid_when: [category columns, need every common row]
+  prep:
+    - step: {page: train-test-split}
+      status: required
+      why: Resample the training rows only.
+      condition: null
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Nearest-neighbour search needs numbers.
+      condition: {has_categoricals: true}
+      unless: null
+    - step: {family: transform.scale.rescale}
+      status: recommended
+      why: Distances need columns on one scale.
+      condition: null
+      unless: null
+  code:
+    - library: imbalanced-learn
+      target: imblearn.under_sampling.NearMiss
+      why_this_library: Undersamplers live in imbalanced-learn, not scikit-learn.
+      snippet: |
+        # imbalanced-learn 0.14.2
+        from collections import Counter
+        
+        from imblearn.under_sampling import NearMiss
+        from sklearn.datasets import load_breast_cancer
+        
+        X, y = load_breast_cancer(return_X_y=True)
+        print("before", Counter(y.tolist()))
+        
+        X_res, y_res = NearMiss(version=1).fit_resample(X, y)
+        print("after", Counter(y_res.tolist()))
+  what_comes_out:
+    items:
+      - {name: fit_resample, kind: method, task: null, shape: "two arrays, X and y", note: "Returns resampled X and y."}
+      - {name: sample_indices_, kind: attribute, task: null, shape: "1-D array", note: "Row positions that were kept."}
+      - {name: sampling_strategy_, kind: attribute, task: null, shape: dict, note: "Target row count per class."}
+    next_step: Fit your model on the resampled X and y.
+    visual: null
+  catch_outs:
+    - Resample after the split, on training rows only.
+    - Drops most common rows, so check the model afterwards.
+    - Scale and encode columns first; distances need numbers.
+  key_settings:
+    tier1:
+      - {name: version, page: null}
+      - {name: n_neighbors, page: null}
+    tier2:
+      - {name: sampling_strategy, page: null}
+      - {name: n_neighbors_ver3, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: Keep the common rows that sit closest to the rare rows.
+  next: []

@@ -1,0 +1,88 @@
+id: smoteenn
+plain_name: SMOTEENN
+code_name: SMOTEENN
+aliases: [smote enn, smote plus enn]
+stage: transform
+family: transform.rebalance.combine
+tracks: [standard]
+archetype: resampler
+question_tags: [imbalanced, rare class, noisy rows]
+targets: [imblearn.combine.SMOTEENN]
+pairs_with: [imblearn-pipeline, smote, editednearestneighbours]
+clashes: []
+source_urls:
+  - https://imbalanced-learn.org/stable/references/generated/imblearn.combine.SMOTEENN.html
+library_versions:
+  imbalanced-learn: "0.14.2"
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: grows, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: resampler, dataset: breast-cancer, classes: [malignant, benign], before: [212, 357], after: [333, 325]}
+    line: Adds synthetic rows with SMOTE, then cleans with ENN.
+  quick_facts:
+    facts:
+      - {label: Removes, value: noisy rows after SMOTE}
+      - {label: Columns, value: unchanged}
+  use_avoid:
+    use_when: [imbalanced classes, noisy classes overlap]
+    avoid_when: [category columns, regression]
+  prep:
+    - step: {page: train-test-split}
+      status: required
+      why: Resample the training rows only.
+      condition: null
+      unless: null
+    - step: {family: transform.scale.rescale}
+      status: recommended
+      why: Neighbour distances need one scale.
+      condition: null
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Needs all-numeric columns.
+      condition: {has_categoricals: true}
+      unless: null
+  code:
+    - library: imbalanced-learn
+      target: imblearn.combine.SMOTEENN
+      why_this_library: The home of SMOTEENN; scikit-learn has no resamplers.
+      snippet: |
+        # imbalanced-learn 0.14.2
+        from collections import Counter
+
+        from imblearn.combine import SMOTEENN
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.preprocessing import StandardScaler
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X = StandardScaler().fit_transform(X)  # neighbour distances need one scale
+        print("before", dict(sorted(Counter(y.tolist()).items())))
+
+        X_res, y_res = SMOTEENN(random_state=0).fit_resample(X, y)
+        print("after", dict(sorted(Counter(y_res.tolist()).items())))
+  what_comes_out:
+    items:
+    - {name: fit_resample, kind: method, task: null, shape: "(n_samples_new, n_features)", note: "Returns new X and y with classes near equal."}
+    - {name: sampling_strategy_, kind: attribute, task: null, shape: "dict of class counts", note: "Per-class target counts the sampler used."}
+    next_step: Train on these rows; evaluate on untouched test rows.
+    visual: null
+  catch_outs:
+    - Resample the training rows only, never the test set.
+    - Output has more rows than the input; check the counts.
+  key_settings:
+    tier1:
+    - {name: sampling_strategy, page: null}
+    - {name: enn, page: null}
+    - {name: smote, page: null}
+    tier2:
+    - {name: random_state, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Add synthetic minority rows with SMOTE, then clean noisy rows with ENN."}
+  next: []

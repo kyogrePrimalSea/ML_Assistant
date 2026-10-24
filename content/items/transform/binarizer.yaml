@@ -1,0 +1,75 @@
+id: binarizer
+plain_name: Binarizer
+code_name: Binarizer / binarize
+stage: transform
+family: transform.scale.bin
+tracks: [standard, time-series]
+archetype: transformer
+aliases: [yes or no flag, on-off flag, threshold flag, cut-off]
+question_tags: [yes or no, cut-off]
+targets: [sklearn.preprocessing.Binarizer, sklearn.preprocessing.binarize]
+pairs_with: []
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.Binarizer.html
+  - https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.binarize.html
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {columns: same, rows: same}
+slots:
+  header: {}
+  solves:
+    hero:
+      kind: transformer
+      dataset: breast-cancer
+      columns: [mean radius]
+      changed: [mean radius]
+    line: Sets each value to 0 or 1 at a cut-off.
+  quick_facts:
+    facts:
+      - {label: Output, value: 0 or 1 per value}
+      - {label: Learns from data, value: 'no: the cut-off is fixed'}
+  use_avoid:
+    use_when: [yes or no flags, one fixed cut-off]
+    avoid_when: [keep the full detail, several bins needed]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.preprocessing.Binarizer
+      why_this_library: Learns nothing, so it cannot leak test rows.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.preprocessing import Binarizer
+
+        X, _ = load_breast_cancer(return_X_y=True)
+        radius = X[:, [0]]  # mean radius, kept as a 2-D column
+
+        binarizer = Binarizer(threshold=15.0)
+        big = binarizer.fit_transform(radius)  # nothing is learned here
+
+        print(int(big.sum()), "rows have a mean radius above 15")
+  what_comes_out:
+    items:
+      - {kind: method, name: transform, note: Each value becomes 0 or 1., shape: '(n_samples, n_features)', task: null}
+      - {kind: method, name: fit_transform, note: Checks settings and transforms in one step., shape: '(n_samples, n_features)', task: null}
+      - {kind: method, name: get_feature_names_out, note: Same names as the input columns., shape: '(n_features,)', task: null}
+      - {kind: attribute, name: n_features_in_, note: Number of columns seen during fit., shape: int, task: null}
+    next_step: Use the 0/1 columns as ordinary features in a model.
+    visual: null
+  catch_outs:
+    - Values equal to the threshold become 0, not 1.
+    - The cut-off is not learned; choose it for the question.
+  key_settings:
+    tier1:
+      - {name: threshold, page: null}
+    tier2: []
+    tier3:
+      - {name: copy, page: null}
+  watch_it_work: {none: true}
+  intuition: {text: Anything above the cut-off becomes 1; the rest become 0.}
+  next: []

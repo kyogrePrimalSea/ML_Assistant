@@ -1,0 +1,89 @@
+id: functionsampler
+plain_name: FunctionSampler
+code_name: FunctionSampler
+aliases: ["custom sampler", "own resampling", "custom function"]
+stage: transform
+family: transform.rebalance.custom
+tracks: [standard]
+archetype: resampler
+question_tags: ["custom rule", "own sampling"]
+targets: [imblearn.FunctionSampler]
+pairs_with: [imblearn-pipeline]
+clashes: []
+source_urls:
+  - https://imbalanced-learn.org/stable/references/generated/imblearn.FunctionSampler.html
+library_versions:
+  imbalanced-learn: "0.14.2"
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: grows, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: resampler, dataset: breast-cancer, classes: [malignant, benign], before: [212, 357], after: [424, 357]}
+    line: "Runs your own rule to change the rows."
+  quick_facts:
+    facts:
+      - {label: "Adds", value: "whatever your function returns"}
+      - {label: "Learns from data", value: "no"}
+  use_avoid:
+    use_when: ["our own resampling rule", "a rule no sampler has"]
+    avoid_when: ["a built-in sampler already fits", "regression"]
+  prep:
+    - step: {page: train-test-split}
+      status: required
+      why: "Resample the training rows only."
+      condition: null
+      unless: null
+  code:
+    - library: imbalanced-learn
+      target: imblearn.FunctionSampler
+      why_this_library: "The imbalanced-learn sampler; scikit-learn has none."
+      snippet: |
+        # imbalanced-learn 0.14.2
+        from collections import Counter
+
+        import numpy as np
+        from imblearn import FunctionSampler
+        from sklearn.datasets import make_classification
+
+
+        def double_rare(X, y):
+            """Copy every row of the rarest class once."""
+            rare = y == np.argmin(np.bincount(y))
+            return np.vstack([X, X[rare]]), np.concatenate([y, y[rare]])
+
+
+        X, y = make_classification(
+            n_samples=1000, weights=[0.9, 0.1], random_state=0
+        )
+        print("before", Counter(y.tolist()))
+
+        sampler = FunctionSampler(func=double_rare)
+        X_res, y_res = sampler.fit_resample(X, y)
+        print("after", Counter(y_res.tolist()))
+  what_comes_out:
+    items:
+      - {name: fit_resample, kind: method, task: null, shape: "X (rows change), y (rows,)", note: "Returns new X and y; training rows only."}
+      - {name: sampling_strategy_, kind: attribute, task: null, shape: "dict: class to count", note: "Rows to add per class, set at fit time."}
+    next_step: "Check the resampled counts before training."
+    visual: null
+  catch_outs:
+    - "Resample after the split, on training rows only."
+    - "Never resample the test set."
+    - "Your function must return X and y together."
+  key_settings:
+    tier1:
+      - {name: func, page: null}
+      - {name: kw_args, page: null}
+    tier2:
+      - {name: validate, page: null}
+      - {name: accept_sparse, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: "Your rule runs in the sampling step, exactly as you wrote it."
+  next: []

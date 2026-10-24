@@ -1,0 +1,75 @@
+id: feature-union
+plain_name: make_union
+code_name: make_union
+aliases: [parallel transforms, auto step names]
+stage: transform
+family: transform.chain.union
+tracks: [standard, time-series]
+archetype: composer
+question_tags: [several transforms, joined features]
+targets: [sklearn.pipeline.make_union]
+pairs_with: [columntransformer]
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.make_union.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: expands}
+slots:
+  header: {}
+  solves:
+    hero: {kind: composer, boxes: [Transform A, Transform B, Joined]}
+    line: Runs transforms side by side on the same rows, then joins them.
+  quick_facts:
+    facts:
+      - {label: Output, value: "outputs joined side by side"}
+      - {label: Learns from data, value: "yes: fit on train only"}
+  use_avoid:
+    use_when: [several transforms, same columns]
+    avoid_when: [one transform is enough, ordered steps]
+  prep:
+    - step: {page: train-test-split}
+      status: required
+      why: Fit each transform on training rows only.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.pipeline.make_union
+      why_this_library: Same as FeatureUnion, with names set for you.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.decomposition import PCA
+        from sklearn.pipeline import make_union
+        from sklearn.preprocessing import StandardScaler
+
+        X, y = load_breast_cancer(return_X_y=True)
+
+        union = make_union(
+            PCA(n_components=2, random_state=0),
+            StandardScaler(),
+        )
+        X_out = union.fit_transform(X)  # outputs joined side by side
+        print(X_out.shape)
+  what_comes_out:
+    items:
+      - {name: make_union, kind: return, task: null, shape: "FeatureUnion object", note: "Not fitted yet; call fit_transform."}
+    next_step: "Feed the joined output to a model or a Pipeline."
+    visual: null
+  catch_outs:
+    - Every transform sees all the input columns.
+    - Step names are the lowercase class names, such as pca.
+    - Use ColumnTransformer when each transform needs other columns.
+  key_settings:
+    tier1:
+      - {name: transformers, page: null}
+    tier2: []
+    tier3:
+      - {name: verbose_feature_names_out, page: null}
+  watch_it_work: {none: true}
+  intuition: {text: "Several transforms read the same rows, then their outputs join."}
+  next: []

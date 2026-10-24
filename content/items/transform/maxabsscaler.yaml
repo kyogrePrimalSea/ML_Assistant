@@ -1,0 +1,85 @@
+id: maxabsscaler
+plain_name: MaxAbsScaler
+code_name: MaxAbsScaler / maxabs_scale
+stage: transform
+family: transform.scale.rescale
+tracks: [standard, time-series]
+archetype: transformer
+aliases: [max abs, scale to minus 1 to 1, sparse-safe scaling]
+question_tags: [sparse data, zeros matter]
+targets: [sklearn.preprocessing.MaxAbsScaler, sklearn.preprocessing.maxabs_scale]
+pairs_with: []
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.MaxAbsScaler.html
+  - https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.maxabs_scale.html
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {columns: same, rows: same}
+slots:
+  header: {}
+  solves:
+    hero:
+      kind: transformer
+      dataset: ames
+      columns: [LotArea]
+      changed: [LotArea]
+    line: Divides each column by its largest absolute value.
+  quick_facts:
+    facts:
+      - {label: Range, value: minus 1 to 1}
+      - {label: Zeros, value: stay zero}
+      - {label: Learns from data, value: 'yes: fit on train only'}
+  use_avoid:
+    use_when: [sparse data, zeros must stay zero]
+    avoid_when: [heavy outliers, data needs centring]
+  prep:
+    - {condition: null, status: required, step: {page: train-test-split}, unless: null, why: Fit the maxima on training rows only.}
+  code:
+    - library: scikit-learn
+      target: sklearn.preprocessing.MaxAbsScaler
+      why_this_library: Fits inside a Pipeline, so no leakage.
+      snippet: |
+        # scikit-learn 1.9.1
+        import numpy as np
+        from sklearn.datasets import make_regression
+        from sklearn.model_selection import train_test_split
+        from sklearn.preprocessing import MaxAbsScaler
+
+        X, y = make_regression(n_samples=200, n_features=3, random_state=0)
+        X[:, 0] *= 1000  # one column on a much bigger scale
+        rng = np.random.default_rng(0)
+        X[rng.random(X.shape) < 0.5] = 0  # half the values are zero
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        scaler = MaxAbsScaler()
+        X_train_s = scaler.fit_transform(X_train)  # learn the maxima here
+        X_test_s = scaler.transform(X_test)        # reuse them, never refit
+
+        print(np.abs(X_train_s).max(axis=0).round(2))
+  what_comes_out:
+    items:
+      - {kind: method, name: transform, note: Each column divided by its largest absolute value., shape: '(n_samples, n_features)', task: null}
+      - {kind: method, name: fit_transform, note: Learns the maxima and scales in one step., shape: '(n_samples, n_features)', task: null}
+      - {kind: method, name: inverse_transform, note: Gets the original values back., shape: '(n_samples, n_features)', task: null}
+      - {kind: attribute, name: scale_, note: Divisor per column; 1 for all-zero columns., shape: '(n_features,)', task: null}
+      - {kind: attribute, name: max_abs_, note: Largest absolute value per column., shape: '(n_features,)', task: null}
+    next_step: Scale inside a Pipeline before a linear model.
+    visual: null
+  catch_outs:
+    - Fit on training rows only; never on the test set.
+    - Test values can exceed 1 unless clip=True.
+    - One extreme value squeezes every other value toward zero.
+  key_settings:
+    tier1:
+      - {name: clip, page: null}
+    tier2: []
+    tier3:
+      - {name: copy, page: null}
+  watch_it_work: {none: true}
+  intuition: {text: 'Divide each column by its biggest size, so values land between minus 1 and 1.'}
+  next: []

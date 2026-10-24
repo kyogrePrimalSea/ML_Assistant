@@ -1,0 +1,79 @@
+id: normalizer
+plain_name: Normalizer
+code_name: Normalizer / normalize
+aliases: [unit length, row norm, l2 normalise]
+stage: transform
+family: transform.scale.rescale
+tracks: [standard, time-series]
+archetype: transformer
+question_tags: [text vectors, row length]
+targets: [sklearn.preprocessing.Normalizer, sklearn.preprocessing.normalize]
+pairs_with: [pipeline]
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.Normalizer.html',
+  'https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.normalize.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: transformer, dataset: ames, columns: [LotArea, YearBuilt], changed: [LotArea, YearBuilt]}
+    line: Scales each row so its total length is one.
+  quick_facts:
+    facts:
+      - {label: Result, value: "each row has length 1"}
+      - {label: Learns from data, value: "no: each row scaled alone"}
+  use_avoid:
+    use_when: [text vectors, rows need length 1]
+    avoid_when: [columns must be compared, per-column scaling]
+  prep:
+    - step: {page: train-test-split}
+      status: not_needed
+      why: Each row is scaled alone, so nothing is learned.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.preprocessing.Normalizer
+      why_this_library: Stateless, so it is safe in any Pipeline.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import make_regression
+        from sklearn.preprocessing import Normalizer
+
+        X, _ = make_regression(n_samples=5, n_features=3, random_state=0)
+        X[:, 0] *= 1000  # one column on a much bigger scale
+
+        normalizer = Normalizer()  # norm="l2" by default, nothing learned
+        X_unit = normalizer.fit_transform(X)
+
+        print(X_unit[:2].round(3).tolist())
+        print((X_unit ** 2).sum(axis=1).round(3))
+  what_comes_out:
+    items:
+      - {name: transform, kind: method, task: null, shape: "(n_samples, n_features)", note: Scales each non-zero row to unit length.}
+      - {name: fit_transform, kind: method, task: null, shape: "(n_samples, n_features)", note: Scales each row in one step.}
+      - {name: get_feature_names_out, kind: method, task: null, shape: "(n_features,)", note: Names of the output columns.}
+      - {name: set_output, kind: method, task: null, shape: self, note: "Chooses the output container, such as pandas."}
+      - {name: feature_names_in_, kind: attribute, task: null, shape: "(n_features_in_,)", note: Column names seen during fit.}
+      - {name: n_features_in_, kind: attribute, task: null, shape: int, note: Number of columns seen during fit.}
+    next_step: Wrap the normalizer and the model in one Pipeline.
+    visual: null
+  catch_outs:
+    - Each row is scaled alone, so columns keep their different scales.
+    - All-zero rows stay zero; they have no length to scale.
+  key_settings:
+    tier1:
+      - {name: norm, page: null}
+    tier2: []
+    tier3:
+      - {name: copy, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    text: Shrink each row so its total length is exactly one.
+  next: []

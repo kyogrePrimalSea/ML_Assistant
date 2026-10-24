@@ -109,15 +109,45 @@
   },
   {
     "source": "adasyn",
+    "target": "imblearn-pipeline",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "adasyn",
     "target": "kmeanssmote",
     "type": "alternative_to",
     "via": "transform.rebalance.over-hard"
   },
   {
     "source": "adasyn",
+    "target": "onehotencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "adasyn",
+    "target": "ordinalencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "adasyn",
     "target": "svmsmote",
     "type": "alternative_to",
     "via": "transform.rebalance.over-hard"
+  },
+  {
+    "source": "adasyn",
+    "target": "targetencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "adasyn",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
   },
   {
     "source": "add-dummy-feature",
@@ -205,9 +235,45 @@
   },
   {
     "source": "allknn",
+    "target": "imblearn-pipeline",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "allknn",
+    "target": "kernelcenterer",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "allknn",
+    "target": "maxabsscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "allknn",
+    "target": "minmaxscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "allknn",
     "target": "neighbourhoodcleaningrule",
     "type": "alternative_to",
     "via": "transform.rebalance.clean"
+  },
+  {
+    "source": "allknn",
+    "target": "normalizer",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "allknn",
+    "target": "onehotencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
   },
   {
     "source": "allknn",
@@ -217,15 +283,45 @@
   },
   {
     "source": "allknn",
+    "target": "ordinalencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "allknn",
     "target": "repeatededitednearestneighbours",
     "type": "alternative_to",
     "via": "transform.rebalance.clean"
   },
   {
     "source": "allknn",
+    "target": "robustscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "allknn",
+    "target": "standardscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "allknn",
+    "target": "targetencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "allknn",
     "target": "tomeklinks",
     "type": "alternative_to",
     "via": "transform.rebalance.clean"
+  },
+  {
+    "source": "allknn",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
   },
   {
     "source": "ard-regression",
@@ -409,15 +505,45 @@
   },
   {
     "source": "borderlinesmote",
+    "target": "imblearn-pipeline",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "borderlinesmote",
     "target": "kmeanssmote",
     "type": "alternative_to",
     "via": "transform.rebalance.over-hard"
   },
   {
     "source": "borderlinesmote",
+    "target": "onehotencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "borderlinesmote",
+    "target": "ordinalencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "borderlinesmote",
     "target": "svmsmote",
     "type": "alternative_to",
     "via": "transform.rebalance.over-hard"
+  },
+  {
+    "source": "borderlinesmote",
+    "target": "targetencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "borderlinesmote",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
   },
   {
     "source": "breusch-pagan",
@@ -697,9 +823,33 @@
   },
   {
     "source": "clustercentroids",
+    "target": "imblearn-pipeline",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "clustercentroids",
     "target": "instancehardnessthreshold",
     "type": "alternative_to",
     "via": "transform.rebalance.under"
+  },
+  {
+    "source": "clustercentroids",
+    "target": "kernelcenterer",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "clustercentroids",
+    "target": "maxabsscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "clustercentroids",
+    "target": "minmaxscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
   },
   {
     "source": "clustercentroids",
@@ -709,9 +859,51 @@
   },
   {
     "source": "clustercentroids",
+    "target": "normalizer",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "clustercentroids",
+    "target": "onehotencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "clustercentroids",
+    "target": "ordinalencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "clustercentroids",
     "target": "randomundersampler",
     "type": "alternative_to",
     "via": "transform.rebalance.under"
+  },
+  {
+    "source": "clustercentroids",
+    "target": "robustscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "clustercentroids",
+    "target": "standardscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "clustercentroids",
+    "target": "targetencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "clustercentroids",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
   },
   {
     "source": "cmaessampler",
@@ -846,10 +1038,76 @@
     "via": "model.probabilistic.nb"
   },
   {
+    "source": "compute-class-weight",
+    "target": "kernelcenterer",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "compute-class-weight",
+    "target": "maxabsscaler",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "compute-class-weight",
+    "target": "minmaxscaler",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "compute-class-weight",
+    "target": "normalizer",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "compute-class-weight",
+    "target": "robustscaler",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "compute-class-weight",
+    "target": "standardscaler",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "compute-class-weight",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
+    "source": "condensednearestneighbour",
+    "target": "imblearn-pipeline",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
     "source": "condensednearestneighbour",
     "target": "instancehardnessthreshold",
     "type": "alternative_to",
     "via": "transform.rebalance.under"
+  },
+  {
+    "source": "condensednearestneighbour",
+    "target": "kernelcenterer",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "condensednearestneighbour",
+    "target": "maxabsscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "condensednearestneighbour",
+    "target": "minmaxscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
   },
   {
     "source": "condensednearestneighbour",
@@ -859,9 +1117,51 @@
   },
   {
     "source": "condensednearestneighbour",
+    "target": "normalizer",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "condensednearestneighbour",
+    "target": "onehotencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "condensednearestneighbour",
+    "target": "ordinalencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "condensednearestneighbour",
     "target": "randomundersampler",
     "type": "alternative_to",
     "via": "transform.rebalance.under"
+  },
+  {
+    "source": "condensednearestneighbour",
+    "target": "robustscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "condensednearestneighbour",
+    "target": "standardscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "condensednearestneighbour",
+    "target": "targetencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "condensednearestneighbour",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
   },
   {
     "source": "confusion-matrix",
@@ -1093,9 +1393,45 @@
   },
   {
     "source": "editednearestneighbours",
+    "target": "imblearn-pipeline",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "editednearestneighbours",
+    "target": "kernelcenterer",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "editednearestneighbours",
+    "target": "maxabsscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "editednearestneighbours",
+    "target": "minmaxscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "editednearestneighbours",
     "target": "neighbourhoodcleaningrule",
     "type": "alternative_to",
     "via": "transform.rebalance.clean"
+  },
+  {
+    "source": "editednearestneighbours",
+    "target": "normalizer",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "editednearestneighbours",
+    "target": "onehotencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
   },
   {
     "source": "editednearestneighbours",
@@ -1105,15 +1441,51 @@
   },
   {
     "source": "editednearestneighbours",
+    "target": "ordinalencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "editednearestneighbours",
     "target": "repeatededitednearestneighbours",
     "type": "alternative_to",
     "via": "transform.rebalance.clean"
   },
   {
     "source": "editednearestneighbours",
+    "target": "robustscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "editednearestneighbours",
+    "target": "smoteenn",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "editednearestneighbours",
+    "target": "standardscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "editednearestneighbours",
+    "target": "targetencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "editednearestneighbours",
     "target": "tomeklinks",
     "type": "alternative_to",
     "via": "transform.rebalance.clean"
+  },
+  {
+    "source": "editednearestneighbours",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
   },
   {
     "source": "elastic-net",
@@ -1522,6 +1894,24 @@
     "target": "partialfixedsampler",
     "type": "alternative_to",
     "via": "tune.optuna.setup"
+  },
+  {
+    "source": "functionsampler",
+    "target": "imblearn-pipeline",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "functionsampler",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
+    "source": "functiontransformer",
+    "target": "pipeline",
+    "type": "pairs_with",
+    "via": "pairs_with"
   },
   {
     "source": "functiontransformer",
@@ -2083,6 +2473,36 @@
   },
   {
     "source": "imblearn-pipeline",
+    "target": "instancehardnessthreshold",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "imblearn-pipeline",
+    "target": "kmeanssmote",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "imblearn-pipeline",
+    "target": "nearmiss",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "imblearn-pipeline",
+    "target": "neighbourhoodcleaningrule",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "imblearn-pipeline",
+    "target": "onesidedselection",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "imblearn-pipeline",
     "target": "pipeline",
     "type": "alternative_to",
     "via": "transform.chain.pipeline"
@@ -2095,7 +2515,61 @@
   },
   {
     "source": "imblearn-pipeline",
+    "target": "randomoversampler",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "imblearn-pipeline",
+    "target": "randomundersampler",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "imblearn-pipeline",
+    "target": "repeatededitednearestneighbours",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "imblearn-pipeline",
     "target": "smote",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "imblearn-pipeline",
+    "target": "smoteenn",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "imblearn-pipeline",
+    "target": "smoten",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "imblearn-pipeline",
+    "target": "smotenc",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "imblearn-pipeline",
+    "target": "smotetomek",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "imblearn-pipeline",
+    "target": "svmsmote",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "imblearn-pipeline",
+    "target": "tomeklinks",
     "type": "pairs_with",
     "via": "pairs_with"
   },
@@ -2149,9 +2623,33 @@
   },
   {
     "source": "instancehardnessthreshold",
+    "target": "onehotencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "instancehardnessthreshold",
+    "target": "ordinalencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "instancehardnessthreshold",
     "target": "randomundersampler",
     "type": "alternative_to",
     "via": "transform.rebalance.under"
+  },
+  {
+    "source": "instancehardnessthreshold",
+    "target": "targetencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "instancehardnessthreshold",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
   },
   {
     "source": "isotonic-regression",
@@ -2226,6 +2724,12 @@
     "via": "model.neighbours.knn"
   },
   {
+    "source": "kbinsdiscretizer",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
     "source": "kernel-ridge",
     "target": "nu-svr",
     "type": "alternative_to",
@@ -2274,6 +2778,12 @@
     "via": "transform.scale.rescale"
   },
   {
+    "source": "kernelcenterer",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
     "source": "kernelexplainer",
     "target": "partitionexplainer",
     "type": "alternative_to",
@@ -2311,9 +2821,33 @@
   },
   {
     "source": "kmeanssmote",
+    "target": "onehotencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "kmeanssmote",
+    "target": "ordinalencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "kmeanssmote",
     "target": "svmsmote",
     "type": "alternative_to",
     "via": "transform.rebalance.over-hard"
+  },
+  {
+    "source": "kmeanssmote",
+    "target": "targetencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "kmeanssmote",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
   },
   {
     "source": "knnimputer",
@@ -2424,10 +2958,22 @@
     "via": "transform.encode.target"
   },
   {
+    "source": "labelbinarizer",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
     "source": "labelencoder",
     "target": "multilabelbinarizer",
     "type": "alternative_to",
     "via": "transform.encode.target"
+  },
+  {
+    "source": "labelencoder",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
   },
   {
     "source": "lars",
@@ -2910,6 +3456,12 @@
     "via": "transform.scale.rescale"
   },
   {
+    "source": "maxabsscaler",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
     "source": "maxtrialscallback",
     "target": "plot-terminator-improvement",
     "type": "alternative_to",
@@ -3025,6 +3577,12 @@
   },
   {
     "source": "minmaxscaler",
+    "target": "pipeline",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "minmaxscaler",
     "target": "robustscaler",
     "type": "alternative_to",
     "via": "transform.scale.rescale"
@@ -3034,6 +3592,12 @@
     "target": "standardscaler",
     "type": "alternative_to",
     "via": "transform.scale.rescale"
+  },
+  {
+    "source": "minmaxscaler",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
   },
   {
     "source": "missingindicator",
@@ -3102,6 +3666,12 @@
     "via": "explore.decompose"
   },
   {
+    "source": "multilabelbinarizer",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
     "source": "mutual-info-classif",
     "target": "mutual-info-regression",
     "type": "alternative_to",
@@ -3133,9 +3703,69 @@
   },
   {
     "source": "nearmiss",
+    "target": "kernelcenterer",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "nearmiss",
+    "target": "maxabsscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "nearmiss",
+    "target": "minmaxscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "nearmiss",
+    "target": "normalizer",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "nearmiss",
+    "target": "onehotencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "nearmiss",
+    "target": "ordinalencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "nearmiss",
     "target": "randomundersampler",
     "type": "alternative_to",
     "via": "transform.rebalance.under"
+  },
+  {
+    "source": "nearmiss",
+    "target": "robustscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "nearmiss",
+    "target": "standardscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "nearmiss",
+    "target": "targetencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "nearmiss",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
   },
   {
     "source": "negative-binomial-regression",
@@ -3151,9 +3781,45 @@
   },
   {
     "source": "neighbourhoodcleaningrule",
+    "target": "kernelcenterer",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "neighbourhoodcleaningrule",
+    "target": "maxabsscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "neighbourhoodcleaningrule",
+    "target": "minmaxscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "neighbourhoodcleaningrule",
+    "target": "normalizer",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "neighbourhoodcleaningrule",
+    "target": "onehotencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "neighbourhoodcleaningrule",
     "target": "onesidedselection",
     "type": "alternative_to",
     "via": "transform.rebalance.clean"
+  },
+  {
+    "source": "neighbourhoodcleaningrule",
+    "target": "ordinalencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
   },
   {
     "source": "neighbourhoodcleaningrule",
@@ -3163,9 +3829,33 @@
   },
   {
     "source": "neighbourhoodcleaningrule",
+    "target": "robustscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "neighbourhoodcleaningrule",
+    "target": "standardscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "neighbourhoodcleaningrule",
+    "target": "targetencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "neighbourhoodcleaningrule",
     "target": "tomeklinks",
     "type": "alternative_to",
     "via": "transform.rebalance.clean"
+  },
+  {
+    "source": "neighbourhoodcleaningrule",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
   },
   {
     "source": "noppruner",
@@ -3229,6 +3919,12 @@
   },
   {
     "source": "normalizer",
+    "target": "pipeline",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "normalizer",
     "target": "robustscaler",
     "type": "alternative_to",
     "via": "transform.scale.rescale"
@@ -3238,6 +3934,12 @@
     "target": "standardscaler",
     "type": "alternative_to",
     "via": "transform.scale.rescale"
+  },
+  {
+    "source": "normalizer",
+    "target": "train-test-split",
+    "type": "clashes",
+    "via": "prep"
   },
   {
     "source": "nsgaiiisampler",
@@ -3307,15 +4009,75 @@
   },
   {
     "source": "onesidedselection",
+    "target": "kernelcenterer",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "onesidedselection",
+    "target": "maxabsscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "onesidedselection",
+    "target": "minmaxscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "onesidedselection",
+    "target": "normalizer",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "onesidedselection",
+    "target": "onehotencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "onesidedselection",
+    "target": "ordinalencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "onesidedselection",
     "target": "repeatededitednearestneighbours",
     "type": "alternative_to",
     "via": "transform.rebalance.clean"
   },
   {
     "source": "onesidedselection",
+    "target": "robustscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "onesidedselection",
+    "target": "standardscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "onesidedselection",
+    "target": "targetencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "onesidedselection",
     "target": "tomeklinks",
     "type": "alternative_to",
     "via": "transform.rebalance.clean"
+  },
+  {
+    "source": "onesidedselection",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
   },
   {
     "source": "optuna-study",
@@ -3337,9 +4099,21 @@
   },
   {
     "source": "ordinalencoder",
+    "target": "pipeline",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "ordinalencoder",
     "target": "targetencoder",
     "type": "alternative_to",
     "via": "transform.encode.features"
+  },
+  {
+    "source": "ordinalencoder",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
   },
   {
     "source": "parametersampler",
@@ -3553,6 +4327,24 @@
   },
   {
     "source": "pipeline",
+    "target": "polynomialfeatures",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "pipeline",
+    "target": "powertransformer",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "pipeline",
+    "target": "quantiletransformer",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "pipeline",
     "target": "randomizedsearchcv",
     "type": "pairs_with",
     "via": "pairs_with"
@@ -3566,6 +4358,12 @@
   {
     "source": "pipeline",
     "target": "rfecv",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "pipeline",
+    "target": "robustscaler",
     "type": "pairs_with",
     "via": "pairs_with"
   },
@@ -3595,7 +4393,19 @@
   },
   {
     "source": "pipeline",
+    "target": "splinetransformer",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "pipeline",
     "target": "standardscaler",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "pipeline",
+    "target": "targetencoder",
     "type": "pairs_with",
     "via": "pairs_with"
   },
@@ -3750,10 +4560,22 @@
     "via": "transform.create.expand"
   },
   {
+    "source": "polynomialfeatures",
+    "target": "train-test-split",
+    "type": "recommended",
+    "via": "prep"
+  },
+  {
     "source": "powertransformer",
     "target": "quantiletransformer",
     "type": "alternative_to",
     "via": "transform.scale.reshape"
+  },
+  {
+    "source": "powertransformer",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
   },
   {
     "source": "powertransformer",
@@ -3828,6 +4650,12 @@
     "via": "tune.optuna.sampler"
   },
   {
+    "source": "quantiletransformer",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
     "source": "r-regression",
     "target": "kernelcenterer",
     "type": "clashes",
@@ -3877,6 +4705,18 @@
   },
   {
     "source": "randomoversampler",
+    "target": "onehotencoder",
+    "type": "clashes",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "randomoversampler",
+    "target": "ordinalencoder",
+    "type": "clashes",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "randomoversampler",
     "target": "smote",
     "type": "alternative_to",
     "via": "transform.rebalance.over"
@@ -3894,10 +4734,64 @@
     "via": "transform.rebalance.over"
   },
   {
+    "source": "randomoversampler",
+    "target": "targetencoder",
+    "type": "clashes",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "randomoversampler",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
     "source": "randomsampler",
     "target": "tpesampler",
     "type": "alternative_to",
     "via": "tune.optuna.sampler"
+  },
+  {
+    "source": "randomundersampler",
+    "target": "kernelcenterer",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "randomundersampler",
+    "target": "maxabsscaler",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "randomundersampler",
+    "target": "minmaxscaler",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "randomundersampler",
+    "target": "normalizer",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "randomundersampler",
+    "target": "robustscaler",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "randomundersampler",
+    "target": "standardscaler",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "randomundersampler",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
   },
   {
     "source": "ransac-regressor",
@@ -3913,9 +4807,69 @@
   },
   {
     "source": "repeatededitednearestneighbours",
+    "target": "kernelcenterer",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "repeatededitednearestneighbours",
+    "target": "maxabsscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "repeatededitednearestneighbours",
+    "target": "minmaxscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "repeatededitednearestneighbours",
+    "target": "normalizer",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "repeatededitednearestneighbours",
+    "target": "onehotencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "repeatededitednearestneighbours",
+    "target": "ordinalencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "repeatededitednearestneighbours",
+    "target": "robustscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "repeatededitednearestneighbours",
+    "target": "standardscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "repeatededitednearestneighbours",
+    "target": "targetencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "repeatededitednearestneighbours",
     "target": "tomeklinks",
     "type": "alternative_to",
     "via": "transform.rebalance.clean"
+  },
+  {
+    "source": "repeatededitednearestneighbours",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
   },
   {
     "source": "repeatedstratifiedkfold",
@@ -4078,6 +5032,12 @@
     "target": "standardscaler",
     "type": "alternative_to",
     "via": "transform.scale.rescale"
+  },
+  {
+    "source": "robustscaler",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
   },
   {
     "source": "roc-auc-score",
@@ -4411,6 +5371,12 @@
   },
   {
     "source": "smote",
+    "target": "smoteenn",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "smote",
     "target": "smoten",
     "type": "alternative_to",
     "via": "transform.rebalance.over"
@@ -4420,6 +5386,12 @@
     "target": "smotenc",
     "type": "alternative_to",
     "via": "transform.rebalance.over"
+  },
+  {
+    "source": "smote",
+    "target": "smotetomek",
+    "type": "pairs_with",
+    "via": "pairs_with"
   },
   {
     "source": "smote",
@@ -4435,15 +5407,195 @@
   },
   {
     "source": "smoteenn",
+    "target": "kernelcenterer",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "smoteenn",
+    "target": "maxabsscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "smoteenn",
+    "target": "minmaxscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "smoteenn",
+    "target": "normalizer",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "smoteenn",
+    "target": "onehotencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "smoteenn",
+    "target": "ordinalencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "smoteenn",
+    "target": "robustscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "smoteenn",
     "target": "smotetomek",
     "type": "alternative_to",
     "via": "transform.rebalance.combine"
+  },
+  {
+    "source": "smoteenn",
+    "target": "standardscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "smoteenn",
+    "target": "targetencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "smoteenn",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
+    "source": "smoten",
+    "target": "onehotencoder",
+    "type": "clashes",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "smoten",
+    "target": "ordinalencoder",
+    "type": "clashes",
+    "via": "prep:transform.encode.features"
   },
   {
     "source": "smoten",
     "target": "smotenc",
     "type": "alternative_to",
     "via": "transform.rebalance.over"
+  },
+  {
+    "source": "smoten",
+    "target": "targetencoder",
+    "type": "clashes",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "smoten",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
+    "source": "smotenc",
+    "target": "onehotencoder",
+    "type": "clashes",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "smotenc",
+    "target": "ordinalencoder",
+    "type": "clashes",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "smotenc",
+    "target": "targetencoder",
+    "type": "clashes",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "smotenc",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
+    "source": "smotetomek",
+    "target": "kernelcenterer",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "smotetomek",
+    "target": "maxabsscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "smotetomek",
+    "target": "minmaxscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "smotetomek",
+    "target": "normalizer",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "smotetomek",
+    "target": "onehotencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "smotetomek",
+    "target": "ordinalencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "smotetomek",
+    "target": "robustscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "smotetomek",
+    "target": "standardscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "smotetomek",
+    "target": "targetencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "smotetomek",
+    "target": "tomeklinks",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "smotetomek",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
+    "source": "splinetransformer",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
   },
   {
     "source": "stacking",
@@ -4500,6 +5652,36 @@
     "via": "model.neighbours.kernel"
   },
   {
+    "source": "svmsmote",
+    "target": "onehotencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "svmsmote",
+    "target": "ordinalencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "svmsmote",
+    "target": "targetencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "svmsmote",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
+    "source": "targetencoder",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
     "source": "terminator",
     "target": "terminatorcallback",
     "type": "alternative_to",
@@ -4510,6 +5692,66 @@
     "target": "trialpruned",
     "type": "alternative_to",
     "via": "tune.watch.prune-rule"
+  },
+  {
+    "source": "tomeklinks",
+    "target": "kernelcenterer",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "tomeklinks",
+    "target": "maxabsscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "tomeklinks",
+    "target": "minmaxscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "tomeklinks",
+    "target": "normalizer",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "tomeklinks",
+    "target": "onehotencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "tomeklinks",
+    "target": "ordinalencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "tomeklinks",
+    "target": "robustscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "tomeklinks",
+    "target": "standardscaler",
+    "type": "recommended",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "tomeklinks",
+    "target": "targetencoder",
+    "type": "needs",
+    "via": "prep:transform.encode.features"
+  },
+  {
+    "source": "tomeklinks",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
   },
   {
     "source": "top-k-accuracy-score",

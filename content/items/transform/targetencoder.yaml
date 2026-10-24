@@ -1,0 +1,81 @@
+id: targetencoder
+plain_name: TargetEncoder
+code_name: TargetEncoder
+aliases: [target encoding, mean encoding]
+stage: transform
+family: transform.encode.features
+tracks: [standard, time-series]
+archetype: transformer
+question_tags: [hundreds of categories, text categories]
+targets: [sklearn.preprocessing.TargetEncoder]
+pairs_with: [pipeline]
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.TargetEncoder.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: transformer, dataset: ames, columns: [Neighborhood], changed: [Neighborhood]}
+    line: Swaps each category for its average target.
+  quick_facts:
+    facts:
+      - {label: Learns from data, value: "yes: uses the target, fit on train only"}
+      - {label: Output, value: "one number per category"}
+  use_avoid:
+    use_when: [hundreds of categories, text categories]
+    avoid_when: [few categories, no target to learn from]
+  prep:
+    - step: {page: train-test-split}
+      status: required
+      why: Target means come from training rows only.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.preprocessing.TargetEncoder
+      why_this_library: Fits inside a Pipeline, with cross fitting built in.
+      snippet: |
+        # scikit-learn 1.9.1
+        import numpy as np
+        from sklearn.datasets import make_classification
+        from sklearn.preprocessing import TargetEncoder
+
+        X_raw, y = make_classification(n_samples=300, n_features=2, n_redundant=0,
+                                       random_state=0)
+        zone = np.round(X_raw[:, [0]] * 5).astype(int).astype(str)  # many codes
+
+        encoder = TargetEncoder()
+        encoder.fit(zone, y)  # learn the target mean per zone here
+        encoded = encoder.transform(zone)
+
+        print(encoded[:5].ravel().round(2))
+  what_comes_out:
+    items:
+      - {name: transform, kind: method, task: null, shape: "(n_samples, n_features)", note: Each category becomes its smoothed target mean.}
+      - {name: encodings_, kind: attribute, task: null, shape: "list of arrays", note: Learned number for each category.}
+      - {name: categories_, kind: attribute, task: null, shape: "list of arrays", note: Categories seen in training rows.}
+    next_step: Feed the numbers to a model.
+    visual: null
+  catch_outs:
+    - Uses the target, so fit on training rows only.
+    - fit_transform encodes each fold using the other folds.
+  key_settings:
+    tier1:
+      - {name: target_type, page: null}
+      - {name: categories, page: null}
+      - {name: cv, page: null}
+    tier2:
+      - {name: smooth, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: Replace each category with the average target for that category.
+  next: []

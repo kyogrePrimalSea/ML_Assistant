@@ -1,0 +1,82 @@
+id: instancehardnessthreshold
+plain_name: InstanceHardnessThreshold
+code_name: InstanceHardnessThreshold
+aliases: [undersampling, hard rows, instance hardness]
+stage: transform
+family: transform.rebalance.under
+tracks: [standard]
+archetype: resampler
+question_tags: [imbalanced, too many common rows]
+targets: [imblearn.under_sampling.InstanceHardnessThreshold]
+pairs_with: [imblearn-pipeline]
+clashes: []
+source_urls: ['https://imbalanced-learn.org/stable/references/generated/imblearn.under_sampling.InstanceHardnessThreshold.html']
+library_versions: {imbalanced-learn: 0.14.2}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: shrinks, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: resampler, dataset: breast-cancer, classes: [malignant, benign], before: [212, 357], after: [212, 229]}
+    line: Drops the common rows a classifier finds hardest.
+  quick_facts:
+    facts:
+      - {label: Removes, value: "common rows hard to classify"}
+      - {label: Learns from data, value: "yes: a classifier scores each row"}
+  use_avoid:
+    use_when: [imbalanced classes, classes overlap]
+    avoid_when: [category columns, regression]
+  prep:
+    - step: {page: train-test-split}
+      status: required
+      why: Resample the training rows only.
+      condition: null
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: The scoring classifier needs numbers.
+      condition: {has_categoricals: true}
+      unless: null
+  code:
+    - library: imbalanced-learn
+      target: imblearn.under_sampling.InstanceHardnessThreshold
+      why_this_library: Undersamplers live in imbalanced-learn, not scikit-learn.
+      snippet: |
+        # imbalanced-learn 0.14.2
+        from collections import Counter
+        
+        from imblearn.under_sampling import InstanceHardnessThreshold
+        from sklearn.datasets import load_breast_cancer
+        
+        X, y = load_breast_cancer(return_X_y=True)
+        print("before", Counter(y.tolist()))
+        
+        iht = InstanceHardnessThreshold(random_state=0)
+        X_res, y_res = iht.fit_resample(X, y)
+        print("after", Counter(y_res.tolist()))
+  what_comes_out:
+    items:
+      - {name: fit_resample, kind: method, task: null, shape: "two arrays, X and y", note: "Returns resampled X and y."}
+      - {name: sample_indices_, kind: attribute, task: null, shape: "1-D array", note: "Row positions that were kept."}
+      - {name: sampling_strategy_, kind: attribute, task: null, shape: dict, note: "Target row count per class."}
+    next_step: Fit your model on the resampled X and y.
+    visual: null
+  catch_outs:
+    - Scores rows with cross-validation; fit on training rows only.
+    - Can stop short of an even split, as in the example run.
+  key_settings:
+    tier1:
+      - {name: estimator, page: null}
+      - {name: cv, page: null}
+    tier2:
+      - {name: sampling_strategy, page: null}
+      - {name: random_state, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: Score each common row and drop the ones the model finds hard.
+  next: []

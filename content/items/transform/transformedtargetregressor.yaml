@@ -1,0 +1,86 @@
+id: transformedtargetregressor
+plain_name: TransformedTargetRegressor
+code_name: TransformedTargetRegressor
+aliases: [log target, target transform, inverse transform]
+stage: transform
+family: transform.chain.target
+tracks: [standard, time-series]
+archetype: composer
+question_tags: [skewed target, log target]
+targets: [sklearn.compose.TransformedTargetRegressor]
+pairs_with: [functiontransformer, powertransformer]
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.compose.TransformedTargetRegressor.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: composer, boxes: [Transform y, Model, Inverse y]}
+    line: Trains on a transformed target, then predicts in real units.
+  quick_facts:
+    facts:
+      - {label: Needs, value: "func pair or transformer"}
+      - {label: Learns from data, value: "only with a transformer"}
+  use_avoid:
+    use_when: [skewed target, predict in real units, log scale training]
+    avoid_when: [target already well behaved]
+  prep:
+    - step: {page: train-test-split}
+      status: required
+      why: Fit on training rows, score on test rows.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.compose.TransformedTargetRegressor
+      why_this_library: Undoes the target transform on every prediction.
+      snippet: |
+        # scikit-learn 1.9.1
+        import numpy as np
+        from sklearn.compose import TransformedTargetRegressor
+        from sklearn.datasets import make_regression
+        from sklearn.linear_model import Ridge
+        from sklearn.model_selection import train_test_split
+
+        X, y = make_regression(n_samples=300, n_features=5, noise=10, random_state=0)
+        y = np.exp(y / 100)  # skewed target, always positive
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        model = TransformedTargetRegressor(
+            regressor=Ridge(),
+            func=np.log1p,  # model learns on log scale
+            inverse_func=np.expm1,  # predictions come back in real units
+        )
+        model.fit(X_train, y_train)
+        print(model.predict(X_test[:3]).round(2))
+        print(round(model.score(X_test, y_test), 3))
+  what_comes_out:
+    items:
+      - {name: fit, kind: method, task: regression, shape: "self", note: "Transforms y, then fits the regressor."}
+      - {name: predict, kind: method, task: regression, shape: "(n_samples,)", note: "Predicts, then undoes the transform."}
+      - {name: regressor_, kind: attribute, task: null, shape: "fitted regressor", note: "The regressor fitted on transformed y."}
+      - {name: feature_names_in_, kind: attribute, task: null, shape: "array of column names", note: "Column names seen during fit."}
+    next_step: "Compare against a plain fit on the raw target."
+    visual: null
+  catch_outs:
+    - Pass func and inverse_func together, or one transformer alone.
+    - check_inverse tests that the inverse undoes the transform.
+    - Only the target changes; the features are untouched.
+  key_settings:
+    tier1:
+      - {name: transformer, page: null}
+      - {name: func, page: null}
+      - {name: inverse_func, page: null}
+      - {name: regressor, page: null}
+    tier2:
+      - {name: check_inverse, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Learn on a scale that fits the data, report in real units."}
+  next: []

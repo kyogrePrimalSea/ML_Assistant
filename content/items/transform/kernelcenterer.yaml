@@ -1,0 +1,76 @@
+id: kernelcenterer
+plain_name: KernelCenterer
+code_name: KernelCenterer
+stage: transform
+family: transform.scale.rescale
+tracks: [standard, time-series]
+archetype: transformer
+aliases: [kernel centering, centre a kernel, kernel matrix]
+question_tags: [kernel matrix, kernel methods]
+targets: [sklearn.preprocessing.KernelCenterer]
+pairs_with: []
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.KernelCenterer.html
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {columns: same, rows: same}
+slots:
+  header: {}
+  solves:
+    hero:
+      kind: transformer
+      dataset: ames
+      columns: [LotArea, YearBuilt]
+      changed: [kernel matrix]
+    line: Centres a kernel matrix, as if its features had mean zero.
+  quick_facts:
+    facts:
+      - {label: Input, value: square kernel matrix}
+      - {label: Learns from data, value: 'yes: fit on train only'}
+  use_avoid:
+    use_when: [precomputed kernel matrix, kernel methods]
+    avoid_when: [plain feature tables, no kernel matrix]
+  prep:
+    - {condition: null, status: required, step: {page: train-test-split}, unless: null, why: Learn the means from training rows only.}
+  code:
+    - library: scikit-learn
+      target: sklearn.preprocessing.KernelCenterer
+      why_this_library: Learns the means from the training kernel only.
+      snippet: |
+        # scikit-learn 1.9.1
+        import numpy as np
+        from sklearn.datasets import load_iris
+        from sklearn.metrics.pairwise import rbf_kernel
+        from sklearn.preprocessing import KernelCenterer
+
+        X, _ = load_iris(return_X_y=True)
+        K = rbf_kernel(X, gamma=0.5)  # square similarity matrix, one row per flower
+
+        centerer = KernelCenterer()
+        K_centred = centerer.fit_transform(K)  # learn the means here
+
+        print(np.abs(K_centred.mean(axis=0)).max() < 1e-9)
+  what_comes_out:
+    items:
+      - {kind: method, name: transform, note: Kernel matrix with its means removed., shape: '(n_rows, n_train)', task: null}
+      - {kind: method, name: fit_transform, note: Learns the means and centres in one step., shape: '(n_samples, n_samples)', task: null}
+      - {kind: attribute, name: K_fit_rows_, note: Row means of the training kernel., shape: '(n_samples,)', task: null}
+      - {kind: attribute, name: K_fit_all_, note: Mean of the whole training kernel., shape: float, task: null}
+    next_step: Pass the centred kernel to a kernel method.
+    visual: null
+  catch_outs:
+    - Input must be a kernel matrix, not raw features.
+    - Test kernels are test rows by training columns, not square.
+    - Fit on training kernel only; never on the test set.
+  key_settings:
+    tier1: []
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: Recentre the similarities so they average to zero.}
+  next: []

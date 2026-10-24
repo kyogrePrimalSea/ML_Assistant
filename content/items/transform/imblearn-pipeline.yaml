@@ -1,0 +1,85 @@
+id: imblearn-pipeline
+plain_name: Pipeline (imbalanced-learn)
+code_name: Pipeline / make_pipeline
+aliases: [resampling pipeline, sampler pipeline]
+stage: transform
+family: transform.chain.pipeline
+tracks: [standard]
+archetype: composer
+question_tags: [sampler inside cv, smote leakage]
+targets: [imblearn.pipeline.Pipeline, imblearn.pipeline.make_pipeline]
+pairs_with: [smote, pipeline]
+clashes: []
+source_urls:
+  - https://imbalanced-learn.org/stable/references/generated/imblearn.pipeline.Pipeline.html
+  - https://imbalanced-learn.org/stable/references/generated/imblearn.pipeline.make_pipeline.html
+library_versions:
+  imbalanced-learn: "0.14.2"
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: grows, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: composer, boxes: [Scaler, Sampler, Model]}
+    line: Runs samplers inside the pipeline, on training folds only.
+  quick_facts:
+    facts:
+      - {label: Last step, value: model}
+      - {label: Step types, value: "transform or resample"}
+  use_avoid:
+    use_when: [samplers like SMOTE, cross-validation, imbalanced classes]
+    avoid_when: [no resampling steps]
+  prep:
+    - step: {page: train-test-split}
+      status: recommended
+      why: Keep a test set the sampler never sees.
+      condition: null
+      unless: null
+  code:
+    - library: imbalanced-learn
+      target: imblearn.pipeline.Pipeline
+      why_this_library: Samplers run only on training folds.
+      snippet: |
+        # imbalanced-learn 0.14.2
+        from imblearn.over_sampling import SMOTE
+        from imblearn.pipeline import Pipeline
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.model_selection import cross_val_score
+        from sklearn.preprocessing import StandardScaler
+
+        X, y = load_breast_cancer(return_X_y=True)
+
+        pipe = Pipeline([
+            ("scale", StandardScaler()),
+            ("smote", SMOTE(random_state=0)),  # runs on training folds only
+            ("model", LogisticRegression(max_iter=1000)),
+        ])
+        print(cross_val_score(pipe, X, y, cv=5).round(3))
+  what_comes_out:
+    items:
+      - {name: fit, kind: method, task: null, shape: "self", note: "Resamples and fits each step in order."}
+      - {name: predict, kind: method, task: classification, shape: "(n_samples,)", note: "Transforms, then the final model predicts."}
+      - {name: transform, kind: method, task: null, shape: "(n_samples, n_features)", note: "Transforms through every step."}
+      - {name: named_steps, kind: attribute, task: null, shape: "Bunch, keyed by step name", note: "Fitted steps, looked up by name."}
+    next_step: "Tune steps with a search, using stepname__setting names."
+    visual: null
+  catch_outs:
+    - Use this, not sklearn's Pipeline, whenever a step resamples.
+    - Tune step settings as stepname__setting.
+    - Last step must be a model or a transformer.
+  key_settings:
+    tier1:
+      - {name: steps, page: null}
+    tier2:
+      - {name: transform_input, page: null}
+      - {name: memory, page: null}
+    tier3:
+      - {name: verbose, page: null}
+  watch_it_work: {none: true}
+  intuition: {text: "Each step feeds the next, and a sampler can change the rows."}
+  next: []

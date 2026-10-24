@@ -1,0 +1,82 @@
+id: labelencoder
+plain_name: LabelEncoder
+code_name: LabelEncoder
+stage: transform
+family: transform.encode.target
+tracks: [standard]
+archetype: transformer
+aliases: [integer codes, class to number, label codes]
+question_tags: [text labels, target labels]
+targets: [sklearn.preprocessing.LabelEncoder]
+pairs_with: []
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.LabelEncoder.html
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {columns: expands, rows: same}
+slots:
+  header: {}
+  solves:
+    hero:
+      kind: transformer
+      dataset: breast-cancer
+      columns: [target]
+      changed: [target]
+    line: Turns class names in y into 0, 1, 2.
+  quick_facts:
+    facts:
+      - {label: Output, value: one integer per class}
+      - {label: Learns from data, value: 'yes: fit on train only'}
+      - {label: Use on, value: the target y only}
+  use_avoid:
+    use_when: [class names in y, classification targets]
+    avoid_when: [feature columns, multi-label targets]
+  prep:
+    - {condition: null, status: required, step: {page: train-test-split}, unless: null, why: Learn the classes from training labels only.}
+  code:
+    - library: scikit-learn
+      target: sklearn.preprocessing.LabelEncoder
+      why_this_library: Learns the classes once, so test labels reuse the same codes.
+      snippet: |
+        # scikit-learn 1.9.1
+        import numpy as np
+        from sklearn.datasets import load_iris
+        from sklearn.model_selection import train_test_split
+        from sklearn.preprocessing import LabelEncoder
+
+        X, y = load_iris(return_X_y=True)
+        names = np.array(["setosa", "versicolor", "virginica"])[y]  # text labels
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, names, random_state=0, stratify=names
+        )
+
+        encoder = LabelEncoder()
+        y_train_int = encoder.fit_transform(y_train)  # learn the classes here
+        y_test_int = encoder.transform(y_test)        # reuse the same mapping
+
+        print(encoder.classes_)
+        print(y_test_int[:5])
+  what_comes_out:
+    items:
+      - {kind: method, name: transform, note: Each class name becomes its integer code., shape: '(n_samples,)', task: classification}
+      - {kind: method, name: fit_transform, note: Learns the classes and encodes them in one step., shape: '(n_samples,)', task: classification}
+      - {kind: method, name: inverse_transform, note: Turns integer codes back into class names., shape: '(n_samples,)', task: null}
+      - {kind: attribute, name: classes_, note: The class names; position is the code., shape: '(n_classes,)', task: null}
+    next_step: Pass the integer codes to the model as y.
+    visual: null
+  catch_outs:
+    - Fit on training labels only; never on the test set.
+    - Unseen labels in the test set raise a ValueError.
+    - Use it on y only; features need a different encoder.
+  key_settings:
+    tier1: []
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: 'Number each class name, starting at 0.'}
+  next: []

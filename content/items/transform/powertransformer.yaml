@@ -1,0 +1,84 @@
+id: powertransformer
+plain_name: PowerTransformer
+code_name: PowerTransformer / power_transform
+aliases: [yeo-johnson, box-cox, skew fix]
+stage: transform
+family: transform.scale.reshape
+tracks: [standard, time-series]
+archetype: transformer
+question_tags: [skewed columns, zeros or negatives]
+targets: [sklearn.preprocessing.PowerTransformer, sklearn.preprocessing.power_transform]
+pairs_with: [pipeline]
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.PowerTransformer.html',
+  'https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.power_transform.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: transformer, dataset: ames, columns: [LotArea], changed: [LotArea]}
+    line: Bends a skewed column towards a bell curve.
+  quick_facts:
+    facts:
+      - {label: Result, value: "closer to bell-shaped"}
+      - {label: Learns from data, value: "yes: one lambda per column"}
+  use_avoid:
+    use_when: [skewed columns, zeros or negatives present]
+    avoid_when: [columns already bell-shaped, categories]
+  prep:
+    - step: {page: train-test-split}
+      status: required
+      why: Learn the lambdas from training rows only.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.preprocessing.PowerTransformer
+      why_this_library: Fits inside a Pipeline, so no leakage.
+      snippet: |
+        # scikit-learn 1.9.1
+        import numpy as np
+        from sklearn.datasets import make_regression
+        from sklearn.model_selection import train_test_split
+        from sklearn.preprocessing import PowerTransformer
+
+        X, y = make_regression(n_samples=200, n_features=2, random_state=0)
+        X[:, 0] = np.exp(X[:, 0])  # make one column heavily skewed
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        pt = PowerTransformer(method="yeo-johnson")
+        X_train_p = pt.fit_transform(X_train)  # learn the lambdas here
+        X_test_p = pt.transform(X_test)  # reuse them, never refit
+
+        print(X_train_p.mean(axis=0).round(2))
+        print(pt.lambdas_.round(3))
+  what_comes_out:
+    items:
+      - {name: transform, kind: method, task: null, shape: "(n_samples, n_features)", note: Applies the learned power transform to new rows.}
+      - {name: fit_transform, kind: method, task: null, shape: "(n_samples, n_features)", note: "Learns the lambdas, then transforms in one step."}
+      - {name: inverse_transform, kind: method, task: null, shape: "(n_samples, n_features)", note: Maps transformed values back to original units.}
+      - {name: set_output, kind: method, task: null, shape: self, note: "Chooses the output container, such as pandas."}
+      - {name: lambdas_, kind: attribute, task: null, shape: "(n_features,)", note: The fitted power for each column.}
+      - {name: n_features_in_, kind: attribute, task: null, shape: int, note: Number of columns seen during fit.}
+    next_step: Wrap the transformer and the model in one Pipeline.
+    visual: null
+  catch_outs:
+    - Fit on training rows only; the lambdas come from fit.
+    - Yeo-Johnson handles zeros and negatives.
+  key_settings:
+    tier1:
+      - {name: method, page: null}
+      - {name: standardize, page: null}
+    tier2: []
+    tier3:
+      - {name: copy, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    text: Bend a skewed column until its values look more like a bell curve.
+  next: []

@@ -1,0 +1,79 @@
+id: featureunion
+plain_name: FeatureUnion
+code_name: FeatureUnion
+aliases: [parallel transforms, joined transforms]
+stage: transform
+family: transform.chain.union
+tracks: [standard, time-series]
+archetype: composer
+question_tags: [several transforms, joined features]
+targets: [sklearn.pipeline.FeatureUnion]
+pairs_with: [columntransformer]
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.FeatureUnion.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: expands}
+slots:
+  header: {}
+  solves:
+    hero: {kind: composer, boxes: [Transform A, Transform B, Joined]}
+    line: Runs transforms side by side on the same rows, then joins them.
+  quick_facts:
+    facts:
+      - {label: Output, value: "outputs joined side by side"}
+      - {label: Learns from data, value: "yes: fit on train only"}
+  use_avoid:
+    use_when: [several transforms, same columns]
+    avoid_when: [one transform is enough, ordered steps]
+  prep:
+    - step: {page: train-test-split}
+      status: required
+      why: Fit each transform on training rows only.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.pipeline.FeatureUnion
+      why_this_library: Fits several transforms and joins their outputs.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.decomposition import PCA
+        from sklearn.pipeline import FeatureUnion
+        from sklearn.preprocessing import StandardScaler
+
+        X, y = load_breast_cancer(return_X_y=True)
+
+        union = FeatureUnion([
+            ("pca", PCA(n_components=2, random_state=0)),
+            ("scale", StandardScaler()),
+        ])
+        X_out = union.fit_transform(X)  # outputs joined side by side
+        print(X_out.shape)
+  what_comes_out:
+    items:
+      - {name: fit, kind: method, task: null, shape: "self", note: "Fits every transformer on the same X."}
+      - {name: transform, kind: method, task: null, shape: "(n_samples, n_out)", note: "Joins each transformer's output by column."}
+      - {name: get_feature_names_out, kind: method, task: null, shape: "array of names", note: "Names prefixed by transformer name."}
+      - {name: named_transformers, kind: attribute, task: null, shape: "Bunch, keyed by name", note: "Fitted transformers, looked up by name."}
+    next_step: "Feed the joined output to a model or a Pipeline."
+    visual: null
+  catch_outs:
+    - Every transform sees all the input columns.
+    - Output width is the sum of all transform outputs.
+    - Use ColumnTransformer when each transform needs other columns.
+  key_settings:
+    tier1:
+      - {name: transformer_list, page: null}
+    tier2:
+      - {name: transformer_weights, page: null}
+    tier3:
+      - {name: verbose_feature_names_out, page: null}
+  watch_it_work: {none: true}
+  intuition: {text: "Several transforms read the same rows, then their outputs join."}
+  next: []

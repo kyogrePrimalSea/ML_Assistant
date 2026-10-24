@@ -1,0 +1,80 @@
+id: splinetransformer
+plain_name: SplineTransformer
+code_name: SplineTransformer
+aliases: [splines, B-splines, spline basis]
+stage: transform
+family: transform.create.expand
+tracks: [standard, time-series]
+archetype: transformer
+question_tags: [smooth curves, curved relationship]
+targets: [sklearn.preprocessing.SplineTransformer]
+pairs_with: [pipeline]
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.SplineTransformer.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: expands}
+slots:
+  header: {}
+  solves:
+    hero: {kind: transformer, dataset: ames, columns: [YearBuilt], changed: [YearBuilt]}
+    line: Turns one column into smooth curved pieces.
+  quick_facts:
+    facts:
+      - {label: Learns from data, value: "yes: knots from training rows"}
+      - {label: Output, value: "smooth curve pieces per column"}
+  use_avoid:
+    use_when: [smooth curves, curved relationship, linear models]
+    avoid_when: [sharp jumps needed, many columns]
+  prep:
+    - step: {page: train-test-split}
+      status: required
+      why: Knot positions come from training rows only.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.preprocessing.SplineTransformer
+      why_this_library: Fits inside a Pipeline and keeps its knots.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import make_regression
+        from sklearn.preprocessing import SplineTransformer
+
+        X, _ = make_regression(n_samples=200, n_features=1, random_state=0)
+        spline = SplineTransformer(n_knots=4, degree=3)
+        X_spline = spline.fit_transform(X)  # knots are learned here
+
+        print(X_spline.shape)
+  what_comes_out:
+    items:
+      - {name: transform, kind: method, task: null, shape: "(n_samples, n_features_out_)", note: Spline pieces for each column.}
+      - {name: get_feature_names_out, kind: method, task: null, shape: "(n_features_out_,)", note: Names each spline piece.}
+      - {name: n_features_out_, kind: attribute, task: null, shape: int, note: Number of spline columns out.}
+    next_step: Feed the curve pieces to a linear model.
+    visual: null
+  catch_outs:
+    - Outside the training range, the default extrapolation is constant.
+    - Each input column becomes several spline columns, so the width grows.
+  key_settings:
+    tier1:
+      - {name: n_knots, page: null}
+      - {name: degree, page: null}
+      - {name: knots, page: null}
+    tier2:
+      - {name: extrapolation, page: null}
+      - {name: include_bias, page: null}
+    tier3:
+      - {name: handle_missing, page: null}
+      - {name: sparse_output, page: null}
+      - {name: order, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    text: Lay smooth bumps along each column and let the model weight them.
+  next: []

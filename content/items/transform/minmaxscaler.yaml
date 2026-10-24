@@ -1,0 +1,85 @@
+id: minmaxscaler
+plain_name: MinMaxScaler
+code_name: MinMaxScaler / minmax_scale
+aliases: [min-max, rescale 0 to 1, range scaling]
+stage: transform
+family: transform.scale.rescale
+tracks: [standard, time-series]
+archetype: transformer
+question_tags: [features on different scales, bounded values]
+targets: [sklearn.preprocessing.MinMaxScaler, sklearn.preprocessing.minmax_scale]
+pairs_with: [pipeline]
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.MinMaxScaler.html',
+  'https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.minmax_scale.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: transformer, dataset: ames, columns: [LotArea, YearBuilt], changed: [LotArea, YearBuilt]}
+    line: Squeezes each number column into the range 0 to 1.
+  quick_facts:
+    facts:
+      - {label: Result, value: "values from 0 to 1"}
+      - {label: Learns from data, value: "yes: fit on train only"}
+  use_avoid:
+    use_when: [needs values 0 to 1, bounded inputs]
+    avoid_when: [heavy outliers, tree models]
+  prep:
+    - step: {page: train-test-split}
+      status: required
+      why: Learn the min and max from training rows only.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.preprocessing.MinMaxScaler
+      why_this_library: Fits inside a Pipeline, so no leakage.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import make_regression
+        from sklearn.model_selection import train_test_split
+        from sklearn.preprocessing import MinMaxScaler
+
+        X, y = make_regression(n_samples=200, n_features=3, random_state=0)
+        X[:, 0] *= 1000  # one column on a much bigger scale
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        scaler = MinMaxScaler()  # feature_range defaults to (0, 1)
+        X_train_s = scaler.fit_transform(X_train)  # learn min and max here
+        X_test_s = scaler.transform(X_test)  # reuse them, never refit
+
+        print(X_train_s.min(axis=0).round(2))
+        print(X_train_s.max(axis=0).round(2))
+  what_comes_out:
+    items:
+      - {name: transform, kind: method, task: null, shape: "(n_samples, n_features)", note: Scales new rows with the learned min and max.}
+      - {name: fit_transform, kind: method, task: null, shape: "(n_samples, n_features)", note: "Learns the min and max, then scales in one step."}
+      - {name: inverse_transform, kind: method, task: null, shape: "(n_samples, n_features)", note: Maps scaled values back to original units.}
+      - {name: set_output, kind: method, task: null, shape: self, note: "Chooses the output container, such as pandas."}
+      - {name: data_min_, kind: attribute, task: null, shape: "(n_features,)", note: Smallest value seen per column during fit.}
+      - {name: data_max_, kind: attribute, task: null, shape: "(n_features,)", note: Largest value seen per column during fit.}
+      - {name: scale_, kind: attribute, task: null, shape: "(n_features,)", note: Multiplier applied to each column.}
+      - {name: n_features_in_, kind: attribute, task: null, shape: int, note: Number of columns seen during fit.}
+    next_step: Wrap the scaler and the model in one Pipeline.
+    visual: null
+  catch_outs:
+    - Fit on training rows only; never fit on the test set.
+    - Held-out values outside the range stay outside unless clip is True.
+  key_settings:
+    tier1:
+      - {name: feature_range, page: null}
+      - {name: clip, page: null}
+    tier2: []
+    tier3:
+      - {name: copy, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    text: Squeeze each column between its smallest and largest value.
+  next: []

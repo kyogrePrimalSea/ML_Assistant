@@ -1,0 +1,89 @@
+id: columntransformer
+plain_name: ColumnTransformer
+code_name: ColumnTransformer
+aliases: [per-column steps, column-wise transforms]
+stage: transform
+family: transform.chain.columns
+tracks: [standard, time-series]
+archetype: composer
+question_tags: [different columns, mixed column types]
+targets: [sklearn.compose.ColumnTransformer]
+pairs_with: [pipeline, make-column-selector]
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.compose.ColumnTransformer.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: expands}
+slots:
+  header: {}
+  solves:
+    hero: {kind: composer, boxes: [Scaler, Encoder]}
+    line: Applies named steps to named columns in one object.
+  quick_facts:
+    facts:
+      - {label: Unlisted columns, value: dropped by default}
+      - {label: Names each step, value: "yes: name, transformer, columns"}
+  use_avoid:
+    use_when: [mixed column types, named steps, reproducible runs]
+    avoid_when: [same steps for every column]
+  prep:
+    - step: {page: train-test-split}
+      status: required
+      why: Fit the steps on training rows only.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.compose.ColumnTransformer
+      why_this_library: Names each step, so you can inspect it later.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.compose import ColumnTransformer
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.model_selection import train_test_split
+        from sklearn.preprocessing import QuantileTransformer, StandardScaler
+
+        X, y = load_breast_cancer(return_X_y=True, as_frame=True)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        ct = ColumnTransformer(
+            transformers=[
+                ("scale", StandardScaler(), ["mean radius", "mean texture"]),
+                ("rank", QuantileTransformer(n_quantiles=50), ["mean area"]),
+            ],
+            remainder="drop",
+        )
+        ct.fit(X_train)  # learn from training rows only
+        X_test_t = ct.transform(X_test)
+        print(ct.named_transformers_["scale"].mean_.round(2))
+        print(X_test_t.shape)
+  what_comes_out:
+    items:
+      - {name: fit, kind: method, task: null, shape: "self", note: "Learns each step from the rows given."}
+      - {name: transform, kind: method, task: null, shape: "(n_samples, n_out)", note: "Applies each step, then joins the columns."}
+      - {name: get_feature_names_out, kind: method, task: null, shape: "array of names", note: "Names for the joined output columns."}
+      - {name: transformers_, kind: attribute, task: null, shape: "list of (name, step, columns)", note: "Fitted steps with their columns."}
+      - {name: named_transformers_, kind: attribute, task: null, shape: "Bunch, keyed by step name", note: "Fitted steps, looked up by name."}
+      - {name: feature_names_in_, kind: attribute, task: null, shape: "array of column names", note: "Column names seen during fit."}
+    next_step: "Put it inside a Pipeline with the model."
+    visual: null
+  catch_outs:
+    - Columns not listed are dropped unless remainder says otherwise.
+    - Each step sees only the columns it was given.
+    - Output is an array; get names with get_feature_names_out.
+  key_settings:
+    tier1:
+      - {name: transformers, page: null}
+      - {name: remainder, page: null}
+    tier2:
+      - {name: sparse_threshold, page: null}
+      - {name: transformer_weights, page: null}
+    tier3:
+      - {name: verbose_feature_names_out, page: null}
+  watch_it_work: {none: true}
+  intuition: {text: "Each column group takes its own steps, then the results join."}
+  next: []

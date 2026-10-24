@@ -1,0 +1,78 @@
+id: column-transformer
+plain_name: make_column_transformer
+code_name: make_column_transformer
+aliases: [make_column_transformer, column transformer]
+stage: transform
+family: transform.chain.columns
+tracks: [standard, time-series]
+archetype: composer
+question_tags: [quick column steps, mixed column types]
+targets: [sklearn.compose.make_column_transformer]
+pairs_with: [pipeline, make-column-selector]
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.compose.make_column_transformer.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: expands}
+slots:
+  header: {}
+  solves:
+    hero: {kind: composer, boxes: [Scaler, Encoder]}
+    line: Gives each group of columns its own steps.
+  quick_facts:
+    facts:
+      - {label: Unlisted columns, value: dropped by default}
+      - {label: Learns from data, value: "yes: fit on train only"}
+  use_avoid:
+    use_when: [mixed column types, different steps per column, reproducible runs]
+    avoid_when: [same steps for every column]
+  prep:
+    - step: {page: train-test-split}
+      status: required
+      why: Fit the steps on training rows only.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.compose.make_column_transformer
+      why_this_library: Gives each column group its own steps in one object.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.compose import make_column_transformer
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.preprocessing import MinMaxScaler, StandardScaler
+
+        X, y = load_breast_cancer(return_X_y=True, as_frame=True)
+
+        ct = make_column_transformer(
+            (StandardScaler(), ["mean radius", "mean texture"]),
+            (MinMaxScaler(), ["mean area", "mean smoothness"]),
+            remainder="drop",
+        )
+        X_out = ct.fit_transform(X)  # each group gets its own scaler
+        print(X_out.shape)
+  what_comes_out:
+    items:
+      - {name: make_column_transformer, kind: return, task: null, shape: "ColumnTransformer object", note: "Not fitted yet; call fit or fit_transform."}
+    next_step: "Put it inside a Pipeline with the model."
+    visual: null
+  catch_outs:
+    - Columns not listed are dropped unless remainder says otherwise.
+    - Each step sees only the columns it was given.
+    - Output is an array; get names with get_feature_names_out.
+  key_settings:
+    tier1:
+      - {name: transformers, page: null}
+      - {name: remainder, page: null}
+    tier2:
+      - {name: sparse_threshold, page: null}
+    tier3:
+      - {name: verbose_feature_names_out, page: null}
+      - {name: n_jobs, page: null}
+  watch_it_work: {none: true}
+  intuition: {text: "Each column group takes its own steps, then the results join."}
+  next: []

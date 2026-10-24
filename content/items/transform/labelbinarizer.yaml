@@ -1,0 +1,84 @@
+id: labelbinarizer
+plain_name: LabelBinarizer
+code_name: LabelBinarizer
+stage: transform
+family: transform.encode.target
+tracks: [standard]
+archetype: transformer
+aliases: [one-vs-all labels, binary target, one-hot target]
+question_tags: [text labels, target labels]
+targets: [sklearn.preprocessing.LabelBinarizer]
+pairs_with: []
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.LabelBinarizer.html
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {columns: expands, rows: same}
+slots:
+  header: {}
+  solves:
+    hero:
+      kind: transformer
+      dataset: breast-cancer
+      columns: [target]
+      changed: [target]
+    line: Turns each class name in y into a 0/1 column.
+  quick_facts:
+    facts:
+      - {label: Output, value: one 0/1 column per class}
+      - {label: Learns from data, value: 'yes: fit on train only'}
+  use_avoid:
+    use_when: [text class labels, one-vs-rest models, several classes]
+    avoid_when: [feature columns, one integer per row]
+  prep:
+    - {condition: null, status: required, step: {page: train-test-split}, unless: null, why: Learn the classes from training labels only.}
+  code:
+    - library: scikit-learn
+      target: sklearn.preprocessing.LabelBinarizer
+      why_this_library: Learns the classes once, then reuses the same columns.
+      snippet: |
+        # scikit-learn 1.9.1
+        import numpy as np
+        from sklearn.datasets import load_iris
+        from sklearn.model_selection import train_test_split
+        from sklearn.preprocessing import LabelBinarizer
+
+        X, y = load_iris(return_X_y=True)
+        names = np.array(["setosa", "versicolor", "virginica"])[y]  # text labels
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, names, random_state=0, stratify=names
+        )
+
+        binarizer = LabelBinarizer()
+        y_train_bin = binarizer.fit_transform(y_train)  # learn the classes here
+        y_test_bin = binarizer.transform(y_test)        # reuse them, never refit
+
+        print(binarizer.classes_)
+        print(y_test_bin[:3])
+  what_comes_out:
+    items:
+      - {kind: method, name: transform, note: One 0/1 column per class; two classes give one., shape: '(n_samples, n_classes)', task: classification}
+      - {kind: method, name: fit_transform, note: Learns the classes and encodes them in one step., shape: '(n_samples, n_classes)', task: classification}
+      - {kind: method, name: inverse_transform, note: Turns 0/1 columns back into class names., shape: '(n_samples,)', task: null}
+      - {kind: attribute, name: classes_, note: The class names; column order follows them., shape: '(n_classes,)', task: null}
+    next_step: Use these 0/1 columns as the target for one-vs-all models.
+    visual: null
+  catch_outs:
+    - Fit on training labels only; never on the test set.
+    - Two classes give one column, not two.
+    - Output is dense unless sparse_output=True.
+  key_settings:
+    tier1:
+      - {name: sparse_output, page: null}
+      - {name: neg_label, page: null}
+      - {name: pos_label, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: Give each class its own 0 or 1 switch.}
+  next: []

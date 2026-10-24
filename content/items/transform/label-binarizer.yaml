@@ -1,0 +1,68 @@
+id: label-binarizer
+plain_name: label_binarize
+code_name: label_binarize
+aliases: [one-vs-all labels, binarize labels]
+stage: transform
+family: transform.encode.target
+tracks: [standard]
+archetype: transformer
+question_tags: [multiclass target, one-off labels]
+targets: [sklearn.preprocessing.label_binarize]
+pairs_with: []
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.label_binarize.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: expands}
+slots:
+  header: {}
+  solves:
+    hero: {kind: transformer, dataset: breast-cancer, columns: [diagnosis], changed: [diagnosis]}
+    line: Turns class labels into one 0/1 column per class.
+  quick_facts:
+    facts:
+      - {label: Learns from data, value: "no: classes are passed in"}
+      - {label: Output, value: "one 0/1 column per class"}
+  use_avoid:
+    use_when: [multiclass target, one-vs-rest]
+    avoid_when: [features need encoding, pipeline step needed]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.preprocessing.label_binarize
+      why_this_library: A plain function for target labels.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_iris
+        from sklearn.preprocessing import label_binarize
+
+        _, y = load_iris(return_X_y=True)
+        Y = label_binarize(y, classes=[0, 1, 2])  # one 0/1 column per class
+
+        print(Y[[0, 60, 120]])
+  what_comes_out:
+    items:
+      - {name: label_binarize, kind: return, task: null, shape: "(n_samples, n_classes)", note: One 0/1 column for each class.}
+    next_step: Use the columns as targets for one-vs-rest models.
+    visual: null
+  catch_outs:
+    - Pass classes so every column keeps the same order.
+    - neg_label and pos_label change the 0 and 1 values.
+  key_settings:
+    tier1:
+      - {name: classes, page: null}
+      - {name: neg_label, page: null}
+      - {name: pos_label, page: null}
+    tier2:
+      - {name: sparse_output, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: Each class gets its own switch; one switch is on per row.
+  next: []

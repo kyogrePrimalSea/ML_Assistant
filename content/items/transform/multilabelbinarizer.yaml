@@ -1,0 +1,84 @@
+id: multilabelbinarizer
+plain_name: MultiLabelBinarizer
+code_name: MultiLabelBinarizer
+stage: transform
+family: transform.encode.target
+tracks: [standard]
+archetype: transformer
+aliases: [tag lists, label sets, multi-label targets]
+question_tags: [several labels, tags, multi-label]
+targets: [sklearn.preprocessing.MultiLabelBinarizer]
+pairs_with: []
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.MultiLabelBinarizer.html
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {columns: expands, rows: same}
+slots:
+  header: {}
+  solves:
+    hero:
+      kind: transformer
+      dataset: breast-cancer
+      columns: [target]
+      changed: [target]
+    line: Turns each row's label list into 0/1 columns.
+  quick_facts:
+    facts:
+      - {label: Output, value: one 0/1 column per label}
+      - {label: Learns from data, value: 'yes: fit on train only'}
+  use_avoid:
+    use_when: [several labels per row, tag lists, multi-label targets]
+    avoid_when: [one label per row]
+  prep:
+    - {condition: null, status: required, step: {page: train-test-split}, unless: null, why: Learn the label set from training rows only.}
+  code:
+    - library: scikit-learn
+      target: sklearn.preprocessing.MultiLabelBinarizer
+      why_this_library: Learns the labels once, so test rows reuse the same columns.
+      snippet: |
+        # scikit-learn 1.9.1
+        import numpy as np
+        from sklearn.datasets import make_multilabel_classification
+        from sklearn.model_selection import train_test_split
+        from sklearn.preprocessing import MultiLabelBinarizer
+
+        tags = ["action", "comedy", "drama", "horror"]
+        _, Y = make_multilabel_classification(
+            n_samples=8, n_classes=4, random_state=0
+        )
+        label_sets = [[tags[j] for j in np.flatnonzero(row)] for row in Y]
+        train, test = train_test_split(label_sets, random_state=0)
+
+        binarizer = MultiLabelBinarizer(classes=tags)
+        train_bin = binarizer.fit_transform(train)  # learn the labels here
+        test_bin = binarizer.transform(test)        # reuse the same columns
+
+        print(binarizer.classes_)
+        print(test_bin[:3])
+  what_comes_out:
+    items:
+      - {kind: method, name: transform, note: 'One 0/1 column per label, in classes_ order.', shape: '(n_samples, n_classes)', task: classification}
+      - {kind: method, name: fit_transform, note: Learns the labels and encodes them in one step., shape: '(n_samples, n_classes)', task: classification}
+      - {kind: method, name: inverse_transform, note: Turns 0/1 columns back into label sets., shape: list of label sets, task: null}
+      - {kind: attribute, name: classes_, note: The labels; column order follows them., shape: '(n_classes,)', task: null}
+    next_step: Use these 0/1 columns as multi-label targets for a model.
+    visual: null
+  catch_outs:
+    - Fit on training rows only; never on the test set.
+    - Labels unseen in training are dropped with a warning.
+    - Pass classes to fix the column order.
+  key_settings:
+    tier1:
+      - {name: classes, page: null}
+      - {name: sparse_output, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: Give each label its own switch; several can be on in one row.}
+  next: []

@@ -1,0 +1,79 @@
+id: compute-class-weight
+plain_name: compute_class_weight
+code_name: compute_class_weight / compute_sample_weight
+aliases: [class weights, balanced weights, sample weights]
+stage: transform
+family: transform.rebalance.weight
+tracks: [standard]
+archetype: resampler
+question_tags: [imbalanced, rare class, weight classes]
+targets: [sklearn.utils.class_weight.compute_class_weight, sklearn.utils.class_weight.compute_sample_weight]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.utils.class_weight.compute_class_weight.html',
+  'https://scikit-learn.org/stable/modules/generated/sklearn.utils.class_weight.compute_sample_weight.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: resampler, dataset: breast-cancer, classes: [malignant, benign], before: [212, 357], after: [212, 357]}
+    line: Makes rare rows count more, without changing the data.
+  quick_facts:
+    facts:
+      - {label: Changes, value: "row weights, not rows"}
+      - {label: Learns from data, value: "yes: counts the labels"}
+  use_avoid:
+    use_when: [imbalanced classes, keep every row, try before resampling]
+    avoid_when: [regression, model with no weight option]
+  prep:
+    - step: {page: train-test-split}
+      status: required
+      why: Count the classes in training labels only.
+      condition: null
+      unless: null
+    - step: {family: transform.scale.rescale}
+      status: not_needed
+      why: Weights depend on labels, not columns.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.utils.class_weight.compute_class_weight
+      why_this_library: Part of scikit-learn; no rows are added or removed.
+      snippet: |
+        # scikit-learn 1.9.1
+        import numpy as np
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.utils.class_weight import compute_class_weight
+        
+        X, y = load_breast_cancer(return_X_y=True)
+        classes = np.unique(y)
+        weights = compute_class_weight("balanced", classes=classes, y=y)
+        print(dict(zip(classes.tolist(), weights.round(3).tolist())))
+  what_comes_out:
+    items:
+      - {name: compute_class_weight, kind: return, task: null, shape: "(n_classes,)", note: "One weight per class, in classes order."}
+    next_step: Pass the weights to the model as class_weight.
+    visual: null
+  catch_outs:
+    - Compute weights from training labels only.
+    - Gives weights only; the rows stay as they are.
+    - Use sample_weight when weights must follow each row.
+  key_settings:
+    tier1:
+      - {name: class_weight, page: null}
+      - {name: classes, page: null}
+    tier2:
+      - {name: sample_weight, page: null}
+      - {name: indices, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: Rare rows count for more when the model learns.
+  next: []

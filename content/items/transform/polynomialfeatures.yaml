@@ -1,0 +1,77 @@
+id: polynomialfeatures
+plain_name: PolynomialFeatures
+code_name: PolynomialFeatures
+aliases: [polynomial features, squares, interaction terms]
+stage: transform
+family: transform.create.expand
+tracks: [standard, time-series]
+archetype: transformer
+question_tags: [curved relationship, few columns]
+targets: [sklearn.preprocessing.PolynomialFeatures]
+pairs_with: [pipeline]
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.PolynomialFeatures.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: expands}
+slots:
+  header: {}
+  solves:
+    hero: {kind: transformer, dataset: ames, columns: [LotArea, YearBuilt], changed: [LotArea, YearBuilt]}
+    line: Adds squares and products of the columns.
+  quick_facts:
+    facts:
+      - {label: Learns from data, value: "no: only counts the new columns"}
+      - {label: Output, value: "powers and products up to degree"}
+  use_avoid:
+    use_when: [few columns, curved relationship, linear models]
+    avoid_when: [many columns, high degree]
+  prep:
+    - step: {page: train-test-split}
+      status: recommended
+      why: Keeps test rows out of the fit.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.preprocessing.PolynomialFeatures
+      why_this_library: Fits inside a Pipeline like other transformers.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import make_regression
+        from sklearn.preprocessing import PolynomialFeatures
+
+        X, _ = make_regression(n_samples=100, n_features=2, random_state=0)
+        poly = PolynomialFeatures(degree=2, include_bias=False)
+        X_poly = poly.fit_transform(X)
+
+        print(poly.get_feature_names_out())
+        print(X_poly.shape)
+  what_comes_out:
+    items:
+      - {name: transform, kind: method, task: null, shape: "(n_samples, n_output_features_)", note: One column per power or product.}
+      - {name: get_feature_names_out, kind: method, task: null, shape: "(n_output_features_,)", note: "Names like x0, x0^2 and x0 x1."}
+      - {name: n_output_features_, kind: attribute, task: null, shape: int, note: Number of columns after expansion.}
+    next_step: Pass the wider table to a linear model.
+    visual: null
+  catch_outs:
+    - Output width grows fast with the degree and the column count.
+    - include_bias is True by default, which adds a column of ones.
+  key_settings:
+    tier1:
+      - {name: degree, page: null}
+      - {name: interaction_only, page: null}
+      - {name: include_bias, page: null}
+    tier2: []
+    tier3:
+      - {name: order, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    text: Multiply columns together and square them, so a line can bend.
+  next: []

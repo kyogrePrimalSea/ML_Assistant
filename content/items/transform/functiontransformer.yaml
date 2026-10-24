@@ -1,0 +1,79 @@
+id: functiontransformer
+plain_name: FunctionTransformer
+code_name: FunctionTransformer
+aliases: [custom function, wrap a function, log transform]
+stage: transform
+family: transform.create.custom
+tracks: [standard, time-series]
+archetype: transformer
+question_tags: [skewed features, custom transform]
+targets: [sklearn.preprocessing.FunctionTransformer]
+pairs_with: [pipeline]
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.FunctionTransformer.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: transformer, dataset: ames, columns: [LotArea], changed: [LotArea]}
+    line: Runs any function you give it as a step.
+  quick_facts:
+    facts:
+      - {label: Learns from data, value: "no: runs your function"}
+      - {label: Output, value: "whatever your function returns"}
+  use_avoid:
+    use_when: [skewed features, custom transform, pipeline step]
+    avoid_when: [built-in transformer already fits]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.preprocessing.FunctionTransformer
+      why_this_library: Wraps any function as a pipeline step.
+      snippet: |
+        # scikit-learn 1.9.1
+        import numpy as np
+        from sklearn.datasets import make_regression
+        from sklearn.preprocessing import FunctionTransformer
+
+        X, _ = make_regression(n_samples=200, n_features=2, random_state=0)
+        X = np.exp(X)  # skewed, positive values
+
+        log_step = FunctionTransformer(np.log1p)  # no fitting needed
+        X_log = log_step.fit_transform(X)
+
+        print(X_log.mean(axis=0).round(2))
+  what_comes_out:
+    items:
+      - {name: transform, kind: method, task: null, shape: "same as X, if func keeps it", note: Applies func to X.}
+      - {name: fit_transform, kind: method, task: null, shape: "same as transform", note: "Calls fit, then transform."}
+      - {name: inverse_transform, kind: method, task: null, shape: "same as X", note: Uses inverse_func; set one first.}
+      - {name: get_feature_names_out, kind: method, task: null, shape: "names for each column", note: Uses feature_names_out if set.}
+    next_step: Feed the result to a model or a scaler.
+    visual: null
+  catch_outs:
+    - validate is False by default, so func gets the raw input.
+    - check_inverse tests that func then inverse_func returns the input.
+  key_settings:
+    tier1:
+      - {name: func, page: null}
+      - {name: inverse_func, page: null}
+      - {name: validate, page: null}
+    tier2:
+      - {name: feature_names_out, page: null}
+      - {name: check_inverse, page: null}
+    tier3:
+      - {name: accept_sparse, page: null}
+      - {name: kw_args, page: null}
+      - {name: inv_kw_args, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    text: Wrap a plain function so it fits into a pipeline.
+  next: []

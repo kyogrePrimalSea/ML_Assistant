@@ -1,0 +1,1 @@
+173 rows have a mean radius above 15

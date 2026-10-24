@@ -1,0 +1,91 @@
+id: repeatededitednearestneighbours
+plain_name: RepeatedEditedNearestNeighbours
+code_name: RepeatedEditedNearestNeighbours
+aliases: [renn, repeated enn]
+stage: transform
+family: transform.rebalance.clean
+tracks: [standard]
+archetype: resampler
+question_tags: [noisy rows, class overlap]
+targets: [imblearn.under_sampling.RepeatedEditedNearestNeighbours]
+pairs_with: [imblearn-pipeline]
+clashes: []
+source_urls:
+  - https://imbalanced-learn.org/stable/references/generated/imblearn.under_sampling.RepeatedEditedNearestNeighbours.html
+library_versions:
+  imbalanced-learn: "0.14.2"
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: shrinks, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: resampler, dataset: breast-cancer, classes: [malignant, benign], before: [212, 357], after: [212, 321]}
+    line: Repeats edited nearest neighbour cleaning until nothing changes.
+  quick_facts:
+    facts:
+      - {label: Removes, value: majority rows only}
+      - {label: Columns, value: unchanged}
+  use_avoid:
+    use_when: [imbalanced classes, noisy majority rows]
+    avoid_when: [category columns, regression]
+  prep:
+    - step: {page: train-test-split}
+      status: required
+      why: Clean the training rows only.
+      condition: null
+      unless: null
+    - step: {family: transform.scale.rescale}
+      status: recommended
+      why: Neighbour distances need one scale.
+      condition: null
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Needs all-numeric columns.
+      condition: {has_categoricals: true}
+      unless: null
+  code:
+    - library: imbalanced-learn
+      target: imblearn.under_sampling.RepeatedEditedNearestNeighbours
+      why_this_library: The home of RepeatedEditedNearestNeighbours; scikit-learn has no resamplers.
+      snippet: |
+        # imbalanced-learn 0.14.2
+        from collections import Counter
+
+        from imblearn.under_sampling import RepeatedEditedNearestNeighbours
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.preprocessing import StandardScaler
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X = StandardScaler().fit_transform(X)  # neighbour distances need one scale
+        print("before", dict(sorted(Counter(y.tolist()).items())))
+
+        X_res, y_res = RepeatedEditedNearestNeighbours().fit_resample(X, y)
+        print("after", dict(sorted(Counter(y_res.tolist()).items())))
+  what_comes_out:
+    items:
+    - {name: fit_resample, kind: method, task: null, shape: "(n_samples_new, n_features)", note: "Returns the cleaned X and y, with fewer rows."}
+    - {name: sample_indices_, kind: attribute, task: null, shape: "(n_new_samples,)", note: "Row positions of the samples returned."}
+    - {name: sampling_strategy_, kind: attribute, task: null, shape: "dict of class counts", note: "Per-class target counts the sampler used."}
+    - {name: n_iter_, kind: attribute, task: null, shape: "int", note: "Number of cleaning rounds that ran."}
+    next_step: Train the model on the cleaned training rows.
+    visual: null
+  catch_outs:
+    - Clean the training rows only, never the test set.
+    - More rounds can remove more rows; max_iter caps them.
+  key_settings:
+    tier1:
+    - {name: sampling_strategy, page: null}
+    - {name: n_neighbors, page: null}
+    - {name: kind_sel, page: null}
+    - {name: max_iter, page: null}
+    tier2:
+      []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Run ENN again and again until a pass removes nothing."}
+  next: []

@@ -1,0 +1,87 @@
+id: smoten
+plain_name: SMOTEN
+code_name: SMOTEN
+aliases: ["category smote", "nominal smote", "synthetic minority"]
+stage: transform
+family: transform.rebalance.over
+tracks: [standard]
+archetype: resampler
+question_tags: ["imbalanced", "rare class", "category columns"]
+targets: [imblearn.over_sampling.SMOTEN]
+pairs_with: [imblearn-pipeline]
+clashes: []
+source_urls:
+  - https://imbalanced-learn.org/stable/references/generated/imblearn.over_sampling.SMOTEN.html
+library_versions:
+  imbalanced-learn: "0.14.2"
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: [{when: {has_categoricals: false}, reason: "No category columns to work on"}]
+  fits_on_data: true
+  shape_effect: {rows: grows, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: resampler, dataset: breast-cancer, classes: [malignant, benign], before: [212, 357], after: [357, 357]}
+    line: "Adds new rare rows built from category columns."
+  quick_facts:
+    facts:
+      - {label: "Adds", value: "new rare rows"}
+      - {label: "Columns", value: "category columns only"}
+  use_avoid:
+    use_when: ["imbalanced classes", "all columns are categories"]
+    avoid_when: ["number columns", "regression"]
+  prep:
+    - step: {page: train-test-split}
+      status: required
+      why: "Resample the training rows only."
+      condition: null
+      unless: null
+    - step: {family: transform.encode.features}
+      status: not_needed
+      why: "Encodes category columns itself."
+      condition: {has_categoricals: true}
+      unless: null
+  code:
+    - library: imbalanced-learn
+      target: imblearn.over_sampling.SMOTEN
+      why_this_library: "The imbalanced-learn sampler; scikit-learn has none."
+      snippet: |
+        # imbalanced-learn 0.14.2
+        from collections import Counter
+
+        import numpy as np
+        from imblearn.over_sampling import SMOTEN
+        from sklearn.datasets import make_classification
+
+        X, y = make_classification(
+            n_samples=1000, weights=[0.9, 0.1], random_state=0
+        )
+        X = np.round(X).astype(int)  # turn numbers into categories
+        print("before", Counter(y.tolist()))
+
+        X_res, y_res = SMOTEN(k_neighbors=5, random_state=0).fit_resample(X, y)
+        print("after", Counter(y_res.tolist()))
+  what_comes_out:
+    items:
+      - {name: fit_resample, kind: method, task: null, shape: "X (more rows), y (rows,)", note: "Returns new X and y; training rows only."}
+      - {name: sampling_strategy_, kind: attribute, task: null, shape: "dict: class to count", note: "Rows to add per class, set at fit time."}
+    next_step: "Train on X_res and y_res; the test set stays as it is."
+    visual: null
+  catch_outs:
+    - "Resample after the split, on training rows only."
+    - "Never resample the test set."
+    - "Category columns only, not number columns."
+  key_settings:
+    tier1:
+      - {name: sampling_strategy, page: null}
+      - {name: k_neighbors, page: null}
+    tier2:
+      - {name: categorical_encoder, page: null}
+      - {name: random_state, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: "Like SMOTE, but for category values instead of numbers."
+  next: []

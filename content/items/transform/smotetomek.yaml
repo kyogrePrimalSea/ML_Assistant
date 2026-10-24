@@ -1,0 +1,88 @@
+id: smotetomek
+plain_name: SMOTETomek
+code_name: SMOTETomek
+aliases: [smote tomek, smote plus tomek]
+stage: transform
+family: transform.rebalance.combine
+tracks: [standard]
+archetype: resampler
+question_tags: [imbalanced, rare class, class overlap]
+targets: [imblearn.combine.SMOTETomek]
+pairs_with: [imblearn-pipeline, smote, tomeklinks]
+clashes: []
+source_urls:
+  - https://imbalanced-learn.org/stable/references/generated/imblearn.combine.SMOTETomek.html
+library_versions:
+  imbalanced-learn: "0.14.2"
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: grows, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: resampler, dataset: breast-cancer, classes: [malignant, benign], before: [212, 357], after: [353, 353]}
+    line: Adds synthetic rows with SMOTE, then removes Tomek links.
+  quick_facts:
+    facts:
+      - {label: Removes, value: opposite-class pairs}
+      - {label: Columns, value: unchanged}
+  use_avoid:
+    use_when: [imbalanced classes, light cleaning]
+    avoid_when: [category columns, regression]
+  prep:
+    - step: {page: train-test-split}
+      status: required
+      why: Resample the training rows only.
+      condition: null
+      unless: null
+    - step: {family: transform.scale.rescale}
+      status: recommended
+      why: Neighbour distances need one scale.
+      condition: null
+      unless: null
+    - step: {family: transform.encode.features}
+      status: required
+      why: Needs all-numeric columns.
+      condition: {has_categoricals: true}
+      unless: null
+  code:
+    - library: imbalanced-learn
+      target: imblearn.combine.SMOTETomek
+      why_this_library: The home of SMOTETomek; scikit-learn has no resamplers.
+      snippet: |
+        # imbalanced-learn 0.14.2
+        from collections import Counter
+
+        from imblearn.combine import SMOTETomek
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.preprocessing import StandardScaler
+
+        X, y = load_breast_cancer(return_X_y=True)
+        X = StandardScaler().fit_transform(X)  # neighbour distances need one scale
+        print("before", dict(sorted(Counter(y.tolist()).items())))
+
+        X_res, y_res = SMOTETomek(random_state=0).fit_resample(X, y)
+        print("after", dict(sorted(Counter(y_res.tolist()).items())))
+  what_comes_out:
+    items:
+    - {name: fit_resample, kind: method, task: null, shape: "(n_samples_new, n_features)", note: "Returns new X and y with classes near equal."}
+    - {name: sampling_strategy_, kind: attribute, task: null, shape: "dict of class counts", note: "Per-class target counts the sampler used."}
+    next_step: Train on these rows; evaluate on untouched test rows.
+    visual: null
+  catch_outs:
+    - Resample the training rows only, never the test set.
+    - Tomek step removes only close opposite-class pairs.
+  key_settings:
+    tier1:
+    - {name: sampling_strategy, page: null}
+    - {name: tomek, page: null}
+    - {name: smote, page: null}
+    tier2:
+    - {name: random_state, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Add synthetic minority rows with SMOTE, then drop close opposite-class pairs."}
+  next: []

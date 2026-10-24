@@ -1,0 +1,66 @@
+id: add-dummy-feature
+plain_name: add_dummy_feature
+code_name: add_dummy_feature
+aliases: [constant column, column of ones, intercept column]
+stage: transform
+family: transform.create.expand
+tracks: [standard, time-series]
+archetype: transformer
+question_tags: [needs a constant column, quick array edit]
+targets: [sklearn.preprocessing.add_dummy_feature]
+pairs_with: []
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.add_dummy_feature.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: expands}
+slots:
+  header: {}
+  solves:
+    hero: {kind: transformer, dataset: ames, columns: [LotArea], changed: [dummy column]}
+    line: Adds a column of ones to an array.
+  quick_facts:
+    facts:
+      - {label: Learns from data, value: "no"}
+      - {label: Output, value: "one extra column, all 1.0 by default"}
+  use_avoid:
+    use_when: [needs a constant column, quick array edit]
+    avoid_when: [a pipeline step is needed]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.preprocessing.add_dummy_feature
+      why_this_library: A plain function, so no fit step.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import make_regression
+        from sklearn.preprocessing import add_dummy_feature
+
+        X, _ = make_regression(n_samples=5, n_features=2, random_state=0)
+        X_plus = add_dummy_feature(X)  # adds a column of 1.0
+
+        print(X_plus.shape)
+        print(X_plus[:2].round(2))
+  what_comes_out:
+    items:
+      - {name: add_dummy_feature, kind: return, task: null, shape: "(n_samples, n_features + 1)", note: New column of 1.0 goes first.}
+    next_step: Use the wider array as input to any estimator.
+    visual: null
+  catch_outs:
+    - The new column goes first, before the original columns.
+    - Column count grows by one, so code expecting the old count breaks.
+  key_settings:
+    tier1:
+      - {name: value, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: Stick a column of ones onto the array, like an intercept.
+  next: []

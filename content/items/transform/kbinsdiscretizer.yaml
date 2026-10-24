@@ -1,0 +1,86 @@
+id: kbinsdiscretizer
+plain_name: KBinsDiscretizer
+code_name: KBinsDiscretizer
+stage: transform
+family: transform.scale.bin
+tracks: [standard, time-series]
+archetype: transformer
+aliases: [binning, bins, age bands, bucketing]
+question_tags: [number ranges, age bands]
+targets: [sklearn.preprocessing.KBinsDiscretizer]
+pairs_with: []
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.KBinsDiscretizer.html
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {columns: expands, rows: same}
+slots:
+  header: {}
+  solves:
+    hero:
+      kind: transformer
+      dataset: ames
+      columns: [YearBuilt]
+      changed: [YearBuilt]
+    line: Sorts a number column into ranges.
+  quick_facts:
+    facts:
+      - {label: Output, value: one 0/1 column per bin}
+      - {label: Learns from data, value: 'yes: bin edges fit on train only'}
+  use_avoid:
+    use_when: [number ranges, age bands, rough groups]
+    avoid_when: [exact values matter, very few rows]
+  prep:
+    - {condition: null, status: required, step: {page: train-test-split}, unless: null, why: Fit the bin edges on training rows only.}
+  code:
+    - library: scikit-learn
+      target: sklearn.preprocessing.KBinsDiscretizer
+      why_this_library: Learns the bin edges, so test rows reuse them.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_diabetes
+        from sklearn.model_selection import train_test_split
+        from sklearn.preprocessing import KBinsDiscretizer
+
+        X, y = load_diabetes(return_X_y=True)
+        first = X[:, [0]]  # one numeric column, kept 2-D
+        first_train, first_test = train_test_split(first, random_state=0)
+
+        binner = KBinsDiscretizer(
+            n_bins=3, encode="onehot-dense", strategy="quantile"
+        )
+        train_binned = binner.fit_transform(first_train)  # learn bin edges here
+        test_binned = binner.transform(first_test)        # reuse the same edges
+
+        print(test_binned[:3])
+  what_comes_out:
+    items:
+      - {kind: method, name: transform, note: 'One 0/1 column per bin, per input column.', shape: '(n_samples, total bins)', task: null}
+      - {kind: method, name: fit_transform, note: Learns the bin edges and transforms in one step., shape: '(n_samples, total bins)', task: null}
+      - {kind: method, name: inverse_transform, note: Maps each bin to its midpoint., shape: '(n_samples, n_features)', task: null}
+      - {kind: method, name: get_feature_names_out, note: Names such as x0_0.0 for each bin., shape: '(n_features_out,)', task: null}
+      - {kind: attribute, name: n_bins_, note: Number of bins for each input column., shape: '(n_features,)', task: null}
+    next_step: Use the bin columns as features in a model.
+    visual: null
+  catch_outs:
+    - Fit on training rows only; never on the test set.
+    - Default output is sparse; use encode='onehot-dense' for an array.
+    - n_bins must be 2 or more; smaller values raise a ValueError.
+  key_settings:
+    tier1:
+      - {name: strategy, page: null}
+      - {name: encode, page: null}
+      - {name: n_bins, page: null}
+    tier2:
+      - {name: subsample, page: null}
+      - {name: quantile_method, page: null}
+      - {name: dtype, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: Cut a number line into bins and say which bin each value is in.}
+  next: []

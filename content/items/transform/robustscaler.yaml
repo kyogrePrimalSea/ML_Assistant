@@ -1,0 +1,87 @@
+id: robustscaler
+plain_name: RobustScaler
+code_name: RobustScaler / robust_scale
+aliases: [median scaling, IQR scaling, robust scaling]
+stage: transform
+family: transform.scale.rescale
+tracks: [standard, time-series]
+archetype: transformer
+question_tags: [outliers, features on different scales]
+targets: [sklearn.preprocessing.RobustScaler, sklearn.preprocessing.robust_scale]
+pairs_with: [pipeline]
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.RobustScaler.html',
+  'https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.robust_scale.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: transformer, dataset: ames, columns: [LotArea], changed: [LotArea]}
+    line: Centres each column on its median and scales by its middle spread.
+  quick_facts:
+    facts:
+      - {label: Result, value: "median 0, middle spread 1"}
+      - {label: Learns from data, value: "yes: fit on train only"}
+  use_avoid:
+    use_when: [outliers distort mean and spread]
+    avoid_when: [sparse data with centering, clean data]
+  prep:
+    - step: {page: train-test-split}
+      status: required
+      why: Learn the median and spread from training rows only.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.preprocessing.RobustScaler
+      why_this_library: Fits inside a Pipeline, so no leakage.
+      snippet: |
+        # scikit-learn 1.9.1
+        import numpy as np
+        from sklearn.datasets import make_regression
+        from sklearn.model_selection import train_test_split
+        from sklearn.preprocessing import RobustScaler
+
+        X, y = make_regression(n_samples=200, n_features=3, random_state=0)
+        X[:5, 0] += 1000  # a few extreme outliers in one column
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+        scaler = RobustScaler()  # median centre, middle-half spread
+        X_train_s = scaler.fit_transform(X_train)  # learn both here
+        X_test_s = scaler.transform(X_test)  # reuse them, never refit
+
+        print(np.median(X_train_s, axis=0).round(2))
+        print(scaler.scale_.round(2))
+  what_comes_out:
+    items:
+      - {name: transform, kind: method, task: null, shape: "(n_samples, n_features)", note: Centres and scales new rows with the learned values.}
+      - {name: fit_transform, kind: method, task: null, shape: "(n_samples, n_features)", note: "Learns the median and spread, then scales in one step."}
+      - {name: inverse_transform, kind: method, task: null, shape: "(n_samples, n_features)", note: Maps scaled values back to original units.}
+      - {name: set_output, kind: method, task: null, shape: self, note: "Chooses the output container, such as pandas."}
+      - {name: center_, kind: attribute, task: null, shape: "(n_features,)", note: Median learned per column during fit.}
+      - {name: scale_, kind: attribute, task: null, shape: "(n_features,)", note: Middle-half spread learned per column during fit.}
+      - {name: n_features_in_, kind: attribute, task: null, shape: int, note: Number of columns seen during fit.}
+    next_step: Wrap the scaler and the model in one Pipeline.
+    visual: null
+  catch_outs:
+    - Fit on training rows only; never fit on the test set.
+    - With centering on, sparse input raises a ValueError.
+  key_settings:
+    tier1:
+      - {name: with_centering, page: null}
+      - {name: quantile_range, page: null}
+      - {name: unit_variance, page: null}
+    tier2:
+      - {name: with_scaling, page: null}
+    tier3:
+      - {name: copy, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    text: Centre on the median and scale by the spread of the middle half.
+  next: []
