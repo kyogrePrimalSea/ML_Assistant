@@ -1,0 +1,70 @@
+id: predefinedsplit
+plain_name: PredefinedSplit
+code_name: PredefinedSplit
+aliases: [fixed validation set, predefined fold]
+stage: split
+family: split.holdout
+tracks: [standard, time-series]
+archetype: splitter
+question_tags: [fixed validation set, already have a split]
+targets: [sklearn.model_selection.PredefinedSplit]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.PredefinedSplit.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: splitter, rows: 20, folds: 2, ordered: false}
+    line: Uses a validation set you already chose.
+  quick_facts:
+    facts:
+      - {label: Folds, value: "one per test_fold value"}
+      - {label: Always-train rows, value: "marked -1"}
+  use_avoid:
+    use_when: [validation set already chosen, custom folds]
+    avoid_when: [no fixed split yet, want random repeats]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.model_selection.PredefinedSplit
+      why_this_library: Uses your own fold labels, one per row.
+      snippet: |
+        # scikit-learn 1.9.1
+        import numpy as np
+        from sklearn.datasets import make_regression
+        from sklearn.model_selection import PredefinedSplit
+
+        X, y = make_regression(n_samples=20, n_features=3, random_state=0)
+
+        # first 12 rows always train; rows 12-15 are fold 0, rows 16-19 fold 1
+        test_fold = np.array([-1] * 12 + [0] * 4 + [1] * 4)
+
+        ps = PredefinedSplit(test_fold)
+        for train_idx, test_idx in ps.split():
+            print("train rows:", len(train_idx), "test rows:", len(test_idx))
+  what_comes_out:
+    items:
+      - {name: split, kind: method, task: null, shape: "generator of (train, test) indices", note: "One pair per distinct test_fold value."}
+      - {name: get_n_splits, kind: method, task: null, shape: "int", note: "Counts distinct test_fold values, not -1."}
+    next_step: "Train on the train rows, then score the test rows."
+    visual: null
+  catch_outs:
+    - Use -1 for rows that must always stay in training.
+    - Give every row a test_fold label, even the training rows.
+    - Nothing is shuffled, so you choose the folds yourself.
+  key_settings:
+    tier1:
+      - {name: test_fold, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: Mark each row with its fold, and the split follows your marks.
+  next: []

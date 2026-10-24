@@ -1,0 +1,68 @@
+id: repeatedstratifiedkfold
+plain_name: RepeatedStratifiedKFold
+code_name: RepeatedStratifiedKFold
+aliases: [repeated stratified cv, repeated class-balanced folds, repeated k-fold]
+stage: split
+family: split.stratified
+tracks: [standard]
+archetype: splitter
+question_tags: [imbalanced, small data]
+targets: [sklearn.model_selection.RepeatedStratifiedKFold]
+pairs_with: []
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RepeatedStratifiedKFold.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: splitter, rows: 20, folds: 5, ordered: false}
+    line: Repeats the class-balanced folds to steady the score.
+  quick_facts:
+    facts:
+      - {label: Default folds, value: "5"}
+      - {label: Default repeats, value: "10"}
+  use_avoid:
+    use_when: [small data, imbalanced classes]
+    avoid_when: [time-ordered data, large data]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.model_selection.RepeatedStratifiedKFold
+      why_this_library: One object gives every repeat and fold.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.model_selection import RepeatedStratifiedKFold
+
+        X, y = load_breast_cancer(return_X_y=True)
+        rskf = RepeatedStratifiedKFold(n_splits=5, n_repeats=3, random_state=0)
+
+        print([len(test) for _, test in rskf.split(X, y)])
+  what_comes_out:
+    items:
+      - {name: split, kind: method, task: classification, shape: "generator of (train, test) index arrays", note: "Yields n_splits x n_repeats index pairs."}
+      - {name: get_n_splits, kind: method, task: null, shape: "int", note: "5 folds x 10 repeats by default."}
+    next_step: Average the scores over all folds and repeats.
+    visual: null
+  catch_outs:
+    - Repeats mean many more fits, so it runs longer.
+    - Set random_state, or each run gives different repeats.
+  key_settings:
+    tier1:
+      - {name: n_repeats, page: null}
+      - {name: n_splits, page: null}
+    tier2:
+      - {name: random_state, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: Run the class-balanced folds several times, then average the results.
+  next: []

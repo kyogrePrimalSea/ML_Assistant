@@ -1,0 +1,71 @@
+id: groupshufflesplit
+plain_name: GroupShuffleSplit
+code_name: GroupShuffleSplit
+aliases: [group shuffle split, random group holdout]
+stage: split
+family: split.grouped
+tracks: [standard]
+archetype: splitter
+question_tags: [random group holdout, group leakage]
+targets: [sklearn.model_selection.GroupShuffleSplit]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupShuffleSplit.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: splitter, rows: 20, folds: 5, ordered: false}
+    line: Holds out random groups, repeated over several splits.
+  quick_facts:
+    facts:
+      - {label: Default splits, value: "5"}
+      - {label: Groups shuffled, value: "yes"}
+  use_avoid:
+    use_when: [rows belong to groups, repeated random holdouts]
+    avoid_when: [every group tested once, no group column]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.model_selection.GroupShuffleSplit
+      why_this_library: Random group holdouts, repeated so you can average.
+      snippet: |
+        # scikit-learn 1.9.1
+        import numpy as np
+        from sklearn.datasets import make_regression
+        from sklearn.model_selection import GroupShuffleSplit
+
+        X, y = make_regression(n_samples=20, n_features=3, random_state=0)
+        groups = np.repeat([0, 1, 2, 3], 5)  # 4 groups, 5 rows each
+
+        gss = GroupShuffleSplit(n_splits=5, test_size=0.25, random_state=0)
+        for train_idx, test_idx in gss.split(X, y, groups=groups):
+            print("test groups:", np.unique(groups[test_idx]))
+  what_comes_out:
+    items:
+      - {name: split, kind: method, task: null, shape: "generator of (train, test) indices", note: "Random group picks; a group can repeat in test."}
+      - {name: get_n_splits, kind: method, task: null, shape: "int", note: "Returns n_splits, 5 by default."}
+    next_step: "Average the test scores over all the splits."
+    visual: null
+  catch_outs:
+    - Test groups are random, so one group can be tested more than once.
+    - Pass groups=, or it raises an error.
+    - Set random_state, or the splits change every run.
+  key_settings:
+    tier1:
+      - {name: test_size, page: null}
+      - {name: n_splits, page: null}
+    tier2:
+      - {name: train_size, page: null}
+      - {name: random_state, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: Shuffle the groups, hold some out, then repeat the draw.
+  next: []

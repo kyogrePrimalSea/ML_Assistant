@@ -1,0 +1,66 @@
+id: repeatedkfold
+plain_name: RepeatedKFold
+code_name: RepeatedKFold
+aliases: [repeated k-fold, repeated kfold]
+stage: split
+family: split.rotate
+tracks: [standard]
+archetype: splitter
+question_tags: [small data, steadier score]
+targets: [sklearn.model_selection.RepeatedKFold]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RepeatedKFold.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: splitter, rows: 20, folds: 5, ordered: false}
+    line: Repeats k-fold with fresh random splits to steady the score.
+  quick_facts:
+    facts:
+    - {label: Default folds, value: "5"}
+    - {label: Default repeats, value: "10"}
+  use_avoid:
+    use_when: [small data, want a steadier score]
+    avoid_when: [big data, slow fits]
+  prep: []
+  code:
+  - library: scikit-learn
+    target: sklearn.model_selection.RepeatedKFold
+    why_this_library: One splitter that repeats k-fold with new random splits.
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import make_regression
+      from sklearn.model_selection import RepeatedKFold
+
+      X, _ = make_regression(n_samples=6, n_features=2, random_state=0)
+      rkf = RepeatedKFold(n_splits=3, n_repeats=2, random_state=0)
+      for train_idx, test_idx in rkf.split(X):
+          print("test", test_idx)
+      print("splits", rkf.get_n_splits(X))
+  what_comes_out:
+    items:
+    - {name: split, kind: method, task: null, shape: "generator of (train, test) index arrays", note: "One pair per fold in every repeat."}
+    - {name: get_n_splits, kind: method, task: null, shape: "int", note: "n_splits times n_repeats, 50 by default."}
+    next_step: Average the scores over all folds and repeats.
+    visual: null
+  catch_outs:
+  - Costs n_splits times n_repeats fits, so it is slow.
+  - Each repeat reshuffles rows, so a row can move between folds.
+  key_settings:
+    tier1:
+    - {name: n_repeats, page: null}
+    - {name: n_splits, page: null}
+    - {name: random_state, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Run the k-fold rotation again with a fresh shuffle, then average all of it."}
+  next: []

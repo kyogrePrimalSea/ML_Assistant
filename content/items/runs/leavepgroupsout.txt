@@ -1,0 +1,6 @@
+test groups: [0 1]
+test groups: [0 2]
+test groups: [0 3]
+test groups: [1 2]
+test groups: [1 3]
+test groups: [2 3]

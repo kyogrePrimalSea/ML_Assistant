@@ -1,0 +1,67 @@
+id: leaveonegroupout
+plain_name: LeaveOneGroupOut
+code_name: LeaveOneGroupOut
+aliases: [leave one group out, LOGO]
+stage: split
+family: split.grouped
+tracks: [standard]
+archetype: splitter
+question_tags: [one store at a time, group leakage]
+targets: [sklearn.model_selection.LeaveOneGroupOut]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.LeaveOneGroupOut.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: splitter, rows: 20, folds: 4, ordered: false}
+    line: Tests on one whole group at a time.
+  quick_facts:
+    facts:
+      - {label: Folds, value: "one per group"}
+      - {label: Settings, value: "none"}
+  use_avoid:
+    use_when: [few groups, each group needs own test]
+    avoid_when: [many groups, slow models]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.model_selection.LeaveOneGroupOut
+      why_this_library: Leaves out each group in turn, with no settings.
+      snippet: |
+        # scikit-learn 1.9.1
+        import numpy as np
+        from sklearn.datasets import make_regression
+        from sklearn.model_selection import LeaveOneGroupOut
+
+        X, y = make_regression(n_samples=20, n_features=3, random_state=0)
+        groups = np.repeat(["north", "south", "east", "west"], 5)
+
+        logo = LeaveOneGroupOut()
+        for train_idx, test_idx in logo.split(X, y, groups=groups):
+            print("test group:", np.unique(groups[test_idx]))
+  what_comes_out:
+    items:
+      - {name: split, kind: method, task: null, shape: "generator of (train, test) indices", note: "One pair per group; test is that group."}
+      - {name: get_n_splits, kind: method, task: null, shape: "int", note: "Equals the number of groups."}
+    next_step: "Average the test scores across all the groups."
+    visual: null
+  catch_outs:
+    - Needs at least two groups, or it raises an error.
+    - One fold per group, so many groups means many fits.
+    - Pass groups=, or it raises an error.
+  key_settings:
+    tier1: []
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: Take each group out in turn, train on the rest, test on it.
+  next: []

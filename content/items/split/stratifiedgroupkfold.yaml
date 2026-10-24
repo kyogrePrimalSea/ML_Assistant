@@ -1,0 +1,73 @@
+id: stratifiedgroupkfold
+plain_name: StratifiedGroupKFold
+code_name: StratifiedGroupKFold
+aliases: [stratified group k-fold]
+stage: split
+family: split.grouped
+tracks: [standard]
+archetype: splitter
+question_tags: [rare class and groups, imbalanced classes with groups]
+targets: [sklearn.model_selection.StratifiedGroupKFold]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.StratifiedGroupKFold.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: splitter, rows: 40, folds: 4, ordered: false}
+    line: Keeps groups whole and class shares close in each fold.
+  quick_facts:
+    facts:
+      - {label: Default folds, value: "5"}
+      - {label: Shuffle by default, value: "no"}
+  use_avoid:
+    use_when: [classification with groups, rare class to keep]
+    avoid_when: [regression target, no group column]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.model_selection.StratifiedGroupKFold
+      why_this_library: Keeps groups whole and balances the classes per fold.
+      snippet: |
+        # scikit-learn 1.9.1
+        import numpy as np
+        from sklearn.datasets import make_classification
+        from sklearn.model_selection import StratifiedGroupKFold
+
+        X, y = make_classification(n_samples=40, n_features=3, n_informative=2,
+                                   n_redundant=0, weights=[0.8, 0.2],
+                                   random_state=0)
+        groups = np.repeat(np.arange(10), 4)  # 10 groups, 4 rows each
+
+        sgkf = StratifiedGroupKFold(n_splits=4, shuffle=True, random_state=0)
+        for train_idx, test_idx in sgkf.split(X, y, groups=groups):
+            print("test rows:", len(test_idx), "positives:", y[test_idx].sum())
+  what_comes_out:
+    items:
+      - {name: split, kind: method, task: classification, shape: "generator of (train, test) indices", note: "Needs y and groups; one pair per fold."}
+      - {name: get_n_splits, kind: method, task: null, shape: "int", note: "Returns n_splits, 5 by default."}
+    next_step: "Fit on train and score on test for each fold."
+    visual: null
+  catch_outs:
+    - Classification only, so y must hold class labels.
+    - Pass groups=, or it raises an error.
+    - Shuffle only mixes rows inside each class.
+    - Class shares per fold are close, not exact.
+  key_settings:
+    tier1:
+      - {name: n_splits, page: null}
+    tier2:
+      - {name: shuffle, page: null}
+      - {name: random_state, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: Deal whole groups into folds, keeping each class in similar shares.
+  next: []

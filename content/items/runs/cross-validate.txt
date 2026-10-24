@@ -1,0 +1,2 @@
+['fit_time', 'score_time', 'test_accuracy', 'test_roc_auc', 'train_accuracy', 'train_roc_auc']
+0.951 0.992

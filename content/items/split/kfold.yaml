@@ -1,0 +1,65 @@
+id: kfold
+plain_name: KFold
+code_name: KFold
+aliases: [k-fold, k fold]
+stage: split
+family: split.rotate
+tracks: [standard]
+archetype: splitter
+question_tags: [rotate test set, every row tested]
+targets: [sklearn.model_selection.KFold]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.KFold.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: splitter, rows: 20, folds: 5, ordered: false}
+    line: Takes turns using each slice of rows as the test set.
+  quick_facts:
+    facts:
+    - {label: Default folds, value: "5"}
+    - {label: Shuffled by default, value: "no"}
+  use_avoid:
+    use_when: [rows are independent, steadier score from many folds]
+    avoid_when: [time-ordered data, one class is rare]
+  prep: []
+  code:
+  - library: scikit-learn
+    target: sklearn.model_selection.KFold
+    why_this_library: One splitter that rotates the test fold through all rows.
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import make_regression
+      from sklearn.model_selection import KFold
+
+      X, _ = make_regression(n_samples=10, n_features=2, random_state=0)
+      kf = KFold(n_splits=5)
+      for train_idx, test_idx in kf.split(X):
+          print("test", test_idx)
+  what_comes_out:
+    items:
+    - {name: split, kind: method, task: null, shape: "generator of (train, test) index arrays", note: "One train and test pair per fold."}
+    - {name: get_n_splits, kind: method, task: null, shape: "int", note: "Returns n_splits, 5 by default."}
+    next_step: Fit one model per fold and average the scores.
+    visual: null
+  catch_outs:
+  - Shuffle is off by default, so row order decides the folds.
+  - Use StratifiedKFold when one class is rare.
+  key_settings:
+    tier1:
+    - {name: n_splits, page: null}
+    - {name: shuffle, page: null}
+    tier2:
+    - {name: random_state, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Cut the rows into k slices, and let each slice take a turn as the test set."}
+  next: []

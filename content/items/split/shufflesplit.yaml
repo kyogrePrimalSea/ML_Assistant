@@ -1,0 +1,68 @@
+id: shufflesplit
+plain_name: ShuffleSplit
+code_name: ShuffleSplit
+aliases: [shuffle split, random splits]
+stage: split
+family: split.holdout
+tracks: [standard]
+archetype: splitter
+question_tags: [several test sets, random splits]
+targets: [sklearn.model_selection.ShuffleSplit]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.ShuffleSplit.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when:
+    - when: {time_ordered: true}
+      reason: Random shuffling puts future rows in training.
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: splitter, rows: 20, folds: 5, ordered: false}
+    line: Draws several random test sets from the same rows.
+  quick_facts:
+    facts:
+    - {label: Default splits, value: "10"}
+    - {label: Reshuffled every split, value: "yes"}
+  use_avoid:
+    use_when: [several random holdouts, rows in any order]
+    avoid_when: [time-ordered data, every row tested once]
+  prep: []
+  code:
+  - library: scikit-learn
+    target: sklearn.model_selection.ShuffleSplit
+    why_this_library: One splitter gives repeated random train and test sets.
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import make_regression
+      from sklearn.model_selection import ShuffleSplit
+
+      X, _ = make_regression(n_samples=20, n_features=3, random_state=0)
+      splitter = ShuffleSplit(n_splits=3, test_size=0.25, random_state=0)
+      for train_idx, test_idx in splitter.split(X):
+          print("train", len(train_idx), "test", test_idx)
+  what_comes_out:
+    items:
+    - {name: split, kind: method, task: null, shape: "generator of (train, test) index arrays", note: "Each split yields row positions for one fit."}
+    - {name: get_n_splits, kind: method, task: null, shape: "int", note: "Returns n_splits, 10 by default."}
+    next_step: Fit one model per split and average the test scores.
+    visual: null
+  catch_outs:
+  - Test sets overlap, so some rows are tested more than once.
+  - Some rows may never appear in any test set.
+  key_settings:
+    tier1:
+    - {name: n_splits, page: null}
+    - {name: test_size, page: null}
+    - {name: random_state, page: null}
+    tier2:
+    - {name: train_size, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Shuffle the rows and cut a new test slice each time, again and again."}
+  next: []

@@ -1,0 +1,69 @@
+id: stratifiedkfold
+plain_name: StratifiedKFold
+code_name: StratifiedKFold
+aliases: [stratified cv, class-balanced folds, stratified k-fold]
+stage: split
+family: split.stratified
+tracks: [standard]
+archetype: splitter
+question_tags: [imbalanced, rare class]
+targets: [sklearn.model_selection.StratifiedKFold]
+pairs_with: []
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.StratifiedKFold.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: splitter, rows: 20, folds: 5, ordered: false}
+    line: Splits into folds that keep each class's share.
+  quick_facts:
+    facts:
+      - {label: Default folds, value: "5"}
+      - {label: Shuffled by default, value: "no"}
+  use_avoid:
+    use_when: [classification, one rare class]
+    avoid_when: [regression target, time-ordered data]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.model_selection.StratifiedKFold
+      why_this_library: Keeps each class's share the same in every fold.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.model_selection import StratifiedKFold
+
+        X, y = load_breast_cancer(return_X_y=True)
+        skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=0)
+
+        print([round(float(y[test].mean()), 3) for _, test in skf.split(X, y)])
+  what_comes_out:
+    items:
+      - {name: split, kind: method, task: classification, shape: "generator of (train, test) index arrays", note: "Yields one index pair per fold."}
+      - {name: get_n_splits, kind: method, task: null, shape: "int", note: "Number of folds, 5 by default."}
+    next_step: Fit on each train fold, then score on its test fold.
+    visual: null
+  catch_outs:
+    - Shuffle is off by default; turn it on to mix the rows.
+    - Shuffle mixes rows within each class, not across classes.
+    - random_state only matters when shuffle is on.
+  key_settings:
+    tier1:
+      - {name: shuffle, page: null}
+      - {name: n_splits, page: null}
+    tier2:
+      - {name: random_state, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: Deal each class's rows across the folds in turn, so every fold gets its share.
+  next: []

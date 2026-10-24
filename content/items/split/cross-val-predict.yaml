@@ -1,0 +1,68 @@
+id: cross-val-predict
+plain_name: cross_val_predict
+code_name: cross_val_predict
+aliases: [out-of-fold predictions, cross val predict]
+stage: split
+family: split.run
+tracks: [standard]
+archetype: splitter
+question_tags: [prediction for every row, out-of-fold]
+targets: [sklearn.model_selection.cross_val_predict]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_val_predict.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: splitter, rows: 20, folds: 5, ordered: false}
+    line: Gives every row a prediction from a model that never saw it.
+  quick_facts:
+    facts:
+    - {label: Output, value: one prediction per row}
+    - {label: Scores included, value: "no"}
+  use_avoid:
+    use_when: [need a prediction per row, check errors row by row]
+    avoid_when: [need one score per fold, time-ordered data]
+  prep: []
+  code:
+  - library: scikit-learn
+    target: sklearn.model_selection.cross_val_predict
+    why_this_library: One call returns out-of-fold predictions for all rows.
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import make_regression
+      from sklearn.linear_model import LinearRegression
+      from sklearn.model_selection import cross_val_predict
+
+      X, y = make_regression(n_samples=100, n_features=3, noise=10,
+                             random_state=0)
+      preds = cross_val_predict(LinearRegression(), X, y, cv=5)
+      print("shape", preds.shape, "first", round(float(preds[0]), 2))
+  what_comes_out:
+    items:
+    - {name: cross_val_predict, kind: return, task: null, shape: "array of shape (n_samples,)", note: "Each row predicted by a fold that did not train on it."}
+    next_step: Compare these predictions with y to see the errors.
+    visual: null
+  catch_outs:
+  - Use cross_val_score when you need one score per fold.
+  - Pass groups only with a group-aware cv splitter.
+  key_settings:
+    tier1:
+    - {name: estimator, page: null}
+    - {name: cv, page: null}
+    - {name: groups, page: null}
+    tier2:
+    - {name: method, page: null}
+    - {name: params, page: null}
+    tier3:
+    - {name: pre_dispatch, page: null}
+  watch_it_work: {none: true}
+  intuition: {text: "Each row gets a prediction from a model that was trained without it."}
+  next: []

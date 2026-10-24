@@ -1,0 +1,70 @@
+id: groupkfold
+plain_name: GroupKFold
+code_name: GroupKFold
+aliases: [group k-fold, grouped k-fold]
+stage: split
+family: split.grouped
+tracks: [standard]
+archetype: splitter
+question_tags: [same customer in both sets, group leakage]
+targets: [sklearn.model_selection.GroupKFold]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GroupKFold.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: splitter, rows: 20, folds: 4, ordered: false}
+    line: Keeps each group whole in one fold.
+  quick_facts:
+    facts:
+      - {label: Default folds, value: "5"}
+      - {label: Groups shuffled by default, value: "no"}
+  use_avoid:
+    use_when: [rows belong to groups, group must not leak]
+    avoid_when: [each row its own group, no group column]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.model_selection.GroupKFold
+      why_this_library: Splits by group id, so no group crosses folds.
+      snippet: |
+        # scikit-learn 1.9.1
+        import numpy as np
+        from sklearn.datasets import make_regression
+        from sklearn.model_selection import GroupKFold
+
+        X, y = make_regression(n_samples=20, n_features=3, random_state=0)
+        groups = np.repeat([0, 1, 2, 3], 5)  # 4 groups, 5 rows each
+
+        gkf = GroupKFold(n_splits=4)
+        for train_idx, test_idx in gkf.split(X, y, groups=groups):
+            print("test groups:", np.unique(groups[test_idx]))
+  what_comes_out:
+    items:
+      - {name: split, kind: method, task: null, shape: "generator of (train, test) indices", note: "Needs groups=; one pair per fold."}
+      - {name: get_n_splits, kind: method, task: null, shape: "int", note: "Returns the fold count, 5 by default."}
+    next_step: "Fit on train and score on test for each fold."
+    visual: null
+  catch_outs:
+    - Pass groups=, or it raises an error.
+    - Fold sizes follow group sizes, so they can differ a lot.
+    - Groups are not shuffled unless shuffle=True.
+  key_settings:
+    tier1:
+      - {name: n_splits, page: null}
+    tier2:
+      - {name: shuffle, page: null}
+      - {name: random_state, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: Deal whole groups into the folds, so none is split across them.
+  next: []

@@ -1,0 +1,68 @@
+id: leavepgroupsout
+plain_name: LeavePGroupsOut
+code_name: LeavePGroupsOut
+aliases: [leave p groups out, LPGO]
+stage: split
+family: split.grouped
+tracks: [standard]
+archetype: splitter
+question_tags: [test on several groups, group leakage]
+targets: [sklearn.model_selection.LeavePGroupsOut]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.LeavePGroupsOut.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: splitter, rows: 20, folds: 6, ordered: false}
+    line: Tests on every set of p groups, one set per fold.
+  quick_facts:
+    facts:
+      - {label: Folds, value: "every set of p groups"}
+      - {label: n_groups default, value: "none, required"}
+  use_avoid:
+    use_when: [few groups, many test combinations needed]
+    avoid_when: [many groups, folds grow too fast]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.model_selection.LeavePGroupsOut
+      why_this_library: Tries every combination of p held-out groups.
+      snippet: |
+        # scikit-learn 1.9.1
+        import numpy as np
+        from sklearn.datasets import make_regression
+        from sklearn.model_selection import LeavePGroupsOut
+
+        X, y = make_regression(n_samples=20, n_features=3, random_state=0)
+        groups = np.repeat([0, 1, 2, 3], 5)  # 4 groups, 5 rows each
+
+        lpgo = LeavePGroupsOut(n_groups=2)
+        for train_idx, test_idx in lpgo.split(X, y, groups=groups):
+            print("test groups:", np.unique(groups[test_idx]))
+  what_comes_out:
+    items:
+      - {name: split, kind: method, task: null, shape: "generator of (train, test) indices", note: "One pair per set of n_groups groups."}
+      - {name: get_n_splits, kind: method, task: null, shape: "int", note: "Equals C(groups, n_groups); 6 in this example."}
+    next_step: "Average the scores over every combination of test groups."
+    visual: null
+  catch_outs:
+    - Folds grow fast, since every set of p groups is one fold.
+    - n_groups is required, and there is no default.
+    - Pass groups=, or it raises an error.
+  key_settings:
+    tier1:
+      - {name: n_groups, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: Hold out every set of p groups in turn, not just one.
+  next: []

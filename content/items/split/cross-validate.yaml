@@ -1,0 +1,83 @@
+id: cross-validate
+plain_name: cross_validate
+code_name: cross_validate
+aliases: [cv metrics, several cv scores, cross validation metrics]
+stage: split
+family: split.run
+tracks: [standard, time-series]
+archetype: splitter
+question_tags: [how good is it, overfitting]
+targets: [sklearn.model_selection.cross_validate]
+pairs_with: []
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_validate.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: []
+  blocked_when:
+    - when: {time_ordered: true}
+      reason: K-fold trains on rows from the future.
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: splitter, rows: 20, folds: 5, ordered: false}
+    line: Scores several metrics per fold and times each fit.
+  quick_facts:
+    facts:
+      - {label: Default folds, value: "5"}
+      - {label: Train scores, value: "Off by default"}
+  use_avoid:
+    use_when: [several metrics at once, checking overfitting]
+    avoid_when: [time-ordered data, one metric only]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.model_selection.cross_validate
+      why_this_library: One call returns a dict of per-fold results.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.model_selection import cross_validate
+
+        X, y = load_breast_cancer(return_X_y=True)
+        model = LogisticRegression(max_iter=5000)
+
+        results = cross_validate(
+            model, X, y, cv=5,
+            scoring=["accuracy", "roc_auc"],
+            return_train_score=True,
+        )
+        print(sorted(results))
+        print(results["test_accuracy"].mean().round(3),
+              results["test_roc_auc"].mean().round(3))
+  what_comes_out:
+    items:
+      - {name: cross_validate, kind: return, task: null, shape: "dict of arrays, each (n_splits,)", note: "Test scores, plus fit and score times per fold."}
+    next_step: Compare test and train scores to spot overfitting.
+    visual: null
+  catch_outs:
+    - Train scores are off by default; turn them on to compare.
+    - Keys are test_<metric>, plus train_<metric> when turned on.
+    - Pass a list to scoring to get several metrics at once.
+  key_settings:
+    tier1:
+      - {name: cv, page: null}
+      - {name: scoring, page: null}
+      - {name: groups, page: null}
+      - {name: return_train_score, page: null}
+    tier2:
+      - {name: error_score, page: null}
+      - {name: params, page: null}
+    tier3:
+      - {name: return_estimator, page: null}
+      - {name: return_indices, page: null}
+  watch_it_work: {none: true}
+  intuition:
+    text: Score the model on each fold, and time the fits as it goes.
+  next: []

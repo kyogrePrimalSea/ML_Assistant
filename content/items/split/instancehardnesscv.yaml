@@ -1,0 +1,70 @@
+id: instancehardnesscv
+plain_name: InstanceHardnessCV
+code_name: InstanceHardnessCV
+aliases: [hard rows split, instance hardness cv, hard example split]
+stage: split
+family: split.stratified
+tracks: [standard]
+archetype: splitter
+question_tags: [imbalanced, rare class]
+targets: [imblearn.model_selection.InstanceHardnessCV]
+pairs_with: []
+clashes: []
+source_urls:
+  - https://imbalanced-learn.org/stable/references/generated/imblearn.model_selection.InstanceHardnessCV.html
+library_versions:
+  imbalanced-learn: "0.14.2"
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: splitter, rows: 20, folds: 5, ordered: false}
+    line: Spreads the hard-to-classify rows evenly across the folds.
+  quick_facts:
+    facts:
+      - {label: Default folds, value: "5"}
+      - {label: Needs, value: "A classifier"}
+  use_avoid:
+    use_when: [classification, rows in any order]
+    avoid_when: [regression target, time-ordered data]
+  prep: []
+  code:
+    - library: imbalanced-learn
+      target: imblearn.model_selection.InstanceHardnessCV
+      why_this_library: A classifier ranks how hard each row is to predict.
+      snippet: |
+        # imbalanced-learn 0.14.2
+        from imblearn.model_selection import InstanceHardnessCV
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegression
+
+        X, y = load_breast_cancer(return_X_y=True)
+        cv = InstanceHardnessCV(LogisticRegression(max_iter=5000), n_splits=5)
+
+        print([len(test) for _, test in cv.split(X, y)])
+  what_comes_out:
+    items:
+      - {name: split, kind: method, task: classification, shape: "generator of (train, test) index arrays", note: "Yields one index pair per fold."}
+      - {name: get_n_splits, kind: method, task: null, shape: "int", note: "Number of folds, 5 by default."}
+    next_step: Fit on each train fold, then score on its test fold.
+    visual: null
+  catch_outs:
+    - Needs a classifier, which it fits to rank the rows.
+    - Set pos_label to choose which class counts as positive.
+    - Use StratifiedKFold when class balance is the only concern.
+  key_settings:
+    tier1:
+      - {name: estimator, page: null}
+      - {name: n_splits, page: null}
+      - {name: pos_label, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: Rank the rows by how hard they are, then deal them out evenly.
+  next: []

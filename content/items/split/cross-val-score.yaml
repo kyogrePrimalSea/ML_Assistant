@@ -1,0 +1,75 @@
+id: cross-val-score
+plain_name: cross_val_score
+code_name: cross_val_score
+aliases: [cross validation score, k-fold score, cv score]
+stage: split
+family: split.run
+tracks: [standard, time-series]
+archetype: splitter
+question_tags: [how good is it, is the score steady]
+targets: [sklearn.model_selection.cross_val_score]
+pairs_with: []
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_val_score.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: []
+  blocked_when:
+    - when: {time_ordered: true}
+      reason: K-fold trains on rows from the future.
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: splitter, rows: 20, folds: 5, ordered: false}
+    line: Scores the model once per fold, so the result is steadier.
+  quick_facts:
+    facts:
+      - {label: Default folds, value: "5"}
+      - {label: Returns, value: "One score per fold"}
+  use_avoid:
+    use_when: [one metric, rows in any order]
+    avoid_when: [time-ordered data, several metrics]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.model_selection.cross_val_score
+      why_this_library: One call scores the model on every fold.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.linear_model import LogisticRegression
+        from sklearn.model_selection import cross_val_score
+
+        X, y = load_breast_cancer(return_X_y=True)
+        model = LogisticRegression(max_iter=5000)
+
+        scores = cross_val_score(model, X, y, cv=5, scoring="accuracy")
+        print(scores.round(3))
+  what_comes_out:
+    items:
+      - {name: cross_val_score, kind: return, task: null, shape: "float array, shape (n_splits,)", note: "One score per fold."}
+    next_step: Compare the mean and the spread across folds.
+    visual: null
+  catch_outs:
+    - Report the spread across folds, not just the mean.
+    - Use cross_validate when you need several metrics or fit times.
+    - Pass groups when one person or unit appears in many rows.
+  key_settings:
+    tier1:
+      - {name: cv, page: null}
+      - {name: scoring, page: null}
+      - {name: groups, page: null}
+    tier2:
+      - {name: error_score, page: null}
+      - {name: params, page: null}
+      - {name: estimator, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: Hold out one fold, score the model on it, then repeat for each fold.
+  next: []

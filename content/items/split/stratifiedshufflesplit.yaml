@@ -1,0 +1,70 @@
+id: stratifiedshufflesplit
+plain_name: StratifiedShuffleSplit
+code_name: StratifiedShuffleSplit
+aliases: [stratified random split, stratified shuffle split, repeated stratified hold-out]
+stage: split
+family: split.stratified
+tracks: [standard]
+archetype: splitter
+question_tags: [imbalanced, how good is it]
+targets: [sklearn.model_selection.StratifiedShuffleSplit]
+pairs_with: []
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.StratifiedShuffleSplit.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: splitter, rows: 20, folds: 3, ordered: false}
+    line: Random hold-outs that keep each class's share.
+  quick_facts:
+    facts:
+      - {label: Default splits, value: "10"}
+      - {label: Default test share, value: "10%"}
+  use_avoid:
+    use_when: [classification, random hold-outs]
+    avoid_when: [time-ordered data, one fixed test set]
+  prep: []
+  code:
+    - library: scikit-learn
+      target: sklearn.model_selection.StratifiedShuffleSplit
+      why_this_library: Random hold-outs with the same class mix each time.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import load_breast_cancer
+        from sklearn.model_selection import StratifiedShuffleSplit
+
+        X, y = load_breast_cancer(return_X_y=True)
+        sss = StratifiedShuffleSplit(n_splits=3, test_size=0.2, random_state=0)
+
+        print([round(float(y[test].mean()), 3) for _, test in sss.split(X, y)])
+  what_comes_out:
+    items:
+      - {name: split, kind: method, task: classification, shape: "generator of (train, test) index arrays", note: "Yields one train and test pair per split."}
+      - {name: get_n_splits, kind: method, task: null, shape: "int", note: "Number of random splits, 10 by default."}
+    next_step: Average the scores across the random splits.
+    visual: null
+  catch_outs:
+    - Test sets can overlap, so a row may be tested more than once.
+    - Set test_size; the default test share is 10% of rows.
+    - Set random_state for repeatable splits.
+  key_settings:
+    tier1:
+      - {name: test_size, page: null}
+      - {name: train_size, page: null}
+      - {name: n_splits, page: null}
+    tier2:
+      - {name: random_state, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: Shuffle the rows, cut off a test slice, and repeat with a fresh shuffle.
+  next: []

@@ -1,0 +1,64 @@
+id: leavepout
+plain_name: LeavePOut
+code_name: LeavePOut
+aliases: [leave p out, leave-p-out]
+stage: split
+family: split.rotate
+tracks: [standard]
+archetype: splitter
+question_tags: [tiny data, every combination]
+targets: [sklearn.model_selection.LeavePOut]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.LeavePOut.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: splitter, rows: 20, folds: 5, ordered: false}
+    line: Tests every possible group of p rows, one group at a time.
+  quick_facts:
+    facts:
+    - {label: Rows per test set, value: p}
+    - {label: Splits, value: one per p-row group}
+  use_avoid:
+    use_when: [tiny data, need every p-row test set]
+    avoid_when: [large data, slow fits]
+  prep: []
+  code:
+  - library: scikit-learn
+    target: sklearn.model_selection.LeavePOut
+    why_this_library: One splitter that tests every group of p rows.
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import make_regression
+      from sklearn.model_selection import LeavePOut
+
+      X, _ = make_regression(n_samples=6, n_features=2, random_state=0)
+      lpo = LeavePOut(p=2)
+      train_idx, test_idx = next(lpo.split(X))
+      print("first test", test_idx)
+      print("splits", lpo.get_n_splits(X))
+  what_comes_out:
+    items:
+    - {name: split, kind: method, task: null, shape: "generator of (train, test) index arrays", note: "One split per group of p test rows."}
+    - {name: get_n_splits, kind: method, task: null, shape: "int", note: "Counts all p-row groups, 15 in the demo."}
+    next_step: Average the scores over every group.
+    visual: null
+  catch_outs:
+  - The number of splits grows fast with rows and p.
+  - p must be below the number of rows.
+  key_settings:
+    tier1:
+    - {name: p, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Hold out every possible group of p rows, one group at a time."}
+  next: []

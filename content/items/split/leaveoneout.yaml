@@ -1,0 +1,63 @@
+id: leaveoneout
+plain_name: LeaveOneOut
+code_name: LeaveOneOut
+aliases: [leave one out]
+stage: split
+family: split.rotate
+tracks: [standard]
+archetype: splitter
+question_tags: [very small data, one row at a time]
+targets: [sklearn.model_selection.LeaveOneOut]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.LeaveOneOut.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [regression, classification]
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: splitter, rows: 20, folds: 20, ordered: false}
+    line: Tests one row at a time, so every row is tested alone.
+  quick_facts:
+    facts:
+    - {label: Splits, value: one per row}
+    - {label: Rows per test set, value: "1"}
+  use_avoid:
+    use_when: [very small data, every row tested alone]
+    avoid_when: [large data, slow fits]
+  prep: []
+  code:
+  - library: scikit-learn
+    target: sklearn.model_selection.LeaveOneOut
+    why_this_library: One splitter that holds out a single row per split.
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import make_regression
+      from sklearn.model_selection import LeaveOneOut
+
+      X, _ = make_regression(n_samples=6, n_features=2, random_state=0)
+      loo = LeaveOneOut()
+      for train_idx, test_idx in loo.split(X):
+          print("test", test_idx)
+      print("splits", loo.get_n_splits(X))
+  what_comes_out:
+    items:
+    - {name: split, kind: method, task: null, shape: "generator of (train, test) index arrays", note: "One split per row, with that row in test."}
+    - {name: get_n_splits, kind: method, task: null, shape: "int", note: "Equals the number of rows."}
+    next_step: Average the one-row errors into one score.
+    visual: null
+  catch_outs:
+  - Slow on big data, since it fits once per row.
+  - Each test score rests on a single row.
+  key_settings:
+    tier1: []
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Leave one row out, train on the rest, test on that row, and repeat for every row."}
+  next: []

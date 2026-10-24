@@ -780,10 +780,58 @@
     "via": "transform.chain.columns"
   },
   {
+    "source": "column-transformer",
+    "target": "make-column-selector",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "column-transformer",
+    "target": "pipeline",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "column-transformer",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
+    "source": "columntransformer",
+    "target": "feature-union",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "columntransformer",
+    "target": "featureunion",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
     "source": "columntransformer",
     "target": "make-column-selector",
     "type": "alternative_to",
     "via": "transform.chain.columns"
+  },
+  {
+    "source": "columntransformer",
+    "target": "make-column-selector",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "columntransformer",
+    "target": "pipeline",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "columntransformer",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
   },
   {
     "source": "complement-nb",
@@ -1440,6 +1488,18 @@
     "via": "transform.chain.union"
   },
   {
+    "source": "feature-union",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
+    "source": "featureunion",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
     "source": "fixedthresholdclassifier",
     "target": "tunedthresholdclassifiercv",
     "type": "alternative_to",
@@ -1462,6 +1522,12 @@
     "target": "partialfixedsampler",
     "type": "alternative_to",
     "via": "tune.optuna.setup"
+  },
+  {
+    "source": "functiontransformer",
+    "target": "transformedtargetregressor",
+    "type": "pairs_with",
+    "via": "pairs_with"
   },
   {
     "source": "gamma-regressor",
@@ -1510,6 +1576,12 @@
     "target": "selectpercentile",
     "type": "alternative_to",
     "via": "select.top-k"
+  },
+  {
+    "source": "genericunivariateselect",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
   },
   {
     "source": "geometric-mean-score",
@@ -2017,9 +2089,21 @@
   },
   {
     "source": "imblearn-pipeline",
+    "target": "pipeline",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "imblearn-pipeline",
     "target": "smote",
     "type": "pairs_with",
     "via": "pairs_with"
+  },
+  {
+    "source": "imblearn-pipeline",
+    "target": "train-test-split",
+    "type": "recommended",
+    "via": "prep"
   },
   {
     "source": "influence",
@@ -3672,6 +3756,12 @@
     "via": "transform.scale.reshape"
   },
   {
+    "source": "powertransformer",
+    "target": "transformedtargetregressor",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
     "source": "precision-recall-curve",
     "target": "roc-auc-score",
     "type": "alternative_to",
@@ -4038,10 +4128,22 @@
     "via": "select.significance"
   },
   {
+    "source": "selectfdr",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
     "source": "selectfpr",
     "target": "selectfwe",
     "type": "alternative_to",
     "via": "select.significance"
+  },
+  {
+    "source": "selectfpr",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
   },
   {
     "source": "selectfrommodel",
@@ -4092,6 +4194,12 @@
     "via": "prep"
   },
   {
+    "source": "selectfwe",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
     "source": "selectkbest",
     "target": "selectpercentile",
     "type": "alternative_to",
@@ -4099,6 +4207,12 @@
   },
   {
     "source": "selectkbest",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
+    "source": "selectpercentile",
     "target": "train-test-split",
     "type": "needs",
     "via": "prep"
@@ -4404,6 +4518,12 @@
     "via": "evaluate.counts.overall"
   },
   {
+    "source": "transformedtargetregressor",
+    "target": "train-test-split",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
     "source": "treeexplainer",
     "target": "xgboost",
     "type": "pairs_with",
@@ -4510,6 +4630,12 @@
     "target": "varmax",
     "type": "alternative_to",
     "via": "model.ts-multi"
+  },
+  {
+    "source": "variancethreshold",
+    "target": "train-test-split",
+    "type": "recommended",
+    "via": "prep"
   },
   {
     "source": "xgboost",
