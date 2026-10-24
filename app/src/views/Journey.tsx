@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button'
 import { loadPage, useIndex } from '@/content/load'
 import type { ItemRecord, StageId } from '@/content/types'
 import { DEMO_PICK_IDS, DEMO_PROFILE, DEMO_SHAPE_OVERRIDES, DEMO_START_SHAPE } from '@/build/demoPipeline'
+import { familyNames } from '@/content/labels'
 import { buildJourney, REGION_CENTRES, PASSPORT_POSITION, type Journey as JourneyData, type Stop } from '@/build/journey'
 import { buildCells } from '@/build/notebook'
 import { formatShape, shapeChanged } from '@/build/shape'
@@ -216,12 +217,13 @@ export default function Journey() {
   useEffect(() => () => timers.current.forEach((t) => window.clearTimeout(t)), [])
 
   const pageNames = useMemo(() => Object.fromEntries((index?.pages ?? []).map((p) => [p.id, p.plain_name])), [index])
+  const famNames = useMemo(() => familyNames(index), [index])
   const journey = useMemo(
     () =>
       records
-        ? buildJourney(DEMO_PROFILE, records, DEMO_START_SHAPE, { fixed, shapeOverrides: DEMO_SHAPE_OVERRIDES, pageNames })
+        ? buildJourney(DEMO_PROFILE, records, DEMO_START_SHAPE, { fixed, shapeOverrides: DEMO_SHAPE_OVERRIDES, pageNames, familyNames: famNames })
         : null,
-    [records, fixed, pageNames],
+    [records, fixed, pageNames, famNames],
   )
   const cells = useMemo(
     () => (records ? buildCells(DEMO_PROFILE, records.map((record) => ({ record }))) : []),

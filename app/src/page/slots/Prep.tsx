@@ -52,10 +52,10 @@ export function showValue(v: unknown): string {
 }
 
 function Row({ entry }: { entry: PrepEntry }) {
-  const { pageName, familyPage } = useCatalogue()
+  const { pageName, familyPage, nodeName } = useCatalogue()
   const step = entry.step
   const target = 'page' in step ? step.page : familyPage(step.family)
-  const name = 'page' in step ? pageName(step.page) : step.family
+  const name = 'page' in step ? pageName(step.page) : nodeName(step.family)
   const tags = conditionTags(entry.condition)
   return (
     <li data-prep-status={entry.status} className="grid gap-2 border-t border-border py-3 first:border-t-0 first:pt-0">

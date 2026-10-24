@@ -4,8 +4,9 @@ import { test, expect, type Page } from '@playwright/test'
 const shot = (name: string) => `test-results/screens/${name}.png`
 
 const stage = (page: Page) => page.getByRole('treeitem', { name: /^Model stage/ })
-const family = (page: Page) => page.getByRole('treeitem', { name: /^Boosting \(XGBoost\) family/ })
-const item = (page: Page) => page.getByRole('treeitem', { name: 'XGBoost, model' })
+const group = (page: Page) => page.getByRole('treeitem', { name: /^Trees and ensembles group/ })
+const family = (page: Page) => page.getByRole('treeitem', { name: /^Boosting family/ })
+const item = (page: Page) => page.getByRole('treeitem', { name: /^XGBoost, model/i })
 
 test('stages only at first; nothing runs off the canvas', async ({ page }) => {
   await page.goto('./#/')
@@ -19,13 +20,14 @@ test('stages only at first; nothing runs off the canvas', async ({ page }) => {
   await page.screenshot({ path: shot(`tree-${page.viewportSize()!.width}-closed`) })
 })
 
-test('open Model, Boosting (XGBoost), XGBoost by mouse; screenshots', async ({ page }) => {
+test('open Model, Trees and ensembles, Boosting, XGBoost by mouse; screenshots', async ({ page }) => {
   const w = page.viewportSize()!.width
   await page.goto('./#/')
   await stage(page).click()
   await expect(stage(page)).toHaveAttribute('aria-expanded', 'true')
   await page.waitForTimeout(1000)
   await page.screenshot({ path: shot(`tree-${w}-stage`) })
+  await group(page).click()
   await family(page).click()
   await item(page).click()
   await expect(page).toHaveURL(/#\/page\/xgboost$/)
@@ -53,17 +55,16 @@ test('same path by keyboard', async ({ page }) => {
   await expect(stage(page)).toBeFocused()
   await page.keyboard.press('Enter')
   await expect(stage(page)).toHaveAttribute('aria-expanded', 'true')
-  await page.keyboard.press('ArrowLeft') // Model sits on the left; outward is left
-  for (let i = 0; i < 100; i++) {
-    if (await family(page).evaluate((el) => el === el.ownerDocument.activeElement)) break
-    await page.keyboard.press('ArrowDown')
-  }
+  await page.keyboard.press('ArrowRight') // into the first group
+  for (let i = 0; i < 2; i++) await page.keyboard.press('ArrowDown')
+  await expect(group(page)).toBeFocused()
+  await page.keyboard.press('Enter')
+  await page.keyboard.press('ArrowRight')
+  await page.keyboard.press('ArrowDown')
+  await page.keyboard.press('ArrowDown')
   await expect(family(page)).toBeFocused()
   await page.keyboard.press('Enter')
-  await page.keyboard.press('ArrowLeft')
-  await page.keyboard.press('ArrowDown')
-  await page.keyboard.press('ArrowDown')
-  await page.keyboard.press('ArrowDown')
+  await page.keyboard.press('ArrowRight')
   await expect(item(page)).toBeFocused()
   await page.keyboard.press('Enter')
   await expect(page).toHaveURL(/#\/page\/xgboost$/)
@@ -73,6 +74,9 @@ test('same path by keyboard', async ({ page }) => {
   await expect(family(page)).toBeFocused()
   await expect(page).toHaveURL(/#\/page\/xgboost$/)
   await page.keyboard.press('Escape')
+  await expect(group(page)).toBeFocused()
+  await page.keyboard.press('Escape')
+  await expect(stage(page)).toBeFocused()
   await page.keyboard.press('Escape')
   await expect(page.getByRole('treeitem')).toHaveCount(9)
 })
@@ -80,9 +84,9 @@ test('same path by keyboard', async ({ page }) => {
 test('track switch re-centres; list toggle works; no axe violations', async ({ page }) => {
   await page.goto('./#/')
   await page.getByLabel('Track').selectOption('time-series')
-  await expect(page.getByRole('treeitem', { name: /^Model stage, 10 pages/ })).toBeVisible()
+  await expect(page.getByRole('treeitem', { name: /^Model stage, \d+ pages/ })).toBeVisible()
   await stage(page).click()
-  await expect(page.getByRole('treeitem', { name: /^Autoregressive family/ })).toBeVisible()
+  await expect(page.getByRole('treeitem', { name: /^Autoregressive group/ })).toBeVisible()
   const results = await new AxeBuilder({ page }).include('main').analyze()
   expect(results.violations.map((v) => `${v.id}: ${v.nodes.map((n) => JSON.stringify(n.any.map((a) => a.message + JSON.stringify(a.data)))).join(" | ")}`)).toEqual([])
   await page.getByRole('radio', { name: 'List' }).click()

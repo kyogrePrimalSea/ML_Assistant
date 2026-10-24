@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router'
+import { nodeName } from '@/content/labels'
 import { useIndex } from '@/content/load'
 import type { IndexPage, StageId } from '@/content/types'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
@@ -84,7 +85,7 @@ export default function CatalogueList({ activeId }: { activeId?: string }) {
                 <AccordionItem key={family} value={`${g.id}/${family}`} className="px-2">
                   <AccordionTrigger className="px-3 py-3 text-base font-bold">
                     <span>
-                      {family} <span className="ml-1 text-xs font-normal text-text-muted">{pages.length}</span>
+                      {nodeName(data, family)} <span className="ml-1 text-xs font-normal text-text-muted">{pages.length}</span>
                     </span>
                   </AccordionTrigger>
                   <AccordionContent>

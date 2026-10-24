@@ -32,8 +32,8 @@ describe('scene lookup', () => {
   it('maps hyperparameter pages and boosting models, and nothing else', () => {
     expect(sceneFor(hero, 'Boosting rounds', 'n-estimators')).toBe('hyper-n-estimators')
     expect(sceneFor(hero, 'Boosting rounds', 'some-other-page')).toBeNull()
-    expect(watchSceneFor('xgboost', 'Boosting (XGBoost)', 'n_estimators')).toBe('hyper-n-estimators')
-    expect(watchSceneFor('hist-gradient-boosting', 'Boosting (scikit-learn)', 'max_iter')).toBe('hyper-n-estimators')
+    expect(watchSceneFor('xgboost', 'model.trees.boosting', 'n_estimators')).toBe('hyper-n-estimators')
+    expect(watchSceneFor('hist-gradient-boosting', 'model.trees.boosting', 'max_iter')).toBe('hyper-n-estimators')
     expect(watchSceneFor('ridge', 'Linear models', 'alpha')).toBeNull()
   })
 })

@@ -51,6 +51,8 @@ export interface Issue {
 export interface ValidateOptions {
   /** Display names for page ids that are not in the pipeline (for "needs ..." messages). */
   pageNames?: Record<string, string>
+  /** Display names for taxonomy family and group ids (see `familyNames` in content/labels.ts). */
+  familyNames?: Record<string, string>
 }
 
 const SEVERITY_RANK: Record<StopStatus, number> = { valid: 0, tip: 1, warn: 2, block: 3 }
@@ -87,8 +89,8 @@ function pickedFor(step: Step, picks: Pick[], except: Pick): Pick[] {
   )
 }
 
-function stepLabel(step: Step, names: Record<string, string>): string {
-  return 'page' in step ? (names[step.page] ?? step.page) : `a ${step.family} step`
+function stepLabel(step: Step, names: Record<string, string>, families: Record<string, string>): string {
+  return 'page' in step ? (names[step.page] ?? step.page) : `a step from ${families[step.family] ?? step.family}`
 }
 
 function unlessHolds(pick: Pick, unless: { setting: string; value: unknown } | null): boolean {
@@ -99,6 +101,7 @@ const stripDot = (s: string) => s.replace(/\.$/, '')
 
 export function validatePipeline(profile: DataProfile, picks: Pick[], options: ValidateOptions = {}): Issue[] {
   const names = { ...options.pageNames }
+  const families = options.familyNames ?? {}
   for (const p of picks) names[p.record.id] = p.record.plain_name
   const issues: Issue[] = []
   const add = (i: Omit<Issue, 'key'>) => issues.push({ ...i, key: `${i.rule}:${i.pageId}:${i.sourceId}` })
@@ -139,13 +142,13 @@ export function validatePipeline(profile: DataProfile, picks: Pick[], options: V
       // Missing requirement (Block).
       if (prep.status === 'required' && applies && !unlessHolds(pick, prep.unless) && !present) {
         add({ rule: 'missing_requirement', severity: 'block', pageId: r.id, sourceId: r.id,
-          message: `${name} needs ${stepLabel(prep.step, names)}. ${stripDot(prep.why)}.` })
+          message: `${name} needs ${stepLabel(prep.step, names, families)}. ${stripDot(prep.why)}.` })
       }
 
       // Missing recommendation (Tip).
       if (prep.status === 'recommended' && applies && !unlessHolds(pick, prep.unless) && !present) {
         add({ rule: 'missing_recommendation', severity: 'tip', pageId: r.id, sourceId: r.id,
-          message: `${name} works better with ${stepLabel(prep.step, names)}. ${stripDot(prep.why)}.` })
+          message: `${name} works better with ${stepLabel(prep.step, names, families)}. ${stripDot(prep.why)}.` })
       }
 
       // Redundant step (Warn): the step is in the pipeline although this pick does not need it.

@@ -26,3 +26,6 @@
 @keyframes rt-fade { from { opacity: 0; } to { opacity: 1; } }
 /* While connection lines show, the tree steps back so the lines and their endpoint labels read first. */
 .rt-svg[data-conn] .rt-node:not([data-end]) .rt-label:not(.rt-dim) { opacity: 0.4; }
+/* The camera moves the whole world; labels scale with it (interim adapter, T038). */
+.rt-cam { transition: transform 600ms var(--ease); }
+@media (prefers-reduced-motion: reduce) { .rt-cam { transition: none; } }

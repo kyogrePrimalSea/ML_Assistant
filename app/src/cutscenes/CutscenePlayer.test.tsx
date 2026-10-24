@@ -20,7 +20,7 @@ function setup(reduced: boolean) {
 }
 afterEach(() => vi.unstubAllGlobals())
 
-const player = () => <CutscenePlayer hero={hero} family="Boosting (XGBoost)" fallback={<p>placeholder</p>} />
+const player = () => <CutscenePlayer hero={hero} family="model.trees.boosting" fallback={<p>placeholder</p>} />
 
 describe('CutscenePlayer', () => {
   it('keeps the placeholder for heroes without a scene', () => {

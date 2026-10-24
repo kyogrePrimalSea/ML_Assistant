@@ -7,7 +7,7 @@ const panel = (page: import('@playwright/test').Page) => page.getByRole('complem
 test('XGBoost connections: toggles draw and hide lines; legend; text list', async ({ page }) => {
   const w = page.viewportSize()!.width
   await page.goto('./#/page/xgboost')
-  await expect(page.getByRole('treeitem', { name: 'XGBoost, model' })).toBeVisible()
+  await expect(page.getByRole('treeitem', { name: /^XGBoost, model/i })).toBeVisible()
   await expect(page.getByTestId('relationship-lines').locator('[data-rel]')).toHaveCount(0)
   await panel(page).getByRole('button', { name: /Show connections/ }).click()
   // The text list is the accessible equivalent, whatever is drawn.
@@ -91,7 +91,7 @@ for (const theme of ['Light', 'Dark']) {
     await expectLegible(page)
 
     await page.goto('./#/page/xgboost')
-    await expect(page.getByRole('treeitem', { name: 'XGBoost, model' })).toBeVisible()
+    await expect(page.getByRole('treeitem', { name: /^XGBoost, model/i })).toBeVisible()
     await panel(page).getByRole('button', { name: /Show connections/ }).click()
     for (const t of ['Needs', 'Recommended', 'Clashes', 'Pairs with']) await panel(page).getByRole('button', { name: new RegExp(`^${t} \\d`) }).click()
     await page.waitForTimeout(1200)

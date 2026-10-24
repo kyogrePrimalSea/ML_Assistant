@@ -12,6 +12,8 @@ export interface SceneProps {
   onState: (s: 'playing' | 'done') => void
 }
 
+/** Taxonomy id of the boosting family (content/taxonomy.yaml); record families are taxonomy ids since T035. */
+export const BOOSTING_FAMILY = 'model.trees.boosting'
 export const HYPER_PAGES = ['n-estimators', 'max-depth', 'learning-rate', 'early-stopping'] as const
 export type SceneId = 'boosting-fit' | `hyper-${(typeof HYPER_PAGES)[number]}`
 
@@ -23,7 +25,7 @@ const isHyperPage = (id: string | undefined): id is (typeof HYPER_PAGES)[number]
  * get their own sweep scene. Others keep the placeholder.
  */
 export function sceneFor(hero: Hero, family: string, pageId?: string): SceneId | null {
-  if (hero.kind === 'model' && hero.shape === 'fit_line' && family.startsWith('Boosting')) return 'boosting-fit'
+  if (hero.kind === 'model' && hero.shape === 'fit_line' && family === BOOSTING_FAMILY) return 'boosting-fit'
   if (hero.kind === 'hyperparameter' && isHyperPage(pageId)) return `hyper-${pageId}`
   return null
 }
@@ -34,6 +36,6 @@ export function sceneFor(hero: Hero, family: string, pageId?: string): SceneId |
  */
 export function watchSceneFor(pageId: string, family: string, controlName: string): SceneId | null {
   if (isHyperPage(pageId)) return `hyper-${pageId}`
-  if (family.startsWith('Boosting') && (controlName === 'n_estimators' || controlName === 'max_iter')) return 'hyper-n-estimators'
+  if (family === BOOSTING_FAMILY && (controlName === 'n_estimators' || controlName === 'max_iter')) return 'hyper-n-estimators'
   return null
 }

@@ -27,9 +27,10 @@ describe('matchesCondition', () => {
 describe('missing requirement (Block)', () => {
   const model = () => rec('xgb', 'model', 'Boosting', { prep: [needsEncoder] })
   it('fires when categoricals are present and no encoder is picked', () => {
-    const [i] = validatePipeline(profile, [model()])
+    const [i] = validatePipeline(profile, [model()], { familyNames: { 'transform.encode.features': 'Categorical encoders' } })
     expect(i).toMatchObject({ rule: 'missing_requirement', severity: 'block', pageId: 'xgb', sourceId: 'xgb' })
-    expect(i.message).toContain('transform.encode.features')
+    expect(i.message).toContain('a step from Categorical encoders')
+    expect(i.message).not.toContain('transform.encode.features')
   })
   it('is satisfied by any page in the family', () => {
     const enc = rec('ohe', 'transform', 'transform.encode.features')

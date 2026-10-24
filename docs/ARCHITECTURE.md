@@ -142,12 +142,27 @@ to functions. Missing sections are empty lists, never omitted.
   the inventory and the extraction records, and writes static JSON to
   `app/public/data/` (generated, git-ignored):
   - `index.json` — vocab, every inventory page (id, plain name, stage, family,
-    archetype, tracks, targets, has_record, reviewed), questions, relationships.
+    archetype, tracks, targets, has_record, reviewed; `stage` and `family` come from
+    `content/taxonomy.yaml`), questions, relationships, and `taxonomy` (T038): goals, root and
+    goal prompts, `views[goal]` (the elided view tree per goal, texts resolved, pages with
+    `shown_as` and `pick_when`) and `labels[id]` (names and question labels of every stage, group
+    and family id; `app/src/content/labels.ts` resolves them so no taxonomy id is shown).
+    `app/scripts/goal-view.mjs` mirrors `tools/taxonomy.py: goal_view`; a fixture exported by
+    `tools/export_goal_views.py` keeps the two equal (`tests/fixtures/taxonomy/goal-views.json`).
   - `pages/<id>.json` — one content record plus the extraction facts its slots
     reference (defaults, effective defaults for key settings).
 - Radial tree layout: `app/scripts/layout-radial.mjs` runs after the content build
-  (`predev`/`prebuild`) and writes `content/derived/layout-radial.json` (committed) plus a
-  copy in `public/data/`. The app never computes layout at runtime (spec §7).
+  (`predev`/`prebuild`) and writes `content/derived/layout-radial.json` (committed, version 2) plus a
+  copy in `public/data/`. The app never computes layout at runtime (spec §7). One layout per goal:
+  the nine stages on a fixed ring (radius 290, 40 degrees apart, pipeline order clockwise from the top),
+  and for every opened node the positions of its children (A5). Fan geometry: n children share a
+  sector of min(120, 20 + 16(n-1)) degrees centred on the opened node's own angle, in reading order,
+  starting 150 units further out; each child then moves outward along its ray (6-unit steps) until its
+  dot and label box clear the centre, the stage ring, the opened ancestors, their siblings and the
+  children placed before it. Label boxes are estimated from text length (`METRICS` in the script) for
+  both Names and Questions and the larger is stored (`w`, `h`, `anchor`). Each opened node also has a
+  zoom-to-fit box (`fits[id]`; `root` when nothing is open). Invariants are tested in
+  `app/src/content/layout-radial.test.ts`.
 - Tests: Vitest + Testing Library (unit/component); Playwright + axe for
   end-to-end, screenshots (1440 and 1024 wide, light and dark) and accessibility.
 - Commands (from `app/`): `npm run dev`, `npm run build`, `npm test`, `npm run e2e`.

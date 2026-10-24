@@ -83,11 +83,16 @@ export function buildJourney(
   profile: DataProfile,
   records: ItemRecord[],
   start: { rows: number; columns: number },
-  opts: { fixed?: ReadonlySet<string>; shapeOverrides?: Record<string, ShapeOverride>; pageNames?: Record<string, string> } = {},
+  opts: {
+    fixed?: ReadonlySet<string>
+    shapeOverrides?: Record<string, ShapeOverride>
+    pageNames?: Record<string, string>
+    familyNames?: Record<string, string>
+  } = {},
 ): Journey {
   const fixed = opts.fixed ?? new Set<string>()
   const picks = sortPicks(records.map((record) => ({ record })))
-  const issues = validatePipeline(profile, picks, { pageNames: opts.pageNames })
+  const issues = validatePipeline(profile, picks, { pageNames: opts.pageNames, familyNames: opts.familyNames })
   const shapes = shapesAlong(start, picks, opts.shapeOverrides)
 
   const perStage = new Map<StageId, number>()

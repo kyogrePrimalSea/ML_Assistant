@@ -6,6 +6,7 @@ import { mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync, existsSync
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { load as yamlLoad } from 'js-yaml'
+import { goalView, pagePlacement, sourceNodes } from './goal-view.mjs'
 
 const here = dirname(fileURLToPath(import.meta.url))
 const root = join(here, '..', '..', 'content')
@@ -65,6 +66,9 @@ const uniq = (xs) => [...new Set(xs)]
 // Inputs
 const vocab = readYaml(join(root, 'schema', 'vocab.yaml'))
 const relationships = readJson(join(root, 'derived', 'relationships.json'))
+const tax = readYaml(join(root, 'taxonomy.yaml'))
+const placement = pagePlacement(tax)
+const placed = (id) => placement.get(id) ?? fail(`page ${id} is not in content/taxonomy.yaml`)
 
 const inventory = []
 for (const f of ['catalogue.yaml', 'supporting.yaml']) {
@@ -111,8 +115,8 @@ for (const [id, entries] of byPage) {
     id,
     plain_name: rec ? rec.plain_name : uniq(entries.map((e) => e.name)).join(' / '),
     code_name: rec ? rec.code_name : uniq(entries.map((e) => e.name)).join(' / '),
-    stage: first.stage,
-    family: first.family,
+    stage: placed(id).stage,
+    family: placed(id).family,
     archetype: first.archetype,
     tracks: uniq(entries.flatMap((e) => e.tracks || [])).sort(),
     targets: entries.map((e) => e.id).sort(),
@@ -128,8 +132,8 @@ for (const [id, rec] of records) {
     id,
     plain_name: rec.plain_name,
     code_name: rec.code_name,
-    stage: rec.stage,
-    family: rec.family,
+    stage: placed(id).stage,
+    family: placed(id).family,
     archetype: rec.archetype,
     tracks: [...rec.tracks].sort(),
     targets: [...(rec.targets || [])].sort(),
@@ -177,7 +181,23 @@ for (const [id, rec] of records) {
 rmSync(join(out, 'cutscenes'), { recursive: true, force: true })
 if (existsSync(join(root, 'cutscenes'))) cpSync(join(root, 'cutscenes'), join(out, 'cutscenes'), { recursive: true })
 
-write(join(out, 'index.json'), { pages, questions, relationships, vocab })
+// Taxonomy for the app: goals, root prompts, one resolved and elided view per goal, and a label
+// table for every stage, group and family id (source values: a string or a per-goal map).
+const withPageTexts = (n) =>
+  n.level === 'page'
+    ? { ...n, names_label: n.shown_as, question_label: n.shown_as, question_sentence: null, question_prompt: null }
+    : { ...n, children: n.children.map(withPageTexts) }
+const taxonomy = {
+  root: tax.root,
+  goal_prompt: tax.goal_prompt,
+  goals: tax.goals,
+  views: Object.fromEntries(tax.goals.map((g) => [g.id, goalView(tax, g.id).map(withPageTexts)])),
+  labels: Object.fromEntries(
+    sourceNodes(tax).map(([n]) => [n.id, { names_label: n.names_label, question_label: n.question_label }]),
+  ),
+}
+
+write(join(out, 'index.json'), { pages, questions, relationships, vocab, taxonomy })
 
 console.log(
   `build-content: ${pages.length} pages (${records.size} with records), ${questions.length} questions, ${relationships.length} relationships`,

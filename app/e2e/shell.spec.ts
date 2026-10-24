@@ -6,7 +6,7 @@ test('open XGBoost from the catalogue; screenshots in both themes', async ({ pag
   const w = page.viewportSize()!.width
   await page.goto('./#/')
   await page.getByRole('radio', { name: 'List' }).click()
-  await page.getByRole('button', { name: /Boosting \(XGBoost\)/ }).click()
+  await page.getByRole('button', { name: /^Boosting \d/ }).click()
   await page.getByRole('link', { name: /XGBoost/ }).first().click()
   await expect(page).toHaveURL(/#\/page\/xgboost$/)
   const panel = page.getByRole('complementary', { name: 'Page panel' })
@@ -54,7 +54,7 @@ test('below 900px the panel is a bottom sheet', async ({ page }) => {
   await page.goto('./#/')
   await page.getByRole('radio', { name: 'List' }).click()
   await page.getByRole('radio', { name: 'List' }).click()
-  await page.getByRole('button', { name: /Boosting \(XGBoost\)/ }).click()
+  await page.getByRole('button', { name: /^Boosting \d/ }).click()
   await page.getByRole('link', { name: /XGBoost/ }).first().click()
   const sheet = page.getByRole('dialog', { name: 'XGBoost' })
   await expect(sheet).toBeVisible()

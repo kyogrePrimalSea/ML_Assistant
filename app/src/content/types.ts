@@ -194,11 +194,47 @@ export interface IndexPage {
   reviewed: boolean
 }
 
+export type TaxLevel = 'stage' | 'group' | 'family' | 'page'
+
+export interface TaxGoal {
+  id: string
+  names_label: string
+  question_label: string
+  question_sentence: string
+  track: TrackId
+  task: TaskType
+}
+
+/** One node of a goal view (content/taxonomy.yaml after filtering and elision), texts resolved for the goal. */
+export interface TaxNode {
+  id: string
+  level: TaxLevel
+  names_label: string | null
+  question_label: string | null
+  question_sentence: string | null
+  question_prompt: string | null
+  /** Pages only. */
+  shown_as?: string
+  pick_when?: string
+  children: TaxNode[]
+}
+
+export interface Taxonomy {
+  root: { question_prompt: string }
+  goal_prompt: string
+  goals: TaxGoal[]
+  /** Goal id to its nine stage nodes. */
+  views: Record<string, TaxNode[]>
+  /** Every stage, group and family id to its labels (source values; `question_label` may be a per-goal map). */
+  labels: Record<string, { names_label: string; question_label: string | Record<string, string | null> }>
+}
+
 export interface ContentIndex {
   pages: IndexPage[]
   questions: Question[]
   relationships: Relationship[]
   vocab: Vocab
+  taxonomy: Taxonomy
 }
 
 // pages/<id>.json
