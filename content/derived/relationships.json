@@ -619,6 +619,12 @@
   },
   {
     "source": "bruteforcesampler",
+    "target": "optuna-study",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "bruteforcesampler",
     "target": "qmcsampler",
     "type": "alternative_to",
     "via": "tune.optuna.sampler"
@@ -634,6 +640,12 @@
     "target": "tpesampler",
     "type": "alternative_to",
     "via": "tune.optuna.sampler"
+  },
+  {
+    "source": "bruteforcesampler",
+    "target": "train-test-split",
+    "type": "recommended",
+    "via": "prep"
   },
   {
     "source": "calibratedclassifiercv",
@@ -919,6 +931,12 @@
   },
   {
     "source": "cmaessampler",
+    "target": "optuna-study",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "cmaessampler",
     "target": "qmcsampler",
     "type": "alternative_to",
     "via": "tune.optuna.sampler"
@@ -934,6 +952,12 @@
     "target": "tpesampler",
     "type": "alternative_to",
     "via": "tune.optuna.sampler"
+  },
+  {
+    "source": "cmaessampler",
+    "target": "train-test-split",
+    "type": "recommended",
+    "via": "prep"
   },
   {
     "source": "cohen-kappa-score",
@@ -1873,6 +1897,12 @@
   },
   {
     "source": "fixedthresholdclassifier",
+    "target": "train-test-split",
+    "type": "recommended",
+    "via": "prep"
+  },
+  {
+    "source": "fixedthresholdclassifier",
     "target": "tunedthresholdclassifiercv",
     "type": "alternative_to",
     "via": "tune.threshold"
@@ -1882,6 +1912,12 @@
     "target": "optuna-study",
     "type": "alternative_to",
     "via": "tune.optuna.setup"
+  },
+  {
+    "source": "frozentrial",
+    "target": "optuna-study",
+    "type": "needs",
+    "via": "prep"
   },
   {
     "source": "frozentrial",
@@ -2005,6 +2041,12 @@
   },
   {
     "source": "get-param-importances",
+    "target": "optuna-study",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
+    "source": "get-param-importances",
     "target": "plot-contour",
     "type": "alternative_to",
     "via": "tune.watch.importance"
@@ -2089,6 +2131,12 @@
   },
   {
     "source": "gpsampler",
+    "target": "optuna-study",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "gpsampler",
     "target": "qmcsampler",
     "type": "alternative_to",
     "via": "tune.optuna.sampler"
@@ -2104,6 +2152,12 @@
     "target": "tpesampler",
     "type": "alternative_to",
     "via": "tune.optuna.sampler"
+  },
+  {
+    "source": "gpsampler",
+    "target": "train-test-split",
+    "type": "recommended",
+    "via": "prep"
   },
   {
     "source": "gradient-boosting",
@@ -2215,6 +2269,12 @@
   },
   {
     "source": "gridsampler",
+    "target": "optuna-study",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "gridsampler",
     "target": "qmcsampler",
     "type": "alternative_to",
     "via": "tune.optuna.sampler"
@@ -2232,10 +2292,28 @@
     "via": "tune.optuna.sampler"
   },
   {
+    "source": "gridsampler",
+    "target": "train-test-split",
+    "type": "recommended",
+    "via": "prep"
+  },
+  {
     "source": "gridsearchcv",
     "target": "parametergrid",
     "type": "alternative_to",
     "via": "tune.search.grid"
+  },
+  {
+    "source": "gridsearchcv",
+    "target": "pipeline",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "gridsearchcv",
+    "target": "train-test-split",
+    "type": "recommended",
+    "via": "prep"
   },
   {
     "source": "groupkfold",
@@ -2284,6 +2362,90 @@
     "target": "halvingrandomsearchcv",
     "type": "alternative_to",
     "via": "tune.search.halving"
+  },
+  {
+    "source": "halvinggridsearchcv",
+    "target": "kernelcenterer",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "halvinggridsearchcv",
+    "target": "maxabsscaler",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "halvinggridsearchcv",
+    "target": "minmaxscaler",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "halvinggridsearchcv",
+    "target": "normalizer",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "halvinggridsearchcv",
+    "target": "robustscaler",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "halvinggridsearchcv",
+    "target": "standardscaler",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "halvinggridsearchcv",
+    "target": "train-test-split",
+    "type": "recommended",
+    "via": "prep"
+  },
+  {
+    "source": "halvingrandomsearchcv",
+    "target": "kernelcenterer",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "halvingrandomsearchcv",
+    "target": "maxabsscaler",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "halvingrandomsearchcv",
+    "target": "minmaxscaler",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "halvingrandomsearchcv",
+    "target": "normalizer",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "halvingrandomsearchcv",
+    "target": "robustscaler",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "halvingrandomsearchcv",
+    "target": "standardscaler",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "halvingrandomsearchcv",
+    "target": "train-test-split",
+    "type": "recommended",
+    "via": "prep"
   },
   {
     "source": "hamming-loss",
@@ -2455,6 +2617,12 @@
   },
   {
     "source": "hyperbandpruner",
+    "target": "optuna-study",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "hyperbandpruner",
     "target": "percentilepruner",
     "type": "alternative_to",
     "via": "tune.watch.prune-relative"
@@ -2464,6 +2632,12 @@
     "target": "successivehalvingpruner",
     "type": "alternative_to",
     "via": "tune.watch.prune-relative"
+  },
+  {
+    "source": "hyperbandpruner",
+    "target": "train-test-split",
+    "type": "recommended",
+    "via": "prep"
   },
   {
     "source": "hyperbandpruner",
@@ -3553,6 +3727,12 @@
   },
   {
     "source": "medianpruner",
+    "target": "patientpruner",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "medianpruner",
     "target": "percentilepruner",
     "type": "alternative_to",
     "via": "tune.watch.prune-relative"
@@ -3562,6 +3742,12 @@
     "target": "successivehalvingpruner",
     "type": "alternative_to",
     "via": "tune.watch.prune-relative"
+  },
+  {
+    "source": "medianpruner",
+    "target": "train-test-split",
+    "type": "recommended",
+    "via": "prep"
   },
   {
     "source": "medianpruner",
@@ -3871,6 +4057,12 @@
   },
   {
     "source": "noppruner",
+    "target": "train-test-split",
+    "type": "recommended",
+    "via": "prep"
+  },
+  {
+    "source": "noppruner",
     "target": "trialpruned",
     "type": "alternative_to",
     "via": "tune.watch.prune-rule"
@@ -3949,6 +4141,12 @@
   },
   {
     "source": "nsgaiiisampler",
+    "target": "optuna-study",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "nsgaiiisampler",
     "target": "plot-hypervolume-history",
     "type": "alternative_to",
     "via": "tune.optuna.multi"
@@ -3960,6 +4158,24 @@
     "via": "tune.optuna.multi"
   },
   {
+    "source": "nsgaiiisampler",
+    "target": "plot-pareto-front",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "nsgaiiisampler",
+    "target": "train-test-split",
+    "type": "recommended",
+    "via": "prep"
+  },
+  {
+    "source": "nsgaiisampler",
+    "target": "optuna-study",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
     "source": "nsgaiisampler",
     "target": "plot-hypervolume-history",
     "type": "alternative_to",
@@ -3970,6 +4186,18 @@
     "target": "plot-pareto-front",
     "type": "alternative_to",
     "via": "tune.optuna.multi"
+  },
+  {
+    "source": "nsgaiisampler",
+    "target": "plot-pareto-front",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "nsgaiisampler",
+    "target": "train-test-split",
+    "type": "recommended",
+    "via": "prep"
   },
   {
     "source": "nu-svr",
@@ -4092,6 +4320,24 @@
     "via": "tune.optuna.setup"
   },
   {
+    "source": "optuna-study",
+    "target": "qmcsampler",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "optuna-study",
+    "target": "train-test-split",
+    "type": "recommended",
+    "via": "prep"
+  },
+  {
+    "source": "optuna-trial",
+    "target": "optuna-study",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
     "source": "optuna-trial",
     "target": "partialfixedsampler",
     "type": "alternative_to",
@@ -4116,10 +4362,94 @@
     "via": "prep"
   },
   {
+    "source": "parametergrid",
+    "target": "kernelcenterer",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "parametergrid",
+    "target": "maxabsscaler",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "parametergrid",
+    "target": "minmaxscaler",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "parametergrid",
+    "target": "normalizer",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "parametergrid",
+    "target": "robustscaler",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "parametergrid",
+    "target": "standardscaler",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "parametergrid",
+    "target": "train-test-split",
+    "type": "recommended",
+    "via": "prep"
+  },
+  {
+    "source": "parametersampler",
+    "target": "kernelcenterer",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "parametersampler",
+    "target": "maxabsscaler",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "parametersampler",
+    "target": "minmaxscaler",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "parametersampler",
+    "target": "normalizer",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
     "source": "parametersampler",
     "target": "randomizedsearchcv",
     "type": "alternative_to",
     "via": "tune.search.random"
+  },
+  {
+    "source": "parametersampler",
+    "target": "robustscaler",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "parametersampler",
+    "target": "standardscaler",
+    "type": "clashes",
+    "via": "prep:transform.scale.rescale"
+  },
+  {
+    "source": "parametersampler",
+    "target": "train-test-split",
+    "type": "recommended",
+    "via": "prep"
   },
   {
     "source": "partial-dependence",
@@ -4132,6 +4462,18 @@
     "target": "shap-scatter",
     "type": "alternative_to",
     "via": "interpret.effect"
+  },
+  {
+    "source": "partialfixedsampler",
+    "target": "optuna-study",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
+    "source": "partialfixedsampler",
+    "target": "tpesampler",
+    "type": "recommended",
+    "via": "prep"
   },
   {
     "source": "partitionexplainer",
@@ -4174,6 +4516,12 @@
     "target": "thresholdpruner",
     "type": "alternative_to",
     "via": "tune.watch.prune-rule"
+  },
+  {
+    "source": "patientpruner",
+    "target": "train-test-split",
+    "type": "recommended",
+    "via": "prep"
   },
   {
     "source": "patientpruner",
@@ -4240,6 +4588,12 @@
     "target": "successivehalvingpruner",
     "type": "alternative_to",
     "via": "tune.watch.prune-relative"
+  },
+  {
+    "source": "percentilepruner",
+    "target": "train-test-split",
+    "type": "recommended",
+    "via": "prep"
   },
   {
     "source": "percentilepruner",
@@ -4423,6 +4777,12 @@
   },
   {
     "source": "plot-contour",
+    "target": "optuna-study",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
+    "source": "plot-contour",
     "target": "plot-parallel-coordinate",
     "type": "alternative_to",
     "via": "tune.watch.importance"
@@ -4447,6 +4807,12 @@
   },
   {
     "source": "plot-edf",
+    "target": "optuna-study",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
+    "source": "plot-edf",
     "target": "plot-intermediate-values",
     "type": "alternative_to",
     "via": "tune.watch.history"
@@ -4465,9 +4831,27 @@
   },
   {
     "source": "plot-hypervolume-history",
+    "target": "optuna-study",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
+    "source": "plot-hypervolume-history",
     "target": "plot-pareto-front",
     "type": "alternative_to",
     "via": "tune.optuna.multi"
+  },
+  {
+    "source": "plot-intermediate-values",
+    "target": "optuna-study",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
+    "source": "plot-intermediate-values",
+    "target": "optuna-trial",
+    "type": "needs",
+    "via": "prep"
   },
   {
     "source": "plot-intermediate-values",
@@ -4483,9 +4867,21 @@
   },
   {
     "source": "plot-optimization-history",
+    "target": "optuna-study",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
+    "source": "plot-optimization-history",
     "target": "plot-timeline",
     "type": "alternative_to",
     "via": "tune.watch.history"
+  },
+  {
+    "source": "plot-parallel-coordinate",
+    "target": "optuna-study",
+    "type": "needs",
+    "via": "prep"
   },
   {
     "source": "plot-parallel-coordinate",
@@ -4507,6 +4903,12 @@
   },
   {
     "source": "plot-param-importances",
+    "target": "optuna-study",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
+    "source": "plot-param-importances",
     "target": "plot-rank",
     "type": "alternative_to",
     "via": "tune.watch.importance"
@@ -4518,10 +4920,34 @@
     "via": "tune.watch.importance"
   },
   {
+    "source": "plot-pareto-front",
+    "target": "optuna-study",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
+    "source": "plot-rank",
+    "target": "optuna-study",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
     "source": "plot-rank",
     "target": "plot-slice",
     "type": "alternative_to",
     "via": "tune.watch.importance"
+  },
+  {
+    "source": "plot-slice",
+    "target": "optuna-study",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
+    "source": "plot-terminator-improvement",
+    "target": "optuna-study",
+    "type": "needs",
+    "via": "prep"
   },
   {
     "source": "plot-terminator-improvement",
@@ -4534,6 +4960,12 @@
     "target": "terminatorcallback",
     "type": "alternative_to",
     "via": "tune.watch.stop"
+  },
+  {
+    "source": "plot-timeline",
+    "target": "optuna-study",
+    "type": "needs",
+    "via": "prep"
   },
   {
     "source": "pls-regression",
@@ -4650,6 +5082,12 @@
     "via": "tune.optuna.sampler"
   },
   {
+    "source": "qmcsampler",
+    "target": "train-test-split",
+    "type": "recommended",
+    "via": "prep"
+  },
+  {
     "source": "quantiletransformer",
     "target": "train-test-split",
     "type": "needs",
@@ -4747,9 +5185,21 @@
   },
   {
     "source": "randomsampler",
+    "target": "optuna-study",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
+    "source": "randomsampler",
     "target": "tpesampler",
     "type": "alternative_to",
     "via": "tune.optuna.sampler"
+  },
+  {
+    "source": "randomsampler",
+    "target": "train-test-split",
+    "type": "recommended",
+    "via": "prep"
   },
   {
     "source": "randomundersampler",
@@ -5641,6 +6091,12 @@
   },
   {
     "source": "successivehalvingpruner",
+    "target": "train-test-split",
+    "type": "recommended",
+    "via": "prep"
+  },
+  {
+    "source": "successivehalvingpruner",
     "target": "wilcoxonpruner",
     "type": "alternative_to",
     "via": "tune.watch.prune-relative"
@@ -5683,9 +6139,33 @@
   },
   {
     "source": "terminator",
+    "target": "cross-validate",
+    "type": "recommended",
+    "via": "prep"
+  },
+  {
+    "source": "terminator",
     "target": "terminatorcallback",
     "type": "alternative_to",
     "via": "tune.watch.stop"
+  },
+  {
+    "source": "terminator",
+    "target": "terminatorcallback",
+    "type": "pairs_with",
+    "via": "pairs_with"
+  },
+  {
+    "source": "terminatorcallback",
+    "target": "cross-validate",
+    "type": "recommended",
+    "via": "prep"
+  },
+  {
+    "source": "thresholdpruner",
+    "target": "train-test-split",
+    "type": "recommended",
+    "via": "prep"
   },
   {
     "source": "thresholdpruner",
@@ -5760,6 +6240,18 @@
     "via": "evaluate.counts.overall"
   },
   {
+    "source": "tpesampler",
+    "target": "optuna-study",
+    "type": "needs",
+    "via": "prep"
+  },
+  {
+    "source": "tpesampler",
+    "target": "train-test-split",
+    "type": "recommended",
+    "via": "prep"
+  },
+  {
     "source": "transformedtargetregressor",
     "target": "train-test-split",
     "type": "needs",
@@ -5770,6 +6262,12 @@
     "target": "xgboost",
     "type": "pairs_with",
     "via": "pairs_with"
+  },
+  {
+    "source": "trialpruned",
+    "target": "train-test-split",
+    "type": "recommended",
+    "via": "prep"
   },
   {
     "source": "truncatedsvd",
@@ -5868,6 +6366,12 @@
     "via": "prep:clean.impute"
   },
   {
+    "source": "tunedthresholdclassifiercv",
+    "target": "train-test-split",
+    "type": "recommended",
+    "via": "prep"
+  },
+  {
     "source": "var",
     "target": "varmax",
     "type": "alternative_to",
@@ -5875,6 +6379,12 @@
   },
   {
     "source": "variancethreshold",
+    "target": "train-test-split",
+    "type": "recommended",
+    "via": "prep"
+  },
+  {
+    "source": "wilcoxonpruner",
     "target": "train-test-split",
     "type": "recommended",
     "via": "prep"

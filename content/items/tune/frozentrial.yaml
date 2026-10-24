@@ -1,0 +1,89 @@
+id: frozentrial
+plain_name: FrozenTrial
+code_name: FrozenTrial
+aliases: [finished trial, trial result, trial record]
+stage: tune
+family: tune.optuna.setup
+tracks: [standard, time-series]
+archetype: tuning
+question_tags: [which setting won, read past trials]
+targets: [optuna.trial.FrozenTrial]
+pairs_with: []
+clashes: []
+source_urls: ['https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.FrozenTrial.html']
+library_versions: {optuna: 5.0.0}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: tuning, dims: 2, trials: 20}
+    line: A record of one trial, with its settings and score.
+  quick_facts:
+    facts:
+      - {label: Made by, value: "study.best_trial or study.trials"}
+      - {label: Changes the study, value: "no"}
+  use_avoid:
+    use_when: [see which settings won, read a finished trial]
+    avoid_when: [still setting up a search]
+  prep:
+    - step: {page: optuna-study}
+      status: required
+      why: A search has to run before there are trials to read.
+      condition: null
+      unless: null
+  code:
+    - library: optuna
+      target: optuna.trial.FrozenTrial
+      why_this_library: Returned by study.best_trial and study.trials.
+      snippet: |
+        # optuna 5.0.0
+        import optuna
+        from sklearn.datasets import make_regression
+        from sklearn.ensemble import RandomForestRegressor
+        from sklearn.model_selection import cross_val_score
+
+        optuna.logging.set_verbosity(optuna.logging.WARNING)
+        X, y = make_regression(n_samples=300, n_features=8, noise=15, random_state=0)
+
+
+        def objective(trial):
+            depth = trial.suggest_int("max_depth", 2, 12)
+            leaf = trial.suggest_int("min_samples_leaf", 1, 10)
+            model = RandomForestRegressor(
+                n_estimators=30, max_depth=depth, min_samples_leaf=leaf, random_state=0
+            )
+            return cross_val_score(model, X, y, cv=3).mean()
+
+
+        sampler = optuna.samplers.TPESampler(seed=0)
+        study = optuna.create_study(direction="maximize", sampler=sampler)
+        study.optimize(objective, n_trials=20)
+        best = study.best_trial
+        print(best.number, best.state.name, round(best.value, 3), best.params)
+  what_comes_out:
+    items:
+      - {name: number, kind: attribute, task: null, shape: int, note: Position of the trial in the study.}
+      - {name: state, kind: attribute, task: null, shape: TrialState, note: Tells you whether the trial finished.}
+      - {name: value, kind: attribute, task: null, shape: "float or None", note: Objective score of the trial.}
+      - {name: params, kind: attribute, task: null, shape: dict, note: Settings the trial tried.}
+    next_step: null
+    visual: null
+  catch_outs:
+    - Check state before you read value.
+    - Reading a trial never changes the study.
+  key_settings:
+    tier1:
+      - {name: state, page: null}
+      - {name: value, page: null}
+    tier2:
+      - {name: params, page: null}
+      - {name: distributions, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "A photo of one finished trial, with its settings and score."}
+  next: []

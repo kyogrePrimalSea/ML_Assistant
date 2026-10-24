@@ -1,0 +1,87 @@
+id: optuna-trial
+plain_name: Trial
+code_name: Trial
+aliases: [trial, suggest, suggest_float]
+stage: tune
+family: tune.optuna.setup
+tracks: [standard, time-series]
+archetype: tuning
+question_tags: [suggest settings, inside objective]
+targets: [optuna.trial.Trial]
+pairs_with: []
+clashes: []
+source_urls: ['https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.Trial.html']
+library_versions: {optuna: 5.0.0}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: tuning, dims: 3, trials: 20}
+    line: Hands out one set of settings for each try.
+  quick_facts:
+    facts:
+      - {label: Called from, value: The objective function}
+  use_avoid:
+    use_when: [inside the objective, custom ranges]
+    avoid_when: [fixed settings only]
+  prep:
+    - step: {page: optuna-study}
+      status: required
+      why: The study creates each trial.
+      condition: null
+      unless: null
+  code:
+    - library: optuna
+      target: optuna.trial.Trial
+      why_this_library: Created by the study. You call its suggest methods.
+      snippet: |
+        # optuna 5.0.0
+        import optuna
+        from optuna.samplers import TPESampler
+        from sklearn.datasets import make_regression
+        from sklearn.ensemble import RandomForestRegressor
+        from sklearn.model_selection import cross_val_score
+
+        optuna.logging.set_verbosity(optuna.logging.WARNING)
+        X, y = make_regression(n_samples=300, n_features=8, noise=15, random_state=0)
+
+
+        def objective(trial):
+            depth = trial.suggest_int("max_depth", 2, 12)
+            leaf = trial.suggest_int("min_samples_leaf", 1, 10)
+            feats = trial.suggest_categorical("max_features", [0.5, 1.0])
+            model = RandomForestRegressor(
+                n_estimators=30,
+                max_depth=depth,
+                min_samples_leaf=leaf,
+                max_features=feats,
+                random_state=0,
+            )
+            return cross_val_score(model, X, y, cv=3).mean()
+
+
+        sampler = TPESampler(seed=0)
+        study = optuna.create_study(direction="maximize", sampler=sampler)
+        study.optimize(objective, n_trials=20)
+        print(study.best_params, round(study.best_value, 3))
+  what_comes_out:
+    items:
+      - {name: suggest_int, kind: method, task: null, shape: int, note: Picks a whole number in a range.}
+      - {name: suggest_categorical, kind: method, task: null, shape: one of the choices, note: Picks one value from a list.}
+    next_step: Return one score for the settings you were given.
+    visual: null
+  catch_outs:
+    - Use the same name and range in every trial.
+    - Each name you suggest becomes a search dimension.
+  key_settings:
+    tier1: []
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Each trial asks for settings, runs them, and gets a score."}
+  next: []

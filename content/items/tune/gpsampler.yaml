@@ -1,0 +1,60 @@
+id: gpsampler
+plain_name: GPSampler
+code_name: GPSampler
+aliases: [Gaussian process, Bayesian optimization]
+stage: tune
+family: tune.optuna.sampler
+tracks: [standard, time-series]
+archetype: tuning
+question_tags: [slow fits, few trials]
+targets: [optuna.samplers.GPSampler]
+pairs_with: [optuna-study]
+clashes: []
+source_urls: ['https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.GPSampler.html']
+library_versions: {optuna: 5.0.0, scikit-learn: "1.9.1"}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: tuning, dims: 2, trials: 20}
+    line: Learns from each trial to pick the next, with few trials.
+  quick_facts:
+    facts:
+      - {label: Startup trials, value: "10"}
+      - {label: Backend, value: "PyTorch"}
+  use_avoid:
+    use_when: [each fit is slow, few trials]
+    avoid_when: [many trials, large search space]
+  prep:
+    - step: {page: train-test-split}
+      status: recommended
+      why: Keep a final test set the search never sees.
+      condition: null
+      unless: null
+  code: []
+  what_comes_out:
+    items:
+      - {name: best_params, kind: return, task: null, shape: dict of settings, note: Best combination among those tried.}
+    next_step: null
+    visual: null
+  catch_outs:
+    - Needs PyTorch installed.
+    - Set deterministic_objective only when reruns give the same score.
+    - Start-up trials are random before the model takes over.
+  key_settings:
+    tier1: 
+      - {name: n_startup_trials, page: null}
+      - {name: deterministic_objective, page: null}
+      - {name: seed, page: null}
+    tier2: 
+      - {name: independent_sampler, page: null}
+      - {name: constraints_func, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Build a cheap model of the score, then test where it expects gains."}
+  next: []

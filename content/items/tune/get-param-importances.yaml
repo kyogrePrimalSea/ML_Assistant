@@ -1,0 +1,90 @@
+id: get-param-importances
+plain_name: get_param_importances
+code_name: get_param_importances
+aliases: [parameter importance numbers, importance scores, which settings matter]
+stage: tune
+family: tune.watch.importance
+tracks: [standard, time-series]
+archetype: diagnostic
+question_tags: [which settings mattered, too many settings, rank settings]
+targets: [optuna.importance.get_param_importances]
+pairs_with: []
+clashes: []
+source_urls: ['https://optuna.readthedocs.io/en/stable/reference/generated/optuna.importance.get_param_importances.html']
+library_versions: {optuna: 5.0.0}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: ames, chart: importance by setting}
+    line: Ranks settings by how much they affect the score, as numbers.
+  quick_facts:
+    facts:
+      - {label: Default evaluator, value: "PED-ANOVA"}
+      - {label: Default normalize, value: "True, sums to 1"}
+  use_avoid:
+    use_when: [too many settings, deciding what to keep tuning]
+    avoid_when: [few finished trials, one setting only]
+  prep:
+  - step: {page: optuna-study}
+    status: required
+    why: Needs a study with finished trials.
+    condition: null
+    unless: null
+  code:
+  - library: optuna
+    target: optuna.importance.get_param_importances
+    why_this_library: Returns numbers; the plot page shows the same ranking.
+    snippet: |
+      # optuna 5.0.0
+      import optuna
+      from sklearn.datasets import make_regression
+      from sklearn.ensemble import RandomForestRegressor
+      from sklearn.model_selection import cross_val_score
+
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+      X, y = make_regression(n_samples=300, n_features=8, noise=15, random_state=0)
+
+
+      def objective(trial):
+          model = RandomForestRegressor(
+              n_estimators=trial.suggest_int("n_estimators", 10, 80),
+              max_depth=trial.suggest_int("max_depth", 2, 12),
+              min_samples_leaf=trial.suggest_int("min_samples_leaf", 1, 10),
+              random_state=0,
+          )
+          return cross_val_score(model, X, y, cv=3, scoring="r2").mean()
+
+
+      study = optuna.create_study(
+          direction="maximize",
+          sampler=optuna.samplers.TPESampler(seed=0),
+      )
+      study.optimize(objective, n_trials=30)
+      importances = optuna.importance.get_param_importances(study)
+      print({name: round(value, 2) for name, value in importances.items()})
+  what_comes_out:
+    items:
+    - {name: get_param_importances, kind: return, task: null, shape: dict of setting to float, note: Sorted from most to least important.}
+    next_step: null
+    visual: null
+  catch_outs:
+    - Values sum to 1 unless normalize is False.
+  key_settings:
+    tier1:
+      - {name: study, page: null}
+      - {name: evaluator, page: null}
+      - {name: params, page: null}
+      - {name: target, page: null}
+    tier2:
+      - {name: normalize, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "The same ranking as the plot, as plain numbers."}
+  next: []
+

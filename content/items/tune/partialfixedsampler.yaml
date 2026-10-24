@@ -1,0 +1,84 @@
+id: partialfixedsampler
+plain_name: PartialFixedSampler
+code_name: PartialFixedSampler
+aliases: [fixed parameters, fix a setting, keep some fixed]
+stage: tune
+family: tune.optuna.setup
+tracks: [standard, time-series]
+archetype: tuning
+question_tags: [keep a setting fixed, search the rest]
+targets: [optuna.samplers.PartialFixedSampler]
+pairs_with: []
+clashes: []
+source_urls: ['https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.PartialFixedSampler.html']
+library_versions: {optuna: 5.0.0}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: tuning, dims: 2, trials: 20}
+    line: Holds some settings fixed while the search tunes the rest.
+  quick_facts:
+    facts:
+      - {label: Wraps, value: Any other sampler}
+  use_avoid:
+    use_when: [some settings fixed, search the rest]
+    avoid_when: [search every setting]
+  prep:
+    - step: {page: optuna-study}
+      status: required
+      why: A study has to exist before sampling.
+      condition: null
+      unless: null
+    - step: {page: tpesampler}
+      status: recommended
+      why: Samples the settings that are not fixed.
+      condition: null
+      unless: null
+  code:
+    - library: optuna
+      target: optuna.samplers.PartialFixedSampler
+      why_this_library: Wraps a base sampler. Passed to create_study.
+      snippet: |
+        # optuna 5.0.0
+        import optuna
+        from optuna.samplers import PartialFixedSampler, TPESampler
+        from sklearn.datasets import make_regression
+        from sklearn.ensemble import RandomForestRegressor
+        from sklearn.model_selection import cross_val_score
+
+        optuna.logging.set_verbosity(optuna.logging.WARNING)
+        X, y = make_regression(n_samples=300, n_features=8, noise=15, random_state=0)
+
+
+        def objective(trial):
+            depth = trial.suggest_int("max_depth", 2, 12)
+            leaf = trial.suggest_int("min_samples_leaf", 1, 10)
+            model = RandomForestRegressor(
+                n_estimators=30, max_depth=depth, min_samples_leaf=leaf, random_state=0
+            )
+            return cross_val_score(model, X, y, cv=3).mean()
+
+
+        sampler = PartialFixedSampler({"max_depth": 6}, TPESampler(seed=0))
+        study = optuna.create_study(direction="maximize", sampler=sampler)
+        study.optimize(objective, n_trials=20)
+        print(study.best_params, round(study.best_value, 3))
+  what_comes_out: {none: true}
+  catch_outs:
+    - A fixed name the objective never suggests does nothing.
+    - Fixed values are used as given, never searched.
+  key_settings:
+    tier1:
+      - {name: fixed_params, page: null}
+      - {name: base_sampler, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Lock some dials, and let the search turn the rest."}
+  next: []

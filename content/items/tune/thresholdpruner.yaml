@@ -1,0 +1,96 @@
+id: thresholdpruner
+plain_name: ThresholdPruner
+code_name: ThresholdPruner
+aliases: [fixed cut-off pruning, score limits]
+stage: tune
+family: tune.watch.prune-rule
+tracks: [standard, time-series]
+archetype: tuning
+question_tags: [known score limit, clearly bad scores]
+targets: [optuna.pruners.ThresholdPruner]
+pairs_with: []
+clashes: []
+source_urls: ['https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.ThresholdPruner.html']
+library_versions: {optuna: 5.0.0}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: tuning, dims: 1, trials: 20}
+    line: Stops a trial whose score crosses a fixed limit.
+  quick_facts:
+    facts:
+      - {label: Default lower, value: "None (off)"}
+      - {label: Default upper, value: "None (off)"}
+  use_avoid:
+    use_when: [known score limit, clearly bad scores]
+    avoid_when: [no sensible limit, unknown score scale]
+  prep:
+    - step: {page: train-test-split}
+      status: recommended
+      why: Keep a final test set the search never sees.
+      condition: null
+      unless: null
+  code:
+    - library: optuna
+      target: optuna.pruners.ThresholdPruner
+      why_this_library: Used as pruner= in optuna.create_study.
+      snippet: |
+        # optuna 5.0.0
+        import optuna
+        from sklearn.datasets import make_classification
+        from sklearn.linear_model import SGDClassifier
+        from sklearn.model_selection import train_test_split
+
+        optuna.logging.set_verbosity(optuna.logging.WARNING)
+        X, y = make_classification(n_samples=600, n_features=10, random_state=0)
+        X_train, X_val, y_train, y_val = train_test_split(X, y, random_state=0)
+
+
+        def objective(trial):
+            alpha = trial.suggest_float("alpha", 1e-5, 1.0, log=True)
+            clf = SGDClassifier(alpha=alpha, random_state=0)
+            for step in range(30):
+                clf.partial_fit(X_train, y_train, classes=[0, 1])
+                score = clf.score(X_val, y_val)
+                trial.report(score, step)
+                if trial.should_prune():
+                    raise optuna.TrialPruned()
+            return score
+
+
+        pruner = optuna.pruners.ThresholdPruner(lower=0.93)
+        study = optuna.create_study(
+            direction="maximize",
+            sampler=optuna.samplers.TPESampler(seed=0),
+            pruner=pruner,
+        )
+        study.optimize(objective, n_trials=20)
+        pruned = [t for t in study.trials if t.state.name == "PRUNED"]
+        print(len(pruned), "of", len(study.trials), "trials pruned")
+  what_comes_out:
+    items:
+      - {name: prune, kind: method, task: null, shape: "bool", note: "Called by Optuna. Your code uses should_prune()."}
+    next_step: null
+    visual: null
+  catch_outs:
+    - Both lower and upper are off by default.
+    - A nan value also prunes the trial.
+    - Pick limits on your metric's own scale.
+  key_settings:
+    tier1:
+      - {name: lower, page: null}
+      - {name: upper, page: null}
+    tier2:
+      - {name: n_warmup_steps, page: null}
+      - {name: interval_steps, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: Stop a trial as soon as its score goes past a line you set.
+  next: []

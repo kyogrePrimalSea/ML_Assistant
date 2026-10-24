@@ -1,0 +1,97 @@
+id: hyperbandpruner
+plain_name: HyperbandPruner
+code_name: HyperbandPruner
+aliases: [hyperband, hyperband pruning]
+stage: tune
+family: tune.watch.prune-relative
+tracks: [standard, time-series]
+archetype: tuning
+question_tags: [slow tuning, too slow]
+targets: [optuna.pruners.HyperbandPruner]
+pairs_with: [optuna-study]
+clashes: []
+source_urls: ['https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.HyperbandPruner.html']
+library_versions: {optuna: 5.0.0}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: tuning, dims: 1, trials: 12}
+    line: Stops weak trials early so more can run.
+  quick_facts:
+    facts:
+    - {label: min_resource, value: 1 by default}
+    - {label: max_resource, value: '''auto'' by default'}
+    - {label: reduction_factor, value: 3 by default}
+  use_avoid:
+    use_when: [many cheap trials, fits can stop early]
+    avoid_when: [no per-step scores, one trial only]
+  prep:
+  - step: {page: train-test-split}
+    status: recommended
+    why: Keep a test set the study never sees.
+    condition: null
+    unless: null
+  code:
+  - library: optuna
+    target: optuna.pruners.HyperbandPruner
+    why_this_library: Optuna pruner. Passed to create_study.
+    snippet: |
+      # optuna 5.0.0
+      import optuna
+      from sklearn.datasets import load_breast_cancer
+      from sklearn.linear_model import SGDClassifier
+      from sklearn.model_selection import train_test_split
+      from sklearn.preprocessing import StandardScaler
+
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+      X, y = load_breast_cancer(return_X_y=True)
+      X_train, X_val, y_train, y_val = train_test_split(X, y, random_state=0)
+      scaler = StandardScaler().fit(X_train)
+      X_train, X_val = scaler.transform(X_train), scaler.transform(X_val)
+
+
+      def objective(trial):
+          alpha = trial.suggest_float("alpha", 1e-5, 1e-1, log=True)
+          model = SGDClassifier(alpha=alpha, random_state=0)
+          for epoch in range(20):
+              model.partial_fit(X_train, y_train, classes=[0, 1])
+              score = model.score(X_val, y_val)
+              trial.report(score, epoch)
+              if trial.should_prune():
+                  raise optuna.TrialPruned()
+          return score
+
+
+      study = optuna.create_study(
+          study_name="hyperband-demo",
+          direction="maximize",
+          sampler=optuna.samplers.RandomSampler(seed=0),
+          pruner=optuna.pruners.HyperbandPruner(max_resource=20),
+      )
+      study.optimize(objective, n_trials=12)
+      pruned = sum(t.state.name == "PRUNED" for t in study.trials)
+      print(pruned, "of", len(study.trials), "trials pruned")
+      print(round(study.best_value, 3))
+  what_comes_out:
+    items:
+    - {name: HyperbandPruner, kind: return, task: null, shape: pruner object, note: Pass to create_study. Stops weak trials.}
+    next_step: Pass it to optuna.create_study as pruner.
+    visual: null
+  catch_outs: ['Needs trial.report at each step. No report, no pruning.', Pruned trials are not the best; judge the finished ones.]
+  key_settings:
+    tier1:
+    - {name: min_resource, page: null}
+    - {name: max_resource, page: null}
+    - {name: reduction_factor, page: null}
+    - {name: bootstrap_count, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: Start many trials cheaply and stop the weak ones early.}
+  next: []

@@ -1,0 +1,80 @@
+id: parametersampler
+plain_name: ParameterSampler
+code_name: ParameterSampler
+aliases: [parameter sampler, random draws, sampler]
+stage: tune
+family: tune.search.random
+tracks: [standard, time-series]
+archetype: tuning
+question_tags: [random settings, custom search]
+targets: [sklearn.model_selection.ParameterSampler]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.ParameterSampler.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: tuning, dims: 2, trials: 4}
+    line: Draws random settings from your ranges.
+  quick_facts:
+    facts:
+    - {label: Input, value: Dict of lists or distributions}
+    - {label: Output, value: n_iter settings}
+    - {label: Seed, value: 'random_state, default None'}
+  use_avoid:
+    use_when: [custom search loop, random settings]
+    avoid_when: [want scikit-learn to search, need the full grid]
+  prep:
+  - step: {page: train-test-split}
+    status: recommended
+    why: Keep a test set the loop never sees.
+    condition: null
+    unless: null
+  - step: {family: transform.scale.rescale}
+    status: not_needed
+    why: Trees split on order, not size.
+    condition: null
+    unless: null
+  code:
+  - library: scikit-learn
+    target: sklearn.model_selection.ParameterSampler
+    why_this_library: Samples settings only. You write the loop.
+    snippet: |
+      # scikit-learn 1.9.1
+      from scipy.stats import randint
+      from sklearn.datasets import load_breast_cancer
+      from sklearn.model_selection import ParameterSampler, cross_val_score
+      from sklearn.tree import DecisionTreeClassifier
+
+      X, y = load_breast_cancer(return_X_y=True)
+      sampler = ParameterSampler(
+          {"max_depth": randint(2, 12), "min_samples_leaf": randint(1, 10)},
+          n_iter=4,
+          random_state=0,
+      )
+      for params in sampler:
+          model = DecisionTreeClassifier(random_state=0, **params)
+          score = cross_val_score(model, X, y, cv=3).mean()
+          print(params, round(score, 3))
+  what_comes_out:
+    items:
+    - {name: ParameterSampler, kind: return, task: null, shape: one dict per draw, note: Yields n_iter dicts. Loop over it.}
+    next_step: Fit one model per dict and score it.
+    visual: null
+  catch_outs: [Set random_state or the draws change each run., Samples settings only. It does not fit or score a model.]
+  key_settings:
+    tier1:
+    - {name: param_distributions, page: null}
+    - {name: n_iter, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: Draw settings from distributions instead of listing them all.}
+  next: []

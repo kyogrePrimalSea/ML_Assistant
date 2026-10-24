@@ -1,0 +1,62 @@
+id: cmaessampler
+plain_name: CmaEsSampler
+code_name: CmaEsSampler
+aliases: [CMA-ES, cmaes]
+stage: tune
+family: tune.optuna.sampler
+tracks: [standard, time-series]
+archetype: tuning
+question_tags: [continuous settings, many trials]
+targets: [optuna.samplers.CmaEsSampler]
+pairs_with: [optuna-study]
+clashes: []
+source_urls: ['https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.CmaEsSampler.html']
+library_versions: {optuna: 5.0.0, scikit-learn: "1.9.1"}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: tuning, dims: 2, trials: 30}
+    line: Searches continuous settings, learning which way to move.
+  quick_facts:
+    facts:
+      - {label: Startup trials, value: "1"}
+      - {label: Backend, value: "cmaes package"}
+  use_avoid:
+    use_when: [mostly continuous settings, many trials]
+    avoid_when: [mostly categorical settings, few trials]
+  prep:
+    - step: {page: train-test-split}
+      status: recommended
+      why: Keep a final test set the search never sees.
+      condition: null
+      unless: null
+  code: []
+  what_comes_out:
+    items:
+      - {name: best_params, kind: return, task: null, shape: dict of settings, note: Best combination among those tried.}
+    next_step: null
+    visual: null
+  catch_outs:
+    - Needs the cmaes package installed.
+    - Warns when a setting falls back to independent sampling.
+    - Few trials give it little to learn from.
+  key_settings:
+    tier1: 
+      - {name: sigma0, page: null}
+      - {name: n_startup_trials, page: null}
+    tier2: 
+      - {name: x0, page: null}
+      - {name: independent_sampler, page: null}
+      - {name: seed, page: null}
+    tier3: 
+      - {name: popsize, page: null}
+      - {name: restart_strategy, page: null}
+  watch_it_work: {none: true}
+  intuition: {text: "Learn the shape of the good area, then move the search toward it."}
+  next: []

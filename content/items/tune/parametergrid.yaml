@@ -1,0 +1,74 @@
+id: parametergrid
+plain_name: ParameterGrid
+code_name: ParameterGrid
+aliases: [parameter grid, param grid, grid of settings]
+stage: tune
+family: tune.search.grid
+tracks: [standard, time-series]
+archetype: tuning
+question_tags: [try every setting, grid]
+targets: [sklearn.model_selection.ParameterGrid]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.ParameterGrid.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: tuning, dims: 2, trials: 6}
+    line: Tries every combination of your settings.
+  quick_facts:
+    facts:
+    - {label: Input, value: Dict of value lists}
+    - {label: Settings, value: Product of list lengths}
+    - {label: Values, value: Discrete only}
+  use_avoid:
+    use_when: ['few settings, need all', custom search loop]
+    avoid_when: [many settings, continuous ranges]
+  prep:
+  - step: {page: train-test-split}
+    status: recommended
+    why: Keep a test set the loop never sees.
+    condition: null
+    unless: null
+  - step: {family: transform.scale.rescale}
+    status: not_needed
+    why: Trees split on order, not size.
+    condition: null
+    unless: null
+  code:
+  - library: scikit-learn
+    target: sklearn.model_selection.ParameterGrid
+    why_this_library: Lists settings only. You write the loop.
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import load_breast_cancer
+      from sklearn.model_selection import ParameterGrid, cross_val_score
+      from sklearn.tree import DecisionTreeClassifier
+
+      X, y = load_breast_cancer(return_X_y=True)
+      grid = ParameterGrid({"max_depth": [2, 4, 6], "min_samples_leaf": [1, 10]})
+      for params in grid:
+          model = DecisionTreeClassifier(random_state=0, **params)
+          score = cross_val_score(model, X, y, cv=3).mean()
+          print(params, round(score, 3))
+  what_comes_out:
+    items:
+    - {name: ParameterGrid, kind: return, task: null, shape: one dict per setting, note: Each dict is one setting to try.}
+    next_step: Fit one model per dict and score it.
+    visual: null
+  catch_outs: ['Each list multiplies the count: 3 by 2 gives 6.', Discrete values only. Use a sampler for ranges.]
+  key_settings:
+    tier1:
+    - {name: param_grid, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: 'Write out every combination on a list, then try each one.'}
+  next: []

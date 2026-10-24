@@ -1,0 +1,87 @@
+id: plot-timeline
+plain_name: plot_timeline
+code_name: plot_timeline
+aliases: [trial timeline, run times, when trials ran]
+stage: tune
+family: tune.watch.history
+tracks: [standard, time-series]
+archetype: diagnostic
+question_tags: [how long trials took, slow trials, search cost]
+targets: [optuna.visualization.plot_timeline]
+pairs_with: []
+clashes: []
+source_urls: ['https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_timeline.html']
+library_versions: {optuna: 5.0.0}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: ames, chart: trial run times over the search}
+    line: Shows when each trial ran and how long it took.
+  quick_facts:
+    facts:
+      - {label: Default n_recent_trials, value: "None"}
+  use_avoid:
+    use_when: [slow search, checking trial run times]
+    avoid_when: [few trials, only scores matter]
+  prep:
+  - step: {page: optuna-study}
+    status: required
+    why: Needs a study with finished trials.
+    condition: null
+    unless: null
+  code:
+  - library: optuna
+    target: optuna.visualization.plot_timeline
+    why_this_library: Plotly figure; you choose where to show it.
+    snippet: |
+      # optuna 5.0.0
+      import optuna
+      from sklearn.datasets import make_regression
+      from sklearn.ensemble import RandomForestRegressor
+      from sklearn.model_selection import cross_val_score
+
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+      X, y = make_regression(n_samples=300, n_features=8, noise=15, random_state=0)
+
+
+      def objective(trial):
+          model = RandomForestRegressor(
+              n_estimators=trial.suggest_int("n_estimators", 10, 80),
+              max_depth=trial.suggest_int("max_depth", 2, 12),
+              min_samples_leaf=trial.suggest_int("min_samples_leaf", 1, 10),
+              random_state=0,
+          )
+          return cross_val_score(model, X, y, cv=3, scoring="r2").mean()
+
+
+      study = optuna.create_study(
+          direction="maximize",
+          sampler=optuna.samplers.TPESampler(seed=0),
+      )
+      study.optimize(objective, n_trials=20)
+      fig = optuna.visualization.plot_timeline(study)
+      print(len(study.trials))
+  what_comes_out:
+    items:
+    - {name: plot_timeline, kind: return, task: null, shape: plotly Figure, note: Figure of trial run times.}
+    next_step: null
+    visual: null
+  catch_outs:
+    - Shows trial times, not the scores.
+    - Needs plotly installed; it is not in the project requirements.
+  key_settings:
+    tier1:
+      - {name: study, page: null}
+      - {name: n_recent_trials, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Shows when trials started and how long they ran."}
+  next: []
+

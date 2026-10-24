@@ -1,0 +1,95 @@
+id: terminator
+plain_name: Terminator
+code_name: Terminator
+aliases: [stop when no gain, improvement estimate, when to stop]
+stage: tune
+family: tune.watch.stop
+tracks: [standard, time-series]
+archetype: tuning
+question_tags: [when to stop searching, more trials wont help]
+targets: [optuna.terminator.Terminator]
+pairs_with: [terminatorcallback]
+clashes: []
+source_urls: ['https://optuna.readthedocs.io/en/stable/reference/generated/optuna.terminator.Terminator.html']
+library_versions: {optuna: 5.0.0}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: tuning, dims: 1, trials: 30}
+    line: Judges whether more trials are still likely to help.
+  quick_facts:
+    facts:
+    - {label: Default min_n_trials, value: "20"}
+    - {label: Improvement, value: Regret bound by default}
+    - {label: Error, value: Cross-validation by default}
+  use_avoid:
+    use_when: [long tuning runs, gains are flattening, costly trials]
+    avoid_when: [fewer trials than min_n_trials, no cv scores]
+  prep:
+    - step: {page: cross-validate}
+      status: recommended
+      why: Terminator's error check reads cross-validation scores.
+      condition: null
+      unless: null
+  code:
+    - library: optuna
+      target: optuna.terminator.Terminator
+      why_this_library: Gives a yes or no for a study you already ran.
+      snippet: |
+        # optuna 5.0.0
+        import optuna
+        from optuna.terminator import BestValueStagnationEvaluator
+        from optuna.terminator import Terminator
+        from optuna.terminator import report_cross_validation_scores
+        from sklearn.datasets import make_regression
+        from sklearn.linear_model import Ridge
+        from sklearn.model_selection import cross_val_score
+
+        optuna.logging.set_verbosity(optuna.logging.WARNING)
+        X, y = make_regression(n_samples=200, n_features=8, noise=15,
+                               random_state=0)
+
+
+        def objective(trial):
+            alpha = trial.suggest_float("alpha", 1e-3, 10.0, log=True)
+            scores = cross_val_score(Ridge(alpha=alpha), X, y, cv=5)
+            report_cross_validation_scores(trial, scores)
+            return scores.mean()
+
+
+        study = optuna.create_study(
+            direction="maximize",
+            sampler=optuna.samplers.RandomSampler(seed=0),
+        )
+        study.optimize(objective, n_trials=30)
+        terminator = Terminator(
+            improvement_evaluator=BestValueStagnationEvaluator(
+                max_stagnation_trials=5
+            ),
+        )
+        print(terminator.should_terminate(study))
+  what_comes_out:
+    items:
+    - {name: should_terminate, kind: method, task: null, shape: bool,
+       note: True means the study should stop.}
+    next_step: If True, stop the search. If False, run more trials.
+    visual: null
+  catch_outs:
+    - Returns False until min_n_trials (default 20) trials exist.
+    - Returns False while fewer than min_n_trials trials exist.
+  key_settings:
+    tier1:
+    - {name: improvement_evaluator, page: null}
+    - {name: error_evaluator, page: null}
+    - {name: min_n_trials, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: Asks whether another trial can still beat the best.}
+  next: [but-when-stop-search]

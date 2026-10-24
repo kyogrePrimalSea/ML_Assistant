@@ -1,0 +1,80 @@
+id: maxtrialscallback
+plain_name: MaxTrialsCallback
+code_name: MaxTrialsCallback
+aliases: [stop after n trials, trial limit, max trials]
+stage: tune
+family: tune.watch.stop
+tracks: [standard, time-series]
+archetype: tuning
+question_tags: [too many trials, cap the trials]
+targets: [optuna.study.MaxTrialsCallback]
+pairs_with: []
+clashes: []
+source_urls: ['https://optuna.readthedocs.io/en/stable/reference/generated/optuna.study.MaxTrialsCallback.html']
+library_versions: {optuna: 5.0.0}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: tuning, dims: 1, trials: 10}
+    line: Stops the search after a set number of trials.
+  quick_facts:
+    facts:
+    - {label: Counts, value: Completed trials by default}
+    - {label: Set with, value: n_trials}
+    - {label: Ends, value: The whole search}
+  use_avoid:
+    use_when: [fixed trial budget, shared compute limit]
+    avoid_when: [stop on no progress, time-based limit]
+  prep: []
+  code:
+    - library: optuna
+      target: optuna.study.MaxTrialsCallback
+      why_this_library: Passed as a callback to optimize.
+      snippet: |
+        # optuna 5.0.0
+        import optuna
+        from optuna.study import MaxTrialsCallback
+        from optuna.trial import TrialState
+        from sklearn.datasets import make_regression
+        from sklearn.linear_model import Ridge
+        from sklearn.model_selection import cross_val_score
+
+        optuna.logging.set_verbosity(optuna.logging.WARNING)
+        X, y = make_regression(n_samples=200, n_features=8, noise=15,
+                               random_state=0)
+
+
+        def objective(trial):
+            alpha = trial.suggest_float("alpha", 1e-3, 10.0, log=True)
+            return cross_val_score(Ridge(alpha=alpha), X, y, cv=3).mean()
+
+
+        study = optuna.create_study(
+            direction="maximize",
+            sampler=optuna.samplers.RandomSampler(seed=0),
+        )
+        study.optimize(
+            objective,
+            n_trials=100,
+            callbacks=[MaxTrialsCallback(10, states=(TrialState.COMPLETE,))],
+        )
+        print(len(study.trials))
+  what_comes_out: {none: true}
+  catch_outs:
+    - Only completed trials count by default, so pruned ones don't.
+    - Add TrialState.PRUNED to states to count pruned trials too.
+  key_settings:
+    tier1:
+    - {name: n_trials, page: null}
+    - {name: states, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: A fixed budget that stops once enough trials finish.}
+  next: []

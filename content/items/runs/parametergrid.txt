@@ -1,0 +1,6 @@
+{'max_depth': 2, 'min_samples_leaf': 1} 0.912
+{'max_depth': 2, 'min_samples_leaf': 10} 0.917
+{'max_depth': 4, 'min_samples_leaf': 1} 0.921
+{'max_depth': 4, 'min_samples_leaf': 10} 0.921
+{'max_depth': 6, 'min_samples_leaf': 1} 0.914
+{'max_depth': 6, 'min_samples_leaf': 10} 0.921

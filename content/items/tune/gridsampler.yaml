@@ -1,0 +1,87 @@
+id: gridsampler
+plain_name: GridSampler
+code_name: GridSampler
+aliases: [grid search, exhaustive grid]
+stage: tune
+family: tune.optuna.sampler
+tracks: [standard, time-series]
+archetype: tuning
+question_tags: [try every combination, small grid]
+targets: [optuna.samplers.GridSampler]
+pairs_with: [optuna-study]
+clashes: []
+source_urls: ['https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.GridSampler.html']
+library_versions: {optuna: 5.0.0, scikit-learn: "1.9.1"}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: tuning, dims: 2, trials: 12}
+    line: Tries every combination of the grid you list.
+  quick_facts:
+    facts:
+      - {label: Search, value: "Every grid combination"}
+      - {label: Grid, value: "Set in search_space"}
+  use_avoid:
+    use_when: [small grid, every combination needed]
+    avoid_when: [many settings, continuous settings]
+  prep:
+    - step: {page: train-test-split}
+      status: recommended
+      why: Keep a final test set the search never sees.
+      condition: null
+      unless: null
+  code:
+    - library: optuna
+      target: optuna.samplers.GridSampler
+      why_this_library: Optuna sampler. Takes the grid as search_space.
+      snippet: |
+        # optuna 5.0.0
+        import optuna
+        from sklearn.datasets import make_regression
+        from sklearn.linear_model import ElasticNet
+        from sklearn.model_selection import cross_val_score
+
+        optuna.logging.set_verbosity(optuna.logging.WARNING)
+        X, y = make_regression(
+            n_samples=200, n_features=8, n_informative=3, noise=10, random_state=0
+        )
+        SCORING = "neg_mean_squared_error"
+        search_space = {"alpha": [0.01, 0.1, 1.0, 10.0], "l1_ratio": [0.1, 0.5, 0.9]}
+
+
+        def objective(trial):
+            alpha = trial.suggest_categorical("alpha", search_space["alpha"])
+            l1_ratio = trial.suggest_categorical("l1_ratio", search_space["l1_ratio"])
+            model = ElasticNet(alpha=alpha, l1_ratio=l1_ratio)
+            return -cross_val_score(model, X, y, cv=3, scoring=SCORING).mean()
+
+
+        sampler = optuna.samplers.GridSampler(search_space, seed=0)
+        study = optuna.create_study(sampler=sampler, direction="minimize")
+        study.optimize(objective, n_trials=12)
+        print(len(study.trials))
+        print({k: round(v, 3) for k, v in study.best_params.items()})
+  what_comes_out:
+    items:
+      - {name: best_params, kind: return, task: null, shape: dict of settings, note: Best combination from the grid.}
+    next_step: null
+    visual: null
+  catch_outs:
+    - Every value you want tried must be in search_space.
+    - Set n_trials to the grid size, here 12.
+    - Only settings in search_space are searched.
+  key_settings:
+    tier1: 
+      - {name: search_space, page: null}
+    tier2: 
+      - {name: seed, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Walk every cell of a fixed grid, then stop."}
+  next: []

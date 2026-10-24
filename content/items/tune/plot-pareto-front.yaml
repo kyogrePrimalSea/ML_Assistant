@@ -1,0 +1,94 @@
+id: plot-pareto-front
+plain_name: plot_pareto_front
+code_name: plot_pareto_front
+aliases: [pareto front, trade-off plot, best trade-offs]
+stage: tune
+family: tune.optuna.multi
+tracks: [standard, time-series]
+archetype: diagnostic
+question_tags: [several goals, trade-offs, pick a balance]
+targets: [optuna.visualization.plot_pareto_front]
+pairs_with: []
+clashes: []
+source_urls: ['https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_pareto_front.html']
+library_versions: {optuna: 5.0.0}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: breast-cancer, chart: accuracy against model size}
+    line: Shows the trade-off between two or more goals.
+  quick_facts:
+    facts:
+      - {label: Include dominated trials, value: "True"}
+      - {label: Default target_names, value: "None"}
+  use_avoid:
+    use_when: [several goals at once, picking a trade-off]
+    avoid_when: [a single goal, no trials finished yet]
+  prep:
+  - step: {page: optuna-study}
+    status: required
+    why: Needs a study with several goals.
+    condition: null
+    unless: null
+  code:
+  - library: optuna
+    target: optuna.visualization.plot_pareto_front
+    why_this_library: Plotly figure; you choose where to show it.
+    snippet: |
+      # optuna 5.0.0
+      import optuna
+      from sklearn.datasets import load_breast_cancer
+      from sklearn.ensemble import RandomForestClassifier
+      from sklearn.model_selection import cross_val_score
+
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+      X, y = load_breast_cancer(return_X_y=True)
+
+
+      def objective(trial):
+          n_trees = trial.suggest_int("n_estimators", 5, 100)
+          model = RandomForestClassifier(
+              n_estimators=n_trees,
+              max_depth=trial.suggest_int("max_depth", 2, 12),
+              random_state=0,
+          )
+          accuracy = cross_val_score(model, X, y, cv=3).mean()
+          return accuracy, n_trees
+
+
+      study = optuna.create_study(
+          directions=["maximize", "minimize"],
+          sampler=optuna.samplers.NSGAIISampler(seed=0),
+      )
+      study.optimize(objective, n_trials=30)
+      fig = optuna.visualization.plot_pareto_front(
+          study, target_names=["accuracy", "n_estimators"]
+      )
+      print(len(study.best_trials))
+  what_comes_out:
+    items:
+    - {name: plot_pareto_front, kind: return, task: null, shape: plotly Figure, note: Figure of trials across the goals.}
+    next_step: null
+    visual: null
+  catch_outs:
+    - Dominated trials are shown unless include_dominated_trials is False.
+    - Needs plotly installed; it is not in the project requirements.
+  key_settings:
+    tier1:
+      - {name: study, page: null}
+      - {name: target_names, page: null}
+      - {name: include_dominated_trials, page: null}
+    tier2:
+      - {name: targets, page: null}
+      - {name: constraints_func, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Trials that no other trial beats on every goal."}
+  next: []
+

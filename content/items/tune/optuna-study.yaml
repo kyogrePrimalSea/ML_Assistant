@@ -1,0 +1,96 @@
+id: optuna-study
+plain_name: Study (create_study)
+code_name: create_study / Study / load_study
+aliases: [study, create study, load study]
+stage: tune
+family: tune.optuna.setup
+tracks: [standard, time-series]
+archetype: tuning
+question_tags: [save a search, reload a search]
+targets: [optuna.create_study, optuna.study.Study, optuna.load_study]
+pairs_with: []
+clashes: []
+source_urls: ['https://optuna.readthedocs.io/en/stable/reference/generated/optuna.create_study.html',
+  'https://optuna.readthedocs.io/en/stable/reference/generated/optuna.study.Study.html', 'https://optuna.readthedocs.io/en/stable/reference/generated/optuna.load_study.html']
+library_versions: {optuna: 5.0.0}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: tuning, dims: 2, trials: 20}
+    line: Holds the whole search, every trial and the best one.
+  quick_facts:
+    facts:
+      - {label: Stored in, value: "Memory, unless storage is set"}
+  use_avoid:
+    use_when: [start a search, save or reload a search]
+    avoid_when: [one fit with no search]
+  prep:
+    - step: {page: train-test-split}
+      status: recommended
+      why: Keep a final test set the search never sees.
+      condition: null
+      unless: null
+  code:
+    - library: optuna
+      target: optuna.create_study
+      why_this_library: Start here. load_study reopens a saved one.
+      snippet: |
+        # optuna 5.0.0
+        import optuna
+        from optuna.samplers import TPESampler
+        from sklearn.datasets import make_regression
+        from sklearn.ensemble import RandomForestRegressor
+        from sklearn.model_selection import cross_val_score
+
+        optuna.logging.set_verbosity(optuna.logging.WARNING)
+        X, y = make_regression(n_samples=300, n_features=8, noise=15, random_state=0)
+
+
+        def objective(trial):
+            depth = trial.suggest_int("max_depth", 2, 12)
+            leaf = trial.suggest_int("min_samples_leaf", 1, 10)
+            model = RandomForestRegressor(
+                n_estimators=30, max_depth=depth, min_samples_leaf=leaf, random_state=0
+            )
+            return cross_val_score(model, X, y, cv=3).mean()
+
+
+        sampler = TPESampler(seed=0)
+        study = optuna.create_study(
+            study_name="rf-search", direction="maximize", sampler=sampler
+        )
+        study.optimize(objective, n_trials=20)
+        df = study.trials_dataframe()
+        best = study.best_trial
+        print(len(df), best.number, round(study.best_value, 3))
+  what_comes_out:
+    items:
+      - {name: trials_dataframe, kind: method, task: null, shape: "DataFrame, one row per trial", note: One row per trial with settings and score.}
+      - {name: optimize, kind: method, task: null, shape: None, note: Runs the objective over many trials.}
+      - {name: best_params, kind: attribute, task: null, shape: dict, note: Settings of the best trial.}
+      - {name: best_value, kind: attribute, task: null, shape: float, note: Score of the best trial.}
+      - {name: best_trial, kind: attribute, task: null, shape: FrozenTrial, note: The best trial as a record.}
+    next_step: Read the trials table or the best settings.
+    visual: null
+  catch_outs:
+    - Without storage, the study is lost when the session ends.
+    - Reusing a study_name raises an error unless load_if_exists is True.
+  key_settings:
+    tier1:
+      - {name: storage, page: null}
+      - {name: sampler, page: null}
+      - {name: pruner, page: null}
+      - {name: study_name, page: null}
+    tier2:
+      - {name: direction, page: null}
+      - {name: load_if_exists, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "The notebook for one search. It keeps every try and the best one."}
+  next: []

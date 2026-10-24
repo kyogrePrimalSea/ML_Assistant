@@ -1,0 +1,89 @@
+id: trialpruned
+plain_name: TrialPruned
+code_name: TrialPruned
+aliases: [prune by hand, stop one trial, raise pruned]
+stage: tune
+family: tune.watch.prune-rule
+tracks: [standard, time-series]
+archetype: tuning
+question_tags: [stop one trial, bad trial, own stop rule]
+targets: [optuna.TrialPruned]
+pairs_with: []
+clashes: []
+source_urls: ['https://optuna.readthedocs.io/en/stable/reference/generated/optuna.TrialPruned.html']
+library_versions: {optuna: 5.0.0}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: tuning, dims: 1, trials: 20}
+    line: Ends one trial early when our own rule says so.
+  quick_facts:
+    facts:
+    - {label: Raised from, value: Your objective function}
+    - {label: Takes, value: No arguments}
+    - {label: Trial state, value: PRUNED}
+  use_avoid:
+    use_when: [own stop rule, hopeless trials, custom checks]
+    avoid_when: [built-in pruner is enough, no per-step scores]
+  prep:
+    - step: {page: train-test-split}
+      status: recommended
+      why: Score each trial on rows it never trained on.
+      condition: null
+      unless: null
+  code:
+    - library: optuna
+      target: optuna.TrialPruned
+      why_this_library: The exception Optuna reads to mark a trial pruned.
+      snippet: |
+        # optuna 5.0.0
+        import optuna
+        from sklearn.datasets import make_regression
+        from sklearn.linear_model import SGDRegressor
+        from sklearn.model_selection import train_test_split
+
+        optuna.logging.set_verbosity(optuna.logging.WARNING)
+        X, y = make_regression(n_samples=300, n_features=8, noise=15,
+                               random_state=0)
+        X_train, X_val, y_train, y_val = train_test_split(
+            X, y, random_state=0
+        )
+
+
+        def objective(trial):
+            alpha = trial.suggest_float("alpha", 1e-3, 1e3, log=True)
+            model = SGDRegressor(alpha=alpha, random_state=0)
+            for step in range(10):
+                model.partial_fit(X_train, y_train)
+                score = model.score(X_val, y_val)
+                trial.report(score, step)
+                if step == 0 and score < 0.5:  # our rule: stop weak starts
+                    raise optuna.TrialPruned()
+            return score
+
+
+        study = optuna.create_study(
+            direction="maximize",
+            sampler=optuna.samplers.TPESampler(seed=0),
+            pruner=optuna.pruners.NopPruner(),
+        )
+        study.optimize(objective, n_trials=20)
+        pruned = [t for t in study.trials if t.state.name == "PRUNED"]
+        print(f"{len(pruned)} of {len(study.trials)} trials pruned")
+  what_comes_out: {none: true}
+  catch_outs:
+    - A pruned trial has no value, so it never wins.
+    - Returning early completes the trial instead of pruning it.
+  key_settings:
+    tier1: []
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: Call time on a trial that is clearly losing.}
+  next: []

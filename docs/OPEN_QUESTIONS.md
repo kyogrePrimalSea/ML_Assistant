@@ -97,6 +97,18 @@ with the source URL. Wording is not rewritten silently.
   GradientBoostingClassifier (breast cancer, run in `.venv`). `decision_function` is the raw
   log-odds there (sigmoid of it equals `predict_proba[:, 1]`). XGBoost has none.
 
+- **`confusion-matrix` page mixes two archetypes (E05).** The inventory gives the page id
+  `confusion-matrix` two targets with different archetypes: `sklearn.metrics.confusion_matrix`
+  (metric) and `sklearn.metrics.ConfusionMatrixDisplay` (diagnostic). The validator requires the
+  record's archetype to match every inventory entry of the page, so one error stays until the map
+  is changed (split the page, or re-label one entry). The record is written as `metric` and
+  covers both targets; nothing in the map was altered.
+- **`optuna.visualization` plot pages and two Optuna samplers cannot run in `.venv` (E05).**
+  `plotly` is not pinned or installed, so every `plot-*` snippet fails with ImportError after
+  its study-level lines (those lines were run). `plot-terminator-improvement` also needs
+  `torch`. `CmaEsSampler` needs `cmaes` and `GPSampler` needs `torch`; those two pages have
+  `code: []`. Decide whether to pin and install the packages, then re-run the snippets.
+
 - **`we_need_but` cap for time-series questions (T036).** The map allows at most 7 per
   stage, but Model holds 7 standard-track `we_need_but` questions plus 4 forecast questions
   (they file under the stage of their first answer, which the taxonomy puts in Model), so

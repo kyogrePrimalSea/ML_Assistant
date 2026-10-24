@@ -1,0 +1,96 @@
+id: wilcoxonpruner
+plain_name: WilcoxonPruner
+code_name: WilcoxonPruner
+aliases: [signed-rank pruning, Wilcoxon test]
+stage: tune
+family: tune.watch.prune-relative
+tracks: [standard, time-series]
+archetype: tuning
+question_tags: [noisy scores, many folds or instances]
+targets: [optuna.pruners.WilcoxonPruner]
+pairs_with: []
+clashes: []
+source_urls: ['https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.WilcoxonPruner.html']
+library_versions: {optuna: 5.0.0}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: tuning, dims: 1, trials: 20}
+    line: Stops a setting once it is clearly worse than the best.
+  quick_facts:
+    facts:
+      - {label: Default p threshold, value: "0.1"}
+      - {label: Default startup steps, value: "2"}
+  use_avoid:
+    use_when: [scores per fold or instance, costly per-instance scores]
+    avoid_when: [one score per trial, scipy not installed]
+  prep:
+    - step: {page: train-test-split}
+      status: recommended
+      why: Keep a final test set the search never sees.
+      condition: null
+      unless: null
+  code:
+    - library: optuna
+      target: optuna.pruners.WilcoxonPruner
+      why_this_library: Used as pruner= in optuna.create_study.
+      snippet: |
+        # optuna 5.0.0
+        import optuna
+        from sklearn.datasets import make_classification
+        from sklearn.linear_model import SGDClassifier
+        from sklearn.model_selection import KFold
+
+        optuna.logging.set_verbosity(optuna.logging.WARNING)
+        X, y = make_classification(n_samples=600, n_features=10, random_state=0)
+        folds = list(KFold(n_splits=10, shuffle=True, random_state=0).split(X))
+
+
+        def objective(trial):
+            alpha = trial.suggest_float("alpha", 1e-5, 1.0, log=True)
+            scores = []
+            for fold, (train, test) in enumerate(folds):
+                clf = SGDClassifier(alpha=alpha, random_state=0)
+                clf.fit(X[train], y[train])
+                scores.append(clf.score(X[test], y[test]))
+                trial.report(scores[-1], fold)
+                if trial.should_prune():
+                    break
+            return sum(scores) / len(scores)
+
+
+        pruner = optuna.pruners.WilcoxonPruner(p_threshold=0.1)
+        study = optuna.create_study(
+            direction="maximize",
+            sampler=optuna.samplers.TPESampler(seed=0),
+            pruner=pruner,
+        )
+        study.optimize(objective, n_trials=20)
+        steps = sum(len(t.intermediate_values) for t in study.trials)
+        print(steps, "of", 20 * len(folds), "fold scores run")
+  what_comes_out:
+    items:
+      - {name: prune, kind: method, task: null, shape: "bool", note: "Called by Optuna. Your code uses should_prune()."}
+    next_step: null
+    visual: null
+  catch_outs:
+    - Report the same instance id for the same fold in every trial.
+    - Return the estimate instead of raising TrialPruned.
+    - Trials with infinity or nan are never pruned.
+    - Needs scipy installed.
+  key_settings:
+    tier1:
+      - {name: p_threshold, page: null}
+      - {name: n_startup_steps, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: Compare each setting fold by fold with the best so far.
+  next: []

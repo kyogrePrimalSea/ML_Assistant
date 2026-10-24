@@ -1,0 +1,103 @@
+id: halvingrandomsearchcv
+plain_name: HalvingRandomSearchCV
+code_name: HalvingRandomSearchCV
+aliases: [halving random search, successive halving random]
+stage: tune
+family: tune.search.halving
+tracks: [standard, time-series]
+archetype: tuning
+question_tags: [slow tuning, too slow]
+targets: [sklearn.model_selection.HalvingRandomSearchCV]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.HalvingRandomSearchCV.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: tuning, dims: 2, trials: 20}
+    line: Tries random settings, dropping weak ones early.
+  quick_facts:
+    facts:
+    - {label: Candidates, value: '''exhaust'' by default'}
+    - {label: Factor, value: 3 by default}
+    - {label: Resource, value: Rows (n_samples) by default}
+  use_avoid:
+    use_when: ['many settings, slow fits', limited time]
+    avoid_when: [one or two settings, need the full grid]
+  prep:
+  - step: {page: train-test-split}
+    status: recommended
+    why: Keep a test set the search never sees.
+    condition: null
+    unless: null
+  - step: {family: transform.scale.rescale}
+    status: not_needed
+    why: Trees split on order, not size.
+    condition: null
+    unless: null
+  code:
+  - library: scikit-learn
+    target: sklearn.model_selection.HalvingRandomSearchCV
+    why_this_library: Samples from distributions. Needs the experimental import.
+    snippet: |
+      # scikit-learn 1.9.1
+      from scipy.stats import randint
+      from sklearn.datasets import load_breast_cancer
+      from sklearn.experimental import enable_halving_search_cv  # noqa: F401
+      from sklearn.model_selection import HalvingRandomSearchCV
+      from sklearn.tree import DecisionTreeClassifier
+
+      X, y = load_breast_cancer(return_X_y=True)
+
+      search = HalvingRandomSearchCV(
+          DecisionTreeClassifier(random_state=0),
+          param_distributions={
+              "max_depth": randint(2, 12),
+              "min_samples_leaf": randint(1, 10),
+          },
+          n_candidates=20,
+          factor=2,
+          cv=3,
+          random_state=0,
+      )
+      search.fit(X, y)
+      print(search.best_params_)
+      print(round(search.best_score_, 3))
+  what_comes_out:
+    items:
+    - {name: fit, kind: method, task: null, shape: self, note: Runs all halving rounds.}
+    - {name: predict, kind: method, task: null, shape: '(n_samples,)', note: Uses the best settings found.}
+    - {name: best_params_, kind: attribute, task: null, shape: dict, note: Winning settings.}
+    - {name: best_score_, kind: attribute, task: null, shape: float, note: Cross-validated score of the winner.}
+    - {name: best_estimator_, kind: attribute, task: null, shape: estimator, note: Refit on all rows when refit is True.}
+    - {name: cv_results_, kind: attribute, task: null, shape: dict of arrays, note: 'One column per setting, one row per candidate.'}
+    next_step: Check cv_results_ before trusting the winner.
+    visual: null
+  catch_outs: [Needs the experimental import line in scikit-learn 1.9.1., Set random_state or the sampled settings change each run., 'Scores come from cross-validation, not a test set.']
+  key_settings:
+    tier1:
+    - {name: min_resources, page: null}
+    - {name: cv, page: null}
+    - {name: refit, page: null}
+    - {name: aggressive_elimination, page: null}
+    tier2:
+    - {name: return_train_score, page: null}
+    - {name: param_distributions, page: null}
+    - {name: scoring, page: null}
+    - {name: resource, page: null}
+    tier3:
+    - {name: n_candidates, page: null}
+    - {name: error_score, page: null}
+    - {name: factor, page: null}
+    - {name: max_resources, page: null}
+    - {name: estimator, page: null}
+  watch_it_work: {none: true}
+  intuition: {text: 'Draw random settings, give each a small budget, keep the best few.'}
+  next: []

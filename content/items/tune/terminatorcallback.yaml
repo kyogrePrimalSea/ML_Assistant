@@ -1,0 +1,89 @@
+id: terminatorcallback
+plain_name: TerminatorCallback
+code_name: TerminatorCallback
+aliases: [auto stop, stop study automatically, terminator callback]
+stage: tune
+family: tune.watch.stop
+tracks: [standard, time-series]
+archetype: tuning
+question_tags: [stop automatically, too many trials]
+targets: [optuna.terminator.TerminatorCallback]
+pairs_with: [terminator]
+clashes: []
+source_urls: ['https://optuna.readthedocs.io/en/stable/reference/generated/optuna.terminator.TerminatorCallback.html']
+library_versions: {optuna: 5.0.0}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: tuning, dims: 1, trials: 20}
+    line: Stops the search when Terminator says so.
+  quick_facts:
+    facts:
+    - {label: Wraps, value: Terminator}
+    - {label: Checks, value: After each trial}
+  use_avoid:
+    use_when: [long unattended runs, no time to watch]
+    avoid_when: [want to pick stop point, under 20 trials]
+  prep:
+    - step: {page: cross-validate}
+      status: recommended
+      why: Terminator's error check reads cross-validation scores.
+      condition: null
+      unless: null
+  code:
+    - library: optuna
+      target: optuna.terminator.TerminatorCallback
+      why_this_library: Passed as a callback to optimize.
+      snippet: |
+        # optuna 5.0.0
+        import optuna
+        from optuna.terminator import BestValueStagnationEvaluator
+        from optuna.terminator import Terminator
+        from optuna.terminator import TerminatorCallback
+        from optuna.terminator import report_cross_validation_scores
+        from sklearn.datasets import make_regression
+        from sklearn.linear_model import Ridge
+        from sklearn.model_selection import cross_val_score
+
+        optuna.logging.set_verbosity(optuna.logging.WARNING)
+        X, y = make_regression(n_samples=200, n_features=8, noise=15,
+                               random_state=0)
+
+
+        def objective(trial):
+            alpha = trial.suggest_float("alpha", 1e-3, 10.0, log=True)
+            scores = cross_val_score(Ridge(alpha=alpha), X, y, cv=5)
+            report_cross_validation_scores(trial, scores)
+            return scores.mean()
+
+
+        terminator = Terminator(
+            improvement_evaluator=BestValueStagnationEvaluator(
+                max_stagnation_trials=5
+            ),
+        )
+        study = optuna.create_study(
+            direction="maximize",
+            sampler=optuna.samplers.RandomSampler(seed=0),
+        )
+        study.optimize(
+            objective, n_trials=100, callbacks=[TerminatorCallback(terminator)]
+        )
+        print(len(study.trials))
+  what_comes_out: {none: true}
+  catch_outs:
+    - Won't stop before min_n_trials trials (default 20).
+  key_settings:
+    tier1:
+    - {name: terminator, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: Terminator run automatically. The search stops itself.}
+  next: []

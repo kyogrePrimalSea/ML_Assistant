@@ -1,0 +1,97 @@
+id: patientpruner
+plain_name: PatientPruner
+code_name: PatientPruner
+aliases: [patience, wait before pruning]
+stage: tune
+family: tune.watch.prune-rule
+tracks: [standard, time-series]
+archetype: tuning
+question_tags: [noisy scores, stops too early]
+targets: [optuna.pruners.PatientPruner]
+pairs_with: [medianpruner]
+clashes: []
+source_urls: ['https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.PatientPruner.html']
+library_versions: {optuna: 5.0.0}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: tuning, dims: 1, trials: 20}
+    line: Waits for a run of steps with no gain before pruning.
+  quick_facts:
+    facts:
+      - {label: Wraps, value: "Another pruner (required)"}
+      - {label: Default min_delta, value: "0.0"}
+  use_avoid:
+    use_when: [scores bounce around, gains come in slow steps]
+    avoid_when: [scores improve every step, few steps per trial]
+  prep:
+    - step: {page: train-test-split}
+      status: recommended
+      why: Keep a final test set the search never sees.
+      condition: null
+      unless: null
+  code:
+    - library: optuna
+      target: optuna.pruners.PatientPruner
+      why_this_library: Used as pruner= in optuna.create_study.
+      snippet: |
+        # optuna 5.0.0
+        import optuna
+        from sklearn.datasets import make_classification
+        from sklearn.linear_model import SGDClassifier
+        from sklearn.model_selection import train_test_split
+
+        optuna.logging.set_verbosity(optuna.logging.WARNING)
+        X, y = make_classification(n_samples=600, n_features=10, random_state=0)
+        X_train, X_val, y_train, y_val = train_test_split(X, y, random_state=0)
+
+
+        def objective(trial):
+            alpha = trial.suggest_float("alpha", 1e-5, 1.0, log=True)
+            clf = SGDClassifier(alpha=alpha, random_state=0)
+            for step in range(30):
+                clf.partial_fit(X_train, y_train, classes=[0, 1])
+                score = clf.score(X_val, y_val)
+                trial.report(score, step)
+                if trial.should_prune():
+                    raise optuna.TrialPruned()
+            return score
+
+
+        pruner = optuna.pruners.PatientPruner(
+            optuna.pruners.MedianPruner(), patience=3
+        )
+        study = optuna.create_study(
+            direction="maximize",
+            sampler=optuna.samplers.TPESampler(seed=0),
+            pruner=pruner,
+        )
+        study.optimize(objective, n_trials=20)
+        pruned = [t for t in study.trials if t.state.name == "PRUNED"]
+        print(len(pruned), "of", len(study.trials), "trials pruned")
+  what_comes_out:
+    items:
+      - {name: prune, kind: method, task: null, shape: "bool", note: "Called by Optuna. Your code uses should_prune()."}
+    next_step: null
+    visual: null
+  catch_outs:
+    - Patience counts steps, not trials.
+    - With no wrapped pruner, it prunes on its own.
+    - min_delta must be zero or more.
+  key_settings:
+    tier1:
+      - {name: wrapped_pruner, page: null}
+      - {name: patience, page: null}
+    tier2:
+      - {name: min_delta, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: Give a trial a few steps to recover before it is judged.
+  next: []

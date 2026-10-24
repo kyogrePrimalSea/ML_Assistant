@@ -1,0 +1,90 @@
+id: gridsearchcv
+plain_name: GridSearchCV
+code_name: GridSearchCV
+aliases: [grid search, exhaustive search]
+stage: tune
+family: tune.search.grid
+tracks: [standard, time-series]
+archetype: tuning
+question_tags: [few settings, every combination]
+targets: [sklearn.model_selection.GridSearchCV]
+pairs_with: [pipeline]
+clashes: []
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html
+library_versions:
+  scikit-learn: "1.9.1"
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: tuning, dims: 2, trials: 6}
+    line: Tries every combination on your list and keeps the best.
+  quick_facts:
+    facts:
+      - {label: Scores with, value: cross-validation}
+      - {label: Combinations, value: "Product of every list length"}
+  use_avoid:
+    use_when: [few settings, few values each]
+    avoid_when: [many settings, limited time]
+  prep:
+    - step: {page: train-test-split}
+      status: recommended
+      why: Keep a final test set the search never sees.
+      condition: null
+      unless: null
+  code:
+    - library: scikit-learn
+      target: sklearn.model_selection.GridSearchCV
+      why_this_library: Works with any scikit-learn model or Pipeline.
+      snippet: |
+        # scikit-learn 1.9.1
+        from sklearn.datasets import make_regression
+        from sklearn.ensemble import RandomForestRegressor
+        from sklearn.model_selection import GridSearchCV
+
+        X, y = make_regression(n_samples=300, n_features=8, noise=15, random_state=0)
+
+        search = GridSearchCV(
+            RandomForestRegressor(n_estimators=30, random_state=0),
+            param_grid={"max_depth": [3, 6, 9], "min_samples_leaf": [1, 5]},
+            cv=3,
+        )
+        search.fit(X, y)
+        print(search.best_params_)
+        print(round(search.best_score_, 3))
+  what_comes_out:
+    items:
+      - {name: fit, kind: method, task: null, shape: fitted search, note: Runs every combination with every fold.}
+      - {name: predict, kind: method, task: null, shape: one prediction per row, note: Uses the best estimator.}
+      - {name: best_params_, kind: attribute, task: null, shape: dict, note: Settings that scored best.}
+      - {name: best_score_, kind: attribute, task: null, shape: float, note: Mean cross-validated score of the best settings.}
+      - {name: best_estimator_, kind: attribute, task: null, shape: fitted estimator, note: Best settings refit on all rows.}
+      - {name: cv_results_, kind: attribute, task: null, shape: dict of arrays, note: Scores for each combination.}
+    next_step: Test the best estimator on the held-out test set.
+    visual: null
+  catch_outs:
+    - Only tries the values you list, never values in between.
+    - The best score is from cross-validation, not a test set.
+    - Fits grow with every list length, times the folds.
+  key_settings:
+    tier1:
+      - {name: param_grid, page: null}
+      - {name: cv, page: null}
+      - {name: scoring, page: null}
+      - {name: refit, page: null}
+    tier2:
+      - {name: estimator, page: null}
+      - {name: return_train_score, page: null}
+    tier3:
+      - {name: n_jobs, page: null}
+      - {name: pre_dispatch, page: null}
+      - {name: error_score, page: null}
+  watch_it_work: {none: true}
+  intuition: {text: "Check every box on the settings grid and keep the best."}
+  next: []

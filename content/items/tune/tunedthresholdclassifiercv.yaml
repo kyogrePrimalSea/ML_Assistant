@@ -1,0 +1,88 @@
+id: tunedthresholdclassifiercv
+plain_name: TunedThresholdClassifierCV
+code_name: TunedThresholdClassifierCV
+aliases: [tuned threshold, threshold tuning, best cut-off]
+stage: tune
+family: tune.threshold
+tracks: [standard]
+archetype: tuning
+question_tags: [wrong cut-off, 0.5 threshold]
+targets: [sklearn.model_selection.TunedThresholdClassifierCV]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TunedThresholdClassifierCV.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: tuning, dims: 1, trials: 100}
+    line: Finds the yes/no cut-off that scores best.
+  quick_facts:
+    facts:
+    - {label: Default scoring, value: balanced_accuracy}
+    - {label: Cut-offs tried, value: 100 by default}
+    - {label: Refits model, value: 'Yes, by default'}
+  use_avoid:
+    use_when: [0.5 is the wrong cut-off, cut-off tuned by cross-validation]
+    avoid_when: [cut-off already chosen, more than two classes]
+  prep:
+  - step: {page: train-test-split}
+    status: recommended
+    why: Keep a test set the cut-off never sees.
+    condition: null
+    unless: null
+  code:
+  - library: scikit-learn
+    target: sklearn.model_selection.TunedThresholdClassifierCV
+    why_this_library: Finds the cut-off with cross-validation.
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import load_breast_cancer
+      from sklearn.linear_model import LogisticRegression
+      from sklearn.model_selection import (
+          TunedThresholdClassifierCV,
+          train_test_split,
+      )
+      from sklearn.pipeline import make_pipeline
+      from sklearn.preprocessing import StandardScaler
+
+      X, y = load_breast_cancer(return_X_y=True)
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+      model = TunedThresholdClassifierCV(
+          make_pipeline(StandardScaler(), LogisticRegression(max_iter=5000)),
+          scoring="balanced_accuracy",
+          cv=5,
+      )
+      model.fit(X_train, y_train)
+      print(round(model.best_threshold_, 3))
+      print(round(model.score(X_test, y_test), 3))
+  what_comes_out:
+    items:
+    - {name: fit, kind: method, task: null, shape: self, note: 'Tunes the cut-off, then refits.'}
+    - {name: predict, kind: method, task: classification, shape: '(n_samples,)', note: Labels using the tuned cut-off.}
+    - {name: best_threshold_, kind: attribute, task: null, shape: float, note: The cut-off chosen by cross-validation.}
+    - {name: best_score_, kind: attribute, task: null, shape: float or None, note: Best cross-validated score.}
+    - {name: cv_results_, kind: attribute, task: null, shape: dict or None, note: Only set when store_cv_results is True.}
+    next_step: Score on test rows, not the rows used to pick it.
+    visual: null
+  catch_outs: ['Score on test rows, not the rows used to pick the cut-off.', 'Default scoring is balanced_accuracy, not accuracy.']
+  key_settings:
+    tier1:
+    - {name: cv, page: null}
+    - {name: response_method, page: null}
+    - {name: scoring, page: null}
+    - {name: refit, page: null}
+    tier2:
+    - {name: thresholds, page: null}
+    - {name: estimator, page: null}
+    - {name: store_cv_results, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: Try many cut-offs with cross-validation and keep the best.}
+  next: []

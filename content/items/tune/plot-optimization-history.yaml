@@ -1,0 +1,90 @@
+id: plot-optimization-history
+plain_name: plot_optimization_history
+code_name: plot_optimization_history
+aliases: [optimization history, best score so far, trial history]
+stage: tune
+family: tune.watch.history
+tracks: [standard, time-series]
+archetype: diagnostic
+question_tags: [search progress, still improving, how many trials]
+targets: [optuna.visualization.plot_optimization_history]
+pairs_with: []
+clashes: []
+source_urls: ['https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_optimization_history.html']
+library_versions: {optuna: 5.0.0}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: ames, chart: best score by trial}
+    line: Shows the best score as trials run.
+  quick_facts:
+    facts:
+      - {label: Default target_name, value: "Objective Value"}
+      - {label: Default error_bar, value: "False"}
+  use_avoid:
+    use_when: [checking search still improving, comparing searches]
+    avoid_when: [no trials finished yet]
+  prep:
+  - step: {page: optuna-study}
+    status: required
+    why: Needs a study with finished trials.
+    condition: null
+    unless: null
+  code:
+  - library: optuna
+    target: optuna.visualization.plot_optimization_history
+    why_this_library: Plotly figure; you choose where to show it.
+    snippet: |
+      # optuna 5.0.0
+      import optuna
+      from sklearn.datasets import make_regression
+      from sklearn.ensemble import RandomForestRegressor
+      from sklearn.model_selection import cross_val_score
+
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+      X, y = make_regression(n_samples=300, n_features=8, noise=15, random_state=0)
+
+
+      def objective(trial):
+          model = RandomForestRegressor(
+              n_estimators=trial.suggest_int("n_estimators", 10, 80),
+              max_depth=trial.suggest_int("max_depth", 2, 12),
+              min_samples_leaf=trial.suggest_int("min_samples_leaf", 1, 10),
+              random_state=0,
+          )
+          return cross_val_score(model, X, y, cv=3, scoring="r2").mean()
+
+
+      study = optuna.create_study(
+          direction="maximize",
+          sampler=optuna.samplers.TPESampler(seed=0),
+      )
+      study.optimize(objective, n_trials=20)
+      fig = optuna.visualization.plot_optimization_history(study)
+      print(round(study.best_value, 3))
+  what_comes_out:
+    items:
+    - {name: plot_optimization_history, kind: return, task: null, shape: plotly Figure, note: Figure of trial values over the search.}
+    next_step: null
+    visual: null
+  catch_outs:
+    - Shows the score, not which settings were tried.
+    - Needs plotly installed; it is not in the project requirements.
+  key_settings:
+    tier1:
+      - {name: study, page: null}
+      - {name: target, page: null}
+    tier2:
+      - {name: target_name, page: null}
+      - {name: error_bar, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Plot the score of each trial in the order it ran."}
+  next: []
+

@@ -1,0 +1,78 @@
+id: fixedthresholdclassifier
+plain_name: FixedThresholdClassifier
+code_name: FixedThresholdClassifier
+aliases: [fixed threshold, manual threshold, set cut-off]
+stage: tune
+family: tune.threshold
+tracks: [standard]
+archetype: tuning
+question_tags: [wrong cut-off]
+targets: [sklearn.model_selection.FixedThresholdClassifier]
+pairs_with: []
+clashes: []
+source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.FixedThresholdClassifier.html']
+library_versions: {scikit-learn: 1.9.1}
+reviewed: false
+rules:
+  task_types: [classification]
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: tuning, dims: 1, trials: 2}
+    line: Uses the yes/no cut-off you set, not 0.5.
+  quick_facts:
+    facts:
+    - {label: Threshold, value: 'Set by you, for example 0.8'}
+    - {label: Classes, value: Binary only}
+    - {label: Fits model, value: 'Yes, inside fit'}
+  use_avoid:
+    use_when: [cut-off already chosen, binary classification]
+    avoid_when: [cut-off not chosen yet, more than two classes]
+  prep:
+  - step: {page: train-test-split}
+    status: recommended
+    why: Keep a test set the cut-off never sees.
+    condition: null
+    unless: null
+  code:
+  - library: scikit-learn
+    target: sklearn.model_selection.FixedThresholdClassifier
+    why_this_library: Wraps any binary classifier. You set the cut-off.
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import load_breast_cancer
+      from sklearn.linear_model import LogisticRegression
+      from sklearn.model_selection import FixedThresholdClassifier, train_test_split
+      from sklearn.pipeline import make_pipeline
+      from sklearn.preprocessing import StandardScaler
+
+      X, y = load_breast_cancer(return_X_y=True)
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+      model = FixedThresholdClassifier(
+          make_pipeline(StandardScaler(), LogisticRegression(max_iter=5000)),
+          threshold=0.8,
+      )
+      model.fit(X_train, y_train)
+      print(model.predict(X_test[:10]))
+      print(round(model.score(X_test, y_test), 3))
+  what_comes_out:
+    items:
+    - {name: fit, kind: method, task: null, shape: self, note: Fits the wrapped classifier.}
+    - {name: predict, kind: method, task: classification, shape: '(n_samples,)', note: Labels from your threshold on the probability.}
+    next_step: Score on test rows, not the training rows.
+    visual: null
+  catch_outs: [The threshold is yours. It is not tuned from data., Only for binary classifiers.]
+  key_settings:
+    tier1:
+    - {name: response_method, page: null}
+    - {name: threshold, page: null}
+    - {name: pos_label, page: null}
+    - {name: estimator, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: Use the cut-off you already decided on.}
+  next: []

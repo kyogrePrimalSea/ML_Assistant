@@ -1,0 +1,88 @@
+id: qmcsampler
+plain_name: QMCSampler
+code_name: QMCSampler
+aliases: [quasi Monte Carlo, low-discrepancy, Sobol]
+stage: tune
+family: tune.optuna.sampler
+tracks: [standard, time-series]
+archetype: tuning
+question_tags: [cover the space, even spread]
+targets: [optuna.samplers.QMCSampler]
+pairs_with: [optuna-study]
+clashes: []
+source_urls: ['https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.QMCSampler.html']
+library_versions: {optuna: 5.0.0, scikit-learn: "1.9.1"}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: true
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: tuning, dims: 2, trials: 30}
+    line: Spreads tries evenly across the space, tidier than random.
+  quick_facts:
+    facts:
+      - {label: Default sequence, value: "sobol"}
+      - {label: Scrambled by default, value: "no"}
+  use_avoid:
+    use_when: [cover the space evenly, continuous settings]
+    avoid_when: [learning from past trials]
+  prep:
+    - step: {page: train-test-split}
+      status: recommended
+      why: Keep a final test set the search never sees.
+      condition: null
+      unless: null
+  code:
+    - library: optuna
+      target: optuna.samplers.QMCSampler
+      why_this_library: Optuna sampler. Pass it to create_study.
+      snippet: |
+        # optuna 5.0.0
+        import optuna
+        from sklearn.datasets import make_regression
+        from sklearn.linear_model import ElasticNet
+        from sklearn.model_selection import cross_val_score
+
+        optuna.logging.set_verbosity(optuna.logging.WARNING)
+        X, y = make_regression(
+            n_samples=200, n_features=8, n_informative=3, noise=10, random_state=0
+        )
+        SCORING = "neg_mean_squared_error"
+
+
+        def objective(trial):
+            alpha = trial.suggest_float("alpha", 0.01, 10.0)
+            l1_ratio = trial.suggest_float("l1_ratio", 0.0, 1.0)
+            model = ElasticNet(alpha=alpha, l1_ratio=l1_ratio)
+            return -cross_val_score(model, X, y, cv=3, scoring=SCORING).mean()
+
+
+        sampler = optuna.samplers.QMCSampler(seed=0, scramble=True)
+        study = optuna.create_study(sampler=sampler, direction="minimize")
+        study.optimize(objective, n_trials=16)
+        print({k: round(v, 3) for k, v in study.best_params.items()})
+        print(round(study.best_value, 3))
+  what_comes_out:
+    items:
+      - {name: best_params, kind: return, task: null, shape: dict of settings, note: Best combination among those tried.}
+    next_step: null
+    visual: null
+  catch_outs:
+    - Sobol is the default sequence.
+    - Turn scramble on for a randomised sequence.
+    - Set seed with scramble for repeatable tries.
+  key_settings:
+    tier1: 
+      - {name: qmc_type, page: null}
+      - {name: scramble, page: null}
+      - {name: seed, page: null}
+    tier2: 
+      - {name: independent_sampler, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Scatter tries evenly, so no corner of the space is missed."}
+  next: []

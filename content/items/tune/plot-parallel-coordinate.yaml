@@ -1,0 +1,94 @@
+id: plot-parallel-coordinate
+plain_name: plot_parallel_coordinate
+code_name: plot_parallel_coordinate
+aliases: [parallel plot, all settings at once, trial lines]
+stage: tune
+family: tune.watch.importance
+tracks: [standard, time-series]
+archetype: diagnostic
+question_tags: [compare all trials, patterns across settings]
+targets: [optuna.visualization.plot_parallel_coordinate]
+pairs_with: []
+clashes: []
+source_urls: ['https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_parallel_coordinate.html']
+library_versions: {optuna: 5.0.0}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: ames, chart: one line per trial across settings}
+    line: Shows every trial's settings and score in one view.
+  quick_facts:
+    facts:
+      - {label: Default label, value: Objective Value}
+      - {label: Needs, value: A study with trials}
+  use_avoid:
+    use_when: [many settings to compare, patterns across trials]
+    avoid_when: [one or two settings, need exact scores]
+  prep:
+    - step: {page: optuna-study}
+      status: required
+      why: Plots read the trials stored in a study.
+      condition: null
+      unless: null
+  code:
+    - library: optuna
+      target: optuna.visualization.plot_parallel_coordinate
+      why_this_library: Draws the plot straight from a study.
+      snippet: |
+        # optuna 5.0.0
+        import optuna
+        from optuna.visualization import plot_parallel_coordinate
+        from sklearn.datasets import make_regression
+        from sklearn.ensemble import RandomForestRegressor
+        from sklearn.model_selection import cross_val_score
+
+        optuna.logging.set_verbosity(optuna.logging.WARNING)
+        X, y = make_regression(n_samples=300, n_features=8, noise=15,
+                               random_state=0)
+
+
+        def objective(trial):
+            depth = trial.suggest_int("max_depth", 2, 12)
+            leaf = trial.suggest_int("min_samples_leaf", 1, 10)
+            feat = trial.suggest_float("max_features", 0.3, 1.0)
+            model = RandomForestRegressor(
+                n_estimators=30, max_depth=depth, min_samples_leaf=leaf,
+                max_features=feat, random_state=0,
+            )
+            return cross_val_score(model, X, y, cv=3).mean()
+
+
+        study = optuna.create_study(
+            direction="maximize", sampler=optuna.samplers.TPESampler(seed=0)
+        )
+        study.optimize(objective, n_trials=20)
+
+        fig = plot_parallel_coordinate(study)
+        print(study.best_params)
+  what_comes_out:
+    items:
+      - {name: plot_parallel_coordinate, kind: return, task: null, shape: go.Figure, note: A plotly figure with one line per trial.}
+    next_step: null
+    visual: null
+  catch_outs:
+    - Needs plotly installed.
+    - Plots the objective value unless target is set.
+    - Pass params to choose which settings are plotted.
+  key_settings:
+    tier1:
+      - {name: study, page: null}
+      - {name: params, page: null}
+    tier2:
+      - {name: target, page: null}
+      - {name: target_name, page: null}
+    tier3: []
+  watch_it_work: {none: true}
+  intuition:
+    text: Each trial is one line running through its settings.
+  next: []

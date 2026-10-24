@@ -1,0 +1,1 @@
+12 COMPLETE 0.725 {'max_depth': 12, 'min_samples_leaf': 1}

@@ -1,0 +1,90 @@
+id: plot-hypervolume-history
+plain_name: plot_hypervolume_history
+code_name: plot_hypervolume_history
+aliases: [hypervolume, trade-off progress, multi-goal progress]
+stage: tune
+family: tune.optuna.multi
+tracks: [standard, time-series]
+archetype: diagnostic
+question_tags: [several goals, still improving, trade-off progress]
+targets: [optuna.visualization.plot_hypervolume_history]
+pairs_with: []
+clashes: []
+source_urls: ['https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_hypervolume_history.html']
+library_versions: {optuna: 5.0.0}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: breast-cancer, chart: hypervolume by trial}
+    line: Shows whether the trade-offs are still improving.
+  quick_facts:
+    facts:
+      - {label: Reference point, value: "one value per goal"}
+  use_avoid:
+    use_when: [several goals at once, checking trade-offs keep improving]
+    avoid_when: [a single goal, no reference point known]
+  prep:
+  - step: {page: optuna-study}
+    status: required
+    why: Needs a study with several goals.
+    condition: null
+    unless: null
+  code:
+  - library: optuna
+    target: optuna.visualization.plot_hypervolume_history
+    why_this_library: Plotly figure; you choose where to show it.
+    snippet: |
+      # optuna 5.0.0
+      import optuna
+      from sklearn.datasets import load_breast_cancer
+      from sklearn.ensemble import RandomForestClassifier
+      from sklearn.model_selection import cross_val_score
+
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+      X, y = load_breast_cancer(return_X_y=True)
+
+
+      def objective(trial):
+          n_trees = trial.suggest_int("n_estimators", 5, 100)
+          model = RandomForestClassifier(
+              n_estimators=n_trees,
+              max_depth=trial.suggest_int("max_depth", 2, 12),
+              random_state=0,
+          )
+          accuracy = cross_val_score(model, X, y, cv=3).mean()
+          return accuracy, n_trees
+
+
+      study = optuna.create_study(
+          directions=["maximize", "minimize"],
+          sampler=optuna.samplers.NSGAIISampler(seed=0),
+      )
+      study.optimize(objective, n_trials=30)
+      fig = optuna.visualization.plot_hypervolume_history(
+          study, reference_point=[0.0, 120.0]
+      )
+      print(len(study.best_trials))
+  what_comes_out:
+    items:
+    - {name: plot_hypervolume_history, kind: return, task: null, shape: plotly Figure, note: Figure of hypervolume over the search.}
+    next_step: null
+    visual: null
+  catch_outs:
+    - Trials worse than the reference point are left out.
+    - Needs plotly installed; it is not in the project requirements.
+  key_settings:
+    tier1:
+      - {name: study, page: null}
+      - {name: reference_point, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "The area covered by the trials so far, against a reference point."}
+  next: []
+

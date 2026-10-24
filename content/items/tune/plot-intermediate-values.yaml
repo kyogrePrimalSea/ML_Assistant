@@ -1,0 +1,98 @@
+id: plot-intermediate-values
+plain_name: plot_intermediate_values
+code_name: plot_intermediate_values
+aliases: [learning curves per trial, pruning curves, intermediate scores]
+stage: tune
+family: tune.watch.history
+tracks: [standard, time-series]
+archetype: diagnostic
+question_tags: [pruning, slow trials, which trials stopped early]
+targets: [optuna.visualization.plot_intermediate_values]
+pairs_with: []
+clashes: []
+source_urls: ['https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_intermediate_values.html']
+library_versions: {optuna: 5.0.0}
+reviewed: false
+rules:
+  task_types: []
+  blocked_when: []
+  fits_on_data: false
+  shape_effect: {rows: same, columns: same}
+slots:
+  header: {}
+  solves:
+    hero: {kind: diagnostic, dataset: ames, chart: score by step for each trial}
+    line: Shows each trial's score at each step, for pruning.
+  quick_facts:
+    facts:
+      - {label: Needs, value: "trial.report calls in the objective"}
+  use_avoid:
+    use_when: [using pruning, comparing trial learning curves]
+    avoid_when: [no steps reported]
+  prep:
+  - step: {page: optuna-study}
+    status: required
+    why: Needs a study with finished trials.
+    condition: null
+    unless: null
+  - step: {page: optuna-trial}
+    status: required
+    why: Trials must call trial.report.
+    condition: null
+    unless: null
+  code:
+  - library: optuna
+    target: optuna.visualization.plot_intermediate_values
+    why_this_library: Plotly figure; you choose where to show it.
+    snippet: |
+      # optuna 5.0.0
+      import optuna
+      from sklearn.datasets import make_regression
+      from sklearn.linear_model import SGDRegressor
+      from sklearn.metrics import r2_score
+      from sklearn.model_selection import train_test_split
+      from sklearn.preprocessing import StandardScaler
+
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+      X, y = make_regression(n_samples=300, n_features=8, noise=15, random_state=0)
+      X = StandardScaler().fit_transform(X)
+      X_tr, X_va, y_tr, y_va = train_test_split(X, y, random_state=0)
+
+
+      def objective(trial):
+          alpha = trial.suggest_float("alpha", 1e-5, 1e-1, log=True)
+          model = SGDRegressor(alpha=alpha, eta0=0.01, random_state=0)
+          for epoch in range(15):
+              model.partial_fit(X_tr, y_tr)
+              score = r2_score(y_va, model.predict(X_va))
+              trial.report(score, epoch)
+              if trial.should_prune():
+                  raise optuna.TrialPruned()
+          return score
+
+
+      study = optuna.create_study(
+          direction="maximize",
+          pruner=optuna.pruners.MedianPruner(n_warmup_steps=3),
+          sampler=optuna.samplers.TPESampler(seed=0),
+      )
+      study.optimize(objective, n_trials=20)
+      fig = optuna.visualization.plot_intermediate_values(study)
+      print(sum(t.state == optuna.trial.TrialState.PRUNED for t in study.trials))
+  what_comes_out:
+    items:
+    - {name: plot_intermediate_values, kind: return, task: null, shape: plotly Figure, note: Figure of each trial's reported scores.}
+    next_step: null
+    visual: null
+  catch_outs:
+    - Trials only show the steps they reported.
+    - Needs plotly installed; it is not in the project requirements.
+  key_settings:
+    tier1:
+      - {name: study, page: null}
+    tier2: []
+    tier3: []
+  watch_it_work: {none: true}
+  intuition: {text: "Each line is one trial's score at each reported step."}
+  next: []
+
