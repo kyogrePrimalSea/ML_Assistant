@@ -34,12 +34,17 @@ test('open Model, Trees and ensembles, Boosting, XGBoost by mouse; screenshots',
   await expect(page.getByRole('complementary', { name: 'Page panel' })).toContainText('xgboost')
   await page.waitForTimeout(1200)
 
-  // Every visible node stays inside the canvas.
+  // The camera frames the tail of the open path: the opened family and its pages stay inside the canvas
+  // (stages on the far side may be off-screen; they keep their labels and return when you go back up).
   const canvas = (await page.getByRole('tree').boundingBox())!
-  for (const t of await page.getByRole('treeitem').all()) {
+  // At 1024 the tail is wider than the canvas at the readable scale, so there only the open family is checked.
+  const framed = w >= 1440 ? [family(page), ...(await page.getByRole('treeitem', { level: 4 }).all())] : [family(page)]
+  for (const t of framed) {
     const b = (await t.boundingBox())!
     expect(b.y).toBeGreaterThanOrEqual(canvas.y - 1)
     expect(b.y + b.height).toBeLessThanOrEqual(canvas.y + canvas.height + 1)
+    expect(b.x).toBeGreaterThanOrEqual(canvas.x - 1)
+    expect(b.x + b.width).toBeLessThanOrEqual(canvas.x + canvas.width + 1)
   }
   for (const theme of ['light', 'dark']) {
     await page.getByRole('radio', { name: theme === 'dark' ? 'Dark' : 'Light' }).click()

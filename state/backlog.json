@@ -527,7 +527,7 @@
     "T038": {
       "title": "Content index and per-goal radial layouts with the fan",
       "file": "tasks/T038-per-goal-layout.md",
-      "status": "In Progress",
+      "status": "Done",
       "dependencies": [
         "T034",
         "T035"
@@ -537,7 +537,7 @@
     "T039": {
       "title": "Goal selector, Names | Questions toggle, fanned tree",
       "file": "tasks/T039-goal-selector-and-questions-mode.md",
-      "status": "Backlog",
+      "status": "In Progress",
       "dependencies": [
         "T038"
       ],

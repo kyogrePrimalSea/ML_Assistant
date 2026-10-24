@@ -153,16 +153,26 @@ to functions. Missing sections are empty lists, never omitted.
     reference (defaults, effective defaults for key settings).
 - Radial tree layout: `app/scripts/layout-radial.mjs` runs after the content build
   (`predev`/`prebuild`) and writes `content/derived/layout-radial.json` (committed, version 2) plus a
-  copy in `public/data/`. The app never computes layout at runtime (spec §7). One layout per goal:
-  the nine stages on a fixed ring (radius 290, 40 degrees apart, pipeline order clockwise from the top),
-  and for every opened node the positions of its children (A5). Fan geometry: n children share a
-  sector of min(120, 20 + 16(n-1)) degrees centred on the opened node's own angle, in reading order,
-  starting 150 units further out; each child then moves outward along its ray (6-unit steps) until its
-  dot and label box clear the centre, the stage ring, the opened ancestors, their siblings and the
-  children placed before it. Label boxes are estimated from text length (`METRICS` in the script) for
-  both Names and Questions and the larger is stored (`w`, `h`, `anchor`). Each opened node also has a
-  zoom-to-fit box (`fits[id]`; `root` when nothing is open). Invariants are tested in
-  `app/src/content/layout-radial.test.ts`.
+  copy in `public/data/`. The app never computes layout at runtime (spec §7). One layout per goal
+  (geometry in `app/scripts/layout-radial-core.mjs`, 1 world unit = 1 px at scale 1):
+  - Depth 1 is the ring: nine stages, radius 320, 40 degrees apart, pipeline order clockwise from the top,
+    labels toward the centre.
+  - The children of an opened node (T038 rework) all sit on one arc around the node's own angle, so siblings
+    share a radius. The radius is the smallest one, at least 70 units beyond the node, where every label box
+    clears the centre, the ring, the opened ancestors and its siblings. The sector starts at
+    min(120, 20 + 16(n-1)) degrees and widens to the 120 degree cap before the radius grows; it narrows only
+    when a neighbour's label blocks the outer lanes. If the plain arc needs more than 140 extra units,
+    alternate children stagger between R and R + one box height. Each child's label sits on its own ray,
+    toward the centre or outward; the side is picked so links stay clear.
+  - Links are straight. Tests check that no link crosses another and none passes through a label other than
+    its own two ends (the ring-to-centre lines are dimmed and not counted). A fan is only accepted if the
+    fans of the next level down also fit compactly, so every open path has a layout.
+  - Label boxes are estimated from text length (`METRICS`) for both Names and Questions; the larger is stored
+    (`w`, `h`, centre offset `dx`, `dy`).
+  - `fits[id]` frames the tail of the open path (its stage, its parent, itself and its children). `fits.root`
+    frames the whole ring. The camera scales the box to the canvas but never below 0.85 for an open path
+    (13px text); far-side stages may be off-screen when deep. Scales reached are in the T038 run log.
+  - Invariants are tested in `app/src/content/layout-radial.test.ts`.
 - Tests: Vitest + Testing Library (unit/component); Playwright + axe for
   end-to-end, screenshots (1440 and 1024 wide, light and dark) and accessibility.
 - Commands (from `app/`): `npm run dev`, `npm run build`, `npm test`, `npm run e2e`.

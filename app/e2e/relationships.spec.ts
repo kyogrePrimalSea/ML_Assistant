@@ -70,7 +70,12 @@ async function expectLegible(page: import('@playwright/test').Page) {
   expect(out.length).toBeGreaterThan(3)
   const tol = 2
   const problems: string[] = []
-  for (const a of out) if (a.x1 < -1 || a.y1 < -1 || a.x2 > w + 1 || a.y2 > h + 1) problems.push(`clipped: ${a.t}`)
+  // Stages on the far side of the ring may sit off-screen; a label that is on-screen must not be cut.
+  for (const a of out) {
+    const cx = (a.x1 + a.x2) / 2
+    const cy = (a.y1 + a.y2) / 2
+    if (cx > 0 && cx < w && cy > 0 && cy < h && (a.x1 < -1 || a.y1 < -1 || a.x2 > w + 1 || a.y2 > h + 1)) problems.push(`clipped: ${a.t}`)
+  }
   for (let i = 0; i < out.length; i++)
     for (let j = i + 1; j < out.length; j++) {
       const a = out[i]

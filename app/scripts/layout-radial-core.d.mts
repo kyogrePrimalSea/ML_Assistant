@@ -8,8 +8,11 @@ export interface LayoutNode {
   radius: number
   x: number
   y: number
-  /** Which side of the dot the horizontal label sits on. */
-  anchor: 'start' | 'end'
+  /** Centre of the label box relative to the dot: on the node's ray, beyond the dot or toward the centre. */
+  dx: number
+  dy: number
+  /** True when the label sits toward the centre of the canvas. */
+  inward: boolean
   /** Dot radius. */
   r: number
   /** Label box for the larger of the Names and Questions sets, padding and count room included. */
@@ -20,13 +23,14 @@ export interface LayoutNode {
   /** Stage only: no pages for this goal; draw dimmed with "Not used for this goal". */
   empty?: boolean
 }
-export interface LayoutFan { sector: number; children: LayoutNode[] }
+/** `sector` is the width used (degrees), `radius` the arc radius, `stagger` true when alternate children sit one box height further out. */
+export interface LayoutFan { sector: number; radius: number; stagger: boolean; children: LayoutNode[] }
 export interface GoalLayout {
   /** The nine stage slots, in pipeline order. */
   ring: LayoutNode[]
   /** Children of each opened node, keyed by node id. */
   fans: Record<string, LayoutFan>
-  /** Zoom-to-fit box of the ring plus the opened path, keyed by the opened node id (`root`: nothing open). */
+  /** Zoom-to-fit box keyed by the opened node id: its stage, its parent, itself and its children. `root`: the whole ring. */
   fits: Record<string, Rect>
 }
 export interface RadialLayout {
@@ -68,7 +72,10 @@ export const METRICS: {
 export function wrapText(text: string, maxChars: number): string[]
 export function labelBoxes(node: ViewNode, empty?: boolean): { names: { w: number; h: number }; questions: { w: number; h: number } }
 export function dotRadius(node: { level: string }): number
-export function nodeRects(n: Pick<LayoutNode, 'x' | 'y' | 'r' | 'w' | 'h' | 'anchor'>): Rect[]
+export function nodeRects(n: Pick<LayoutNode, 'x' | 'y' | 'r' | 'w' | 'h' | 'dx' | 'dy'>): Rect[]
+export function boundsOf(rects: Rect[]): Rect
+export function segmentHitsRect(a: { x: number; y: number }, b: { x: number; y: number }, r: Rect, margin?: number): boolean
+export function segmentsCross(a: { x: number; y: number }, b: { x: number; y: number }, c: { x: number; y: number }, d: { x: number; y: number }): boolean
 export function overlaps(a: Rect, b: Rect, margin?: number): boolean
 export function fanSector(n: number): number
 export function computeLayout(index: unknown): RadialLayout
