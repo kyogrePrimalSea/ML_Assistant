@@ -57,7 +57,7 @@ def test_vocab_has_required_lists(vocab):
         "needs", "recommended", "clashes", "alternative_to", "pairs_with"}
     assert [s["id"] for s in vocab["severities"]] == ["block", "warn", "tip", "valid"]
     assert [s["id"] for s in vocab["prep_statuses"]] == ["required", "recommended", "not_needed"]
-    assert {s["id"] for s in vocab["question_stems"]} == {"my_data_is", "my_model_is", "i_want_to_know"}
+    assert {s["id"] for s in vocab["question_stems"]} == {"my_data_is", "my_model_is", "i_want_to_know", "we_need_but"}
     for s in vocab["stages"]:
         assert s["icon"].startswith("ti-") and s["dark"] and s["light"]
     for a in vocab["archetypes"]:

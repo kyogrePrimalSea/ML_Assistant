@@ -1,0 +1,52 @@
+stage: tune
+questions:
+  - id: but-slow-fits
+    stem: we_need_but
+    text: We need to tune, but each fit takes minutes
+    stage: tune
+    tracks: [standard, time-series]
+    answers:
+      - {page: halvingrandomsearchcv}
+      - {page: medianpruner}
+      - {page: gpsampler}
+      - {page: early-stopping}
+    next: []
+  - id: but-several-goals
+    stem: we_need_but
+    text: We need to tune, but we care about speed as well as accuracy
+    stage: tune
+    tracks: [standard, time-series]
+    answers:
+      - {page: nsgaiisampler}
+      - {page: plot-pareto-front}
+    next: []
+  - id: but-boosting-start
+    stem: we_need_but
+    text: We need to tune boosting, but we don't know where to start
+    stage: tune
+    tracks: [standard, time-series]
+    answers:
+      - {page: learning-rate}
+      - {page: n-estimators}
+      - {page: early-stopping}
+      - {page: max-depth}
+    next: []
+  - id: but-wrong-cutoff
+    stem: we_need_but
+    text: We need yes/no decisions, but 0.5 is the wrong cut-off
+    stage: tune
+    tracks: [standard]
+    answers:
+      - {page: tunedthresholdclassifiercv}
+      - {page: precision-recall-curve}
+      - {page: fixedthresholdclassifier}
+    next: []
+  - id: but-when-stop-search
+    stem: we_need_but
+    text: We need better settings, but we don't know when to stop searching
+    stage: tune
+    tracks: [standard, time-series]
+    answers:
+      - {page: terminator}
+      - {page: plot-optimization-history}
+    next: []

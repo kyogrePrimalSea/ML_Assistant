@@ -1,0 +1,47 @@
+stage: split
+questions:
+  - id: but-same-customer
+    stem: we_need_but
+    text: We need to split, but the same customer appears many times
+    stage: split
+    tracks: [standard]
+    answers:
+      - {page: groupkfold}
+      - {page: stratifiedgroupkfold}
+    next: []
+  - id: but-time-order
+    stem: we_need_but
+    text: We need to split, but the rows are in time order
+    stage: split
+    tracks: [standard, time-series]
+    answers:
+      - {page: timeseriessplit, setting: gap}
+      - {page: train-test-split, setting: shuffle}
+    next: []
+  - id: but-tiny-data
+    stem: we_need_but
+    text: We need a reliable score, but we have very few rows
+    stage: split
+    tracks: [standard]
+    answers:
+      - {page: repeatedkfold}
+      - {page: repeatedstratifiedkfold}
+      - {page: leaveoneout}
+    next: []
+  - id: but-rare-class-split
+    stem: we_need_but
+    text: We need to split, but one class is rare
+    stage: split
+    tracks: [standard, time-series]
+    answers:
+      - {page: stratifiedkfold}
+      - {page: train-test-split, setting: stratify}
+    next: []
+  - id: but-oof-predictions
+    stem: we_need_but
+    text: We need a prediction for every row, but without leaking
+    stage: split
+    tracks: [standard]
+    answers:
+      - {page: cross-val-predict}
+    next: []

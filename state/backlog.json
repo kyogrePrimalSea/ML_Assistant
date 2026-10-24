@@ -509,7 +509,7 @@
     "T036": {
       "title": "we_need_but stem and question rewrite",
       "file": "tasks/T036-we-need-but-questions.md",
-      "status": "In Progress",
+      "status": "Done",
       "dependencies": [
         "T034"
       ],

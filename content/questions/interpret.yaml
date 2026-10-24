@@ -2,10 +2,57 @@ stage: interpret
 questions:
   - id: know-feature-importance
     stem: i_want_to_know
-    text: Which features matter
+    text: I want to know which features matter most
     stage: interpret
     tracks: [standard]
     answers:
       - {page: feature-importances}
       - {page: treeexplainer}
+    next: []
+  - id: but-black-box
+    stem: we_need_but
+    text: We need to explain the model, but it's a black box
+    stage: interpret
+    tracks: [standard]
+    answers:
+      - {page: permutation-importance}
+      - {page: permutationexplainer}
+      - {page: partial-dependence}
+    next: []
+  - id: but-correlated-importance
+    stem: we_need_but
+    text: We need importances, but our features are correlated
+    stage: interpret
+    tracks: [standard]
+    answers:
+      - {page: permutation-importance, note: "catch-out: correlated features share credit"}
+      - {page: partitionexplainer}
+      - {page: shap-beeswarm}
+    next: []
+  - id: but-one-row-stakeholder
+    stem: we_need_but
+    text: We need to explain one decision to a stakeholder
+    stage: interpret
+    tracks: [standard]
+    answers:
+      - {page: shap-waterfall}
+      - {page: shap-force}
+    next: []
+  - id: but-explain-fast
+    stem: we_need_but
+    text: We need SHAP values, but KernelExplainer is too slow
+    stage: interpret
+    tracks: [standard]
+    answers:
+      - {page: treeexplainer}
+      - {page: permutationexplainer}
+      - {page: explainer}
+    next: []
+  - id: but-drift
+    stem: we_need_but
+    text: We need to know whether the model's reasoning drifts over time
+    stage: interpret
+    tracks: [standard]
+    answers:
+      - {page: shap-monitoring}
     next: []

@@ -11,7 +11,7 @@ export type TaskType = 'regression' | 'classification' | 'forecasting'
 export type PrepStatus = 'required' | 'recommended' | 'not_needed'
 export type DatasetId = 'ames' | 'breast-cancer' | 'airline-passengers'
 export type ShapeEffectValue = 'same' | 'grows' | 'shrinks' | 'expands'
-export type QuestionStem = 'my_data_is' | 'my_model_is' | 'i_want_to_know'
+export type QuestionStem = 'my_data_is' | 'my_model_is' | 'i_want_to_know' | 'we_need_but'
 export type RelationshipType = 'needs' | 'recommended' | 'clashes' | 'alternative_to' | 'pairs_with'
 
 /** Data-profile condition: all keys must match. */
@@ -151,7 +151,7 @@ export interface Question {
   text: string
   stage: StageId
   tracks: TrackId[]
-  answers: { page: string; setting?: string }[]
+  answers: { page: string; setting?: string; note?: string }[]
   next: string[]
 }
 

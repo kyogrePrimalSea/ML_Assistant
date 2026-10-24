@@ -67,3 +67,46 @@ with the source URL. Wording is not rewritten silently.
   https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.chi2.html
   Suggested wording: "Counts, frequencies or yes/no flags (whole numbers, not negative)".
   Accept or reject? Full table: `content/verification/pick-when.md`.
+
+### From T029 (What comes out, hyperparameter pages)
+
+- **XGBoost `get_num_boosting_rounds()` after early stopping.** Run in `.venv`
+  (xgboost 3.4.1): with `n_estimators=500, early_stopping_rounds=10` it returned 500, while
+  `best_iteration` was 57 and the booster had run 68 rounds. The method docs ("Gets the number
+  of xgboost boosting rounds") do not say it echoes `n_estimators`. The `n-estimators` page says
+  so in one line. Source: https://xgboost.readthedocs.io/en/stable/python/python_api.html
+- **No fitted value for `learning_rate`, and none for `max_depth` outside scikit-learn
+  GradientBoosting.** `get_params()` only echoes the setting (XGBoost returns `None` when you
+  did not set it, so the default 0.3 is not visible). `learning-rate` has `what_comes_out:
+  {none: true}`. `max-depth` lists only `estimators_[0, 0].get_depth()` for GradientBoosting.
+  XGBoost, LightGBM and HistGradientBoosting have no depth attribute in the extraction.
+  Fine as is, or should the page show `get_params()` with a "you set this" note?
+- **`max-depth` `pairs_with` left empty.** The docs support the `learning_rate` and
+  `n_estimators` trade-off (GradientBoosting `learning_rate`), but say nothing that ties
+  `max_depth` to either. Source:
+  https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingRegressor.html
+- **`early-stopping` prep is `required` for all four libraries.** scikit-learn
+  GradientBoosting and HistGradientBoosting hold out `validation_fraction` (default 0.1) of
+  the training rows themselves, so a separate validation split is optional there (Hist also
+  accepts `X_val, y_val` in `fit`, and `validation_fraction=None` watches the training
+  data). The existing catch-out states the scikit-learn behaviour. `unless` cannot name the
+  setting without wrongly applying to XGBoost and LightGBM. Source:
+  https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.HistGradientBoostingRegressor.html
+- **Brief A4 wording holds for all four libraries.** `predict` equalled a 0.5 cut-off on
+  `predict_proba[:, 1]` for XGBClassifier, LGBMClassifier, HistGradientBoostingClassifier and
+  GradientBoostingClassifier (breast cancer, run in `.venv`). `decision_function` is the raw
+  log-odds there (sigmoid of it equals `predict_proba[:, 1]`). XGBoost has none.
+
+- **`we_need_but` cap for time-series questions (T036).** The map allows at most 7 per
+  stage, but Model holds 7 standard-track `we_need_but` questions plus 4 forecast questions
+  (they file under the stage of their first answer, which the taxonomy puts in Model), so
+  11 in one stage. The validator now counts the cap per track (7 standard, 4 time-series),
+  which keeps all 11. Keep per-track counting, or move or drop a question?
+- **`but-normality-big-sample` answer `shapiro-wilk` (T036, kept, not blocking).** The
+  question is about "tens of thousands of rows". The SciPy docs say "For N > 5000 the W
+  test statistic is accurate, but the p-value may not be." The answer and its catch-out
+  note are kept as written (the docs do not contradict the note), but the docs caveat is
+  stronger than the note. Source:
+  https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.shapiro.html
+  Suggested note: "catch-out: p-value unreliable above 5,000 rows; with big samples every
+  test says 'not normal'; plot it too" (too long, 19 words; needs trimming). Keep as is or change?

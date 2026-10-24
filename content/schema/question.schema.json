@@ -44,13 +44,18 @@
         "setting": {
           "type": "string",
           "minLength": 1
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Short catch-out shown with this answer (16 words or fewer; checked by the validator)."
         }
       },
       "required": [
         "page"
       ],
       "additionalProperties": false,
-      "description": "A page, or one setting named in that page's key_settings."
+      "description": "A page, or one setting named in that page's key_settings or in its targets' extraction parameters."
     },
     "question": {
       "type": "object",
@@ -62,7 +67,8 @@
           "enum": [
             "my_data_is",
             "my_model_is",
-            "i_want_to_know"
+            "i_want_to_know",
+            "we_need_but"
           ]
         },
         "text": {

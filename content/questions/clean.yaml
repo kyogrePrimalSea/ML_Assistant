@@ -1,0 +1,30 @@
+stage: clean
+questions:
+  - id: but-missing-is-signal
+    stem: we_need_but
+    text: We need to fill gaps, but the gaps themselves tell us something
+    stage: clean
+    tracks: [standard, time-series]
+    answers:
+      - {page: missingindicator}
+      - {page: simpleimputer, setting: add_indicator}
+    next: []
+  - id: but-no-impute-boosting
+    stem: we_need_but
+    text: We need to model, but we'd rather not fill the gaps at all
+    stage: clean
+    tracks: [standard]
+    answers:
+      - {page: hist-gradient-boosting}
+      - {page: xgboost}
+      - {page: lightgbm}
+    next: []
+  - id: but-impute-no-leak
+    stem: we_need_but
+    text: We need to impute, but without learning from the test set
+    stage: clean
+    tracks: [standard, time-series]
+    answers:
+      - {page: pipeline}
+      - {page: columntransformer}
+    next: []

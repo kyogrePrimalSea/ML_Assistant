@@ -91,10 +91,23 @@ fields (`task_type`, `track`: lists matching any member; `has_categoricals`, `ha
 
 ## Questions
 
-`{id, stem, text, stage, tracks, answers, next}`. `answers` entries are `{page}` or
-`{page, setting}` (a setting named in that page's `key_settings`, for settings with no page of
-their own). `next` holds question ids. Validator rule: at most 7 questions per stem per stage; the
-file's `stage` equals each question's `stage`.
+`{id, stem, text, stage, tracks, answers, next}`. `text` is a full sentence in the stem's voice
+(max 80 characters), for example "Our model is great on training data, but poor on new data".
+
+`stem` is one of `my_data_is`, `my_model_is`, `i_want_to_know`, `we_need_but` ("We need…, but…",
+seeded from `docs/QUESTION_MAP.md` §7). A `we_need_but` text starts "We need".
+
+`answers` entries are `{page}`, `{page, setting}` or either with an optional `note`. `page` is an
+inventory page id or a content record id. `setting` names a parameter with no page of its own: it
+must be in that page's `key_settings` **or** be a parameter in the extraction of the page's
+targets (`content/extraction/<library>/<id>.json`). `note` is a short catch-out (16 words or
+fewer) copied verbatim from the map, for example "catch-out: correlated features share credit".
+`next` holds question ids.
+
+Validator rules: the file's `stage` equals each question's `stage`; at most 7 questions per stem
+per stage, **counted per track** (a question with several tracks counts once in each), so a
+stage's 7 standard-track `we_need_but` questions and its time-series forecast questions do not
+share one cap; `we_need_but` texts start "We need"; notes are 16 words or fewer.
 
 ## Taxonomy
 

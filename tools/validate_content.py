@@ -259,25 +259,39 @@ def validate(content, warnings=None):
     # ---- question checks
     counts = Counter()
     for rel, fstage, q, i in questions:
-        counts[(q["stage"], q["stem"])] += 1
+        for tr in q["tracks"]:
+            counts[(q["stage"], q["stem"], tr)] += 1
+        if q["stem"] == "we_need_but" and not q["text"].startswith("We need"):
+            rep.add(rel, f"questions.{i}.text", "a 'we_need_but' text must start with 'We need'")
         for j, a in enumerate(q["answers"]):
             path = f"questions.{i}.answers.{j}"
             page_ref(rel, f"{path}.page", a["page"])
-            if "setting" in a and a["page"] in rec_by_id:
-                ks = rec_by_id[a["page"]][1]["slots"]["key_settings"]
-                names = {k["name"] for t in ks.values() for k in t}
+            if "note" in a and len(a["note"].split()) > 16:
+                rep.add(rel, f"{path}.note", "note is longer than 16 words")
+            if "setting" in a and a["page"] in page_ids:
+                names = set()
+                if a["page"] in rec_by_id:
+                    ks = rec_by_id[a["page"]][1]["slots"]["key_settings"]
+                    names |= {k["name"] for t in ks.values() for k in t}
+                for e in inv_by_page.get(a["page"], []):
+                    x = ext(e["id"])
+                    if x:
+                        names |= {pm["name"] for pm in x.get("parameters", [])}
                 if a["setting"] not in names:
-                    rep.add(rel, f"{path}.setting", f"'{a['setting']}' is not in key_settings of '{a['page']}'")
+                    rep.add(rel, f"{path}.setting",
+                            f"'{a['setting']}' is not in key_settings or the extraction parameters of '{a['page']}'")
         for j, n in enumerate(q["next"]):
             if n not in q_by_id:
                 rep.add(rel, f"questions.{i}.next.{j}", f"question '{n}' does not exist")
+    # Cap is counted per track: a stage view shows one track's questions at a time.
     first_file = {}
     for rel, _, q, _ in questions:
-        first_file.setdefault((q["stage"], q["stem"]), rel)
-    for (stage, stem), n in sorted(counts.items()):
+        for tr in q["tracks"]:
+            first_file.setdefault((q["stage"], q["stem"], tr), rel)
+    for (stage, stem, tr), n in sorted(counts.items()):
         if n > stem_cap.get(stem, 7):
-            rep.add(first_file[(stage, stem)], "questions",
-                    f"{n} questions for stem '{stem}' in stage '{stage}' exceeds cap {stem_cap.get(stem, 7)}")
+            rep.add(first_file[(stage, stem, tr)], "questions",
+                    f"{n} questions for stem '{stem}' in stage '{stage}' (track '{tr}') exceeds cap {stem_cap.get(stem, 7)}")
 
     reviewed = sum(1 for _, r in items if r["reviewed"])
     return rep.errors, {"records": len(items), "reviewed": reviewed,

@@ -1,0 +1,68 @@
+stage: transform
+questions:
+  - id: but-scales-differ
+    stem: we_need_but
+    text: We need a linear model, but columns are on very different scales
+    stage: transform
+    tracks: [standard, time-series]
+    answers:
+      - {page: standardscaler}
+      - {page: pipeline}
+    next: []
+  - id: but-scale-outliers
+    stem: we_need_but
+    text: We need to scale, but outliers distort the mean
+    stage: transform
+    tracks: [standard, time-series]
+    answers:
+      - {page: robustscaler}
+      - {page: quantiletransformer}
+    next: []
+  - id: but-many-categories
+    stem: we_need_but
+    text: We need to encode categories, but there are hundreds of them
+    stage: transform
+    tracks: [standard, time-series]
+    answers:
+      - {page: targetencoder}
+      - {page: hist-gradient-boosting}
+      - {page: lightgbm}
+    next: []
+  - id: but-xgb-text
+    stem: we_need_but
+    text: We need XGBoost, but we have text columns
+    stage: transform
+    tracks: [standard, time-series]
+    answers:
+      - {page: xgboost, setting: enable_categorical}
+      - {page: onehotencoder}
+      - {page: targetencoder}
+    next: []
+  - id: but-resample-in-cv
+    stem: we_need_but
+    text: We need to resample, but inside cross-validation
+    stage: transform
+    tracks: [standard]
+    answers:
+      - {page: imblearn-pipeline}
+      - {page: stratifiedkfold}
+    next: []
+  - id: but-mixed-smote
+    stem: we_need_but
+    text: We need SMOTE, but some columns are categories
+    stage: transform
+    tracks: [standard]
+    answers:
+      - {page: smotenc}
+      - {page: smoten}
+    next: []
+  - id: but-skewed-target
+    stem: we_need_but
+    text: We need to predict a number, but the target is very skewed
+    stage: transform
+    tracks: [standard, time-series]
+    answers:
+      - {page: transformedtargetregressor}
+      - {page: functiontransformer}
+      - {page: gamma-regressor}
+    next: []

@@ -7,8 +7,8 @@ questions:
     tracks: [standard]
     answers:
       - {page: max-depth}
-      - {page: random-forest, setting: min_samples_leaf}
-      - {page: gradient-boosting, setting: ccp_alpha}
+      - {page: random-forest, setting: max_depth}
+      - {page: gradient-boosting, setting: max_depth}
     next: [know-feature-importance]
   - id: know-feature-importance
     stem: i_want_to_know

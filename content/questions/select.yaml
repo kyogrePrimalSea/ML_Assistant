@@ -1,0 +1,38 @@
+stage: select
+questions:
+  - id: but-select-no-peek
+    stem: we_need_but
+    text: We need to select features, but without peeking at the test set
+    stage: select
+    tracks: [standard, time-series]
+    answers:
+      - {page: pipeline}
+      - {page: rfecv}
+      - {page: selectkbest}
+    next: []
+  - id: but-pca-sparse
+    stem: we_need_but
+    text: We need to compress features, but the data is sparse
+    stage: select
+    tracks: [standard, time-series]
+    answers:
+      - {page: truncatedsvd}
+    next: []
+  - id: but-nonlinear-link
+    stem: we_need_but
+    text: We need to score features, but the link may be curved
+    stage: select
+    tracks: [standard]
+    answers:
+      - {page: mutual-info-regression}
+      - {page: mutual-info-classif}
+    next: []
+  - id: but-how-many-features
+    stem: we_need_but
+    text: We need to drop features, but we don't know how many to keep
+    stage: select
+    tracks: [standard]
+    answers:
+      - {page: rfecv}
+      - {page: lasso-cv}
+    next: []

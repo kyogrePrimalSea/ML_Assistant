@@ -2,10 +2,77 @@ stage: evaluate
 questions:
   - id: evaluate-how-good
     stem: i_want_to_know
-    text: How good is it now?
+    text: I want to know how good the model is right now
     stage: evaluate
     tracks: [standard]
     answers:
       - {page: precision-score}
       - {page: learning-curve}
     next: [know-feature-importance]
+  - id: but-log-target-metrics
+    stem: we_need_but
+    text: We need to report errors, but we trained on a log target
+    stage: evaluate
+    tracks: [standard, time-series]
+    answers:
+      - {page: transformedtargetregressor}
+      - {page: mean-absolute-error}
+    next: []
+  - id: but-imbalanced-score
+    stem: we_need_but
+    text: We need one score, but the classes are lopsided
+    stage: evaluate
+    tracks: [standard]
+    answers:
+      - {page: balanced-accuracy-score}
+      - {page: matthews-corrcoef}
+      - {page: average-precision-score}
+    next: []
+  - id: but-overconfident
+    stem: we_need_but
+    text: We need probabilities, but they look overconfident
+    stage: evaluate
+    tracks: [standard]
+    answers:
+      - {page: calibration-curve}
+      - {page: calibratedclassifiercv}
+      - {page: brier-score-loss}
+    next: []
+  - id: but-fan-errors
+    stem: we_need_but
+    text: We need to trust the line, but errors fan out as predictions grow
+    stage: evaluate
+    tracks: [standard]
+    answers:
+      - {page: breusch-pagan}
+      - {page: wls}
+      - {page: gamma-regressor}
+    next: []
+  - id: but-wobbly-coefs
+    stem: we_need_but
+    text: We need stable coefficients, but features overlap
+    stage: evaluate
+    tracks: [standard]
+    answers:
+      - {page: vif}
+      - {page: ridge}
+    next: []
+  - id: but-zero-targets-mape
+    stem: we_need_but
+    text: We need a percentage error, but some targets are near zero
+    stage: evaluate
+    tracks: [standard, time-series]
+    answers:
+      - {page: mean-absolute-error}
+      - {page: root-mean-squared-log-error}
+    next: []
+  - id: but-beat-chance
+    stem: we_need_but
+    text: We need to know the score is real, not luck
+    stage: evaluate
+    tracks: [standard]
+    answers:
+      - {page: permutation-test-score}
+      - {page: dummyclassifier}
+      - {page: dummyregressor}
+    next: []

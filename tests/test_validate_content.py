@@ -221,6 +221,47 @@ def test_question_answer_setting_must_be_key_setting(tree):
     assert errs(tree) == []
 
 
+def test_question_answer_setting_may_be_extraction_parameter(tree):
+    # random-forest has no content record; its targets' extraction carries max_depth only.
+    edit(tree, QS, lambda d: d["questions"][0]["answers"].append({"page": "random-forest", "setting": "max_depth"}))
+    assert errs(tree) == []
+    edit(tree, QS, lambda d: d["questions"][0]["answers"][-1].update(setting="nope"))
+    has(tree, "answers.3.setting", "nope", "random-forest")
+
+
+def _we_need(i, **kw):
+    q = {"id": f"but-{i}", "stem": "we_need_but", "text": f"We need item {i}, but it is hard",
+         "stage": "model", "tracks": ["standard"], "answers": [{"page": "xgboost"}], "next": []}
+    q.update(kw)
+    return q
+
+
+def test_we_need_but_text_prefix(tree):
+    edit(tree, QS, lambda d: d["questions"].append(_we_need(1)))
+    assert errs(tree) == []
+    edit(tree, QS, lambda d: d["questions"][-1].update(text="Need item 1, but it is hard"))
+    has(tree, QS, "questions.2.text", "We need")
+
+
+def test_answer_note_word_limit(tree):
+    edit(tree, QS, lambda d: d["questions"][0]["answers"][0].update(note="one two three four five six seven eight"))
+    assert errs(tree) == []
+    edit(tree, QS, lambda d: d["questions"][0]["answers"][0].update(note=" ".join(["w"] * 17)))
+    has(tree, "answers.0.note", "16 words")
+
+
+def test_we_need_but_cap_is_per_track(tree):
+    def f(d):
+        for i in range(7):
+            d["questions"].append(_we_need(i))
+        for i in range(7, 11):
+            d["questions"].append(_we_need(i, tracks=["time-series"]))
+    edit(tree, QS, f)
+    assert errs(tree) == []  # 7 standard + 4 time-series
+    edit(tree, QS, lambda d: d["questions"].append(_we_need(99)))
+    has(tree, "8 questions", "we_need_but", "track 'standard'", "cap 7")
+
+
 def test_question_next_resolves(tree):
     edit(tree, QS, lambda d: d["questions"][0]["next"].append("ghost-q"))
     has(tree, QS, "next.1", "ghost-q")

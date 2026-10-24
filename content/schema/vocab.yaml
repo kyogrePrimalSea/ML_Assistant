@@ -73,6 +73,7 @@ question_stems:
   - {id: my_data_is,        name: "My data is…",        max_per_stage: 7}
   - {id: my_model_is,       name: "My model is…",       max_per_stage: 7}
   - {id: i_want_to_know,    name: "I want to know…",    max_per_stage: 7}
+  - {id: we_need_but,       name: "We need…, but…",     max_per_stage: 7}
 
 # Spec §8 shape-effect values (journey ticket: data shape after the step).
 shape_effects: [same, grows, shrinks, expands]

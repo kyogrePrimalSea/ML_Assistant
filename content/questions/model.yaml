@@ -2,7 +2,7 @@ stage: model
 questions:
   - id: model-overfitting
     stem: my_model_is
-    text: Overfitting
+    text: Our model is great on training data, but poor on new data
     stage: model
     tracks: [standard]
     answers:
@@ -11,3 +11,110 @@ questions:
       - {page: gradient-boosting, setting: ccp_alpha}
       - {page: random-forest, setting: max_features}
     next: [evaluate-how-good]
+  - id: but-pvalues
+    stem: we_need_but
+    text: We need p-values, but scikit-learn doesn't give them
+    stage: model
+    tracks: [standard]
+    answers:
+      - {page: linear-regression}
+      - {page: logistic-regression}
+      - {page: glm}
+    next: []
+  - id: but-small-data
+    stem: we_need_but
+    text: We need a good model, but we have under 1,000 rows
+    stage: model
+    tracks: [standard]
+    answers:
+      - {page: ridge-cv}
+      - {page: gaussian-process-regressor}
+      - {page: random-forest}
+      - {page: repeatedkfold}
+    next: []
+  - id: but-wide-data
+    stem: we_need_but
+    text: We need a model, but we have more features than rows
+    stage: model
+    tracks: [standard]
+    answers:
+      - {page: lasso-cv}
+      - {page: elastic-net-cv}
+      - {page: pls-regression}
+    next: []
+  - id: but-count-zeros
+    stem: we_need_but
+    text: We need to predict counts, but many of them are zero
+    stage: model
+    tracks: [standard]
+    answers:
+      - {page: tweedie-regressor}
+      - {page: poisson-regression}
+      - {page: negative-binomial-regression}
+    next: []
+  - id: but-too-big
+    stem: we_need_but
+    text: We need a model, but the data doesn't fit in memory
+    stage: model
+    tracks: [standard]
+    answers:
+      - {page: sgd-regressor}
+      - {page: sgd-classifier}
+    next: []
+  - id: but-svm-big
+    stem: we_need_but
+    text: We need an SVM, but we have 100,000 rows
+    stage: model
+    tracks: [standard]
+    answers:
+      - {page: linear-svc}
+      - {page: linear-svr}
+      - {page: sgd-classifier}
+    next: []
+  - id: but-rare-class-model
+    stem: we_need_but
+    text: We need to classify, but the rare class is under 5%
+    stage: model
+    tracks: [standard]
+    answers:
+      - {page: compute-class-weight}
+      - {page: balancedrandomforestclassifier}
+      - {page: average-precision-score}
+      - {page: tunedthresholdclassifiercv}
+    next: []
+  - id: but-outside-drivers
+    stem: we_need_but
+    text: We need to forecast, but outside drivers like price matter
+    stage: model
+    tracks: [time-series]
+    answers:
+      - {page: sarimax}
+      - {page: varmax}
+    next: []
+  - id: but-beat-simple
+    stem: we_need_but
+    text: We need a forecast, but we don't know if it beats a simple one
+    stage: model
+    tracks: [time-series]
+    answers:
+      - {page: theta-model}
+      - {page: exponential-smoothing}
+    next: []
+  - id: but-intervals
+    stem: we_need_but
+    text: We need a forecast, but with a range, not one number
+    stage: model
+    tracks: [time-series]
+    answers:
+      - {page: ets-model}
+      - {page: sarimax}
+    next: []
+  - id: but-regime-change
+    stem: we_need_but
+    text: We need to forecast, but behaviour switches between states
+    stage: model
+    tracks: [time-series]
+    answers:
+      - {page: markov-regression}
+      - {page: unobserved-components}
+    next: []

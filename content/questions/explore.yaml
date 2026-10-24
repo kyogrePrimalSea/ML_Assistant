@@ -1,0 +1,46 @@
+stage: explore
+questions:
+  - id: but-normality-big-sample
+    stem: we_need_but
+    text: We need to check normality, but we have tens of thousands of rows
+    stage: explore
+    tracks: [standard, time-series]
+    answers:
+      - {page: normality-tests}
+      - {page: shapiro-wilk, note: "catch-out: with big samples every test says \"not normal\"; plot it too"}
+    next: []
+  - id: but-paired-groups
+    stem: we_need_but
+    text: We need to compare two groups, but the same people were measured twice
+    stage: explore
+    tracks: [standard, time-series]
+    answers:
+      - {page: ttest-rel}
+    next: []
+  - id: but-unknown-season
+    stem: we_need_but
+    text: We need to model seasonality, but we don't know the cycle length
+    stage: explore
+    tracks: [time-series]
+    answers:
+      - {page: periodogram}
+      - {page: acf-pacf-plots}
+    next: []
+  - id: but-several-seasons
+    stem: we_need_but
+    text: We need to decompose the series, but it has several seasons
+    stage: explore
+    tracks: [time-series]
+    answers:
+      - {page: mstl}
+    next: []
+  - id: but-arima-orders
+    stem: we_need_but
+    text: We need ARIMA, but we don't know which orders to use
+    stage: explore
+    tracks: [time-series]
+    answers:
+      - {page: acf-pacf-plots}
+      - {page: adf}
+      - {page: kpss}
+    next: []
