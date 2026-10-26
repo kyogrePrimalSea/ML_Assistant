@@ -1,101 +1,252 @@
 id: varmax
 plain_name: VARMAX
 code_name: VARMAX
-aliases: [VARMA, VARMAX model]
+aliases:
+- VARMA
+- VARMAX model
 stage: model
 family: model.ts-multi
-tracks: [time-series]
+tracks:
+- time-series
 archetype: model
-question_tags: [forecast, several series, past shocks]
-targets: [statsmodels.tsa.statespace.varmax.VARMAX]
-pairs_with: [var]
+question_tags:
+- forecast
+- several series
+- past shocks
+targets:
+- statsmodels.tsa.statespace.varmax.VARMAX
+pairs_with:
+- var
 clashes: []
-source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.tsa.statespace.varmax.VARMAX.html']
-library_versions: {statsmodels: 0.15.0}
+source_urls:
+- https://www.statsmodels.org/stable/generated/statsmodels.tsa.statespace.varmax.VARMAX.html
+library_versions:
+  statsmodels: 0.15.0
 reviewed: false
 rules:
-  task_types: [regression]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: airline-passengers, shape: fit_line}
+    hero:
+      kind: model
+      dataset: airline-passengers
+      shape: fit_line
     line: VAR, plus moving-average terms and optional outside drivers.
-  quick_facts: {none: true}
+  quick_facts:
+    none: true
   use_avoid:
-    use_when: [several linked series, past shocks, outside drivers]
-    avoid_when: [one series alone, tiny data, quick fits]
+    use_when:
+    - several linked series
+    - past shocks
+    - outside drivers
+    avoid_when:
+    - one series alone
+    - tiny data
+    - quick fits
   prep:
-    - step: {family: explore.stationarity}
-      status: recommended
-      why: Check stationarity before choosing lags.
-      condition: null
-      unless: null
-    - step: {family: split.time}
-      status: recommended
-      why: Test on the latest rows, never shuffled.
-      condition: null
-      unless: null
+  - step:
+      family: explore.stationarity
+    status: recommended
+    why: Check stationarity before choosing lags.
+    condition: null
+    unless: null
+  - step:
+      family: split.time
+    status: recommended
+    why: Test on the latest rows, never shuffled.
+    condition: null
+    unless: null
   code:
-    - library: statsmodels
-      target: statsmodels.tsa.statespace.varmax.VARMAX
-      why_this_library: The statsmodels class for this model.
-      snippet: |
-        # statsmodels 0.15.0
-        import numpy as np
-        from sklearn.datasets import make_regression
-        from statsmodels.tsa.statespace.varmax import VARMAX
-
-        _, shocks = make_regression(
-            n_samples=200, n_features=3, n_targets=2, noise=1.0, random_state=0
-        )
-        shocks = shocks / shocks.std(axis=0)
-        data = np.zeros((200, 2))
-        coefs = np.array([[0.5, 0.2], [0.1, 0.4]])
-        for t in range(1, 200):
-            data[t] = coefs @ data[t - 1] + shocks[t]
-
-        model = VARMAX(data, order=(1, 0), trend="c")
-        res = model.fit(disp=False)
-        print(round(res.aic, 1))
+  - library: statsmodels
+    target: statsmodels.tsa.statespace.varmax.VARMAX
+    why_this_library: The statsmodels class for this model.
+    snippet: "# statsmodels 0.15.0\nimport numpy as np\nfrom statsmodels.tsa.statespace.varmax import VARMAX\n\n\
+      rng = np.random.default_rng(3)\nnobs = 120\ntime = np.arange(nobs)\nexog = np.sin(time / 11)[:, None]\nshocks\
+      \ = rng.normal(scale=0.5, size=(nobs, 2))\nendog = np.zeros((nobs, 2))\nar = np.array([[0.30, 0.05], [0.10,\
+      \ 0.25]])\nbeta = np.array([0.20, -0.10])\nfor t in range(1, nobs):\n    endog[t] = (\n        ar @ endog[t\
+      \ - 1] + beta * exog[t, 0]\n        + shocks[t] + 0.15 * shocks[t - 1]\n    )\nfuture_exog = np.sin(np.arange(nobs,\
+      \ nobs + 3) / 11)[:, None]\nmodel = VARMAX(\n    endog, exog=exog, order=(1, 1), trend=\"c\",\n    error_cov_type=\"\
+      diagonal\", enforce_stationarity=True,\n    enforce_invertibility=True,\n)\nresult = model.fit(disp=False,\
+      \ maxiter=400)\nforecast = result.get_forecast(steps=3, exog=future_exog)\ny_pred = np.asarray(forecast.predicted_mean)\n\
+      print(\"forecast shape:\", y_pred.shape)\nprint(\"forecast:\", np.round(y_pred, 2))\nprint(\"AIC:\", round(result.aic,\
+      \ 2))\n"
+    output: "forecast shape: (3, 2)\nforecast: [[-0.56 -0.03]\n [-0.42 -0.08]\n [-0.36 -0.06]]\nAIC: 367.91\n"
   what_comes_out:
     items:
-      - {name: fit, kind: method, task: null, shape: "results object", note: "Returns the fitted results. Use them to forecast."}
-      - {name: predict, kind: method, task: null, shape: "(n_obs, k_series)", note: "Fitted values or forecasts for every series."}
-      - {name: order, kind: attribute, task: null, shape: "(p, q)", note: "AR and MA orders used by the model."}
-      - {name: trend, kind: attribute, task: null, shape: "'n', 'c', 't' or 'ct'", note: "Trend terms in the model."}
-    next_step: If the fit warns about convergence, check mle_retvals.
-    visual: null
+    - name: predicted_mean
+      kind: return
+      task: regression
+      shape: (steps, k_endog)
+      object_type: numpy.ndarray
+      example: '[[-0.56, -0.03], [-0.42, -0.08], [-0.36, -0.06]]'
+      shape_explanation: Rows are 3 forecast horizons and columns are 2 observed series, giving shape (3, 2).
+      note: Forecasts use fitted AR and MA dynamics plus known future exog.
+    - name: conf_int
+      kind: return
+      task: regression
+      shape: (steps, 2 * k_endog)
+      object_type: numpy.ndarray
+      example: '[[-1.55, -0.97, 0.43, 0.90], [-1.52, -1.08, 0.68, 0.93], [-1.48, -1.07, 0.75, 0.96]]'
+      shape_explanation: For 2 series each row stores both lower bounds then both upper bounds. Three forecast steps
+        and 4 bounds give shape (3, 4).
+      note: These are marginal bounds for each series, not cross-series covariance.
+    - name: var_pred_mean
+      kind: return
+      task: regression
+      shape: (steps, k_endog, k_endog)
+      object_type: numpy.ndarray
+      example: '[[[0.25, 0.02], [0.02, 0.22]], [[0.31, 0.03], [0.03, 0.28]], [[0.34, 0.04], [0.04, 0.30]]]'
+      shape_explanation: Each of 3 forecast steps has a 2-by-2 covariance matrix for the 2 observed series, giving
+        shape (3, 2, 2).
+      note: Off-diagonal terms represent forecast error covariance between series.
+    - name: forecasts_error
+      kind: return
+      task: null
+      shape: (k_endog, n_obs)
+      object_type: numpy.ndarray
+      example: '[[0.1, -0.2, 0.05], [0.0, 0.3, -0.1]]'
+      shape_explanation: Rows are the 2 observed series and columns are 3 fictional time points, so this concrete
+        matrix has shape (2, 3).
+      note: One-step prediction errors from the Kalman filter.
+    - name: forecasts_error_cov
+      kind: return
+      task: null
+      shape: (k_endog, k_endog, n_obs)
+      object_type: numpy.ndarray
+      example: '[[[0.4, 0.5], [0.0, 0.02]], [[0.0, 0.02], [0.3, 0.35]]]'
+      shape_explanation: Two series covariance axes form a 2-by-2 matrix at each of 2 fictional time points, giving
+        shape (2, 2, 2).
+      note: Kalman forecast error covariance at each observation.
+    - name: params
+      kind: return
+      task: null
+      shape: (n_params,)
+      object_type: numpy.ndarray
+      example: '[0.1, -0.2, 0.3, 0.05, -0.1, 0.4, 0.2, -0.3, 0.1, 0.05, -0.02, 0.5, 0.4, 0.3]'
+      shape_explanation: This fictional configured fit has 14 estimated parameters, so the one-dimensional vector
+        has shape (14,).
+      note: Parameter ordering is available from model.param_names.
+    next_step: null
+    visual: regression_preds
+    snippet: "# statsmodels 0.15.0\nimport numpy as np\nfrom statsmodels.tsa.statespace.varmax import VARMAX\n\n\
+      rng = np.random.default_rng(3)\nnobs = 120\ntime = np.arange(nobs)\nexog = np.sin(time / 11)[:, None]\nshocks\
+      \ = rng.normal(scale=0.5, size=(nobs, 2))\nendog = np.zeros((nobs, 2))\nar = np.array([[0.30, 0.05], [0.10,\
+      \ 0.25]])\nbeta = np.array([0.20, -0.10])\nfor t in range(1, nobs):\n    endog[t] = (\n        ar @ endog[t\
+      \ - 1] + beta * exog[t, 0]\n        + shocks[t] + 0.15 * shocks[t - 1]\n    )\nfuture_exog = np.sin(np.arange(nobs,\
+      \ nobs + 3) / 11)[:, None]\nmodel = VARMAX(\n    endog, exog=exog, order=(1, 1), trend=\"c\",\n    error_cov_type=\"\
+      diagonal\", enforce_stationarity=True,\n    enforce_invertibility=True,\n)\nresult = model.fit(disp=False,\
+      \ maxiter=400)\nforecast = result.get_forecast(steps=3, exog=future_exog)\nprint(\"forecast mean:\", np.round(np.asarray(forecast.predicted_mean),\
+      \ 2))\nprint(\"forecast covariance shape:\", forecast.var_pred_mean.shape)\nprint(\"confidence bounds:\",\
+      \ np.round(np.asarray(forecast.conf_int()), 2))\nprint(\"forecast errors shape:\", result.filter_results.forecasts_error.shape)\n\
+      print(\"error covariance shape:\")\nprint(result.filter_results.forecasts_error_cov.shape)\nprint(\"parameters:\"\
+      , result.params.shape, \"states:\", len(model.state_names))\n"
+    snippet_library: statsmodels
+    guidance:
+    - task: regression
+      text: Forecast rows follow time order. Keep multivariate series columns together and provide future exog where
+        the model uses it.
+    output: "forecast mean: [[-0.56 -0.03]\n [-0.42 -0.08]\n [-0.36 -0.06]]\nforecast covariance shape: (3, 2, 2)\n\
+      confidence bounds: [[-1.55 -0.97  0.43  0.9 ]\n [-1.52 -1.08  0.68  0.93]\n [-1.48 -1.07  0.75  0.96]]\nforecast\
+      \ errors shape: (2, 120)\nerror covariance shape:\n(2, 2, 120)\nparameters: (14,) states: 4\n"
   catch_outs:
-    - Fits can fail to converge, as in a ConvergenceWarning. Check mle_retvals.
-    - enforce_stationarity and enforce_invertibility are on by default.
-    - Higher orders need more data and can fail to converge.
+  - Fits can fail to converge, as in a ConvergenceWarning. Check mle_retvals.
+  - enforce_stationarity and enforce_invertibility are on by default.
+  - Higher orders need more data and can fail to converge.
   key_settings:
     tier1:
-      - {name: order, page: null}
-      - {name: trend, page: null}
-      - {name: error_cov_type, page: null}
-      - {name: enforce_stationarity, page: null}
+    - name: order
+      page: null
+      controls: AR lag order p and moving-average shock lag order q.
+      effect: Higher orders capture longer dynamics but add parameters and estimation difficulty.
+    - name: trend
+      page: null
+      controls: Whether to include constant and/or time trend terms.
+      effect: Trend terms capture deterministic drift but can absorb structure or overfit.
+    - name: error_cov_type
+      page: null
+      controls: Whether contemporaneous innovations have diagonal or unrestricted covariance.
+      effect: Unstructured covariance captures cross-series shocks but estimates more parameters.
+    - name: enforce_stationarity
+      page: null
+      controls: Whether AR parameters are transformed to ensure stationary dynamics.
+      effect: Enforcing stationarity rules out explosive roots but may constrain a genuinely nonstationary process.
     tier2:
-      - {name: enforce_invertibility, page: null}
-      - {name: measurement_error, page: null}
-      - {name: trend_offset, page: null}
+    - name: enforce_invertibility
+      page: null
+      controls: Whether MA parameters are transformed to ensure invertibility.
+      effect: Enforcement gives a unique invertible representation but restricts allowed parameters.
+    - name: measurement_error
+      page: null
+      controls: Whether observations include a separate measurement-noise component.
+      effect: Models noisy measurements explicitly but adds variance parameters.
+    - name: trend_offset
+      page: null
+      controls: Starting index used to construct deterministic time trends.
+      effect: Adjust when extending a prior sample; a wrong offset misaligns trend values.
     tier3:
-      - {name: exog, page: null}
-  watch_it_work: {none: true}
+    - name: exog
+      page: null
+      controls: Known external regressors aligned with each observed time row.
+      effect: External signals may help, but forecast requires their future values.
+  watch_it_work:
+    none: true
   intuition:
     idea: A VAR that also learns from its past shocks.
     analogy: Like a VAR that also learns from its own past mistakes.
     animation: none
-    good_at: [several linked series, past shocks, outside drivers]
-    bad_at: [one series alone, tiny data, quick fits]
+    good_at:
+    - several linked series
+    - past shocks
+    - outside drivers
+    bad_at:
+    - one series alone
+    - tiny data
+    - quick fits
     vs_siblings:
-      - {page: var, note: "No moving-average terms."}
-      - {page: sarimax, note: "Single series only. Adds seasons."}
+    - page: var
+      note: No moving-average terms.
+    - page: sarimax
+      note: Single series only. Adds seasons.
     read_more:
-      - Choose the AR and MA orders.
-      - Fit all series together by maximum likelihood.
-      - Forecast every series from the fitted model.
-  next: [but-beat-simple, but-intervals]
+    - p counts autoregressive series lags; q counts moving-average shock lags.
+    - The Kalman filter estimates state-space parameters and one-step prediction errors.
+    - Forecast covariance describes uncertainty across series; marginal confidence bounds are not a full covariance
+      matrix.
+    goal: Model several series with both lagged series values and lagged innovations, optionally adding exogenous
+      drivers.
+    steps:
+    - Place observations in rows and dependent series in columns.
+    - Choose AR order p and moving-average shock order q.
+    - Estimate the state-space VARMAX parameters by maximum likelihood with the Kalman filter.
+    - Supply future exogenous rows to get forecast means, confidence bounds, and covariance matrices.
+    - Inspect Kalman forecast errors separately from forecast uncertainty.
+    math:
+      notation:
+      - symbol: y_t
+        meaning: Vector of k_endog observed series at time t.
+      - symbol: A_i
+        meaning: AR coefficient matrix at lag i.
+      - symbol: u_t
+        meaning: Innovation vector at time t.
+      - symbol: M_j
+        meaning: MA coefficient matrix for innovation lag j.
+      - symbol: B x_t
+        meaning: Effect of optional exogenous regressors.
+      - symbol: epsilon_t
+        meaning: New multivariate innovation with covariance matrix Sigma.
+      equations:
+      - expression: y_t = A_1 y_(t-1) + ... + A_p y_(t-p) + B x_t + u_t
+        meaning: The autoregressive part links current series to their lagged values and external inputs.
+      - expression: u_t = epsilon_t + M_1 epsilon_(t-1) + ... + M_q epsilon_(t-q)
+        meaning: The moving-average part links current shocks to earlier shocks.
+      prediction: Forecast means are time-by-series; var_pred_mean adds two series axes. Confidence bounds are marginal.
+  next:
+  - but-beat-simple
+  - but-intervals

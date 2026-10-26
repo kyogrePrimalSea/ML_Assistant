@@ -1,132 +1,255 @@
 id: tweedie-regressor
 plain_name: TweedieRegressor
 code_name: TweedieRegressor
-aliases: [tweedie glm]
+aliases:
+- tweedie glm
 stage: model
 family: model.awkward.glm
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [many zeros, amounts, total spend]
-targets: [sklearn.linear_model.TweedieRegressor]
+question_tags:
+- many zeros
+- amounts
+- total spend
+targets:
+- sklearn.linear_model.TweedieRegressor
 pairs_with: []
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.TweedieRegressor.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.TweedieRegressor.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [regression]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: ames, shape: fit_line}
+    hero:
+      kind: model
+      dataset: ames
+      shape: fit_line
     line: A line for amounts that are often exactly zero.
   quick_facts:
     data_size: Fits in memory
   use_avoid:
-    use_when: [many exact zeros, amounts, total spend]
-    avoid_when: [need p-values, negative targets, pure counts]
+    use_when:
+    - many exact zeros
+    - amounts
+    - total spend
+    avoid_when:
+    - need p-values
+    - negative targets
+    - pure counts
   prep:
-    - step: {family: transform.scale.rescale}
-      status: recommended
-      why: Alpha penalises coefficients, so feature scale changes the fit.
-      condition: null
-      unless: null
-    - step: {family: clean.impute}
-      status: required
-      why: Missing values raise an error here.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Text categories must become numbers.
-      condition: {has_categoricals: true}
-      unless: null
-    - step: {page: train-test-split}
-      status: recommended
-      why: Hold out rows to check predictions on new data.
-      condition: null
-      unless: null
+  - step:
+      family: transform.scale.rescale
+    status: recommended
+    why: Alpha penalises coefficients, so feature scale changes the fit.
+    condition: null
+    unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Missing values raise an error here.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Text categories must become numbers.
+    condition:
+      has_categoricals: true
+    unless: null
+  - step:
+      page: train-test-split
+    status: recommended
+    why: Hold out rows to check predictions on new data.
+    condition: null
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.linear_model.TweedieRegressor
-      why_this_library: Scikit-learn Tweedie GLM. The power sets the distribution.
-      snippet: |
-        # scikit-learn 1.9.1
-        import numpy as np
-        from sklearn.datasets import make_regression
-        from sklearn.linear_model import TweedieRegressor
-        from sklearn.model_selection import train_test_split
+  - library: scikit-learn
+    target: sklearn.linear_model.TweedieRegressor
+    why_this_library: Scikit-learn Tweedie GLM. The power sets the distribution.
+    snippet: "# scikit-learn 1.9.1\nimport numpy as np\nfrom sklearn.datasets import make_regression\nfrom sklearn.linear_model\
+      \ import TweedieRegressor\nfrom sklearn.model_selection import train_test_split\n\nX, signal = make_regression(\n\
+      \    n_samples=500, n_features=5, noise=10, random_state=0\n)\nmu = np.exp(0.4 * X[:, 0] - 0.2 * X[:, 1])\n\
+      rng = np.random.default_rng(0)\nn_events = rng.poisson(2 * np.sqrt(mu))\ny = np.array([\n    rng.gamma(shape=n,\
+      \ scale=0.5 * np.sqrt(m)) if n else 0.0\n    for n, m in zip(n_events, mu)\n])\nX_train, X_test, y_train,\
+      \ y_test = train_test_split(X, y, random_state=0)\nmodel = TweedieRegressor(\n    power=1.5, alpha=0.1, max_iter=300\n\
+      ).fit(X_train, y_train)\ny_pred = model.predict(X_test[:5])\nprint(\"y_pred:\", np.round(y_pred, 3))\nprint(\"\
+      D2:\", round(model.score(X_test, y_test), 3))\n"
+    output: 'y_pred: [1.548 1.016 2.246 1.297 0.724]
 
-        X, y = make_regression(n_samples=500, n_features=5, noise=10,
-                               random_state=0)
-        y = np.maximum(y, 0)  # many exact zeros, like total spend
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, random_state=0)
+      D2: 0.149
 
-        model = TweedieRegressor(power=1.5, alpha=0.1, max_iter=300)
-        model.fit(X_train, y_train)
-        print(round(model.score(X_test, y_test), 3))
+      '
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
-         note: "Predicted mean, never negative at power 1.5."}
-      - {name: score, kind: method, task: regression, shape: float,
-         note: "Share of deviance explained, the D² score."}
-      - {name: coef_, kind: attribute, task: null, shape: "(n_features,)",
-         note: "One weight per column, on the link scale."}
-      - {name: intercept_, kind: attribute, task: null, shape: float,
-         note: "Baseline on the link scale."}
-      - {name: n_iter_, kind: attribute, task: null, shape: int,
-         note: "Solver steps used. Compare with max_iter."}
-      - {name: n_features_in_, kind: attribute, task: null, shape: int,
-         note: "Number of columns seen at fit time."}
-    next_step: With a log link, read exp(coef_) as a multiplier.
-    snippet: |
-      # scikit-learn 1.9.1
-      import numpy as np
-      from sklearn.datasets import make_regression
-      from sklearn.linear_model import TweedieRegressor
-
-      X, y = make_regression(n_samples=200, n_features=3, noise=10,
-                             random_state=0)
-      y = np.maximum(y, 0)
-      model = TweedieRegressor(power=1.5).fit(X, y)
-      pred = model.predict(X)
-      print(pred.shape)
-      print(bool(pred.min() >= 0))
-      print(round(model.score(X, y), 3))
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[2.4, 5.1, 3.2]'
+      shape_explanation: One predicted response per input row. n_samples is the number of rows; this example has
+        3 values, shape (3,).
+      note: Conditional response mean after the selected inverse link; at power 1.5, auto uses log.
+    - name: score
+      kind: method
+      task: regression
+      shape: scalar
+      object_type: float
+      example: '0.72'
+      shape_explanation: A scalar is one value with no array dimensions. This example is one D-squared score.
+      note: D-squared measures deviance explained under the selected Tweedie power; it is not R-squared.
+    - name: coef_
+      kind: attribute
+      task: null
+      shape: (n_features,)
+      object_type: numpy.ndarray
+      example: '[0.2, -0.1, 0.4]'
+      shape_explanation: One coefficient per input feature. n_features is the number of columns; the example has
+        3 coefficients, shape (3,).
+      note: At power 1.5, auto uses log; coefficients act on log mean before exponentiation.
+    - name: intercept_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: float
+      example: '0.3'
+      shape_explanation: A scalar is one intercept value, with no array dimensions.
+      note: At power 1.5 with auto link, this is the log baseline mean.
+    - name: n_iter_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: int
+      example: '12'
+      shape_explanation: A scalar integer counts solver iterations for this one fitted target; it has no array dimensions.
+      note: Compare with max_iter to see whether the solver hit its limit.
+    - name: n_features_in_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: int
+      example: '3'
+      shape_explanation: A scalar integer counts fitted input columns; it has no array dimensions.
+      note: Number of columns seen during fit.
+    snippet: "# scikit-learn 1.9.1\nimport numpy as np\nfrom sklearn.datasets import make_regression\nfrom sklearn.linear_model\
+      \ import TweedieRegressor\nX, _ = make_regression(n_samples=200, n_features=3, random_state=0)\nmu = np.exp(0.4\
+      \ * X[:, 0] - 0.2 * X[:, 1])\nrng = np.random.default_rng(0)\nn_events = rng.poisson(2 * np.sqrt(mu))\ny =\
+      \ np.array([\n    rng.gamma(shape=n, scale=0.5 * np.sqrt(m)) if n else 0.0\n    for n, m in zip(n_events,\
+      \ mu)\n])\nmodel = TweedieRegressor(power=1.5).fit(X, y)\ny_pred = model.predict(X[:3])\nprint(\"y_pred:\"\
+      , y_pred.round(3))\nprint(\"zero predictions:\", int((y_pred == 0).sum()))\nprint(\"D2:\", round(model.score(X,\
+      \ y), 3))\n"
     snippet_library: scikit-learn
     visual: regression_preds
+    next_step: null
+    guidance:
+    - task: regression
+      text: Choose power to match the target process. For 1 < power < 2, targets can be zero or positive continuous
+        values; predictions use the selected link.
+    output: 'y_pred: [0.715 1.01  0.903]
+
+      zero predictions: 0
+
+      D2: 0.094
+
+      '
   catch_outs:
-    - Target must be zero or above. Negative values raise an error.
-    - Power 2 is the gamma case, and exact zeros then fail.
-    - Missing values raise an error. Impute first.
+  - Target must be zero or above. Negative values raise an error.
+  - Power 2 is the gamma case, and exact zeros then fail.
+  - Missing values raise an error. Impute first.
+  - For 0 < power < 1, the Tweedie distribution does not exist.
   key_settings:
     tier1:
-      - {name: power, page: null}
-      - {name: alpha, page: null}
-      - {name: link, page: null}
+    - name: power
+      page: null
+      controls: Tweedie variance power p in Var(Y|X)=phi*mu^p, which selects the response distribution.
+      effect: Power determines target support and variance; choose it from the data-generating process.
+    - name: alpha
+      page: null
+      controls: Strength of the L2 penalty on coefficients.
+      effect: A larger value shrinks coefficients more; for NB family it also changes variance, so check which API
+        owns it.
+    - name: link
+      page: null
+      controls: Mapping from linear predictor to response mean; auto selects identity for p<=0 and log for p>0.
+      effect: The link changes prediction scale and valid mean range; explicit links must match the family.
     tier2:
-      - {name: max_iter, page: null}
-      - {name: fit_intercept, page: null}
+    - name: max_iter
+      page: null
+      controls: Maximum solver iterations.
+      effect: A larger limit allows more time to converge, but costs runtime; reaching the limit may leave the fit
+        unfinished.
+    - name: fit_intercept
+      page: null
+      controls: Whether to add an intercept to the linear predictor.
+      effect: Turning it off assumes the response relation is already centered on the chosen link scale.
     tier3:
-      - {name: tol, page: null}
-  watch_it_work: {none: true}
+    - name: tol
+      page: null
+      controls: Convergence tolerance for the optimizer.
+      effect: A smaller tolerance asks for a more precise fit and can take longer.
+  watch_it_work:
+    none: true
   intuition:
     idea: Model amounts that are often exactly zero, with one power setting.
     analogy: Like a shop's daily takings, where many days are zero and the rest vary.
     animation: none
-    good_at: [many exact zeros, skewed amounts, total spend]
-    bad_at: [pure counts, negative targets, need p-values]
+    good_at:
+    - many exact zeros
+    - skewed amounts
+    - total spend
+    bad_at:
+    - pure counts
+    - negative targets
+    - need p-values
     vs_siblings:
-      - {page: gamma-regressor, note: "Strictly positive amounts only. No exact zeros."}
-      - {page: poisson-regression, note: "Whole counts. Tweedie allows non-whole amounts."}
-      - {page: glm, note: "Statsmodels Tweedie family, with p-values."}
+    - page: gamma-regressor
+      note: Strictly positive amounts only. No exact zeros.
+    - page: poisson-regression
+      note: Whole counts. Tweedie allows non-whole amounts.
+    - page: glm
+      note: Statsmodels Tweedie family, with p-values.
     read_more:
-      - Power 1.5 allows exact zeros. Power 2 does not.
-      - Log keeps predictions above zero.
-      - Read coefficients as multipliers when the link is log.
-  next: [but-count-zeros]
+    - Power p sets Var(Y|X)=phi*mu^p.
+    - p=0 is Normal, p=1 is Poisson, and 1<p<2 is compound Poisson-Gamma.
+    - At 1<p<2, responses can be exactly zero or positive continuous amounts.
+    - p=2 is Gamma and requires positive responses; p=3 is Inverse Gaussian.
+    - No distribution exists for 0<p<1; auto uses log link for p>0.
+    goal: Choose a Tweedie variance power that matches the response distribution and its mean-variance relationship.
+    steps:
+    - 'Choose power p from the response process: p=1 is Poisson, 1<p<2 is compound Poisson-Gamma, and p=2 is Gamma.'
+    - Set or accept the link; auto uses identity for p<=0 and log for p>0.
+    - Fit the GLM with an L2 penalty on coefficients.
+    - Interpret predictions on the response scale after applying the inverse link; with log link they are positive
+      means.
+    math:
+      notation:
+      - symbol: Y_i
+        meaning: Response for row i.
+      - symbol: mu_i
+        meaning: Conditional mean response.
+      - symbol: phi
+        meaning: Positive dispersion scale.
+      - symbol: p
+        meaning: Tweedie power selecting the variance function and distribution.
+      - symbol: eta_i
+        meaning: Linear predictor intercept_ + x_i dot coef_.
+      equations:
+      - expression: Var(Y_i|x_i)=phi*mu_i^p; log(mu_i)=eta_i when link="log"
+        meaning: Power controls variance; 1<p<2 gives a point mass at zero and positive continuous outcomes.
+      prediction: With the log link, predict mu_i=exp(eta_i), a positive mean; an observed target may still be exactly
+        zero.
+  next:
+  - but-count-zeros

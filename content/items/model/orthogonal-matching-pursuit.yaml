@@ -1,105 +1,223 @@
 id: orthogonal-matching-pursuit
 plain_name: OrthogonalMatchingPursuit
 code_name: OrthogonalMatchingPursuit
-aliases: [omp, orthogonal matching pursuit]
+aliases:
+- omp
+- orthogonal matching pursuit
 stage: model
 family: model.linear.sparse
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [exact feature count, keep k features, fixed feature count]
-targets: [sklearn.linear_model.OrthogonalMatchingPursuit]
+question_tags:
+- exact feature count
+- keep k features
+- fixed feature count
+targets:
+- sklearn.linear_model.OrthogonalMatchingPursuit
 pairs_with: []
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.OrthogonalMatchingPursuit.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.OrthogonalMatchingPursuit.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [regression]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: ames, shape: fit_line}
+    hero:
+      kind: model
+      dataset: ames
+      shape: fit_line
     line: A line built from at most k features.
-  quick_facts: {none: true}
+  quick_facts:
+    none: true
   use_avoid:
-    use_when: [exact feature count, keep k features]
-    avoid_when: [classification targets, keep every feature]
+    use_when:
+    - exact feature count
+    - keep k features
+    avoid_when:
+    - classification targets
+    - keep every feature
   prep:
-    - step: {family: clean.impute}
-      status: required
-      why: Scikit-learn rejects NaN in X.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Text categories must become numbers.
-      condition: {has_categoricals: true}
-      unless: null
-    - step: {family: transform.scale.rescale}
-      status: required
-      why: Units decide which columns are picked first.
-      condition: null
-      unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Scikit-learn rejects NaN in X.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Text categories must become numbers.
+    condition:
+      has_categoricals: true
+    unless: null
+  - step:
+      family: transform.scale.rescale
+    status: required
+    why: Units decide which columns are picked first.
+    condition: null
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.linear_model.OrthogonalMatchingPursuit
-      why_this_library: Built into scikit-learn. You choose k or a tolerance.
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import load_diabetes
-        from sklearn.linear_model import OrthogonalMatchingPursuit
-        from sklearn.model_selection import train_test_split
-        from sklearn.pipeline import make_pipeline
-        from sklearn.preprocessing import StandardScaler
+  - library: scikit-learn
+    target: sklearn.linear_model.OrthogonalMatchingPursuit
+    why_this_library: Built into scikit-learn. You choose k or a tolerance.
+    snippet: "# scikit-learn 1.9.1\nfrom sklearn.datasets import load_diabetes\nfrom sklearn.linear_model import\
+      \ OrthogonalMatchingPursuit\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.pipeline import\
+      \ make_pipeline\nfrom sklearn.preprocessing import StandardScaler\n\nX, y = load_diabetes(return_X_y=True)\n\
+      X_train, X_test, y_train, y_test = train_test_split(\n    X, y, random_state=0\n)\n\nmodel = make_pipeline(\n\
+      \    StandardScaler(),\n    OrthogonalMatchingPursuit(n_nonzero_coefs=3),\n)\nmodel.fit(X_train, y_train)\n\
+      print(int((model[-1].coef_ != 0).sum()))\ny_pred = model.predict(X_test[:5])\nprint('y_pred:', ', '.join(f'{v:.1f}'\
+      \ for v in y_pred))\n"
+    output: '3
 
-        X, y = load_diabetes(return_X_y=True)
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, random_state=0
-        )
+      y_pred: 241.6, 237.8, 156.3, 111.1, 165.3
 
-        model = make_pipeline(
-            StandardScaler(),
-            OrthogonalMatchingPursuit(n_nonzero_coefs=3),
-        )
-        model.fit(X_train, y_train)
-        print(int((model[-1].coef_ != 0).sum()))
+      '
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: null, shape: "(n_samples,)", note: "One predicted value per row."}
-      - {name: score, kind: method, task: null, shape: float, note: "R squared on the data you pass in."}
-      - {name: coef_, kind: attribute, task: null, shape: "(n_features,)", note: "One weight per input column. Zero means not picked."}
-      - {name: intercept_, kind: attribute, task: null, shape: float, note: "Intercept of the fitted line."}
-      - {name: n_nonzero_coefs_, kind: attribute, task: null, shape: "int or None", note: "The k used, or None when tol is set."}
-      - {name: n_iter_, kind: attribute, task: null, shape: "int or array-like", note: "Steps the greedy search took."}
-    next_step: Try a few k values and compare scores on held-out data.
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples,)
+      note: One predicted value per row.
+      object_type: numpy.ndarray
+      example: '[146.2, 92.1, 155.8]'
+      shape_explanation: One value is returned for each input row. n_samples is the number of rows; this example
+        has 3 values, so its shape is (3,).
+    - name: score
+      kind: method
+      task: regression
+      shape: scalar
+      note: R squared on the data you pass in.
+      object_type: float
+      example: '0.72'
+      shape_explanation: A scalar is one value with no array dimensions. The example is one R-squared score.
+    - name: coef_
+      kind: attribute
+      task: null
+      shape: (n_features,)
+      note: One weight per input column. Zero means not picked.
+      object_type: numpy.ndarray
+      example: '[0.0, 12.4, -3.1]'
+      shape_explanation: A one-dimensional array with one coefficient per feature. n_features is the number of input
+        columns; this example has 3 values, shape (3,).
+    - name: intercept_
+      kind: attribute
+      task: null
+      shape: scalar
+      note: Intercept of the fitted line.
+      object_type: float
+      example: '152.0'
+      shape_explanation: A scalar is one fitted intercept value, with no array dimensions.
+    - name: n_nonzero_coefs_
+      kind: attribute
+      task: null
+      shape: scalar
+      note: The k used, or None when tol is set.
+      object_type: int
+      example: '3'
+      shape_explanation: A scalar integer gives the effective requested feature count; it has no array dimensions.
+    - name: n_iter_
+      kind: attribute
+      task: null
+      shape: scalar
+      note: Steps the greedy search took.
+      object_type: int
+      example: '12'
+      shape_explanation: A scalar integer is the iteration count for this single-target fit, with no array dimensions.
     visual: null
+    snippet: "# scikit-learn 1.9.1\nfrom sklearn.datasets import load_diabetes\nfrom sklearn.linear_model import\
+      \ OrthogonalMatchingPursuit\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.pipeline import\
+      \ make_pipeline\nfrom sklearn.preprocessing import StandardScaler\nimport numpy as np\n\nX, y = load_diabetes(return_X_y=True)\n\
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)\nmodel = make_pipeline(\n    StandardScaler(),\
+      \ OrthogonalMatchingPursuit(n_nonzero_coefs=3)\n)\nmodel.fit(X_train, y_train)\ny_pred = model.predict(X_test[:3])\n\
+      print('y_pred:', np.round(y_pred, 1))\nprint('coef_:', np.round(\n    model[-1].coef_, 3\n))\n"
+    snippet_library: scikit-learn
+    guidance:
+    - task: regression
+      text: Use y_pred for regression metrics on held-out rows. Compare the selected features and residuals before
+        interpreting the fit.
+    output: "y_pred: [241.6 237.8 156.3]\ncoef_: [  0.      0.     35.963   0.    -11.359   0.      0.      0. \
+      \    36.107\n   0.   ]\n"
+    next_step: null
   catch_outs:
-    - Setting tol overrides n_nonzero_coefs.
-    - Scale the columns first, or big units get picked first.
-    - Missing values stop the fit. Impute them first.
+  - Setting tol overrides n_nonzero_coefs.
+  - Scale the columns first, or big units get picked first.
+  - Missing values stop the fit. Impute them first.
   key_settings:
     tier1:
-      - {name: n_nonzero_coefs, page: null}
-      - {name: tol, page: null}
+    - name: n_nonzero_coefs
+      page: null
+      controls: Target or maximum number of non-zero coefficients along the LARS path, or chosen by OMP.
+      effect: A larger number allows more features into the fit and can capture detail but also noise.
+    - name: tol
+      page: null
+      controls: Maximum squared residual norm used as OMP stopping rule; it overrides n_nonzero_coefs.
+      effect: A larger threshold stops earlier with fewer selected features; it may leave more residual error.
     tier2:
-      - {name: fit_intercept, page: null}
+    - name: fit_intercept
+      page: null
+      controls: Whether to estimate an intercept; False assumes the data are already centered.
+      effect: Turning it off avoids estimating a baseline, but biases predictions if the data are not centered.
     tier3:
-      - {name: precompute, page: null}
-  watch_it_work: {none: true}
+    - name: precompute
+      page: null
+      controls: Whether to use a Gram matrix (and for OMP, Xy) to speed fitting.
+      effect: Precomputation can speed suitable dense or large-target problems, but uses extra memory.
+  watch_it_work:
+    none: true
   intuition:
     idea: Pick the feature that best explains what is left, k times.
     analogy: Packing a bag by taking, each time, the item that fits the gap best.
     animation: none
-    good_at: [exact feature count, few features]
-    bad_at: [classification, many features to keep]
+    good_at:
+    - exact feature count
+    - few features
+    bad_at:
+    - classification
+    - many features to keep
     vs_siblings:
-      - {page: lasso, note: "Lasso sets a penalty. OMP sets a feature count."}
-      - {page: lars, note: "Lars builds a full path. OMP stops at k features."}
+    - page: lasso
+      note: Lasso sets a penalty. OMP sets a feature count.
+    - page: lars
+      note: Lars builds a full path. OMP stops at k features.
     read_more:
-      - Start with the residual equal to y.
-      - Add the feature most correlated with the residual.
-      - Refit on all chosen features, then repeat until k.
-  next: [know-feature-importance]
+    - Start with the residual equal to y.
+    - Add the feature most correlated with the residual.
+    - Refit on all chosen features, then repeat until k.
+    goal: Greedily select features and refit least squares until k or the residual tolerance stops the fit.
+    steps:
+    - Start with an empty selected-feature set and residual y (after intercept handling).
+    - Select the feature most correlated with the current residual.
+    - Refit least squares jointly on all selected features and recompute the residual.
+    - Repeat until n_nonzero_coefs is reached or tol residual norm is met.
+    math:
+      notation:
+      - symbol: X, y
+        meaning: Training feature matrix and target vector.
+      - symbol: A
+        meaning: Set of selected feature indices.
+      - symbol: r = y - X_A w_A
+        meaning: Residual after fitting selected columns.
+      - symbol: k
+        meaning: Maximum number of selected coefficients when tol is unset.
+      equations:
+      - expression: j_next = argmax_{j not in A} |X_j^T r|
+        meaning: OMP greedily adds the feature most correlated with what the current fit leaves unexplained.
+      - expression: w_A = argmin_v ||y - X_A v||_2^2
+        meaning: After each addition, OMP refits least squares jointly on all selected features; it stops at k or
+          the residual tolerance.
+      prediction: For a new feature row x, return b + sum_j x_j w_j.
+  next:
+  - know-feature-importance

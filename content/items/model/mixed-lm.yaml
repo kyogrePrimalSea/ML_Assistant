@@ -1,101 +1,288 @@
 id: mixed-lm
 plain_name: MixedLM
 code_name: MixedLM
-aliases: [mixed effects, multilevel model, linear mixed model]
+aliases:
+- mixed effects
+- multilevel model
+- linear mixed model
 stage: model
 family: model.linear.mixed
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [grouped rows, group baselines, hierarchical data]
-targets: [statsmodels.regression.mixed_linear_model.MixedLM]
+question_tags:
+- grouped rows
+- group baselines
+- hierarchical data
+targets:
+- statsmodels.regression.mixed_linear_model.MixedLM
 pairs_with: []
 clashes: []
-source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.regression.mixed_linear_model.MixedLM.html']
-library_versions: {statsmodels: 0.15.0}
+source_urls:
+- https://www.statsmodels.org/stable/generated/statsmodels.regression.mixed_linear_model.MixedLM.html
+- https://www.statsmodels.org/stable/generated/statsmodels.regression.mixed_linear_model.MixedLMResults.html
+library_versions:
+  statsmodels: 0.15.0
 reviewed: false
 rules:
-  task_types: [regression]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: ames, shape: fit_line}
+    hero:
+      kind: model
+      dataset: ames
+      shape: fit_line
     line: A straight line with a separate baseline for each group.
-  quick_facts: {none: true}
+  quick_facts:
+    none: true
   use_avoid:
-    use_when: [rows come in groups, each group needs a baseline]
-    avoid_when: [groups not labelled, rows are independent]
+    use_when:
+    - rows come in groups
+    - each group needs a baseline
+    avoid_when:
+    - groups not labelled
+    - rows are independent
   prep:
-    - step: {family: clean.impute}
-      status: required
-      why: Statsmodels rejects NaN in the inputs.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Text categories must become numbers.
-      condition: {has_categoricals: true}
-      unless: null
-    - step: {family: transform.scale.rescale}
-      status: not_needed
-      why: Fixed effects are unchanged by scaling.
-      condition: null
-      unless: null
-    - step: {page: train-test-split}
-      status: recommended
-      why: Keep each group whole when splitting.
-      condition: null
-      unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Statsmodels rejects NaN in the inputs.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Text categories must become numbers.
+    condition:
+      has_categoricals: true
+    unless: null
+  - step:
+      family: transform.scale.rescale
+    status: not_needed
+    why: Fixed effects are unchanged by scaling.
+    condition: null
+    unless: null
+  - step:
+      page: train-test-split
+    status: recommended
+    why: Keep each group whole when splitting.
+    condition: null
+    unless: null
   code:
-    - library: statsmodels
-      target: statsmodels.regression.mixed_linear_model.MixedLM
-      why_this_library: Random effects by group, built in.
-      snippet: |
-        # statsmodels 0.15.0
-        import numpy as np
-        import statsmodels.api as sm
-        from sklearn.datasets import make_regression
+  - library: statsmodels
+    target: statsmodels.regression.mixed_linear_model.MixedLM
+    why_this_library: Random effects by group, built in.
+    snippet: '# statsmodels 0.15.0
 
-        X, y = make_regression(n_samples=200, n_features=2, noise=10, random_state=0)
-        rng = np.random.default_rng(0)
-        groups = np.repeat(np.arange(20), 10)
-        y = y + rng.normal(0, 5, size=20)[groups]
-        results = sm.MixedLM(y, sm.add_constant(X), groups=groups).fit()
-        print(results.params.round(2))
+      import numpy as np
+
+      import statsmodels.api as sm
+
+      from sklearn.datasets import make_regression
+
+
+      X, y = make_regression(n_samples=200, n_features=2, noise=10, random_state=0)
+
+      rng = np.random.default_rng(0)
+
+      groups = np.repeat(np.arange(20), 10)
+
+      y = y + rng.normal(0, 5, size=20)[groups]
+
+      results = sm.MixedLM(y, sm.add_constant(X), groups=groups).fit()
+
+      y_pred = results.predict(sm.add_constant(X[:3]))
+
+      print("population y_pred:", y_pred.round(1))
+
+      print("params (fixed + variance):", results.params.round(2))
+
+      print("group 0 random effect:", results.random_effects[0].round(2).to_dict())
+
+      print("training fitted values:", results.fittedvalues[:3].round(1))
+
+      '
+    output: 'population y_pred: [-33.5   1.6  36.1]
+
+      params (fixed + variance): [-1.95 20.62 34.07  0.24]
+
+      group 0 random effect: {''Group Var'': -1.5}
+
+      training fitted values: [-34.9   0.1  34.6]
+
+      '
   what_comes_out:
     items:
-    - {name: predict, kind: method, task: regression, shape: "(n_samples,)", note: Predicted values from a design matrix.}
-    - {name: get_fe_params, kind: method, task: null, shape: "(n_features,)", note: "Fixed-effect estimates, found by GLS."}
-    - {name: get_scale, kind: method, task: null, shape: float, note: Estimated error variance from the fit.}
-    next_step: Group labels must line up with the rows, or the fit is wrong.
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[-33.5, 1.6, 36.1]'
+      shape_explanation: One population-level mean per supplied design row. n_samples is the number of
+        rows; this example has shape (3,).
+      note: 'MixedLMResults method: fixed-effects population means; random effects are omitted.'
+    - name: params
+      kind: return
+      task: null
+      shape: (n_parameters,)
+      object_type: numpy.ndarray
+      example: '[-1.95, 20.62, 34.07, 0.24]'
+      shape_explanation: A one-dimensional packed parameter vector. n_parameters includes k_fe fixed coefficients
+        plus variance parameters; the example has 3 fixed effects and 1 variance parameter, shape (4,).
+      note: 'After fit(), read results.params: fixed effects followed by profiled variance parameters.'
+    - name: fittedvalues
+      kind: return
+      task: regression
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[-34.9, 0.1, 34.6]'
+      shape_explanation: One conditional fitted mean per training row. n_samples is the number of training
+        observations; the example has shape (3,).
+      note: After fit(), read results.fittedvalues for training means including group effects.
+    - name: random_effects
+      kind: return
+      task: null
+      shape: mapping by group
+      object_type: dict[int, pandas.Series]
+      example: '{0: {"Group Var": -1.50}}'
+      shape_explanation: A mapping keyed by group, not a rectangular numeric array. This example shows
+        one group and its random-intercept estimate.
+      note: After fit(), read results.random_effects for group-keyed estimated random effects.
+    next_step: null
     visual: regression_preds
+    guidance:
+    - task: regression
+      text: Keep group labels aligned with design rows; population predictions and group conditional predictions
+        answer different questions.
+    snippet: '# statsmodels 0.15.0
+
+      import numpy as np
+
+      import statsmodels.api as sm
+
+      from sklearn.datasets import make_regression
+
+
+      X, y = make_regression(n_samples=200, n_features=2, noise=10, random_state=0)
+
+      rng = np.random.default_rng(0)
+
+      groups = np.repeat(np.arange(20), 10)
+
+      y = y + rng.normal(0, 5, size=20)[groups]
+
+      results = sm.MixedLM(y, sm.add_constant(X), groups=groups).fit()
+
+      y_pred = results.predict(sm.add_constant(X[:3]))
+
+      print("population y_pred:", y_pred.round(1))
+
+      print("params (fixed + variance):", results.params.round(2))
+
+      print("group 0 random effect:", results.random_effects[0].round(2).to_dict())
+
+      print("training fitted values:", results.fittedvalues[:3].round(1))
+
+      '
+    snippet_library: statsmodels
+    output: 'population y_pred: [-33.5   1.6  36.1]
+
+      params (fixed + variance): [-1.95 20.62 34.07  0.24]
+
+      group 0 random effect: {''Group Var'': -1.5}
+
+      training fitted values: [-34.9   0.1  34.6]
+
+      '
   catch_outs:
-    - The last parameter is the group variance, not a slope.
-    - The fit can fail to converge. Read the warnings.
-    - Missing values stop the fit. Impute them first.
+  - The last parameter is the group variance, not a slope.
+  - The fit can fail to converge. Read the warnings.
+  - Missing values stop the fit. Impute them first.
   key_settings:
     tier1:
-    - {name: groups, page: null}
-    - {name: exog_re, page: null}
+    - name: groups
+      page: null
+      controls: Group membership for every observation.
+      effect: Incorrect or misaligned labels assign observations to the wrong group.
+    - name: exog_re
+      page: null
+      controls: Design columns for random effects; None means a random intercept.
+      effect: Adding random slopes models more group variation but can make fitting harder.
     tier2:
-    - {name: exog_vc, page: null}
-    - {name: use_sqrt, page: null}
+    - name: exog_vc
+      page: null
+      controls: Additional variance-component design structures.
+      effect: More components model richer group structure but increase estimation complexity.
+    - name: use_sqrt
+      page: null
+      controls: Optimise using a square-root covariance parameterisation.
+      effect: The default parameterisation is generally more stable; changing it alters optimisation.
     tier3:
-    - {name: missing, page: null}
-  watch_it_work: {none: true}
+    - name: missing
+      page: null
+      controls: How missing observations are handled.
+      effect: Drop removes affected rows; raise errors; none passes them through.
+  watch_it_work:
+    none: true
   intuition:
     idea: Each group gets its own baseline, with shared effects.
     analogy: Every class has its own starting grade, under the same grading rules.
     animation: none
-    good_at: [rows in groups, group baselines, shared effects]
-    bad_at: [independent rows, unlabelled groups]
+    good_at:
+    - rows in groups
+    - group baselines
+    - shared effects
+    bad_at:
+    - independent rows
+    - unlabelled groups
     vs_siblings:
-      - {page: linear-regression, note: "Same line, but it ignores the groups."}
-      - {page: gls, note: "Links errors by a stated structure, not by group."}
+    - page: linear-regression
+      note: Same line, but it ignores the groups.
+    - page: gls
+      note: Links errors by a stated structure, not by group.
     read_more:
-      - Each group gets its own intercept.
-      - Shared slopes apply to every group.
-      - The group variance says how far the groups spread.
+    - Each group gets its own intercept.
+    - Shared slopes apply to every group.
+    - The group variance says how far the groups spread.
+    goal: Groups share fixed slopes while random effects model group-level deviations; group labels and
+      design alignment matter.
+    steps:
+    - Build the fixed-effect design for shared slopes and a random-effect design within groups
+    - Estimate fixed coefficients, random-effect covariance, and residual variance jointly by likelihood
+      or REML
+    - Predict the fixed part for new rows; group-specific predictions require the relevant random effects.
+    math:
+      notation:
+      - symbol: i
+        meaning: Observation index.
+      - symbol: x_i
+        meaning: Feature vector for observation i.
+      - symbol: y_i
+        meaning: Observed target for observation i.
+      - symbol: β
+        meaning: Shared fixed-effect coefficients.
+      - symbol: ε_i
+        meaning: Observation-level error.
+      - symbol: g
+        meaning: Group index.
+      - symbol: z_ig
+        meaning: Random-effect features for observation i in group g.
+      - symbol: u_g
+        meaning: Random effect for group g.
+      - symbol: G
+        meaning: Random-effect covariance matrix.
+      equations:
+      - expression: y_ig = x_igᵀβ + z_igᵀu_g + ε_ig;  u_g ~ N(0,G)
+        meaning: Fixed effects are shared; random effects and residuals model group variation.
+      prediction: predict(exog) returns fixed-effect means per row; fittedvalues adds estimated group
+        effects on training rows.
   next: []

@@ -1,118 +1,260 @@
 id: negative-binomial-regression
 plain_name: NegativeBinomial
 code_name: NegativeBinomial
-aliases: [negative binomial, nb2]
+aliases:
+- negative binomial
+- nb2
 stage: model
 family: model.awkward.glm
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [overdispersed counts, count target, p-values]
-targets: [statsmodels.discrete.discrete_model.NegativeBinomial]
+question_tags:
+- overdispersed counts
+- count target
+- p-values
+targets:
+- statsmodels.discrete.discrete_model.NegativeBinomial
 pairs_with: []
 clashes: []
-source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.discrete.discrete_model.NegativeBinomial.html']
-library_versions: {statsmodels: 0.15.0}
+source_urls:
+- https://www.statsmodels.org/stable/generated/statsmodels.discrete.discrete_model.NegativeBinomial.html
+library_versions:
+  statsmodels: 0.15.0
 reviewed: false
 rules:
-  task_types: [regression]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: airline-passengers, shape: fit_line}
+    hero:
+      kind: model
+      dataset: airline-passengers
+      shape: fit_line
     line: A line for counts that spread wider than Poisson allows.
   quick_facts:
     data_size: Fits in memory
   use_avoid:
-    use_when: [count target, counts spread wide, need p-values]
-    avoid_when: [continuous target, text or images, only predictions needed]
+    use_when:
+    - count target
+    - counts spread wide
+    - need p-values
+    avoid_when:
+    - continuous target
+    - text or images
+    - only predictions needed
   prep:
-    - step: {family: transform.scale.rescale}
-      status: not_needed
-      why: "Unpenalised fit: scaling changes units, not the results."
-      condition: null
-      unless: null
-    - step: {family: clean.impute}
-      status: required
-      why: NaN raises an error. Drop or impute first.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Text categories must become numbers.
-      condition: {has_categoricals: true}
-      unless: null
+  - step:
+      family: transform.scale.rescale
+    status: not_needed
+    why: 'Unpenalised fit: scaling changes units, not the results.'
+    condition: null
+    unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: NaN raises an error. Drop or impute first.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Text categories must become numbers.
+    condition:
+      has_categoricals: true
+    unless: null
   code:
-    - library: statsmodels
-      target: statsmodels.discrete.discrete_model.NegativeBinomial
-      why_this_library: Estimates the extra spread, alpha, from the data.
-      snippet: |
-        # statsmodels 0.15.0
-        import numpy as np
-        import statsmodels.api as sm
-        from sklearn.datasets import make_regression
+  - library: statsmodels
+    target: statsmodels.discrete.discrete_model.NegativeBinomial
+    why_this_library: Estimates the extra spread, alpha, from the data.
+    snippet: '# statsmodels 0.15.0
 
-        X, _ = make_regression(n_samples=500, n_features=3, random_state=0)
-        rate = np.exp(0.5 * X[:, 0] - 0.3 * X[:, 1])
-        rng = np.random.default_rng(0)
-        counts = rng.negative_binomial(n=2, p=2 / (2 + rate))
-        model = sm.NegativeBinomial(counts, sm.add_constant(X))
-        result = model.fit(disp=False)
-        print(result.params.round(3))  # last value is alpha
-  what_comes_out:
-    items:
-      - {name: fit, kind: method, task: regression, shape: results object,
-         note: "Holds params, with alpha as the last one."}
-      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
-         note: "Predicted mean count per row."}
-      - {name: endog, kind: attribute, task: null, shape: "(n_samples,)",
-         note: "The counts the model was fit on."}
-      - {name: exog, kind: attribute, task: null, shape: "(n_samples, n_features)",
-         note: "The design matrix, with the constant if added."}
-    next_step: A dispersion near zero means Poisson would fit as well.
-    snippet: |
-      # statsmodels 0.15.0
       import numpy as np
+
       import statsmodels.api as sm
+
       from sklearn.datasets import make_regression
 
+
       X, _ = make_regression(n_samples=500, n_features=3, random_state=0)
-      rate = np.exp(0.5 * X[:, 0] - 0.3 * X[:, 1])
+
+      mu = np.exp(0.5 * X[:, 0] - 0.3 * X[:, 1])
+
       rng = np.random.default_rng(0)
-      counts = rng.negative_binomial(n=2, p=2 / (2 + rate))
+
+      y = rng.negative_binomial(n=2, p=2 / (2 + mu))
+
       Xc = sm.add_constant(X)
-      result = sm.NegativeBinomial(counts, Xc).fit(disp=False)
-      print(result.params.round(3))
-      print(result.predict(Xc).shape)
+
+      result = sm.NegativeBinomial(y, Xc, loglike_method="nb2").fit(disp=False)
+
+      y_pred = result.predict(Xc[:5])
+
+      print("y_pred:", np.round(y_pred, 2))
+
+      print("params:", np.round(result.params, 3))
+
+      '
+    output: 'y_pred: [1.53 0.58 1.35 0.29 1.8 ]
+
+      params: [-0.076  0.554 -0.231 -0.016  0.369]
+
+      '
+  what_comes_out:
+    items:
+    - name: fit
+      kind: method
+      task: regression
+      shape: results object
+      object_type: NegativeBinomialResultsWrapper
+      example: NegativeBinomialResultsWrapper with fitted parameters
+      shape_explanation: fit returns this results wrapper; it owns coefficient estimates, inference, and prediction
+        methods.
+      note: result owns the fitted coefficients, inference, and prediction methods.
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[1.2, 2.4, 0.8]'
+      shape_explanation: One response mean per input row. n_samples is the number of rows; this example has 3 predictions,
+        shape (3,).
+      note: Default log link exponentiates the predictor to a positive expected count.
+    - name: params
+      kind: return
+      task: null
+      shape: (n_parameters,)
+      object_type: numpy.ndarray
+      example: '[0.1, 0.5, -0.3, 0.0, 0.4]'
+      shape_explanation: Four design coefficients plus one dispersion value make 5 parameters in this example.
+      note: result.params ends with estimated NB2 alpha; it is not a feature coefficient.
+    - name: pvalues
+      kind: return
+      task: null
+      shape: (n_parameters,)
+      object_type: numpy.ndarray
+      example: '[0.8, 0.01, 0.04, 0.7, 0.02]'
+      shape_explanation: One p-value per fitted parameter, including estimated alpha; 5 values are shown.
+      note: result.pvalues matches result.params, including the final alpha dispersion estimate.
+    snippet: '# statsmodels 0.15.0
+
+      import numpy as np
+
+      import statsmodels.api as sm
+
+      from sklearn.datasets import make_regression
+
+      X, _ = make_regression(n_samples=200, n_features=3, random_state=0)
+
+      mu = np.exp(0.5 * X[:, 0] - 0.3 * X[:, 1])
+
+      y = np.random.default_rng(0).negative_binomial(2, 2 / (2 + mu))
+
+      Xc = sm.add_constant(X)
+
+      result = sm.NegativeBinomial(y, Xc, loglike_method="nb2").fit(disp=False)
+
+      y_pred = result.predict(Xc[:3])
+
+      print("y_pred:", y_pred.round(2))
+
+      print("params:", result.params.round(3))
+
+      print("pvalues:", result.pvalues.round(3))
+
+      '
     snippet_library: statsmodels
     visual: regression_preds
+    next_step: null
+    guidance:
+    - task: regression
+      text: Use predicted means for count forecasts. The response is a non-negative integer; NB2 variance is mu
+        + alpha*mu^2, so it allows more spread than Poisson.
+    output: 'y_pred: [0.47 1.19 0.87]
+
+      params: [ 0.064  0.495 -0.275 -0.019  0.32 ]
+
+      pvalues: [0.438 0.    0.001 0.8   0.013]
+
+      '
   catch_outs:
-    - The last parameter is alpha, the extra spread. It is not a coefficient.
-    - Add a constant with sm.add_constant, or there is no intercept.
-    - NaN raises an error. Drop or impute before fitting.
+  - The last parameter is alpha, the extra spread. It is not a coefficient.
+  - Add a constant with sm.add_constant, or there is no intercept.
+  - NaN raises an error. Drop or impute before fitting.
   key_settings:
     tier1:
-      - {name: loglike_method, page: null}
+    - name: loglike_method
+      page: null
+      controls: 'Negative-binomial variance parameterization: nb2, nb1, or geometric.'
+      effect: The choice changes how variance grows with the mean; nb2 uses mu + alpha*mu^2.
     tier2:
-      - {name: offset, page: null}
-      - {name: exposure, page: null}
-      - {name: missing, page: null}
+    - name: offset
+      page: null
+      controls: Known row-level term added to the linear predictor with coefficient fixed at 1 (statsmodels).
+      effect: Use only a known additive contribution; it shifts predictions without estimating a coefficient.
+    - name: exposure
+      page: null
+      controls: Known positive exposure; statsmodels adds log(exposure) to a log-link predictor with coefficient
+        1.
+      effect: Predictions scale with exposure; only valid with a log link.
+    - name: missing
+      page: null
+      controls: 'Statsmodels policy for missing data: none, drop, or raise.'
+      effect: Drop changes the fitted rows; raise catches missing values; none skips checking.
     tier3:
-      - {name: check_rank, page: null}
-  watch_it_work: {none: true}
+    - name: check_rank
+      page: null
+      controls: Whether statsmodels checks the design matrix rank at initialization.
+      effect: Disabling may speed very wide problems, but leaves rank/degree-of-freedom checks to you.
+  watch_it_work:
+    none: true
   intuition:
     idea: Counts whose spread can grow faster than the mean, using one extra number.
     analogy: Like daily sales that swing more than a steady count would.
     animation: none
-    good_at: [overdispersed counts, count targets, p-values]
-    bad_at: [continuous targets, text or images, only predictions needed]
+    good_at:
+    - overdispersed counts
+    - count targets
+    - p-values
+    bad_at:
+    - continuous targets
+    - text or images
+    - only predictions needed
     vs_siblings:
-      - {page: poisson-regression, note: "Same counts. Poisson spread equals the mean."}
-      - {page: glm, note: "GLM uses alpha 1 unless you set it. This page estimates it."}
+    - page: poisson-regression
+      note: Same counts. Poisson spread equals the mean.
+    - page: glm
+      note: GLM uses alpha 1 unless you set it. This page estimates it.
     read_more:
-      - Start with a Poisson fit as a baseline.
-      - Estimate the extra spread, alpha, from the data.
-      - If alpha is near zero, Poisson was enough.
-  next: [but-pvalues]
+    - Start with a Poisson fit as a baseline.
+    - Estimate the extra spread, alpha, from the data.
+    - If alpha is near zero, Poisson was enough.
+    goal: Fit integer counts with an estimated dispersion parameter when variance grows faster than the mean.
+    steps:
+    - Supply non-negative integer counts and a design matrix; add a constant if an intercept is wanted.
+    - Choose loglike_method to select the variance parameterization; nb2 is the default.
+    - Estimate regression coefficients and the extra dispersion parameter jointly by maximum likelihood.
+    - Predict the conditional mean on the response scale; inspect alpha and diagnostics for excess spread.
+    math:
+      notation:
+      - symbol: Y_i
+        meaning: Observed non-negative count for row i.
+      - symbol: mu_i
+        meaning: Expected count for row i.
+      - symbol: alpha
+        meaning: Estimated non-negative overdispersion parameter.
+      - symbol: eta_i
+        meaning: Linear predictor x_i dot beta, including an intercept if supplied.
+      equations:
+      - expression: log(mu_i) = eta_i; Var(Y_i|x_i) = mu_i + alpha*mu_i^2 (NB2)
+        meaning: Family defines response support and variance; the link maps the mean to the linear predictor.
+      prediction: result.predict(Xc) returns the positive conditional count mean; NB2 variance is mu + alpha*mu^2.
+  next:
+  - but-pvalues

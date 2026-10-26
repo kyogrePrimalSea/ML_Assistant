@@ -1,96 +1,231 @@
 id: nu-svr
 plain_name: NuSVR
 code_name: NuSVR
-aliases: ["nu support vector regression", "nusvr"]
+aliases:
+- nu support vector regression
+- nusvr
 stage: model
 family: model.neighbours.kernel
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: ["curved trends", "support vectors", "small data"]
-targets: ["sklearn.svm.NuSVR"]
+question_tags:
+- curved trends
+- support vectors
+- small data
+targets:
+- sklearn.svm.NuSVR
 pairs_with: []
 clashes: []
-source_urls: ["https://scikit-learn.org/stable/modules/generated/sklearn.svm.NuSVR.html"]
-library_versions: {scikit-learn: "1.9.1"}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.svm.NuSVR.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: ["regression"]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: ames, shape: fit_line}
-    line: "SVR where nu sets the share of support vectors."
+    hero:
+      kind: model
+      dataset: ames
+      shape: fit_line
+    line: Fit a kernel function while nu controls the support-vector share and the tube width.
   quick_facts:
-    data_size: "Small to medium tables"
+    data_size: Small to medium tables
   use_avoid:
-    use_when: ["curved trends", "small to medium data", "support vector control"]
-    avoid_when: ["large data", "images or text", "need a simple formula"]
+    use_when:
+    - curved trends
+    - small to medium data
+    - support vector control
+    avoid_when:
+    - large data
+    - images or text
+    - need a simple formula
   prep: []
   code:
-    - library: scikit-learn
-      target: sklearn.svm.NuSVR
-      why_this_library: "Like SVR; nu replaces epsilon as the main knob."
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import make_friedman1
-        from sklearn.model_selection import train_test_split
-        from sklearn.pipeline import make_pipeline
-        from sklearn.preprocessing import StandardScaler
-        from sklearn.svm import NuSVR
+  - library: scikit-learn
+    target: sklearn.svm.NuSVR
+    why_this_library: Like SVR; nu replaces epsilon as the main knob.
+    snippet: "# scikit-learn 1.9.1\nfrom sklearn.datasets import make_friedman1\nfrom sklearn.model_selection\
+      \ import train_test_split\nfrom sklearn.pipeline import make_pipeline\nfrom sklearn.preprocessing\
+      \ import StandardScaler\nfrom sklearn.svm import NuSVR\n\nX, y = make_friedman1(n_samples=300, noise=0.5,\
+      \ random_state=0)\nX_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)\n\n\
+      model = make_pipeline(\n    StandardScaler(),\n    NuSVR(nu=0.5, C=10),\n)\nmodel.fit(X_train, y_train)\n\
+      y_pred = model.predict(X_test[:3])\nprint(\"y_pred:\", y_pred)\nprint(\"score:\", round(model.score(X_test,\
+      \ y_test), 3))"
+    output: 'y_pred: [13.05178416 13.5562491  19.63175422]
 
-        X, y = make_friedman1(n_samples=300, noise=0.5, random_state=0)
-        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+      score: 0.827
 
-        model = make_pipeline(
-            StandardScaler(),
-            NuSVR(nu=0.5, C=10),
-        )
-        model.fit(X_train, y_train)
-        print(round(model.score(X_test, y_test), 3))
+      '
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
-         note: "One value per row."}
-      - {name: score, kind: method, task: regression, shape: "float",
-         note: "R squared on the data you pass in."}
-      - {name: support_vectors_, kind: attribute, task: null, shape: "(n_SV, n_features)",
-         note: "The rows the model kept as support vectors."}
-      - {name: n_support_, kind: attribute, task: null, shape: "(1,)",
-         note: "Number of support vectors, in a one-item array."}
-    next_step: "Compare with SVR; nu sets the support vector share instead."
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples,)
+      note: One value per row.
+      object_type: numpy.ndarray
+      example: '[0.25, 0.40, 0.65]'
+      shape_explanation: One predicted value per query row; three values give n_samples=3 and shape (3,).
+    - name: score
+      kind: method
+      task: regression
+      shape: scalar
+      note: R² on supplied data; 1 is perfect and 0 matches the mean baseline.
+      object_type: float
+      example: '0.82'
+      shape_explanation: A scalar is one value with no array dimensions; 0.82 is one score.
+    - name: support_vectors_
+      kind: attribute
+      task: null
+      shape: (n_SV, n_features)
+      note: The rows the model kept as support vectors.
+      object_type: numpy.ndarray
+      example: '[[0.2, -0.1], [1.0, 0.4]]'
+      shape_explanation: Rows are support vectors and columns are input features; this example has 2 vectors
+        and 2 features, shape (2, 2).
+    - name: n_support_
+      kind: attribute
+      task: null
+      shape: (1,)
+      note: Number of support vectors, in a one-item array.
+      object_type: numpy.ndarray
+      example: '[12]'
+      shape_explanation: One count for the single regression output; [12] has shape (1,).
+    next_step: Compare with SVR; nu sets the support vector share instead.
     visual: regression_preds
+    snippet: '# scikit-learn 1.9.1
+
+      from sklearn.datasets import make_friedman1
+
+      from sklearn.svm import NuSVR
+
+
+      X, y = make_friedman1(n_samples=100, noise=0.5, random_state=0)
+
+      model = NuSVR(nu=0.5, C=10).fit(X, y)
+
+      y_pred = model.predict(X[:3])
+
+      print("y_pred:", y_pred.round(3))
+
+      print("support_vectors_ shape:", model.support_vectors_.shape)
+
+      print("n_support_:", model.n_support_)
+
+      '
+    snippet_library: scikit-learn
+    output: 'y_pred: [17.163 19.389 15.676]
+
+      support_vectors_ shape: (100, 10)
+
+      n_support_: [100]
+
+      '
   catch_outs:
-    - "There is no epsilon here; nu is the setting to tune."
-    - "coef_ exists only with kernel='linear'."
-    - "On this toy data, C=1 scored 0.55 and C=10 scored 0.83."
+  - There is no epsilon here; nu is the setting to tune.
+  - coef_ exists only with kernel='linear'.
+  - On this toy data, C=1 scored 0.55 and C=10 scored 0.83.
   key_settings:
     tier1:
-      - {name: nu, page: null}
-      - {name: C, page: null}
-      - {name: kernel, page: null}
-      - {name: gamma, page: null}
+    - name: nu
+      page: null
+      controls: Bound on error share and lower bound on support-vector share.
+      effect: Increasing nu permits more errors and requires a larger support-vector fraction.
+    - name: C
+      page: null
+      controls: Penalty strength for errors and margin violations.
+      effect: Larger C fits training rows more closely; smaller C allows more violations for a wider,
+        smoother margin.
+    - name: kernel
+      page: null
+      controls: Similarity function, such as linear, polynomial, or RBF.
+      effect: Nonlinear kernels allow curved boundaries; precomputed expects a kernel matrix.
+    - name: gamma
+      page: null
+      controls: Kernel coefficient for RBF, polynomial, and sigmoid kernels.
+      effect: Larger gamma makes similarity fall off faster and can create more local fits.
     tier2:
-      - {name: degree, page: null}
-      - {name: coef0, page: null}
+    - name: degree
+      page: null
+      controls: Polynomial kernel degree.
+      effect: Higher degree makes the polynomial boundary more flexible.
+    - name: coef0
+      page: null
+      controls: Independent term used by polynomial and sigmoid kernels.
+      effect: It changes how higher-order and lower-order terms trade off.
     tier3:
-      - {name: shrinking, page: null}
-      - {name: max_iter, page: null}
-      - {name: cache_size, page: null}
-      - {name: tol, page: null}
-  watch_it_work: {none: true}
+    - name: shrinking
+      page: null
+      controls: Whether to use the shrinking heuristic during optimization.
+      effect: Can speed optimization; disabling it can help diagnose convergence.
+    - name: max_iter
+      page: null
+      controls: Iteration cap; -1 means no cap.
+      effect: A low cap may stop before convergence.
+    - name: cache_size
+      page: null
+      controls: Kernel cache size in MB.
+      effect: A larger cache can reduce recomputation at a memory cost.
+    - name: tol
+      page: null
+      controls: Optimization stopping tolerance.
+      effect: Smaller tolerance can take longer for a tighter stopping condition.
+  watch_it_work:
+    none: true
   intuition:
-    idea: "Fit a curve where only some rows, the support vectors, set the answer."
-    analogy: "A committee where a few key votes decide the outcome."
+    idea: Fit a curve where only some rows, the support vectors, set the answer.
+    analogy: A committee where a few key votes decide the outcome.
     animation: none
-    good_at: ["curved trends", "small to medium data", "support vector control"]
-    bad_at: ["large data", "images or text", "a simple formula"]
+    good_at:
+    - curved trends
+    - small to medium data
+    - support vector control
+    bad_at:
+    - large data
+    - images or text
+    - a simple formula
     vs_siblings:
-      - {page: svr, note: "SVR sets epsilon, the tube width. NuSVR sets nu."}
-    read_more:
-      - "Start with a kernel that says how alike rows are."
-      - "nu sets the share of support vectors."
-      - "Rows inside the tube cost nothing."
+    - page: svr
+      note: SVR sets epsilon, the tube width. NuSVR sets nu.
+    goal: Fit kernel regression while nu sets a bound on errors and a floor on support-vector share.
+    math:
+      notation:
+      - symbol: φ(x)
+        meaning: feature representation defined by the kernel
+      - symbol: w,b
+        meaning: regression direction and intercept
+      - symbol: ε
+        meaning: tube width learned during fitting
+      - symbol: ξ_i,ξ_i*
+        meaning: positive and negative tube violations
+      - symbol: ν
+        meaning: error-share upper bound and support-vector-share lower bound
+      - symbol: C
+        meaning: penalty multiplier
+      - symbol: α_i,α_i*
+        meaning: dual weights
+      equations:
+      - expression: min ½||w||²+C(ν ε + (1/n)Σ_i(ξ_i+ξ_i*))
+        meaning: Optimize the tube width and penalize violations under nu-SVR.
+      - expression: y_i-(w·φ(x_i)+b)≤ε+ξ_i; (w·φ(x_i)+b)-y_i≤ε+ξ_i*
+        meaning: Slack variables measure residuals outside the learned tube.
+      - expression: f(x)=Σ_{i∈SV}(α_i-α_i*)K(x_i,x)+b
+        meaning: Predict from support-vector similarities and their signed dual weights.
+      prediction: 'nu replaces SVR’s chosen epsilon: fitting learns epsilon while nu bounds errors above
+        and support vectors below.'
+    read_more: &id001
+    - Map rows into the kernel feature space and optimize a tube width.
+    - Use nu to constrain the error share and require enough support vectors.
+    - Penalize tube violations by C and predict from the support-vector kernel expansion.
+    steps: *id001
   next: []

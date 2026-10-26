@@ -1,129 +1,298 @@
 id: glm
 plain_name: GLM (statsmodels)
 code_name: GLM / Gaussian / Poisson / Binomial / Gamma / Tweedie / NegativeBinomial
-aliases: [generalised linear model, statsmodels glm]
+aliases:
+- generalised linear model
+- statsmodels glm
 stage: model
 family: model.awkward.glm
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [p-values, count or amount target, statistical inference]
-targets: [statsmodels.genmod.generalized_linear_model.GLM, statsmodels.genmod.families.family.Gaussian,
-  statsmodels.genmod.families.family.Poisson, statsmodels.genmod.families.family.Binomial, statsmodels.genmod.families.family.Gamma,
-  statsmodels.genmod.families.family.Tweedie, statsmodels.genmod.families.family.NegativeBinomial]
+question_tags:
+- p-values
+- count or amount target
+- statistical inference
+targets:
+- statsmodels.genmod.generalized_linear_model.GLM
+- statsmodels.genmod.families.family.Gaussian
+- statsmodels.genmod.families.family.Poisson
+- statsmodels.genmod.families.family.Binomial
+- statsmodels.genmod.families.family.Gamma
+- statsmodels.genmod.families.family.Tweedie
+- statsmodels.genmod.families.family.NegativeBinomial
 pairs_with: []
 clashes: []
-source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.genmod.generalized_linear_model.GLM.html',
-  'https://www.statsmodels.org/stable/generated/statsmodels.genmod.families.family.Gaussian.html', 'https://www.statsmodels.org/stable/generated/statsmodels.genmod.families.family.Poisson.html',
-  'https://www.statsmodels.org/stable/generated/statsmodels.genmod.families.family.Binomial.html', 'https://www.statsmodels.org/stable/generated/statsmodels.genmod.families.family.Gamma.html',
-  'https://www.statsmodels.org/stable/generated/statsmodels.genmod.families.family.Tweedie.html', 'https://www.statsmodels.org/stable/generated/statsmodels.genmod.families.family.NegativeBinomial.html']
-library_versions: {statsmodels: 0.15.0}
+source_urls:
+- https://www.statsmodels.org/stable/generated/statsmodels.genmod.generalized_linear_model.GLM.html
+- https://www.statsmodels.org/stable/generated/statsmodels.genmod.families.family.Gaussian.html
+- https://www.statsmodels.org/stable/generated/statsmodels.genmod.families.family.Poisson.html
+- https://www.statsmodels.org/stable/generated/statsmodels.genmod.families.family.Binomial.html
+- https://www.statsmodels.org/stable/generated/statsmodels.genmod.families.family.Gamma.html
+- https://www.statsmodels.org/stable/generated/statsmodels.genmod.families.family.Tweedie.html
+- https://www.statsmodels.org/stable/generated/statsmodels.genmod.families.family.NegativeBinomial.html
+library_versions:
+  statsmodels: 0.15.0
 reviewed: false
 rules:
-  task_types: [regression]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: ames, shape: fit_line}
+    hero:
+      kind: model
+      dataset: ames
+      shape: fit_line
     line: A line with p-values, for the distribution you choose.
   quick_facts:
     data_size: Fits in memory
   use_avoid:
-    use_when: [need p-values, count or amount target, statistical inference]
-    avoid_when: [only predictions needed, text or images, data too big for memory]
+    use_when:
+    - need p-values
+    - count or amount target
+    - statistical inference
+    avoid_when:
+    - only predictions needed
+    - text or images
+    - data too big for memory
   prep:
-    - step: {family: transform.scale.rescale}
-      status: not_needed
-      why: "Unpenalised fit: scaling changes units, not the results."
-      condition: null
-      unless: null
-    - step: {family: clean.impute}
-      status: required
-      why: NaN raises an error. Drop or impute first.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Text categories must become numbers.
-      condition: {has_categoricals: true}
-      unless: null
+  - step:
+      family: transform.scale.rescale
+    status: not_needed
+    why: 'Unpenalised fit: scaling changes units, not the results.'
+    condition: null
+    unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: NaN raises an error. Drop or impute first.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Text categories must become numbers.
+    condition:
+      has_categoricals: true
+    unless: null
   code:
-    - library: statsmodels
-      target: statsmodels.genmod.generalized_linear_model.GLM
-      why_this_library: Statsmodels reports p-values, which scikit-learn does not.
-      snippet: |
-        # statsmodels 0.15.0
-        import numpy as np
-        import statsmodels.api as sm
-        from sklearn.datasets import make_regression
+  - library: statsmodels
+    target: statsmodels.genmod.generalized_linear_model.GLM
+    why_this_library: Statsmodels reports p-values, which scikit-learn does not.
+    snippet: '# statsmodels 0.15.0
 
-        X, _ = make_regression(n_samples=500, n_features=3, random_state=0)
-        rate = np.exp(0.5 * X[:, 0] - 0.3 * X[:, 1])
-        counts = np.random.default_rng(0).poisson(rate)
-        model = sm.GLM(counts, sm.add_constant(X),
-                       family=sm.families.Poisson())
-        result = model.fit()
-        print(result.pvalues.round(3))
-  what_comes_out:
-    items:
-      - {name: fit, kind: method, task: regression, shape: results object,
-         note: "Holds params and pvalues, one per column."}
-      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
-         note: "Predicted mean per row. Needs the same columns as fit."}
-      - {name: df_resid, kind: attribute, task: null, shape: float,
-         note: "Rows minus parameters, constant included."}
-      - {name: exog, kind: attribute, task: null, shape: "(n_samples, n_features)",
-         note: "The design matrix the model was fit on."}
-      - {name: endog, kind: attribute, task: null, shape: "(n_samples,)",
-         note: "The target the model was fit on."}
-    next_step: For a log link, exp(params) gives multipliers.
-    snippet: |
-      # statsmodels 0.15.0
       import numpy as np
+
       import statsmodels.api as sm
+
       from sklearn.datasets import make_regression
 
+
       X, _ = make_regression(n_samples=500, n_features=3, random_state=0)
-      rate = np.exp(0.5 * X[:, 0] - 0.3 * X[:, 1])
-      counts = np.random.default_rng(0).poisson(rate)
+
+      mu = np.exp(0.5 * X[:, 0] - 0.3 * X[:, 1])
+
+      y = np.random.default_rng(0).poisson(mu)
+
       Xc = sm.add_constant(X)
-      result = sm.GLM(counts, Xc, family=sm.families.Poisson()).fit()
-      print(result.params.round(3))
-      print(result.predict(Xc).shape)
+
+      result = sm.GLM(y, Xc, family=sm.families.Poisson()).fit()
+
+      y_pred = result.predict(Xc[:5])
+
+      print("y_pred:", np.round(y_pred, 2))
+
+      print("params:", np.round(result.params, 3))
+
+      print("pvalues:", np.round(result.pvalues, 3))
+
+      '
+    output: 'y_pred: [1.68 0.72 1.52 0.34 1.85]
+
+      params: [ 0.055  0.458 -0.294  0.01 ]
+
+      pvalues: [0.232 0.    0.    0.798]
+
+      '
+  what_comes_out:
+    items:
+    - name: fit
+      kind: method
+      task: regression
+      shape: results object
+      object_type: GLMResultsWrapper
+      example: GLMResultsWrapper with fitted parameters
+      shape_explanation: fit returns this results wrapper; it owns coefficient estimates, inference, and prediction
+        methods.
+      note: result owns the fitted coefficients, inference, and prediction methods.
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[1.2, 2.4, 0.8]'
+      shape_explanation: One response mean per input row. n_samples is the number of rows; this example has 3 predictions,
+        shape (3,).
+      note: result.predict returns the family mean on the response scale by default.
+    - name: params
+      kind: return
+      task: null
+      shape: (n_parameters,)
+      object_type: numpy.ndarray
+      example: '[0.1, 0.5, -0.3, 0.2]'
+      shape_explanation: One coefficient per design column; this example includes the constant and has 4 values.
+      note: result.params contains fitted coefficients, including the constant when added to exog.
+    - name: pvalues
+      kind: return
+      task: null
+      shape: (n_parameters,)
+      object_type: numpy.ndarray
+      example: '[0.8, 0.01, 0.04, 0.02]'
+      shape_explanation: One p-value per fitted parameter, including the constant when present.
+      note: result.pvalues gives inference for each fitted coefficient in result.params order.
+    snippet: '# statsmodels 0.15.0
+
+      import numpy as np
+
+      import statsmodels.api as sm
+
+      from sklearn.datasets import make_regression
+
+      X, _ = make_regression(n_samples=200, n_features=3, random_state=0)
+
+      mu = np.exp(0.5 * X[:, 0] - 0.3 * X[:, 1])
+
+      y = np.random.default_rng(0).poisson(mu)
+
+      Xc = sm.add_constant(X)
+
+      result = sm.GLM(y, Xc, family=sm.families.Poisson()).fit()
+
+      y_pred = result.predict(Xc[:3])
+
+      print("y_pred:", y_pred.round(2))
+
+      print("params:", result.params.round(3))
+
+      print("pvalues:", result.pvalues.round(3))
+
+      '
     snippet_library: statsmodels
     visual: regression_preds
+    next_step: null
+    guidance:
+    - task: regression
+      text: Select family and link from response support. predict returns the response mean by default; offsets
+        enter the linear predictor and exposure contributes log(exposure) with a log link.
+    output: 'y_pred: [0.52 1.43 1.  ]
+
+      params: [ 0.203  0.451 -0.258  0.067]
+
+      pvalues: [0.002 0.    0.    0.275]
+
+      '
   catch_outs:
-    - "Pick the family for the target: Poisson for counts, Gamma for amounts."
-    - No intercept unless you add one with sm.add_constant.
-    - NaN raises an error. Drop or impute before fitting.
-    - Binomial needs 0 to 1 targets, not counts or amounts.
-    - The NegativeBinomial family uses alpha 1 unless you set it.
+  - 'Pick the family for the target: Poisson for counts, Gamma for amounts.'
+  - No intercept unless you add one with sm.add_constant.
+  - NaN raises an error. Drop or impute before fitting.
+  - Binomial needs 0 to 1 targets, not counts or amounts.
+  - The NegativeBinomial family uses alpha 1 unless you set it.
   key_settings:
     tier1:
-      - {name: family, page: null}
-      - {name: link, page: null}
+    - name: family
+      page: null
+      controls: Response distribution and variance relationship, such as Poisson, Gamma, Binomial, or Gaussian.
+      effect: A mismatched family misstates response support and uncertainty; it also sets a default link.
+    - name: link
+      page: null
+      controls: Mapping from linear predictor to response mean; auto selects identity for p<=0 and log for p>0.
+      effect: The link changes prediction scale and valid mean range; explicit links must match the family.
     tier2:
-      - {name: offset, page: null}
-      - {name: exposure, page: null}
+    - name: offset
+      page: null
+      controls: Known row-level term added to the linear predictor with coefficient fixed at 1 (statsmodels).
+      effect: Use only a known additive contribution; it shifts predictions without estimating a coefficient.
+    - name: exposure
+      page: null
+      controls: Known positive exposure; statsmodels adds log(exposure) to a log-link predictor with coefficient
+        1.
+      effect: Predictions scale with exposure; only valid with a log link.
     tier3:
-      - {name: freq_weights, page: null}
-      - {name: var_weights, page: null}
-      - {name: missing, page: null}
-  watch_it_work: {none: true}
+    - name: freq_weights
+      page: null
+      controls: Frequency weights that treat a row as repeated observations.
+      effect: Larger weights make a row contribute more to likelihood; covariance interpretation depends on use.
+    - name: var_weights
+      page: null
+      controls: Analytic weights for variance scaling in supported GLM families.
+      effect: Weights alter residual contribution and variance interpretation; use them only for known precision.
+    - name: missing
+      page: null
+      controls: 'Statsmodels policy for missing data: none, drop, or raise.'
+      effect: Drop changes the fitted rows; raise catches missing values; none skips checking.
+  watch_it_work:
+    none: true
   intuition:
     idea: One line recipe, with the error shape set by the family.
     analogy: Like one sewing pattern, cut to different fabrics.
     animation: none
-    good_at: [p-values, count and amount targets, inference]
-    bad_at: [prediction only, text or images, very large data]
+    good_at:
+    - p-values
+    - count and amount targets
+    - inference
+    bad_at:
+    - prediction only
+    - text or images
+    - very large data
     vs_siblings:
-      - {page: gamma-regressor, note: "Scikit-learn. Predictions only, no p-values."}
-      - {page: tweedie-regressor, note: "Scikit-learn. Predictions only, allows exact zeros."}
-      - {page: negative-binomial-regression, note: "Same counts. That page estimates alpha for you."}
+    - page: gamma-regressor
+      note: Scikit-learn. Predictions only, no p-values.
+    - page: tweedie-regressor
+      note: Scikit-learn. Predictions only, allows exact zeros.
+    - page: negative-binomial-regression
+      note: Same counts. That page estimates alpha for you.
     read_more:
-      - Choose the family for the target.
-      - "Poisson defaults to the log link. Gamma defaults to inverse."
-      - Fit, then read p-values from the results.
-  next: [evaluate-how-good]
+    - Poisson models non-negative counts with variance equal to the mean.
+    - Poisson defaults to log; Binomial defaults to logit for binary or success/failure responses.
+    - Gamma needs positive amounts, variance proportional to mean squared, and defaults to inverse link.
+    - Gaussian supports real-valued responses and defaults to identity link.
+    - Tweedie defaults to log link; its power sets the mean-variance relationship.
+    - GLM NegativeBinomial defaults to log link and alpha=1; the discrete model estimates alpha.
+    - Exposure adds log(exposure) and requires a log link; offset adds a known linear-predictor term.
+    goal: Use a distribution-specific likelihood and link to model a response mean and obtain statistical inference.
+    steps:
+    - 'Choose a family: Gaussian for real values, Poisson for counts, Gamma for positive amounts, or Binomial for
+      binary data.'
+    - Choose a valid link; it maps the mean to the linear predictor. Defaults vary by family.
+    - Add a constant to exog when an intercept is needed. Add offset or exposure only when scientifically known.
+    - Fit by iteratively reweighted likelihood; inspect response-scale means and inference in the results.
+    math:
+      notation:
+      - symbol: Y_i
+        meaning: Response for observation i, with support determined by family.
+      - symbol: mu_i
+        meaning: Conditional mean response.
+      - symbol: g
+        meaning: Chosen link mapping the mean to the linear predictor.
+      - symbol: x_i, beta
+        meaning: Design row and fitted coefficient vector.
+      - symbol: o_i
+        meaning: Known offset added with coefficient fixed at one.
+      - symbol: V(mu)
+        meaning: Family variance function, up to a scale/dispersion factor.
+      equations:
+      - expression: g(mu_i) = x_i dot beta + o_i; Var(Y_i|x_i)=phi*V(mu_i)
+        meaning: Family defines response support and variance; the link maps the mean to the linear predictor.
+      - expression: mu_i = g^{-1}(x_i dot beta + o_i)
+        meaning: Predictions apply the inverse link; with log-link exposure E_i, add log(E_i) before inversion.
+      prediction: result.predict(exog) returns the response mean by default; the family/link determine its scale
+        and valid range.
+  next:
+  - evaluate-how-good

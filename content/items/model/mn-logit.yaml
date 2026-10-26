@@ -1,111 +1,194 @@
 id: mn-logit
 plain_name: MNLogit
 code_name: MNLogit
-aliases: [multinomial logit]
+aliases:
+- multinomial logit
 stage: model
 family: model.linear.logit
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [several classes, p-values]
-targets: [statsmodels.discrete.discrete_model.MNLogit]
+question_tags:
+- several classes
+- p-values
+targets:
+- statsmodels.discrete.discrete_model.MNLogit
 pairs_with: []
 clashes: []
-source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.discrete.discrete_model.MNLogit.html']
-library_versions: {statsmodels: 0.15.0}
+source_urls:
+- https://www.statsmodels.org/stable/generated/statsmodels.discrete.discrete_model.MNLogit.html
+library_versions:
+  statsmodels: 0.15.0
 reviewed: false
 rules:
-  task_types: [classification]
+  task_types:
+  - classification
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: breast-cancer, shape: boundary}
+    hero:
+      kind: model
+      dataset: breast-cancer
+      shape: boundary
     line: Class probabilities for three or more classes, with p-values.
-  quick_facts: {none: true}
+  quick_facts:
+    none: true
   use_avoid:
-    use_when: [three or more classes, p-values per class, linear effects]
-    avoid_when: [curved boundaries, separable classes, text inputs]
+    use_when:
+    - three or more classes
+    - p-values per class
+    - linear effects
+    avoid_when:
+    - curved boundaries
+    - separable classes
+    - text inputs
   prep:
-    - step: {family: clean.impute}
-      status: required
-      why: Raises on missing values unless missing is drop.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Needs numbers, not text.
-      condition: {has_categoricals: true}
-      unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Raises on missing values unless missing is drop.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Needs numbers, not text.
+    condition:
+      has_categoricals: true
+    unless: null
   code:
-    - library: statsmodels
-      target: statsmodels.discrete.discrete_model.MNLogit
-      why_this_library: Gives p-values for each class against a base class.
-      snippet: |
-        # statsmodels 0.15.0
-        import statsmodels.api as sm
-        from sklearn.datasets import make_classification
-
-        X, y = make_classification(
-            n_samples=300, n_features=4, n_informative=3,
-            n_redundant=0, n_classes=3, random_state=0,
-        )
-        X = sm.add_constant(X)
-        result = sm.MNLogit(y, X).fit(disp=False)
-        print(result.pvalues.round(3))
+  - library: statsmodels
+    target: statsmodels.discrete.discrete_model.MNLogit
+    why_this_library: Models multiclass probabilities against a reference class and reports inference.
+    snippet: "# statsmodels 0.15.0\nimport numpy as np\nimport statsmodels.api as sm\nfrom sklearn.datasets import\
+      \ make_classification\n\nX, y = make_classification(\n    n_samples=300, n_features=4, n_informative=3,\n\
+      \    n_redundant=0, n_classes=3, random_state=0,\n)\nX = sm.add_constant(X)\nresult = sm.MNLogit(y, X).fit(disp=False)\n\
+      y_proba = result.predict(X[:3])\ny_pred = y_proba.argmax(axis=1)\nprint('y_pred labels:', y_pred)\nprint('y_proba:',\
+      \ np.round(y_proba, 3))\nprint('params shape:', result.params.shape)\nprint('pvalues first parameter:', np.round(result.pvalues[0],\
+      \ 3))"
+    output: "y_pred labels: [2 0 0]\ny_proba: [[0.001 0.021 0.978]\n [0.743 0.249 0.008]\n [0.96  0.038 0.002]]\n\
+      params shape: (5, 2)\npvalues first parameter: [0.259 0.772]\n"
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: classification,
-         shape: "(n_samples, n_classes)",
-         note: "Probability of each class. Rows sum to one."}
-      - {name: score, kind: method, task: null, shape: "(n_params,)",
-         note: "Gradient of the log-likelihood. Not accuracy."}
-      - {name: endog, kind: attribute, task: null, shape: "(n_obs,)",
-         note: "The response the model stores."}
-      - {name: exog, kind: attribute, task: null, shape: "(n_obs, n_params)",
-         note: "Design matrix, with the constant if added."}
-      - {name: params, kind: return, task: null,
-         shape: "(n_params, n_classes - 1)",
-         note: "One column per class, except the base class."}
-      - {name: pvalues, kind: return, task: null,
-         shape: "(n_params, n_classes - 1)",
-         note: "Same layout as params."}
-    next_step: Check mle_retvals converged before reading the p-values.
-    snippet: |
-      # statsmodels 0.15.0
-      import statsmodels.api as sm
-      from sklearn.datasets import make_classification
-
-      X, y = make_classification(
-          n_samples=300, n_features=4, n_informative=3,
-          n_redundant=0, n_classes=3, random_state=0,
-      )
-      X = sm.add_constant(X)
-      result = sm.MNLogit(y, X).fit(disp=False)
-      print(result.predict(X)[:3].round(3))
+    - name: predict
+      kind: method
+      task: classification
+      shape: (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[[0.70, 0.20, 0.10], [0.15, 0.65, 0.20], [0.10, 0.25, 0.65]]'
+      shape_explanation: 'A two-dimensional probability table: rows are n_samples and columns are n_classes. This
+        fictional example assumes 3 cases and 3 classes, shape (3, 3); each row sums to one.'
+      note: Statsmodels predicts one probability per class; use probabilities for ROC AUC or PR.
+    - name: params
+      kind: return
+      task: null
+      shape: (n_parameters, n_classes - 1)
+      object_type: numpy.ndarray
+      example: '[[0.4, -0.2], [1.1, 0.6], [-0.5, 0.9]]'
+      shape_explanation: 'A two-dimensional table: rows are n_parameters, including the constant if present, and
+        columns are non-base classes. This fictional example has 3 parameters and 3 classes, shape (3, 2).'
+      note: Statsmodels coefficients compare each non-base class with the reference class.
+    - name: pvalues
+      kind: return
+      task: null
+      shape: (n_parameters, n_classes - 1)
+      object_type: numpy.ndarray
+      example: '[[0.03, 0.2], [0.001, 0.01], [0.4, 0.02]]'
+      shape_explanation: A two-dimensional table aligned with params. This fictional example has 3 parameters and
+        2 non-base classes, shape (3, 2).
+      note: Statsmodels coefficient tests for each class contrast.
+    - name: llf
+      kind: return
+      task: null
+      shape: scalar
+      object_type: float
+      example: '-187.3'
+      shape_explanation: A scalar is one value with no dimensions. This fictional example is the fitted log-likelihood.
+      note: Log-likelihood for the fitted multinomial model.
+    next_step: null
+    snippet: "# statsmodels 0.15.0\nimport numpy as np\nimport statsmodels.api as sm\nfrom sklearn.datasets import\
+      \ make_classification\n\nX, y = make_classification(\n    n_samples=300, n_features=4, n_informative=3,\n\
+      \    n_redundant=0, n_classes=3, random_state=0,\n)\nX = sm.add_constant(X)\nresult = sm.MNLogit(y, X).fit(disp=False)\n\
+      y_proba = result.predict(X[:3])\ny_pred = y_proba.argmax(axis=1)\nprint('y_pred labels:', y_pred)\nprint('y_proba:',\
+      \ np.round(y_proba, 3))\nprint('params shape:', result.params.shape)\nprint('pvalues first parameter:', np.round(result.pvalues[0],\
+      \ 3))"
     snippet_library: statsmodels
     visual: proba_table
+    guidance:
+    - task: classification
+      text: Use predict_proba or continuous decision scores for ROC AUC and PR curves. Use predicted labels for
+        accuracy or a confusion matrix.
+    output: "y_pred labels: [2 0 0]\ny_proba: [[0.001 0.021 0.978]\n [0.743 0.249 0.008]\n [0.96  0.038 0.002]]\n\
+      params shape: (5, 2)\npvalues first parameter: [0.259 0.772]\n"
   catch_outs:
-    - Missing values raise an error unless missing is drop.
-    - Separable classes can fail to converge. Check mle_retvals.
+  - Missing values raise an error unless missing is drop.
+  - Separable classes can fail to converge. Check mle_retvals.
   key_settings:
     tier1:
-      - {name: missing, page: null}
+    - name: missing
+      page: null
+      controls: 'Statsmodels handling of missing observations: none, drop, or raise.'
+      effect: Dropping rows changes the estimation sample; raising stops when missing values are found.
     tier2:
-      - {name: check_rank, page: null}
+    - name: check_rank
+      page: null
+      controls: Whether statsmodels checks the design matrix rank when determining model degrees of freedom.
+      effect: Skipping the check can save setup time for wide designs but may hide rank problems.
     tier3: []
-  watch_it_work: {none: true}
+  watch_it_work:
+    none: true
   intuition:
     idea: One score per class, with one base class fixed at zero.
     analogy: Ranking several candidates by points, then turning points into shares.
     animation: none
-    good_at: [several classes, p-values per class]
-    bad_at: [curved boundaries, separable classes]
+    good_at:
+    - several classes
+    - p-values per class
+    bad_at:
+    - curved boundaries
+    - separable classes
     vs_siblings:
-      - {page: logistic-regression, note: "Statsmodels Logit is two classes only. MNLogit takes three or more."}
-    read_more:
-      - Give each class a score, with the base class at zero.
-      - Turn the scores into probabilities with softmax.
-      - Fit by maximum likelihood, then read p-values.
+    - page: logistic-regression
+      note: Statsmodels Logit is two classes only. MNLogit takes three or more.
+    read_more: &id001
+    - Choose a reference class and assign each other class a linear score.
+    - Convert the class scores into probabilities with softmax.
+    - Choose all class coefficients together by multinomial maximum likelihood.
+    - Read each output row as probabilities for all classes.
+    goal: Estimate class-specific linear log-odds against a reference class and convert the scores into multiclass
+      probabilities.
+    math:
+      notation:
+      - symbol: x_i
+        meaning: Feature vector for case i.
+      - symbol: J
+        meaning: Number of outcome classes.
+      - symbol: '0'
+        meaning: Reference class whose score is fixed at zero.
+      - symbol: b_j
+        meaning: Coefficient vector for non-reference class j.
+      - symbol: p_ij
+        meaning: Probability that case i belongs to class j.
+      - symbol: i
+        meaning: Case index.
+      - symbol: r
+        meaning: Class index in the probability sum.
+      - symbol: 1(condition)
+        meaning: One when the condition is true, otherwise zero.
+      equations:
+      - expression: eta_i0 = 0; eta_ij = x_i^T b_j for j=1,...,J-1
+        meaning: Each non-reference class gets a linear score relative to the base class.
+      - expression: p_ij = exp(eta_ij) / sum_r exp(eta_ir)
+        meaning: Softmax converts all J class scores, including the base score, into probabilities summing to one.
+      - expression: maximize sum_i sum_j 1(y_i=j) log(p_ij)
+        meaning: Multinomial maximum likelihood rewards probability assigned to each observed class.
+      prediction: MNLogit returns probabilities by row and class. Use argmax for labels; parameters compare non-base
+        classes.
+    steps: *id001
   next: []

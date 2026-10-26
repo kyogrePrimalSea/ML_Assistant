@@ -1,149 +1,348 @@
 id: poisson-regression
 plain_name: Poisson regression
 code_name: PoissonRegressor / Poisson
-aliases: [poisson glm, count regression]
+aliases:
+- poisson glm
+- count regression
 stage: model
 family: model.awkward.glm
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [count target, counts, visits or claims]
-targets: [sklearn.linear_model.PoissonRegressor, statsmodels.discrete.discrete_model.Poisson]
+question_tags:
+- count target
+- counts
+- visits or claims
+targets:
+- sklearn.linear_model.PoissonRegressor
+- statsmodels.discrete.discrete_model.Poisson
 pairs_with: []
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.PoissonRegressor.html',
-  'https://www.statsmodels.org/stable/generated/statsmodels.discrete.discrete_model.Poisson.html']
-library_versions: {scikit-learn: 1.9.1, statsmodels: 0.15.0}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.PoissonRegressor.html
+- https://www.statsmodels.org/stable/generated/statsmodels.discrete.discrete_model.Poisson.html
+library_versions:
+  scikit-learn: 1.9.1
+  statsmodels: 0.15.0
 reviewed: false
 rules:
-  task_types: [regression]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: airline-passengers, shape: fit_line}
+    hero:
+      kind: model
+      dataset: airline-passengers
+      shape: fit_line
     line: A line for counts, on a log scale.
   quick_facts:
     data_size: Fits in memory
   use_avoid:
-    use_when: [count target, visits or claims, rate per exposure]
-    avoid_when: [continuous target, counts spread wide, text or images]
+    use_when:
+    - count target
+    - visits or claims
+    - rate per exposure
+    avoid_when:
+    - continuous target
+    - counts spread wide
+    - text or images
   prep:
-    - step: {family: transform.scale.rescale}
-      status: recommended
-      why: Scikit-learn alpha penalty depends on feature scale.
-      condition: null
-      unless: null
-    - step: {family: clean.impute}
-      status: required
-      why: NaN raises an error in both libraries.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Text categories must become numbers.
-      condition: {has_categoricals: true}
-      unless: null
-    - step: {page: train-test-split}
-      status: recommended
-      why: Hold out rows to check predictions on new data.
-      condition: null
-      unless: null
+  - step:
+      family: transform.scale.rescale
+    status: recommended
+    why: Scikit-learn alpha penalty depends on feature scale.
+    condition: null
+    unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: NaN raises an error in both libraries.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Text categories must become numbers.
+    condition:
+      has_categoricals: true
+    unless: null
+  - step:
+      page: train-test-split
+    status: recommended
+    why: Hold out rows to check predictions on new data.
+    condition: null
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.linear_model.PoissonRegressor
-      why_this_library: Scikit-learn API, with an alpha penalty.
-      snippet: |
-        # scikit-learn 1.9.1
-        import numpy as np
-        from sklearn.datasets import make_regression
-        from sklearn.linear_model import PoissonRegressor
-        from sklearn.model_selection import train_test_split
+  - library: scikit-learn
+    target: sklearn.linear_model.PoissonRegressor
+    why_this_library: Scikit-learn API, with an alpha penalty.
+    snippet: '# scikit-learn 1.9.1
 
-        X, _ = make_regression(n_samples=500, n_features=5, random_state=0)
-        rate = np.exp(0.5 * X[:, 0] - 0.3 * X[:, 1])
-        counts = np.random.default_rng(0).poisson(rate)
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, counts, random_state=0)
+      import numpy as np
 
-        model = PoissonRegressor(alpha=0.1, max_iter=300)
-        model.fit(X_train, y_train)
-        print(round(model.score(X_test, y_test), 3))
-    - library: statsmodels
-      target: statsmodels.discrete.discrete_model.Poisson
-      why_this_library: Statsmodels gives p-values, which scikit-learn does not.
-      snippet: |
-        # statsmodels 0.15.0
-        import numpy as np
-        import statsmodels.api as sm
-        from sklearn.datasets import make_regression
+      from sklearn.datasets import make_regression
 
-        X, _ = make_regression(n_samples=500, n_features=3, random_state=0)
-        rate = np.exp(0.5 * X[:, 0] - 0.3 * X[:, 1])
-        counts = np.random.default_rng(0).poisson(rate)
-        model = sm.Poisson(counts, sm.add_constant(X))
-        result = model.fit(disp=False)
-        print(result.pvalues.round(3))
+      from sklearn.linear_model import PoissonRegressor
+
+      from sklearn.model_selection import train_test_split
+
+
+      X, _ = make_regression(n_samples=500, n_features=5, random_state=0)
+
+      mu = np.exp(0.5 * X[:, 0] - 0.3 * X[:, 1])
+
+      y = np.random.default_rng(0).poisson(mu)
+
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+      model = PoissonRegressor(alpha=0.1, max_iter=300).fit(X_train, y_train)
+
+      y_pred = model.predict(X_test[:5])
+
+      print("y_pred:", np.round(y_pred, 2))
+
+      print("D2:", round(model.score(X_test, y_test), 3))
+
+      '
+    output: 'y_pred: [0.62 1.96 3.05 0.91 1.32]
+
+      D2: 0.16
+
+      '
+  - library: statsmodels
+    target: statsmodels.discrete.discrete_model.Poisson
+    why_this_library: Statsmodels gives p-values, which scikit-learn does not.
+    snippet: '# statsmodels 0.15.0
+
+      import numpy as np
+
+      import statsmodels.api as sm
+
+      from sklearn.datasets import make_regression
+
+
+      X, _ = make_regression(n_samples=500, n_features=3, random_state=0)
+
+      mu = np.exp(0.5 * X[:, 0] - 0.3 * X[:, 1])
+
+      y = np.random.default_rng(0).poisson(mu)
+
+      Xc = sm.add_constant(X)
+
+      result = sm.Poisson(y, Xc).fit(disp=False)
+
+      y_pred = result.predict(Xc[:5])
+
+      print("y_pred:", np.round(y_pred, 2))
+
+      print("params:", np.round(result.params, 3))
+
+      print("pvalues:", np.round(result.pvalues, 3))
+
+      '
+    output: 'y_pred: [1.68 0.72 1.52 0.34 1.85]
+
+      params: [ 0.055  0.458 -0.294  0.01 ]
+
+      pvalues: [0.232 0.    0.    0.798]
+
+      '
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
-         note: "Predicted mean count. Always above zero."}
-      - {name: score, kind: method, task: regression, shape: float,
-         note: "Share of deviance explained, the D² score."}
-      - {name: coef_, kind: attribute, task: null, shape: "(n_features,)",
-         note: "One weight per column, on the log scale."}
-      - {name: intercept_, kind: attribute, task: null, shape: float,
-         note: "Baseline on the log scale."}
-      - {name: n_iter_, kind: attribute, task: null, shape: int,
-         note: "Solver steps used. Compare with max_iter."}
-      - {name: n_features_in_, kind: attribute, task: null, shape: int,
-         note: "Number of columns seen at fit time."}
-    next_step: Read exp(coef_) as a multiplier on the expected count.
-    snippet: |
-      # scikit-learn 1.9.1
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[2.4, 5.1, 3.2]'
+      shape_explanation: One predicted response per input row. n_samples is the number of rows; this example has
+        3 values, shape (3,).
+      note: Expected count on the response scale; predictions are positive means and may be fractional.
+    - name: score
+      kind: method
+      task: regression
+      shape: scalar
+      object_type: float
+      example: '0.72'
+      shape_explanation: A scalar is one value with no array dimensions. This example is one D-squared score.
+      note: D-squared measures explained Poisson deviance; it is not R-squared.
+    - name: coef_
+      kind: attribute
+      task: null
+      shape: (n_features,)
+      object_type: numpy.ndarray
+      example: '[0.2, -0.1, 0.4]'
+      shape_explanation: One coefficient per input feature. n_features is the number of columns; the example has
+        3 coefficients, shape (3,).
+      note: Coefficients act on log expected count; exp(coef_) gives multiplicative factors per feature unit.
+    - name: intercept_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: float
+      example: '0.3'
+      shape_explanation: A scalar is one intercept value, with no array dimensions.
+      note: Log baseline expected count when all features are zero.
+    - name: n_iter_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: int
+      example: '12'
+      shape_explanation: A scalar integer counts solver iterations for this one fitted target; it has no array dimensions.
+      note: Compare with max_iter to see whether the solver hit its limit.
+    - name: n_features_in_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: int
+      example: '3'
+      shape_explanation: A scalar integer counts fitted input columns; it has no array dimensions.
+      note: Number of columns seen during fit.
+    - name: params
+      kind: return
+      task: null
+      shape: (n_parameters,)
+      object_type: numpy.ndarray
+      example: '[0.1, 0.5, -0.3, 0.2]'
+      shape_explanation: A one-dimensional array with one fitted value per design parameter. With 3 features and
+        a constant, n_parameters is 4; shape (4,).
+      note: result.params is ordered as the constant, then the three feature coefficients in Xc.
+    - name: pvalues
+      kind: return
+      task: null
+      shape: (n_parameters,)
+      object_type: numpy.ndarray
+      example: '[0.8, 0.01, 0.04, 0.02]'
+      shape_explanation: One p-value per design parameter in the same order as params. Three features plus the constant
+        give 4 values, shape (4,).
+      note: result.pvalues reports inference in constant-first Xc column order.
+    snippet: '# scikit-learn 1.9.1
+
       import numpy as np
+
       from sklearn.datasets import make_regression
+
       from sklearn.linear_model import PoissonRegressor
 
       X, _ = make_regression(n_samples=200, n_features=3, random_state=0)
-      rate = np.exp(0.5 * X[:, 0] - 0.3 * X[:, 1])
-      counts = np.random.default_rng(0).poisson(rate)
-      model = PoissonRegressor().fit(X, counts)
-      pred = model.predict(X)
-      print(pred.shape)
-      print(bool(pred.min() > 0))
-      print(np.exp(model.coef_).round(3))
+
+      mu = np.exp(0.5 * X[:, 0] - 0.3 * X[:, 1])
+
+      y = np.random.default_rng(0).poisson(mu)
+
+      model = PoissonRegressor().fit(X, y)
+
+      y_pred = model.predict(X[:3])
+
+      print("y_pred:", y_pred.round(2))
+
+      print("coef_:", model.coef_.round(3))
+
+      print("D2:", round(model.score(X, y), 3))
+
+      '
     snippet_library: scikit-learn
     visual: regression_preds
+    next_step: null
+    guidance:
+    - task: regression
+      text: Sklearn exposes coef_ and D-squared but no p-values. Statsmodels Poisson results expose params and pvalues;
+        exposure adjusts rates.
+    output: 'y_pred: [0.81 1.38 1.15]
+
+      coef_: [ 0.243 -0.132  0.039]
+
+      D2: 0.189
+
+      '
   catch_outs:
-    - Target must be zero or above. Negative values raise an error.
-    - "Counts spread wider than the mean: try negative-binomial-regression."
-    - statsmodels adds no intercept unless you pass sm.add_constant.
-    - Predictions stay above zero.
+  - Target must be zero or above. Negative values raise an error.
+  - 'Counts spread wider than the mean: try negative-binomial-regression.'
+  - statsmodels adds no intercept unless you pass sm.add_constant.
+  - Predictions stay above zero.
   key_settings:
     tier1:
-      - {name: exposure, page: null}
-      - {name: alpha, page: null}
+    - name: exposure
+      page: null
+      controls: Known positive exposure; statsmodels adds log(exposure) to a log-link predictor with coefficient
+        1.
+      effect: Predictions scale with exposure; only valid with a log link.
+    - name: alpha
+      page: null
+      controls: Strength of the L2 penalty on coefficients.
+      effect: A larger value shrinks coefficients more; for NB family it also changes variance, so check which API
+        owns it.
     tier2:
-      - {name: fit_intercept, page: null}
-      - {name: max_iter, page: null}
+    - name: fit_intercept
+      page: null
+      controls: Whether to add an intercept to the linear predictor.
+      effect: Turning it off assumes the response relation is already centered on the chosen link scale.
+    - name: max_iter
+      page: null
+      controls: Maximum solver iterations.
+      effect: A larger limit allows more time to converge, but costs runtime; reaching the limit may leave the fit
+        unfinished.
     tier3:
-      - {name: offset, page: null}
-      - {name: missing, page: null}
-  watch_it_work: {none: true}
+    - name: offset
+      page: null
+      controls: Known row-level term added to the linear predictor with coefficient fixed at 1 (statsmodels).
+      effect: Use only a known additive contribution; it shifts predictions without estimating a coefficient.
+    - name: missing
+      page: null
+      controls: 'Statsmodels policy for missing data: none, drop, or raise.'
+      effect: Drop changes the fitted rows; raise catches missing values; none skips checking.
+  watch_it_work:
+    none: true
   intuition:
     idea: Model the average count as exp of a line, so predictions stay positive.
     analogy: Like compound interest, where each step multiplies rather than adds.
     animation: none
-    good_at: [count targets, rates per exposure, positive predictions]
-    bad_at: [continuous targets, overdispersed counts]
+    good_at:
+    - count targets
+    - rates per exposure
+    - positive predictions
+    bad_at:
+    - continuous targets
+    - overdispersed counts
     vs_siblings:
-      - {page: negative-binomial-regression, note: "Adds a spread term, alpha, for overdispersed counts."}
-      - {page: tweedie-regressor, note: "Allows amounts and exact zeros, not just counts."}
-      - {page: glm, note: "Same Poisson family, through the GLM interface."}
+    - page: negative-binomial-regression
+      note: Adds a spread term, alpha, for overdispersed counts.
+    - page: tweedie-regressor
+      note: Allows amounts and exact zeros, not just counts.
+    - page: glm
+      note: Same Poisson family, through the GLM interface.
     read_more:
-      - Start from the log of the average count.
-      - Minimise the deviance in scikit-learn, or maximise likelihood in statsmodels.
-      - Read each coefficient as a multiplier on the count.
-  next: [but-count-zeros, but-pvalues]
+    - Start from the log of the average count.
+    - Minimise the deviance in scikit-learn, or maximise likelihood in statsmodels.
+    - Read each coefficient as a multiplier on the count.
+    goal: Model non-negative count targets whose conditional variance equals their conditional mean.
+    steps:
+    - Represent counts as non-negative integers and scale features when using a penalty.
+    - Fit the Poisson likelihood with a log link and optional L2 penalty.
+    - The model exponentiates the linear predictor, so predicted means remain positive.
+    - For varying exposure, use statsmodels Poisson exposure; sklearn PoissonRegressor has no exposure argument.
+    math:
+      notation:
+      - symbol: Y_i
+        meaning: Non-negative integer count for row i.
+      - symbol: mu_i
+        meaning: Expected count for row i.
+      - symbol: eta_i
+        meaning: Linear predictor intercept_ + x_i dot coef_.
+      - symbol: alpha
+        meaning: L2 penalty strength in sklearn PoissonRegressor.
+      equations:
+      - expression: log(mu_i)=eta_i; Var(Y_i|x_i)=mu_i
+        meaning: The log link yields a positive expected count; Poisson assumes the variance equals the mean.
+      prediction: sklearn PoissonRegressor returns mu_i=exp(eta_i), the expected count, not a rounded integer.
+  next:
+  - but-count-zeros
+  - but-pvalues

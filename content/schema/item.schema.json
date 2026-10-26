@@ -1034,6 +1034,9 @@
                   },
                   {
                     "$ref": "#/$defs/short_intuition"
+                  },
+                  {
+                    "$ref": "#/$defs/model_intuition"
                   }
                 ]
               }
@@ -1287,6 +1290,10 @@
         "snippet": {
           "type": "string",
           "pattern": "^# [a-z-]+ [0-9][^\\n]*\\n[\\s\\S]+$"
+        },
+        "output": {
+          "type": "string",
+          "minLength": 1
         }
       },
       "required": [
@@ -1313,6 +1320,12 @@
               "type": "null"
             }
           ]
+        },
+        "controls": {
+          "$ref": "#/$defs/one_line"
+        },
+        "effect": {
+          "$ref": "#/$defs/one_line"
         }
       },
       "required": [
@@ -1722,6 +1735,75 @@
           "items": {
             "$ref": "#/$defs/one_line"
           }
+        },
+        "goal": {
+          "$ref": "#/$defs/one_line"
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/one_line"
+          },
+          "minItems": 1,
+          "maxItems": 12
+        },
+        "math": {
+          "type": "object",
+          "properties": {
+            "notation": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "symbol": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "meaning": {
+                    "$ref": "#/$defs/one_line"
+                  }
+                },
+                "required": [
+                  "symbol",
+                  "meaning"
+                ],
+                "additionalProperties": false
+              },
+              "minItems": 1,
+              "maxItems": 20
+            },
+            "equations": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "expression": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "meaning": {
+                    "$ref": "#/$defs/one_line"
+                  }
+                },
+                "required": [
+                  "expression",
+                  "meaning"
+                ],
+                "additionalProperties": false
+              },
+              "minItems": 1,
+              "maxItems": 10
+            },
+            "prediction": {
+              "$ref": "#/$defs/one_line"
+            }
+          },
+          "required": [
+            "notation",
+            "equations",
+            "prediction"
+          ],
+          "additionalProperties": false
         }
       },
       "required": [
@@ -1827,6 +1909,21 @@
         "note": {
           "type": "string",
           "pattern": "^(\\S+\\s+){0,15}\\S+$"
+        },
+        "object_type": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "example": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 400
+        },
+        "shape_explanation": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 600
         }
       },
       "required": [
@@ -1860,6 +1957,32 @@
             }
           ]
         },
+        "guidance": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "items": {
+            "type": "object",
+            "properties": {
+              "task": {
+                "enum": [
+                  "classification",
+                  "regression"
+                ]
+              },
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 240
+              }
+            },
+            "required": [
+              "task",
+              "text"
+            ],
+            "additionalProperties": false
+          }
+        },
         "snippet": {
           "type": "string",
           "pattern": "^# [a-z-]+ [0-9][^\\n]*\\n[\\s\\S]+$"
@@ -1876,6 +1999,10 @@
             "shap",
             "matplotlib"
           ]
+        },
+        "output": {
+          "type": "string",
+          "minLength": 1
         },
         "visual": {
           "enum": [
@@ -1896,6 +2023,9 @@
           "snippet_library"
         ],
         "snippet_library": [
+          "snippet"
+        ],
+        "output": [
           "snippet"
         ]
       },

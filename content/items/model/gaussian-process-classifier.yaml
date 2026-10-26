@@ -1,102 +1,243 @@
 id: gaussian-process-classifier
 plain_name: GaussianProcessClassifier
 code_name: GaussianProcessClassifier
-aliases: ["gpc", "gaussian process classification", "gp classifier"]
+aliases:
+- gpc
+- gaussian process classification
+- gp classifier
 stage: model
 family: model.neighbours.gp
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: ["small data", "class probabilities", "uncertainty"]
-targets: ["sklearn.gaussian_process.GaussianProcessClassifier"]
+question_tags:
+- small data
+- class probabilities
+- uncertainty
+targets:
+- sklearn.gaussian_process.GaussianProcessClassifier
 pairs_with: []
 clashes: []
-source_urls: ["https://scikit-learn.org/stable/modules/generated/sklearn.gaussian_process.GaussianProcessClassifier.html"]
-library_versions: {scikit-learn: "1.9.1"}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.gaussian_process.GaussianProcessClassifier.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: ["classification"]
+  task_types:
+  - classification
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: breast-cancer, shape: boundary}
-    line: "Gives each class a probability from a smooth Gaussian process."
+    hero:
+      kind: model
+      dataset: breast-cancer
+      shape: boundary
+    line: Gives each class a probability from a smooth Gaussian process.
   quick_facts:
-    data_size: "Small data"
+    data_size: Small data
   use_avoid:
-    use_when: ["small data", "class probabilities", "smooth boundary"]
-    avoid_when: ["large data", "images or text", "need a simple formula"]
+    use_when:
+    - small data
+    - class probabilities
+    - smooth boundary
+    avoid_when:
+    - large data
+    - images or text
+    - need a simple formula
   prep:
-    - step: {family: transform.scale.rescale}
-      status: recommended
-      why: "Kernel distances need comparable scales."
-      condition: null
-      unless: null
+  - step:
+      family: transform.scale.rescale
+    status: recommended
+    why: Kernel distances need comparable scales.
+    condition: null
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.gaussian_process.GaussianProcessClassifier
-      why_this_library: "Built into scikit-learn; no extra install."
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import load_breast_cancer
-        from sklearn.gaussian_process import GaussianProcessClassifier
-        from sklearn.model_selection import train_test_split
-        from sklearn.pipeline import make_pipeline
-        from sklearn.preprocessing import StandardScaler
-
-        X, y = load_breast_cancer(return_X_y=True)
-        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
-
-        model = make_pipeline(
-            StandardScaler(),
-            GaussianProcessClassifier(random_state=0),
-        )
-        model.fit(X_train, y_train)
-        print(round(model.score(X_test, y_test), 3))
+  - library: scikit-learn
+    target: sklearn.gaussian_process.GaussianProcessClassifier
+    why_this_library: Built into scikit-learn; no extra install.
+    snippet: "# scikit-learn 1.9.1\nfrom sklearn.datasets import make_classification\nfrom sklearn.gaussian_process\
+      \ import GaussianProcessClassifier\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.pipeline\
+      \ import make_pipeline\nfrom sklearn.preprocessing import StandardScaler\n\nX, y = make_classification(\n\
+      \    n_samples=100, n_features=4, n_informative=3, n_redundant=0,\n    class_sep=1.2, random_state=0,\n)\n\
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)\nmodel = make_pipeline(\n    StandardScaler(),\n\
+      \    GaussianProcessClassifier(max_iter_predict=60, random_state=0),\n).fit(X_train, y_train)\ny_proba = model.predict_proba(X_test[:3])\n\
+      y_pred = model.predict(X_test[:3])\nprint(\"classes:\", model.classes_)\nprint(\"probabilities:\", y_proba.round(3))\n\
+      print(\"labels:\", y_pred)\nprint(\"score:\", round(model.score(X_test, y_test), 3))\n"
+    output: "classes: [0 1]\nprobabilities: [[0.373 0.627]\n [0.548 0.452]\n [0.318 0.682]]\nlabels: [1 0 1]\nscore:\
+      \ 0.84\n"
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: null, shape: "(n_samples,)",
-         note: "Class labels, from the classes_ list."}
-      - {name: predict_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
-         note: "One column per class, in classes_ order."}
-      - {name: score, kind: method, task: null, shape: "float",
-         note: "Accuracy on the data you pass in."}
-      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)",
-         note: "Class labels, in the column order of predict_proba."}
-      - {name: kernel_, kind: attribute, task: null, shape: "fitted kernel object",
-         note: "The kernel after fit, with tuned settings."}
-    next_step: "ROC AUC needs predict_proba, not predict."
+    - name: predict
+      kind: method
+      task: classification
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[0, 1, 1]'
+      shape_explanation: One predicted class per each of 3 query rows gives shape (3,).
+      note: Labels are selected from classes_; they are not probabilities.
+    - name: predict_proba
+      kind: method
+      task: classification
+      shape: (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[[0.91, 0.09], [0.12, 0.88], [0.20, 0.80]]'
+      shape_explanation: Rows are 3 queries and columns are 2 classes, shape (3, 2).
+      note: Default one-vs-rest provides probabilities; one-vs-one does not.
+    - name: classes_
+      kind: attribute
+      task: classification
+      shape: (n_classes,)
+      object_type: numpy.ndarray
+      example: '[0, 1]'
+      shape_explanation: Two fitted class labels form a one-dimensional array with shape (2,).
+      note: Class order matches predict_proba columns.
+    - name: kernel_
+      kind: attribute
+      task: null
+      shape: kernel object
+      object_type: kernel object
+      example: 1.07**2 * RBF(length_scale=[0.8, 1.2])
+      shape_explanation: One fitted kernel object has no array axes. This fictional two-feature RBF uses one length
+        scale for each of its two feature dimensions.
+      note: Hyperparameters are tuned against log marginal likelihood.
+    - name: log_marginal_likelihood_value_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: numpy.float64
+      example: '-43.067'
+      shape_explanation: One fitted likelihood value is a NumPy float64 scalar, not an array, so it has no array
+        dimensions.
+      note: Log marginal likelihood at the fitted kernel parameters.
+    - name: n_classes_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: int
+      example: '2'
+      shape_explanation: A scalar integer counts the fitted classes; it has no array axes.
+      note: Number of unique target classes seen during fit.
+    next_step: null
     visual: proba_table
+    guidance:
+    - task: classification
+      text: Use predict_proba for probability metrics with the default one_vs_rest strategy; one_vs_one supports
+        labels only.
+    snippet: "# scikit-learn 1.9.1\nfrom sklearn.datasets import make_classification\nfrom sklearn.gaussian_process\
+      \ import GaussianProcessClassifier\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.pipeline\
+      \ import make_pipeline\nfrom sklearn.preprocessing import StandardScaler\n\nX, y = make_classification(\n\
+      \    n_samples=100, n_features=4, n_informative=3, n_redundant=0,\n    class_sep=1.2, random_state=0,\n)\n\
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)\nmodel = make_pipeline(StandardScaler(),\
+      \ GaussianProcessClassifier(\n    max_iter_predict=60, random_state=0,\n)).fit(X_train, y_train)\ngp = model.named_steps[\"\
+      gaussianprocessclassifier\"]\nproba = gp.predict_proba(X_test[:3])\nprint(\"classes_:\", gp.classes_)\nprint(\"\
+      probability shape:\", proba.shape)\nprint(\"labels:\", gp.predict(X_test[:3]))\nprint(\"kernel_:\", gp.kernel_)\n\
+      print(\"LML value:\", round(gp.log_marginal_likelihood_value_, 3))\nprint(\"n_classes_:\", gp.n_classes_)\n"
+    snippet_library: scikit-learn
+    output: 'classes_: [0 1]
+
+      probability shape: (3, 2)
+
+      labels: [1 0 1]
+
+      kernel_: 1**2 * RBF(length_scale=1)
+
+      LML value: -43.067
+
+      n_classes_: 2
+
+      '
   catch_outs:
-    - "Default kernel is 1.0 * RBF; set kernel to change the shape."
-    - "n_restarts_optimizer is 0, so the kernel is tuned from one start."
-    - "Stores a copy of the training data by default."
-    - "Built for small data; training slows as rows grow."
+  - Default kernel is 1.0 * RBF; set kernel to change the shape.
+  - n_restarts_optimizer is 0, so the kernel is tuned from one start.
+  - Stores a copy of the training data by default.
+  - Built for small data; training slows as rows grow.
   key_settings:
     tier1:
-      - {name: kernel, page: null}
-      - {name: n_restarts_optimizer, page: null}
-      - {name: multi_class, page: null}
+    - name: kernel
+      page: null
+      controls: Covariance function defining similarity between input rows.
+      effect: A suitable kernel captures class-boundary smoothness; an unsuitable one limits the boundary.
+    - name: n_restarts_optimizer
+      page: null
+      controls: Extra starts for maximizing kernel log marginal likelihood.
+      effect: More starts can improve the selected kernel parameters but increase fitting time.
+    - name: multi_class
+      page: null
+      controls: 'Strategy for classes beyond two: one-vs-rest or one-vs-one binary GPs.'
+      effect: One-vs-one fits more smaller problems and returns labels only; one-vs-rest supports probabilities.
     tier2:
-      - {name: optimizer, page: null}
-      - {name: max_iter_predict, page: null}
+    - name: optimizer
+      page: null
+      controls: Optimizer for kernel hyperparameters during log-marginal-likelihood maximization.
+      effect: None leaves kernel parameters fixed; optimization can reach a local optimum.
+    - name: max_iter_predict
+      page: null
+      controls: Maximum Newton iterations for the Laplace posterior approximation at prediction.
+      effect: A lower cap speeds prediction but may leave the approximation less converged.
     tier3:
-      - {name: copy_X_train, page: null}
-      - {name: warm_start, page: null}
-  watch_it_work: {none: true}
+    - name: copy_X_train
+      page: null
+      controls: Whether to retain a persistent copy of training inputs.
+      effect: Copying costs memory; without it, later external input edits may affect predictions.
+    - name: warm_start
+      page: null
+      controls: Whether later Laplace-mode calculations start from the previous solution.
+      effect: Can speed repeated similar calculations; a poor initial solution may slow convergence.
+  watch_it_work:
+    none: true
   intuition:
-    idea: "Fit a smooth curve of scores, then turn the scores into class probabilities."
-    analogy: "A forecaster who also says how sure they are."
+    idea: Fit a smooth curve of scores, then turn the scores into class probabilities.
+    analogy: A forecaster who also says how sure they are.
     animation: none
-    good_at: ["small data", "class probabilities", "smooth boundaries"]
-    bad_at: ["large data", "images or text", "fast training"]
+    good_at:
+    - small data
+    - class probabilities
+    - smooth boundaries
+    bad_at:
+    - large data
+    - images or text
+    - fast training
     vs_siblings:
-      - {page: svc, note: "SVC has no probabilities unless you turn them on."}
-      - {page: k-neighbors-classifier, note: "Votes from nearby rows; no fitted curve."}
+    - page: svc
+      note: SVC has no probabilities unless you turn them on.
+    - page: k-neighbors-classifier
+      note: Votes from nearby rows; no fitted curve.
     read_more:
-      - "A kernel says how alike two rows are."
-      - "Fitting tunes the kernel to the training rows."
-      - "predict uses Newton steps, capped by max_iter_predict."
+    - A logistic likelihood makes the latent posterior non-Gaussian, so scikit-learn uses a Laplace approximation.
+    - Default multiclass handling fits one binary GP per class.
+    - The dense training calculation scales cubically with rows; multiclass repeats binary fits.
+    goal: Infer a smooth latent classification function and turn its approximate posterior into class probabilities.
+    steps:
+    - Define covariance among rows with a kernel and initialize a zero-mean latent Gaussian process.
+    - Use the logistic link for the non-Gaussian Bernoulli class likelihood.
+    - Use a Laplace approximation to approximate the posterior over latent values.
+    - Optimize kernel hyperparameters by log marginal likelihood, restarting when requested.
+    - For multiple classes, combine binary one-vs-rest or one-vs-one classifiers.
+    math:
+      notation:
+      - symbol: f
+        meaning: Latent Gaussian-process score at an input.
+      - symbol: k(x,x′)
+        meaning: Kernel covariance between two inputs.
+      - symbol: y in {0,1}
+        meaning: Binary class indicator.
+      - symbol: sigma(f)
+        meaning: Logistic function 1/(1+exp(-f)).
+      - symbol: q(f|X,y)
+        meaning: Gaussian Laplace approximation to the non-Gaussian posterior.
+      equations:
+      - expression: f ~ GP(0, k)
+        meaning: Before seeing labels, latent scores have a zero-mean Gaussian-process prior.
+      - expression: P(y=1|f) = 1/(1 + exp(-f))
+        meaning: The logistic link turns a latent score into a Bernoulli class probability.
+      - expression: q(f|X,y) approx p(f|X,y)
+        meaning: Laplace approximation replaces the intractable posterior with a Gaussian approximation.
+      prediction: Approximate logistic posterior gives class probabilities. Dense fitting is cubic; multiclass repeats
+        binary fits.
   next: []

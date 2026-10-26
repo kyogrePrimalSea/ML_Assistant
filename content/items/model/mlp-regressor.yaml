@@ -1,139 +1,324 @@
 id: mlp-regressor
 plain_name: MLPRegressor
 code_name: MLPRegressor
-aliases: [neural network regressor, multilayer perceptron regressor, mlp regressor]
+aliases:
+- neural network regressor
+- multilayer perceptron regressor
+- mlp regressor
 stage: model
 family: model.neural
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [complex patterns, lots of data, neural network]
-targets: [sklearn.neural_network.MLPRegressor]
+question_tags:
+- complex patterns
+- lots of data
+- neural network
+targets:
+- sklearn.neural_network.MLPRegressor
 pairs_with: []
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPRegressor.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPRegressor.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [regression]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: ames, shape: fit_line}
+    hero:
+      kind: model
+      dataset: ames
+      shape: fit_line
     line: Layers of weighted sums learn a curved line through the data.
   quick_facts:
     data_size: Plenty of rows, scaled inputs
   use_avoid:
-    use_when: [complex patterns, plenty of data, scaled numeric inputs]
-    avoid_when: [tiny data, need a simple formula, need a quick baseline]
+    use_when:
+    - complex patterns
+    - plenty of data
+    - scaled numeric inputs
+    avoid_when:
+    - tiny data
+    - need a simple formula
+    - need a quick baseline
   prep:
-    - step: {family: transform.scale.rescale}
-      status: required
-      why: "Neural nets need inputs on one scale."
-      condition: null
-      unless: null
-    - step: {family: clean.impute}
-      status: required
-      why: Rejects missing values.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Text categories must become numbers.
-      condition: {has_categoricals: true}
-      unless: null
+  - step:
+      family: transform.scale.rescale
+    status: required
+    why: Neural nets need inputs on one scale.
+    condition: null
+    unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Rejects missing values.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Text categories must become numbers.
+    condition:
+      has_categoricals: true
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.neural_network.MLPRegressor
-      why_this_library: The scikit-learn estimator for this method.
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import load_diabetes
-        from sklearn.model_selection import train_test_split
-        from sklearn.neural_network import MLPRegressor
-        from sklearn.pipeline import make_pipeline
-        from sklearn.preprocessing import StandardScaler
-
-        X, y = load_diabetes(return_X_y=True)
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, random_state=0
-        )
-
-        model = make_pipeline(
-            StandardScaler(),
-            MLPRegressor(hidden_layer_sizes=(32,), max_iter=1000, random_state=0),
-        )
-        model.fit(X_train, y_train)
-        print(round(model.score(X_test, y_test), 3))
-  what_comes_out:
-    items:
-      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
-         note: "One predicted number per row."}
-      - {name: score, kind: method, task: regression, shape: "float",
-         note: "R squared on the data given."}
-      - {name: loss_, kind: attribute, task: null, shape: "float",
-         note: "Training loss after the last pass."}
-      - {name: loss_curve_, kind: attribute, task: null, shape: "(n_iter_,)",
-         note: "Loss after each pass. Check it flattens."}
-      - {name: n_iter_, kind: attribute, task: null, shape: "int",
-         note: "Passes over the data before stopping."}
-      - {name: n_features_in_, kind: attribute, task: null, shape: "int",
-         note: "Columns seen during fit."}
-      - {name: feature_names_in_, kind: attribute, task: null, shape: "(n_features,)",
-         note: "Column names. Set only when fit on a DataFrame."}
-    next_step: "Check loss_curve_ flattens before trusting the score."
+  - library: scikit-learn
+    target: sklearn.neural_network.MLPRegressor
+    why_this_library: The scikit-learn estimator for this method.
     snippet: |
       # scikit-learn 1.9.1
-      import pandas as pd
-      from sklearn.datasets import load_diabetes
+      import warnings, numpy as np, pandas as pd
+      from sklearn.datasets import make_regression
+      from sklearn.exceptions import ConvergenceWarning
+      from sklearn.model_selection import train_test_split
       from sklearn.neural_network import MLPRegressor
       from sklearn.preprocessing import StandardScaler
-
-      data = load_diabetes(as_frame=True)
-      X = pd.DataFrame(
-          StandardScaler().fit_transform(data.data),
-          columns=data.feature_names,
+      warnings.filterwarnings('ignore',category=ConvergenceWarning)
+      X,y=make_regression(
+          n_samples=90, n_features=4, n_informative=3, noise=4, random_state=0
       )
-      model = MLPRegressor(hidden_layer_sizes=(32,), max_iter=1000, random_state=0)
-      model.fit(X, data.target)
-      print(model.predict(X[:3]).shape)
-      print(round(model.score(X, data.target), 3))
-      print(model.n_features_in_)
-      print(model.n_iter_)
+      Xt,Xv,yt,yv=train_test_split(X,y,test_size=.25,random_state=0)
+      s=StandardScaler().fit(Xt)
+      columns=['feature_a','feature_b','feature_c','feature_d']
+      Xt=pd.DataFrame(s.transform(Xt),columns=columns)
+      Xv=pd.DataFrame(s.transform(Xv),columns=columns)
+      ys=StandardScaler().fit(yt.reshape(-1,1))
+      yts=ys.transform(yt.reshape(-1,1)).ravel()
+      ysv=ys.transform(yv.reshape(-1,1)).ravel()
+      m=MLPRegressor(
+          hidden_layer_sizes=(6,3), solver='lbfgs', max_iter=1000, random_state=0
+      ).fit(Xt,yts)
+      y_pred=ys.inverse_transform(m.predict(Xv[:3]).reshape(-1,1)).ravel()
+      print('y_pred:',np.round(y_pred,1))
+      print('R2:',round(m.score(Xv,ysv),3))
+      print('coefs:',[w.shape for w in m.coefs_])
+      print('biases:',[b.shape for b in m.intercepts_])
+      print('loss/iterations/features:',round(m.loss_,3),m.n_iter_,m.n_features_in_)
+      print('feature_names_in_:',m.feature_names_in_)
+    output: |
+      y_pred: [-38.3 150.3 179.9]
+      R2: 0.997
+      coefs: [(4, 6), (6, 3), (3, 1)]
+      biases: [(6,), (3,), (1,)]
+      loss/iterations/features: 0.0 59 4
+      feature_names_in_: ['feature_a' 'feature_b' 'feature_c' 'feature_d']
+  what_comes_out:
+    items:
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[12.4, -3.1, 7.8]'
+      shape_explanation: One numeric prediction per row; three rows give shape (3,).
+      note: Continuous output for single-target regression.
+    - name: score
+      kind: method
+      task: regression
+      shape: scalar
+      object_type: float
+      example: '0.72'
+      shape_explanation: One scalar, no array dimensions.
+      note: R² on the supplied rows; can be negative.
+    - name: coefs_
+      kind: attribute
+      task: null
+      shape: list of n_layers - 1 matrices
+      object_type: list[numpy.ndarray]
+      example: '[(4, 6), (6, 3), (3, 1)]'
+      shape_explanation: One matrix connects each adjacent pair of layers. Four inputs, hidden widths 6 and 3, and one numeric output give these three shapes.
+      note: Rows connect prior-layer units to next-layer units.
+    - name: intercepts_
+      kind: attribute
+      task: null
+      shape: list of n_layers - 1 vectors
+      object_type: list[numpy.ndarray]
+      example: '[(6,), (3,), (1,)]'
+      shape_explanation: One bias vector per non-input layer; lengths equal layer widths.
+      note: Added to each layer weighted sum.
+    - name: loss_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: float
+      example: '0.021'
+      shape_explanation: One scalar training-loss value with no array dimensions.
+      note: Current fitted regression loss at the end of training.
+    - name: n_iter_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: int
+      example: '250'
+      shape_explanation: One integer count, not an array.
+      note: May stop before max_iter.
+    - name: n_features_in_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: int
+      example: '4'
+      shape_explanation: One integer equal to input column count.
+      note: Input width.
+    - name: feature_names_in_
+      kind: attribute
+      task: null
+      shape: (n_features_in_,)
+      object_type: numpy.ndarray of str
+      example: '[''age'', ''fare'', ''pclass'']'
+      shape_explanation: One name per column; present only when fit receives all-string feature names.
+      note: Names do not provide causal explanations.
+    next_step: Check loss_curve_ flattens before trusting the score.
+    snippet: |
+      # scikit-learn 1.9.1
+      import warnings, numpy as np, pandas as pd
+      from sklearn.datasets import make_regression
+      from sklearn.exceptions import ConvergenceWarning
+      from sklearn.model_selection import train_test_split
+      from sklearn.neural_network import MLPRegressor
+      from sklearn.preprocessing import StandardScaler
+      warnings.filterwarnings('ignore',category=ConvergenceWarning)
+      X,y=make_regression(
+          n_samples=90, n_features=4, n_informative=3, noise=4, random_state=0
+      )
+      Xt,Xv,yt,yv=train_test_split(X,y,test_size=.25,random_state=0)
+      s=StandardScaler().fit(Xt)
+      columns=['feature_a','feature_b','feature_c','feature_d']
+      Xt=pd.DataFrame(s.transform(Xt),columns=columns)
+      Xv=pd.DataFrame(s.transform(Xv),columns=columns)
+      ys=StandardScaler().fit(yt.reshape(-1,1))
+      yts=ys.transform(yt.reshape(-1,1)).ravel()
+      ysv=ys.transform(yv.reshape(-1,1)).ravel()
+      m=MLPRegressor(
+          hidden_layer_sizes=(6,3), solver='lbfgs', max_iter=1000, random_state=0
+      ).fit(Xt,yts)
+      y_pred=ys.inverse_transform(m.predict(Xv[:3]).reshape(-1,1)).ravel()
+      print('y_pred:',np.round(y_pred,1))
+      print('R2:',round(m.score(Xv,ysv),3))
+      print('coefs:',[w.shape for w in m.coefs_])
+      print('biases:',[b.shape for b in m.intercepts_])
+      print('loss/iterations/features:',round(m.loss_,3),m.n_iter_,m.n_features_in_)
+      print('feature_names_in_:',m.feature_names_in_)
     snippet_library: scikit-learn
     visual: null
+    output: |
+      y_pred: [-38.3 150.3 179.9]
+      R2: 0.997
+      coefs: [(4, 6), (6, 3), (3, 1)]
+      biases: [(6,), (3,), (1,)]
+      loss/iterations/features: 0.0 59 4
+      feature_names_in_: ['feature_a' 'feature_b' 'feature_c' 'feature_d']
+    guidance:
+    - task: regression
+      text: Scale neural-network inputs using training rows only; use probabilities for ranking and labels for confusion matrices.
   catch_outs:
-    - "Training stops at max_iter even when it has not converged."
-    - "Early stopping is off by default; set early_stopping=True to use it."
-    - "A score on training rows flatters the model."
+  - Training stops at max_iter even when it has not converged.
+  - Early stopping is off by default; set early_stopping=True to use it.
+  - A score on training rows flatters the model.
   key_settings:
     tier1:
-      - {name: hidden_layer_sizes, page: null}
-      - {name: learning_rate_init, page: learning-rate}
-      - {name: alpha, page: null}
-      - {name: early_stopping, page: null}
+    - name: hidden_layer_sizes
+      page: null
+      controls: Sets number and width of hidden layers.
+      effect: More units can fit richer functions but add weights and overfit risk.
+    - name: learning_rate_init
+      page: learning-rate
+      controls: Sets initial step size for sgd/adam.
+      effect: Large steps may overshoot; small steps learn more slowly.
+    - name: alpha
+      page: null
+      controls: Sets L2 weight regularization.
+      effect: More penalty can reduce overfit but underfit.
+    - name: early_stopping
+      page: null
+      controls: Holds out validation rows and stops when validation score stalls.
+      effect: Can limit overfitting but leaves fewer rows for fitting weights.
     tier2:
-      - {name: activation, page: null}
-      - {name: solver, page: null}
-      - {name: max_iter, page: null}
+    - name: activation
+      page: null
+      controls: Chooses hidden-layer activation.
+      effect: Changes representable nonlinearities; identity removes hidden bends.
+    - name: solver
+      page: null
+      controls: Chooses lbfgs, sgd, or adam.
+      effect: Solvers differ in minibatch behavior and convergence.
+    - name: max_iter
+      page: null
+      controls: Caps optimization iterations.
+      effect: A larger cap may permit convergence but takes longer.
     tier3:
-      - {name: loss, page: null}
-      - {name: batch_size, page: null}
-      - {name: validation_fraction, page: null}
-      - {name: n_iter_no_change, page: null}
-  watch_it_work: {none: true}
+    - name: loss
+      page: null
+      controls: Chooses regression objective, including squared error or Poisson where supported.
+      effect: Changes which errors are penalized; Poisson requires nonnegative targets.
+    - name: batch_size
+      page: null
+      controls: Sets stochastic optimizer minibatch size.
+      effect: Small batches update often but noisily; large batches use more memory.
+    - name: validation_fraction
+      page: null
+      controls: Sets validation share when early_stopping is on.
+      effect: More validation data improves stopping estimates but reduces fit rows.
+    - name: n_iter_no_change
+      page: null
+      controls: Sets tolerated iterations without sufficient improvement.
+      effect: Lower values stop sooner; higher values tolerate plateaus.
+  watch_it_work:
+    none: true
   intuition:
     idea: Layers of weighted sums, each followed by a bend, learn a curved line.
     analogy: A chain of simple calculators, each passing its result onward.
     animation: none
-    good_at: [complex patterns, plenty of rows, non-linear effects]
-    bad_at: [tiny data, extrapolation, explaining the answer]
+    good_at:
+    - complex patterns
+    - plenty of rows
+    - non-linear effects
+    bad_at:
+    - tiny data
+    - extrapolation
+    - explaining the answer
     vs_siblings:
-      - {page: mlp-classifier, note: "Same network. Predicts a class, not a number."}
+    - page: mlp-classifier
+      note: Same network. Predicts a class, not a number.
+    goal: Adjust layered weights to map scaled features to a numeric target while reducing regression loss.
+    steps:
+    - Scale features using training rows.
+    - Initialize a weight matrix and bias for each connection.
+    - Apply affine transformations and hidden activations from input to output.
+    - Measure regression loss and backpropagate gradients to update weights and biases.
+    - Repeat optimizer iterations until convergence, early stopping, or max_iter.
+    math:
+      notation:
+      - symbol: a_0=x
+        meaning: Input vector.
+      - symbol: W_l,b_l
+        meaning: Weights and bias at layer l.
+      - symbol: phi
+        meaning: Hidden activation function.
+      - symbol: a_l
+        meaning: Layer l activations.
+      - symbol: L(y,yhat)
+        meaning: Regression loss.
+      equations:
+      - expression: a_l=phi(a_(l-1) W_l+b_l)
+        meaning: Each layer applies a learned affine transformation and activation.
+      - expression: min_(W,b) mean_i L(y_i,f(x_i)) + alpha/(2n) sum_l ||W_l||_F^2
+        meaning: Fit reduces regression loss with L2 penalty on weights using backpropagation and an optimizer.
+      - expression: yhat=a_(L-1) W_L+b_L
+        meaning: The regression output layer uses identity activation, so its weighted sum is the numeric prediction.
+      prediction: predict returns one numeric value per row. Weights describe the fitted function; they do not prove causes.
     read_more:
-      - Multiply inputs by weights and add a bias.
-      - Pass the result through an activation.
-      - Repeat for each hidden layer, then output one number.
+    - Multiply inputs by weights and add a bias.
+    - Pass the result through an activation.
+    - Repeat for each hidden layer, then output one number.
   next: []

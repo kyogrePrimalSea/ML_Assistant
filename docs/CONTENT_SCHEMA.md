@@ -56,25 +56,78 @@ from metadata, so it holds no data.
    `{family}`, where `family` is a taxonomy family or group id (`transform.scale.rescale`, `clean.impute`); the stage is the id's first segment. `status` is `required|recommended|not_needed`. `why` is at most 12 words
    (pattern-checked). `condition` is a data-profile condition or `null`. `unless` is
    `{setting, value}` or `null`.
-6. **code**: tabs `{library, target, why_this_library, snippet}`. The first snippet line must be
+6. **code**: tabs `{library, target, why_this_library, snippet, [output]}`. The first snippet line must be
    `# <library> <version>` with the version from `library_versions[library]` (validator
-   checks the exact value; the schema checks the form). `target` is an inventory id.
+   checks the exact value; the schema checks the form). `target` is an inventory id. Optional `output`
+   stores deterministic stdout captured by running that exact snippet in the pinned environment.
 7. **what_comes_out** (spec §5.1 slot 7, A4): `{none: true}` or
-   `{items, next_step, [snippet, snippet_library], visual}`.
+   `{items, next_step, [guidance], [snippet, snippet_library, output], visual}`.
    `items` (1 to 8, reading order): `{name, kind: method|attribute|return, task: classification|regression|null,
-   shape (at most 40 characters), note (at most 16 words)}`. `next_step` is at most 16 words, or `null`.
+   shape (at most 40 characters), note (at most 16 words), [object_type], [example], [shape_explanation]}`.
+   Rich rows use `object_type` for the concrete Python-facing type and `example` for a short, fictional
+   preformatted value. Optional `shape_explanation` explains the formal dimensions in plain language and
+   connects them to the fictional example; it renders as naturally wrapping prose below the formal shape.
+   `next_step` is at most 16 words, or `null`. Optional `guidance` holds one or two separately labelled
+   `{task: classification|regression, text}` blocks; legacy records keep using `next_step`.
    `snippet` follows the Code snippet rules (stamp line from `library_versions[snippet_library]`, runs when
-   pasted); `snippet_library` is required with it. `visual` is `proba_table | regression_preds | both | null`
+   pasted); `snippet_library` is required with it. Optional `output` stores deterministic stdout captured
+   from that exact snippet and therefore requires `snippet`. `visual` is `proba_table | regression_preds | both | null`
    and must fit `rules.task_types` (`proba_table` needs classification, `regression_preds` regression,
    `both` both). The validator checks that every `method` or `attribute` name exists in the extraction
    record of a target (for hyperparameter pages, of an `applies_to` page's targets); `return` entries are
    free text. The visual reads `content/cutscenes/outputs/<page>.json` (see `docs/ARCHITECTURE.md`).
 8. **catch_outs**: list of one-line warnings.
-9. **key_settings**: `tier1|tier2|tier3`, each a list of `{name, page|null}`.
+9. **key_settings**: `tier1|tier2|tier3`, each a list of
+   `{name, page|null, [controls], [effect]}`. `controls` says what the setting changes; `effect`
+   states the trade-off introduced by changing it. Both remain optional for legacy records.
 10. **watch_it_work**: `{dataset, control: {name, min, max, step, default}}`.
-11. **intuition**: model `{idea, analogy, animation, good_at, bad_at, vs_siblings: [{page, note}], read_more}`;
-    other archetypes `{text}`; or none.
+11. **intuition**: model `{idea, analogy, animation, good_at, bad_at, vs_siblings: [{page, note}], read_more,
+    [goal], [steps], [math]}`. Rich model content uses `math: {notation: [{symbol, meaning}],
+    equations: [{expression, meaning}], prediction}`. The rich fields are optional for the prototype.
+    Other archetypes use `{text}` or none. Composer pages may use the rich model form when they
+    explain a model or ensemble mechanism; legacy composer `{text}` remains valid.
 12. **next**: question ids.
+
+## Reviewed model-page template
+
+**Canonical reference:** `content/items/model/xgboost.yaml`, approved by the user on
+2026-10-26 after the T045-T047 review cycle. New model-page enrichment and model-page
+migrations must match this level and structure unless a model genuinely does not expose
+the corresponding concept. This is the reviewed template; `reviewed: false` still remains
+on migrated records until the user reviews each batch.
+
+The required model-page standard is:
+
+1. **Code and exact output.** The main runnable example fits the model, creates the
+   prediction variable (`y_pred`, and `y_proba`/`y_score` for classifiers where available),
+   and carries exact deterministic `output` captured from the pinned environment.
+2. **What comes out.** Include the important prediction methods and fitted attributes,
+   each with `kind`, `task`, formal `shape`, concrete `object_type`, a short fictional
+   `example`, and an always-visible `shape_explanation`. The explanation defines every
+   symbolic dimension, explains one-dimensional commas or scalar values, and reconciles
+   the formal shape with the example's concrete size. Fictional examples remain visibly
+   distinct from captured output in the renderer.
+3. **Task guidance.** Use separately labelled `guidance` entries when classification and
+   regression advice differs. Do not combine unrelated instructions in `next_step`.
+4. **Prediction demonstration.** The What-comes-out snippet shows how to obtain and use
+   the listed prediction objects and carries exact captured `output`. For classifiers,
+   distinguish labels from probabilities/scores. For transformed regression targets,
+   show the inverse transform only when the example actually applied that transform.
+5. **Settings with consequences.** Every listed key setting has `controls` (what it
+   changes) and `effect` (the practical trade-off when it changes), grounded in official
+   docs or verified pinned-library behaviour.
+6. **Two explanation levels.** Model intuition retains the short `idea` and analogy, and
+   adds `goal`, chronological `steps`, and model-specific `math`. The mathematics defines
+   notation before use, gives the fitting objective/mechanism and prediction rule where
+   applicable, and follows every equation with a plain-English meaning.
+7. **Evidence and accessibility.** Facts come from the existing extraction, installed
+   pinned library, or official documentation recorded in `source_urls`; never from memory.
+   Copy uses one idea per sentence and naturally wrapping prose. Existing animation fields
+   are preserved, but content writers do not create or change animations.
+
+Batch writers may leave a field absent only when the model truly lacks that method,
+attribute, task variant, or mathematical concept—not merely because the existing draft
+omitted it. All snippets and stored outputs are verified before review.
 
 ## Data-profile condition
 

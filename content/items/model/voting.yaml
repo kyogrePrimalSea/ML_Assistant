@@ -1,89 +1,248 @@
 id: voting
 plain_name: Voting
 code_name: VotingRegressor / VotingClassifier
-aliases: [majority vote, soft vote, averaging]
+aliases:
+- majority vote
+- soft vote
+- averaging
 stage: model
 family: model.trees.combine
-tracks: [standard]
+tracks:
+- standard
 archetype: composer
-question_tags: [several good models, average predictions, combine models]
-targets: [sklearn.ensemble.VotingRegressor, sklearn.ensemble.VotingClassifier]
-pairs_with: [pipeline, stacking]
+question_tags:
+- several good models
+- average predictions
+- combine models
+targets:
+- sklearn.ensemble.VotingRegressor
+- sklearn.ensemble.VotingClassifier
+pairs_with:
+- pipeline
+- stacking
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.VotingRegressor.html',
-  'https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.VotingClassifier.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.VotingRegressor.html
+- https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.VotingClassifier.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [regression, classification]
+  task_types:
+  - regression
+  - classification
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: composer, boxes: [Logit, Forest, Vote]}
+    hero:
+      kind: composer
+      boxes:
+      - Logit
+      - Forest
+      - Vote
     line: Averages or votes across several models.
   quick_facts:
     facts:
-      - {label: Combines, value: labels (hard) or probabilities (soft)}
-      - {label: Fits, value: clones of your models}
-      - {label: Weights, value: optional per model}
+    - label: Combines
+      value: labels (hard) or probabilities (soft)
+    - label: Fits
+      value: clones of your models
+    - label: Weights
+      value: optional per model
   use_avoid:
-    use_when: [several good models, simple combining rule]
-    avoid_when: [need to learn the weights]
+    use_when:
+    - several good models
+    - simple combining rule
+    avoid_when:
+    - need to learn the weights
   prep:
-    - step: {page: train-test-split}
-      status: recommended
-      why: Keep a test set to check the vote.
-      condition: null
-      unless: null
+  - step:
+      page: train-test-split
+    status: recommended
+    why: Keep a test set to check the vote.
+    condition: null
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.ensemble.VotingClassifier
-      why_this_library: Averages each model's probabilities into one vote.
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import load_breast_cancer
-        from sklearn.ensemble import RandomForestClassifier, VotingClassifier
-        from sklearn.linear_model import LogisticRegression
-        from sklearn.model_selection import cross_val_score
-        from sklearn.naive_bayes import GaussianNB
+  - library: scikit-learn
+    target: sklearn.ensemble.VotingClassifier
+    why_this_library: Averages each model's probabilities into one vote.
+    snippet: "# scikit-learn 1.9.1\nimport numpy as np\nfrom sklearn.datasets import load_breast_cancer\nfrom sklearn.ensemble\
+      \ import RandomForestClassifier, VotingClassifier\nfrom sklearn.linear_model import LogisticRegression\nfrom\
+      \ sklearn.model_selection import train_test_split\nfrom sklearn.naive_bayes import GaussianNB\n\nX, y = load_breast_cancer(return_X_y=True)\n\
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)\nvote = VotingClassifier(\n    estimators=[\n\
+      \        (\"logit\", LogisticRegression(max_iter=5000)),\n        (\"forest\", RandomForestClassifier(n_estimators=30,\
+      \ random_state=0)),\n        (\"nb\", GaussianNB()),\n    ],\n    voting=\"soft\",\n)\nvote.fit(X_train, y_train)\n\
+      y_pred = vote.predict(X_test[:5])\ny_proba = vote.predict_proba(X_test[:5])\nprint(\"y_pred:\", y_pred)\n\
+      print(\"y_proba shape:\", y_proba.shape)\nprint(\"score:\", round(vote.score(X_test, y_test), 3))\n"
+    output: 'y_pred: [0 1 1 1 1]
 
-        X, y = load_breast_cancer(return_X_y=True)
+      y_proba shape: (5, 2)
 
-        vote = VotingClassifier(
-            estimators=[
-                ("logit", LogisticRegression(max_iter=5000)),
-                ("forest", RandomForestClassifier(random_state=0)),
-                ("nb", GaussianNB()),
-            ],
-            voting="soft",
-        )
-        print(cross_val_score(vote, X, y, cv=5).mean().round(3))
+      score: 0.958
+
+      '
   what_comes_out:
     items:
-      - {name: fit, kind: method, task: null, shape: "self", note: "Fits a clone of each model on the rows given."}
-      - {name: predict, kind: method, task: null, shape: "(n_samples,)", note: "The vote or average for each row."}
-      - {name: transform, kind: method, task: null, shape: "(n_samples, n_outputs)", note: "Each model's output, side by side."}
-      - {name: get_feature_names_out, kind: method, task: null, shape: "array of names", note: "Names for the transform columns."}
-      - {name: feature_names_in_, kind: attribute, task: null, shape: "array of column names", note: "Column names seen during fit."}
-    next_step: "Try weights if one model should count more."
-    visual: null
+    - name: predict
+      kind: method
+      task: classification
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[0, 1]'
+      shape_explanation: One voted class label per case. n_samples is 2 in this example, so shape (2,).
+      note: Soft vote chooses the class with the largest averaged probability.
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[245.0, 318.5]'
+      shape_explanation: One averaged numeric prediction per case. n_samples is 2, so shape (2,).
+      note: VotingRegressor averages member predictions.
+    - name: predict_proba
+      kind: method
+      task: classification
+      shape: (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[[0.91, 0.09], [0.18, 0.82]]'
+      shape_explanation: Rows are cases and columns follow classes_. This example has 2 cases and 2 classes, shape
+        (2, 2).
+      note: Soft voting averages member probabilities, optionally weighted.
+    - name: transform
+      kind: method
+      task: classification
+      shape: (n_samples,n_classifiers*n_classes)
+      object_type: numpy.ndarray
+      example: '[[0.8, 0.2, 0.7, 0.3], [0.1, 0.9, 0.3, 0.7]]'
+      shape_explanation: 'This fictional example uses soft voting and flatten_transform=True: 2 rows, 2 classifiers,
+        and 2 classes produce shape (2, 4). With False, soft output is (n_classifiers,n_samples,n_classes); hard
+        voting returns (n_samples,n_classifiers).'
+      note: Example is flattened soft voting; flatten_transform only changes soft-vote output.
+    - name: transform
+      kind: method
+      task: regression
+      shape: (n_samples, n_estimators)
+      object_type: numpy.ndarray
+      example: '[[120.0, 132.0], [240.0, 221.0]]'
+      shape_explanation: Rows are cases and columns are member predictions. Two cases and two regressors give shape
+        (2, 2).
+      note: Each column is the prediction from one fitted member.
+    - name: classes_
+      kind: attribute
+      task: classification
+      shape: (n_classes,)
+      object_type: numpy.ndarray
+      example: '[0, 1]'
+      shape_explanation: One label per class. n_classes is 2 in this example, so shape (2,).
+      note: Probability columns use this order.
+    - name: estimators_
+      kind: attribute
+      task: null
+      shape: (n_estimators,)
+      object_type: list
+      example: '[LogisticRegression(...), GaussianNB(...)]'
+      shape_explanation: One fitted clone per configured member. Two members give 2 entries, shape (2,).
+      note: The ensemble fits clones; original estimators are not modified.
+    next_step: null
+    visual: both
+    snippet: "# scikit-learn 1.9.1\nimport numpy as np\nfrom sklearn.datasets import load_breast_cancer, make_regression\n\
+      from sklearn.ensemble import (\n    RandomForestClassifier, VotingClassifier, VotingRegressor\n)\nfrom sklearn.linear_model\
+      \ import LinearRegression, LogisticRegression\nfrom sklearn.model_selection import train_test_split\nfrom\
+      \ sklearn.naive_bayes import GaussianNB\nfrom sklearn.tree import DecisionTreeRegressor\n\nX, y = load_breast_cancer(return_X_y=True)\n\
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)\nvote = VotingClassifier(\n    estimators=[\n\
+      \        (\"logit\", LogisticRegression(max_iter=5000)),\n        (\"forest\", RandomForestClassifier(n_estimators=20,\
+      \ random_state=0)),\n        (\"nb\", GaussianNB()),\n    ], voting=\"soft\",\n).fit(X_train, y_train)\ny_proba\
+      \ = vote.predict_proba(X_test[:3])\nprint(\"classes_:\", vote.classes_)\nprint(\"y_proba:\", np.round(y_proba,\
+      \ 3))\nprint(\"transform shape:\", vote.transform(X_test[:3]).shape)\n\nXr, yr = make_regression(n_samples=200,\
+      \ n_features=4, noise=10, random_state=0)\nreg = VotingRegressor(\n    estimators=[\n        (\"linear\",\
+      \ LinearRegression()),\n        (\"tree\", DecisionTreeRegressor(max_depth=3, random_state=0)),\n    ],\n\
+      ).fit(Xr, yr)\nprint(\"regression transform shape:\", reg.transform(Xr[:3]).shape)\nprint(\"regression y_pred:\"\
+      , np.round(reg.predict(Xr[:3]), 1))\n"
+    snippet_library: scikit-learn
+    output: "classes_: [0 1]\ny_proba: [[0.982 0.018]\n [0.044 0.956]\n [0.001 0.999]]\ntransform shape: (3, 6)\n\
+      regression transform shape: (3, 2)\nregression y_pred: [-110.3   62.8 -137.3]\n"
+    guidance:
+    - task: classification
+      text: Use class probabilities for soft-voting or final-classifier probability metrics.
+    - task: regression
+      text: Use numeric predictions for regression metrics; member transforms expose one column per estimator.
   catch_outs:
-    - Hard voting uses predicted labels only.
-    - Soft voting needs every model to give probabilities.
-    - Weights multiply each model's vote or average.
+  - Hard voting uses predicted labels only.
+  - Soft voting needs every model to give probabilities.
+  - Weights multiply each model's vote or average.
   key_settings:
     tier1:
-      - {name: estimators, page: null}
-      - {name: voting, page: null}
-      - {name: weights, page: null}
+    - name: estimators
+      page: null
+      controls: Named member models cloned and fitted by the voting ensemble.
+      effect: Different strengths can help; weak or correlated members can hurt.
+    - name: voting
+      page: null
+      controls: For classifiers, choose hard label majority or soft probability averaging.
+      effect: Soft voting uses confidence and is recommended for well-calibrated members; hard voting uses labels
+        only.
+    - name: weights
+      page: null
+      controls: Relative contribution of each named member to the vote or average.
+      effect: Higher weights emphasize a member; poor weights can worsen the ensemble.
     tier2:
-      - {name: flatten_transform, page: null}
+    - name: flatten_transform
+      page: null
+      controls: For soft classifier transform, flatten member/class axes into columns.
+      effect: True eases tabular use; False preserves the 3D member-by-row-by-class structure.
     tier3:
-      - {name: n_jobs, page: null}
-      - {name: verbose, page: null}
-  watch_it_work: {none: true}
-  intuition: {text: "Average or vote across models."}
+    - name: n_jobs
+      page: null
+      controls: Parallel jobs used to fit member estimators.
+      effect: More workers can reduce wall time but use more memory and CPU.
+    - name: verbose
+      page: null
+      controls: Whether to print elapsed fitting time.
+      effect: Progress aids monitoring but adds console output.
+  watch_it_work:
+    none: true
+  intuition:
+    idea: Combine predictions from separately fitted models with votes or weighted averages.
+    analogy: A panel uses a majority vote or averages members’ numeric estimates.
+    animation: none
+    good_at:
+    - simple ensemble combination
+    - different model families
+    bad_at:
+    - correlated errors
+    - uncalibrated soft-voting probabilities
+    vs_siblings:
+    - page: stacking
+      note: Voting combines predictions directly; stacking learns a final estimator from out-of-fold predictions.
+    read_more:
+    - Combine member predictions by class votes or weighted means.
+    - Clone and fit each member on the training rows.
+    - For hard classification, collect labels and choose the weighted majority class.
+    goal: Combine member predictions by class votes or weighted means.
+    steps:
+    - Clone and fit each member on the training rows.
+    - For hard classification, collect labels and choose the weighted majority class.
+    - For soft classification, average class probabilities and choose the largest.
+    - For regression, average numeric predictions using configured weights.
+    math:
+      notation:
+      - symbol: M
+        meaning: Number of fitted member estimators.
+      - symbol: w_j
+        meaning: Weight for member j; uniform when weights is None.
+      - symbol: p_jk(x)
+        meaning: Member j probability for class k.
+      - symbol: y_j(x)
+        meaning: Member j regression prediction.
+      equations:
+      - expression: p_k(x) = sum_j w_j p_jk(x) / sum_j w_j
+        meaning: Soft voting averages class probabilities, optionally using member weights.
+      - expression: yhat(x) = sum_j w_j y_j(x) / sum_j w_j
+        meaning: VotingRegressor returns the weighted mean of member predictions.
+      prediction: Hard votes labels; soft voting averages probabilities; regression averages numeric predictions.
   next: []

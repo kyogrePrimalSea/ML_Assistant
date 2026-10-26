@@ -1,108 +1,296 @@
 id: bagging
 plain_name: Bagging
 code_name: BaggingRegressor / BaggingClassifier
-aliases: [bootstrap aggregating]
+aliases:
+- bootstrap aggregating
 stage: model
 family: model.trees.bagging
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [overfitting, any base model]
-targets: [sklearn.ensemble.BaggingRegressor, sklearn.ensemble.BaggingClassifier]
+question_tags:
+- overfitting
+- any base model
+targets:
+- sklearn.ensemble.BaggingRegressor
+- sklearn.ensemble.BaggingClassifier
 pairs_with: []
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.BaggingRegressor.html',
-  'https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.BaggingClassifier.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.BaggingRegressor.html
+- https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.BaggingClassifier.html
+- https://scikit-learn.org/stable/modules/ensemble.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [regression, classification]
+  task_types:
+  - regression
+  - classification
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: ames, shape: fit_line}
+    hero:
+      kind: model
+      dataset: ames
+      shape: fit_line
     line: Average many copies of one model, each on a random sample.
-  quick_facts: {none: true}
+  quick_facts:
+    none: true
   use_avoid:
-    use_when: [noisy predictions, any base model, tabular data]
-    avoid_when: [needs feature importances, needs one readable model]
+    use_when:
+    - noisy predictions
+    - any base model
+    - tabular data
+    avoid_when:
+    - needs feature importances
+    - needs one readable model
   prep:
-    - step: {family: clean.impute}
-      status: not_needed
-      why: Default trees accept missing values.
-      condition: null
-      unless: null
-    - step: {family: transform.scale.rescale}
-      status: not_needed
-      why: Default trees split on order, not size.
-      condition: null
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Text categories must become numbers.
-      condition: {has_categoricals: true}
-      unless: null
-    - step: {page: train-test-split}
-      status: recommended
-      why: Keep a test set. Out-of-bag score needs bootstrap=True.
-      condition: null
-      unless: null
+  - step:
+      family: clean.impute
+    status: not_needed
+    why: Default trees accept missing values.
+    condition: null
+    unless: null
+  - step:
+      family: transform.scale.rescale
+    status: not_needed
+    why: Default trees split on order, not size.
+    condition: null
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Text categories must become numbers.
+    condition:
+      has_categoricals: true
+    unless: null
+  - step:
+      page: train-test-split
+    status: recommended
+    why: Keep a test set. Out-of-bag score needs bootstrap=True.
+    condition: null
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.ensemble.BaggingRegressor
-      why_this_library: Wraps any base model.
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import load_diabetes
-        from sklearn.ensemble import BaggingRegressor
-        from sklearn.model_selection import train_test_split
+  - library: scikit-learn
+    target: sklearn.ensemble.BaggingRegressor
+    why_this_library: Fits independent base models on randomized sample/feature subsets and averages predictions.
+    snippet: "# scikit-learn 1.9.1\nimport numpy as np\nfrom sklearn.datasets import load_diabetes\nfrom sklearn.ensemble\
+      \ import BaggingRegressor\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.tree import\
+      \ DecisionTreeRegressor\n\nX, y = load_diabetes(return_X_y=True)\nX_train, X_test, y_train, y_test = train_test_split(X,\
+      \ y, random_state=0)\nmodel = BaggingRegressor(\n    estimator=DecisionTreeRegressor(max_depth=4),\n    n_estimators=30,\
+      \ oob_score=True, n_jobs=1, random_state=0,\n)\nmodel.fit(X_train, y_train)\ny_pred = model.predict(X_test[:3])\n\
+      print('y_pred:', np.round(y_pred, 1))\nprint('R2:', round(model.score(X_test, y_test), 3))\nprint('OOB R2:',\
+      \ round(model.oob_score_, 3))"
+    output: 'y_pred: [253.1 250.9 180.7]
 
-        X, y = load_diabetes(return_X_y=True)
-        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+      R2: 0.27
 
-        model = BaggingRegressor(n_estimators=50, random_state=0)
-        model.fit(X_train, y_train)
-        print(round(model.score(X_test, y_test), 3))
+      OOB R2: 0.473
+
+      '
+  - library: scikit-learn
+    target: sklearn.ensemble.BaggingClassifier
+    why_this_library: Fits independent base models on randomized sample/feature subsets and averages probabilities.
+    snippet: "# scikit-learn 1.9.1\nimport numpy as np\nfrom sklearn.datasets import load_breast_cancer\nfrom sklearn.ensemble\
+      \ import BaggingClassifier\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.tree import\
+      \ DecisionTreeClassifier\n\nX, y = load_breast_cancer(return_X_y=True)\nX_train, X_test, y_train, y_test =\
+      \ train_test_split(X, y, random_state=0)\nmodel = BaggingClassifier(\n    estimator=DecisionTreeClassifier(max_depth=4),\n\
+      \    n_estimators=30, oob_score=True, n_jobs=1, random_state=0,\n)\nmodel.fit(X_train, y_train)\ny_pred =\
+      \ model.predict(X_test[:3])\ny_proba = model.predict_proba(X_test[:3])\nprint('y_pred labels:', y_pred)\n\
+      print('y_proba:', np.round(y_proba, 3))\nprint('accuracy:', round(model.score(X_test, y_test), 3))\nprint('OOB\
+      \ accuracy:', round(model.oob_score_, 3))"
+    output: "y_pred labels: [0 1 1]\ny_proba: [[0.988 0.012]\n [0.033 0.967]\n [0.006 0.994]]\naccuracy: 0.972\n\
+      OOB accuracy: 0.953\n"
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: null, shape: "(n_samples,)", note: "Regression values or class labels."}
-      - {name: predict_proba, kind: method, task: classification, shape: "(n_samples, n_classes)", note: "One column per class, in classes_ order."}
-      - {name: predict_log_proba, kind: method, task: classification, shape: "(n_samples, n_classes)", note: "Log of predict_proba, same columns."}
-      - {name: score, kind: method, task: null, shape: "float", note: "R2 for regression, accuracy for classification."}
-      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)", note: "Class labels, in predict_proba column order."}
-      - {name: estimators_, kind: attribute, task: null, shape: "list of fitted base models", note: "The fitted base models, one per copy."}
-      - {name: oob_score_, kind: attribute, task: null, shape: "float", note: "Only set when oob_score=True."}
-      - {name: n_features_in_, kind: attribute, task: null, shape: "int", note: "Number of input columns seen in fit."}
-    next_step: "Try oob_score=True for a validation score without a split."
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples,) or (n_samples, n_outputs)
+      object_type: numpy.ndarray
+      example: '[12.4, -3.1, 8.0]'
+      shape_explanation: For one regression target, this is one numeric prediction per row. This fictional example
+        has n_samples=3, shape (3,); multiple targets add an n_outputs column axis.
+      note: Regression values are averaged across the trees or base estimators.
+    - name: predict
+      kind: method
+      task: classification
+      shape: (n_samples,) or (n_samples, n_outputs)
+      object_type: numpy.ndarray
+      example: '[0, 1, 1]'
+      shape_explanation: For one classification output, this is one class label per row. This fictional example
+        has n_samples=3, shape (3,); multiple outputs add a column per output.
+      note: Greatest mean probability when supported; otherwise majority vote. Multi-output gives one label per
+        output.
+    - name: predict_proba
+      kind: method
+      task: classification
+      shape: (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[[0.8, 0.2], [0.1, 0.9], [0.3, 0.7]]'
+      shape_explanation: Rows are cases and columns follow classes_. This fictional single-output example has 3
+        cases and 2 classes, shape (3, 2).
+      note: Averages base probabilities; without predict_proba, returns vote fractions. Multi-output gives a list
+        of arrays.
+    - name: classes_
+      kind: attribute
+      task: classification
+      shape: (n_classes,)
+      object_type: numpy.ndarray
+      example: '[0, 1]'
+      shape_explanation: One label per class. This fictional example has two classes, shape (2,); the trailing comma
+        marks one dimension.
+      note: Class order used in predicted probability columns.
+    - name: estimators_
+      kind: attribute
+      task: null
+      shape: (n_estimators,)
+      object_type: list of fitted estimators
+      example: '[DecisionTreeRegressor(...), DecisionTreeRegressor(...)]'
+      shape_explanation: One fitted base estimator per ensemble member. This fictional example depicts two members,
+        concrete length 2.
+      note: Each member was fit on its sampled rows and feature subset.
+    - name: oob_score_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: float
+      example: '0.71'
+      shape_explanation: A scalar has no array axes. This fictional example is one aggregate out-of-bag score.
+      note: Regression uses R squared; classification uses accuracy. Requires bootstrap and oob_score=True.
+    - name: oob_prediction_
+      kind: attribute
+      task: regression
+      shape: (n_samples,) or (n_samples, n_outputs)
+      object_type: numpy.ndarray
+      example: '[12.4, -3.1, 8.0]'
+      shape_explanation: One out-of-bag regression prediction per row for one target. This fictional example has
+        3 rows, shape (3,); multi-output adds n_outputs columns.
+      note: Uses only base estimators that omitted each row during fitting.
+    - name: oob_decision_function_
+      kind: attribute
+      task: classification
+      shape: (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[[0.8, 0.2], [0.1, 0.9], [0.3, 0.7]]'
+      shape_explanation: Rows are cases and columns are classes. This fictional example has 3 cases and 2 classes,
+        shape (3, 2).
+      note: Out-of-bag class probabilities; set bootstrap=True and oob_score=True.
+    next_step: null
     visual: both
+    guidance:
+    - task: regression
+      text: Check regression predictions on held-out rows; tree predictions are piecewise constant and do not extrapolate.
+    - task: classification
+      text: Use probabilities for ROC AUC or PR curves. Use labels for accuracy and confusion matrices.
+    snippet: "# scikit-learn 1.9.1\nimport numpy as np\nfrom sklearn.datasets import load_breast_cancer, load_diabetes\n\
+      from sklearn.ensemble import BaggingClassifier, BaggingRegressor\nfrom sklearn.model_selection import train_test_split\n\
+      from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor\n\nXd, yd = load_diabetes(return_X_y=True)\n\
+      Xd_tr, Xd_te, yd_tr, yd_te = train_test_split(Xd, yd, random_state=0)\nreg = BaggingRegressor(\n    estimator=DecisionTreeRegressor(max_depth=4),\
+      \ n_estimators=30,\n    oob_score=True, n_jobs=1, random_state=0,\n)\nreg.fit(Xd_tr, yd_tr)\ny_pred = reg.predict(Xd_te[:3])\n\
+      print('regression y_pred:', np.round(y_pred, 1))\nprint('regression oob_score_:', round(reg.oob_score_, 3))\n\
+      Xc, yc = load_breast_cancer(return_X_y=True)\nXc_tr, Xc_te, yc_tr, yc_te = train_test_split(Xc, yc, random_state=0)\n\
+      clf = BaggingClassifier(\n    estimator=DecisionTreeClassifier(max_depth=4), n_estimators=30,\n    oob_score=True,\
+      \ n_jobs=1, random_state=0,\n)\nclf.fit(Xc_tr, yc_tr)\ny_pred = clf.predict(Xc_te[:3])\ny_proba = clf.predict_proba(Xc_te[:3])\n\
+      print('classification y_pred:', y_pred)\nprint('classification y_proba:', np.round(y_proba, 3))\nprint('classification\
+      \ oob_score_:', round(clf.oob_score_, 3))\nprint(\n    'classification oob probabilities:',\n    np.round(clf.oob_decision_function_[:3],\
+      \ 3),\n)\nprint('estimators_ count:', len(clf.estimators_))"
+    snippet_library: scikit-learn
+    output: "regression y_pred: [253.1 250.9 180.7]\nregression oob_score_: 0.473\nclassification y_pred: [0 1 1]\n\
+      classification y_proba: [[0.988 0.012]\n [0.033 0.967]\n [0.006 0.994]]\nclassification oob_score_: 0.953\n\
+      classification oob probabilities: [[0.003 0.997]\n [0.007 0.993]\n [0.999 0.001]]\nestimators_ count: 30\n"
   catch_outs:
-    - oob_score needs bootstrap=True, which is the default.
-    - No feature_importances_ on this model.
-    - Set estimator to change the base model. The default is a tree.
+  - oob_score needs bootstrap=True, which is the default.
+  - No feature_importances_ on this model.
+  - Set estimator to change the base model. The default is a tree.
   key_settings:
     tier1:
-      - {name: n_estimators, page: n-estimators}
-      - {name: max_samples, page: null}
-      - {name: max_features, page: null}
-      - {name: estimator, page: null}
+    - name: n_estimators
+      page: n-estimators
+      controls: Number of independently sampled base estimators to fit.
+      effect: More members usually stabilize the aggregate, with higher time and memory.
+    - name: max_samples
+      page: null
+      controls: Number or fraction of rows sampled for each estimator.
+      effect: Smaller subsets diversify members but can weaken each fit.
+    - name: max_features
+      page: null
+      controls: Number or fraction of columns passed to each estimator.
+      effect: Smaller subsets add diversity but may omit useful features.
+    - name: estimator
+      page: null
+      controls: Base learning algorithm to clone and fit for each random subset.
+      effect: A more complex base learner can improve fit but costs more and may overfit each sample.
     tier2:
-      - {name: bootstrap, page: null}
-      - {name: oob_score, page: null}
+    - name: bootstrap
+      page: null
+      controls: Whether rows are sampled with replacement.
+      effect: Replacement can repeat rows and leave others out for OOB estimates.
+    - name: oob_score
+      page: null
+      controls: Whether to score predictions from members that did not train on each row.
+      effect: Gives an internal validation estimate, but requires bootstrap=True.
     tier3:
-      - {name: bootstrap_features, page: null}
-  watch_it_work: {none: true}
+    - name: bootstrap_features
+      page: null
+      controls: Whether feature columns are sampled with replacement.
+      effect: Repeated or omitted columns add diversity but may weaken individual estimators.
+  watch_it_work:
+    none: true
   intuition:
     idea: Fit many copies on random samples, then average them.
     analogy: Asking many people the same question, then averaging their answers.
     animation: none
-    good_at: [noisy predictions, any base model]
-    bad_at: [feature importances, one readable model]
+    good_at:
+    - noisy predictions
+    - any base model
+    bad_at:
+    - feature importances
+    - one readable model
     vs_siblings:
-      - {page: random-forest, note: "Bagged trees that also sample features at each split."}
-      - {page: extra-trees, note: "Trees only. No bootstrap by default."}
-    read_more:
-      - See the scikit-learn reference pages for both Bagging classes.
-  next: [model-overfitting]
-...
+    - page: random-forest
+      note: Bagged trees that also sample features at each split.
+    - page: extra-trees
+      note: Trees only. No bootstrap by default.
+    read_more: &id001
+    - Clone the selected base estimator many times.
+    - Sample rows and columns for each member, using replacement according to bootstrap settings.
+    - Fit members independently on their selected data.
+    - Average regression predictions or class probabilities; use the most common class label.
+    goal: Reduce base-estimator variance by fitting copies on random row and feature subsets, then aggregating them.
+    steps: *id001
+    math:
+      notation:
+      - symbol: b=1,...,B
+        meaning: Index of a fitted base estimator among B members.
+      - symbol: h_b(x)
+        meaning: Prediction from base estimator b.
+      - symbol: S_b
+        meaning: Sampled rows for member b.
+      - symbol: F_b
+        meaning: Sampled features for member b.
+      - symbol: B
+        meaning: Number of fitted base estimators.
+      - symbol: x
+        meaning: Input row to predict.
+      - symbol: p_bk(x)
+        meaning: Probability for class k from member b.
+      - symbol: k
+        meaning: Class index.
+      equations:
+      - expression: 'regression: f(x) = (1/B) sum_b h_b(x)'
+        meaning: Bagging regression averages numerical predictions from the fitted base estimators.
+      - expression: 'if predict_proba exists: p_k(x)=mean_b p_bk(x); else: p_k(x)=vote_share_k(x)'
+        meaning: Bagging averages base probabilities when available; otherwise probabilities are class-vote fractions.
+      - expression: predict(x)=argmax_k p_k(x) when probabilities exist; otherwise majority vote
+        meaning: Choose the class with highest mean probability; if unavailable, choose the most-voted class.
+      prediction: With probability-capable bases, predict picks the class with greatest mean probability; otherwise
+        it uses majority vote.
+  next:
+  - model-overfitting

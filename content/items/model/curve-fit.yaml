@@ -1,44 +1,68 @@
 id: curve-fit
 plain_name: curve_fit
 code_name: curve_fit
-aliases: [curve fitting, nonlinear least squares]
+aliases:
+- curve fitting
+- nonlinear least squares
 stage: model
 family: model.awkward.shape
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [known formula, curve fit, exponential]
-targets: [scipy.optimize.curve_fit]
+question_tags:
+- known formula
+- curve fit
+- exponential
+targets:
+- scipy.optimize.curve_fit
 pairs_with: []
 clashes: []
-source_urls: ['https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.curve_fit.html']
-library_versions: {scipy: 1.18.1}
+source_urls:
+- https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.curve_fit.html
+library_versions:
+  scipy: 1.18.1
 reviewed: false
 rules:
-  task_types: [regression]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: airline-passengers, shape: fit_line}
+    hero:
+      kind: model
+      dataset: airline-passengers
+      shape: fit_line
     line: Tunes a formula's numbers until its curve matches the data.
   quick_facts:
     data_size: Small to medium tables
   use_avoid:
-    use_when: [known formula, few parameters, error bars needed]
-    avoid_when: [no formula, many parameters, unknown shape]
+    use_when:
+    - known formula
+    - few parameters
+    - error bars needed
+    avoid_when:
+    - no formula
+    - many parameters
+    - unknown shape
   prep:
-    - step: {family: clean.impute}
-      status: required
-      why: Raises an error on NaN.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.scale.rescale}
-      status: recommended
-      why: Keeps fitted parameters on similar scales.
-      condition: null
-      unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Raises an error on NaN.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.scale.rescale
+    status: recommended
+    why: Keeps fitted parameters on similar scales.
+    condition: null
+    unless: null
   code:
   - library: scipy
     target: scipy.optimize.curve_fit
@@ -47,55 +71,174 @@ slots:
       # scipy 1.18.1
       import numpy as np
       from scipy.optimize import curve_fit
-      from sklearn.datasets import make_regression
-
 
       def decay(x, a, b, c):
           return a * np.exp(-b * x) + c
 
-
-      x = np.linspace(0, 4, 50)
-      _, noise = make_regression(n_samples=50, noise=1.0, random_state=0)
-      y = 2.5 * np.exp(-1.3 * x) + 0.5 + 0.05 * noise / noise.std()
-      popt, pcov = curve_fit(decay, x, y, p0=[1, 1, 0])
-      print(np.round(popt, 2))
+      x = np.linspace(0, 3, 12)
+      noise = np.array([0.02, -0.01, 0.01, -0.02, 0.01, 0.0,
+                        -0.01, 0.02, -0.01, 0.01, -0.02, 0.01])
+      y = decay(x, 2.5, 0.8, 0.5) + noise
+      popt, pcov = curve_fit(decay, x, y, p0=[2.0, 1.0, 0.4])
+      perr = np.sqrt(np.diag(pcov))
+      y_fit = decay(x, *popt)
+      print("popt:", np.round(popt, 3))
+      print("pcov shape:", pcov.shape)
+      print("parameter errors:", np.round(perr, 4))
+      print("fitted y first 3:", np.round(y_fit[:3], 3))
+    output: |
+      popt: [2.501 0.812 0.511]
+      pcov shape: (3, 3)
+      parameter errors: [0.0192 0.0176 0.0204]
+      fitted y first 3: [3.012 2.515 2.116]
   what_comes_out:
     items:
-      - {name: popt, kind: return, task: null, shape: "(n_params,)",
-         note: "Fitted values, in the order of the formula's arguments."}
-      - {name: pcov, kind: return, task: null, shape: "(n_params, n_params)",
-         note: "Covariance. Its diagonal gives each parameter's variance."}
-    next_step: Take the square root of pcov's diagonal for errors.
+    - name: popt
+      kind: return
+      task: null
+      shape: (n_params,)
+      object_type: numpy.ndarray
+      example: '[2.5, 0.8, 0.5]'
+      shape_explanation: One fitted value per parameter in the order of the function signature. This example has 3 parameters, so shape (3,).
+      note: Tuple result from curve_fit; values minimize squared residuals.
+    - name: pcov
+      kind: return
+      task: null
+      shape: (n_params, n_params)
+      object_type: numpy.ndarray
+      example: '[[0.001, 0.0, 0.0], [0.0, 0.002, 0.0], [0.0, 0.0, 0.001]]'
+      shape_explanation: A square covariance matrix for fitted parameters. With 3 parameters, the example shape is (3, 3).
+      note: Diagonal entries are variances; square roots give approximate standard errors, not confidence intervals.
+    - name: f(x, *popt)
+      kind: return
+      task: regression
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[3.0, 2.3, 1.8]'
+      shape_explanation: Calling the supplied function with popt gives one fitted value per input x. There are 12 x values in the snippet, so the full prediction array has shape (12,).
+      note: Caller-built predictions; curve_fit returns popt and pcov, not a prediction method.
+    next_step: Use sqrt(diag(pcov)) for approximate errors; call f(x, *popt) to predict.
     visual: null
+    snippet: |
+      # scipy 1.18.1
+      import numpy as np
+      from scipy.optimize import curve_fit
+
+      def decay(x, a, b, c):
+          return a * np.exp(-b * x) + c
+
+      x = np.linspace(0, 3, 12)
+      noise = np.array([0.02, -0.01, 0.01, -0.02, 0.01, 0.0,
+                        -0.01, 0.02, -0.01, 0.01, -0.02, 0.01])
+      y = decay(x, 2.5, 0.8, 0.5) + noise
+      popt, pcov = curve_fit(decay, x, y, p0=[2.0, 1.0, 0.4])
+      perr = np.sqrt(np.diag(pcov))
+      y_fit = decay(x, *popt)
+      print("popt:", np.round(popt, 3))
+      print("pcov shape:", pcov.shape)
+      print("parameter errors:", np.round(perr, 4))
+      print("fitted y first 3:", np.round(y_fit[:3], 3))
+    snippet_library: scipy
+    output: |
+      popt: [2.501 0.812 0.511]
+      pcov shape: (3, 3)
+      parameter errors: [0.0192 0.0176 0.0204]
+      fitted y first 3: [3.012 2.515 2.116]
+    guidance:
+    - task: regression
+      text: For curve_fit, compute fitted predictions by calling your supplied function with popt. Treat pcov as approximate parameter covariance, not a confidence interval.
   catch_outs:
-    - Default p0 is all ones. A poor guess may not converge.
-    - Parameters on very different scales converge badly.
-    - NaN or infinite values raise an error by default.
+  - Default p0 is all ones. A poor guess may not converge.
+  - Parameters on very different scales converge badly.
+  - NaN or infinite values raise an error by default.
   key_settings:
     tier1:
-    - {name: p0, page: null}
-    - {name: bounds, page: null}
-    - {name: sigma, page: null}
-    - {name: absolute_sigma, page: null}
+    - name: p0
+      page: null
+      controls: Sets the starting value for each unknown model parameter.
+      effect: A closer starting guess can help convergence; a poor guess may find a bad local solution.
+    - name: bounds
+      page: null
+      controls: Sets lower and upper limits for every fitted parameter.
+      effect: Bounds enforce plausible values but constrain the solution and select a bounded method.
+    - name: sigma
+      page: null
+      controls: Weights residuals using observation uncertainty or covariance.
+      effect: Smaller uncertainty gives an observation more influence; incorrect errors distort fit and covariance.
+    - name: absolute_sigma
+      page: null
+      controls: Chooses whether sigma has absolute scale or only relative weights.
+      effect: True keeps the supplied scale in pcov; false rescales it using residual variance.
     tier2:
-    - {name: method, page: null}
-    - {name: jac, page: null}
-    - {name: check_finite, page: null}
+    - name: method
+      page: null
+      controls: Chooses lm, trf, or dogbox optimization.
+      effect: lm is efficient when unconstrained; trf/dogbox support bounds, while lm needs enough observations.
+    - name: jac
+      page: null
+      controls: Supplies derivatives of the model with respect to its parameters.
+      effect: A good Jacobian can improve speed and accuracy; otherwise finite differences are estimated.
+    - name: check_finite
+      page: null
+      controls: Checks inputs for NaN or infinity before fitting.
+      effect: Checking catches invalid data; disabling it may silently produce nonsensical results.
     tier3:
-    - {name: nan_policy, page: null}
-    - {name: full_output, page: null}
-  watch_it_work: {none: true}
+    - name: nan_policy
+      page: null
+      controls: 'Chooses how NaNs are handled: default, raise, or omit.'
+      effect: Omitting rows changes the fitted sample; raising fails early on missing values.
+    - name: full_output
+      page: null
+      controls: Requests optimizer diagnostics in addition to popt and pcov.
+      effect: Extra diagnostics help inspect convergence but add returned tuple values.
+  watch_it_work:
+    none: true
   intuition:
     idea: Adjust the numbers in a known formula until its curve sits closest to the points.
     analogy: Turning the dials of a machine you understand until its output matches the readings.
     animation: none
-    good_at: [known formulas, few parameters, error estimates]
-    bad_at: [unknown shape, many parameters]
+    good_at:
+    - known formulas
+    - few parameters
+    - error estimates
+    bad_at:
+    - unknown shape
+    - many parameters
     vs_siblings:
-      - {page: least-squares, note: "Lower-level solver. Adds robust losses."}
+    - page: least-squares
+      note: Lower-level solver. Adds robust losses.
+    goal: Fit the parameters of a supplied nonlinear formula by minimizing its weighted squared residuals.
+    steps:
+    - Write a model function with the independent input first and unknown parameters afterward.
+    - Choose an initial value for each parameter and optional bounds or observation uncertainties.
+    - Evaluate residuals between observed values and the function at each parameter trial.
+    - Let a nonlinear least-squares method update parameters until it converges.
+    - Evaluate the fitted function at desired x values and inspect approximate parameter covariance.
+    math:
+      notation:
+      - symbol: x_i
+        meaning: Independent input for observation i.
+      - symbol: y_i
+        meaning: Observed response for observation i.
+      - symbol: f(x_i,theta)
+        meaning: User-supplied model prediction at x_i and parameter vector theta.
+      - symbol: theta
+        meaning: Vector of n_params unknown model parameters.
+      - symbol: r_i
+        meaning: Residual f(x_i,theta)-y_i.
+      - symbol: sigma_i
+        meaning: Optional uncertainty scale for observation i.
+      equations:
+      - expression: theta_hat=argmin_theta sum_i (r_i/sigma_i)^2
+        meaning: The fit chooses parameters that minimize weighted squared residuals; without sigma, weights are equal.
+      - expression: yhat(x)=f(x,theta_hat)
+        meaning: Predictions are made by calling the supplied formula with fitted parameters.
+      - expression: perr_j=sqrt(pcov[j,j])
+        meaning: The square root of a covariance diagonal gives an approximate parameter standard error, not a confidence interval.
+      prediction: curve_fit returns popt and approximate pcov. Call f(x, *popt) to predict.
     read_more:
-      - Write the formula with its unknown numbers.
-      - Give a starting guess in p0.
-      - Minimise the squared errors numerically.
-      - Read popt for values and pcov for error bars.
+    - Write the formula with its unknown numbers.
+    - Give a starting guess in p0.
+    - Minimise the squared errors numerically.
+    - Read popt for values and pcov for error bars.
   next: []

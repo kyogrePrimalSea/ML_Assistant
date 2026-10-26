@@ -1,114 +1,280 @@
 id: theil-sen-regression
 plain_name: Theil–Sen
 code_name: TheilSenRegressor / theilslopes
-aliases: [theil sen, theil-sen estimator, theilslopes]
+aliases:
+- theil sen
+- theil-sen estimator
+- theilslopes
 stage: model
 family: model.awkward.robust
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [outliers, small data, median slope]
-targets: [sklearn.linear_model.TheilSenRegressor, scipy.stats.theilslopes]
+question_tags:
+- outliers
+- small data
+- median slope
+targets:
+- sklearn.linear_model.TheilSenRegressor
+- scipy.stats.theilslopes
 pairs_with: []
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.TheilSenRegressor.html',
-  'https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.theilslopes.html']
-library_versions: {scikit-learn: 1.9.1, scipy: 1.18.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.TheilSenRegressor.html
+- https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.theilslopes.html
+library_versions:
+  scikit-learn: 1.9.1
+  scipy: 1.18.1
 reviewed: false
 rules:
-  task_types: [regression]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: airline-passengers, shape: fit_line}
+    hero:
+      kind: model
+      dataset: airline-passengers
+      shape: fit_line
     line: Fits a line from the median slope, not the average.
   quick_facts:
     data_size: Small tables
   use_avoid:
-    use_when: [small data, outliers, median slope]
-    avoid_when: [big data, speed matters, many features]
+    use_when:
+    - small data
+    - outliers
+    - median slope
+    avoid_when:
+    - big data
+    - speed matters
+    - many features
   prep:
-    - step: {family: clean.impute}
-      status: required
-      why: Stops with an error on NaN.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.scale.rescale}
-      status: not_needed
-      why: A linear fit gives the same answer after scaling.
-      condition: null
-      unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Stops with an error on NaN.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.scale.rescale
+    status: not_needed
+    why: A linear fit gives the same answer after scaling.
+    condition: null
+    unless: null
   code:
   - library: scikit-learn
     target: sklearn.linear_model.TheilSenRegressor
     why_this_library: The scikit-learn version, with subsampling options.
-    snippet: |
-      # scikit-learn 1.9.1
+    snippet: '# scikit-learn 1.9.1
+
       from sklearn.datasets import make_regression
+
       from sklearn.linear_model import TheilSenRegressor
 
-      X, y = make_regression(n_samples=60, n_features=1, noise=5.0,
-                             random_state=0)
-      y[:6] += 150  # a few gross outliers
+
+      X, y = make_regression(n_samples=60, n_features=1, noise=5.0, random_state=0)
+
+      y[:6] += 150
+
       model = TheilSenRegressor(random_state=0).fit(X, y)
-      print(round(model.coef_[0], 2))
+
+      y_pred = model.predict(X[:3])
+
+      print("y_pred:", y_pred.round(1))
+
+      print("slope:", round(model.coef_[0], 2))
+
+      print("breakdown_:", round(model.breakdown_, 2))
+
+      '
+    output: 'y_pred: [ 6.1 14.4 -4.2]
+
+      slope: 28.75
+
+      breakdown_: 0.29
+
+      '
   - library: scipy
     target: scipy.stats.theilslopes
     why_this_library: The scipy version, with a confidence interval on the slope.
-    snippet: |
-      # scipy 1.18.1
+    snippet: '# scipy 1.18.1
+
       from scipy.stats import theilslopes
+
       from sklearn.datasets import make_regression
 
-      X, y = make_regression(n_samples=60, n_features=1, noise=5.0,
-                             random_state=0)
-      y[:6] += 150  # a few gross outliers
+
+      X, y = make_regression(n_samples=60, n_features=1, noise=5.0, random_state=0)
+
+      y[:6] += 150
+
       res = theilslopes(y, X[:, 0])
-      print(round(res.slope, 2))
+
+      y_pred = res.slope * X[:3, 0] + res.intercept
+
+      print("y_pred:", y_pred.round(1))
+
+      print("slope:", round(res.slope, 2))
+
+      '
+    output: 'y_pred: [ 6.4 14.7 -4. ]
+
+      slope: 28.8
+
+      '
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
-         note: "Linear predictions from the median-based fit."}
-      - {name: score, kind: method, task: regression, shape: "float",
-         note: "R squared on the data given."}
-      - {name: coef_, kind: attribute, task: null, shape: "(n_features,)",
-         note: "Median-based slopes, one per input column."}
-      - {name: intercept_, kind: attribute, task: null, shape: "float",
-         note: "Intercept of the fitted line."}
-      - {name: breakdown_, kind: attribute, task: null, shape: "float",
-         note: "Approximate share of bad rows it can resist."}
-    next_step: Compare the slope with an ordinary least squares fit.
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[6.1, 14.4, -4.2]'
+      shape_explanation: One predicted value per input row. n_samples is the number of rows; this example
+        has shape (3,).
+      note: One prediction per row from the fitted spatial-median coefficients.
+    - name: coef_
+      kind: attribute
+      task: null
+      shape: (n_features,)
+      object_type: numpy.ndarray
+      example: '[28.75]'
+      shape_explanation: One coefficient per input feature. n_features is the number of columns; this
+        one-feature example has shape (1,).
+      note: Spatial-median slope for each feature.
+    - name: breakdown_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: float
+      example: '0.25'
+      shape_explanation: A scalar proportion between 0 and 1; the example 0.25 means 25%, not a count
+        or percentage number.
+      note: Approximate fraction of contaminated data the fitted estimator can resist.
+    next_step: null
     visual: null
+    guidance:
+    - task: regression
+      text: Use the multivariate estimator for feature matrices; scipy.stats.theilslopes is for a one-dimensional
+        predictor.
+    snippet: '# scikit-learn 1.9.1
+
+      from sklearn.datasets import make_regression
+
+      from sklearn.linear_model import TheilSenRegressor
+
+
+      X, y = make_regression(n_samples=60, n_features=1, noise=5.0, random_state=0)
+
+      y[:6] += 150
+
+      model = TheilSenRegressor(random_state=0).fit(X, y)
+
+      y_pred = model.predict(X[:3])
+
+      print("y_pred:", y_pred.round(1))
+
+      print("slope:", round(model.coef_[0], 2))
+
+      print("breakdown_:", round(model.breakdown_, 2))
+
+      '
+    snippet_library: scikit-learn
+    output: 'y_pred: [ 6.1 14.4 -4.2]
+
+      slope: 28.75
+
+      breakdown_: 0.29
+
+      '
   catch_outs:
-    - Cost grows with the subsets it tries. Cap max_subpopulation.
-    - Set random_state to get the same subsets each run.
-    - NaN inputs stop the fit. Impute first.
+  - Cost grows with the subsets it tries. Cap max_subpopulation.
+  - Set random_state to get the same subsets each run.
+  - NaN inputs stop the fit. Impute first.
   key_settings:
     tier1:
-    - {name: n_subsamples, page: null}
-    - {name: max_subpopulation, page: null}
-    - {name: fit_intercept, page: null}
+    - name: n_subsamples
+      page: null
+      controls: Subset size used for each least-squares candidate.
+      effect: Larger subsets can improve efficiency but reduce robustness.
+    - name: max_subpopulation
+      page: null
+      controls: Maximum number of candidate subsets considered.
+      effect: A lower cap saves computation but reduces candidate coverage.
+    - name: fit_intercept
+      page: null
+      controls: Whether candidates include an intercept.
+      effect: Turning it off forces the fit through zero.
     tier2:
-    - {name: max_iter, page: null}
-    - {name: tol, page: null}
+    - name: max_iter
+      page: null
+      controls: Maximum spatial-median iterations.
+      effect: More iterations allow convergence but take longer.
+    - name: tol
+      page: null
+      controls: Spatial-median convergence tolerance.
+      effect: Tighter tolerance may refine the estimate at added cost.
     tier3:
-    - {name: random_state, page: null}
-    - {name: n_jobs, page: null}
-    - {name: verbose, page: null}
-  watch_it_work: {none: true}
+    - name: random_state
+      page: null
+      controls: Seed for subset sampling.
+      effect: A fixed seed makes sampled subsets reproducible.
+    - name: n_jobs
+      page: null
+      controls: Parallel workers for subset fits.
+      effect: More workers may reduce elapsed time while using more resources.
+    - name: verbose
+      page: null
+      controls: Amount of progress output.
+      effect: Higher verbosity prints more diagnostics.
+  watch_it_work:
+    none: true
   intuition:
     idea: Fit lines through many small subsets, then take the median of them.
     analogy: Asking every pair of friends for a rough slope and taking the middle answer.
     animation: none
-    good_at: [small data, outliers, median slopes]
-    bad_at: [big data, many features, speed]
+    good_at:
+    - small data
+    - outliers
+    - median slopes
+    bad_at:
+    - big data
+    - many features
+    - speed
     vs_siblings:
-      - {page: ransac-regressor, note: "Random subsets. Suited to many outliers."}
-      - {page: huber-regressor, note: "Down-weights outliers rather than taking medians."}
+    - page: ransac-regressor
+      note: Random subsets. Suited to many outliers.
+    - page: huber-regressor
+      note: Down-weights outliers rather than taking medians.
     read_more:
-      - Fit least squares on many small subsets of rows.
-      - Take the spatial median of those fits.
-      - Use that median as the final line.
+    - Fit least squares on many small subsets of rows.
+    - Take the spatial median of those fits.
+    - Use that median as the final line.
+    goal: A spatial median aggregates subset coefficient vectors; SciPy’s 1D function uses pairwise median
+      slopes.
+    steps:
+    - Fit least-squares coefficients on many sampled row subsets.
+    - Take the spatial median of the candidate coefficient vectors.
+    - Subsampling caps computation but makes results depend on selected subsets.
+    math:
+      notation:
+      - symbol: S
+        meaning: One sampled subset of observations.
+      - symbol: θ_S
+        meaning: Least-squares parameter vector fitted on subset S.
+      - symbol: θ*
+        meaning: Spatial median of candidate parameter vectors.
+      - symbol: '||·||₂'
+        meaning: Euclidean distance.
+      equations:
+      - expression: θ* = argmin_θ Σ_S ||θ−θ_S||₂
+        meaning: The spatial median minimises total distance to the subset coefficient vectors.
+      prediction: y_pred = x @ coef_ + intercept_; returns one prediction per row from spatial-median
+        coefficients.
   next: []

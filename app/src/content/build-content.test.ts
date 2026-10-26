@@ -56,6 +56,16 @@ describe('build-content output', () => {
     expect(page.key_setting_facts.learning_rate).toBeDefined()
   })
 
+  it('transports XGBoost rich learning fields unchanged', () => {
+    const page = read<PageData>('pages/xgboost.json')
+    expect(page.record.slots.code[0].output).toContain('y_pred: 18.2')
+    const whatComesOut = page.record.slots.what_comes_out
+    expect('items' in whatComesOut && whatComesOut.output).toContain('classification y_proba')
+    expect(page.record.slots.key_settings.tier1[0].controls).toContain('boosting rounds')
+    const intuition = page.record.slots.intuition
+    expect('idea' in intuition && intuition.math?.equations).toHaveLength(7)
+  })
+
   it('is deterministic', () => {
     const tmp = mkdtempSync(join(tmpdir(), 'build-content-'))
     execFileSync('node', ['scripts/build-content.mjs'], { cwd: appDir, stdio: 'pipe', env: { ...process.env, BUILD_CONTENT_OUT: tmp } })

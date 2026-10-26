@@ -1,100 +1,240 @@
 id: svr
 plain_name: SVR
 code_name: SVR
-aliases: ["support vector regression", "epsilon svr", "svm regressor"]
+aliases:
+- support vector regression
+- epsilon svr
+- svm regressor
 stage: model
 family: model.neighbours.kernel
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: ["curved trends", "up to 10,000 rows", "scale first"]
-targets: ["sklearn.svm.SVR"]
+question_tags:
+- curved trends
+- up to 10,000 rows
+- scale first
+targets:
+- sklearn.svm.SVR
 pairs_with: []
 clashes: []
-source_urls: ["https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html"]
-library_versions: {scikit-learn: "1.9.1"}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVR.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: ["regression"]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: ames, shape: fit_line}
-    line: "Fits a curve inside a tube around the points."
+    hero:
+      kind: model
+      dataset: ames
+      shape: fit_line
+    line: Fit a kernel function while penalizing prediction errors outside an epsilon-wide tube.
   quick_facts:
-    data_size: "Up to about 10,000 rows"
+    data_size: Up to about 10,000 rows
   use_avoid:
-    use_when: ["curved trends", "up to 10,000 rows", "scaled features"]
-    avoid_when: ["large data", "images or text", "need a simple formula"]
+    use_when:
+    - curved trends
+    - up to 10,000 rows
+    - scaled features
+    avoid_when:
+    - large data
+    - images or text
+    - need a simple formula
   prep:
-    - step: {family: transform.scale.rescale}
-      status: required
-      why: "Kernel distances need comparable scales; scale first."
-      condition: null
-      unless: null
+  - step:
+      family: transform.scale.rescale
+    status: required
+    why: Kernel distances need comparable scales; scale first.
+    condition: null
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.svm.SVR
-      why_this_library: "Built into scikit-learn; no extra install."
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import make_friedman1
-        from sklearn.model_selection import train_test_split
-        from sklearn.pipeline import make_pipeline
-        from sklearn.preprocessing import StandardScaler
-        from sklearn.svm import SVR
+  - library: scikit-learn
+    target: sklearn.svm.SVR
+    why_this_library: Built into scikit-learn; no extra install.
+    snippet: "# scikit-learn 1.9.1\nfrom sklearn.datasets import make_friedman1\nfrom sklearn.model_selection\
+      \ import train_test_split\nfrom sklearn.pipeline import make_pipeline\nfrom sklearn.preprocessing\
+      \ import StandardScaler\nfrom sklearn.svm import SVR\n\nX, y = make_friedman1(n_samples=300, noise=0.5,\
+      \ random_state=0)\nX_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)\n\n\
+      model = make_pipeline(\n    StandardScaler(),\n    SVR(C=10, epsilon=0.1),\n)\nmodel.fit(X_train,\
+      \ y_train)\ny_pred = model.predict(X_test[:3])\nprint(\"y_pred:\", y_pred)\nprint(\"score:\", round(model.score(X_test,\
+      \ y_test), 3))"
+    output: 'y_pred: [13.08584644 13.55479807 19.6385231 ]
 
-        X, y = make_friedman1(n_samples=300, noise=0.5, random_state=0)
-        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+      score: 0.827
 
-        model = make_pipeline(
-            StandardScaler(),
-            SVR(C=10, epsilon=0.1),
-        )
-        model.fit(X_train, y_train)
-        print(round(model.score(X_test, y_test), 3))
+      '
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
-         note: "One value per row."}
-      - {name: score, kind: method, task: regression, shape: "float",
-         note: "R squared on the data you pass in."}
-      - {name: support_vectors_, kind: attribute, task: null, shape: "(n_SV, n_features)",
-         note: "Rows on or outside the epsilon tube."}
-    next_step: "Try a few epsilon values; the default is 0.1."
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples,)
+      note: One value per row.
+      object_type: numpy.ndarray
+      example: '[0.25, 0.40, 0.65]'
+      shape_explanation: One predicted value per query row; three values give n_samples=3 and shape (3,).
+    - name: score
+      kind: method
+      task: regression
+      shape: scalar
+      note: R² on supplied data; 1 is perfect and 0 matches the mean baseline.
+      object_type: float
+      example: '0.82'
+      shape_explanation: A scalar is one value with no array dimensions; 0.82 is one score.
+    - name: support_vectors_
+      kind: attribute
+      task: null
+      shape: (n_SV, n_features)
+      note: Rows on or outside the epsilon tube.
+      object_type: numpy.ndarray
+      example: '[[0.2, -0.1], [1.0, 0.4]]'
+      shape_explanation: Rows are support vectors and columns are input features; this example has 2 vectors
+        and 2 features, shape (2, 2).
+    - name: dual_coef_
+      kind: attribute
+      task: null
+      shape: (1, n_SV)
+      note: Signed dual weights for each support vector.
+      object_type: numpy.ndarray
+      example: '[[0.2, -0.5]]'
+      shape_explanation: One row of signed dual weights, one per support vector; this binary regression
+        example has 2 support vectors, shape (1, 2).
+    next_step: Try a few epsilon values; the default is 0.1.
     visual: regression_preds
+    snippet: '# scikit-learn 1.9.1
+
+      from sklearn.datasets import make_friedman1
+
+      from sklearn.svm import SVR
+
+
+      X, y = make_friedman1(n_samples=100, noise=0.5, random_state=0)
+
+      model = SVR(C=10, epsilon=0.1).fit(X, y)
+
+      y_pred = model.predict(X[:3])
+
+      print("y_pred:", y_pred.round(3))
+
+      print("support_vectors_ shape:", model.support_vectors_.shape)
+
+      print("dual_coef_ shape:", model.dual_coef_.shape)
+
+      '
+    snippet_library: scikit-learn
+    output: 'y_pred: [17.133 19.29  15.775]
+
+      support_vectors_ shape: (96, 10)
+
+      dual_coef_ shape: (1, 96)
+
+      '
   catch_outs:
-    - "SVR does no scaling itself; scale features first."
-    - "coef_ exists only with kernel='linear'."
-    - "On this toy data, C=1 scored 0.62 and C=10 scored 0.83."
+  - SVR does no scaling itself; scale features first.
+  - coef_ exists only with kernel='linear'.
+  - On this toy data, C=1 scored 0.62 and C=10 scored 0.83.
   key_settings:
     tier1:
-      - {name: C, page: null}
-      - {name: epsilon, page: null}
-      - {name: kernel, page: null}
-      - {name: gamma, page: null}
+    - name: C
+      page: null
+      controls: Penalty strength for errors and margin violations.
+      effect: Larger C fits training rows more closely; smaller C allows more violations for a wider,
+        smoother margin.
+    - name: epsilon
+      page: null
+      controls: Width of the epsilon-insensitive tube.
+      effect: A wider tube ignores more small errors and usually yields fewer support vectors.
+    - name: kernel
+      page: null
+      controls: Similarity function, such as linear, polynomial, or RBF.
+      effect: Nonlinear kernels allow curved boundaries; precomputed expects a kernel matrix.
+    - name: gamma
+      page: null
+      controls: Kernel coefficient for RBF, polynomial, and sigmoid kernels.
+      effect: Larger gamma makes similarity fall off faster and can create more local fits.
     tier2:
-      - {name: degree, page: null}
-      - {name: coef0, page: null}
+    - name: degree
+      page: null
+      controls: Polynomial kernel degree.
+      effect: Higher degree makes the polynomial boundary more flexible.
+    - name: coef0
+      page: null
+      controls: Independent term used by polynomial and sigmoid kernels.
+      effect: It changes how higher-order and lower-order terms trade off.
     tier3:
-      - {name: shrinking, page: null}
-      - {name: tol, page: null}
-      - {name: max_iter, page: null}
-      - {name: cache_size, page: null}
-  watch_it_work: {none: true}
+    - name: shrinking
+      page: null
+      controls: Whether to use the shrinking heuristic during optimization.
+      effect: Can speed optimization; disabling it can help diagnose convergence.
+    - name: tol
+      page: null
+      controls: Optimization stopping tolerance.
+      effect: Smaller tolerance can take longer for a tighter stopping condition.
+    - name: max_iter
+      page: null
+      controls: Iteration cap; -1 means no cap.
+      effect: A low cap may stop before convergence.
+    - name: cache_size
+      page: null
+      controls: Kernel cache size in MB.
+      effect: A larger cache can reduce recomputation at a memory cost.
+  watch_it_work:
+    none: true
   intuition:
-    idea: "Fit a curve so most points sit inside a tube; points outside it set the fit."
-    analogy: "A rope pinned to the points, slack inside a tube."
+    idea: Fit a curve so most points sit inside a tube; points outside it set the fit.
+    analogy: A rope pinned to the points, slack inside a tube.
     animation: none
-    good_at: ["curved trends", "up to 10,000 rows", "scaled features"]
-    bad_at: ["large data", "images or text", "a simple formula"]
+    good_at:
+    - curved trends
+    - up to 10,000 rows
+    - scaled features
+    bad_at:
+    - large data
+    - images or text
+    - a simple formula
     vs_siblings:
-      - {page: nu-svr, note: "NuSVR sets nu instead of epsilon."}
-      - {page: kernel-ridge, note: "Kernel ridge has no tube; every point counts."}
-    read_more:
-      - "Pick a kernel to measure how alike two rows are."
-      - "Points inside the epsilon tube cost nothing."
-      - "Points outside it set the curve."
+    - page: nu-svr
+      note: NuSVR sets nu instead of epsilon.
+    - page: kernel-ridge
+      note: Kernel ridge has no tube; every point counts.
+    goal: Fit a kernel regression function while ignoring residuals within epsilon and penalizing larger
+      ones.
+    math:
+      notation:
+      - symbol: φ(x)
+        meaning: feature representation defined by the kernel
+      - symbol: w,b
+        meaning: regression direction and intercept
+      - symbol: ε
+        meaning: width of the zero-loss tube
+      - symbol: ξ_i,ξ_i*
+        meaning: positive and negative tube violations
+      - symbol: C
+        meaning: penalty multiplier for violations
+      - symbol: α_i,α_i*
+        meaning: dual weights for training rows
+      equations:
+      - expression: min ½||w||²+CΣ_i(ξ_i+ξ_i*)
+        meaning: Choose a flat function and penalize tube violations.
+      - expression: y_i-(w·φ(x_i)+b)≤ε+ξ_i; (w·φ(x_i)+b)-y_i≤ε+ξ_i*
+        meaning: Require both residual directions to fit inside epsilon plus slack.
+      - expression: f(x)=Σ_{i∈SV}(α_i-α_i*)K(x_i,x)+b
+        meaning: Predict with kernel similarities weighted by support-vector dual coefficients.
+      prediction: Within epsilon, errors cost zero. C penalizes excess errors; dual_coef_ stores signed
+        support-vector weights.
+    read_more: &id001
+    - Map rows into the kernel feature space.
+    - Find the flattest function whose residuals can lie inside the epsilon tube.
+    - Penalize residuals outside the tube by C and keep rows with nonzero dual weight.
+    steps: *id001
   next: []

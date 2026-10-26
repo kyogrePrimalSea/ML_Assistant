@@ -1,157 +1,387 @@
 id: logistic-regression
 plain_name: Logistic regression
 code_name: LogisticRegression / Logit
-aliases: [logit, MaxEnt]
+aliases:
+- logit
+- MaxEnt
 stage: model
 family: model.linear.logit
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [probabilities, binary outcome, p-values]
-targets: [sklearn.linear_model.LogisticRegression, statsmodels.discrete.discrete_model.Logit]
+question_tags:
+- probabilities
+- binary outcome
+- p-values
+targets:
+- sklearn.linear_model.LogisticRegression
+- statsmodels.discrete.discrete_model.Logit
 pairs_with: []
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html',
-  'https://www.statsmodels.org/stable/generated/statsmodels.discrete.discrete_model.Logit.html']
-library_versions: {scikit-learn: 1.9.1, statsmodels: 0.15.0}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html
+- https://www.statsmodels.org/stable/generated/statsmodels.discrete.discrete_model.Logit.html
+- https://scikit-learn.org/stable/modules/linear_model.html#logistic-regression
+library_versions:
+  scikit-learn: 1.9.1
+  statsmodels: 0.15.0
 reviewed: false
 rules:
-  task_types: [classification]
+  task_types:
+  - classification
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: breast-cancer, shape: boundary}
+    hero:
+      kind: model
+      dataset: breast-cancer
+      shape: boundary
     line: Class probabilities from a weighted sum you can read.
-  quick_facts: {none: true}
+  quick_facts:
+    none: true
   use_avoid:
-    use_when: [class probabilities, readable effects, two classes]
-    avoid_when: [curved boundaries, correlated columns, text inputs]
+    use_when:
+    - class probabilities
+    - readable effects
+    - two classes
+    avoid_when:
+    - curved boundaries
+    - correlated columns
+    - text inputs
   prep:
-    - step: {family: clean.impute}
-      status: required
-      why: Rejects missing values with an error.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Needs numbers, not text.
-      condition: {has_categoricals: true}
-      unless: null
-    - step: {family: transform.scale.rescale}
-      status: recommended
-      why: lbfgs may not converge on raw columns.
-      condition: null
-      unless: null
-    - step: {family: transform.rebalance.weight}
-      status: recommended
-      why: class_weight='balanced' helps lopsided classes.
-      condition: {imbalanced: true, task_type: [classification]}
-      unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Rejects missing values with an error.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Needs numbers, not text.
+    condition:
+      has_categoricals: true
+    unless: null
+  - step:
+      family: transform.scale.rescale
+    status: recommended
+    why: lbfgs may not converge on raw columns.
+    condition: null
+    unless: null
+  - step:
+      family: transform.rebalance.weight
+    status: recommended
+    why: class_weight='balanced' helps lopsided classes.
+    condition:
+      imbalanced: true
+      task_type:
+      - classification
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.linear_model.LogisticRegression
-      why_this_library: Regularised, with class probabilities built in.
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import load_breast_cancer
-        from sklearn.linear_model import LogisticRegression
-        from sklearn.model_selection import train_test_split
-        from sklearn.pipeline import make_pipeline
-        from sklearn.preprocessing import StandardScaler
+  - library: scikit-learn
+    target: sklearn.linear_model.LogisticRegression
+    why_this_library: Regularized classifier with labels, probabilities, and decision scores.
+    snippet: '# scikit-learn 1.9.1
 
-        X, y = load_breast_cancer(return_X_y=True)
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, random_state=0
-        )
+      import numpy as np
 
-        model = make_pipeline(StandardScaler(), LogisticRegression())
-        model.fit(X_train, y_train)
-        print(round(model.score(X_test, y_test), 3))
-    - library: statsmodels
-      target: statsmodels.discrete.discrete_model.Logit
-      why_this_library: Gives p-values, which scikit-learn does not.
-      snippet: |
-        # statsmodels 0.15.0
-        import statsmodels.api as sm
-        from sklearn.datasets import load_breast_cancer
-
-        X, y = load_breast_cancer(return_X_y=True)
-        X = sm.add_constant(X[:, :5])
-        result = sm.Logit(y, X).fit(disp=False)
-        print(result.pvalues.round(3))
-  what_comes_out:
-    items:
-      - {name: predict, kind: method, task: classification, shape: "(n_samples,)",
-         note: "Class labels. Same as a 0.5 cut-off on predict_proba."}
-      - {name: predict_proba, kind: method, task: classification,
-         shape: "(n_samples, n_classes)",
-         note: "One column per class, in classes_ order."}
-      - {name: decision_function, kind: method, task: classification,
-         shape: "(n_samples,)",
-         note: "Raw score before the sigmoid. Above 0 means class 1."}
-      - {name: score, kind: method, task: null, shape: "float",
-         note: "Accuracy on the data you pass."}
-      - {name: coef_, kind: attribute, task: null, shape: "(1, n_features)",
-         note: "One row for two classes. Weights are on log-odds."}
-      - {name: intercept_, kind: attribute, task: null, shape: "(1,)",
-         note: "Log-odds when all inputs are zero."}
-      - {name: classes_, kind: attribute, task: classification,
-         shape: "(n_classes,)", note: "Label order used by predict_proba."}
-      - {name: pvalues, kind: return, task: null, shape: "(n_features + 1,)",
-         note: "Statsmodels fit result only. Includes the constant."}
-    next_step: ROC AUC and PR curves need probabilities, not labels.
-    snippet: |
-      # scikit-learn 1.9.1
       from sklearn.datasets import load_breast_cancer
+
       from sklearn.linear_model import LogisticRegression
+
       from sklearn.model_selection import train_test_split
+
       from sklearn.pipeline import make_pipeline
+
       from sklearn.preprocessing import StandardScaler
 
-      X, y = load_breast_cancer(return_X_y=True)
-      X_train, X_test, y_train, y_test = train_test_split(
-          X, y, random_state=0
-      )
 
-      model = make_pipeline(StandardScaler(), LogisticRegression())
+      X, y = load_breast_cancer(return_X_y=True)
+
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+      model = make_pipeline(StandardScaler(), LogisticRegression(max_iter=1000))
+
       model.fit(X_train, y_train)
-      print(model.predict_proba(X_test).shape)
-      print(model.predict_proba(X_test)[:3].round(3))
+
+      y_pred = model.predict(X_test[:3])
+
+      y_proba = model.predict_proba(X_test[:3])
+
+      y_score = model.decision_function(X_test[:3])
+
+      print(''y_pred labels:'', y_pred)
+
+      print(''y_proba:'', np.round(y_proba, 3))
+
+      print(''y_score:'', np.round(y_score, 3))
+
+      print(''classes:'', model[-1].classes_)'
+    output: "y_pred labels: [0 1 1]\ny_proba: [[0.999 0.001]\n [0.04  0.96 ]\n [0.001 0.999]]\ny_score: [-6.605\
+      \  3.186  6.638]\nclasses: [0 1]\n"
+  - library: statsmodels
+    target: statsmodels.discrete.discrete_model.Logit
+    why_this_library: Unpenalized Logit fit returns likelihood-based inference such as p-values.
+    snippet: '# statsmodels 0.15.0
+
+      import numpy as np
+
+      import statsmodels.api as sm
+
+      from sklearn.datasets import load_breast_cancer
+
+
+      X, y = load_breast_cancer(return_X_y=True)
+
+      X = sm.add_constant(X[:, :5])
+
+      result = sm.Logit(y, X).fit(disp=False)
+
+      y_proba = result.predict(X[:3])
+
+      y_pred = (y_proba >= 0.5).astype(int)
+
+      print(''y_pred labels:'', y_pred)
+
+      print(''y_proba class 1:'', np.round(y_proba, 3))
+
+      print(''params:'', np.round(result.params, 3))
+
+      print(''pvalues:'', np.round(result.pvalues, 3))'
+    output: "y_pred labels: [0 0 0]\ny_proba class 1: [0. 0. 0.]\nparams: [ 1.25260e+01  6.27500e+00 -3.64000e-01\
+      \ -6.07000e-01 -4.20000e-02\n -1.18462e+02]\npvalues: [0.135 0.001 0.    0.001 0.002 0.   ]\n"
+  what_comes_out:
+    items:
+    - name: predict
+      kind: method
+      task: classification
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[0, 1, 1]'
+      shape_explanation: 'A one-dimensional array: n_samples counts cases being classified. The fictional example
+        assumes n_samples=3 and has concrete shape (3,); the trailing comma marks one dimension.'
+      note: Predicted class labels; labels are not probability scores.
+    - name: predict_proba
+      kind: method
+      task: classification
+      shape: (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[[0.82, 0.18], [0.27, 0.73], [0.61, 0.39]]'
+      shape_explanation: 'A two-dimensional table: rows are n_samples and columns are n_classes. This fictional
+        example assumes 3 cases and 2 classes, so its concrete shape is (3, 2).'
+      note: One probability per class in classes_ order; rows sum to one.
+    - name: decision_function
+      kind: method
+      task: classification
+      shape: (n_samples,) or (n_samples,n_classes)
+      object_type: numpy.ndarray
+      example: '[-1.4, 0.8, 0.2]'
+      shape_explanation: 'Binary: one signed score per case, so this fictional example with n_samples=3 has shape
+        (3,). Multiclass: one score per case and class, shape (n_samples, n_classes).'
+      note: Binary has one signed score per case; multiclass has one score per class.
+    - name: classes_
+      kind: attribute
+      task: classification
+      shape: (n_classes,)
+      object_type: numpy.ndarray
+      example: '[0, 1]'
+      shape_explanation: 'A one-dimensional array: n_classes counts known labels. This fictional example assumes
+        2 classes and has shape (2,); the trailing comma marks one dimension.'
+      note: Label order maps predict_proba columns to class labels.
+    - name: coef_
+      kind: attribute
+      task: null
+      shape: (1|n_classes, n_features)
+      object_type: numpy.ndarray
+      example: '[[0.4, -1.2, 0.7]]'
+      shape_explanation: Rows are class contrasts and columns are features. This fictional binary example assumes
+        n_features=3 and one contrast, so its concrete shape is (1, 3). Multiclass has n_classes rows and n_features
+        columns.
+      note: One binary contrast row; multiclass has one coefficient row per class.
+    - name: intercept_
+      kind: attribute
+      task: null
+      shape: (1,) binary; (n_classes,) multiclass
+      object_type: numpy.ndarray
+      example: '[0.3]'
+      shape_explanation: A one-dimensional array of class intercepts. This fictional binary example has one contrast,
+        shape (1,); the trailing comma marks one dimension.
+      note: Scikit-learn baseline decision score for each class contrast.
+    - name: params
+      kind: return
+      task: null
+      shape: (n_parameters,)
+      object_type: numpy.ndarray
+      example: '[0.2, 0.4, -1.2]'
+      shape_explanation: 'A one-dimensional fitted coefficient array: n_parameters includes the constant if it was
+        added to exog. This fictional example assumes n_parameters=3 and has shape (3,).'
+      note: Statsmodels Results.params; this unpenalized Logit fit includes its constant.
+    - name: pvalues
+      kind: return
+      task: null
+      shape: (n_parameters,)
+      object_type: numpy.ndarray
+      example: '[0.4, 0.02, 0.001]'
+      shape_explanation: A one-dimensional array of coefficient tests. This fictional example assumes n_parameters=3
+        and has shape (3,); the trailing comma marks one dimension.
+      note: Statsmodels Results.pvalues; inference depends on model assumptions.
+    next_step: null
+    snippet: '# scikit-learn 1.9.1
+
+      import numpy as np
+
+      import statsmodels.api as sm
+
+      from sklearn.datasets import load_breast_cancer
+
+      from sklearn.linear_model import LogisticRegression
+
+      from sklearn.model_selection import train_test_split
+
+      from sklearn.pipeline import make_pipeline
+
+      from sklearn.preprocessing import StandardScaler
+
+
+      X, y = load_breast_cancer(return_X_y=True)
+
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+      model = make_pipeline(StandardScaler(), LogisticRegression(max_iter=1000))
+
+      model.fit(X_train, y_train)
+
+      y_pred = model.predict(X_test[:3])
+
+      y_proba = model.predict_proba(X_test[:3])
+
+      y_score = model.decision_function(X_test[:3])
+
+      print(''sklearn labels:'', y_pred)
+
+      print(''sklearn probabilities:'', np.round(y_proba, 3))
+
+      print(''sklearn binary scores:'', np.round(y_score, 3))
+
+      X_sm = sm.add_constant(X[:, :5])
+
+      result = sm.Logit(y, X_sm).fit(disp=False)
+
+      print(''statsmodels params:'', np.round(result.params[:3], 3))
+
+      print(''statsmodels pvalues:'', np.round(result.pvalues[:3], 3))'
     snippet_library: scikit-learn
     visual: proba_table
+    guidance:
+    - task: classification
+      text: Use predict_proba or continuous decision scores for ROC AUC and PR curves. Use predicted labels for
+        accuracy or a confusion matrix.
+    output: "sklearn labels: [0 1 1]\nsklearn probabilities: [[0.999 0.001]\n [0.04  0.96 ]\n [0.001 0.999]]\nsklearn\
+      \ binary scores: [-6.605  3.186  6.638]\nstatsmodels params: [12.526  6.275 -0.364]\nstatsmodels pvalues:\
+      \ [0.135 0.001 0.   ]\n"
   catch_outs:
-    - Missing values raise an error. Impute first.
-    - Unscaled columns can stop lbfgs converging.
-    - Many correlated columns can give a singular matrix in statsmodels.
-    - Text columns fail. Encode them first.
+  - Missing values raise an error. Impute first.
+  - Unscaled columns can stop lbfgs converging.
+  - Many correlated columns can give a singular matrix in statsmodels.
+  - Text columns fail. Encode them first.
   key_settings:
     tier1:
-      - {name: C, page: null}
-      - {name: solver, page: null}
-      - {name: class_weight, page: null}
+    - name: C
+      page: null
+      controls: Inverse regularization strength for the scikit-learn fit.
+      effect: Smaller C applies stronger shrinkage; too small can underfit and too large can overfit.
+    - name: solver
+      page: null
+      controls: Numerical optimization method for the scikit-learn likelihood objective.
+      effect: Solvers support different penalties and data sizes; an incompatible pairing cannot fit.
+    - name: class_weight
+      page: null
+      controls: Relative class weights in the scikit-learn loss; balanced mode weights classes inversely to frequency.
+      effect: Higher weight makes mistakes for that class cost more, which can shift the decision boundary.
     tier2:
-      - {name: l1_ratio, page: null}
-      - {name: max_iter, page: null}
-      - {name: fit_intercept, page: null}
+    - name: l1_ratio
+      page: null
+      controls: Mix of L1 and L2 penalties when elastic-net regularization is enabled.
+      effect: More L1 encourages sparse coefficients; more L2 spreads shrinkage across coefficients.
+    - name: max_iter
+      page: null
+      controls: Maximum solver iterations for scikit-learn.
+      effect: Too few iterations can stop before convergence; more iterations take longer.
+    - name: fit_intercept
+      page: null
+      controls: Whether scikit-learn fits a constant term.
+      effect: Turning it off assumes the decision boundary should pass through the origin after preprocessing.
     tier3:
-      - {name: missing, page: null}
-      - {name: dual, page: null}
-      - {name: tol, page: null}
-  watch_it_work: {none: true}
+    - name: missing
+      page: null
+      controls: 'Statsmodels handling of missing observations: none, drop, or raise.'
+      effect: Dropping rows changes the estimation sample; raising stops when missing values are found.
+    - name: dual
+      page: null
+      controls: Use the dual formulation; supported only for liblinear with L2 penalty.
+      effect: It can be preferable when features outnumber rows; invalid solver/penalty combinations are unsupported.
+    - name: tol
+      page: null
+      controls: Stopping tolerance for the scikit-learn solver.
+      effect: A looser tolerance may finish sooner but with a less precise optimum.
+  watch_it_work:
+    none: true
   intuition:
     idea: Adds weighted inputs, then squashes the sum into a probability.
     analogy: A scale that tips toward yes once enough evidence piles up.
     animation: none
-    good_at: [class probabilities, readable effects, linear boundaries]
-    bad_at: [curved boundaries, correlated columns]
+    good_at:
+    - class probabilities
+    - readable effects
+    - linear boundaries
+    bad_at:
+    - curved boundaries
+    - correlated columns
     vs_siblings:
-      - {page: logistic-regression-cv, note: "Same model. Cross-validation picks C for you."}
-      - {page: probit, note: "Normal curve instead of logistic curve."}
-      - {page: mn-logit, note: "Three or more classes, with p-values."}
-    read_more:
-      - Take the weighted sum of the inputs.
-      - Pass it through the logistic curve.
-      - Fit by maximum likelihood, with an optional penalty.
-  next: [model-overfitting, but-rare-class-model]
+    - page: logistic-regression-cv
+      note: Same model. Cross-validation picks C for you.
+    - page: probit
+      note: Normal curve instead of logistic curve.
+    - page: mn-logit
+      note: Three or more classes, with p-values.
+    read_more: &id001
+    - Build a weighted sum of the input features.
+    - Map that sum through the logistic curve to estimate class-1 probability.
+    - Choose coefficients by maximum likelihood. Scikit-learn adds a penalty; statsmodels Logit does not.
+    - Convert probability to a label only when a class decision is needed.
+    goal: Fit binary log-odds. Scikit-learn regularizes; statsmodels Logit provides unpenalized likelihood inference.
+    math:
+      notation:
+      - symbol: x_i
+        meaning: Feature vector for case i.
+      - symbol: y_i
+        meaning: Binary target, coded 0 or 1.
+      - symbol: z_i
+        meaning: Linear predictor b_0 + x_i^T b.
+      - symbol: p_i
+        meaning: Probability that case i belongs to class 1.
+      - symbol: C
+        meaning: Inverse regularization strength in scikit-learn.
+      - symbol: b
+        meaning: Coefficient vector for the input features.
+      - symbol: b_0
+        meaning: Intercept in the linear predictor.
+      equations:
+      - expression: z_i = b_0 + x_i^T b;  p_i = 1 / (1 + exp(-z_i))
+        meaning: The logistic curve maps the linear predictor to a class-1 probability.
+      - expression: maximize sum_i [y_i log(p_i) + (1-y_i) log(1-p_i)]
+        meaning: Logit maximum likelihood chooses coefficients that assign high probability to observed labels.
+      - expression: sklearn minimizes negative log-likelihood + penalty(b) / C
+        meaning: Scikit-learn adds coefficient regularization; smaller C means a stronger penalty.
+      prediction: Sklearn returns binary probabilities and signed scores; statsmodels predicts class-1 probability.
+        Labels use 0.5.
+    steps: *id001
+  next:
+  - model-overfitting
+  - but-rare-class-model

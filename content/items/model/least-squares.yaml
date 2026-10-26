@@ -1,44 +1,68 @@
 id: least-squares
 plain_name: least_squares
 code_name: least_squares
-aliases: [nonlinear least squares, bounded least squares]
+aliases:
+- nonlinear least squares
+- bounded least squares
 stage: model
 family: model.awkward.shape
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [bounds, custom formula, robust loss]
-targets: [scipy.optimize.least_squares]
+question_tags:
+- bounds
+- custom formula
+- robust loss
+targets:
+- scipy.optimize.least_squares
 pairs_with: []
 clashes: []
-source_urls: ['https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.least_squares.html']
-library_versions: {scipy: 1.18.1}
+source_urls:
+- https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.least_squares.html
+library_versions:
+  scipy: 1.18.1
 reviewed: false
 rules:
-  task_types: [regression]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: ames, shape: fit_line}
+    hero:
+      kind: model
+      dataset: ames
+      shape: fit_line
     line: Fits any formula, with limits on each number.
   quick_facts:
     data_size: Any size
   use_avoid:
-    use_when: [bounds on values, robust loss, custom formula]
-    avoid_when: [plain linear fit, need p-values, no residual form]
+    use_when:
+    - bounds on values
+    - robust loss
+    - custom formula
+    avoid_when:
+    - plain linear fit
+    - need p-values
+    - no residual form
   prep:
-    - step: {family: clean.impute}
-      status: required
-      why: NaN residuals stop the fit.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.scale.rescale}
-      status: recommended
-      why: Similar input scales help the solver converge.
-      condition: null
-      unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: NaN residuals stop the fit.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.scale.rescale
+    status: recommended
+    why: Similar input scales help the solver converge.
+    condition: null
+    unless: null
   code:
   - library: scipy
     target: scipy.optimize.least_squares
@@ -47,61 +71,234 @@ slots:
       # scipy 1.18.1
       import numpy as np
       from scipy.optimize import least_squares
-      from sklearn.datasets import make_regression
 
-      X, y = make_regression(n_samples=100, n_features=2, noise=5.0,
-                             random_state=0)
-      y[:5] += 100  # a few gross outliers
+      A = np.array([
+          [1.0, 0.0], [1.0, 1.0], [1.0, 2.0],
+          [1.0, 3.0], [1.0, 4.0], [1.0, 5.0],
+      ])
+      y = np.array([1.0, 0.8, 2.4, 3.1, 3.7, 30.0])
+      def residuals(theta):
+          return A @ theta - y
 
-
-      def residuals(w):
-          return X @ w - y
-
-
-      res = least_squares(residuals, x0=np.zeros(2), bounds=(-200, 200),
-                          loss="soft_l1")
-      print(res.x.round(2))
+      result = least_squares(
+          residuals, x0=np.zeros(2), bounds=(-10, 10),
+          loss="soft_l1", f_scale=1.0,
+      )
+      y_fit = A @ result.x
+      print("OptimizeResult:")
+      print("x:", np.round(result.x, 3))
+      print("fun shape and values:", result.fun.shape, np.round(result.fun, 3))
+      print("cost:", round(result.cost, 4))
+      print("jac shape:", result.jac.shape)
+      print("status/success:", result.status, result.success)
+      print("fitted y:", np.round(y_fit, 3))
+    output: |
+      OptimizeResult:
+      x: [0.029 1.21 ]
+      fun shape and values: (6,) [ -0.971   0.438   0.048   0.557   1.167 -23.923]
+      cost: 24.1131
+      jac shape: (6, 2)
+      status/success: 2 True
+      fitted y: [0.029 1.238 2.448 3.657 4.867 6.077]
   what_comes_out:
     items:
-      - {name: x, kind: return, task: null, shape: "(n,)",
-         note: "Solution: the fitted parameter values."}
-      - {name: cost, kind: return, task: null, shape: "float",
-         note: "Cost at the solution, using the chosen loss."}
-      - {name: fun, kind: return, task: null, shape: "(m,)",
-         note: "Residuals at the solution."}
-    next_step: Read result.x for the values and result.cost for the loss.
+    - name: x
+      kind: return
+      task: null
+      shape: (n,)
+      object_type: numpy.ndarray
+      example: '[1.2, 0.6]'
+      shape_explanation: The solution vector has n entries, one per optimized parameter. This example has 2 parameters, shape (2,).
+      note: Read from the returned OptimizeResult as result.x.
+    - name: fun
+      kind: return
+      task: null
+      shape: (m,)
+      object_type: numpy.ndarray
+      example: '[0.1, -0.2, 0.0, 0.4]'
+      shape_explanation: One residual per residual-function output. m counts residuals; the fictional example has 4, shape (4,).
+      note: Final residual vector from result.fun, not the scalar objective.
+    - name: cost
+      kind: return
+      task: null
+      shape: scalar
+      object_type: numpy.float64
+      example: '0.15'
+      shape_explanation: One scalar objective value, with no array axes.
+      note: result.cost is half the chosen summed loss; linear loss gives half the squared-residual sum.
+    - name: jac
+      kind: return
+      task: null
+      shape: (m, n)
+      object_type: numpy.ndarray
+      example: '[[1.0, 0.0], [1.0, 1.0], [1.0, 2.0]]'
+      shape_explanation: Rows are residuals and columns are optimized parameters. With 4 residuals and 2 parameters, shape is (4, 2).
+      note: Read result.jac; robust losses modify it so J.T @ J approximates the loss Hessian.
+    - name: status
+      kind: return
+      task: null
+      shape: scalar
+      object_type: int
+      example: '1'
+      shape_explanation: One integer termination code, not an array. Positive status codes indicate a convergence condition.
+      note: Read from result.status; see message for the reason.
+    - name: success
+      kind: return
+      task: null
+      shape: scalar
+      object_type: bool
+      example: 'True'
+      shape_explanation: One true/false value, with no array dimensions.
+      note: Read from result.success; false means the solver did not satisfy a convergence condition.
+    - name: A @ result.x
+      kind: return
+      task: regression
+      shape: (m,)
+      object_type: numpy.ndarray
+      example: '[1.1, 1.5, 2.0, 2.6]'
+      shape_explanation: Multiplying the design matrix A by the fitted parameter vector gives one model value per design row. Here A has 6 rows, so the prediction vector has shape (6,).
+      note: Caller-built predictions; least_squares returns result.x and residual diagnostics, not predictions.
+    next_step: Check result.success, then calculate predictions with result.x.
     visual: null
+    snippet: |
+      # scipy 1.18.1
+      import numpy as np
+      from scipy.optimize import least_squares
+
+      A = np.array([
+          [1.0, 0.0], [1.0, 1.0], [1.0, 2.0],
+          [1.0, 3.0], [1.0, 4.0], [1.0, 5.0],
+      ])
+      y = np.array([1.0, 0.8, 2.4, 3.1, 3.7, 30.0])
+      def residuals(theta):
+          return A @ theta - y
+
+      result = least_squares(
+          residuals, x0=np.zeros(2), bounds=(-10, 10),
+          loss="soft_l1", f_scale=1.0,
+      )
+      y_fit = A @ result.x
+      print("OptimizeResult:")
+      print("x:", np.round(result.x, 3))
+      print("fun shape and values:", result.fun.shape, np.round(result.fun, 3))
+      print("cost:", round(result.cost, 4))
+      print("jac shape:", result.jac.shape)
+      print("status/success:", result.status, result.success)
+      print("fitted y:", np.round(y_fit, 3))
+    snippet_library: scipy
+    output: |
+      OptimizeResult:
+      x: [0.029 1.21 ]
+      fun shape and values: (6,) [ -0.971   0.438   0.048   0.557   1.167 -23.923]
+      cost: 24.1131
+      jac shape: (6, 2)
+      status/success: 2 True
+      fitted y: [0.029 1.238 2.448 3.657 4.867 6.077]
+    guidance:
+    - task: regression
+      text: Check result.success and status; construct predictions with result.x and your own model function.
   catch_outs:
-    - The default loss is linear. Set loss for robust fits.
-    - The lm method ignores bounds. Use trf or dogbox.
-    - A poor starting point x0 can reach a local minimum.
+  - The default loss is linear. Set loss for robust fits.
+  - The lm method ignores bounds. Use trf or dogbox.
+  - A poor starting point x0 can reach a local minimum.
   key_settings:
     tier1:
-    - {name: loss, page: null}
-    - {name: bounds, page: null}
-    - {name: method, page: null}
-    - {name: jac, page: null}
+    - name: loss
+      page: null
+      controls: Chooses linear least squares or a robust loss such as soft_l1 or huber.
+      effect: Robust losses reduce the influence of large residuals, but change cost interpretation.
+    - name: bounds
+      page: null
+      controls: Sets lower and upper limits on each optimized variable.
+      effect: Bounds enforce constraints; the initial point must be feasible and the solution may land on a bound.
+    - name: method
+      page: null
+      controls: Chooses trf, dogbox, or lm algorithm.
+      effect: trf supports bounds and sparse problems; lm is unconstrained and requires at least as many residuals as parameters.
+    - name: jac
+      page: null
+      controls: Chooses numerical differentiation or supplies the residual Jacobian.
+      effect: A reliable Jacobian improves steps; sparse patterns can reduce work.
     tier2:
-    - {name: x_scale, page: null}
-    - {name: max_nfev, page: null}
-    - {name: tr_solver, page: null}
-    - {name: callback, page: null}
+    - name: x_scale
+      page: null
+      controls: Sets characteristic scale for each optimization variable.
+      effect: Scaling makes trust-region steps comparable across differently sized parameters.
+    - name: max_nfev
+      page: null
+      controls: Caps residual function evaluations.
+      effect: A higher cap may allow convergence but takes longer.
+    - name: tr_solver
+      page: null
+      controls: Chooses exact or iterative trust-region subproblem solver.
+      effect: Exact can suit small dense Jacobians; lsmr can reduce memory for large sparse problems.
+    - name: callback
+      page: null
+      controls: Runs user code after iterations and can stop optimization.
+      effect: Callbacks support monitoring or early stopping, but add work and can interrupt convergence.
     tier3:
-    - {name: ftol, page: null}
-    - {name: xtol, page: null}
-    - {name: gtol, page: null}
-    - {name: f_scale, page: null}
-  watch_it_work: {none: true}
+    - name: ftol
+      page: null
+      controls: Sets termination tolerance for relative cost change.
+      effect: Looser tolerance may stop sooner with a less settled objective.
+    - name: xtol
+      page: null
+      controls: Sets termination tolerance for parameter-step size.
+      effect: Looser tolerance may stop while parameters could still move.
+    - name: gtol
+      page: null
+      controls: Sets termination tolerance for the scaled gradient.
+      effect: Looser tolerance accepts a less stationary solution.
+    - name: f_scale
+      page: null
+      controls: Sets the inlier/outlier transition scale for robust losses.
+      effect: Larger values treat more residuals as inliers; smaller values downweight large residuals sooner.
+  watch_it_work:
+    none: true
   intuition:
     idea: Adjust the numbers to make the residuals as small as possible, within limits.
     analogy: Tuning knobs that each have a stop at a set limit.
     animation: none
-    good_at: [bounds on values, robust losses, custom formulas]
-    bad_at: [p-values, poor starting points]
+    good_at:
+    - bounds on values
+    - robust losses
+    - custom formulas
+    bad_at:
+    - p-values
+    - poor starting points
     vs_siblings:
-      - {page: curve-fit, note: "Simpler interface on top of this solver. Fewer options."}
+    - page: curve-fit
+      note: Simpler interface on top of this solver. Fewer options.
+    goal: Find parameter values that minimize a residual-based objective, optionally with bounds and robust loss.
+    steps:
+    - Define a function that maps a parameter vector to m residuals.
+    - Choose an initial parameter vector and optional bounds.
+    - At each iteration, estimate or compute the Jacobian of residuals with respect to parameters.
+    - Use the selected trust-region or LM method to reduce linear or robust least-squares cost.
+    - Stop when a tolerance or evaluation limit is reached and inspect the returned OptimizeResult.
+    - Construct model predictions separately by applying the fitted parameters to the model function.
+    math:
+      notation:
+      - symbol: theta
+        meaning: Vector of n optimized parameters.
+      - symbol: r(theta)
+        meaning: Vector of m residuals returned by the user function.
+      - symbol: J
+        meaning: Jacobian with m residual rows and n parameter columns.
+      - symbol: rho
+        meaning: Selected loss function applied to squared residuals.
+      - symbol: f_scale
+        meaning: Scale that sets the transition for robust losses.
+      equations:
+      - expression: J_ij=partial r_i(theta)/partial theta_j
+        meaning: Each Jacobian entry measures how one residual changes with one fitted parameter.
+      - expression: cost(theta)=1/2 sum_i rho(r_i(theta)^2)
+        meaning: The solver minimizes half the sum of the selected loss over residuals.
+      - expression: yhat=g(theta_hat)
+        meaning: If the residuals came from a model g, predictions are made by evaluating that model at the returned solution.
+      prediction: least_squares returns OptimizeResult, not an estimator. Use result.x in your model; result.fun stores residuals.
     read_more:
-      - Write the residuals as a function of the parameters.
-      - Start from x0 and step to a lower cost.
-      - Stop when the change falls below ftol, xtol or gtol.
+    - Write the residuals as a function of the parameters.
+    - Start from x0 and step to a lower cost.
+    - Stop when the change falls below ftol, xtol or gtol.
   next: []

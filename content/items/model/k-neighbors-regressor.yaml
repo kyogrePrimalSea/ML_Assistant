@@ -1,130 +1,267 @@
 id: k-neighbors-regressor
 plain_name: KNeighborsRegressor
 code_name: KNeighborsRegressor
-aliases: [knn regressor, k-nearest neighbors, knn]
+aliases:
+- knn regressor
+- k-nearest neighbors
+- knn
 stage: model
 family: model.neighbours.knn
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [small data, local patterns, simple model]
-targets: [sklearn.neighbors.KNeighborsRegressor]
+question_tags:
+- small data
+- local patterns
+- simple model
+targets:
+- sklearn.neighbors.KNeighborsRegressor
 pairs_with: []
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsRegressor.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsRegressor.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [regression]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: ames, shape: fit_line}
-    line: Predicts from the average of the nearest training rows.
+    hero:
+      kind: model
+      dataset: ames
+      shape: fit_line
+    line: For each query, average the target values from its k closest training rows.
   quick_facts:
     data_size: Small tables, few features
   use_avoid:
-    use_when: [small data, few features, local patterns]
-    avoid_when: [many features, large tables, need a formula]
+    use_when:
+    - small data
+    - few features
+    - local patterns
+    avoid_when:
+    - many features
+    - large tables
+    - need a formula
   prep:
-    - step: {family: transform.scale.rescale}
-      status: required
-      why: "Distances need features on one scale."
-      condition: null
-      unless: null
-    - step: {family: clean.impute}
-      status: required
-      why: Rejects missing values.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Text categories must become numbers.
-      condition: {has_categoricals: true}
-      unless: null
+  - step:
+      family: transform.scale.rescale
+    status: required
+    why: Distances need features on one scale.
+    condition: null
+    unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Rejects missing values.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Text categories must become numbers.
+    condition:
+      has_categoricals: true
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.neighbors.KNeighborsRegressor
-      why_this_library: The scikit-learn estimator for this method.
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import load_diabetes
-        from sklearn.model_selection import train_test_split
-        from sklearn.neighbors import KNeighborsRegressor
-        from sklearn.pipeline import make_pipeline
-        from sklearn.preprocessing import StandardScaler
+  - library: scikit-learn
+    target: sklearn.neighbors.KNeighborsRegressor
+    why_this_library: The scikit-learn estimator for this method.
+    snippet: "# scikit-learn 1.9.1\nfrom sklearn.datasets import load_diabetes\nfrom sklearn.model_selection\
+      \ import train_test_split\nfrom sklearn.neighbors import KNeighborsRegressor\nfrom sklearn.pipeline\
+      \ import make_pipeline\nfrom sklearn.preprocessing import StandardScaler\n\nX, y = load_diabetes(return_X_y=True)\n\
+      X_train, X_test, y_train, y_test = train_test_split(\n    X, y, random_state=0\n)\n\nmodel = make_pipeline(\n\
+      \    StandardScaler(),\n    KNeighborsRegressor(n_neighbors=5),\n)\nmodel.fit(X_train, y_train)\n\
+      y_pred = model.predict(X_test[:3])\nprint(\"y_pred:\", y_pred)\nprint(\"score:\", round(model.score(X_test,\
+      \ y_test), 3))"
+    output: 'y_pred: [253.6 184.8 183.2]
 
-        X, y = load_diabetes(return_X_y=True)
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, random_state=0
-        )
+      score: 0.194
 
-        model = make_pipeline(
-            StandardScaler(),
-            KNeighborsRegressor(n_neighbors=5),
-        )
-        model.fit(X_train, y_train)
-        print(round(model.score(X_test, y_test), 3))
+      '
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
-         note: "Average target of the k nearest training rows."}
-      - {name: kneighbors, kind: method, task: null, shape: "2 arrays of (n_samples, k)",
-         note: "Distances and row numbers of the k nearest rows."}
-      - {name: score, kind: method, task: regression, shape: "float",
-         note: "R squared. 1.0 is perfect; 0 matches the mean."}
-      - {name: n_samples_fit_, kind: attribute, task: null, shape: "int",
-         note: "Training rows kept for lookup."}
-      - {name: n_features_in_, kind: attribute, task: null, shape: "int",
-         note: "Columns seen during fit."}
-      - {name: feature_names_in_, kind: attribute, task: null, shape: "(n_features,)",
-         note: "Column names. Set only when fit on a DataFrame."}
-    next_step: "Score on held-out rows, not on the rows used to fit."
-    snippet: |
-      # scikit-learn 1.9.1
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples,)
+      note: Average target of the k nearest training rows.
+      object_type: numpy.ndarray
+      example: '[0.25, 0.40, 0.65]'
+      shape_explanation: One predicted value per query row; three values give n_samples=3 and shape (3,).
+    - name: kneighbors
+      kind: method
+      task: null
+      shape: 2 arrays of (n_samples, k)
+      note: Distances and row numbers of the k nearest rows.
+      object_type: tuple of numpy.ndarray
+      example: (array([[0.1, 0.3]]), array([[4, 8]]))
+      shape_explanation: The formal shape is 2 arrays of (n_samples, k). n_samples means query rows, n_features
+        input columns, n_classes possible labels, and n_SV support vectors. The fictional example is a
+        small illustrative value; its listed dimensions refer to the corresponding input/model dimensions.
+    - name: score
+      kind: method
+      task: regression
+      shape: scalar
+      note: R² on supplied data; 1 is perfect and 0 matches the mean baseline.
+      object_type: float
+      example: '0.82'
+      shape_explanation: A scalar is one value with no array dimensions; 0.82 is one score.
+    - name: n_samples_fit_
+      kind: attribute
+      task: null
+      shape: scalar
+      note: Training rows kept for lookup.
+      object_type: int
+      example: '442'
+      shape_explanation: A scalar integer is one count, not an array; this fictional example is one count.
+    - name: n_features_in_
+      kind: attribute
+      task: null
+      shape: scalar
+      note: Columns seen during fit.
+      object_type: int
+      example: '2'
+      shape_explanation: A scalar integer is one count, not an array; this fictional example is one count.
+    - name: feature_names_in_
+      kind: attribute
+      task: null
+      shape: (n_features,)
+      note: Column names. Set only when fit on a DataFrame.
+      object_type: numpy.ndarray
+      example: '[''feature_a'', ''feature_b'']'
+      shape_explanation: One name per input feature; this two-name fictional example has shape (2,) and
+        n_features=2.
+    next_step: Score on held-out rows, not on the rows used to fit.
+    snippet: '# scikit-learn 1.9.1
+
       from sklearn.datasets import load_diabetes
+
       from sklearn.neighbors import KNeighborsRegressor
 
+
       data = load_diabetes(as_frame=True)
-      model = KNeighborsRegressor(n_neighbors=5)
-      model.fit(data.data, data.target)
-      print(model.predict(data.data[:3]).shape)
-      dist, idx = model.kneighbors(data.data[:3])
-      print(dist.shape, idx.shape)
-      print(model.n_samples_fit_)
-      print(model.feature_names_in_[:3])
+
+      model = KNeighborsRegressor(n_neighbors=5).fit(data.data, data.target)
+
+      y_pred = model.predict(data.data[:3])
+
+      distances, indices = model.kneighbors(data.data[:3])
+
+      print("y_pred shape:", y_pred.shape)
+
+      print("distances shape:", distances.shape, "indices shape:", indices.shape)
+
+      print("first neighbour indices:", indices[0])
+
+      print("n_samples_fit_:", model.n_samples_fit_)
+
+      print("feature_names_in_:", model.feature_names_in_[:3].tolist())
+
+      '
     snippet_library: scikit-learn
     visual: null
+    output: 'y_pred shape: (3,)
+
+      distances shape: (3, 5) indices shape: (3, 5)
+
+      first neighbour indices: [  0  51   2 341 271]
+
+      n_samples_fit_: 442
+
+      feature_names_in_: [''age'', ''sex'', ''bmi'']
+
+      '
   catch_outs:
-    - "Unscaled features let the widest column decide the distances."
-    - "Predictions are averages of training targets, so they stay in that range."
-    - "Fit the scaler on training rows only, or test rows leak in."
+  - Unscaled features let the widest column decide the distances.
+  - Predictions are averages of training targets, so they stay in that range.
+  - Fit the scaler on training rows only, or test rows leak in.
   key_settings:
     tier1:
-      - {name: n_neighbors, page: null}
-      - {name: weights, page: null}
-      - {name: metric, page: null}
+    - name: n_neighbors
+      page: null
+      controls: Number of nearest training rows used for each average.
+      effect: More neighbours smooth local variation but can blur local patterns.
+    - name: weights
+      page: null
+      controls: Uniform or inverse-distance influence for each neighbour.
+      effect: Distance weighting emphasizes close rows; uniform weighting treats neighbours equally.
+    - name: metric
+      page: null
+      controls: Distance formula used to find neighbours.
+      effect: Different metrics change which training rows count as close.
     tier2:
-      - {name: algorithm, page: null}
-      - {name: leaf_size, page: null}
-      - {name: p, page: null}
+    - name: algorithm
+      page: null
+      controls: 'Search implementation: auto, ball_tree, kd_tree, or brute.'
+      effect: The best method depends on metric and data; predictions should represent the same neighbours.
+    - name: leaf_size
+      page: null
+      controls: Tree leaf size for ball-tree or kd-tree searches.
+      effect: Changes tree memory and speed, not the distance definition.
+    - name: p
+      page: null
+      controls: Minkowski distance power; 1 is Manhattan and 2 is Euclidean.
+      effect: Changing p changes neighbour ranking.
     tier3:
-      - {name: metric_params, page: null}
-      - {name: n_jobs, page: null}
-  watch_it_work: {none: true}
+    - name: metric_params
+      page: null
+      controls: Extra keyword parameters for the selected metric.
+      effect: Metric-specific parameters change distance calculations.
+    - name: n_jobs
+      page: null
+      controls: Parallel jobs for neighbour searches.
+      effect: More workers can speed searches while using more CPU.
+  watch_it_work:
+    none: true
   intuition:
     idea: Predict from the training rows closest to the new row.
     analogy: Asking the five nearest houses what they sold for.
     animation: none
-    good_at: [small data, local patterns, easy to explain]
-    bad_at: [large tables, many features, extrapolation]
+    good_at:
+    - small data
+    - local patterns
+    - easy to explain
+    bad_at:
+    - large tables
+    - many features
+    - extrapolation
     vs_siblings:
-      - {page: k-neighbors-classifier, note: "Same neighbors. Votes for a class instead of averaging."}
-      - {page: radius-neighbors-regressor, note: "Fixed distance instead of a fixed count of neighbors."}
-    read_more:
-      - Find the k closest training rows.
-      - Average their targets, weighted if asked.
-      - That average is the prediction.
+    - page: k-neighbors-classifier
+      note: Same neighbors. Votes for a class instead of averaging.
+    - page: radius-neighbors-regressor
+      note: Fixed distance instead of a fixed count of neighbors.
+    goal: Estimate a target locally by averaging the k closest training rows.
+    math:
+      notation:
+      - symbol: x
+        meaning: query row
+      - symbol: N_k(x)
+        meaning: the k training rows nearest to x
+      - symbol: d_i
+        meaning: distance from x to neighbour i
+      - symbol: y_i
+        meaning: observed target of neighbour i
+      - symbol: w_i
+        meaning: 'neighbour weight: 1 or inverse distance'
+      equations:
+      - expression: N_k(x)=arg k smallest_i d(x,x_i)
+        meaning: Choose exactly k training rows with the smallest distances.
+      - expression: ŷ(x)=Σ_{i∈N_k(x)} w_i y_i / Σ_{i∈N_k(x)} w_i
+        meaning: Return the weighted mean of their observed targets.
+      prediction: Uniform weights set each w_i=1; distance weights emphasize nearby rows. The result is
+        an average of observed targets.
+    read_more: &id001
+    - Compute the configured distance from the query to training rows.
+    - Select the k rows with the smallest distances.
+    - Average their target values, equally or with the configured weights.
+    steps: *id001
   next: []

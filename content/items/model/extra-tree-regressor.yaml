@@ -1,109 +1,306 @@
 id: extra-tree-regressor
 plain_name: ExtraTreeRegressor
 code_name: ExtraTreeRegressor
-aliases: [extremely randomized tree, extra tree regressor]
+aliases:
+- extremely randomized tree
+- extra tree regressor
 stage: model
 family: model.trees.single
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [tabular data, overfitting, one tree]
-targets: [sklearn.tree.ExtraTreeRegressor]
-pairs_with: [treeexplainer]
+question_tags:
+- tabular data
+- overfitting
+- one tree
+targets:
+- sklearn.tree.ExtraTreeRegressor
+pairs_with:
+- treeexplainer
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.tree.ExtraTreeRegressor.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.tree.ExtraTreeRegressor.html
+- https://scikit-learn.org/stable/modules/tree.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [regression]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: ames, shape: fit_line}
+    hero:
+      kind: model
+      dataset: ames
+      shape: fit_line
     line: One tree that picks its split points at random.
-  quick_facts: {none: true}
+  quick_facts:
+    none: true
   use_avoid:
-    use_when: [tabular data, a quick tree baseline, mixed feature types]
-    avoid_when: [images or text, need the most accurate model, tiny data]
+    use_when:
+    - tabular data
+    - a quick tree baseline
+    - mixed feature types
+    avoid_when:
+    - images or text
+    - need the most accurate model
+    - tiny data
   prep:
-    - step: {family: transform.scale.rescale}
-      status: not_needed
-      why: Trees split on order, not size.
-      condition: null
-      unless: null
-    - step: {family: clean.impute}
-      status: not_needed
-      why: Missing values are handled natively.
-      condition: null
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Text categories must become numbers.
-      condition: {has_categoricals: true}
-      unless: null
-    - step: {page: train-test-split}
-      status: recommended
-      why: A held-out set shows how much the tree overfits.
-      condition: null
-      unless: null
+  - step:
+      family: transform.scale.rescale
+    status: not_needed
+    why: Trees split on order, not size.
+    condition: null
+    unless: null
+  - step:
+      family: clean.impute
+    status: not_needed
+    why: Missing values are handled natively.
+    condition: null
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Text categories must become numbers.
+    condition:
+      has_categoricals: true
+    unless: null
+  - step:
+      page: train-test-split
+    status: recommended
+    why: A held-out set shows how much the tree overfits.
+    condition: null
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.tree.ExtraTreeRegressor
-      why_this_library: Same fit and predict API as other scikit-learn regressors.
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import make_regression
-        from sklearn.model_selection import train_test_split
-        from sklearn.tree import ExtraTreeRegressor
+  - library: scikit-learn
+    target: sklearn.tree.ExtraTreeRegressor
+    why_this_library: Thresholds are randomized before the best sampled split is taken.
+    snippet: '# scikit-learn 1.9.1
 
-        X, y = make_regression(n_samples=500, n_features=8, noise=10, random_state=0)
-        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+      import numpy as np
 
-        model = ExtraTreeRegressor(max_depth=5, random_state=0)
-        model.fit(X_train, y_train)
-        print(model.predict(X_test).shape)
-        print(round(model.score(X_test, y_test), 3))
+      from sklearn.datasets import make_regression
+
+      from sklearn.model_selection import train_test_split
+
+      from sklearn.tree import ExtraTreeRegressor
+
+
+      X, y = make_regression(n_samples=500, n_features=8, noise=10, random_state=0)
+
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+      model = ExtraTreeRegressor(max_depth=5, random_state=0)
+
+      model.fit(X_train, y_train)
+
+      y_pred = model.predict(X_test[:5])
+
+      print(''y_pred:'', np.round(y_pred, 1))
+
+      print(''R2:'', round(model.score(X_test, y_test), 3))
+
+      print(''tree nodes:'', model.tree_.node_count)'
+    output: 'y_pred: [-280.3 -117.5  -41.9   39.8  104.1]
+
+      R2: 0.325
+
+      tree nodes: 51
+
+      '
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: regression, shape: "(n_samples,)", note: "One value per row."}
-      - {name: score, kind: method, task: regression, shape: "float", note: "R squared on the data passed in."}
-      - {name: feature_importances_, kind: attribute, task: null, shape: "(n_features,)", note: "One score per input column."}
-      - {name: n_features_in_, kind: attribute, task: null, shape: "int", note: "Columns seen during fit."}
-      - {name: feature_names_in_, kind: attribute, task: null, shape: "(n_features,) of str", note: "Set when fit gets a DataFrame with named columns."}
-    next_step: Plot predictions against the true values to spot the big misses.
-    visual: null
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples,) or (n_samples, n_outputs)
+      object_type: numpy.ndarray
+      example: '[12.4, -3.1, 8.0]'
+      shape_explanation: One value per row for one target; this fictional example has n_samples=3, shape (3,). For
+        multiple targets, columns are n_outputs.
+      note: Leaf prediction is the mean or median of training targets there, depending on criterion.
+    - name: score
+      kind: method
+      task: regression
+      shape: scalar
+      object_type: float
+      example: '0.42'
+      shape_explanation: A scalar has no array axes. This fictional example is one R squared value.
+      note: R squared on the rows passed to score.
+    - name: feature_importances_
+      kind: attribute
+      task: null
+      shape: (n_features,)
+      object_type: numpy.ndarray
+      example: '[0.6, 0.3, 0.1]'
+      shape_explanation: One-dimensional feature scores. This fictional example assumes n_features=3 and has shape
+        (3,); the trailing comma means one dimension.
+      note: Normalized reductions in split impurity, not causal effects.
+    - name: tree_
+      kind: attribute
+      task: null
+      shape: tree object
+      object_type: sklearn.tree._tree.Tree
+      example: Tree with root, split nodes, and leaves
+      shape_explanation: A fitted tree object rather than an array. It stores the root and child nodes, split features
+        and thresholds, and leaf values.
+      note: Use the tree structure to inspect the fitted if-then rules.
+    - name: max_features_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: int
+      example: '3'
+      shape_explanation: A scalar is one value with no array axes. This fictional example says three features were
+        considered at a split.
+      note: Number of features considered at each split.
+    next_step: null
+    visual: regression_preds
+    guidance:
+    - task: regression
+      text: Check regression predictions on held-out rows; tree predictions are piecewise constant and do not extrapolate.
+    - task: classification
+      text: Use probabilities for ROC AUC or PR curves. Use labels for accuracy and confusion matrices.
+    snippet: '# scikit-learn 1.9.1
+
+      import numpy as np
+
+      from sklearn.datasets import make_regression
+
+      from sklearn.model_selection import train_test_split
+
+      from sklearn.tree import ExtraTreeRegressor
+
+
+      X, y = make_regression(n_samples=500, n_features=8, noise=10, random_state=0)
+
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+      model = ExtraTreeRegressor(max_depth=5, random_state=0)
+
+      model.fit(X_train, y_train)
+
+      y_pred = model.predict(X_test[:5])
+
+      print(''y_pred:'', np.round(y_pred, 1))
+
+      print(''R2:'', round(model.score(X_test, y_test), 3))
+
+      print(''tree nodes:'', model.tree_.node_count)'
+    snippet_library: scikit-learn
+    output: 'y_pred: [-280.3 -117.5  -41.9   39.8  104.1]
+
+      R2: 0.325
+
+      tree nodes: 51
+
+      '
   catch_outs:
-    - Text columns fail. Encode them first.
-    - Set random_state, or the random splits change between runs.
-    - max_depth None grows the tree until its leaves are pure. Set a limit.
+  - Text columns fail. Encode them first.
+  - Set random_state, or the random splits change between runs.
+  - max_depth None grows the tree until its leaves are pure. Set a limit.
   key_settings:
     tier1:
-      - {name: criterion, page: null}
-      - {name: min_impurity_decrease, page: null}
-      - {name: max_features, page: null}
-      - {name: min_samples_leaf, page: null}
+    - name: criterion
+      page: null
+      controls: The error or impurity measure minimized by a regression split.
+      effect: Squared error favors means; absolute error is more robust but can cost more; Poisson requires non-negative
+        targets.
+    - name: min_impurity_decrease
+      page: null
+      controls: Minimum weighted impurity reduction required for a split.
+      effect: A larger threshold grows a smaller tree and can miss useful detail.
+    - name: max_features
+      page: null
+      controls: How many candidate input columns are considered at each split.
+      effect: Fewer candidates add randomness and may reduce overfit, but can weaken a tree.
+    - name: min_samples_leaf
+      page: null
+      controls: Minimum training rows required in every leaf.
+      effect: Larger leaves smooth predictions and resist noise, but can miss local patterns.
     tier2:
-      - {name: monotonic_cst, page: null}
-      - {name: ccp_alpha, page: null}
-      - {name: min_samples_split, page: null}
+    - name: monotonic_cst
+      page: null
+      controls: Per-feature constraints requiring predictions to move only in specified directions.
+      effect: Constraints can encode known direction but restrict learned patterns.
+    - name: ccp_alpha
+      page: null
+      controls: Strength of minimal cost-complexity pruning after growth.
+      effect: Larger values prune more branches and can underfit.
+    - name: min_samples_split
+      page: null
+      controls: Minimum rows a node must contain before it may split.
+      effect: Larger values stop growth earlier and may smooth away useful detail.
     tier3:
-      - {name: max_leaf_nodes, page: null}
-      - {name: splitter, page: null}
-      - {name: max_depth, page: max-depth}
-  watch_it_work: {none: true}
+    - name: max_leaf_nodes
+      page: null
+      controls: Maximum number of terminal leaves, grown by best-first impurity reduction.
+      effect: Fewer leaves simplify the tree but limit local patterns.
+    - name: splitter
+      page: null
+      controls: Whether each split uses the best threshold or randomly sampled thresholds.
+      effect: Random thresholds add variation and may reduce variance, with more bias.
+    - name: max_depth
+      page: max-depth
+      controls: Maximum number of levels from root to leaf.
+      effect: Shallower trees are simpler but can underfit.
+  watch_it_work:
+    none: true
   intuition:
     idea: Grow one tree, drawing a random cut for each feature and keeping the best.
     analogy: Trying a few random cuts of a cake and keeping the one that splits it best.
     animation: none
-    good_at: [tabular data, fast fits, one readable tree]
-    bad_at: [tiny data, images or text, smooth curves]
+    good_at:
+    - tabular data
+    - fast fits
+    - one readable tree
+    bad_at:
+    - tiny data
+    - images or text
+    - smooth curves
     vs_siblings:
-      - {page: decision-tree-regressor, note: "Tries every cut. This one draws the cuts at random."}
-      - {page: extra-trees, note: "Many of these trees, averaged together."}
-    read_more:
-      - Draw one random cut for each feature.
-      - Keep the cut that reduces error the most.
-      - Repeat until max_depth or another stop rule.
-  next: [model-overfitting, know-feature-importance]
+    - page: decision-tree-regressor
+      note: Tries every cut. This one draws the cuts at random.
+    - page: extra-trees
+      note: Many of these trees, averaged together.
+    read_more: &id001
+    - At each node, draw candidate thresholds at random for sampled features.
+    - Choose the sampled split with the greatest reduction in the selected regression criterion.
+    - Repeat until a stopping rule creates leaves.
+    - Predict from the target summary stored in the reached leaf.
+    goal: Fit one readable piecewise-constant regression tree while randomizing candidate thresholds to vary its
+      structure.
+    steps: *id001
+    math:
+      notation:
+      - symbol: A
+        meaning: Rows reaching the current parent node.
+      - symbol: j
+        meaning: Input feature considered at this node.
+      - symbol: t
+        meaning: Random threshold proposed for feature j.
+      - symbol: L, R
+        meaning: Left and right child row groups.
+      - symbol: i
+        meaning: Training-row index.
+      - symbol: x
+        meaning: New input row to predict.
+      - symbol: y_i
+        meaning: Observed target for training row i.
+      equations:
+      - expression: choose (j,t) from random candidates to minimize impurity(L)+impurity(R)
+        meaning: The tree draws candidate thresholds at random, then keeps the sampled split with the best criterion
+          value.
+      - expression: predict(x) = mean(y_i for i in leaf(x))
+        meaning: With squared-error criterion, the prediction is the average training target in the reached leaf.
+      prediction: A single tree returns its reached leaf value; with absolute_error the leaf summary is a median
+        instead of a mean.
+  next:
+  - model-overfitting
+  - know-feature-importance

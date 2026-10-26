@@ -1,140 +1,341 @@
 id: mlp-classifier
 plain_name: MLPClassifier
 code_name: MLPClassifier
-aliases: [neural network classifier, multilayer perceptron, mlp, neural net]
+aliases:
+- neural network classifier
+- multilayer perceptron
+- mlp
+- neural net
 stage: model
 family: model.neural
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [complex patterns, lots of data, neural network]
-targets: [sklearn.neural_network.MLPClassifier]
+question_tags:
+- complex patterns
+- lots of data
+- neural network
+targets:
+- sklearn.neural_network.MLPClassifier
 pairs_with: []
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPClassifier.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPClassifier.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [classification]
+  task_types:
+  - classification
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: breast-cancer, shape: boundary}
+    hero:
+      kind: model
+      dataset: breast-cancer
+      shape: boundary
     line: Layers of weighted sums learn a curved decision boundary.
   quick_facts:
     data_size: Plenty of rows, scaled inputs
   use_avoid:
-    use_when: [complex patterns, plenty of data, scaled numeric inputs]
-    avoid_when: [tiny data, need a simple formula, need a quick baseline]
+    use_when:
+    - complex patterns
+    - plenty of data
+    - scaled numeric inputs
+    avoid_when:
+    - tiny data
+    - need a simple formula
+    - need a quick baseline
   prep:
-    - step: {family: transform.scale.rescale}
-      status: required
-      why: "Neural nets need inputs on one scale."
-      condition: null
-      unless: null
-    - step: {family: clean.impute}
-      status: required
-      why: Rejects missing values.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Text categories must become numbers.
-      condition: {has_categoricals: true}
-      unless: null
+  - step:
+      family: transform.scale.rescale
+    status: required
+    why: Neural nets need inputs on one scale.
+    condition: null
+    unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Rejects missing values.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Text categories must become numbers.
+    condition:
+      has_categoricals: true
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.neural_network.MLPClassifier
-      why_this_library: The scikit-learn estimator for this method.
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import load_breast_cancer
-        from sklearn.model_selection import train_test_split
-        from sklearn.neural_network import MLPClassifier
-        from sklearn.pipeline import make_pipeline
-        from sklearn.preprocessing import StandardScaler
-
-        X, y = load_breast_cancer(return_X_y=True)
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, random_state=0
-        )
-
-        model = make_pipeline(
-            StandardScaler(),
-            MLPClassifier(hidden_layer_sizes=(32,), max_iter=500, random_state=0),
-        )
-        model.fit(X_train, y_train)
-        print(round(model.score(X_test, y_test), 3))
-  what_comes_out:
-    items:
-      - {name: predict, kind: method, task: classification, shape: "(n_samples,)",
-         note: "Class labels. The most likely class per row."}
-      - {name: predict_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
-         note: "One column per class, in classes_ order."}
-      - {name: predict_log_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
-         note: "Log of predict_proba, same column order."}
-      - {name: score, kind: method, task: classification, shape: "float",
-         note: "Accuracy on the data given."}
-      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)",
-         note: "Labels, in the order of the probability columns."}
-      - {name: n_iter_, kind: attribute, task: null, shape: "int",
-         note: "Passes over the data before stopping."}
-      - {name: n_features_in_, kind: attribute, task: null, shape: "int",
-         note: "Columns seen during fit."}
-      - {name: feature_names_in_, kind: attribute, task: null, shape: "(n_features,)",
-         note: "Column names. Set only when fit on a DataFrame."}
-    next_step: "ROC AUC needs predict_proba[:, 1], not the labels."
+  - library: scikit-learn
+    target: sklearn.neural_network.MLPClassifier
+    why_this_library: The scikit-learn estimator for this method.
     snippet: |
       # scikit-learn 1.9.1
-      import pandas as pd
-      from sklearn.datasets import load_breast_cancer
+      import warnings, numpy as np, pandas as pd
+      from sklearn.datasets import make_classification
+      from sklearn.exceptions import ConvergenceWarning
+      from sklearn.model_selection import train_test_split
       from sklearn.neural_network import MLPClassifier
       from sklearn.preprocessing import StandardScaler
-
-      data = load_breast_cancer(as_frame=True)
-      X = pd.DataFrame(
-          StandardScaler().fit_transform(data.data),
-          columns=data.feature_names,
+      warnings.filterwarnings('ignore',category=ConvergenceWarning)
+      X,y=make_classification(
+          n_samples=100, n_features=4, n_informative=3, n_redundant=0,
+          weights=[.7,.3], random_state=0,
       )
-      model = MLPClassifier(hidden_layer_sizes=(32,), max_iter=500, random_state=0)
-      model.fit(X, data.target)
-      print(model.predict_proba(X[:3]).shape)
-      print(model.predict_log_proba(X[:3]).shape)
-      print(model.classes_)
-      print(model.n_iter_)
+      Xt,Xv,yt,yv=train_test_split(X,y,test_size=.25,stratify=y,random_state=0)
+      s=StandardScaler().fit(Xt)
+      columns=['feature_a','feature_b','feature_c','feature_d']
+      Xt=pd.DataFrame(s.transform(Xt),columns=columns)
+      Xv=pd.DataFrame(s.transform(Xv),columns=columns)
+      m=MLPClassifier(
+          hidden_layer_sizes=(6,3), max_iter=250, random_state=0
+      ).fit(Xt,yt)
+      y_pred=m.predict(Xv[:3])
+      y_proba=m.predict_proba(Xv[:3])
+      y_log_proba=m.predict_log_proba(Xv[:3])
+      print('y_pred:',y_pred)
+      print('y_proba:')
+      print(np.round(y_proba,3))
+      print('log proba shape:',y_log_proba.shape)
+      print('classes_:',m.classes_)
+      print('coefs:',[w.shape for w in m.coefs_])
+      print('biases:',[b.shape for b in m.intercepts_])
+      print('loss/iterations:',round(m.loss_,3),m.n_iter_)
+      print('accuracy:',round(m.score(Xv,yv),3))
+      print('features:',m.n_features_in_,m.feature_names_in_)
+    output: |
+      y_pred: [0 0 0]
+      y_proba:
+      [[0.678 0.322]
+       [0.633 0.367]
+       [0.664 0.336]]
+      log proba shape: (3, 2)
+      classes_: [0 1]
+      coefs: [(4, 6), (6, 3), (3, 1)]
+      biases: [(6,), (3,), (1,)]
+      loss/iterations: 0.563 250
+      accuracy: 0.72
+      features: 4 ['feature_a' 'feature_b' 'feature_c' 'feature_d']
+  what_comes_out:
+    items:
+    - name: predict
+      kind: method
+      task: classification
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[0, 1, 0]'
+      shape_explanation: One label per row; three predictions give shape (3,).
+      note: Class labels, not probability scores.
+    - name: predict_proba
+      kind: method
+      task: classification
+      shape: (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[[0.8, 0.2], [0.1, 0.9]]'
+      shape_explanation: Rows are cases, columns are classes; this is shape (2, 2).
+      note: Columns follow classes_.
+    - name: predict_log_proba
+      kind: method
+      task: classification
+      shape: (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[[-0.223, -1.609], [-2.303, -0.105]]'
+      shape_explanation: Same case/class layout as probabilities; this example is (2, 2).
+      note: Log probabilities, not probabilities themselves.
+    - name: classes_
+      kind: attribute
+      task: classification
+      shape: (n_classes,)
+      object_type: numpy.ndarray
+      example: '[0, 1]'
+      shape_explanation: One label per class; shape (2,) here.
+      note: Probability-column order.
+    - name: coefs_
+      kind: attribute
+      task: null
+      shape: list of n_layers - 1 matrices
+      object_type: list[numpy.ndarray]
+      example: '[(4, 6), (6, 3), (3, 1)]'
+      shape_explanation: One matrix connects each adjacent pair of layers. Four inputs, hidden widths 6 and 3, and the single binary output unit give these shapes.
+      note: Learned weights; not causal effects.
+    - name: intercepts_
+      kind: attribute
+      task: null
+      shape: list of n_layers - 1 vectors
+      object_type: list[numpy.ndarray]
+      example: '[(6,), (3,), (2,)]'
+      shape_explanation: One bias vector per non-input layer, with length equal to layer width.
+      note: Added to weighted sums.
+    - name: n_iter_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: int
+      example: '250'
+      shape_explanation: One integer iteration count.
+      note: May stop before max_iter.
+    - name: score
+      kind: method
+      task: classification
+      shape: scalar
+      object_type: float
+      example: '0.87'
+      shape_explanation: One scalar with no array dimensions.
+      note: Classifier score is accuracy.
+    next_step: ROC AUC needs predict_proba[:, 1], not the labels.
+    snippet: |
+      # scikit-learn 1.9.1
+      import warnings, numpy as np, pandas as pd
+      from sklearn.datasets import make_classification
+      from sklearn.exceptions import ConvergenceWarning
+      from sklearn.model_selection import train_test_split
+      from sklearn.neural_network import MLPClassifier
+      from sklearn.preprocessing import StandardScaler
+      warnings.filterwarnings('ignore',category=ConvergenceWarning)
+      X,y=make_classification(
+          n_samples=100, n_features=4, n_informative=3, n_redundant=0,
+          weights=[.7,.3], random_state=0,
+      )
+      Xt,Xv,yt,yv=train_test_split(X,y,test_size=.25,stratify=y,random_state=0)
+      s=StandardScaler().fit(Xt)
+      columns=['feature_a','feature_b','feature_c','feature_d']
+      Xt=pd.DataFrame(s.transform(Xt),columns=columns)
+      Xv=pd.DataFrame(s.transform(Xv),columns=columns)
+      m=MLPClassifier(
+          hidden_layer_sizes=(6,3), max_iter=250, random_state=0
+      ).fit(Xt,yt)
+      y_pred=m.predict(Xv[:3])
+      y_proba=m.predict_proba(Xv[:3])
+      y_log_proba=m.predict_log_proba(Xv[:3])
+      print('y_pred:',y_pred)
+      print('y_proba:')
+      print(np.round(y_proba,3))
+      print('log proba shape:',y_log_proba.shape)
+      print('classes_:',m.classes_)
+      print('coefs:',[w.shape for w in m.coefs_])
+      print('biases:',[b.shape for b in m.intercepts_])
+      print('loss/iterations:',round(m.loss_,3),m.n_iter_)
+      print('accuracy:',round(m.score(Xv,yv),3))
+      print('features:',m.n_features_in_,m.feature_names_in_)
     snippet_library: scikit-learn
     visual: null
+    output: |
+      y_pred: [0 0 0]
+      y_proba:
+      [[0.678 0.322]
+       [0.633 0.367]
+       [0.664 0.336]]
+      log proba shape: (3, 2)
+      classes_: [0 1]
+      coefs: [(4, 6), (6, 3), (3, 1)]
+      biases: [(6,), (3,), (1,)]
+      loss/iterations: 0.563 250
+      accuracy: 0.72
+      features: 4 ['feature_a' 'feature_b' 'feature_c' 'feature_d']
+    guidance:
+    - task: classification
+      text: Scale neural-network inputs using training rows only; use probabilities for ranking and labels for confusion matrices.
   catch_outs:
-    - "Fit the scaler on training rows only, or test rows leak in."
-    - "Training stops at max_iter even when it has not converged."
-    - "Early stopping is off by default; set early_stopping=True to use it."
+  - Fit the scaler on training rows only, or test rows leak in.
+  - Training stops at max_iter even when it has not converged.
+  - Early stopping is off by default; set early_stopping=True to use it.
   key_settings:
     tier1:
-      - {name: hidden_layer_sizes, page: null}
-      - {name: learning_rate_init, page: learning-rate}
-      - {name: alpha, page: null}
-      - {name: early_stopping, page: null}
+    - name: hidden_layer_sizes
+      page: null
+      controls: Sets number and width of hidden layers.
+      effect: More units add capacity and training cost.
+    - name: learning_rate_init
+      page: learning-rate
+      controls: Sets initial step size for sgd/adam.
+      effect: Large steps may destabilize training; small steps take longer.
+    - name: alpha
+      page: null
+      controls: Sets L2 weight penalty.
+      effect: More regularization may control overfit but reduce fit.
+    - name: early_stopping
+      page: null
+      controls: Uses validation accuracy to stop training.
+      effect: Reserves validation rows and can stop before max_iter.
     tier2:
-      - {name: activation, page: null}
-      - {name: solver, page: null}
-      - {name: max_iter, page: null}
+    - name: activation
+      page: null
+      controls: Chooses hidden-layer nonlinearity.
+      effect: Changes the shape of learnable decision boundaries.
+    - name: solver
+      page: null
+      controls: Chooses lbfgs, sgd, or adam.
+      effect: Solvers differ in convergence and minibatch behavior.
+    - name: max_iter
+      page: null
+      controls: Caps optimization iterations.
+      effect: More iterations permit further fitting but take longer.
     tier3:
-      - {name: batch_size, page: null}
-      - {name: validation_fraction, page: null}
-      - {name: n_iter_no_change, page: null}
-  watch_it_work: {none: true}
+    - name: batch_size
+      page: null
+      controls: Sets stochastic optimizer minibatch size.
+      effect: Small batches are noisy; large batches use more memory.
+    - name: validation_fraction
+      page: null
+      controls: Sets held-out share when early_stopping is enabled.
+      effect: More validation improves monitoring but leaves fewer fitting rows.
+    - name: n_iter_no_change
+      page: null
+      controls: Sets tolerated iterations without sufficient validation/loss improvement.
+      effect: Lower values stop sooner; higher values allow longer plateaus.
+  watch_it_work:
+    none: true
   intuition:
     idea: Layers of weighted sums, each followed by a bend, learn a curved boundary.
     analogy: A stack of simple voters, each passing a summary up the chain.
     animation: none
-    good_at: [complex patterns, plenty of rows, scaled numeric inputs]
-    bad_at: [tiny data, explaining the answer, quick baselines]
+    good_at:
+    - complex patterns
+    - plenty of rows
+    - scaled numeric inputs
+    bad_at:
+    - tiny data
+    - explaining the answer
+    - quick baselines
     vs_siblings:
-      - {page: mlp-regressor, note: "Same network. Predicts a number, not a class."}
+    - page: mlp-regressor
+      note: Same network. Predicts a number, not a class.
+    goal: Adjust layered weights to learn class outputs from scaled inputs and return labels or probabilities.
+    steps:
+    - Scale features using training rows.
+    - Initialize weight matrices and biases between input, hidden, and output layers.
+    - Pass each row through affine transforms and hidden activations.
+    - Measure classification loss and backpropagate gradients to update parameters.
+    - Stop when convergence, validation early stopping, or max_iter ends training.
+    math:
+      notation:
+      - symbol: a_0=x
+        meaning: Input vector.
+      - symbol: W_l,b_l
+        meaning: Weights and bias at layer l.
+      - symbol: phi
+        meaning: Hidden activation.
+      - symbol: z_k
+        meaning: Output score for class k.
+      - symbol: p_k
+        meaning: Probability for class k.
+      equations:
+      - expression: a_l=phi(a_(l-1) W_l+b_l)
+        meaning: Each layer transforms activations with learned weights, bias, and nonlinearity.
+      - expression: L=-sum_k 1[y=k] log(p_k)+alpha/(2n) sum_l ||W_l||_F^2
+        meaning: Training reduces classification log loss plus L2 weight regularization.
+      - expression: p_1=sigmoid(z) for binary, or p_k=softmax(z)_k for multiclass; predict(x)=classes_[argmax_k p_k]
+        meaning: Binary output uses sigmoid; multiclass uses softmax. predict returns the highest-probability class.
+      prediction: predict returns labels; predict_proba gives class probabilities in classes_ order.
     read_more:
-      - Multiply inputs by weights and add a bias.
-      - Pass the result through an activation.
-      - Repeat for each hidden layer, then output class probabilities.
+    - Multiply inputs by weights and add a bias.
+    - Pass the result through an activation.
+    - Repeat for each hidden layer, then output class probabilities.
   next: []

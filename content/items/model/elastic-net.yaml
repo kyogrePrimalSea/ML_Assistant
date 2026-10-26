@@ -1,109 +1,273 @@
 id: elastic-net
 plain_name: ElasticNet
 code_name: ElasticNet
-aliases: [elastic net, elasticnet regression]
+aliases:
+- elastic net
+- elasticnet regression
 stage: model
 family: model.linear.sparse
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [drop features, keep correlated features, mixed penalty]
-targets: [sklearn.linear_model.ElasticNet]
+question_tags:
+- drop features
+- keep correlated features
+- mixed penalty
+targets:
+- sklearn.linear_model.ElasticNet
 pairs_with: []
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.ElasticNet.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.ElasticNet.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [regression]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: ames, shape: fit_line}
+    hero:
+      kind: model
+      dataset: ames
+      shape: fit_line
     line: A line with both lasso and ridge penalties.
-  quick_facts: {none: true}
+  quick_facts:
+    none: true
   use_avoid:
-    use_when: [drop features, keep correlated ones]
-    avoid_when: [classification targets, curved patterns]
+    use_when:
+    - drop features
+    - keep correlated ones
+    avoid_when:
+    - classification targets
+    - curved patterns
   prep:
-    - step: {family: clean.impute}
-      status: required
-      why: Scikit-learn rejects NaN in X.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Text categories must become numbers.
-      condition: {has_categoricals: true}
-      unless: null
-    - step: {family: transform.scale.rescale}
-      status: required
-      why: The penalty depends on units. Scale first.
-      condition: null
-      unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Scikit-learn rejects NaN in X.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Text categories must become numbers.
+    condition:
+      has_categoricals: true
+    unless: null
+  - step:
+      family: transform.scale.rescale
+    status: required
+    why: The penalty depends on units. Scale first.
+    condition: null
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.linear_model.ElasticNet
-      why_this_library: Built into scikit-learn. You set alpha and l1_ratio.
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import load_diabetes
-        from sklearn.linear_model import ElasticNet
-        from sklearn.model_selection import train_test_split
-        from sklearn.pipeline import make_pipeline
-        from sklearn.preprocessing import StandardScaler
+  - library: scikit-learn
+    target: sklearn.linear_model.ElasticNet
+    why_this_library: Built into scikit-learn. You set alpha and l1_ratio.
+    snippet: "# scikit-learn 1.9.1\nfrom sklearn.datasets import load_diabetes\nfrom sklearn.linear_model import\
+      \ ElasticNet\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.pipeline import make_pipeline\n\
+      from sklearn.preprocessing import StandardScaler\n\nX, y = load_diabetes(return_X_y=True)\nX_train, X_test,\
+      \ y_train, y_test = train_test_split(\n    X, y, random_state=0\n)\n\nmodel = make_pipeline(\n    StandardScaler(),\
+      \ ElasticNet(alpha=0.1, l1_ratio=0.5)\n)\nmodel.fit(X_train, y_train)\nprint(int((model[-1].coef_ != 0).sum()))\n\
+      y_pred = model.predict(X_test[:5])\nprint('y_pred:', ', '.join(f'{v:.1f}' for v in y_pred))\n"
+    output: '10
 
-        X, y = load_diabetes(return_X_y=True)
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, random_state=0
-        )
+      y_pred: 237.7, 246.9, 164.7, 120.5, 184.3
 
-        model = make_pipeline(
-            StandardScaler(), ElasticNet(alpha=0.1, l1_ratio=0.5)
-        )
-        model.fit(X_train, y_train)
-        print(int((model[-1].coef_ != 0).sum()))
+      '
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: null, shape: "(n_samples,)", note: "One predicted value per row."}
-      - {name: score, kind: method, task: null, shape: float, note: "R squared on the data you pass in."}
-      - {name: coef_, kind: attribute, task: null, shape: "(n_features,)", note: "One weight per input column. Zero means dropped."}
-      - {name: sparse_coef_, kind: attribute, task: null, shape: "sparse (n_features,)", note: "The same weights, stored as a sparse matrix."}
-      - {name: intercept_, kind: attribute, task: null, shape: float, note: "Intercept of the fitted line."}
-      - {name: n_iter_, kind: attribute, task: null, shape: "list of int", note: "Iterations the coordinate descent solver ran."}
-    next_step: Compare coef_ across a few alpha values to see what drops out.
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples,)
+      note: One predicted value per row.
+      object_type: numpy.ndarray
+      example: '[146.2, 92.1, 155.8]'
+      shape_explanation: One value is returned for each input row. n_samples is the number of rows; this example
+        has 3 values, so its shape is (3,).
+    - name: score
+      kind: method
+      task: regression
+      shape: scalar
+      note: R squared on the data you pass in.
+      object_type: float
+      example: '0.72'
+      shape_explanation: A scalar is one value with no array dimensions. The example is one R-squared score.
+    - name: coef_
+      kind: attribute
+      task: null
+      shape: (n_features,)
+      note: One weight per input column. Zero means dropped.
+      object_type: numpy.ndarray
+      example: '[0.0, 12.4, -3.1]'
+      shape_explanation: A one-dimensional array with one coefficient per feature. n_features is the number of input
+        columns; this example has 3 values, shape (3,).
+    - name: sparse_coef_
+      kind: attribute
+      task: null
+      shape: (n_targets, n_features)
+      note: The same weights, stored as a sparse matrix.
+      object_type: scipy.sparse.csr_matrix
+      example: '[[0.0, 12.4, -3.1]]'
+      shape_explanation: 'A two-dimensional sparse matrix: rows are targets and columns are features. This single-target
+        example has 1 row and 3 columns, shape (1, 3).'
+    - name: intercept_
+      kind: attribute
+      task: null
+      shape: scalar
+      note: Intercept of the fitted line.
+      object_type: float
+      example: '152.0'
+      shape_explanation: A scalar is one fitted intercept value, with no array dimensions.
+    - name: n_iter_
+      kind: attribute
+      task: null
+      shape: scalar
+      note: Iterations the coordinate descent solver ran.
+      object_type: int
+      example: '12'
+      shape_explanation: A scalar integer is the iteration count for this single-target fit, with no array dimensions.
     visual: null
+    snippet: '# scikit-learn 1.9.1
+
+      from sklearn.datasets import load_diabetes
+
+      from sklearn.linear_model import ElasticNet
+
+      from sklearn.model_selection import train_test_split
+
+      from sklearn.pipeline import make_pipeline
+
+      from sklearn.preprocessing import StandardScaler
+
+      import numpy as np
+
+
+      X, y = load_diabetes(return_X_y=True)
+
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+      model = make_pipeline(StandardScaler(), ElasticNet(alpha=0.1, l1_ratio=0.5))
+
+      model.fit(X_train, y_train)
+
+      y_pred = model.predict(X_test[:3])
+
+      print(''y_pred:'', np.round(y_pred, 1))
+
+      print(''coef_:'', np.round(model[-1].coef_, 3))
+
+      '
+    snippet_library: scikit-learn
+    guidance:
+    - task: regression
+      text: Use y_pred for regression metrics on held-out rows. Compare the selected features and residuals before
+        interpreting the fit.
+    output: 'y_pred: [237.7 246.9 164.7]
+
+      coef_: [-1.542 -9.188 27.994 13.739 -5.194 -3.952 -9.538  4.345 24.769  2.073]
+
+      '
+    next_step: null
   catch_outs:
-    - alpha defaults to 1.0 and is not tuned for your data.
-    - Scale the columns first, or the penalty is unfair.
-    - Missing values stop the fit. Impute them first.
+  - alpha defaults to 1.0 and is not tuned for your data.
+  - Scale the columns first, or the penalty is unfair.
+  - Missing values stop the fit. Impute them first.
   key_settings:
     tier1:
-      - {name: alpha, page: null}
-      - {name: l1_ratio, page: null}
+    - name: alpha
+      page: null
+      controls: Overall penalty strength; it multiplies the L1 term for Lasso/LassoLars and the combined penalty
+        for ElasticNet.
+      effect: A larger value shrinks more strongly and can underfit; zero removes the penalty.
+    - name: l1_ratio
+      page: null
+      controls: Share of the ElasticNet penalty assigned to L1; the remainder is L2.
+      effect: Near 1 can zero more coefficients; near 0 shrinks without sparse selection.
     tier2:
-      - {name: fit_intercept, page: null}
-      - {name: positive, page: null}
-      - {name: selection, page: null}
+    - name: fit_intercept
+      page: null
+      controls: Whether to estimate an intercept; False assumes the data are already centered.
+      effect: Turning it off avoids estimating a baseline, but biases predictions if the data are not centered.
+    - name: positive
+      page: null
+      controls: Whether fitted coefficients are constrained to be non-negative.
+      effect: The constraint can encode a known direction, but rules out useful negative effects.
+    - name: selection
+      page: null
+      controls: Whether coordinate descent visits features cyclically or chooses one randomly at each update.
+      effect: Random updates can converge faster in some cases; use random_state for reproducible random selection.
     tier3:
-      - {name: precompute, page: null}
-      - {name: tol, page: null}
-      - {name: copy_X, page: null}
-      - {name: max_iter, page: null}
-  watch_it_work: {none: true}
+    - name: precompute
+      page: null
+      controls: Whether to use a Gram matrix (and for OMP, Xy) to speed fitting.
+      effect: Precomputation can speed suitable dense or large-target problems, but uses extra memory.
+    - name: tol
+      page: null
+      controls: Optimization stopping tolerance, checked against coefficient updates and the dual gap.
+      effect: A larger tolerance can stop sooner with a less precise solution; a smaller one takes more work.
+    - name: copy_X
+      page: null
+      controls: Whether to copy X before fitting; False may allow X to be overwritten.
+      effect: Copying protects the input at a memory cost; disabling the copy can save memory.
+    - name: max_iter
+      page: null
+      controls: Maximum coordinate descent iterations.
+      effect: A larger limit can allow convergence but takes longer; reaching the limit can leave an unfinished
+        fit.
+  watch_it_work:
+    none: true
   intuition:
     idea: Add both a lasso penalty and a ridge penalty to the weights.
     analogy: Packing a suitcase by dropping some items and folding the rest tighter.
     animation: none
-    good_at: [drop features, correlated features]
-    bad_at: [classification, curved patterns]
+    good_at:
+    - drop features
+    - correlated features
+    bad_at:
+    - classification
+    - curved patterns
     vs_siblings:
-      - {page: lasso, note: "Lasso penalty only. No ridge part."}
-      - {page: elastic-net-cv, note: "Same model. Cross-validation picks alpha and l1_ratio."}
+    - page: lasso
+      note: Lasso penalty only. No ridge part.
+    - page: elastic-net-cv
+      note: Same model. Cross-validation picks alpha and l1_ratio.
     read_more:
-      - The penalty adds an absolute-value part and a squared part.
-      - l1_ratio sets the mix between the two parts.
-      - alpha sets how strong the whole penalty is.
-  next: [know-feature-importance]
+    - The penalty adds an absolute-value part and a squared part.
+    - l1_ratio sets the mix between the two parts.
+    - alpha sets how strong the whole penalty is.
+    goal: Balance squared prediction error against an L1 term that can zero coefficients and an L2 term that shrinks
+      them.
+    steps:
+    - Center the target when fitting an intercept, then initialise coefficients.
+    - Coordinate descent updates coefficients against squared error and the mixed L1/L2 penalty.
+    - The L1 share can set coefficients to zero; the L2 share shrinks coefficients, including correlated ones.
+    - Stop when updates and the dual gap meet tol, or max_iter is reached.
+    math:
+      notation:
+      - symbol: n, p
+        meaning: Number of training rows and input features.
+      - symbol: x_ij, y_i
+        meaning: Feature j and observed target for training row i.
+      - symbol: w_j, b
+        meaning: Coefficient for feature j and fitted intercept.
+      - symbol: alpha
+        meaning: Overall regularization strength.
+      - symbol: r
+        meaning: l1_ratio, the fraction assigned to the L1 penalty.
+      equations:
+      - expression: minimise (1/(2n)) sum_i (y_i - b - sum_j x_ij w_j)^2 + alpha*r*sum_j|w_j| + alpha*(1-r)/2*sum_j
+          w_j^2
+        meaning: L1 can zero coefficients; L2 shrinks them and tends to retain groups of correlated features.
+      prediction: For a new feature row x, return b + sum_j x_j w_j.
+  next:
+  - know-feature-importance

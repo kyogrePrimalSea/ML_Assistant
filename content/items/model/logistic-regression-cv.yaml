@@ -1,147 +1,276 @@
 id: logistic-regression-cv
 plain_name: LogisticRegressionCV
 code_name: LogisticRegressionCV
-aliases: [logit, MaxEnt]
+aliases:
+- logit
+- MaxEnt
 stage: model
 family: model.linear.logit
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [tuning, probabilities]
-targets: [sklearn.linear_model.LogisticRegressionCV]
+question_tags:
+- tuning
+- probabilities
+targets:
+- sklearn.linear_model.LogisticRegressionCV
 pairs_with: []
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegressionCV.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegressionCV.html
+- https://scikit-learn.org/stable/modules/linear_model.html#logistic-regression
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [classification]
+  task_types:
+  - classification
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: breast-cancer, shape: boundary}
+    hero:
+      kind: model
+      dataset: breast-cancer
+      shape: boundary
     line: Logistic model that picks its own strength by cross-validation.
-  quick_facts: {none: true}
+  quick_facts:
+    none: true
   use_avoid:
-    use_when: [tuned strength, class probabilities, two classes]
-    avoid_when: [curved boundaries, correlated columns, text inputs]
+    use_when:
+    - tuned strength
+    - class probabilities
+    - two classes
+    avoid_when:
+    - curved boundaries
+    - correlated columns
+    - text inputs
   prep:
-    - step: {family: clean.impute}
-      status: required
-      why: Rejects missing values with an error.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Needs numbers, not text.
-      condition: {has_categoricals: true}
-      unless: null
-    - step: {family: transform.scale.rescale}
-      status: recommended
-      why: lbfgs may not converge on raw columns.
-      condition: null
-      unless: null
-    - step: {family: transform.rebalance.weight}
-      status: recommended
-      why: class_weight='balanced' helps lopsided classes.
-      condition: {imbalanced: true, task_type: [classification]}
-      unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Rejects missing values with an error.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Needs numbers, not text.
+    condition:
+      has_categoricals: true
+    unless: null
+  - step:
+      family: transform.scale.rescale
+    status: recommended
+    why: lbfgs may not converge on raw columns.
+    condition: null
+    unless: null
+  - step:
+      family: transform.rebalance.weight
+    status: recommended
+    why: class_weight='balanced' helps lopsided classes.
+    condition:
+      imbalanced: true
+      task_type:
+      - classification
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.linear_model.LogisticRegressionCV
-      why_this_library: Chooses C with cross-validation, so you do not tune it.
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import load_breast_cancer
-        from sklearn.linear_model import LogisticRegressionCV
-        from sklearn.model_selection import train_test_split
-        from sklearn.pipeline import make_pipeline
-        from sklearn.preprocessing import StandardScaler
-
-        X, y = load_breast_cancer(return_X_y=True)
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, random_state=0
-        )
-
-        model = make_pipeline(
-            StandardScaler(),
-            LogisticRegressionCV(cv=5, scoring="accuracy"),
-        )
-        model.fit(X_train, y_train)
-        print(model[-1].C_.round(3))
+  - library: scikit-learn
+    target: sklearn.linear_model.LogisticRegressionCV
+    why_this_library: Selects regularization settings by cross-validation, then refits.
+    snippet: "# scikit-learn 1.9.1\nimport numpy as np\nfrom sklearn.datasets import load_breast_cancer\nfrom sklearn.linear_model\
+      \ import LogisticRegressionCV\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.pipeline\
+      \ import make_pipeline\nfrom sklearn.preprocessing import StandardScaler\n\nX, y = load_breast_cancer(return_X_y=True)\n\
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)\nmodel = make_pipeline(\n    StandardScaler(),\n\
+      \    LogisticRegressionCV(\n        Cs=[0.1, 1.0, 10.0], cv=5, scoring='accuracy', max_iter=1000\n    ),\n\
+      )\nmodel.fit(X_train, y_train)\ny_pred = model.predict(X_test[:3])\ny_proba = model.predict_proba(X_test[:3])\n\
+      y_score = model.decision_function(X_test[:3])\nprint('y_pred labels:', y_pred)\nprint('y_proba:', np.round(y_proba,\
+      \ 3))\nprint('y_score:', np.round(y_score, 3))\nprint('chosen C:', model[-1].C_)"
+    output: "y_pred labels: [0 1 1]\ny_proba: [[0.999 0.001]\n [0.04  0.96 ]\n [0.001 0.999]]\ny_score: [-6.594\
+      \  3.189  6.63 ]\nchosen C: [1.]\n"
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: classification, shape: "(n_samples,)",
-         note: "Class labels from the chosen C."}
-      - {name: predict_proba, kind: method, task: classification,
-         shape: "(n_samples, n_classes)",
-         note: "One column per class, in classes_ order."}
-      - {name: decision_function, kind: method, task: classification,
-         shape: "(n_samples,)", note: "Raw score before the sigmoid."}
-      - {name: score, kind: method, task: null, shape: "float",
-         note: "Scored with scoring. Accuracy in this setup."}
-      - {name: coef_, kind: attribute, task: null, shape: "(1, n_features)",
-         note: "Weights at the chosen C."}
-      - {name: intercept_, kind: attribute, task: null, shape: "(1,)",
-         note: "Baseline log-odds at the chosen C."}
-      - {name: classes_, kind: attribute, task: classification,
-         shape: "(n_classes,)", note: "Label order used by predict_proba."}
-      - {name: C_, kind: attribute, task: null, shape: "(1,) or (n_classes,)",
-         note: "The strength the cross-validation picked."}
-    next_step: Check C_ and scores_ before trusting the chosen strength.
-    snippet: |
-      # scikit-learn 1.9.1
-      from sklearn.datasets import load_breast_cancer
-      from sklearn.linear_model import LogisticRegressionCV
-      from sklearn.model_selection import train_test_split
-      from sklearn.pipeline import make_pipeline
-      from sklearn.preprocessing import StandardScaler
-
-      X, y = load_breast_cancer(return_X_y=True)
-      X_train, X_test, y_train, y_test = train_test_split(
-          X, y, random_state=0
-      )
-
-      model = make_pipeline(
-          StandardScaler(),
-          LogisticRegressionCV(cv=5, scoring="accuracy"),
-      )
-      model.fit(X_train, y_train)
-      print(model.predict_proba(X_test).shape)
-      print(model.predict_proba(X_test)[:3].round(3))
+    - name: predict
+      kind: method
+      task: classification
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[0, 1, 1]'
+      shape_explanation: 'A one-dimensional array: n_samples counts cases being classified. The fictional example
+        assumes n_samples=3 and has concrete shape (3,); the trailing comma marks one dimension.'
+      note: Predicted class labels; labels are not probability scores.
+    - name: predict_proba
+      kind: method
+      task: classification
+      shape: (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[[0.82, 0.18], [0.27, 0.73], [0.61, 0.39]]'
+      shape_explanation: 'A two-dimensional table: rows are n_samples and columns are n_classes. This fictional
+        example assumes 3 cases and 2 classes, so its concrete shape is (3, 2).'
+      note: One probability per class in classes_ order; rows sum to one.
+    - name: decision_function
+      kind: method
+      task: classification
+      shape: (n_samples,) or (n_samples,n_classes)
+      object_type: numpy.ndarray
+      example: '[-1.4, 0.8, 0.2]'
+      shape_explanation: 'Binary: one signed score per case, so this fictional example with n_samples=3 has shape
+        (3,). Multiclass: one score per case and class, shape (n_samples, n_classes).'
+      note: Binary has one signed score per case; multiclass has one score per class.
+    - name: classes_
+      kind: attribute
+      task: classification
+      shape: (n_classes,)
+      object_type: numpy.ndarray
+      example: '[0, 1]'
+      shape_explanation: 'A one-dimensional array: n_classes counts known labels. This fictional example assumes
+        2 classes and has shape (2,); the trailing comma marks one dimension.'
+      note: Label order maps predict_proba columns to class labels.
+    - name: coef_
+      kind: attribute
+      task: null
+      shape: (1|n_classes, n_features)
+      object_type: numpy.ndarray
+      example: '[[0.4, -1.2, 0.7]]'
+      shape_explanation: Rows are class contrasts and columns are features. This fictional binary example assumes
+        n_features=3 and one contrast, so its concrete shape is (1, 3). Multiclass has n_classes rows and n_features
+        columns.
+      note: One binary contrast row; multiclass has one coefficient row per class.
+    - name: intercept_
+      kind: attribute
+      task: null
+      shape: (1,) binary; (n_classes,) multiclass
+      object_type: numpy.ndarray
+      example: '[0.3]'
+      shape_explanation: A one-dimensional array of class intercepts. This fictional binary example has one contrast,
+        shape (1,); the trailing comma marks one dimension.
+      note: Scikit-learn baseline decision score for each class contrast.
+    - name: C_
+      kind: attribute
+      task: null
+      shape: (1,) binary; (n_classes,) multiclass
+      object_type: numpy.ndarray
+      example: '[1.0]'
+      shape_explanation: A one-dimensional array of selected inverse penalty strengths. This fictional binary example
+        has one value, shape (1,); the trailing comma marks one dimension.
+      note: Selected C for the refitted classifier; smaller C means stronger regularization.
+    - name: Cs_
+      kind: attribute
+      task: null
+      shape: (n_Cs,)
+      object_type: numpy.ndarray
+      example: '[0.1, 1.0, 10.0]'
+      shape_explanation: 'A one-dimensional array: n_Cs counts candidate C values tried. This fictional example
+        assumes n_Cs=3 and has shape (3,); the trailing comma marks one dimension.'
+      note: Candidate inverse regularization strengths used in cross-validation.
+    next_step: null
+    snippet: "# scikit-learn 1.9.1\nimport numpy as np\nfrom sklearn.datasets import load_breast_cancer\nfrom sklearn.linear_model\
+      \ import LogisticRegressionCV\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.pipeline\
+      \ import make_pipeline\nfrom sklearn.preprocessing import StandardScaler\n\nX, y = load_breast_cancer(return_X_y=True)\n\
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)\nmodel = make_pipeline(\n    StandardScaler(),\n\
+      \    LogisticRegressionCV(\n        Cs=[0.1, 1.0, 10.0], cv=5, scoring='accuracy', max_iter=1000\n    ),\n\
+      )\nmodel.fit(X_train, y_train)\ny_pred = model.predict(X_test[:3])\ny_proba = model.predict_proba(X_test[:3])\n\
+      y_score = model.decision_function(X_test[:3])\nprint('y_pred labels:', y_pred)\nprint('y_proba:', np.round(y_proba,\
+      \ 3))\nprint('y_score:', np.round(y_score, 3))\nprint('chosen C:', model[-1].C_)\nprint('candidate Cs:', model[-1].Cs_)"
     snippet_library: scikit-learn
     visual: proba_table
+    guidance:
+    - task: classification
+      text: Use predict_proba or continuous decision scores for ROC AUC and PR curves. Use predicted labels for
+        accuracy or a confusion matrix.
+    output: "y_pred labels: [0 1 1]\ny_proba: [[0.999 0.001]\n [0.04  0.96 ]\n [0.001 0.999]]\ny_score: [-6.594\
+      \  3.189  6.63 ]\nchosen C: [1.]\ncandidate Cs: [ 0.1  1.  10. ]\n"
   catch_outs:
-    - Missing values raise an error. Impute first.
-    - Pass scoring yourself. Its default changes in 1.11.
-    - Unscaled columns can stop lbfgs converging.
-    - Text columns fail. Encode them first.
+  - Missing values raise an error. Impute first.
+  - Pass scoring yourself. Its default changes in 1.11.
+  - Unscaled columns can stop lbfgs converging.
+  - Text columns fail. Encode them first.
   key_settings:
     tier1:
-      - {name: Cs, page: null}
-      - {name: cv, page: null}
-      - {name: scoring, page: null}
+    - name: Cs
+      page: null
+      controls: Candidate inverse regularization strengths, or the count used to build a logarithmic grid.
+      effect: A narrow grid can miss a better strength; a larger grid requires more fits.
+    - name: cv
+      page: null
+      controls: Cross-validation splitter or number of stratified folds used to compare candidates.
+      effect: More folds give more comparisons but require more fitting work.
+    - name: scoring
+      page: null
+      controls: Metric used to select C and any elastic-net ratio.
+      effect: A metric mismatched to the goal can select a poor operating model.
     tier2:
-      - {name: solver, page: null}
-      - {name: class_weight, page: null}
-      - {name: refit, page: null}
+    - name: solver
+      page: null
+      controls: Optimization algorithm used for each candidate fit.
+      effect: Solver support differs by penalty; incompatible settings fail or constrain the search.
+    - name: class_weight
+      page: null
+      controls: Class weights used in each fold fit.
+      effect: Higher weight penalizes errors on that class more and can shift the boundary.
+    - name: refit
+      page: null
+      controls: Whether to refit a final estimator on all training rows using selected settings.
+      effect: With refit disabled, selected coefficients may represent fold averages rather than a final full-data
+        fit.
     tier3:
-      - {name: l1_ratios, page: null}
-      - {name: tol, page: null}
-      - {name: n_jobs, page: null}
-  watch_it_work: {none: true}
+    - name: l1_ratios
+      page: null
+      controls: Candidate elastic-net mixes between L1 and L2 penalties.
+      effect: More candidates add computation; the setting is relevant with elastic-net penalty.
+    - name: tol
+      page: null
+      controls: Convergence tolerance for candidate solvers.
+      effect: Looser tolerance may reduce fitting time but leave less precise solutions.
+    - name: n_jobs
+      page: null
+      controls: Number of parallel jobs for the cross-validation loop.
+      effect: More jobs may reduce elapsed time but use more CPU and memory.
+  watch_it_work:
+    none: true
   intuition:
     idea: Tries a grid of strengths with cross-validation and keeps the best.
     analogy: Testing several seasonings on a small tasting panel before serving.
     animation: none
-    good_at: [tuned strength, class probabilities, linear boundaries]
-    bad_at: [curved boundaries, correlated columns]
+    good_at:
+    - tuned strength
+    - class probabilities
+    - linear boundaries
+    bad_at:
+    - curved boundaries
+    - correlated columns
     vs_siblings:
-      - {page: logistic-regression, note: "Same model. You pick C yourself."}
-    read_more:
-      - Build a grid of C values.
-      - Score each C on each cross-validation fold.
-      - Refit on all rows with the best C.
-  next: [model-overfitting]
+    - page: logistic-regression
+      note: Same model. You pick C yourself.
+    read_more: &id001
+    - Build candidate C values and cross-validation folds.
+    - Fit each candidate on the training portion of every fold.
+    - Compare mean validation scores using scoring.
+    - Select C and refit on the supplied training data when refit is enabled.
+    goal: Compare logistic regularization settings on training folds, select the best score, and refit the chosen
+      classifier.
+    math:
+      notation:
+      - symbol: C
+        meaning: Candidate inverse regularization strength.
+      - symbol: fold k
+        meaning: One training/validation split in cross-validation.
+      - symbol: S(C)
+        meaning: Mean validation score for candidate C.
+      - symbol: b
+        meaning: Coefficient vector fitted for one candidate C.
+      equations:
+      - expression: fit each candidate C by minimizing negative log-likelihood + penalty(b)/C
+        meaning: Each candidate strength produces a regularized logistic fit.
+      - expression: C_ = argmax_C S(C)
+        meaning: The candidate with the best configured cross-validation score is selected.
+      prediction: CV selects C then refits. predict gives labels, predict_proba gives probabilities, decision_function
+        gives scores.
+    steps: *id001
+  next:
+  - model-overfitting

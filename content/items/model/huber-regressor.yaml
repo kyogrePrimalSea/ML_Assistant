@@ -1,124 +1,233 @@
 id: huber-regressor
 plain_name: HuberRegressor
 code_name: HuberRegressor
-aliases: [robust linear regression]
+aliases:
+- robust linear regression
 stage: model
 family: model.awkward.robust
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [outliers, robust fit, outliers in target]
-targets: [sklearn.linear_model.HuberRegressor]
+question_tags:
+- outliers
+- robust fit
+- outliers in target
+targets:
+- sklearn.linear_model.HuberRegressor
 pairs_with: []
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.HuberRegressor.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.HuberRegressor.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [regression]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: ames, shape: fit_line}
+    hero:
+      kind: model
+      dataset: ames
+      shape: fit_line
     line: A line that ignores a few outliers in the target.
   quick_facts:
     data_size: Fits in memory
   use_avoid:
-    use_when: [outliers in the target, a line still needed, few outliers]
-    avoid_when: [many outliers, need p-values, text or images]
+    use_when:
+    - outliers in the target
+    - a line still needed
+    - few outliers
+    avoid_when:
+    - many outliers
+    - need p-values
+    - text or images
   prep:
-    - step: {family: transform.scale.rescale}
-      status: recommended
-      why: Alpha penalises coefficients, so feature scale changes the fit.
-      condition: null
-      unless: null
-    - step: {family: clean.impute}
-      status: required
-      why: Missing values raise an error here.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Text categories must become numbers.
-      condition: {has_categoricals: true}
-      unless: null
+  - step:
+      family: transform.scale.rescale
+    status: recommended
+    why: Alpha penalises coefficients, so feature scale changes the fit.
+    condition: null
+    unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Missing values raise an error here.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Text categories must become numbers.
+    condition:
+      has_categoricals: true
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.linear_model.HuberRegressor
-      why_this_library: Scikit-learn API, with epsilon set in the constructor.
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import make_regression
-        from sklearn.linear_model import HuberRegressor
-        from sklearn.model_selection import train_test_split
+  - library: scikit-learn
+    target: sklearn.linear_model.HuberRegressor
+    why_this_library: Scikit-learn API, with epsilon set in the constructor.
+    snippet: "# scikit-learn 1.9.1\nfrom sklearn.datasets import make_regression\nfrom sklearn.linear_model\
+      \ import HuberRegressor\nfrom sklearn.model_selection import train_test_split\n\nX, y = make_regression(\n\
+      \    n_samples=500, n_features=5, noise=10,\n    random_state=0\n)\nX_train, X_test, y_train, y_test\
+      \ = train_test_split(\n    X, y, random_state=0\n)\ny_train[:10] += 500\nmodel = HuberRegressor(epsilon=1.35,\
+      \ max_iter=300).fit(X_train, y_train)\ny_pred = model.predict(X_test[:3])\nprint(\"y_pred:\", y_pred.round(1))\n\
+      print(\"outliers among first 10 training rows:\",\n      int(model.outliers_[:10].sum()))\nprint(\"\
+      n_iter_:\", model.n_iter_, type(model.n_iter_).__name__)\n"
+    output: 'y_pred: [-115.1   -8.3  115.1]
 
-        X, y = make_regression(n_samples=500, n_features=5, noise=10,
-                               random_state=0)
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, random_state=0)
-        y_train[:10] += 500  # ten outliers in the training target
+      outliers among first 10 training rows: 10
 
-        model = HuberRegressor(epsilon=1.35, max_iter=300)
-        model.fit(X_train, y_train)
-        print(round(model.score(X_test, y_test), 3))
+      n_iter_: 12 int
+
+      '
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
-         note: "Predicted value per row, from the robust line."}
-      - {name: score, kind: method, task: regression, shape: float,
-         note: "R², the share of variance explained."}
-      - {name: coef_, kind: attribute, task: null, shape: "(n_features,)",
-         note: "One weight per column."}
-      - {name: intercept_, kind: attribute, task: null, shape: float,
-         note: "Intercept of the robust line."}
-      - {name: scale_, kind: attribute, task: null, shape: float,
-         note: "Estimated scale of the errors."}
-      - {name: outliers_, kind: attribute, task: null, shape: "(n_samples,)",
-         note: "True where a row was down-weighted as an outlier."}
-      - {name: n_iter_, kind: attribute, task: null, shape: int,
-         note: "Optimiser steps used."}
-    next_step: Compare with linear-regression. A big gap means outliers mattered.
-    snippet: |
-      # scikit-learn 1.9.1
-      from sklearn.datasets import make_regression
-      from sklearn.linear_model import HuberRegressor
-
-      X, y = make_regression(n_samples=200, n_features=3, noise=10,
-                             random_state=0)
-      y[:10] += 500
-      model = HuberRegressor().fit(X, y)
-      print(model.coef_.round(1))
-      print(int(model.outliers_[:10].sum()))  # planted outliers caught
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[12.4, 18.1, 9.7]'
+      shape_explanation: A one-dimensional array with one predicted target per input row. n_samples is
+        the number of rows; this example has shape (3,).
+      note: One prediction per row from the fitted robust linear function.
+    - name: coef_
+      kind: attribute
+      task: null
+      shape: (n_features,)
+      object_type: numpy.ndarray
+      example: '[0.42, -0.18, 0.73]'
+      shape_explanation: A one-dimensional array with one entry per input feature. n_features is the number
+        of columns; this example has shape (3,).
+      note: One fitted coefficient per feature.
+    - name: outliers_
+      kind: attribute
+      task: null
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[True, False, False]'
+      shape_explanation: A one-dimensional boolean array with one flag per training row. n_samples is
+        the training row count; this example has shape (3,).
+      note: Boolean mask identifying training rows whose residuals exceed epsilon times scale.
+    - name: scale_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: float
+      example: '14.7'
+      shape_explanation: A scalar is one value, with no array dimensions. The example shows that single
+        value.
+      note: Estimated residual scale used to define the cutoff.
+    - name: n_iter_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: int
+      example: '12'
+      shape_explanation: A scalar is one value, with no array dimensions. The example shows that single
+        value.
+      note: Number of L-BFGS-B iterations run.
+    next_step: null
+    snippet: "# scikit-learn 1.9.1\nfrom sklearn.datasets import make_regression\nfrom sklearn.linear_model\
+      \ import HuberRegressor\nfrom sklearn.model_selection import train_test_split\n\nX, y = make_regression(\n\
+      \    n_samples=500, n_features=5, noise=10,\n    random_state=0\n)\nX_train, X_test, y_train, y_test\
+      \ = train_test_split(\n    X, y, random_state=0\n)\ny_train[:10] += 500\nmodel = HuberRegressor(epsilon=1.35,\
+      \ max_iter=300).fit(X_train, y_train)\ny_pred = model.predict(X_test[:3])\nprint(\"y_pred:\", y_pred.round(1))\n\
+      print(\"outliers among first 10 training rows:\",\n      int(model.outliers_[:10].sum()))\nprint(\"\
+      n_iter_:\", model.n_iter_, type(model.n_iter_).__name__)\n"
     snippet_library: scikit-learn
     visual: regression_preds
+    guidance:
+    - task: regression
+      text: Compare with ordinary least squares to see whether a few large target residuals changed the
+        fit.
+    output: 'y_pred: [-115.1   -8.3  115.1]
+
+      outliers among first 10 training rows: 10
+
+      n_iter_: 12 int
+
+      '
   catch_outs:
-    - epsilon sets how many rows count as outliers.
-    - Missing values raise an error. Impute first.
-    - Many outliers means ransac-regressor, not this page.
+  - epsilon sets how many rows count as outliers.
+  - Missing values raise an error. Impute first.
+  - Many outliers means ransac-regressor, not this page.
   key_settings:
     tier1:
-      - {name: epsilon, page: null}
-      - {name: alpha, page: null}
+    - name: epsilon
+      page: null
+      controls: Residual cutoff in estimated-scale units between quadratic and linear loss.
+      effect: Lower values treat more residuals linearly; higher values approach squared loss.
+    - name: alpha
+      page: null
+      controls: L2 penalty strength on coefficients.
+      effect: More penalty shrinks coefficients and may underfit.
     tier2:
-      - {name: fit_intercept, page: null}
-      - {name: max_iter, page: null}
+    - name: fit_intercept
+      page: null
+      controls: Whether to estimate an intercept.
+      effect: Turning it off forces predictions through zero.
+    - name: max_iter
+      page: null
+      controls: Maximum L-BFGS-B optimisation iterations.
+      effect: A larger limit allows convergence but can take longer.
     tier3:
-      - {name: tol, page: null}
-  watch_it_work: {none: true}
+    - name: tol
+      page: null
+      controls: Optimiser stopping tolerance.
+      effect: Tighter tolerance may improve convergence at added cost.
+  watch_it_work:
+    none: true
   intuition:
     idea: Errors past a cut-off count less, so outliers pull the line less.
     analogy: Like a jury that discounts one loud witness.
     animation: none
-    good_at: [outliers in the target, a clean line, few outliers]
-    bad_at: [many outliers, text or images, need p-values]
+    good_at:
+    - outliers in the target
+    - a clean line
+    - few outliers
+    bad_at:
+    - many outliers
+    - text or images
+    - need p-values
     vs_siblings:
-      - {page: linear-regression, note: "Squared errors. One outlier can pull the line."}
-      - {page: ransac-regressor, note: "For many outliers. Fits on the clean subset."}
-      - {page: theil-sen-regression, note: "Median of slopes. Small data with outliers."}
+    - page: linear-regression
+      note: Squared errors. One outlier can pull the line.
+    - page: ransac-regressor
+      note: For many outliers. Fits on the clean subset.
+    - page: theil-sen-regression
+      note: Median of slopes. Small data with outliers.
     read_more:
-      - Use a loss that is squared near zero and linear far out.
-      - Give rows with large errors less weight, past epsilon.
-      - Stop when the fit barely changes, set by tol.
-  next: [evaluate-how-good]
+    - Use a loss that is squared near zero and linear far out.
+    - Give rows with large errors less weight, past epsilon.
+    - Stop when the fit barely changes, set by tol.
+    goal: Large residuals have linear rather than quadratic loss, limiting their influence; alpha regularises
+      coefficients.
+    steps:
+    - Estimate coefficients, intercept, and residual scale jointly
+    - Residuals within epsilon times the scale use quadratic loss; larger residuals use linear loss
+    - L-BFGS-B optimises the objective with an L2 coefficient penalty.
+    math:
+      notation:
+      - symbol: r
+        meaning: Residual y minus predicted value.
+      - symbol: ε
+        meaning: Huber cutoff multiplier.
+      - symbol: s
+        meaning: Estimated residual scale.
+      - symbol: L
+        meaning: Huber loss for one residual.
+      equations:
+      - expression: L(r)=r²/2 if |r|≤εs; otherwise εs(|r|−εs/2)
+        meaning: Large residuals grow linearly, so they pull less than under squared loss.
+      prediction: y_pred = x @ coef_ + intercept_; predict returns one robustly fitted mean per input
+        row.
+  next:
+  - evaluate-how-good

@@ -1,92 +1,276 @@
 id: rlm
 plain_name: RLM
 code_name: RLM
-aliases: [robust linear model, m-estimator]
+aliases:
+- robust linear model
+- m-estimator
 stage: model
 family: model.awkward.robust
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [outliers, robust fit, statsmodels]
-targets: [statsmodels.robust.robust_linear_model.RLM]
+question_tags:
+- outliers
+- robust fit
+- statsmodels
+targets:
+- statsmodels.robust.robust_linear_model.RLM
 pairs_with: []
 clashes: []
-source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.robust.robust_linear_model.RLM.html']
-library_versions: {statsmodels: 0.15.0}
+source_urls:
+- https://www.statsmodels.org/stable/generated/statsmodels.robust.robust_linear_model.RLM.html
+- https://www.statsmodels.org/stable/generated/statsmodels.robust.robust_linear_model.RLMResults.html
+library_versions:
+  statsmodels: 0.15.0
 reviewed: false
 rules:
-  task_types: [regression]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: ames, shape: fit_line}
+    hero:
+      kind: model
+      dataset: ames
+      shape: fit_line
     line: Fits a line that a few outliers cannot pull far off.
   quick_facts:
     data_size: Small to large tables
   use_avoid:
-    use_when: [outliers in the target, statsmodels output, linear shape]
-    avoid_when: [missing values, non-linear shape, many outliers]
+    use_when:
+    - outliers in the target
+    - statsmodels output
+    - linear shape
+    avoid_when:
+    - missing values
+    - non-linear shape
+    - many outliers
   prep:
-    - step: {family: clean.impute}
-      status: required
-      why: Stops with an error on NaN.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.scale.rescale}
-      status: not_needed
-      why: A linear fit gives the same answer after scaling.
-      condition: null
-      unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Stops with an error on NaN.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.scale.rescale
+    status: not_needed
+    why: A linear fit gives the same answer after scaling.
+    condition: null
+    unless: null
   code:
   - library: statsmodels
     target: statsmodels.robust.robust_linear_model.RLM
     why_this_library: The statsmodels robust fit, with statsmodels results.
-    snippet: |
-      # statsmodels 0.15.0
+    snippet: '# statsmodels 0.15.0
+
       import statsmodels.api as sm
+
       from sklearn.datasets import make_regression
 
-      X, y = make_regression(n_samples=200, n_features=2, noise=4.0,
-                             random_state=0)
-      y[:40] += 200  # gross outliers
+
+      X, y = make_regression(n_samples=200, n_features=2, noise=4.0, random_state=0)
+
+      y[:40] += 200
+
       model = sm.RLM(y, sm.add_constant(X), M=sm.robust.norms.HuberT())
+
       results = model.fit()
-      print(model.df_model, model.df_resid)
+
+      y_pred = results.predict(sm.add_constant(X[:3]))
+
+      print("y_pred:", y_pred.round(1))
+
+      print("results.params:", results.params.round(2))
+
+      print("fittedvalues shape:", results.fittedvalues.shape)
+
+      print("weights first 3:", results.weights[:3].round(3))
+
+      print("scale:", round(float(results.scale), 2))
+
+      '
+    output: 'y_pred: [-29.    5.6  39.8]
+
+      results.params: [ 2.04 20.29 33.69]
+
+      fittedvalues shape: (200,)
+
+      weights first 3: [0.042 0.04  0.04 ]
+
+      scale: 6.03
+
+      '
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
-         note: "Linear predictions. Call it on the results."}
-      - {name: df_model, kind: attribute, task: null, shape: "float",
-         note: "Regressors, not counting the intercept."}
-      - {name: df_resid, kind: attribute, task: null, shape: "float",
-         note: "Observations minus parameters, intercept included."}
-    next_step: Call fit(); the coefficients live on the results.
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[-29.0, 5.6, 39.8]'
+      shape_explanation: One predicted mean per supplied row. n_samples is the number of rows; this example
+        has shape (3,).
+      note: 'RLMResults method: applies fitted params to the supplied design matrix.'
+    - name: params
+      kind: return
+      task: null
+      shape: (n_parameters,)
+      object_type: numpy.ndarray
+      example: '[2.04, 20.29, 33.69]'
+      shape_explanation: One coefficient per design column. n_parameters includes the intercept column;
+        this example has 3 coefficients and shape (3,).
+      note: After fit(), read results.params for fitted coefficient estimates.
+    - name: fittedvalues
+      kind: return
+      task: regression
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[-29.0, 5.6, 39.8]'
+      shape_explanation: One fitted mean per training observation. n_samples is the training row count;
+        this example has shape (3,).
+      note: After fit(), read results.fittedvalues for fitted means on training rows.
+    - name: weights
+      kind: return
+      task: null
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[0.042, 0.040, 0.040]'
+      shape_explanation: One robust weight per training observation. n_samples is the training row count;
+        this example has shape (3,).
+      note: After fit(), read results.weights; smaller robust weights reduce a row’s influence.
+    - name: scale
+      kind: return
+      task: null
+      shape: scalar
+      object_type: float
+      example: '6.03'
+      shape_explanation: A scalar is one value, with no array dimensions. The example shows that single
+        value.
+      note: After fit(), read results.scale for the robust residual scale.
+    - name: resid
+      kind: return
+      task: null
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[192.3, 201.6, 204.6]'
+      shape_explanation: One residual per training observation. n_samples is the training row count; this
+        example has shape (3,).
+      note: After fit(), read results.resid for observed minus fitted training targets.
+    next_step: null
     visual: null
+    guidance:
+    - task: regression
+      text: Inspect the fitted results and selected norm; robust fitting does not make missing data acceptable.
+    snippet: '# statsmodels 0.15.0
+
+      import statsmodels.api as sm
+
+      from sklearn.datasets import make_regression
+
+
+      X, y = make_regression(n_samples=200, n_features=2, noise=4.0, random_state=0)
+
+      y[:40] += 200
+
+      model = sm.RLM(y, sm.add_constant(X), M=sm.robust.norms.HuberT())
+
+      results = model.fit()
+
+      y_pred = results.predict(sm.add_constant(X[:3]))
+
+      print("y_pred:", y_pred.round(1))
+
+      print("results.params:", results.params.round(2))
+
+      print("fittedvalues shape:", results.fittedvalues.shape)
+
+      print("weights first 3:", results.weights[:3].round(3))
+
+      print("scale:", round(float(results.scale), 2))
+
+      '
+    snippet_library: statsmodels
+    output: 'y_pred: [-29.    5.6  39.8]
+
+      results.params: [ 2.04 20.29 33.69]
+
+      fittedvalues shape: (200,)
+
+      weights first 3: [0.042 0.04  0.04 ]
+
+      scale: 6.03
+
+      '
   catch_outs:
-    - Missing values stop the fit. Drop or fill them first.
-    - No intercept by default. Add one with add_constant.
-    - The default M is HuberT, not least squares.
+  - Missing values stop the fit. Drop or fill them first.
+  - No intercept by default. Add one with add_constant.
+  - The default M is HuberT, not least squares.
   key_settings:
     tier1:
-    - {name: M, page: null}
-    - {name: missing, page: null}
+    - name: M
+      page: null
+      controls: Robust norm defining loss and residual weights.
+      effect: Different norms change how strongly large residuals are downweighted.
+    - name: missing
+      page: null
+      controls: Missing-data handling when building the model.
+      effect: Dropping rows changes the fitted sample; passing missing values can fail.
     tier2: []
     tier3: []
-  watch_it_work: {none: true}
+  watch_it_work:
+    none: true
   intuition:
     idea: Fit a line, shrink the pull of large residuals, and refit until stable.
     analogy: A referee who gives less weight to the one wildly out-of-line score.
     animation: none
-    good_at: [outliers in the target, statsmodels output, linear shape]
-    bad_at: [missing values, non-linear shape]
+    good_at:
+    - outliers in the target
+    - statsmodels output
+    - linear shape
+    bad_at:
+    - missing values
+    - non-linear shape
     vs_siblings:
-      - {page: huber-regressor, note: "A similar robust loss in scikit-learn. No statsmodels output."}
-      - {page: ransac-regressor, note: "Random samples. Suited to many outliers."}
+    - page: huber-regressor
+      note: A similar robust loss in scikit-learn. No statsmodels output.
+    - page: ransac-regressor
+      note: Random samples. Suited to many outliers.
     read_more:
-      - Start with an ordinary least squares fit.
-      - Compute the residuals and their scale.
-      - Down-weight large residuals with the M function.
-      - Refit with those weights until the estimates settle.
+    - Start with an ordinary least squares fit.
+    - Compute the residuals and their scale.
+    - Down-weight large residuals with the M function.
+    - Refit with those weights until the estimates settle.
+    goal: M-estimation downweights large standardised residuals according to the chosen norm; it does
+      not identify a clean subset.
+    steps:
+    - Start with an initial least-squares estimate and residual scale
+    - Apply the chosen robust norm to standardised residuals to obtain weights
+    - Refit weighted least squares and update scale until coefficients stabilise or the iteration limit
+      is reached.
+    math:
+      notation:
+      - symbol: i
+        meaning: Observation index.
+      - symbol: x_i
+        meaning: Feature vector for observation i.
+      - symbol: y_i
+        meaning: Observed target for observation i.
+      - symbol: β
+        meaning: Coefficient vector.
+      - symbol: w_i
+        meaning: Robust weight assigned to observation i.
+      - symbol: argmin
+        meaning: Value of β that minimises the weighted squared residual sum.
+      equations:
+      - expression: β_next = argmin_β Σ_i w_i (y_i−x_iᵀβ)²
+        meaning: Robust norm weights update between weighted least-squares fits.
+      prediction: RLMResults.predict(exog) = exog @ params; returns one mean per row. Training fittedvalues
+        use training design.
   next: []

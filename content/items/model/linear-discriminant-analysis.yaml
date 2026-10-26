@@ -1,128 +1,292 @@
 id: linear-discriminant-analysis
 plain_name: LinearDiscriminantAnalysis
 code_name: LinearDiscriminantAnalysis
-aliases: [lda, linear discriminant]
+aliases:
+- lda
+- linear discriminant
 stage: model
 family: model.probabilistic.da
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [classes overlap, few features, reduce dimensions]
-targets: [sklearn.discriminant_analysis.LinearDiscriminantAnalysis]
+question_tags:
+- classes overlap
+- few features
+- reduce dimensions
+targets:
+- sklearn.discriminant_analysis.LinearDiscriminantAnalysis
 pairs_with: []
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.discriminant_analysis.LinearDiscriminantAnalysis.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.discriminant_analysis.LinearDiscriminantAnalysis.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [classification]
+  task_types:
+  - classification
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: breast-cancer, shape: boundary}
+    hero:
+      kind: model
+      dataset: breast-cancer
+      shape: boundary
     line: Draws one straight line that best separates the classes.
   quick_facts:
     data_size: Any size table with rows in every class
   use_avoid:
-    use_when: [classes share a spread, need a straight boundary, want fewer dimensions]
-    avoid_when: [classes differ in spread, non-linear boundaries, categorical inputs]
+    use_when:
+    - classes share a spread
+    - need a straight boundary
+    - want fewer dimensions
+    avoid_when:
+    - classes differ in spread
+    - non-linear boundaries
+    - categorical inputs
   prep:
-    - step: {family: transform.scale.rescale}
-      status: not_needed
-      why: "Predictions do not change when scaled."
-      condition: null
-      unless: null
-    - step: {family: clean.impute}
-      status: required
-      why: Rejects missing values.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Text categories must become numbers.
-      condition: {has_categoricals: true}
-      unless: null
+  - step:
+      family: transform.scale.rescale
+    status: not_needed
+    why: Predictions do not change when scaled.
+    condition: null
+    unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Rejects missing values.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Text categories must become numbers.
+    condition:
+      has_categoricals: true
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.discriminant_analysis.LinearDiscriminantAnalysis
-      why_this_library: The scikit-learn estimator for this method.
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import load_breast_cancer
-        from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
-        from sklearn.model_selection import train_test_split
-
-        X, y = load_breast_cancer(return_X_y=True)
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, random_state=0
-        )
-
-        model = LinearDiscriminantAnalysis()
-        model.fit(X_train, y_train)
-        print(round(model.score(X_test, y_test), 3))
-  what_comes_out:
-    items:
-      - {name: predict, kind: method, task: classification, shape: "(n_samples,)",
-         note: "Class with the highest probability."}
-      - {name: predict_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
-         note: "One column per class, in classes_ order."}
-      - {name: predict_log_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
-         note: "Log of predict_proba, same column order."}
-      - {name: decision_function, kind: method, task: classification, shape: "(n_samples,) for two classes",
-         note: "Score before the probability. Above 0 means class 1."}
-      - {name: score, kind: method, task: classification, shape: "float",
-         note: "Accuracy on the data given."}
-      - {name: coef_, kind: attribute, task: null, shape: "(1, n_features) for two classes",
-         note: "Weight per column in the linear rule."}
-      - {name: intercept_, kind: attribute, task: null, shape: "(1,) for two classes",
-         note: "Offset of the linear rule."}
-      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)",
-         note: "Labels, in the order of the probability columns."}
-    next_step: "ROC AUC needs predict_proba[:, 1], not the labels."
+  - library: scikit-learn
+    target: sklearn.discriminant_analysis.LinearDiscriminantAnalysis
+    why_this_library: The scikit-learn estimator for this method.
     snippet: |
       # scikit-learn 1.9.1
+      import numpy as np
       from sklearn.datasets import load_breast_cancer
       from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
-
-      data = load_breast_cancer(as_frame=True)
-      model = LinearDiscriminantAnalysis()
-      model.fit(data.data, data.target)
-      print(model.predict_proba(data.data[:3]).shape)
-      print(model.decision_function(data.data[:3]).shape)
-      print(model.coef_.shape)
-      print(model.intercept_.shape)
-      print(model.classes_)
+      from sklearn.model_selection import train_test_split
+      X,y=load_breast_cancer(return_X_y=True)
+      X=X[:,:4]
+      Xt,Xv,yt,yv=train_test_split(X,y,test_size=.25,stratify=y,random_state=0)
+      m=LinearDiscriminantAnalysis(store_covariance=True).fit(Xt,yt)
+      y_pred=m.predict(Xv[:3])
+      y_proba=m.predict_proba(Xv[:3])
+      y_score=m.decision_function(Xv[:3])
+      print('y_pred:',y_pred)
+      print('y_proba:')
+      print(np.round(y_proba,3))
+      print('y_score:',np.round(y_score,3))
+      print('classes_:',m.classes_)
+      print('means/covariance/coef:',
+            m.means_.shape,m.covariance_.shape,m.coef_.shape)
+      print('accuracy:',round(m.score(Xv,yv),3))
+    output: |
+      y_pred: [1 0 0]
+      y_proba:
+      [[0.049 0.951]
+       [0.985 0.015]
+       [0.96  0.04 ]]
+      y_score: [ 2.964 -4.21  -3.191]
+      classes_: [0 1]
+      means/covariance/coef: (2, 4) (4, 4) (1, 4)
+      accuracy: 0.888
+  what_comes_out:
+    items:
+    - name: predict
+      kind: method
+      task: classification
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[0, 1, 0]'
+      shape_explanation: One class label per input row; three labels mean shape (3,).
+      note: Chooses the class with the greatest linear discriminant score.
+    - name: predict_proba
+      kind: method
+      task: classification
+      shape: (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[[0.9, 0.1], [0.2, 0.8]]'
+      shape_explanation: Rows are cases and columns are classes; this example has shape (2, 2).
+      note: Columns follow classes_ order and each row sums to 1.
+    - name: decision_function
+      kind: method
+      task: classification
+      shape: (n_samples,) or (n_samples,n_classes)
+      object_type: numpy.ndarray
+      example: '[-2.1, 1.7, -0.8]'
+      shape_explanation: 'This fictional example is binary: one score per row gives shape (3,). With multiple classes, there is one score per row and class, shape (n_samples, n_classes).'
+      note: Binary positive scores favor classes_[1]; multiclass returns one discriminant score per class.
+    - name: classes_
+      kind: attribute
+      task: classification
+      shape: (n_classes,)
+      object_type: numpy.ndarray
+      example: '[0, 1]'
+      shape_explanation: One label per class; this example has shape (2,).
+      note: Probability column order.
+    - name: means_
+      kind: attribute
+      task: null
+      shape: (n_classes, n_features)
+      object_type: numpy.ndarray
+      example: '[[1.2, 0.4], [2.1, 0.9]]'
+      shape_explanation: Each class is a row and each feature a column; 2 classes and 2 illustrative features give (2, 2).
+      note: Each class has its own mean.
+    - name: covariance_
+      kind: attribute
+      task: null
+      shape: (n_features, n_features)
+      object_type: numpy.ndarray
+      example: '[[1.0, 0.2], [0.2, 0.8]]'
+      shape_explanation: One square shared within-class covariance; two illustrative features give shape (2, 2).
+      note: For svd it exists only with store_covariance=True; lsqr and eigen store it.
+    - name: coef_
+      kind: attribute
+      task: null
+      shape: (1,n_features) binary; multiclass matrix
+      object_type: numpy.ndarray
+      example: '[[0.7, -0.3]]'
+      shape_explanation: The fictional binary example has one coefficient row and two features, shape (1, 2). With multiple classes, there is one row per class and shape (n_classes, n_features).
+      note: Linear decision weights.
+    - name: score
+      kind: method
+      task: classification
+      shape: scalar
+      object_type: float
+      example: '0.96'
+      shape_explanation: One number, with no array dimensions.
+      note: Classification score is accuracy on the supplied labeled rows.
+    next_step: ROC AUC needs predict_proba[:, 1], not the labels.
+    snippet: |
+      # scikit-learn 1.9.1
+      import numpy as np
+      from sklearn.datasets import load_breast_cancer
+      from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+      from sklearn.model_selection import train_test_split
+      X,y=load_breast_cancer(return_X_y=True)
+      X=X[:,:4]
+      Xt,Xv,yt,yv=train_test_split(X,y,test_size=.25,stratify=y,random_state=0)
+      m=LinearDiscriminantAnalysis(store_covariance=True).fit(Xt,yt)
+      y_pred=m.predict(Xv[:3])
+      y_proba=m.predict_proba(Xv[:3])
+      y_score=m.decision_function(Xv[:3])
+      print('y_pred:',y_pred)
+      print('y_proba:')
+      print(np.round(y_proba,3))
+      print('y_score:',np.round(y_score,3))
+      print('classes_:',m.classes_)
+      print('means/covariance/coef:',
+            m.means_.shape,m.covariance_.shape,m.coef_.shape)
+      print('accuracy:',round(m.score(Xv,yv),3))
     snippet_library: scikit-learn
     visual: null
+    output: |
+      y_pred: [1 0 0]
+      y_proba:
+      [[0.049 0.951]
+       [0.985 0.015]
+       [0.96  0.04 ]]
+      y_score: [ 2.964 -4.21  -3.191]
+      classes_: [0 1]
+      means/covariance/coef: (2, 4) (4, 4) (1, 4)
+      accuracy: 0.888
+    guidance:
+    - task: classification
+      text: Use class labels for accuracy and probabilities/scores for ranking; check the shared-versus-class-specific covariance assumption.
   catch_outs:
-    - "Assumes the classes share one spread, so it misses curved boundaries."
-    - "Needs rows in every class to estimate each class mean."
-    - "Shrinkage is off by default (None); 'auto' is one option."
+  - Assumes the classes share one spread, so it misses curved boundaries.
+  - Needs rows in every class to estimate each class mean.
+  - Shrinkage is off by default (None); 'auto' is one option.
   key_settings:
     tier1:
-      - {name: solver, page: null}
-      - {name: shrinkage, page: null}
-      - {name: covariance_estimator, page: null}
-      - {name: n_components, page: null}
+    - name: solver
+      page: null
+      controls: Chooses SVD, least-squares, or eigen covariance computation.
+      effect: SVD avoids explicitly computing covariance; lsqr/eigen support covariance shrinkage.
+    - name: shrinkage
+      page: null
+      controls: Regularizes shared covariance for lsqr/eigen.
+      effect: More shrinkage stabilizes correlated or sparse estimates but can blur signal.
+    - name: covariance_estimator
+      page: null
+      controls: Provides a custom shared covariance estimator.
+      effect: Changes covariance estimation and must expose a compatible covariance_.
+    - name: n_components
+      page: null
+      controls: Caps directions returned by transform.
+      effect: Fewer dimensions make a smaller projection; predictions are unchanged.
     tier2:
-      - {name: tol, page: null}
-      - {name: store_covariance, page: null}
-      - {name: priors, page: null}
-    tier3:
-      []
-  watch_it_work: {none: true}
+    - name: priors
+      page: null
+      controls: Sets class prior probabilities.
+      effect: Changes class score offsets and can shift decision regions.
+    - name: store_covariance
+      page: null
+      controls: Stores covariance_ with the svd solver.
+      effect: Enables matrix inspection with extra storage.
+    - name: tol
+      page: null
+      controls: Sets the singular-value rank cutoff for svd.
+      effect: Higher tolerance discards more weak directions and may stabilize fitting.
+    tier3: []
+  watch_it_work:
+    none: true
   intuition:
     idea: Draw the one straight line that best separates the classes.
     analogy: A single fence across a field that keeps the groups apart.
     animation: none
-    good_at: [similar spread, small data, reducing dimensions]
-    bad_at: [curved boundaries, different spreads, raw categories]
+    good_at:
+    - similar spread
+    - small data
+    - reducing dimensions
+    bad_at:
+    - curved boundaries
+    - different spreads
+    - raw categories
     vs_siblings:
-      - {page: quadratic-discriminant-analysis, note: "Same family. Each class gets its own spread."}
+    - page: quadratic-discriminant-analysis
+      note: Same family. Each class gets its own spread.
+    goal: Estimate class means and one pooled within-class covariance, then assign each row the largest linear discriminant score.
+    steps:
+    - Estimate each class mean and prior from training labels.
+    - Pool within-class covariance across classes.
+    - Score each class with the shared covariance; score differences are linear in x.
+    - Return the label with the highest score and posterior probabilities.
+    math:
+      notation:
+      - symbol: x
+        meaning: Input feature vector.
+      - symbol: mu_k
+        meaning: Mean vector for class k.
+      - symbol: Sigma
+        meaning: Pooled within-class covariance shared by classes.
+      - symbol: pi_k
+        meaning: Prior probability for class k.
+      - symbol: delta_k(x)
+        meaning: Linear discriminant score.
+      equations:
+      - expression: delta_k(x)=x^T Sigma^{-1} mu_k - 1/2 mu_k^T Sigma^{-1} mu_k + log(pi_k)
+        meaning: Shared covariance makes each class score linear in the input.
+      - expression: predict(x)=argmax_k delta_k(x)
+        meaning: Choose the class with largest score; probabilities are posterior class probabilities.
+      prediction: predict returns one label per row; predict_proba gives posterior columns. Binary decision_function is a signed score.
     read_more:
-      - Estimate each class mean.
-      - Pool the spread shared by all classes.
-      - Draw the straight line that separates the class means best.
+    - Estimate each class mean.
+    - Pool the spread shared by all classes.
+    - Draw the straight line that separates the class means best.
   next: []

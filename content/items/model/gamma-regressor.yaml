@@ -1,132 +1,245 @@
 id: gamma-regressor
 plain_name: GammaRegressor
 code_name: GammaRegressor
-aliases: [gamma regression]
+aliases:
+- gamma regression
 stage: model
 family: model.awkward.glm
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [positive skewed target, amounts, claim size]
-targets: [sklearn.linear_model.GammaRegressor]
+question_tags:
+- positive skewed target
+- amounts
+- claim size
+targets:
+- sklearn.linear_model.GammaRegressor
 pairs_with: []
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.GammaRegressor.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.GammaRegressor.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [regression]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: ames, shape: fit_line}
+    hero:
+      kind: model
+      dataset: ames
+      shape: fit_line
     line: A line for positive amounts that spread wider as they grow.
   quick_facts:
     data_size: Fits in memory
   use_avoid:
-    use_when: [positive skewed target, amounts, spread grows with size]
-    avoid_when: [zero or negative targets, counts, need p-values]
+    use_when:
+    - positive skewed target
+    - amounts
+    - spread grows with size
+    avoid_when:
+    - zero or negative targets
+    - counts
+    - need p-values
   prep:
-    - step: {family: transform.scale.rescale}
-      status: recommended
-      why: Alpha penalises coefficients, so feature scale changes the fit.
-      condition: null
-      unless: null
-    - step: {family: clean.impute}
-      status: required
-      why: Missing values raise an error here.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Text categories must become numbers.
-      condition: {has_categoricals: true}
-      unless: null
-    - step: {page: train-test-split}
-      status: recommended
-      why: Hold out rows to check predictions on new data.
-      condition: null
-      unless: null
+  - step:
+      family: transform.scale.rescale
+    status: recommended
+    why: Alpha penalises coefficients, so feature scale changes the fit.
+    condition: null
+    unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Missing values raise an error here.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Text categories must become numbers.
+    condition:
+      has_categoricals: true
+    unless: null
+  - step:
+      page: train-test-split
+    status: recommended
+    why: Hold out rows to check predictions on new data.
+    condition: null
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.linear_model.GammaRegressor
-      why_this_library: Gamma GLM with a log link, in the scikit-learn API.
-      snippet: |
-        # scikit-learn 1.9.1
-        import numpy as np
-        from sklearn.datasets import make_regression
-        from sklearn.linear_model import GammaRegressor
-        from sklearn.model_selection import train_test_split
+  - library: scikit-learn
+    target: sklearn.linear_model.GammaRegressor
+    why_this_library: Gamma GLM with a log link, in the scikit-learn API.
+    snippet: "# scikit-learn 1.9.1\nimport numpy as np\nfrom sklearn.datasets import make_regression\nfrom sklearn.linear_model\
+      \ import GammaRegressor\nfrom sklearn.model_selection import train_test_split\n\nX, signal = make_regression(\n\
+      \    n_samples=500, n_features=5, noise=10, random_state=0\n)\ny = np.exp(signal / signal.std())\nX_train,\
+      \ X_test, y_train, y_test = train_test_split(X, y, random_state=0)\nmodel = GammaRegressor(alpha=0.1, max_iter=300).fit(X_train,\
+      \ y_train)\ny_pred = model.predict(X_test[:5])\nprint(\"y_pred:\", np.round(y_pred, 3))\nprint(\"D2:\", round(model.score(X_test,\
+      \ y_test), 3))\n"
+    output: 'y_pred: [0.364 0.934 2.804 0.225 0.608]
 
-        X, y = make_regression(n_samples=500, n_features=5, noise=10,
-                               random_state=0)
-        y = np.exp(y / y.std())  # positive, right-skewed target
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, random_state=0)
+      D2: 0.983
 
-        model = GammaRegressor(alpha=0.1, max_iter=300)
-        model.fit(X_train, y_train)
-        print(round(model.score(X_test, y_test), 3))
+      '
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
-         note: "Always above zero. The log link keeps them positive."}
-      - {name: score, kind: method, task: regression, shape: float,
-         note: "Share of deviance explained, the D² score."}
-      - {name: coef_, kind: attribute, task: null, shape: "(n_features,)",
-         note: "One weight per column, on the log scale."}
-      - {name: intercept_, kind: attribute, task: null, shape: float,
-         note: "Baseline on the log scale."}
-      - {name: n_iter_, kind: attribute, task: null, shape: int,
-         note: "Solver steps used. Compare with max_iter."}
-      - {name: n_features_in_, kind: attribute, task: null, shape: int,
-         note: "Number of columns seen at fit time."}
-    next_step: Use exp(coef_) to read each effect as a multiplier.
-    snippet: |
-      # scikit-learn 1.9.1
-      import numpy as np
-      from sklearn.datasets import make_regression
-      from sklearn.linear_model import GammaRegressor
-
-      X, y = make_regression(n_samples=200, n_features=3, noise=10,
-                             random_state=0)
-      y = np.exp(y / y.std())
-      model = GammaRegressor().fit(X, y)
-      pred = model.predict(X)
-      print(pred.shape)
-      print(bool(pred.min() > 0))
-      print(np.exp(model.coef_).round(3))
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[2.4, 5.1, 3.2]'
+      shape_explanation: One predicted response per input row. n_samples is the number of rows; this example has
+        3 values, shape (3,).
+      note: Positive response-scale mean for a strictly positive Gamma target.
+    - name: score
+      kind: method
+      task: regression
+      shape: scalar
+      object_type: float
+      example: '0.72'
+      shape_explanation: A scalar is one value with no array dimensions. This example is one D-squared score.
+      note: D-squared measures deviance explained under the Gamma loss; it is not R-squared.
+    - name: coef_
+      kind: attribute
+      task: null
+      shape: (n_features,)
+      object_type: numpy.ndarray
+      example: '[0.2, -0.1, 0.4]'
+      shape_explanation: One coefficient per input feature. n_features is the number of columns; the example has
+        3 coefficients, shape (3,).
+      note: Coefficients act on log mean; exp(coef_) gives multiplicative mean factors per feature unit.
+    - name: intercept_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: float
+      example: '0.3'
+      shape_explanation: A scalar is one intercept value, with no array dimensions.
+      note: Log of the baseline expected amount when features are zero.
+    - name: n_iter_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: int
+      example: '12'
+      shape_explanation: A scalar integer counts solver iterations for this one fitted target; it has no array dimensions.
+      note: Compare with max_iter to see whether the solver hit its limit.
+    - name: n_features_in_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: int
+      example: '3'
+      shape_explanation: A scalar integer counts fitted input columns; it has no array dimensions.
+      note: Number of columns seen during fit.
+    snippet: "# scikit-learn 1.9.1\nimport numpy as np\nfrom sklearn.datasets import make_regression\nfrom sklearn.linear_model\
+      \ import GammaRegressor\nX, signal = make_regression(\n    n_samples=200, n_features=3, noise=10, random_state=0\n\
+      )\ny = np.exp(signal / signal.std())\nmodel = GammaRegressor().fit(X, y)\ny_pred = model.predict(X[:3])\n\
+      print(\"y_pred:\", y_pred.round(3))\nprint(\"coef_:\", model.coef_.round(3))\nprint(\"D2:\", round(model.score(X,\
+      \ y), 3))\n"
     snippet_library: scikit-learn
     visual: regression_preds
+    next_step: null
+    guidance:
+    - task: regression
+      text: Targets must be strictly positive. Predictions are positive conditional means on the response scale;
+        coefficients are on the log-mean scale.
+    output: 'y_pred: [1.214 0.618 3.564]
+
+      coef_: [0.149 0.348 0.342]
+
+      D2: 0.776
+
+      '
   catch_outs:
-    - Target must be above zero. Zero or negative values raise an error.
-    - Missing values raise an error. Impute before fitting.
-    - score returns D², not R². Read it as deviance explained.
-    - alpha is an L2 penalty on the weights, not a learning rate.
+  - Target must be above zero. Zero or negative values raise an error.
+  - Missing values raise an error. Impute before fitting.
+  - score returns D², not R². Read it as deviance explained.
+  - alpha is an L2 penalty on the weights, not a learning rate.
   key_settings:
     tier1:
-      - {name: alpha, page: null}
-      - {name: max_iter, page: null}
+    - name: alpha
+      page: null
+      controls: Strength of the L2 penalty on coefficients.
+      effect: A larger value shrinks coefficients more; for NB family it also changes variance, so check which API
+        owns it.
+    - name: max_iter
+      page: null
+      controls: Maximum solver iterations.
+      effect: A larger limit allows more time to converge, but costs runtime; reaching the limit may leave the fit
+        unfinished.
     tier2:
-      - {name: fit_intercept, page: null}
-      - {name: tol, page: null}
+    - name: fit_intercept
+      page: null
+      controls: Whether to add an intercept to the linear predictor.
+      effect: Turning it off assumes the response relation is already centered on the chosen link scale.
+    - name: tol
+      page: null
+      controls: Convergence tolerance for the optimizer.
+      effect: A smaller tolerance asks for a more precise fit and can take longer.
     tier3:
-      - {name: warm_start, page: null}
-  watch_it_work: {none: true}
+    - name: warm_start
+      page: null
+      controls: Whether a later fit starts from the previous coefficients.
+      effect: Can speed repeated related fits; the previous solution may not help a different dataset.
+  watch_it_work:
+    none: true
   intuition:
     idea: Model the mean on a log scale. Spread grows with the square of the mean.
     analogy: Like a bill that varies by a percentage, so bigger bills vary more in dollars.
     animation: none
-    good_at: [positive amounts, skewed targets, multiplicative effects]
-    bad_at: [zero or negative targets, counts, text or images]
+    good_at:
+    - positive amounts
+    - skewed targets
+    - multiplicative effects
+    bad_at:
+    - zero or negative targets
+    - counts
+    - text or images
     vs_siblings:
-      - {page: poisson-regression, note: "Counts, not amounts. Poisson spread equals the mean."}
-      - {page: tweedie-regressor, note: "Allows exact zeros. Gamma needs strictly positive targets."}
-      - {page: glm, note: "Statsmodels version, with p-values."}
+    - page: poisson-regression
+      note: Counts, not amounts. Poisson spread equals the mean.
+    - page: tweedie-regressor
+      note: Allows exact zeros. Gamma needs strictly positive targets.
+    - page: glm
+      note: Statsmodels version, with p-values.
     read_more:
-      - Pick a log link, so the mean is exp of a line.
-      - Minimise the deviance, with an L2 penalty on the weights.
-      - Read each coefficient as a multiplier on the mean.
-  next: [but-fan-errors]
+    - Pick a log link, so the mean is exp of a line.
+    - Minimise the deviance, with an L2 penalty on the weights.
+    - Read each coefficient as a multiplier on the mean.
+    goal: Model strictly positive continuous amounts whose variance grows in proportion to the squared mean.
+    steps:
+    - Require every target value to be strictly greater than zero.
+    - Fit a log-linked Gamma GLM by minimizing Gamma deviance plus an L2 coefficient penalty.
+    - The inverse log link exponentiates the fitted linear predictor to a positive mean.
+    - Use deviance explained for score; coefficient exponentials describe multiplicative changes in the mean.
+    math:
+      notation:
+      - symbol: Y_i
+        meaning: Positive continuous response for row i.
+      - symbol: mu_i
+        meaning: Conditional mean response for row i.
+      - symbol: phi
+        meaning: Positive dispersion scale.
+      - symbol: eta_i
+        meaning: Linear predictor b + x_i dot beta.
+      - symbol: alpha
+        meaning: Non-negative L2 penalty strength.
+      equations:
+      - expression: log(mu_i)=eta_i; Var(Y_i|x_i)=phi*mu_i^2
+        meaning: The log link gives a positive expected amount; Gamma variance increases with the square of its
+          mean.
+      prediction: Predict the response mean as mu_i=exp(intercept_ + x_i dot coef_); sklearn returns this response-scale
+        mean.
+  next:
+  - but-fan-errors

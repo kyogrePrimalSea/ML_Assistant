@@ -1,101 +1,263 @@
 id: arima
 plain_name: ARIMA
 code_name: ARIMA
-aliases: [ARIMA model, Box-Jenkins]
+aliases:
+- ARIMA model
+- Box-Jenkins
 stage: model
 family: model.ts-past
-tracks: [time-series]
+tracks:
+- time-series
 archetype: model
-question_tags: [forecast, one series, trend or drift]
-targets: [statsmodels.tsa.arima.model.ARIMA]
-pairs_with: [acf-pacf-plots, ljung-box, adf]
+question_tags:
+- forecast
+- one series
+- trend or drift
+targets:
+- statsmodels.tsa.arima.model.ARIMA
+pairs_with:
+- acf-pacf-plots
+- ljung-box
+- adf
 clashes: []
-source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.tsa.arima.model.ARIMA.html']
-library_versions: {statsmodels: 0.15.0}
+source_urls:
+- https://www.statsmodels.org/stable/generated/statsmodels.tsa.arima.model.ARIMA.html
+- https://www.statsmodels.org/stable/generated/statsmodels.tsa.arima.model.ARIMAResults.forecast.html
+- https://www.statsmodels.org/stable/generated/statsmodels.tsa.arima.model.ARIMAResults.get_forecast.html
+library_versions:
+  statsmodels: 0.15.0
 reviewed: false
 rules:
-  task_types: [regression]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: airline-passengers, shape: fit_line}
+    hero:
+      kind: model
+      dataset: airline-passengers
+      shape: fit_line
     line: Differences the series, then fits autoregressive and moving-average terms.
-  quick_facts: {none: true}
+  quick_facts:
+    none: true
   use_avoid:
-    use_when: [one series, a trend or drift, short memory]
-    avoid_when: [strong seasons, several series at once, shifting regimes]
+    use_when:
+    - one series
+    - a trend or drift
+    - short memory
+    avoid_when:
+    - strong seasons
+    - several series at once
+    - shifting regimes
   prep:
-    - step: {family: explore.stationarity}
-      status: recommended
-      why: Check stationarity before choosing lags.
-      condition: null
-      unless: null
-    - step: {family: split.time}
-      status: recommended
-      why: Test on the latest rows, never shuffled.
-      condition: null
-      unless: null
+  - step:
+      family: explore.stationarity
+    status: recommended
+    why: Check stationarity before choosing lags.
+    condition: null
+    unless: null
+  - step:
+      family: split.time
+    status: recommended
+    why: Test on the latest rows, never shuffled.
+    condition: null
+    unless: null
   code:
-    - library: statsmodels
-      target: statsmodels.tsa.arima.model.ARIMA
-      why_this_library: The statsmodels class for this model.
-      snippet: |
-        # statsmodels 0.15.0
-        import numpy as np
-        from sklearn.datasets import make_regression
-        from statsmodels.tsa.arima.model import ARIMA
+  - library: statsmodels
+    target: statsmodels.tsa.arima.model.ARIMA
+    why_this_library: The statsmodels class for this model.
+    snippet: "# statsmodels 0.15.0\nimport numpy as np\nfrom sklearn.datasets import make_regression\nfrom statsmodels.tsa.arima.model\
+      \ import ARIMA\n\n_, noise = make_regression(\n    n_samples=150, n_features=1, noise=1.0, random_state=0\n\
+      )\nseries = 0.2 * np.arange(150) + noise  # a drift plus noise\n\nmodel = ARIMA(series, order=(1, 1, 0))\n\
+      res = model.fit()\ny_pred = res.forecast(steps=3)\npred = res.get_forecast(steps=3)\nci = pred.conf_int()\n\
+      print(\"forecast:\", np.round(y_pred, 2).tolist())\nprint(\"interval shape:\", ci.shape)\nprint(\"params shape:\"\
+      , res.params.shape, \"resid shape:\", res.resid.shape)\n"
+    output: 'forecast: [36.54, 41.52, 39.17]
 
-        _, noise = make_regression(
-            n_samples=150, n_features=1, noise=1.0, random_state=0
-        )
-        series = 0.2 * np.arange(150) + noise  # a drift plus noise
+      interval shape: (3, 2)
 
-        model = ARIMA(series, order=(1, 1, 0))
-        res = model.fit()
-        print(round(res.aic, 1))
+      params shape: (2,) resid shape: (150,)
+
+      '
   what_comes_out:
     items:
-      - {name: fit, kind: method, task: null, shape: "results object", note: "Returns the fitted results. Use them to forecast."}
-      - {name: predict, kind: method, task: null, shape: "(n_obs,)", note: "Fitted values, or forecasts past the sample."}
-      - {name: model_orders, kind: attribute, task: null, shape: "dict", note: "The p, d, q and seasonal orders used."}
-      - {name: param_names, kind: attribute, task: null, shape: "list of str", note: "Names for each fitted parameter."}
-    next_step: Check the residuals for leftover patterns before forecasting.
+    - name: fitted Results object
+      kind: return
+      task: null
+      shape: results object
+      note: Returned by model.fit(); holds fitted parameters and forecasting methods.
+      object_type: statsmodels ARIMAResultsWrapper
+      example: ARIMAResultsWrapper(...)
+      shape_explanation: A fitted Python ARIMAResultsWrapper object, with no array shape; it holds estimates and
+        prediction methods.
+    - name: forecast result
+      kind: return
+      task: regression
+      shape: (steps,)
+      note: forecast(steps) returns future means; get_forecast adds intervals, while predict(start,end) selects
+        positions.
+      object_type: numpy.ndarray
+      example: '[12.4, 13.1, 13.8]'
+      shape_explanation: steps counts positions after the observed series; three example values correspond to steps=3.
+    - name: prediction interval
+      kind: return
+      task: regression
+      shape: (steps, 2)
+      note: Lower and upper forecast limits; these are uncertainty bounds, not probabilities.
+      object_type: numpy.ndarray
+      example: '[[11.0, 13.8], [11.4, 14.8], [11.9, 15.6]]'
+      shape_explanation: Each row is one time step and the two columns are lower and upper limits; three steps give
+        shape (3, 2).
+    - name: fitted parameters
+      kind: return
+      task: null
+      shape: (n_params,)
+      note: Estimated coefficients or smoothing states.
+      object_type: numpy.ndarray
+      example: '[0.2, 0.4, 0.1]'
+      shape_explanation: n_params counts estimated entries; this fictional example shows three values.
+    - name: residuals
+      kind: return
+      task: regression
+      shape: (n_effective_obs,)
+      note: Observed minus fitted values on the estimation sample.
+      object_type: numpy.ndarray
+      example: '[0.1, -0.2, 0.05]'
+      shape_explanation: n_effective_obs counts observations used for residuals; this fictional example has three.
+    - name: AIC
+      kind: return
+      task: null
+      shape: scalar
+      note: Likelihood-based fit criterion for comparing compatible models.
+      object_type: numpy.float64
+      example: np.float64(128.4)
+      shape_explanation: A numpy.float64 scalar contains one criterion value and has no array dimensions.
+    next_step: Compare forecasts with a held-out future window and inspect residual patterns.
     visual: null
+    snippet: "# statsmodels 0.15.0\nimport numpy as np\nfrom sklearn.datasets import make_regression\nfrom statsmodels.tsa.arima.model\
+      \ import ARIMA\n\n_, noise = make_regression(\n    n_samples=150, n_features=1, noise=1.0, random_state=0\n\
+      )\nseries = 0.2 * np.arange(150) + noise  # a drift plus noise\n\nmodel = ARIMA(series, order=(1, 1, 0))\n\
+      res = model.fit()\ny_pred = res.forecast(steps=3)\npred = res.get_forecast(steps=3)\nci = pred.conf_int()\n\
+      print(\"forecast:\", np.round(y_pred, 2).tolist())\nprint(\"intervals:\", np.round(ci, 2).tolist())\nprint(\"\
+      params:\", np.round(res.params, 2).tolist())\nprint(\"resid shape:\", res.resid.shape)\nprint(\"AIC:\", round(float(res.aic),\
+      \ 2))\n"
+    snippet_library: statsmodels
+    output: 'forecast: [36.54, 41.52, 39.17]
+
+      intervals: [[-8.83, 81.9], [-9.77, 92.82], [-22.41, 100.74]]
+
+      params: [-0.47, 535.7]
+
+      resid shape: (150,)
+
+      AIC: 1363.35
+
+      '
   catch_outs:
-    - order is (p, d, q) and is set by hand. Check the series first.
-    - enforce_stationarity and enforce_invertibility are on by default.
-    - seasonal_order is separate from order; leave it at zero without seasons.
+  - Differencing can remove level information; forecasts are returned on the original scale.
+  - Randomly shuffling a series breaks its temporal order.
   key_settings:
     tier1:
-      - {name: trend, page: null}
-      - {name: order, page: null}
-      - {name: seasonal_order, page: null}
-      - {name: concentrate_scale, page: null}
+    - name: trend
+      page: null
+      controls: Constant or polynomial trend terms.
+      effect: More trend structure may capture drift but can conflict with differencing.
+    - name: order
+      page: null
+      controls: Nonseasonal AR, differencing and MA orders p,d,q.
+      effect: Higher orders add lag parameters; extra differencing can remove useful low-frequency signal.
+    - name: seasonal_order
+      page: null
+      controls: Seasonal AR, differencing, MA orders and period.
+      effect: Seasonal terms model cycles but add parameters.
+    - name: concentrate_scale
+      page: null
+      controls: Estimate innovation variance outside the likelihood optimization.
+      effect: Can reduce optimizer dimension but changes parameter covariance calculations.
     tier2:
-      - {name: trend_offset, page: null}
-      - {name: missing, page: null}
-      - {name: validate_exog, page: null}
-      - {name: freq, page: null}
+    - name: trend_offset
+      page: null
+      controls: Starting value for the deterministic trend sequence.
+      effect: Changes the trend level when trend terms are included.
+    - name: missing
+      page: null
+      controls: How missing observations are handled.
+      effect: Rejecting gaps avoids treating nonadjacent observations as consecutive.
+    - name: validate_exog
+      page: null
+      controls: Check exogenous regressors for invalid values and shape.
+      effect: Validation catches malformed regressors early.
+    - name: freq
+      page: null
+      controls: Frequency attached to a date index.
+      effect: A correct frequency enables date-based forecast endpoints.
     tier3:
-      - {name: enforce_stationarity, page: null}
-      - {name: enforce_invertibility, page: null}
-      - {name: validate_specification, page: null}
-      - {name: exog, page: null}
-  watch_it_work: {none: true}
+    - name: enforce_stationarity
+      page: null
+      controls: Transform AR parameters to satisfy stationarity.
+      effect: Enforcement restricts estimates to stable AR dynamics.
+    - name: enforce_invertibility
+      page: null
+      controls: Transform MA parameters to satisfy invertibility.
+      effect: Enforcement restricts estimates to invertible MA dynamics.
+    - name: validate_specification
+      page: null
+      controls: Check order and trend combinations for compatibility.
+      effect: Validation catches unsupported model specifications.
+    - name: exog
+      page: null
+      controls: External regressors aligned to observations.
+      effect: Out-of-sample forecasts require future exog rows for every step.
+  watch_it_work:
+    none: true
   intuition:
     idea: Remove the drift by differencing, then model what is left.
     analogy: Like fixing a slope with differences, then correcting from past errors.
     animation: none
-    good_at: [one series, a trend or drift, short memory]
-    bad_at: [strong seasons, several series at once, shifting regimes]
+    good_at:
+    - one series
+    - a trend or drift
+    - short memory
+    bad_at:
+    - strong seasons
+    - several series at once
+    - shifting regimes
     vs_siblings:
-      - {page: auto-reg, note: "No differencing and no moving-average terms."}
-      - {page: sarimax, note: "Adds seasons and outside drivers."}
-    read_more:
-      - Difference the series until the drift is gone.
-      - Fit AR and MA terms to what is left.
-      - Forecast, then undo the differencing.
-  next: [but-beat-simple, but-intervals]
+    - page: auto-reg
+      note: No differencing and no moving-average terms.
+    - page: sarimax
+      note: Adds seasons and outside drivers.
+    read_more: &id001
+    - Choose p autoregressive lags, d differences, and q lagged innovations.
+    - Estimate their coefficients and innovation variance by maximum likelihood.
+    - Forecast the differenced series, then integrate predictions back to the original scale.
+    goal: Model a series after differencing it, using autoregressive lags and moving-average shocks.
+    steps: *id001
+    math:
+      notation:
+      - symbol: B
+        meaning: 'backshift operator: B y_t=y_{t-1}'
+      - symbol: p,d,q
+        meaning: AR order, differencing count, and MA order
+      - symbol: φ(B)
+        meaning: autoregressive polynomial
+      - symbol: θ(B)
+        meaning: moving-average polynomial
+      - symbol: ε_t
+        meaning: innovation at time t
+      - symbol: c
+        meaning: deterministic intercept or trend contribution
+      equations:
+      - expression: φ(B)(1-B)^d y_t=c+θ(B)ε_t
+        meaning: Differencing stabilizes the level; AR terms use past values and MA terms use past shocks.
+      - expression: ŷ_{T+h|T}=E[y_{T+h}|y_1,…,y_T]
+        meaning: Forecast is the conditional mean given observations through time T.
+      prediction: Differencing is reversed when forecasts return to the original series scale.
+  next:
+  - but-beat-simple
+  - but-intervals

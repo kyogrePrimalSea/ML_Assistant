@@ -1,98 +1,304 @@
 id: markov-regression
 plain_name: MarkovRegression
 code_name: MarkovRegression
-aliases: [regime switching, Markov switching]
+aliases:
+- regime switching
+- Markov switching
 stage: model
 family: model.ts-changing
-tracks: [time-series]
+tracks:
+- time-series
 archetype: model
-question_tags: [forecast, regimes, behaviour switches]
-targets: [statsmodels.tsa.regime_switching.markov_regression.MarkovRegression]
+question_tags:
+- forecast
+- regimes
+- behaviour switches
+targets:
+- statsmodels.tsa.regime_switching.markov_regression.MarkovRegression
 pairs_with: []
 clashes: []
-source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.tsa.regime_switching.markov_regression.MarkovRegression.html']
-library_versions: {statsmodels: 0.15.0}
+source_urls:
+- https://www.statsmodels.org/stable/generated/statsmodels.tsa.regime_switching.markov_regression.MarkovRegression.html
+library_versions:
+  statsmodels: 0.15.0
 reviewed: false
 rules:
-  task_types: [regression]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: airline-passengers, shape: fit_line}
+    hero:
+      kind: model
+      dataset: airline-passengers
+      shape: fit_line
     line: Switches between regimes, each with its own mean and rules.
-  quick_facts: {none: true}
+  quick_facts:
+    none: true
   use_avoid:
-    use_when: [behaviour that switches, regime labels, few states]
-    avoid_when: [steady series with no switches, very short data, many regimes]
+    use_when:
+    - behaviour that switches
+    - regime labels
+    - few states
+    avoid_when:
+    - steady series with no switches
+    - very short data
+    - many regimes
   prep:
-    - step: {family: explore.stationarity}
-      status: recommended
-      why: Check stationarity before choosing lags.
-      condition: null
-      unless: null
-    - step: {family: split.time}
-      status: recommended
-      why: Test on the latest rows, never shuffled.
-      condition: null
-      unless: null
+  - step:
+      family: explore.stationarity
+    status: recommended
+    why: Check stationarity before choosing lags.
+    condition: null
+    unless: null
+  - step:
+      family: split.time
+    status: recommended
+    why: Test on the latest rows, never shuffled.
+    condition: null
+    unless: null
   code:
-    - library: statsmodels
-      target: statsmodels.tsa.regime_switching.markov_regression.MarkovRegression
-      why_this_library: The statsmodels class for this model.
-      snippet: |
-        # statsmodels 0.15.0
-        from sklearn.datasets import make_regression
-        from statsmodels.tsa.regime_switching.markov_regression import (
-            MarkovRegression,
-        )
+  - library: statsmodels
+    target: statsmodels.tsa.regime_switching.markov_regression.MarkovRegression
+    why_this_library: The statsmodels class for this model.
+    snippet: '# statsmodels 0.15.0
 
-        _, y = make_regression(n_samples=300, n_features=1, noise=1.0, random_state=0)
-        y = (y - y.mean()) / y.std()
-        y[150:] += 3  # the level jumps halfway through
+      import numpy as np
 
-        model = MarkovRegression(y, k_regimes=2, switching_variance=True)
-        res = model.fit(disp=False)
-        print(res.params.round(2))
+      from statsmodels.tsa.regime_switching.markov_regression import MarkovRegression
+
+
+      rng = np.random.default_rng(4)
+
+      nobs = 100
+
+      endog = rng.normal(loc=0, scale=0.4, size=nobs)
+
+      endog[50:] = 2 + rng.normal(loc=0, scale=0.7, size=nobs - 50)
+
+      model = MarkovRegression(endog, k_regimes=2, switching_variance=True)
+
+      result = model.fit(disp=False, maxiter=200, search_reps=0)
+
+      y_pred = result.predict()
+
+      probabilities = result.smoothed_marginal_probabilities
+
+      print("prediction shape:", y_pred.shape)
+
+      print("smoothed probabilities:", np.round(probabilities[-3:], 3))
+
+      print("transition matrix:")
+
+      print(np.round(model.regime_transition_matrix(result.params)[:, :, 0], 3))
+
+      '
+    output: "prediction shape: (100,)\nsmoothed probabilities: [[0. 1.]\n [0. 1.]\n [0. 1.]]\ntransition matrix:\n\
+      [[0.99 0.01]\n [0.01 0.99]]\n"
   what_comes_out:
     items:
-      - {name: fit, kind: method, task: null, shape: "results object", note: "Returns the fitted results, with regime estimates."}
-      - {name: predict, kind: method, task: null, shape: "(n_obs,)", note: "In-sample predictions or forecasts."}
-      - {name: regime_transition_matrix, kind: method, task: null, shape: "(k, k)", note: "Chances of moving between regimes."}
-      - {name: endog_names, kind: attribute, task: null, shape: "list of str", note: "Name of the series."}
-    next_step: Check the regime switches against the series before trusting them.
-    visual: null
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_obs,)
+      object_type: numpy.ndarray
+      example: '[0.1, 0.2, 0.3]'
+      shape_explanation: Three time points give three probability-weighted conditional means, shape (3,).
+      note: Default in-sample prediction weights regime means by smoothed probabilities.
+    - name: smoothed_marginal_probabilities
+      kind: return
+      task: null
+      shape: (n_obs, k_regimes)
+      object_type: numpy.ndarray
+      example: '[[0.98, 0.02], [0.91, 0.09], [0.08, 0.92]]'
+      shape_explanation: Rows are 3 fictional observations and columns are 2 hidden regimes, giving shape (3, 2).
+      note: Posterior regime probabilities are estimates, not observed regime labels.
+    - name: filtered_marginal_probabilities
+      kind: return
+      task: null
+      shape: (n_obs, k_regimes)
+      object_type: numpy.ndarray
+      example: '[[0.95, 0.05], [0.88, 0.12], [0.12, 0.88]]'
+      shape_explanation: Rows are 3 time points and columns are 2 hidden regimes, giving shape (3, 2).
+      note: Filtered probabilities use observations only through that time.
+    - name: regime_transition_matrix
+      kind: method
+      task: null
+      shape: (k_regimes, k_regimes, 1)
+      object_type: numpy.ndarray
+      example: '[[[0.99], [0.01]], [[0.01], [0.99]]]'
+      shape_explanation: For 2 regimes and constant transitions, the third axis has length 1. Rows are next regime;
+        columns are previous regime.
+      note: Call model.regime_transition_matrix(result.params); previous regimes are columns, each summing to one.
+    - name: params
+      kind: return
+      task: null
+      shape: (k_params,)
+      object_type: numpy.ndarray
+      example: '[0.0, 2.0, 0.16, 0.49, 0.01, 0.01]'
+      shape_explanation: One fitted value for each of 6 model parameters; param_names gives the ordering.
+      note: Includes regime-specific intercepts and variances when switching is enabled.
+    - name: param_names
+      kind: attribute
+      task: null
+      shape: (k_params,)
+      object_type: list[str]
+      example: '[''p[0->0]'', ''p[1->0]'', ''const[0]'', ''const[1]'', ''sigma2[0]'', ''sigma2[1]'']'
+      shape_explanation: A name for each of the 6 entries in params; list order matches the parameter vector.
+      note: Labels transition probabilities and regime-dependent regression parameters.
+    next_step: null
+    visual: regression_preds
+    snippet: '# statsmodels 0.15.0
+
+      import numpy as np
+
+      from statsmodels.tsa.regime_switching.markov_regression import MarkovRegression
+
+
+      rng = np.random.default_rng(4)
+
+      nobs = 100
+
+      endog = rng.normal(loc=0, scale=0.4, size=nobs)
+
+      endog[50:] = 2 + rng.normal(loc=0, scale=0.7, size=nobs - 50)
+
+      model = MarkovRegression(endog, k_regimes=2, switching_variance=True)
+
+      result = model.fit(disp=False, maxiter=200, search_reps=0)
+
+      probs = result.smoothed_marginal_probabilities
+
+      transition = model.regime_transition_matrix(result.params)[:, :, 0]
+
+      print("predictions:", np.round(result.predict()[-3:], 2))
+
+      print("smoothed probabilities shape:", probs.shape)
+
+      print("last smoothed probabilities:", np.round(probs[-3:], 3))
+
+      print("transition matrix:")
+
+      print(np.round(transition, 3))
+
+      print("parameters:", model.param_names)
+
+      print(np.round(result.params, 3))
+
+      '
+    snippet_library: statsmodels
+    guidance:
+    - task: regression
+      text: Keep observations in time order. Regime probabilities estimate hidden states; do not treat the regimes
+        as observed labels.
+    output: "predictions: [2.17 2.17 2.17]\nsmoothed probabilities shape: (100, 2)\nlast smoothed probabilities:\
+      \ [[0. 1.]\n [0. 1.]\n [0. 1.]]\ntransition matrix:\n[[0.99 0.01]\n [0.01 0.99]]\nparameters: ['p[0->0]',\
+      \ 'p[1->0]', 'const[0]', 'const[1]', 'sigma2[0]', 'sigma2[1]']\n[ 0.99   0.01  -0.037  2.165  0.167  0.443]\n"
   catch_outs:
-    - k_regimes is an input; the model does not choose it.
-    - switching_variance is off by default.
-    - exog_tvtp makes transition chances depend on other variables.
+  - k_regimes is an input; the model does not choose it.
+  - switching_variance is off by default.
+  - exog_tvtp makes transition chances depend on other variables.
   key_settings:
     tier1:
-      - {name: k_regimes, page: null}
-      - {name: switching_variance, page: null}
-      - {name: switching_exog, page: null}
-      - {name: switching_trend, page: null}
+    - name: k_regimes
+      page: null
+      controls: Number of hidden regimes in the first-order Markov process.
+      effect: More regimes can represent more behaviors but multiply parameters and interpretation burden.
+    - name: switching_variance
+      page: null
+      controls: Whether observation variance differs across regimes.
+      effect: Regime-specific volatility captures changing noise but adds variance parameters.
+    - name: switching_exog
+      page: null
+      controls: Whether exogenous-regressor coefficients may differ by regime.
+      effect: Switching slopes capture behavior-specific effects but increase fitted parameters.
+    - name: switching_trend
+      page: null
+      controls: Whether included trend coefficients vary across regimes.
+      effect: Switching intercept or trend captures level shifts but may overfit short regimes.
     tier2:
-      - {name: trend, page: null}
-      - {name: order, page: null}
-      - {name: exog_tvtp, page: null}
+    - name: trend
+      page: null
+      controls: Whether to include no trend, an intercept, time trend, or both.
+      effect: A trend captures systematic level or drift; unnecessary terms weaken regime identification.
+    - name: order
+      page: null
+      controls: Number of lagged regimes used in the regime-dependent likelihood structure.
+      effect: Higher order allows longer regime dependence but grows the transition structure.
+    - name: exog_tvtp
+      page: null
+      controls: Regressors controlling time-varying transition probabilities.
+      effect: Transitions can respond to external signals; extra transition coefficients need enough data.
     tier3:
-      - {name: missing, page: null}
-      - {name: freq, page: null}
-      - {name: exog, page: null}
-  watch_it_work: {none: true}
+    - name: missing
+      page: null
+      controls: Whether missing observations are unchecked, dropped, or rejected.
+      effect: Dropping observations changes temporal spacing; raise exposes gaps before fitting.
+    - name: freq
+      page: null
+      controls: Frequency metadata for dated observations.
+      effect: Correct frequency enables date-aware forecasts; it does not determine regime states.
+    - name: exog
+      page: null
+      controls: Observed external regressors in the regime-specific mean equation.
+      effect: Useful drivers explain changes beyond regimes; future forecasts need future exog values.
+  watch_it_work:
+    none: true
   intuition:
     idea: Behaviour moves between a few hidden states.
     analogy: Like a shop with good and quiet months, each with its own sales level.
     animation: none
-    good_at: [behaviour that switches, regime labels, few states]
-    bad_at: [steady series with no switches, very short data, many regimes]
+    good_at:
+    - behaviour that switches
+    - regime labels
+    - few states
+    bad_at:
+    - steady series with no switches
+    - very short data
+    - many regimes
     vs_siblings:
-      - {page: unobserved-components, note: "Slow drift in trend and seasons, not sudden switches."}
+    - page: unobserved-components
+      note: Slow drift in trend and seasons, not sudden switches.
     read_more:
-      - Set how many regimes there are.
-      - Fit a regression in each regime.
-      - Estimate the chance of moving between regimes.
-  next: [but-intervals, but-beat-simple]
+    - The regime index is hidden; fitted probabilities express uncertainty about it.
+    - Switching coefficients and variances make the conditional regression differ by regime.
+    - 'Transition matrices are left-stochastic: columns represent previous regimes and sum to one.'
+    goal: Estimate regression behavior that changes between unobserved regimes following a Markov transition process.
+    steps:
+    - Choose the number of hidden regimes and which regression terms or variances may switch.
+    - Estimate regime-specific regression parameters and transition probabilities by maximum likelihood.
+    - Use the Hamilton filter to update regime probabilities as each observation arrives.
+    - Use the Kim smoother to compute retrospective probabilities using the full series.
+    - Average regime-conditional predictions using the selected regime probabilities.
+    math:
+      notation:
+      - symbol: S_t
+        meaning: Unobserved regime at time t.
+      - symbol: P_ij
+        meaning: Transition probability from previous regime j to next regime i.
+      - symbol: a_j, beta_j
+        meaning: Intercept and regression coefficients in regime j.
+      - symbol: x_t
+        meaning: Observed exogenous regressors at time t.
+      - symbol: sigma_j^2
+        meaning: Observation variance in regime j.
+      - symbol: p_(t,j)
+        meaning: Filtered or smoothed probability that S_t equals j.
+      equations:
+      - expression: y_t = a_(S_t) + x_t^T beta_(S_t) + epsilon_t; epsilon_t ~ N(0,sigma_(S_t)^2)
+        meaning: The conditional regression mean and optionally the variance depend on the hidden regime.
+      - expression: P(S_t=i | S_(t-1)=j) = P_ij
+        meaning: Transition probabilities describe movement between hidden states; each previous-state column sums
+          to one.
+      - expression: yhat_t = sum_j p_(t,j) [a_j + x_t^T beta_j]
+        meaning: Prediction averages regime-specific means by probability instead of treating a regime as observed.
+      prediction: Predictions average regime means by probability; regimes are estimated hidden states, not observed
+        labels.
+  next:
+  - but-intervals
+  - but-beat-simple

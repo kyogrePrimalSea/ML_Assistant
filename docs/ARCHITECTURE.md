@@ -151,6 +151,15 @@ to functions. Missing sections are empty lists, never omitted.
     `tools/export_goal_views.py` keeps the two equal (`tests/fixtures/taxonomy/goal-views.json`).
   - `pages/<id>.json` — one content record plus the extraction facts its slots
     reference (defaults, effective defaults for key settings).
+- Rich learning content is an additive item-record contract: a code tab or What-comes-out
+  prediction snippet may carry captured `output`; a key setting may carry `controls` and `effect`; and model intuition may carry
+  `goal`, chronological `steps`, and structured `math` notation, equations and prediction text.
+  `build-content.mjs` transports these optional fields unchanged, so legacy records need no migration.
+- What-comes-out rows may add `object_type` and a fictional `example`; the slot may add task-specific
+  `guidance`. These fields are transported unchanged and activate labelled row metadata and per-row
+  disclosures without changing compact legacy rows.
+- A rich What-comes-out row may add `shape_explanation`; the renderer places this prose below the
+  formal shape with natural wrapping. Records without it keep their existing rich or compact layout.
 - Radial tree layout: `app/scripts/layout-radial.mjs` runs after the content build
   (`predev`/`prebuild`) and writes `content/derived/layout-radial.json` (committed, version 2) plus a
   copy in `public/data/`. The app never computes layout at runtime (spec §7). One layout per goal

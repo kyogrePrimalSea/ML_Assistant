@@ -108,6 +108,69 @@ test('tiers 2 and 3 are hidden until opened; intuition is collapsed', async () =
   expect(screen.getByText('Start with a constant prediction.')).toBeInTheDocument()
 })
 
+test('XGBoost renders rich code, setting and intuition fields', async () => {
+  const user = userEvent.setup()
+  show('xgboost')
+  await screen.findByRole('article')
+
+  const code = document.querySelector('[data-slot-name="code"]') as HTMLElement
+  expect(within(code).getByText('Output')).toBeInTheDocument()
+  expect(within(code).getByLabelText('xgboost output')).toHaveTextContent(
+    'y_pred: 18.2, -90.9, 37.8, 84.4, 98.6',
+  )
+  const whatComesOut = document.querySelector('[data-slot-name="what_comes_out"]') as HTMLElement
+  const predictionOutput = within(whatComesOut).getByLabelText('Prediction example output')
+  expect(predictionOutput).toHaveTextContent('classification y_proba:')
+  expect(predictionOutput).toHaveTextContent('classification y_score:')
+  expect(predictionOutput).toHaveTextContent('classification y_pred:')
+  expect(predictionOutput).toHaveTextContent('regression y_pred:')
+  expect(within(whatComesOut).getByRole('heading', { name: 'Classification' })).toBeInTheDocument()
+  expect(within(whatComesOut).getByRole('heading', { name: 'Regression' })).toBeInTheDocument()
+  expect(within(whatComesOut).getByText(/ROC AUC and PR curves/)).toBeInTheDocument()
+  expect(within(whatComesOut).getByText(/np.expm1 only after np.log1p/)).toBeInTheDocument()
+  expect(within(whatComesOut).queryByText(/ROC AUC and PR curves need probabilities/)).not.toBeInTheDocument()
+  const examples = within(whatComesOut).getAllByRole('button', { name: 'Show example' })
+  expect(examples).toHaveLength(6)
+  expect(within(whatComesOut).getAllByText('How to read this shape')).toHaveLength(6)
+  const shapeNotes = [...whatComesOut.querySelectorAll<HTMLElement>('[data-shape-explanation]')]
+  expect(shapeNotes).toHaveLength(6)
+  const concreteSizes = ['(2, 2)', '(3,)', '(2,)', '(3,)', '(2,)', 'single integer 42']
+  shapeNotes.forEach((note, index) => expect(note).toHaveTextContent(concreteSizes[index]))
+  expect(within(whatComesOut).getAllByText(/trailing comma/)).toHaveLength(4)
+  expect(within(whatComesOut).getByText(/no rows or columns/)).toBeInTheDocument()
+  await user.click(examples[0])
+  expect(within(whatComesOut).getByText('Illustrative example')).toBeInTheDocument()
+  expect(within(whatComesOut).getByText('Made-up values')).toBeInTheDocument()
+
+  const settings = document.querySelector('[data-slot-name="key_settings"]') as HTMLElement
+  await user.click(within(settings).getByRole('button', { name: /Also useful/ }))
+  await user.click(within(settings).getByRole('button', { name: /Rarely changed/ }))
+  expect(within(settings).getAllByText('Controls')).toHaveLength(10)
+  expect(within(settings).getAllByText('Trade-off')).toHaveLength(10)
+
+  await user.click(screen.getByRole('button', { name: 'Intuition' }))
+  expect(screen.getByRole('heading', { name: 'What we are trying to do' })).toBeInTheDocument()
+  expect(screen.getByRole('heading', { name: 'How it works' })).toBeInTheDocument()
+  expect(screen.getByRole('heading', { name: 'The mathematics' })).toBeInTheDocument()
+  expect(screen.getByText(/obj\^\(t\).*G_j w_j/)).toBeInTheDocument()
+  expect(screen.getByText('w_j* = -G_j / (H_j + λ)')).toBeInTheDocument()
+  expect(screen.getByText(/Gain = .*G_L/)).toBeInTheDocument()
+  expect(screen.getByText('p_i = 1 / (1 + e^(-ŷ_i))')).toBeInTheDocument()
+  expect(screen.getByText(/only to the binary logistic objective/)).toBeInTheDocument()
+})
+
+test('legacy pages keep compact settings and omit rich explanation headings', async () => {
+  const user = userEvent.setup()
+  show('onehotencoder')
+  await screen.findByRole('article')
+  const settings = document.querySelector('[data-slot-name="key_settings"]') as HTMLElement
+  expect(within(settings).queryByText('Controls')).not.toBeInTheDocument()
+  expect(within(settings).queryByText('Trade-off')).not.toBeInTheDocument()
+
+  await user.click(screen.getByRole('button', { name: 'Intuition' }))
+  expect(screen.queryByRole('heading', { name: 'The mathematics' })).not.toBeInTheDocument()
+})
+
 test('next shows question text linking to the question route', async () => {
   show('xgboost')
   await screen.findByRole('article')

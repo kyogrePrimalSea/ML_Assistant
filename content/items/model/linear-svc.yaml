@@ -1,142 +1,284 @@
 id: linear-svc
 plain_name: LinearSVC
 code_name: LinearSVC
-aliases: [linear svm, linear svc, svm with a straight line]
+aliases:
+- linear svm
+- linear svc
+- svm with a straight line
 stage: model
 family: model.awkward.big
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [large data, text data, margin-based]
-targets: [sklearn.svm.LinearSVC]
-pairs_with: [linearexplainer]
+question_tags:
+- large data
+- text data
+- margin-based
+targets:
+- sklearn.svm.LinearSVC
+pairs_with:
+- linearexplainer
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVC.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [classification]
+  task_types:
+  - classification
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: breast-cancer, shape: boundary}
+    hero:
+      kind: model
+      dataset: breast-cancer
+      shape: boundary
     line: Draws one straight line that separates two classes.
-  quick_facts: {data_size: Large or text data}
+  quick_facts:
+    data_size: Large or text data
   use_avoid:
-    use_when: [large data, text features, straight boundary]
-    avoid_when: [needs probabilities, curved boundary]
+    use_when:
+    - large data
+    - text features
+    - straight boundary
+    avoid_when:
+    - needs probabilities
+    - curved boundary
   prep:
-    - step: {family: transform.scale.rescale}
-      status: recommended
-      why: Margins depend on feature size.
-      condition: null
-      unless: null
-    - step: {family: clean.impute}
-      status: required
-      why: Linear models reject missing values.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Text categories must become numbers.
-      condition: {has_categoricals: true}
-      unless: null
-    - step: {family: transform.rebalance.weight}
-      status: recommended
-      why: Use class_weight when classes are lopsided.
-      condition: {imbalanced: true, task_type: [classification]}
-      unless: null
+  - step:
+      family: transform.scale.rescale
+    status: recommended
+    why: Margins depend on feature size.
+    condition: null
+    unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Linear models reject missing values.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Text categories must become numbers.
+    condition:
+      has_categoricals: true
+    unless: null
+  - step:
+      family: transform.rebalance.weight
+    status: recommended
+    why: Use class_weight when classes are lopsided.
+    condition:
+      imbalanced: true
+      task_type:
+      - classification
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.svm.LinearSVC
-      why_this_library: Same fit and score API as other scikit-learn models.
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import load_breast_cancer
-        from sklearn.model_selection import train_test_split
-        from sklearn.pipeline import make_pipeline
-        from sklearn.preprocessing import StandardScaler
-        from sklearn.svm import LinearSVC
+  - library: scikit-learn
+    target: sklearn.svm.LinearSVC
+    why_this_library: Same fit and score API as other scikit-learn models.
+    snippet: "# scikit-learn 1.9.1\nfrom sklearn.datasets import load_breast_cancer\nfrom sklearn.model_selection\
+      \ import train_test_split\nfrom sklearn.pipeline import make_pipeline\nfrom sklearn.preprocessing\
+      \ import StandardScaler\nfrom sklearn.svm import LinearSVC\n\nX, y = load_breast_cancer(return_X_y=True)\n\
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)\nmodel = make_pipeline(\n\
+      \    StandardScaler(),\n    LinearSVC(C=1.0, random_state=0, max_iter=5000),\n)\nmodel.fit(X_train,\
+      \ y_train)\nsvc = model[-1]\ny_pred = model.predict(X_test[:3])\ny_score = model.decision_function(X_test[:3])\n\
+      print(\"class labels:\", y_pred)\nprint(\"decision scores:\", y_score.round(2))\nprint(\"classes_:\"\
+      , svc.classes_)\nprint(\"coef_ shape:\", svc.coef_.shape)\n"
+    output: 'class labels: [0 1 1]
 
-        X, y = load_breast_cancer(return_X_y=True)
-        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+      decision scores: [-4.77  1.62  3.09]
 
-        model = make_pipeline(StandardScaler(), LinearSVC(C=1.0, random_state=0))
-        model.fit(X_train, y_train)
-        print(round(model.score(X_test, y_test), 3))
+      classes_: [0 1]
+
+      coef_ shape: (1, 30)
+
+      '
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: null, shape: "(n_samples,)",
-         note: "Class labels for each row."}
-      - {name: decision_function, kind: method, task: classification, shape: "(n_samples,) for two classes",
-         note: "Signed score. Above 0 means classes_[1]."}
-      - {name: score, kind: method, task: null, shape: "float",
-         note: "Accuracy on the rows you pass in."}
-      - {name: coef_, kind: attribute, task: null, shape: "(1, n_features) for two classes",
-         note: "One weight per input column."}
-      - {name: intercept_, kind: attribute, task: null, shape: "(1,) for two classes",
-         note: "The offset added to every score."}
-      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)",
-         note: "Labels, in the order decision_function uses them."}
-      - {name: n_iter_, kind: attribute, task: null, shape: "int",
-         note: "Solver passes used. At max_iter, it may not have converged."}
-      - {name: n_features_in_, kind: attribute, task: null, shape: "int",
-         note: "Number of input columns seen in fit."}
-    next_step: ROC and PR curves take decision scores. There are no probabilities.
-    snippet: |
-      # scikit-learn 1.9.1
-      from sklearn.datasets import load_breast_cancer
-      from sklearn.model_selection import train_test_split
-      from sklearn.pipeline import make_pipeline
-      from sklearn.preprocessing import StandardScaler
-      from sklearn.svm import LinearSVC
-
-      X, y = load_breast_cancer(return_X_y=True)
-      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
-
-      model = make_pipeline(StandardScaler(), LinearSVC(random_state=0))
-      model.fit(X_train, y_train)
-      svc = model[-1]
-      print(model.predict(X_test).shape)
-      print(model.decision_function(X_test).shape)
-      print(svc.coef_.shape)
-      print(svc.intercept_.shape)
-      print(svc.classes_)
-      print(svc.n_iter_)
-      print(svc.n_features_in_)
+    - name: predict
+      kind: method
+      task: classification
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[0, 1, 1]'
+      shape_explanation: One predicted label per row. n_samples is the number of input rows; these three
+        labels have shape (3,).
+      note: Predicted labels; labels correspond to classes_.
+    - name: decision_function
+      kind: method
+      task: classification
+      shape: (n_samples,) or (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[1.2, -0.7, 0.4]'
+      shape_explanation: For binary classification there is one signed score per row, shape (3,). For
+        multiclass there is one score per row and class.
+      note: Raw scores, not probabilities; positive binary scores map to classes_[1].
+    - name: classes_
+      kind: attribute
+      task: classification
+      shape: (n_classes,)
+      object_type: numpy.ndarray
+      example: '[0, 1]'
+      shape_explanation: A one-dimensional array with n_classes labels. This two-class example has shape
+        (2,).
+      note: Class labels in score/probability column order.
+    - name: coef_
+      kind: attribute
+      task: null
+      shape: (1,n_features) or (n_classes,n_features)
+      object_type: numpy.ndarray
+      example: '[[0.2, -0.1, 0.4]]'
+      shape_explanation: A matrix with one row per fitted class boundary and one column per input feature.
+        The example shows one binary boundary with 3 features.
+      note: One row of coefficients per binary boundary or multiclass one-versus-rest class.
+    - name: intercept_
+      kind: attribute
+      task: null
+      shape: (1,) binary; (n_classes,) multiclass
+      object_type: numpy.ndarray
+      example: '[0.3]'
+      shape_explanation: A one-dimensional array with one offset per class boundary. This binary example
+        has one boundary and shape (1,).
+      note: One offset per fitted decision boundary.
+    - name: n_iter_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: int
+      example: '8'
+      shape_explanation: A scalar integer count of solver passes, with no array dimensions.
+      note: Solver passes used before convergence or hitting max_iter.
+    next_step: null
+    snippet: "# scikit-learn 1.9.1\nfrom sklearn.datasets import load_breast_cancer\nfrom sklearn.model_selection\
+      \ import train_test_split\nfrom sklearn.pipeline import make_pipeline\nfrom sklearn.preprocessing\
+      \ import StandardScaler\nfrom sklearn.svm import LinearSVC\n\nX, y = load_breast_cancer(return_X_y=True)\n\
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)\nmodel = make_pipeline(\n\
+      \    StandardScaler(),\n    LinearSVC(C=1.0, random_state=0, max_iter=5000),\n)\nmodel.fit(X_train,\
+      \ y_train)\nsvc = model[-1]\ny_pred = model.predict(X_test[:3])\ny_score = model.decision_function(X_test[:3])\n\
+      print(\"class labels:\", y_pred)\nprint(\"decision scores:\", y_score.round(2))\nprint(\"classes_:\"\
+      , svc.classes_)\nprint(\"coef_ shape:\", svc.coef_.shape)\n"
     snippet_library: scikit-learn
     visual: null
+    output: 'class labels: [0 1 1]
+
+      decision scores: [-4.77  1.62  3.09]
+
+      classes_: [0 1]
+
+      coef_ shape: (1, 30)
+
+      '
+    guidance:
+    - task: classification
+      text: Use labels for accuracy and confusion matrices. Use decision scores for ranking; use probabilities
+        only when the chosen loss supports them.
   catch_outs:
-    - No predict_proba. Use decision_function to rank rows.
-    - Scale features first, or the margin is set by the largest column.
-    - Text and missing values fail. Encode and impute first.
+  - No predict_proba. Use decision_function to rank rows.
+  - Scale features first, or the margin is set by the largest column.
+  - Text and missing values fail. Encode and impute first.
   key_settings:
     tier1:
-      - {name: C, page: null}
-      - {name: class_weight, page: null}
-      - {name: loss, page: null}
+    - name: C
+      page: null
+      controls: Inverse regularisation strength for margin violations.
+      effect: Higher C penalises violations more and can narrow the margin or overfit.
+    - name: class_weight
+      page: null
+      controls: Per-class multipliers for margin penalties.
+      effect: Higher weight makes mistakes on that class more costly.
+    - name: loss
+      page: null
+      controls: Hinge or squared-hinge penalty for margin violations.
+      effect: Squared hinge penalises large violations more sharply.
     tier2:
-      - {name: penalty, page: null}
-      - {name: fit_intercept, page: null}
-      - {name: dual, page: null}
+    - name: penalty
+      page: null
+      controls: L1 or L2 coefficient regularisation.
+      effect: L1 encourages sparse weights; L2 shrinks weights smoothly.
+    - name: fit_intercept
+      page: null
+      controls: Whether to learn an intercept for the decision scores.
+      effect: Turning it off constrains the boundary through the origin.
+    - name: dual
+      page: null
+      controls: Whether to solve the dual optimisation problem.
+      effect: Primal/dual efficiency depends on data dimensions; compatible combinations are constrained.
     tier3:
-      - {name: max_iter, page: null}
-      - {name: tol, page: null}
-      - {name: intercept_scaling, page: null}
-  watch_it_work: {none: true}
+    - name: max_iter
+      page: null
+      controls: Maximum optimisation iterations.
+      effect: More iterations may reach convergence but take longer.
+    - name: tol
+      page: null
+      controls: Stopping tolerance for solver convergence.
+      effect: Tighter tolerance may improve precision but increases compute.
+    - name: intercept_scaling
+      page: null
+      controls: Synthetic feature scale for the intercept under liblinear.
+      effect: Larger scaling reduces effective regularisation on the intercept.
+  watch_it_work:
+    none: true
   intuition:
     idea: Find one straight line with the widest gap between two classes.
     analogy: A ruler laid between two piles, sitting in the widest clear gap.
     animation: none
-    good_at: [large data, text features, linear boundaries]
-    bad_at: [probabilities, curved boundaries]
+    good_at:
+    - large data
+    - text features
+    - linear boundaries
+    bad_at:
+    - probabilities
+    - curved boundaries
     vs_siblings:
-      - {page: sgd-classifier, note: "Same kind of line, trained in small steps. Handles streams."}
-      - {page: ridge-classifier, note: "Ridge regression on labels, not a margin."}
+    - page: sgd-classifier
+      note: Same kind of line, trained in small steps. Handles streams.
+    - page: ridge-classifier
+      note: Ridge regression on labels, not a margin.
     read_more:
-      - Start with any line through the data.
-      - Score each row by its distance from the line.
-      - Move the line to widen the gap, then stop.
-  next: [know-feature-importance]
+    - Start with any line through the data.
+    - Score each row by its distance from the line.
+    - Move the line to widen the gap, then stop.
+    goal: Find a linear decision boundary that balances a wide margin against hinge-loss violations.
+    steps:
+    - Choose coefficients and intercept defining a boundary
+    - Measure each training row’s signed margin
+    - Penalise rows within or across the wrong side of the margin
+    - Optimise the regularised hinge or squared-hinge objective
+    - For multiple classes, train one-versus-rest boundaries.
+    math:
+      notation:
+      - symbol: x_i
+        meaning: Feature vector for row i.
+      - symbol: y_i
+        meaning: Binary label coded as -1 or +1.
+      - symbol: w
+        meaning: Boundary coefficient vector.
+      - symbol: b
+        meaning: Boundary offset.
+      - symbol: f(x_i)
+        meaning: Signed decision score.
+      - symbol: m_i
+        meaning: Signed margin y_i f(x_i).
+      - symbol: C
+        meaning: Penalty on margin violations.
+      - symbol: f_i
+        meaning: Decision score wᵀx_i+b for row i.
+      - symbol: L_i
+        meaning: Hinge or squared-hinge loss for row i.
+      - symbol: q
+        meaning: 'Loss power: one for hinge and two for squared hinge.'
+      equations:
+      - expression: L_i=max(0,1−m_i)^q, q∈{1,2}; min_w (1/2)||w||²+CΣ_i L_i
+        meaning: q=1 is hinge loss; q=2 is squared hinge. C weights margin violations against coefficient
+          size.
+      prediction: predict picks the highest decision score; binary scores are signed margins, not probabilities.
+  next:
+  - know-feature-importance

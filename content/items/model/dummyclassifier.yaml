@@ -1,94 +1,258 @@
 id: dummyclassifier
 plain_name: DummyClassifier
 code_name: DummyClassifier
-aliases: [baseline classifier, most frequent class]
+aliases:
+- baseline classifier
+- most frequent class
 stage: model
 family: model.baseline
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [baseline, score to beat, sanity check]
-targets: [sklearn.dummy.DummyClassifier]
+question_tags:
+- baseline
+- score to beat
+- sanity check
+targets:
+- sklearn.dummy.DummyClassifier
 pairs_with: []
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.dummy.DummyClassifier.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.dummy.DummyClassifier.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [classification]
+  task_types:
+  - classification
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: breast-cancer, shape: boundary}
+    hero:
+      kind: model
+      dataset: breast-cancer
+      shape: boundary
     line: Predicts the most common class every time.
   quick_facts:
     data_size: Any size
   use_avoid:
-    use_when: [set a baseline, sanity check, score to beat]
-    avoid_when: [real predictions, need the features, final model]
+    use_when:
+    - set a baseline
+    - sanity check
+    - score to beat
+    avoid_when:
+    - real predictions
+    - need the features
+    - final model
   prep:
-    - step: {family: clean.impute}
-      status: not_needed
-      why: Ignores the feature values, so gaps do not matter.
-      condition: null
-      unless: null
-    - step: {family: transform.scale.rescale}
-      status: not_needed
-      why: Predictions ignore the feature values.
-      condition: null
-      unless: null
+  - step:
+      family: clean.impute
+    status: not_needed
+    why: Ignores the feature values, so gaps do not matter.
+    condition: null
+    unless: null
+  - step:
+      family: transform.scale.rescale
+    status: not_needed
+    why: Predictions ignore the feature values.
+    condition: null
+    unless: null
   code:
   - library: scikit-learn
     target: sklearn.dummy.DummyClassifier
     why_this_library: The scikit-learn baseline classifier.
     snippet: |
       # scikit-learn 1.9.1
-      from sklearn.datasets import make_classification
+      import numpy as np, pandas as pd
       from sklearn.dummy import DummyClassifier
-      from sklearn.model_selection import train_test_split
-
-      X, y = make_classification(n_samples=300, weights=[0.8, 0.2],
-                                 random_state=0)
-      X_train, X_test, y_train, y_test = train_test_split(X, y,
-                                                          random_state=0)
-      dummy = DummyClassifier(strategy="prior").fit(X_train, y_train)
-      print(round(dummy.score(X_test, y_test), 3))
+      X=pd.DataFrame(
+          np.arange(20).reshape(10,2), columns=['age','fare']
+      )
+      y=np.array([0,0,0,0,0,0,0,1,1,1])
+      m=DummyClassifier(strategy='prior').fit(X,y)
+      y_pred=m.predict(X[:3])
+      y_proba=m.predict_proba(X[:3])
+      print('y_pred:',y_pred)
+      print('y_proba:')
+      print(np.round(y_proba,3))
+      print('classes/prior:',m.classes_,np.round(m.class_prior_,3))
+      print('accuracy:',round(m.score(X,y),3))
+      print('features:',m.n_features_in_,m.feature_names_in_)
+    output: |
+      y_pred: [0 0 0]
+      y_proba:
+      [[0.7 0.3]
+       [0.7 0.3]
+       [0.7 0.3]]
+      classes/prior: [0 1] [0.7 0.3]
+      accuracy: 0.7
+      features: 2 ['age' 'fare']
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: classification, shape: "(n_samples,)",
-         note: "The most common class, for every row."}
-      - {name: predict_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
-         note: "Class frequencies seen in y, same for every row."}
-      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)",
-         note: "Class labels seen in y, in column order."}
-      - {name: class_prior_, kind: attribute, task: classification, shape: "(n_classes,)",
-         note: "Class frequencies seen in y during fit."}
+    - name: predict
+      kind: method
+      task: classification
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[0, 0, 0]'
+      shape_explanation: One class label per row; three rows give shape (3,).
+      note: Prior and most_frequent repeat the majority class regardless of features.
+    - name: predict_proba
+      kind: method
+      task: classification
+      shape: (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[[0.7, 0.3], [0.7, 0.3]]'
+      shape_explanation: Rows are cases and columns are classes; two rows and classes give (2, 2).
+      note: prior repeats empirical frequencies; most_frequent returns one-hot majority probabilities.
+    - name: classes_
+      kind: attribute
+      task: classification
+      shape: (n_classes,)
+      object_type: numpy.ndarray
+      example: '[0, 1]'
+      shape_explanation: One label per class; shape (2,) here.
+      note: Labels in probability-column order.
+    - name: class_prior_
+      kind: attribute
+      task: classification
+      shape: (n_classes,)
+      object_type: numpy.ndarray
+      example: '[0.7, 0.3]'
+      shape_explanation: One training frequency per class; shape (2,) for two classes.
+      note: Empirical frequencies used by strategy=prior.
+    - name: score
+      kind: method
+      task: classification
+      shape: scalar
+      object_type: float
+      example: '0.7'
+      shape_explanation: One scalar, no array dimensions.
+      note: 'Accuracy: fraction of supplied labels predicted correctly.'
+    - name: n_features_in_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: int
+      example: '2'
+      shape_explanation: One integer number of input columns.
+      note: Metadata only; features are ignored.
+    - name: feature_names_in_
+      kind: attribute
+      task: null
+      shape: (n_features_in_,)
+      object_type: numpy.ndarray of str
+      example: '[''age'', ''fare'']'
+      shape_explanation: One name per feature; present only for all-string feature names at fit.
+      note: Recorded only; not used by baseline predictions.
+    - name: n_outputs_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: int
+      example: '1'
+      shape_explanation: One integer target-output count.
+      note: This example has one target.
     next_step: Use its score as the bar every model must beat.
     visual: null
+    snippet: |
+      # scikit-learn 1.9.1
+      import numpy as np, pandas as pd
+      from sklearn.dummy import DummyClassifier
+      X=pd.DataFrame(
+          np.arange(20).reshape(10,2), columns=['age','fare']
+      )
+      y=np.array([0,0,0,0,0,0,0,1,1,1])
+      m=DummyClassifier(strategy='prior').fit(X,y)
+      y_pred=m.predict(X[:3])
+      y_proba=m.predict_proba(X[:3])
+      print('y_pred:',y_pred)
+      print('y_proba:')
+      print(np.round(y_proba,3))
+      print('classes/prior:',m.classes_,np.round(m.class_prior_,3))
+      print('accuracy:',round(m.score(X,y),3))
+      print('features:',m.n_features_in_,m.feature_names_in_)
+    output: |
+      y_pred: [0 0 0]
+      y_proba:
+      [[0.7 0.3]
+       [0.7 0.3]
+       [0.7 0.3]]
+      classes/prior: [0 1] [0.7 0.3]
+      accuracy: 0.7
+      features: 2 ['age' 'fare']
+    snippet_library: scikit-learn
+    guidance:
+    - task: classification
+      text: Compare predictions with a majority-class/prior baseline; accuracy alone can hide poor minority-class performance.
   catch_outs:
-    - On skewed data, accuracy is just the majority share.
-    - Strategies stratified and uniform need random_state for repeatable output.
-    - Pick the strategy first. The default prior predicts the majority class.
+  - On skewed data, accuracy is just the majority share.
+  - Strategies stratified and uniform need random_state for repeatable output.
+  - Pick the strategy first. The default prior predicts the majority class.
   key_settings:
     tier1:
-    - {name: strategy, page: null}
-    - {name: constant, page: null}
+    - name: strategy
+      page: null
+      controls: Chooses prior, most_frequent, stratified, uniform, or constant rule.
+      effect: Prior returns frequencies; most_frequent is one-hot. Other strategies sample by frequencies, uniformly, or a constant.
+    - name: constant
+      page: null
+      controls: Selects class emitted by constant strategy.
+      effect: The chosen label must occur among training classes; probability mass is placed on it.
     tier2:
-    - {name: random_state, page: null}
+    - name: random_state
+      page: null
+      controls: Seeds stratified and uniform prediction draws.
+      effect: An integer seed makes random baseline outputs repeatable; deterministic strategies are unaffected.
     tier3: []
-  watch_it_work: {none: true}
+  watch_it_work:
+    none: true
   intuition:
     idea: Ignore the features and always predict the most common class.
     analogy: Always answering the most popular choice on a multiple-choice quiz.
     animation: none
-    good_at: [a score to beat, sanity checks, imbalance checks]
-    bad_at: [real predictions, using the features, any learning]
+    good_at:
+    - a score to beat
+    - sanity checks
+    - imbalance checks
+    bad_at:
+    - real predictions
+    - using the features
+    - any learning
     vs_siblings:
-      - {page: dummyregressor, note: "Same idea for numbers. Predicts the mean or median."}
+    - page: dummyregressor
+      note: Same idea for numbers. Predicts the mean or median.
+    goal: Provide a feature-independent classification baseline under a selected simple rule.
+    steps:
+    - Record classes and target frequencies from training labels.
+    - Choose prior, most_frequent, stratified, uniform, or constant rule.
+    - Apply the rule to each row without inspecting feature values.
+    - Compare accuracy or probability metrics against this baseline.
+    math:
+      notation:
+      - symbol: n_k
+        meaning: Training count for class k.
+      - symbol: n
+        meaning: Total training labels.
+      - symbol: pi_k
+        meaning: Observed frequency n_k/n.
+      - symbol: k*
+        meaning: Most frequent class.
+      equations:
+      - expression: pi_k=n_k/n
+        meaning: Prior probabilities equal observed training frequencies.
+      - expression: prior predict(x)=classes_[argmax_k pi_k]
+        meaning: Prior predicts the mode while returning the full empirical prior vector.
+      - expression: accuracy=correct predictions/evaluated rows
+        meaning: DummyClassifier.score reports accuracy, which may be high on imbalanced data.
+      prediction: predict repeats one rule-based label per row. Prior probabilities are frequencies; most_frequent is one-hot.
     read_more:
-      - Count the classes in y.
-      - Pick a rule from most frequent, prior, uniform or constant.
-      - Predict with that rule, ignoring X.
+    - Count the classes in y.
+    - Pick a rule from most frequent, prior, uniform or constant.
+    - Predict with that rule, ignoring X.
   next: []

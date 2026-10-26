@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
-import { IconArrowRight, IconChartHistogram, IconSwitchHorizontal } from '@tabler/icons-react'
+import { IconArrowRight, IconChartHistogram, IconChevronDown, IconSwitchHorizontal } from '@tabler/icons-react'
 import { Switch } from 'radix-ui'
 import { CodeBlock } from '@/components/CodeBlock'
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { Slider } from '@/components/ui/slider'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
-import type { WhatComesOut as WhatComesOutData, WhatComesOutBody } from '@/content/types'
+import type { WhatComesOut as WhatComesOutData, WhatComesOutBody, WhatComesOutItem } from '@/content/types'
 import { cn } from '@/lib/utils'
 import { Frame, None, Slot, Tag } from './shared'
 
@@ -234,6 +235,81 @@ function Visual({
   )
 }
 
+const kindLabel = (kind: WhatComesOutItem['kind']) => kind[0].toUpperCase() + kind.slice(1)
+
+function OutputRow({ item }: { item: WhatComesOutItem }) {
+  const [open, setOpen] = useState(false)
+  const rich = item.object_type || item.example
+
+  if (!rich) {
+    return (
+      <li className="grid gap-1 border-t border-border py-2 first:border-t-0" data-output-item>
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+          <code className="border-0 bg-transparent p-0 font-bold [overflow-wrap:anywhere]">{item.name}</code>
+          <span className="text-sm text-text-muted">{item.kind}</span>
+          {item.task ? <Tag className="text-xs">{item.task}</Tag> : null}
+          <span className={cn('text-sm font-bold', num)}>{item.shape}</span>
+        </div>
+        <p className="m-0 text-sm text-text-muted">{item.note}</p>
+      </li>
+    )
+  }
+
+  return (
+    <li className="grid gap-3 border-t border-border py-3 first:border-t-0" data-output-item data-rich-output-item>
+      <div className="flex flex-wrap items-center gap-3">
+        <code className="border-0 bg-transparent p-0 font-bold [overflow-wrap:anywhere]">{item.name}</code>
+        {item.task ? <Tag className="text-xs">{item.task}</Tag> : null}
+      </div>
+      <dl className="m-0 grid gap-2 sm:grid-cols-3">
+        <div className="grid gap-0.5">
+          <dt className="text-xs font-bold text-text-muted">Kind</dt>
+          <dd className="m-0 text-sm">{kindLabel(item.kind)}</dd>
+        </div>
+        <div className="grid gap-0.5">
+          <dt className="text-xs font-bold text-text-muted">Object type</dt>
+          <dd className="m-0 text-sm">{item.object_type ? <code>{item.object_type}</code> : 'Not specified'}</dd>
+        </div>
+        <div className="grid gap-0.5">
+          <dt className="text-xs font-bold text-text-muted">Shape</dt>
+          <dd className={cn('m-0 text-sm font-bold', num)}>{item.shape}</dd>
+        </div>
+      </dl>
+      {item.shape_explanation ? (
+        <div className="grid min-w-0 gap-1">
+          <div className="text-xs font-bold text-text-muted">How to read this shape</div>
+          <p data-shape-explanation className="m-0 max-w-prose text-sm leading-relaxed [overflow-wrap:anywhere]">
+            {item.shape_explanation}
+          </p>
+        </div>
+      ) : null}
+      <p className="m-0 text-sm text-text-muted">{item.note}</p>
+      {item.example ? (
+        <Collapsible open={open} onOpenChange={setOpen} className="grid gap-2">
+          <CollapsibleTrigger className="flex min-h-11 w-full items-center justify-between gap-3 rounded-md border border-border-strong px-3 py-2 text-left text-sm font-bold hover:bg-surface-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring">
+            {open ? 'Hide example' : 'Show example'}
+            <IconChevronDown className={cn('size-4 transition-transform', open && 'rotate-180')} aria-hidden />
+          </CollapsibleTrigger>
+          <CollapsibleContent>
+            <div className="grid gap-1 rounded-md border border-border bg-surface-1 p-3">
+              <p className="m-0 text-sm font-bold">Illustrative example</p>
+              <p className="m-0 text-xs text-text-muted">Made-up values</p>
+              <pre
+                tabIndex={0}
+                aria-label={`${item.name} illustrative example`}
+                className="m-0 overflow-x-auto whitespace-pre rounded-md border border-border bg-code-bg p-3 text-[13px] leading-[1.6]"
+                style={{ fontVariantLigatures: 'none' }}
+              >
+                {item.example}
+              </pre>
+            </div>
+          </CollapsibleContent>
+        </Collapsible>
+      ) : null}
+    </li>
+  )
+}
+
 /** Slot 7. `defaultTask` is the starting side of the Classification | Regression toggle (E11's goal selector sets it later). */
 export function WhatComesOut({
   data,
@@ -252,24 +328,46 @@ export function WhatComesOut({
       <>
         <ul className="m-0 grid list-none gap-0 p-0">
           {data.items.map((it) => (
-            <li key={it.name} className="grid gap-1 border-t border-border py-2 first:border-t-0" data-output-item>
-              <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                <code className="border-0 bg-transparent p-0 font-bold [overflow-wrap:anywhere]">{it.name}</code>
-                <span className="text-sm text-text-muted">{it.kind}</span>
-                {it.task ? <Tag className="text-xs">{it.task}</Tag> : null}
-                <span className={cn('text-sm font-bold', num)}>{it.shape}</span>
-              </div>
-              <p className="m-0 text-sm text-text-muted">{it.note}</p>
-            </li>
+            <OutputRow key={`${it.name}-${it.task ?? it.kind}`} item={it} />
           ))}
         </ul>
+        {data.guidance ? (
+          <div className="grid gap-3" aria-label="Task guidance">
+            {data.guidance.map((item) => (
+              <div key={item.task} className="grid gap-1 rounded-md border border-border bg-surface-1 p-3">
+                <h4 className="m-0 text-sm font-bold">
+                  {item.task === 'classification' ? 'Classification' : 'Regression'}
+                </h4>
+                <p className="m-0 text-sm text-text-muted">{item.text}</p>
+              </div>
+            ))}
+          </div>
+        ) : null}
         {data.next_step ? (
           <p className="m-0 flex items-start gap-2">
             <IconArrowRight className="mt-1 size-4 shrink-0" aria-hidden />
             <span>{data.next_step}</span>
           </p>
         ) : null}
-        {data.snippet ? <CodeBlock code={data.snippet} /> : null}
+        {data.snippet ? (
+          <div className="grid gap-3">
+            <CodeBlock code={data.snippet} />
+            {data.output ? (
+              <div className="grid gap-1">
+                <div className="text-sm font-bold">Output</div>
+                <pre
+                  tabIndex={0}
+                  aria-label="Prediction example output"
+                  data-slot="what-comes-out-output"
+                  className="m-0 overflow-x-auto whitespace-pre rounded-md border border-border bg-code-bg p-3 text-[13px] leading-[1.6]"
+                  style={{ fontVariantLigatures: 'none' }}
+                >
+                  {data.output}
+                </pre>
+              </div>
+            ) : null}
+          </div>
+        ) : null}
         {data.visual ? <Visual visual={data.visual} pageId={pageId} defaultTask={defaultTask} /> : null}
       </>
     )

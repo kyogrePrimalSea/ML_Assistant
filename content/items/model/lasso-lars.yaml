@@ -1,108 +1,272 @@
 id: lasso-lars
 plain_name: LassoLars
 code_name: LassoLars
-aliases: [lasso lars, lars lasso]
+aliases:
+- lasso lars
+- lars lasso
 stage: model
 family: model.linear.sparse
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [drop features, wide data, lasso path]
-targets: [sklearn.linear_model.LassoLars]
+question_tags:
+- drop features
+- wide data
+- lasso path
+targets:
+- sklearn.linear_model.LassoLars
 pairs_with: []
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LassoLars.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LassoLars.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [regression]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: ames, shape: fit_line}
+    hero:
+      kind: model
+      dataset: ames
+      shape: fit_line
     line: A lasso line fitted with the LARS method, for wide data.
-  quick_facts: {none: true}
+  quick_facts:
+    none: true
   use_avoid:
-    use_when: [few useful features, wide data]
-    avoid_when: [classification targets, curved patterns]
+    use_when:
+    - few useful features
+    - wide data
+    avoid_when:
+    - classification targets
+    - curved patterns
   prep:
-    - step: {family: clean.impute}
-      status: required
-      why: Scikit-learn rejects NaN in X.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Text categories must become numbers.
-      condition: {has_categoricals: true}
-      unless: null
-    - step: {family: transform.scale.rescale}
-      status: required
-      why: The penalty depends on units. Scale first.
-      condition: null
-      unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Scikit-learn rejects NaN in X.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Text categories must become numbers.
+    condition:
+      has_categoricals: true
+    unless: null
+  - step:
+      family: transform.scale.rescale
+    status: required
+    why: The penalty depends on units. Scale first.
+    condition: null
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.linear_model.LassoLars
-      why_this_library: Built into scikit-learn. Lasso penalty, LARS method.
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import load_diabetes
-        from sklearn.linear_model import LassoLars
-        from sklearn.model_selection import train_test_split
-        from sklearn.pipeline import make_pipeline
-        from sklearn.preprocessing import StandardScaler
+  - library: scikit-learn
+    target: sklearn.linear_model.LassoLars
+    why_this_library: Built into scikit-learn. Lasso penalty, LARS method.
+    snippet: "# scikit-learn 1.9.1\nfrom sklearn.datasets import load_diabetes\nfrom sklearn.linear_model import\
+      \ LassoLars\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.pipeline import make_pipeline\n\
+      from sklearn.preprocessing import StandardScaler\n\nX, y = load_diabetes(return_X_y=True)\nX_train, X_test,\
+      \ y_train, y_test = train_test_split(\n    X, y, random_state=0\n)\n\nmodel = make_pipeline(StandardScaler(),\
+      \ LassoLars(alpha=0.1))\nmodel.fit(X_train, y_train)\nprint(int((model[-1].coef_ != 0).sum()))\ny_pred = model.predict(X_test[:5])\n\
+      print('y_pred:', ', '.join(f'{v:.1f}' for v in y_pred))\n"
+    output: '10
 
-        X, y = load_diabetes(return_X_y=True)
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, random_state=0
-        )
+      y_pred: 241.1, 250.0, 164.8, 119.4, 186.9
 
-        model = make_pipeline(StandardScaler(), LassoLars(alpha=0.1))
-        model.fit(X_train, y_train)
-        print(int((model[-1].coef_ != 0).sum()))
+      '
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: null, shape: "(n_samples,)", note: "One predicted value per row."}
-      - {name: score, kind: method, task: null, shape: float, note: "R squared on the data you pass in."}
-      - {name: coef_, kind: attribute, task: null, shape: "(n_features,)", note: "Weights at the chosen alpha."}
-      - {name: intercept_, kind: attribute, task: null, shape: float, note: "Intercept of the fitted line."}
-      - {name: alphas_, kind: attribute, task: null, shape: "(n_alphas + 1,)", note: "Penalty values the path visits."}
-      - {name: coef_path_, kind: attribute, task: null, shape: "(n_features, n_alphas + 1)", note: "Weights along the path. Needs fit_path=True."}
-    next_step: Plot coef_path_ against alphas_ to see the path.
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples,)
+      note: One predicted value per row.
+      object_type: numpy.ndarray
+      example: '[146.2, 92.1, 155.8]'
+      shape_explanation: One value is returned for each input row. n_samples is the number of rows; this example
+        has 3 values, so its shape is (3,).
+    - name: score
+      kind: method
+      task: regression
+      shape: scalar
+      note: R squared on the data you pass in.
+      object_type: float
+      example: '0.72'
+      shape_explanation: A scalar is one value with no array dimensions. The example is one R-squared score.
+    - name: coef_
+      kind: attribute
+      task: null
+      shape: (n_features,)
+      note: Weights at the chosen alpha.
+      object_type: numpy.ndarray
+      example: '[0.0, 12.4, -3.1]'
+      shape_explanation: A one-dimensional array with one coefficient per feature. n_features is the number of input
+        columns; this example has 3 values, shape (3,).
+    - name: intercept_
+      kind: attribute
+      task: null
+      shape: scalar
+      note: Intercept of the fitted line.
+      object_type: float
+      example: '152.0'
+      shape_explanation: A scalar is one fitted intercept value, with no array dimensions.
+    - name: alphas_
+      kind: attribute
+      task: null
+      shape: (n_alphas + 1,)
+      note: Penalty values the path visits.
+      object_type: numpy.ndarray
+      example: '[100.0, 10.0, 0.0]'
+      shape_explanation: A one-dimensional array with one alpha at each path point. n_alphas + 1 includes the initial
+        point; this example has 3 values.
+    - name: coef_path_
+      kind: attribute
+      task: null
+      shape: (n_features, n_alphas + 1)
+      note: Weights along the path. Needs fit_path=True.
+      object_type: numpy.ndarray
+      example: '[[0.0, 0.1, 0.2], [0.0, -0.2, -0.3], [0.0, 0.0, 0.1]]'
+      shape_explanation: Rows are the n_features and columns are the n_alphas + 1 path points. The example has 3
+        features and 3 points, shape (3, 3).
     visual: null
+    snippet: '# scikit-learn 1.9.1
+
+      from sklearn.datasets import load_diabetes
+
+      from sklearn.linear_model import LassoLars
+
+      from sklearn.model_selection import train_test_split
+
+      from sklearn.pipeline import make_pipeline
+
+      from sklearn.preprocessing import StandardScaler
+
+      import numpy as np
+
+
+      X, y = load_diabetes(return_X_y=True)
+
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+      model = make_pipeline(StandardScaler(), LassoLars(alpha=0.1))
+
+      model.fit(X_train, y_train)
+
+      y_pred = model.predict(X_test[:3])
+
+      print(''y_pred:'', np.round(y_pred, 1))
+
+      print(''coef_:'', np.round(model[-1].coef_, 3))
+
+      '
+    snippet_library: scikit-learn
+    guidance:
+    - task: regression
+      text: Use y_pred for regression metrics on held-out rows. Compare the selected features and residuals before
+        interpreting the fit.
+    output: "y_pred: [241.1 250.  164.8]\ncoef_: [ -1.839  -9.672  29.043  14.063 -16.53    4.511  -4.854   5.102\
+      \  30.629\n   1.345]\n"
+    next_step: null
   catch_outs:
-    - positive=True keeps every weight zero or more.
-    - coef_path_ is only stored when fit_path is True.
-    - Scale the columns first, or the penalty is unfair.
-    - Missing values stop the fit. Impute them first.
+  - positive=True keeps every weight zero or more.
+  - coef_path_ is only stored when fit_path is True.
+  - Scale the columns first, or the penalty is unfair.
+  - Missing values stop the fit. Impute them first.
   key_settings:
     tier1:
-      - {name: alpha, page: null}
-      - {name: positive, page: null}
-      - {name: fit_path, page: null}
+    - name: alpha
+      page: null
+      controls: Overall penalty strength; it multiplies the L1 term for Lasso/LassoLars and the combined penalty
+        for ElasticNet.
+      effect: A larger value shrinks more strongly and can underfit; zero removes the penalty.
+    - name: positive
+      page: null
+      controls: Whether fitted coefficients are constrained to be non-negative.
+      effect: The constraint can encode a known direction, but rules out useful negative effects.
+    - name: fit_path
+      page: null
+      controls: Whether to store coefficient values for every point on the LARS path.
+      effect: Keeping the path enables inspection but uses more memory; disabling it can speed large fits.
     tier2:
-      - {name: fit_intercept, page: null}
-      - {name: max_iter, page: null}
-      - {name: jitter, page: null}
-      - {name: precompute, page: null}
+    - name: fit_intercept
+      page: null
+      controls: Whether to estimate an intercept; False assumes the data are already centered.
+      effect: Turning it off avoids estimating a baseline, but biases predictions if the data are not centered.
+    - name: max_iter
+      page: null
+      controls: Maximum coordinate descent iterations.
+      effect: A larger limit can allow convergence but takes longer; reaching the limit can leave an unfinished
+        fit.
+    - name: jitter
+      page: null
+      controls: Upper bound for uniform noise added to y to break ties in LARS path computations.
+      effect: A small jitter can stabilise tied cases, while changing the target slightly; leave unset unless needed.
+    - name: precompute
+      page: null
+      controls: Whether to use a Gram matrix (and for OMP, Xy) to speed fitting.
+      effect: Precomputation can speed suitable dense or large-target problems, but uses extra memory.
     tier3:
-      - {name: eps, page: null}
-      - {name: copy_X, page: null}
-  watch_it_work: {none: true}
+    - name: eps
+      page: null
+      controls: Ratio of the smallest to largest alpha on the automatically generated path.
+      effect: A smaller ratio extends the search to weaker regularization; it may add candidates and computation.
+    - name: copy_X
+      page: null
+      controls: Whether to copy X before fitting; False may allow X to be overwritten.
+      effect: Copying protects the input at a memory cost; disabling the copy can save memory.
+  watch_it_work:
+    none: true
   intuition:
     idea: Fit the lasso penalty along the LARS path, one step at a time.
     analogy: Turning down a row of dials one notch at a time, dropping any that hit zero.
     animation: none
-    good_at: [wide data, few useful features]
-    bad_at: [classification, curved patterns]
+    good_at:
+    - wide data
+    - few useful features
+    bad_at:
+    - classification
+    - curved patterns
     vs_siblings:
-      - {page: lasso, note: "Same penalty, fitted with coordinate descent."}
-      - {page: lars, note: "Same path method, with no penalty."}
+    - page: lasso
+      note: Same penalty, fitted with coordinate descent.
+    - page: lars
+      note: Same path method, with no penalty.
     read_more:
-      - Start with all weights at zero.
-      - Add the feature most correlated with the residual.
-      - Track the path as alpha decreases.
-  next: [know-feature-importance]
+    - Start with all weights at zero.
+    - Add the feature most correlated with the residual.
+    - Track the path as alpha decreases.
+    goal: Trace the least-angle path under an L1 constraint so coefficient values may enter and later leave as alpha
+      decreases.
+    steps:
+    - Start with zero coefficients and compute feature correlations with the residual.
+    - Add the most correlated feature to the active set.
+    - Move along the LARS direction until another feature ties or an active coefficient reaches zero.
+    - At a zero crossing, remove that feature; continue until alpha or max_iter stops the path.
+    math:
+      notation:
+      - symbol: X, y
+        meaning: Training feature matrix and target vector.
+      - symbol: r = y - Xw
+        meaning: Current residual vector.
+      - symbol: A
+        meaning: Set of active feature indices.
+      - symbol: alpha
+        meaning: L1 penalty level where the path is evaluated.
+      equations:
+      - expression: minimise (1/(2n)) ||y - b - Xw||_2^2 + alpha ||w||_1
+        meaning: The L1 penalty creates a piecewise-linear path and can return coefficients to zero as alpha changes.
+      - expression: j_next = argmax_j |X_j^T r|
+        meaning: The path adds a feature with the strongest residual correlation, then follows the L1-constrained
+          direction.
+      prediction: For a new feature row x, return b + sum_j x_j w_j at the selected alpha.
+  next:
+  - know-feature-importance

@@ -1,105 +1,260 @@
 id: sarimax
 plain_name: SARIMAX
 code_name: SARIMAX
-aliases: [seasonal arima]
+aliases:
+- seasonal arima
 stage: model
 family: model.ts-past
-tracks: [time-series]
+tracks:
+- time-series
 archetype: model
-question_tags: [forecast, seasonal, outside drivers]
-targets: [statsmodels.tsa.statespace.sarimax.SARIMAX]
+question_tags:
+- forecast
+- seasonal
+- outside drivers
+targets:
+- statsmodels.tsa.statespace.sarimax.SARIMAX
 pairs_with: []
 clashes: []
-source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.tsa.statespace.sarimax.SARIMAX.html']
-library_versions: {statsmodels: 0.15.0}
+source_urls:
+- https://www.statsmodels.org/stable/generated/statsmodels.tsa.statespace.sarimax.SARIMAX.html
+- https://www.statsmodels.org/stable/generated/statsmodels.tsa.statespace.sarimax.SARIMAXResults.forecast.html
+- https://www.statsmodels.org/stable/generated/statsmodels.tsa.statespace.sarimax.SARIMAXResults.get_forecast.html
+library_versions:
+  statsmodels: 0.15.0
 reviewed: false
 rules:
-  task_types: [regression]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: airline-passengers, shape: fit_line}
+    hero:
+      kind: model
+      dataset: airline-passengers
+      shape: fit_line
     line: Past values and outside drivers, with seasons built in.
   quick_facts:
     data_size: 2+ seasons, e.g. 24 monthly points
   use_avoid:
-    use_when: [seasonal series, outside drivers like price]
-    avoid_when: [no seasonal pattern]
+    use_when:
+    - seasonal series
+    - outside drivers like price
+    avoid_when:
+    - no seasonal pattern
   prep:
-    - step: {family: explore.stationarity}
-      status: recommended
-      why: Check stability first to choose the differencing order.
-      condition: null
-      unless: null
-    - step: {family: split.time}
-      status: recommended
-      why: Test on the latest months, never on random rows.
-      condition: null
-      unless: null
+  - step:
+      family: explore.stationarity
+    status: recommended
+    why: Check stability first to choose the differencing order.
+    condition: null
+    unless: null
+  - step:
+      family: split.time
+    status: recommended
+    why: Test on the latest months, never on random rows.
+    condition: null
+    unless: null
   code:
-    - library: statsmodels
-      target: statsmodels.tsa.statespace.sarimax.SARIMAX
-      why_this_library: Fit, predict and forecast in one object.
-      snippet: |
-        # statsmodels 0.15.0
-        import numpy as np
-        from statsmodels.tsa.statespace.sarimax import SARIMAX
+  - library: statsmodels
+    target: statsmodels.tsa.statespace.sarimax.SARIMAX
+    why_this_library: Fit, predict and forecast in one object.
+    snippet: "# statsmodels 0.15.0\nimport numpy as np\nfrom statsmodels.tsa.statespace.sarimax import SARIMAX\n\
+      \nrng = np.random.default_rng(0)\nt = np.arange(144)\ny = 100 + 0.8 * t + 10 * np.sin(2 * np.pi * t / 12)\n\
+      y = y + rng.normal(0, 2, 144)\n\nmodel = SARIMAX(\n    y[:132], order=(1, 0, 0), seasonal_order=(1, 0, 0,\
+      \ 12)\n)\nres = model.fit(disp=False)\ny_pred = res.forecast(steps=3)\npred = res.get_forecast(steps=3)\n\
+      ci = pred.conf_int()\nprint(\"forecast:\", np.round(y_pred, 2).tolist())\nprint(\"interval shape:\", ci.shape)\n\
+      print(\"params shape:\", res.params.shape, \"resid shape:\", res.resid.shape)\n"
+    output: 'forecast: [203.55, 207.33, 209.14]
 
-        rng = np.random.default_rng(0)
-        t = np.arange(144)
-        y = 100 + 0.8 * t + 10 * np.sin(2 * np.pi * t / 12)
-        y = y + rng.normal(0, 2, 144)
+      interval shape: (3, 2)
 
-        model = SARIMAX(
-            y[:132], order=(1, 0, 0), seasonal_order=(1, 0, 0, 12)
-        )
-        res = model.fit(disp=False)
-        print(np.round(res.predict(132, 143), 1).tolist())
+      params shape: (3,) resid shape: (132,)
+
+      '
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: regression, shape: "(n_obs,) or (n_steps,)",
-         note: "Fitted values in sample, forecasts past the end."}
-      - {name: score, kind: method, task: null, shape: "(n_params,)",
-         note: "Score function evaluated at the given params."}
-      - {name: measurement_error, kind: attribute, task: null, shape: "bool",
-         note: "False by default. Set True to model noisy observations."}
-      - {name: state_error, kind: attribute, task: null, shape: "bool",
-         note: "True for this model. Read it, do not set it."}
-    next_step: null
+    - name: fitted Results object
+      kind: return
+      task: null
+      shape: results object
+      note: Returned by model.fit(); holds fitted parameters and forecasting methods.
+      object_type: statsmodels SARIMAXResultsWrapper
+      example: SARIMAXResultsWrapper(...)
+      shape_explanation: A fitted Python SARIMAXResultsWrapper object, with no array shape; it holds estimates and
+        prediction methods.
+    - name: forecast result
+      kind: return
+      task: regression
+      shape: (steps,)
+      note: forecast(steps) returns future means; get_forecast adds intervals, while predict(start,end) selects
+        positions.
+      object_type: numpy.ndarray
+      example: '[12.4, 13.1, 13.8]'
+      shape_explanation: steps counts positions after the observed series; three example values correspond to steps=3.
+    - name: prediction interval
+      kind: return
+      task: regression
+      shape: (steps, 2)
+      note: Lower and upper forecast limits; these are uncertainty bounds, not probabilities.
+      object_type: numpy.ndarray
+      example: '[[11.0, 13.8], [11.4, 14.8], [11.9, 15.6]]'
+      shape_explanation: Each row is one time step and the two columns are lower and upper limits; three steps give
+        shape (3, 2).
+    - name: fitted parameters
+      kind: return
+      task: null
+      shape: (n_params,)
+      note: Estimated coefficients or smoothing states.
+      object_type: numpy.ndarray
+      example: '[0.2, 0.4, 0.1]'
+      shape_explanation: n_params counts estimated entries; this fictional example shows three values.
+    - name: residuals
+      kind: return
+      task: regression
+      shape: (n_effective_obs,)
+      note: Observed minus fitted values on the estimation sample.
+      object_type: numpy.ndarray
+      example: '[0.1, -0.2, 0.05]'
+      shape_explanation: n_effective_obs counts observations used for residuals; this fictional example has three.
+    - name: AIC
+      kind: return
+      task: null
+      shape: scalar
+      note: Likelihood-based fit criterion for comparing compatible models.
+      object_type: numpy.float64
+      example: np.float64(128.4)
+      shape_explanation: A numpy.float64 scalar contains one criterion value and has no array dimensions.
+    next_step: For exogenous models, provide one future exog row per forecast step before requesting a horizon.
     visual: null
+    snippet: "# statsmodels 0.15.0\nimport numpy as np\nfrom statsmodels.tsa.statespace.sarimax import SARIMAX\n\
+      \nrng = np.random.default_rng(0)\nt = np.arange(144)\ny = 100 + 0.8 * t + 10 * np.sin(2 * np.pi * t / 12)\n\
+      y = y + rng.normal(0, 2, 144)\n\nmodel = SARIMAX(\n    y[:132], order=(1, 0, 0), seasonal_order=(1, 0, 0,\
+      \ 12)\n)\nres = model.fit(disp=False)\ny_pred = res.forecast(steps=3)\npred = res.get_forecast(steps=3)\n\
+      ci = pred.conf_int()\nprint(\"forecast:\", np.round(y_pred, 2).tolist())\nprint(\"intervals:\", np.round(ci,\
+      \ 2).tolist())\nprint(\"params:\", np.round(res.params, 2).tolist())\nprint(\"resid shape:\", res.resid.shape)\n\
+      print(\"AIC:\", round(float(res.aic), 2))\n"
+    snippet_library: statsmodels
+    output: 'forecast: [203.55, 207.33, 209.14]
+
+      intervals: [[197.03, 210.06], [198.13, 216.54], [197.88, 220.4]]
+
+      params: [1.0, 0.66, 11.05]
+
+      resid shape: (132,)
+
+      AIC: 712.34
+
+      '
   catch_outs:
-    - Forecasts need future values of the outside drivers, too.
-    - Pass exog to the model and again to predict.
+  - Forecasts are conditional on specified future exogenous values.
+  - Seasonal period s must match the series cadence.
   key_settings:
     tier1:
-      - {name: order, page: null}
-      - {name: seasonal_order, page: null}
-      - {name: trend, page: null}
-      - {name: simple_differencing, page: null}
+    - name: order
+      page: null
+      controls: Nonseasonal AR, differencing and MA orders.
+      effect: Larger orders add dynamics and parameters.
+    - name: seasonal_order
+      page: null
+      controls: Seasonal AR, differencing and MA orders plus period s.
+      effect: Seasonal terms capture repeated cycles at s but add parameters.
+    - name: trend
+      page: null
+      controls: Deterministic trend terms in the state-space equation.
+      effect: Can represent drift; avoid duplicating a level trend after differencing.
+    - name: simple_differencing
+      page: null
+      controls: Difference data before constructing the state-space model.
+      effect: Reduces state dimension but discards initial observations.
     tier2:
-      - {name: mle_regression, page: null}
-      - {name: concentrate_scale, page: null}
-      - {name: trend_offset, page: null}
-      - {name: missing, page: null}
+    - name: mle_regression
+      page: null
+      controls: Estimate exogenous regression coefficients by maximum likelihood.
+      effect: Changes whether coefficients are estimated in the state-space likelihood.
+    - name: concentrate_scale
+      page: null
+      controls: Concentrate innovation variance out of likelihood optimization.
+      effect: Reduces optimizer dimension but excludes scale from covariance calculations.
+    - name: trend_offset
+      page: null
+      controls: Starting point for deterministic trend values.
+      effect: Affects trend level when the model includes trend terms.
+    - name: missing
+      page: null
+      controls: How missing observations are handled.
+      effect: State-space filtering can represent missing observations; input policy still matters.
     tier3:
-      - {name: time_varying_regression, page: null}
-      - {name: enforce_invertibility, page: null}
-      - {name: freq, page: null}
-  watch_it_work: {none: true}
+    - name: time_varying_regression
+      page: null
+      controls: Allow regression coefficients to evolve over time.
+      effect: Adds states and requires state-space regression rather than fixed coefficients.
+    - name: enforce_invertibility
+      page: null
+      controls: Constrain MA parameters to invertible values.
+      effect: Restricts the optimizer to an identifiable representation.
+    - name: freq
+      page: null
+      controls: Frequency for a date-indexed series.
+      effect: Correct frequency allows date-based forecast horizons.
+    - name: exog
+      page: null
+      controls: External regressors aligned with the series.
+      effect: Forecasts need future exogenous values with matching columns and horizon rows.
+  watch_it_work:
+    none: true
   intuition:
     idea: Predict from past values and past errors, with seasons and outside drivers.
     analogy: Like guessing next month's sales from recent months and last year's peak.
     animation: none
-    good_at: [seasonal patterns, outside drivers]
-    bad_at: [very short series]
+    good_at:
+    - seasonal patterns
+    - outside drivers
+    bad_at:
+    - very short series
     vs_siblings:
-      - {page: arima, note: "Same idea without seasonal terms."}
-      - {page: exponential-smoothing, note: "Smooths level, trend and season. No outside drivers."}
-    read_more:
-      - Set order (p, d, q) for the lags and differencing.
-      - Set seasonal_order with the season length.
-      - Pass exog to add outside drivers.
+    - page: arima
+      note: Same idea without seasonal terms.
+    - page: exponential-smoothing
+      note: Smooths level, trend and season. No outside drivers.
+    read_more: &id001
+    - Specify nonseasonal orders (p,d,q) and seasonal orders (P,D,Q,s).
+    - Estimate dynamic coefficients, seasonal terms and any exogenous effects in a state-space model.
+    - Propagate the state forward to forecast; supply future exogenous rows when the model used exog.
+    goal: Model autoregressive and moving-average dynamics with seasonal cycles and optional external drivers.
+    steps: *id001
+    math:
+      notation:
+      - symbol: B
+        meaning: backshift operator
+      - symbol: (p,d,q)
+        meaning: nonseasonal AR, differencing and MA orders
+      - symbol: (P,D,Q,s)
+        meaning: seasonal AR, differencing, MA orders and period
+      - symbol: x_t
+        meaning: external regressors at time t
+      - symbol: ε_t
+        meaning: innovation
+      - symbol: Φ(B^s)
+        meaning: seasonal autoregressive polynomial
+      - symbol: Θ(B^s)
+        meaning: seasonal moving-average polynomial
+      - symbol: β
+        meaning: coefficient vector for exogenous regressors
+      - symbol: s
+        meaning: observations per seasonal cycle
+      equations:
+      - expression: φ(B)Φ(B^s)(1-B)^d(1-B^s)^D y_t=βᵀx_t+θ(B)Θ(B^s)ε_t
+        meaning: Seasonal and ordinary lag polynomials act on differenced observations, alongside external drivers.
+      - expression: ŷ_{T+h|T}=E[y_{T+h}|y_{1:T},x_{1:T+h}]
+        meaning: Forecast uses the fitted state and, when present, known future driver values.
+      - expression: θ̂=argmax_θ p(y_{1:T}|θ)
+        meaning: Maximum likelihood estimates the state-space and regression parameters from observed data.
+      prediction: The horizon is measured after the training endpoint. If exog was fit, provide one future driver
+        row per forecast step.
   next: []

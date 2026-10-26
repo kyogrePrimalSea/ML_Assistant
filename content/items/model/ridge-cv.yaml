@@ -1,104 +1,274 @@
 id: ridge-cv
 plain_name: RidgeCV
 code_name: RidgeCV
-aliases: [cross-validated ridge, ridge with cv]
+aliases:
+- cross-validated ridge
+- ridge with cv
 stage: model
 family: model.linear.shrink
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [correlated features, pick alpha, cross-validation]
-targets: [sklearn.linear_model.RidgeCV]
+question_tags:
+- correlated features
+- pick alpha
+- cross-validation
+targets:
+- sklearn.linear_model.RidgeCV
 pairs_with: []
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.RidgeCV.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.RidgeCV.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [regression]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: ames, shape: fit_line}
+    hero:
+      kind: model
+      dataset: ames
+      shape: fit_line
     line: Ridge, with the penalty strength picked for you.
-  quick_facts: {none: true}
+  quick_facts:
+    none: true
   use_avoid:
-    use_when: [correlated features, no hand-tuned alpha]
-    avoid_when: [only a few features matter, curved patterns]
+    use_when:
+    - correlated features
+    - no hand-tuned alpha
+    avoid_when:
+    - only a few features matter
+    - curved patterns
   prep:
-    - step: {family: clean.impute}
-      status: required
-      why: Scikit-learn rejects NaN in X.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Text categories must become numbers.
-      condition: {has_categoricals: true}
-      unless: null
-    - step: {family: transform.scale.rescale}
-      status: required
-      why: The penalty depends on units. Scale first.
-      condition: null
-      unless: null
-    - step: {page: train-test-split}
-      status: recommended
-      why: Keep a test set the alpha search never saw.
-      condition: null
-      unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Scikit-learn rejects NaN in X.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Text categories must become numbers.
+    condition:
+      has_categoricals: true
+    unless: null
+  - step:
+      family: transform.scale.rescale
+    status: required
+    why: The penalty depends on units. Scale first.
+    condition: null
+    unless: null
+  - step:
+      page: train-test-split
+    status: recommended
+    why: Keep a test set the alpha search never saw.
+    condition: null
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.linear_model.RidgeCV
-      why_this_library: Picks alpha by cross-validation, built in.
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import make_regression
-        from sklearn.linear_model import RidgeCV
-        from sklearn.pipeline import make_pipeline
-        from sklearn.preprocessing import StandardScaler
+  - library: scikit-learn
+    target: sklearn.linear_model.RidgeCV
+    why_this_library: Picks alpha by cross-validation, built in.
+    snippet: '# scikit-learn 1.9.1
 
-        X, y = make_regression(n_samples=200, n_features=8, noise=10, random_state=0)
-        model = make_pipeline(StandardScaler(), RidgeCV(alphas=[0.1, 1.0, 10.0]))
-        model.fit(X, y)
-        print(model[-1].alpha_)
+      from sklearn.datasets import make_regression
+
+      from sklearn.linear_model import RidgeCV
+
+      from sklearn.pipeline import make_pipeline
+
+      from sklearn.preprocessing import StandardScaler
+
+
+      X, y = make_regression(n_samples=200, n_features=8, noise=10, random_state=0)
+
+      model = make_pipeline(StandardScaler(), RidgeCV(alphas=[0.1, 1.0, 10.0]))
+
+      model.fit(X, y)
+
+      y_pred = model.predict(X[:3])
+
+      print(''y_pred:'', y_pred.round(1))
+
+      print(''alpha:'', model[-1].alpha_)
+
+      print(''R2:'', round(model.score(X, y), 3))'
+    output: 'y_pred: [ 217.1 -284.2 -265.5]
+
+      alpha: 0.1
+
+      R2: 0.996
+
+      '
   what_comes_out:
     items:
-    - {name: predict, kind: method, task: regression, shape: "(n_samples,)", note: One predicted value per row.}
-    - {name: score, kind: method, task: regression, shape: float, note: R squared on the data you pass in.}
-    - {name: coef_, kind: attribute, task: null, shape: "(n_features,)", note: Slopes at the chosen alpha.}
-    - {name: alpha_, kind: attribute, task: null, shape: float, note: The alpha that cross-validation picked.}
-    - {name: best_score_, kind: attribute, task: null, shape: float, note: Best cross-validated score.}
-    next_step: Read alpha_ to see the penalty that was chosen.
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[12.4, -3.1]'
+      shape_explanation: 'A one-dimensional array: n_samples is the number of predicted rows. The example has two
+        values, so its concrete shape is (2,); the trailing comma marks one dimension.'
+      note: One predicted value per row.
+    - name: score
+      kind: method
+      task: regression
+      shape: scalar
+      object_type: float
+      example: '0.997'
+      shape_explanation: A scalar is one value with no dimensions. The example is one R squared score.
+      note: R squared for the rows passed to score.
+    - name: coef_
+      kind: attribute
+      task: null
+      shape: (n_features,)
+      object_type: numpy.ndarray
+      example: '[0.4, -1.2, 2.0]'
+      shape_explanation: 'A one-dimensional array: n_features is the number of input columns. The example shows
+        three of the n_features entries; the trailing comma marks one dimension.'
+      note: One coefficient per input column.
+    - name: intercept_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: float
+      example: '2.5'
+      shape_explanation: A scalar is one value with no dimensions. The example is one fitted intercept.
+      note: Predicted target baseline when inputs are zero.
+    - name: alpha_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: float
+      example: '0.1'
+      shape_explanation: A scalar is one value with no dimensions. This is the selected penalty strength.
+      note: Chosen from alphas by cross-validation.
     visual: regression_preds
+    guidance:
+    - task: regression
+      text: Use predictions on held-out rows for error metrics; score is R squared on the rows you pass in.
+    snippet: '# scikit-learn 1.9.1
+
+      from sklearn.datasets import make_regression
+
+      from sklearn.linear_model import RidgeCV
+
+      from sklearn.pipeline import make_pipeline
+
+      from sklearn.preprocessing import StandardScaler
+
+
+      X, y = make_regression(n_samples=200, n_features=8, noise=10, random_state=0)
+
+      model = make_pipeline(StandardScaler(), RidgeCV(alphas=[0.1, 1.0, 10.0]))
+
+      model.fit(X, y)
+
+      y_pred = model.predict(X[:3])
+
+      print(''y_pred:'', y_pred.round(1))
+
+      print(''alpha:'', model[-1].alpha_)
+
+      print(''R2:'', round(model.score(X, y), 3))'
+    snippet_library: scikit-learn
+    output: 'y_pred: [ 217.1 -284.2 -265.5]
+
+      alpha: 0.1
+
+      R2: 0.996
+
+      '
+    next_step: Use held-out rows to check predictions and residuals.
   catch_outs:
-    - Only the values in alphas are tried.
-    - Scale the columns first, or the penalty is unfair.
-    - Missing values stop the fit. Impute them first.
+  - Only the values in alphas are tried.
+  - Scale the columns first, or the penalty is unfair.
+  - Missing values stop the fit. Impute them first.
   key_settings:
     tier1:
-    - {name: alphas, page: null}
-    - {name: cv, page: null}
+    - name: alphas
+      page: null
+      controls: Candidate penalty strengths to compare.
+      effect: The chosen value cannot fall outside this list.
+    - name: cv
+      page: null
+      controls: Cross-validation strategy; None uses efficient leave-one-out generalized cross-validation.
+      effect: More folds cost more fitting work; splits affect the chosen alpha.
     tier2:
-    - {name: scoring, page: null}
-    - {name: alpha_per_target, page: null}
+    - name: scoring
+      page: null
+      controls: Metric used to choose among candidate penalties.
+      effect: A metric poorly matched to the goal selects a poor penalty.
+    - name: alpha_per_target
+      page: null
+      controls: Whether to choose a separate penalty for each target.
+      effect: Separate choices can fit targets differently.
     tier3:
-    - {name: store_cv_results, page: null}
-    - {name: gcv_mode, page: null}
-    - {name: fit_intercept, page: null}
-  watch_it_work: {none: true}
+    - name: store_cv_results
+      page: null
+      controls: Whether to retain per-sample results; requires cv=None.
+      effect: Stored results use additional memory.
+    - name: gcv_mode
+      page: null
+      controls: Computation mode for generalized cross-validation.
+      effect: The faster mode depends on whether samples or features are fewer.
+    - name: fit_intercept
+      page: null
+      controls: Whether to fit a constant baseline term.
+      effect: Turning it off assumes inputs and target are centered.
+  watch_it_work:
+    none: true
   intuition:
     idea: Try several penalty strengths and keep the best by cross-validation.
     analogy: Taste a sauce at several salt levels, then keep the best one.
     animation: none
-    good_at: [correlated features, no hand-tuned alpha, stable slopes]
-    bad_at: [picking a few features, curved patterns]
+    good_at:
+    - correlated features
+    - no hand-tuned alpha
+    - stable slopes
+    bad_at:
+    - picking a few features
+    - curved patterns
     vs_siblings:
-      - {page: ridge, note: "Same penalty, but you set alpha yourself."}
-      - {page: linear-regression, note: "No penalty, and no alpha to pick."}
-    read_more:
-      - Each alpha in alphas gets a cross-validated score.
-      - The best alpha is kept as alpha_.
-      - The final slopes are fitted at that alpha.
-  next: [but-wobbly-coefs]
+    - page: ridge
+      note: Same penalty, but you set alpha yourself.
+    - page: linear-regression
+      note: No penalty, and no alpha to pick.
+    goal: Choose a Ridge penalty from candidate values by cross-validation, then fit the final linear predictor.
+    steps: &id001
+    - Each alpha in alphas gets a cross-validated score.
+    - The best alpha is kept as alpha_.
+    - The final slopes are fitted at that alpha.
+    math:
+      notation:
+      - symbol: alpha
+        meaning: candidate penalty strength
+      - symbol: CV(alpha)
+        meaning: cross-validation score for that penalty
+      - symbol: x_ij
+        meaning: feature j for row i
+      - symbol: y_i
+        meaning: observed target for row i
+      - symbol: b_j
+        meaning: coefficient for feature j
+      - symbol: alpha
+        meaning: candidate penalty strength
+      equations:
+      - expression: minimise_b sum_i (y_i - sum_j x_ij b_j)^2 + alpha sum_j b_j^2
+        meaning: For each candidate, Ridge trades squared residual error against squared coefficient size.
+      - expression: alpha_ = argmin over alpha in alphas of CV-error(alpha)
+        meaning: It selects the candidate with lowest CV error by default, or the best configured scoring value.
+      prediction: Use the chosen alpha_ to fit final Ridge coefficients; predict with y-hat = b_0 + X_new b.
+    read_more: *id001
+  next:
+  - but-wobbly-coefs

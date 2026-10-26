@@ -1,107 +1,266 @@
 id: lars
 plain_name: Lars
 code_name: Lars
-aliases: [least angle regression, lar]
+aliases:
+- least angle regression
+- lar
 stage: model
 family: model.linear.sparse
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [more features than rows, wide data, fast path]
-targets: [sklearn.linear_model.Lars]
+question_tags:
+- more features than rows
+- wide data
+- fast path
+targets:
+- sklearn.linear_model.Lars
 pairs_with: []
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Lars.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Lars.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [regression]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: ames, shape: fit_line}
+    hero:
+      kind: model
+      dataset: ames
+      shape: fit_line
     line: A fast line fitted step by step along the whole path.
-  quick_facts: {none: true}
+  quick_facts:
+    none: true
   use_avoid:
-    use_when: [more features than rows, wide data]
-    avoid_when: [classification targets, curved patterns]
+    use_when:
+    - more features than rows
+    - wide data
+    avoid_when:
+    - classification targets
+    - curved patterns
   prep:
-    - step: {family: clean.impute}
-      status: required
-      why: Scikit-learn rejects NaN in X.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Text categories must become numbers.
-      condition: {has_categoricals: true}
-      unless: null
-    - step: {family: transform.scale.rescale}
-      status: required
-      why: Units decide which columns are picked first.
-      condition: null
-      unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Scikit-learn rejects NaN in X.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Text categories must become numbers.
+    condition:
+      has_categoricals: true
+    unless: null
+  - step:
+      family: transform.scale.rescale
+    status: required
+    why: Units decide which columns are picked first.
+    condition: null
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.linear_model.Lars
-      why_this_library: Built into scikit-learn. Keeps the full path by default.
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import load_diabetes
-        from sklearn.linear_model import Lars
-        from sklearn.model_selection import train_test_split
-        from sklearn.pipeline import make_pipeline
-        from sklearn.preprocessing import StandardScaler
+  - library: scikit-learn
+    target: sklearn.linear_model.Lars
+    why_this_library: Built into scikit-learn. Keeps the full path by default.
+    snippet: "# scikit-learn 1.9.1\nfrom sklearn.datasets import load_diabetes\nfrom sklearn.linear_model import\
+      \ Lars\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.pipeline import make_pipeline\n\
+      from sklearn.preprocessing import StandardScaler\n\nX, y = load_diabetes(return_X_y=True)\nX_train, X_test,\
+      \ y_train, y_test = train_test_split(\n    X, y, random_state=0\n)\n\nmodel = make_pipeline(StandardScaler(),\
+      \ Lars())\nmodel.fit(X_train, y_train)\nprint(int((model[-1].coef_ != 0).sum()))\ny_pred = model.predict(X_test[:5])\n\
+      print('y_pred:', ', '.join(f'{v:.1f}' for v in y_pred))\n"
+    output: '10
 
-        X, y = load_diabetes(return_X_y=True)
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, random_state=0
-        )
+      y_pred: 294.8, 242.1, 167.2, 85.4, 288.4
 
-        model = make_pipeline(StandardScaler(), Lars())
-        model.fit(X_train, y_train)
-        print(int((model[-1].coef_ != 0).sum()))
+      '
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: null, shape: "(n_samples,)", note: "One predicted value per row."}
-      - {name: score, kind: method, task: null, shape: float, note: "R squared on the data you pass in."}
-      - {name: coef_, kind: attribute, task: null, shape: "(n_features,)", note: "Weights at the end of the path."}
-      - {name: intercept_, kind: attribute, task: null, shape: float, note: "Intercept of the fitted line."}
-      - {name: coef_path_, kind: attribute, task: null, shape: "(n_features, n_alphas + 1)", note: "Weights at each step. Needs fit_path=True."}
-      - {name: active_, kind: attribute, task: null, shape: "list per step", note: "Which features are in at each step."}
-    next_step: Plot coef_path_ to see how the weights change along the path.
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples,)
+      note: One predicted value per row.
+      object_type: numpy.ndarray
+      example: '[146.2, 92.1, 155.8]'
+      shape_explanation: One value is returned for each input row. n_samples is the number of rows; this example
+        has 3 values, so its shape is (3,).
+    - name: score
+      kind: method
+      task: regression
+      shape: scalar
+      note: R squared on the data you pass in.
+      object_type: float
+      example: '0.72'
+      shape_explanation: A scalar is one value with no array dimensions. The example is one R-squared score.
+    - name: coef_
+      kind: attribute
+      task: null
+      shape: (n_features,)
+      note: Weights at the end of the path.
+      object_type: numpy.ndarray
+      example: '[0.0, 12.4, -3.1]'
+      shape_explanation: A one-dimensional array with one coefficient per feature. n_features is the number of input
+        columns; this example has 3 values, shape (3,).
+    - name: intercept_
+      kind: attribute
+      task: null
+      shape: scalar
+      note: Intercept of the fitted line.
+      object_type: float
+      example: '152.0'
+      shape_explanation: A scalar is one fitted intercept value, with no array dimensions.
+    - name: coef_path_
+      kind: attribute
+      task: null
+      shape: (n_features, n_alphas + 1)
+      note: Weights at each step. Needs fit_path=True.
+      object_type: numpy.ndarray
+      example: '[[0.0, 0.1, 0.2], [0.0, -0.2, -0.3], [0.0, 0.0, 0.1]]'
+      shape_explanation: Rows are the n_features and columns are the n_alphas + 1 path points. The example has 3
+        features and 3 points, shape (3, 3).
+    - name: active_
+      kind: attribute
+      task: null
+      shape: (n_active,)
+      note: Which features are in at each step.
+      object_type: list
+      example: '[0, 2]'
+      shape_explanation: A Python list of active feature indices at one path step. n_active is the number of listed
+        indices; this example has 2.
     visual: null
+    snippet: '# scikit-learn 1.9.1
+
+      from sklearn.datasets import load_diabetes
+
+      from sklearn.linear_model import Lars
+
+      from sklearn.model_selection import train_test_split
+
+      from sklearn.pipeline import make_pipeline
+
+      from sklearn.preprocessing import StandardScaler
+
+      import numpy as np
+
+
+      X, y = load_diabetes(return_X_y=True)
+
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+      model = make_pipeline(StandardScaler(), Lars())
+
+      model.fit(X_train, y_train)
+
+      y_pred = model.predict(X_test[:3])
+
+      print(''y_pred:'', np.round(y_pred, 1))
+
+      print(''coef_:'', np.round(model[-1].coef_, 3))
+
+      '
+    snippet_library: scikit-learn
+    guidance:
+    - task: regression
+      text: Use y_pred for regression metrics on held-out rows. Compare the selected features and residuals before
+        interpreting the fit.
+    output: "y_pred: [294.8 242.1 167.2]\ncoef_: [ -14.555  -18.645   19.589   27.99  -725.743  561.568  331.177\
+      \  118.005\n  303.55     3.468]\n"
+    next_step: null
   catch_outs:
-    - n_nonzero_coefs (default 500) caps how many features it keeps.
-    - coef_path_ is only stored when fit_path is True.
-    - Scale the columns first, or the units decide the picks.
-    - Missing values stop the fit. Impute them first.
+  - n_nonzero_coefs (default 500) caps how many features it keeps.
+  - coef_path_ is only stored when fit_path is True.
+  - Scale the columns first, or the units decide the picks.
+  - Missing values stop the fit. Impute them first.
   key_settings:
     tier1:
-      - {name: n_nonzero_coefs, page: null}
-      - {name: fit_intercept, page: null}
-      - {name: fit_path, page: null}
+    - name: n_nonzero_coefs
+      page: null
+      controls: Target or maximum number of non-zero coefficients along the LARS path, or chosen by OMP.
+      effect: A larger number allows more features into the fit and can capture detail but also noise.
+    - name: fit_intercept
+      page: null
+      controls: Whether to estimate an intercept; False assumes the data are already centered.
+      effect: Turning it off avoids estimating a baseline, but biases predictions if the data are not centered.
+    - name: fit_path
+      page: null
+      controls: Whether to store coefficient values for every point on the LARS path.
+      effect: Keeping the path enables inspection but uses more memory; disabling it can speed large fits.
     tier2:
-      - {name: precompute, page: null}
-      - {name: jitter, page: null}
-      - {name: copy_X, page: null}
+    - name: precompute
+      page: null
+      controls: Whether to use a Gram matrix (and for OMP, Xy) to speed fitting.
+      effect: Precomputation can speed suitable dense or large-target problems, but uses extra memory.
+    - name: jitter
+      page: null
+      controls: Upper bound for uniform noise added to y to break ties in LARS path computations.
+      effect: A small jitter can stabilise tied cases, while changing the target slightly; leave unset unless needed.
+    - name: copy_X
+      page: null
+      controls: Whether to copy X before fitting; False may allow X to be overwritten.
+      effect: Copying protects the input at a memory cost; disabling the copy can save memory.
     tier3:
-      - {name: eps, page: null}
-      - {name: random_state, page: null}
-  watch_it_work: {none: true}
+    - name: eps
+      page: null
+      controls: Ratio of the smallest to largest alpha on the automatically generated path.
+      effect: A smaller ratio extends the search to weaker regularization; it may add candidates and computation.
+    - name: random_state
+      page: null
+      controls: Seed controlling random jitter when jitter is enabled.
+      effect: A fixed seed makes jitter reproducible; it has no effect when jitter is unset.
+  watch_it_work:
+    none: true
   intuition:
     idea: Move the weights toward the answer, adding one feature at a time.
     analogy: A group of hikers who split off only when another hiker catches up.
     animation: none
-    good_at: [wide data, fast fits]
-    bad_at: [classification, curved patterns]
+    good_at:
+    - wide data
+    - fast fits
+    bad_at:
+    - classification
+    - curved patterns
     vs_siblings:
-      - {page: lasso-lars, note: "Same path method, with a lasso penalty."}
-      - {page: orthogonal-matching-pursuit, note: "Stops at a fixed count of features."}
+    - page: lasso-lars
+      note: Same path method, with a lasso penalty.
+    - page: orthogonal-matching-pursuit
+      note: Stops at a fixed count of features.
     read_more:
-      - Start with all weights at zero.
-      - Move the weight of the feature most correlated with the residual.
-      - Keep moving until another feature catches up.
-  next: [know-feature-importance]
+    - Start with all weights at zero.
+    - Move the weight of the feature most correlated with the residual.
+    - Keep moving until another feature catches up.
+    goal: Trace a piecewise-linear least-angle path, adding features as they become equally correlated with the
+      residual.
+    steps:
+    - Start with zero coefficients and compute feature correlations with the residual.
+    - Add the most correlated feature to the active set.
+    - Move active coefficients together until another feature ties in correlation.
+    - Continue along the path until the feature limit or end of path; optionally store every coefficient vector.
+    math:
+      notation:
+      - symbol: X, y
+        meaning: Training feature matrix and target vector.
+      - symbol: r = y - Xw
+        meaning: Current residual vector.
+      - symbol: A
+        meaning: Set of active feature indices.
+      - symbol: w
+        meaning: Current coefficient vector.
+      equations:
+      - expression: j_next = argmax_{j not in A} |X_j^T r|
+        meaning: LARS next admits the inactive feature most correlated with the current residual.
+      - expression: w(t) = w + t*d
+        meaning: Move active coefficients together until a feature ties in correlation; ordinary Lars does not drop
+          coefficients at zero.
+      prediction: For a new feature row x, return b + sum_j x_j w_j at the selected path point.
+  next:
+  - know-feature-importance

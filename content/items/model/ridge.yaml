@@ -1,102 +1,254 @@
 id: ridge
 plain_name: Ridge
 code_name: Ridge
-aliases: [ridge regression, l2 regression]
+aliases:
+- ridge regression
+- l2 regression
 stage: model
 family: model.linear.shrink
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [correlated features, shrinkage, stable slopes]
-targets: [sklearn.linear_model.Ridge]
-pairs_with: [vif]
+question_tags:
+- correlated features
+- shrinkage
+- stable slopes
+targets:
+- sklearn.linear_model.Ridge
+pairs_with:
+- vif
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [regression]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: ames, shape: fit_line}
+    hero:
+      kind: model
+      dataset: ames
+      shape: fit_line
     line: A straight line whose slopes are pulled toward zero.
-  quick_facts: {none: true}
+  quick_facts:
+    none: true
   use_avoid:
-    use_when: [many correlated features, keep every feature, stable line]
-    avoid_when: [only a few features matter, curved patterns, rows in groups]
+    use_when:
+    - many correlated features
+    - keep every feature
+    - stable line
+    avoid_when:
+    - only a few features matter
+    - curved patterns
+    - rows in groups
   prep:
-    - step: {family: clean.impute}
-      status: required
-      why: Scikit-learn rejects NaN in X.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Text categories must become numbers.
-      condition: {has_categoricals: true}
-      unless: null
-    - step: {family: transform.scale.rescale}
-      status: required
-      why: The penalty depends on units. Scale first.
-      condition: null
-      unless: null
-    - step: {page: train-test-split}
-      status: recommended
-      why: Tune alpha on rows the fit never saw.
-      condition: null
-      unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Scikit-learn rejects NaN in X.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Text categories must become numbers.
+    condition:
+      has_categoricals: true
+    unless: null
+  - step:
+      family: transform.scale.rescale
+    status: required
+    why: The penalty depends on units. Scale first.
+    condition: null
+    unless: null
+  - step:
+      page: train-test-split
+    status: recommended
+    why: Tune alpha on rows the fit never saw.
+    condition: null
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.linear_model.Ridge
-      why_this_library: Takes alpha and solver settings directly.
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import make_regression
-        from sklearn.linear_model import Ridge
-        from sklearn.pipeline import make_pipeline
-        from sklearn.preprocessing import StandardScaler
+  - library: scikit-learn
+    target: sklearn.linear_model.Ridge
+    why_this_library: Takes alpha and solver settings directly.
+    snippet: '# scikit-learn 1.9.1
 
-        X, y = make_regression(n_samples=200, n_features=8, noise=10, random_state=0)
-        model = make_pipeline(StandardScaler(), Ridge(alpha=1.0)).fit(X, y)
-        print(round(model.score(X, y), 3))
+      from sklearn.datasets import make_regression
+
+      from sklearn.linear_model import Ridge
+
+      from sklearn.pipeline import make_pipeline
+
+      from sklearn.preprocessing import StandardScaler
+
+
+      X, y = make_regression(n_samples=200, n_features=8, noise=10, random_state=0)
+
+      model = make_pipeline(StandardScaler(), Ridge(alpha=1.0)).fit(X, y)
+
+      y_pred = model.predict(X[:3])
+
+      print(''y_pred:'', y_pred.round(1))
+
+      print(''R2:'', round(model.score(X, y), 3))'
+    output: 'y_pred: [ 216.  -283.  -264.1]
+
+      R2: 0.996
+
+      '
   what_comes_out:
     items:
-    - {name: predict, kind: method, task: regression, shape: "(n_samples,)", note: One predicted value per row.}
-    - {name: score, kind: method, task: regression, shape: float, note: R squared on the data you pass in.}
-    - {name: coef_, kind: attribute, task: null, shape: "(n_features,)", note: One shrunk slope per input column.}
-    - {name: intercept_, kind: attribute, task: null, shape: float, note: Not shrunk when fit_intercept is on.}
-    next_step: Pick alpha on held-out rows, or use RidgeCV to pick it.
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[12.4, -3.1]'
+      shape_explanation: 'A one-dimensional array: n_samples is the number of predicted rows. The example has two
+        values, so its concrete shape is (2,); the trailing comma marks one dimension.'
+      note: One predicted value per row.
+    - name: score
+      kind: method
+      task: regression
+      shape: scalar
+      object_type: float
+      example: '0.997'
+      shape_explanation: A scalar is one value with no dimensions. The example is one R squared score.
+      note: R squared for the rows passed to score.
+    - name: coef_
+      kind: attribute
+      task: null
+      shape: (n_features,)
+      object_type: numpy.ndarray
+      example: '[0.4, -1.2, 2.0]'
+      shape_explanation: 'A one-dimensional array: n_features is the number of input columns. The example shows
+        three of the n_features entries; the trailing comma marks one dimension.'
+      note: One coefficient per input column.
+    - name: intercept_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: float
+      example: '2.5'
+      shape_explanation: A scalar is one value with no dimensions. The example is one fitted intercept.
+      note: Predicted target baseline when inputs are zero.
     visual: regression_preds
+    guidance:
+    - task: regression
+      text: Use predictions on held-out rows for error metrics; score is R squared on the rows you pass in.
+    snippet: '# scikit-learn 1.9.1
+
+      from sklearn.datasets import make_regression
+
+      from sklearn.linear_model import Ridge
+
+      from sklearn.pipeline import make_pipeline
+
+      from sklearn.preprocessing import StandardScaler
+
+
+      X, y = make_regression(n_samples=200, n_features=8, noise=10, random_state=0)
+
+      model = make_pipeline(StandardScaler(), Ridge(alpha=1.0)).fit(X, y)
+
+      y_pred = model.predict(X[:3])
+
+      print(''y_pred:'', y_pred.round(1))
+
+      print(''R2:'', round(model.score(X, y), 3))'
+    snippet_library: scikit-learn
+    output: 'y_pred: [ 216.  -283.  -264.1]
+
+      R2: 0.996
+
+      '
+    next_step: Use held-out rows to check predictions and residuals.
   catch_outs:
-    - Scale the columns first, or the penalty is unfair.
-    - Ridge keeps every feature, so it never drops one.
-    - Missing values stop the fit. Impute them first.
+  - Scale the columns first, or the penalty is unfair.
+  - Ridge keeps every feature, so it never drops one.
+  - Missing values stop the fit. Impute them first.
   key_settings:
     tier1:
-    - {name: alpha, page: null}
-    - {name: solver, page: null}
+    - name: alpha
+      page: null
+      controls: Strength of the squared-coefficient penalty.
+      effect: Larger alpha shrinks coefficients more and can underfit.
+    - name: solver
+      page: null
+      controls: Numerical method used to solve the penalized least-squares problem.
+      effect: Methods trade speed, memory use, and numerical stability.
     tier2:
-    - {name: fit_intercept, page: null}
-    - {name: positive, page: null}
+    - name: fit_intercept
+      page: null
+      controls: Whether to fit a constant baseline term.
+      effect: Turning it off assumes inputs and target are centered.
+    - name: positive
+      page: null
+      controls: Whether coefficients must be non-negative.
+      effect: The constraint can rule out useful negative effects.
     tier3:
-    - {name: max_iter, page: null}
-    - {name: tol, page: null}
-  watch_it_work: {none: true}
+    - name: max_iter
+      page: null
+      controls: Maximum iterations for iterative solvers.
+      effect: A low limit can stop before convergence.
+    - name: tol
+      page: null
+      controls: Convergence tolerance for iterative solvers.
+      effect: A looser tolerance can finish sooner with a less precise solution.
+  watch_it_work:
+    none: true
   intuition:
     idea: Least squares with a penalty on large slopes.
     analogy: A gentle tug on each slope that keeps it from running wild.
     animation: none
-    good_at: [correlated features, keeping every feature, stable slopes]
-    bad_at: [picking a few features, curved patterns, zero slopes]
+    good_at:
+    - correlated features
+    - keeping every feature
+    - stable slopes
+    bad_at:
+    - picking a few features
+    - curved patterns
+    - zero slopes
     vs_siblings:
-      - {page: ridge-cv, note: "Same penalty. Picks alpha by cross-validation."}
-      - {page: linear-regression, note: "No penalty. Slopes can swing with correlated features."}
-      - {page: lasso, note: "Sets unhelpful slopes to zero."}
-    read_more:
-      - The error gets alpha times the sum of squared slopes added.
-      - A bigger alpha pulls the slopes closer to zero.
-      - Scale features first so the penalty is fair.
-  next: [but-wobbly-coefs]
+    - page: ridge-cv
+      note: Same penalty. Picks alpha by cross-validation.
+    - page: linear-regression
+      note: No penalty. Slopes can swing with correlated features.
+    - page: lasso
+      note: Sets unhelpful slopes to zero.
+    goal: Fit a linear predictor while shrinking coefficients to limit their size.
+    steps: &id001
+    - The error gets alpha times the sum of squared slopes added.
+    - A bigger alpha pulls the slopes closer to zero.
+    - Scale features first so the penalty is fair.
+    math:
+      notation:
+      - symbol: i
+        meaning: row index
+      - symbol: j
+        meaning: feature index
+      - symbol: x_ij
+        meaning: feature j for row i
+      - symbol: y_i
+        meaning: observed target for row i
+      - symbol: b_j
+        meaning: coefficient for feature j
+      - symbol: alpha
+        meaning: non-negative penalty strength
+      equations:
+      - expression: minimise sum_i (y_i - sum_j x_ij b_j)^2 + alpha sum_j b_j^2
+        meaning: Ridge trades squared prediction errors against squared coefficient size.
+      prediction: For new rows, multiply by the fitted coefficients and add the intercept when enabled.
+    read_more: *id001
+  next:
+  - but-wobbly-coefs

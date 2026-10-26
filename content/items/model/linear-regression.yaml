@@ -1,122 +1,320 @@
 id: linear-regression
 plain_name: Linear regression
 code_name: LinearRegression / OLS / linregress
-aliases: [ols, linear model]
+aliases:
+- ols
+- linear model
 stage: model
 family: model.linear.ols
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [p-values, explainable model, baseline]
-targets: [sklearn.linear_model.LinearRegression, statsmodels.regression.linear_model.OLS, scipy.stats.linregress]
-pairs_with: [vif, residual-normality]
+question_tags:
+- p-values
+- explainable model
+- baseline
+targets:
+- sklearn.linear_model.LinearRegression
+- statsmodels.regression.linear_model.OLS
+- scipy.stats.linregress
+pairs_with:
+- vif
+- residual-normality
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html',
-  'https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.OLS.html', 'https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.linregress.html']
-library_versions: {scikit-learn: 1.9.1, statsmodels: 0.15.0, scipy: 1.18.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LinearRegression.html
+- https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.OLS.html
+- https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.linregress.html
+library_versions:
+  scikit-learn: 1.9.1
+  statsmodels: 0.15.0
+  scipy: 1.18.1
 reviewed: false
 rules:
-  task_types: [regression]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: ames, shape: fit_line}
+    hero:
+      kind: model
+      dataset: ames
+      shape: fit_line
     line: One straight line through the cloud of points.
-  quick_facts: {none: true}
+  quick_facts:
+    none: true
   use_avoid:
-    use_when: [explain each effect, baseline model, p-values needed]
-    avoid_when: [curved patterns, correlated features, rows in groups]
+    use_when:
+    - explain each effect
+    - baseline model
+    - p-values needed
+    avoid_when:
+    - curved patterns
+    - correlated features
+    - rows in groups
   prep:
-    - step: {family: clean.impute}
-      status: required
-      why: Scikit-learn and statsmodels both reject NaN.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Text categories must become numbers.
-      condition: {has_categoricals: true}
-      unless: null
-    - step: {family: transform.scale.rescale}
-      status: not_needed
-      why: Scaling changes the coefficients, not the predictions.
-      condition: null
-      unless: null
-    - step: {page: train-test-split}
-      status: recommended
-      why: A held-out set checks the fit on new rows.
-      condition: null
-      unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Scikit-learn and statsmodels both reject NaN.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Text categories must become numbers.
+    condition:
+      has_categoricals: true
+    unless: null
+  - step:
+      family: transform.scale.rescale
+    status: not_needed
+    why: Scaling changes the coefficients, not the predictions.
+    condition: null
+    unless: null
+  - step:
+      page: train-test-split
+    status: recommended
+    why: A held-out set checks the fit on new rows.
+    condition: null
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.linear_model.LinearRegression
-      why_this_library: Same fit and predict calls as the other models.
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import make_regression
-        from sklearn.linear_model import LinearRegression
+  - library: scikit-learn
+    target: sklearn.linear_model.LinearRegression
+    why_this_library: Same fit and predict calls as the other models.
+    snippet: "# scikit-learn 1.9.1\nimport numpy as np\nimport statsmodels.api as sm\nfrom scipy.stats import linregress\n\
+      from sklearn.datasets import make_regression\nfrom sklearn.linear_model import LinearRegression\n\nX, y =\
+      \ make_regression(n_samples=200, n_features=5, noise=10, random_state=0)\nsk = LinearRegression().fit(X, y)\n\
+      y_pred = sk.predict(X[:3])\nols = sm.OLS(y, sm.add_constant(X)).fit()\nX_one, y_one = make_regression(\n \
+      \   n_samples=200, n_features=1, noise=10, random_state=0\n)\nscipy_fit = linregress(X_one[:, 0], y_one)\n\
+      print('sklearn y_pred:', np.round(y_pred, 1))\nprint('sklearn coef_:', np.round(sk.coef_[:3], 2))\nprint(\n\
+      \    'statsmodels params:', ols.params[:3].round(2)\n)\nprint('statsmodels pvalues:', ols.pvalues[:3].round(3))\n\
+      print('scipy slope:', round(scipy_fit.slope, 3))\nprint('scipy pvalue:', round(scipy_fit.pvalue, 3))"
+    output: 'sklearn y_pred: [ -64.1  -42.7 -103.3]
 
-        X, y = make_regression(n_samples=200, n_features=5, noise=10, random_state=0)
-        model = LinearRegression().fit(X, y)
-        print(round(model.score(X, y), 3))
-    - library: statsmodels
-      target: statsmodels.regression.linear_model.OLS
-      why_this_library: Gives p-values and standard errors.
-      snippet: |
-        # statsmodels 0.15.0
-        import statsmodels.api as sm
-        from sklearn.datasets import make_regression
+      sklearn coef_: [77.88 70.94 82.15]
 
-        X, y = make_regression(n_samples=200, n_features=5, noise=10, random_state=0)
-        results = sm.OLS(y, sm.add_constant(X)).fit()
-        print(results.pvalues.round(3))
-    - library: scipy
-      target: scipy.stats.linregress
-      why_this_library: One-line fit for a single feature.
-      snippet: |
-        # scipy 1.18.1
-        from scipy.stats import linregress
-        from sklearn.datasets import make_regression
+      statsmodels params: [ 1.16 77.88 70.94]
 
-        X, y = make_regression(n_samples=200, n_features=1, noise=10, random_state=0)
-        result = linregress(X[:, 0], y)
-        print(round(result.slope, 3))
+      statsmodels pvalues: [0.122 0.    0.   ]
+
+      scipy slope: 96.465
+
+      scipy pvalue: 0.0
+
+      '
+  - library: statsmodels
+    target: statsmodels.regression.linear_model.OLS
+    why_this_library: Statsmodels OLS adds inferential results such as p-values.
+    snippet: '# statsmodels 0.15.0
+
+      import statsmodels.api as sm
+
+      from sklearn.datasets import make_regression
+
+
+      X, y = make_regression(n_samples=200, n_features=5, noise=10, random_state=0)
+
+      results = sm.OLS(y, sm.add_constant(X)).fit()
+
+      print(results.pvalues.round(3))
+
+      '
+    output: '[0.122 0.    0.    0.    0.    0.   ]
+
+      '
+  - library: scipy
+    target: scipy.stats.linregress
+    why_this_library: SciPy provides a compact simple linear regression for one predictor.
+    snippet: '# scipy 1.18.1
+
+      from scipy.stats import linregress
+
+      from sklearn.datasets import make_regression
+
+
+      X, y = make_regression(n_samples=200, n_features=1, noise=10, random_state=0)
+
+      result = linregress(X[:, 0], y)
+
+      print(round(result.slope, 3))
+
+      '
+    output: '96.465
+
+      '
   what_comes_out:
     items:
-    - {name: predict, kind: method, task: regression, shape: "(n_samples,)", note: One predicted value per row.}
-    - {name: score, kind: method, task: regression, shape: float, note: R squared on the data you pass in.}
-    - {name: coef_, kind: attribute, task: null, shape: "(n_features,)", note: One slope per input column.}
-    - {name: intercept_, kind: attribute, task: null, shape: float, note: Predicted value when every input is zero.}
-    next_step: Check the residuals before trusting the p-values.
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[-64.1, -42.7, -103.3]'
+      shape_explanation: 'A one-dimensional array: n_samples counts rows passed to predict. This example has three
+        predictions, shape (3,); the trailing comma marks one dimension.'
+      note: Scikit-learn LinearRegression predicts one target per row.
+    - name: coef_
+      kind: attribute
+      task: null
+      shape: (n_features,)
+      object_type: numpy.ndarray
+      example: '[77.88, 70.94, 82.15]'
+      shape_explanation: 'A one-dimensional array: n_features counts input columns. This fictional example assumes
+        n_features=3 and therefore has concrete shape (3,); the trailing comma marks one dimension.'
+      note: Scikit-learn coefficient for each input feature.
+    - name: intercept_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: float
+      example: '1.16'
+      shape_explanation: A scalar is a single value with no dimensions. The example is the fitted intercept.
+      note: Scikit-learn baseline prediction when features are zero.
+    - name: params
+      kind: return
+      task: null
+      shape: (n_parameters,)
+      object_type: numpy.ndarray
+      example: '[1.16, 77.88, 70.94]'
+      shape_explanation: 'A one-dimensional array: n_parameters counts coefficients, including the constant. This
+        fictional example assumes n_parameters=3 and therefore has concrete shape (3,); the trailing comma marks
+        one dimension.'
+      note: Statsmodels fitted Results.params includes the constant first.
+    - name: pvalues
+      kind: return
+      task: null
+      shape: (n_parameters,)
+      object_type: numpy.ndarray
+      example: '[0.122, 0.0, 0.0]'
+      shape_explanation: 'A one-dimensional array: n_parameters counts coefficient tests. This fictional example
+        assumes n_parameters=3 and therefore has concrete shape (3,); the trailing comma marks one dimension.'
+      note: Statsmodels Results.pvalues gives coefficient tests under OLS assumptions.
+    - name: slope
+      kind: return
+      task: null
+      shape: scalar
+      object_type: float
+      example: '96.465'
+      shape_explanation: A scalar is a single value with no dimensions. SciPy reports one fitted slope for this
+        one-predictor regression.
+      note: SciPy linregress result field for a single input feature.
+    - name: pvalue
+      kind: return
+      task: null
+      shape: scalar
+      object_type: float
+      example: '1.22e-200'
+      shape_explanation: A scalar is a single value with no dimensions. SciPy reports one test p-value for its single
+        slope.
+      note: SciPy tests whether the one-predictor slope is zero.
     visual: regression_preds
+    guidance:
+    - task: regression
+      text: Use predictions on held-out rows for error metrics; score is R squared on the rows you pass in.
+    snippet: "# scikit-learn 1.9.1\nimport numpy as np\nimport statsmodels.api as sm\nfrom scipy.stats import linregress\n\
+      from sklearn.datasets import make_regression\nfrom sklearn.linear_model import LinearRegression\n\nX, y =\
+      \ make_regression(n_samples=200, n_features=5, noise=10, random_state=0)\nsk = LinearRegression().fit(X, y)\n\
+      y_pred = sk.predict(X[:3])\nols = sm.OLS(y, sm.add_constant(X)).fit()\nX_one, y_one = make_regression(\n \
+      \   n_samples=200, n_features=1, noise=10, random_state=0\n)\nscipy_fit = linregress(X_one[:, 0], y_one)\n\
+      print('sklearn y_pred:', np.round(y_pred, 1))\nprint('sklearn coef_:', np.round(sk.coef_[:3], 2))\nprint(\n\
+      \    'statsmodels params:', ols.params[:3].round(2)\n)\nprint('statsmodels pvalues:', ols.pvalues[:3].round(3))\n\
+      print('scipy slope:', round(scipy_fit.slope, 3))\nprint('scipy pvalue:', round(scipy_fit.pvalue, 3))"
+    snippet_library: scikit-learn
+    output: 'sklearn y_pred: [ -64.1  -42.7 -103.3]
+
+      sklearn coef_: [77.88 70.94 82.15]
+
+      statsmodels params: [ 1.16 77.88 70.94]
+
+      statsmodels pvalues: [0.122 0.    0.   ]
+
+      scipy slope: 96.465
+
+      scipy pvalue: 0.0
+
+      '
+    next_step: Use held-out rows to check predictions and residuals.
   catch_outs:
-    - Missing values stop the fit. Impute them first.
-    - Correlated features make the coefficients unstable.
-    - p-values come from statsmodels, not scikit-learn.
+  - Missing values stop the fit. Impute them first.
+  - Correlated features make the coefficients unstable.
+  - p-values come from statsmodels, not scikit-learn.
   key_settings:
     tier1:
-    - {name: fit_intercept, page: null}
-    - {name: positive, page: null}
+    - name: fit_intercept
+      page: null
+      controls: Whether to fit a constant baseline term.
+      effect: Turning it off assumes inputs and target are centered.
+    - name: positive
+      page: null
+      controls: Whether coefficients must be non-negative.
+      effect: A constraint can rule out a useful negative effect.
     tier2:
-    - {name: missing, page: null}
+    - name: missing
+      page: null
+      controls: Statsmodels missing-data handling; scikit-learn does not expose this setting.
+      effect: Dropping rows changes the fitted sample; raising stops on missing values.
     tier3:
-    - {name: copy_X, page: null}
-    - {name: hasconst, page: null}
-  watch_it_work: {none: true}
+    - name: copy_X
+      page: null
+      controls: Whether to copy the input matrix before fitting.
+      effect: Disabling can allow the input matrix to be overwritten.
+    - name: hasconst
+      page: null
+      controls: Whether statsmodels should treat the design as containing a constant.
+      effect: A wrong declaration changes model degrees of freedom and statistics.
+  watch_it_work:
+    none: true
   intuition:
     idea: Pick the straight line with the smallest squared errors.
     analogy: A ruler laid through a scatter of dots, placed to miss them least.
     animation: none
-    good_at: [explaining each effect, a fast baseline, p-values]
-    bad_at: [curved patterns, correlated features, rows in groups]
+    good_at:
+    - explaining each effect
+    - a fast baseline
+    - p-values
+    bad_at:
+    - curved patterns
+    - correlated features
+    - rows in groups
     vs_siblings:
-      - {page: ridge, note: "Same line, with a penalty on large slopes."}
-      - {page: wls, note: "Same line, but rows can get different weights."}
-      - {page: gls, note: "Same line, but errors may be linked across rows."}
-    read_more:
-      - Start with the mean of y as a flat line.
-      - Tilt the line to shrink the squared errors.
-      - Read each slope as one effect, with the others held fixed.
-  next: [but-wobbly-coefs]
+    - page: ridge
+      note: Same line, with a penalty on large slopes.
+    - page: wls
+      note: Same line, but rows can get different weights.
+    - page: gls
+      note: Same line, but errors may be linked across rows.
+    goal: Estimate one straight-line coefficient for each feature by minimising squared prediction errors.
+    steps: &id001
+    - Start with the mean of y as a flat line.
+    - Tilt the line to shrink the squared errors.
+    - Read each slope as one effect, with the others held fixed.
+    math:
+      notation:
+      - symbol: i
+        meaning: row index
+      - symbol: j
+        meaning: feature index
+      - symbol: x_ij
+        meaning: feature j for row i
+      - symbol: y_i
+        meaning: observed target for row i
+      - symbol: b_j
+        meaning: coefficient for feature j
+      - symbol: b_0
+        meaning: intercept
+      equations:
+      - expression: y-hat_i = b_0 + sum_j b_j x_ij
+        meaning: Each prediction is an intercept plus the weighted input features.
+      - expression: minimise sum_i (y_i - y-hat_i)^2
+        meaning: Ordinary least squares chooses coefficients with the smallest total squared residual.
+      prediction: For new rows, use y-hat = b_0 + X_new b.
+    read_more: *id001
+  next:
+  - but-wobbly-coefs

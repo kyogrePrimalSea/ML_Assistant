@@ -1,99 +1,246 @@
 id: auto-reg
 plain_name: AutoReg
 code_name: AutoReg
-aliases: [AR model, autoregression]
+aliases:
+- AR model
+- autoregression
 stage: model
 family: model.ts-past
-tracks: [time-series]
+tracks:
+- time-series
 archetype: model
-question_tags: [forecast, one series, recent values]
-targets: [statsmodels.tsa.ar_model.AutoReg]
-pairs_with: [acf-pacf-plots, ljung-box]
+question_tags:
+- forecast
+- one series
+- recent values
+targets:
+- statsmodels.tsa.ar_model.AutoReg
+pairs_with:
+- acf-pacf-plots
+- ljung-box
 clashes: []
-source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.tsa.ar_model.AutoReg.html']
-library_versions: {statsmodels: 0.15.0}
+source_urls:
+- https://www.statsmodels.org/stable/generated/statsmodels.tsa.ar_model.AutoReg.html
+- https://www.statsmodels.org/stable/generated/statsmodels.tsa.ar_model.AutoRegResults.forecast.html
+- https://www.statsmodels.org/stable/generated/statsmodels.tsa.ar_model.AutoRegResults.get_prediction.html
+library_versions:
+  statsmodels: 0.15.0
 reviewed: false
 rules:
-  task_types: [regression]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: airline-passengers, shape: fit_line}
+    hero:
+      kind: model
+      dataset: airline-passengers
+      shape: fit_line
     line: Predicts one series from its own recent values.
-  quick_facts: {none: true}
+  quick_facts:
+    none: true
   use_avoid:
-    use_when: [one series, short memory, a simple forecast]
-    avoid_when: [several series at once, shifting patterns, tiny data]
+    use_when:
+    - one series
+    - short memory
+    - a simple forecast
+    avoid_when:
+    - several series at once
+    - shifting patterns
+    - tiny data
   prep:
-    - step: {family: explore.stationarity}
-      status: recommended
-      why: Check stationarity before choosing lags.
-      condition: null
-      unless: null
-    - step: {family: split.time}
-      status: recommended
-      why: Test on the latest rows, never shuffled.
-      condition: null
-      unless: null
+  - step:
+      family: explore.stationarity
+    status: recommended
+    why: Check stationarity before choosing lags.
+    condition: null
+    unless: null
+  - step:
+      family: split.time
+    status: recommended
+    why: Test on the latest rows, never shuffled.
+    condition: null
+    unless: null
   code:
-    - library: statsmodels
-      target: statsmodels.tsa.ar_model.AutoReg
-      why_this_library: The statsmodels class for this model.
-      snippet: |
-        # statsmodels 0.15.0
-        import numpy as np
-        from sklearn.datasets import make_regression
-        from statsmodels.tsa.ar_model import AutoReg
+  - library: statsmodels
+    target: statsmodels.tsa.ar_model.AutoReg
+    why_this_library: The statsmodels class for this model.
+    snippet: "# statsmodels 0.15.0\nimport numpy as np\nfrom sklearn.datasets import make_regression\nfrom statsmodels.tsa.ar_model\
+      \ import AutoReg\n\n_, shocks = make_regression(\n    n_samples=200, n_features=3, noise=1.0, random_state=0\n\
+      )\nshocks = shocks / shocks.std()\ny = np.zeros(200)\nfor t in range(1, 200):\n    y[t] = 0.7 * y[t - 1] +\
+      \ shocks[t]\n\nres = AutoReg(y, lags=2).fit()\ny_pred = res.forecast(3)\npred = res.get_prediction(start=len(y),\
+      \ end=len(y) + 2)\nci = pred.conf_int()\nprint(\"forecast:\", np.round(y_pred, 2).tolist())\nprint(\"interval\
+      \ shape:\", ci.shape)\nprint(\"params shape:\", res.params.shape, \"resid shape:\", res.resid.shape)\n"
+    output: 'forecast: [0.46, 0.19, 0.01]
 
-        _, shocks = make_regression(
-            n_samples=200, n_features=3, noise=1.0, random_state=0
-        )
-        shocks = shocks / shocks.std()
-        y = np.zeros(200)
-        for t in range(1, 200):
-            y[t] = 0.7 * y[t - 1] + shocks[t]
+      interval shape: (3, 2)
 
-        res = AutoReg(y, lags=2).fit()
-        print(res.params.round(2))
+      params shape: (3,) resid shape: (198,)
+
+      '
   what_comes_out:
     items:
-      - {name: fit, kind: method, task: null, shape: "results object", note: "Returns the fitted results. Use them to forecast."}
-      - {name: predict, kind: method, task: null, shape: "(n_obs,)", note: "Fitted values, or forecasts past the sample."}
-      - {name: ar_lags, kind: attribute, task: null, shape: "list of int", note: "The lags kept in the model."}
-      - {name: deterministic, kind: attribute, task: null, shape: "object", note: "Trend and seasonal terms added to the model."}
-    next_step: Plot the forecast against the real series before trusting it.
+    - name: fitted Results object
+      kind: return
+      task: null
+      shape: results object
+      note: Returned by model.fit(); holds fitted parameters and forecasting methods.
+      object_type: statsmodels AutoRegResultsWrapper
+      example: AutoRegResultsWrapper(...)
+      shape_explanation: A fitted Python AutoRegResultsWrapper object, with no array shape; it holds estimates and
+        prediction methods.
+    - name: forecast result
+      kind: return
+      task: regression
+      shape: (steps,)
+      note: forecast(steps) extends beyond the sample; predict(start,end) can span fitted and future positions.
+      object_type: numpy.ndarray
+      example: '[12.4, 13.1, 13.8]'
+      shape_explanation: steps counts positions after the observed series; three example values correspond to steps=3.
+    - name: prediction interval
+      kind: return
+      task: regression
+      shape: (steps, 2)
+      note: Lower and upper forecast limits; these are uncertainty bounds, not probabilities.
+      object_type: numpy.ndarray
+      example: '[[11.0, 13.8], [11.4, 14.8], [11.9, 15.6]]'
+      shape_explanation: Each row is one time step and the two columns are lower and upper limits; three steps give
+        shape (3, 2).
+    - name: fitted parameters
+      kind: return
+      task: null
+      shape: (n_params,)
+      note: Estimated coefficients or smoothing states.
+      object_type: numpy.ndarray
+      example: '[0.2, 0.4, 0.1]'
+      shape_explanation: n_params counts estimated entries; this fictional example shows three values.
+    - name: residuals
+      kind: return
+      task: regression
+      shape: (n_effective_obs,)
+      note: Observed minus fitted values on the estimation sample.
+      object_type: numpy.ndarray
+      example: '[0.1, -0.2, 0.05]'
+      shape_explanation: n_effective_obs counts observations used for residuals; this fictional example has three.
+    - name: AIC
+      kind: return
+      task: null
+      shape: scalar
+      note: Likelihood-based fit criterion for comparing compatible models.
+      object_type: numpy.float64
+      example: np.float64(128.4)
+      shape_explanation: A numpy.float64 scalar contains one criterion value and has no array dimensions.
+    next_step: Compare forecasts with a held-out future window and inspect residual patterns.
     visual: null
+    snippet: "# statsmodels 0.15.0\nimport numpy as np\nfrom sklearn.datasets import make_regression\nfrom statsmodels.tsa.ar_model\
+      \ import AutoReg\n\n_, shocks = make_regression(\n    n_samples=200, n_features=3, noise=1.0, random_state=0\n\
+      )\nshocks = shocks / shocks.std()\ny = np.zeros(200)\nfor t in range(1, 200):\n    y[t] = 0.7 * y[t - 1] +\
+      \ shocks[t]\n\nres = AutoReg(y, lags=2).fit()\ny_pred = res.forecast(3)\npred = res.get_prediction(start=len(y),\
+      \ end=len(y) + 2)\nci = pred.conf_int()\nprint(\"forecast:\", np.round(y_pred, 2).tolist())\nprint(\"intervals:\"\
+      , np.round(ci, 2).tolist())\nprint(\"params:\", np.round(res.params, 2).tolist())\nprint(\"resid shape:\"\
+      , res.resid.shape)\nprint(\"AIC:\", round(float(res.aic), 2))\n"
+    snippet_library: statsmodels
+    output: 'forecast: [0.46, 0.19, 0.01]
+
+      intervals: [[-1.5, 2.43], [-2.24, 2.61], [-2.6, 2.61]]
+
+      params: [-0.11, 0.73, -0.05]
+
+      resid shape: (198,)
+
+      AIC: 570.47
+
+      '
   catch_outs:
-    - Estimation drops the first lags of the series, so fewer rows are fitted.
-    - hold_back removes early observations from the estimation sample.
-    - If deterministic is given, it replaces trend and seasonal.
+  - Time order matters; random shuffling destroys the lag relationships.
+  - The lagged regression uses fewer rows when lags increase.
   key_settings:
     tier1:
-      - {name: lags, page: null}
-      - {name: trend, page: null}
-      - {name: hold_back, page: null}
-      - {name: missing, page: null}
+    - name: lags
+      page: null
+      controls: Past observation offsets used as regression inputs.
+      effect: More lags capture longer memory but use more parameters and observations.
+    - name: trend
+      page: null
+      controls: Deterministic constant, linear or quadratic trend terms.
+      effect: Extra trend terms can capture drift but increase model complexity.
+    - name: hold_back
+      page: null
+      controls: Initial observations excluded so compared lag models use the same rows.
+      effect: A larger hold-back reduces the estimation sample.
+    - name: missing
+      page: null
+      controls: How missing observations are handled.
+      effect: Rejecting missing data avoids silently changing the time sequence.
     tier2:
-      - {name: seasonal, page: null}
-      - {name: period, page: null}
-      - {name: exog, page: null}
+    - name: seasonal
+      page: null
+      controls: Whether to include seasonal dummy regressors.
+      effect: Can model fixed seasonal means but adds coefficients.
+    - name: period
+      page: null
+      controls: Number of observations in one seasonal cycle.
+      effect: A wrong period places seasonal effects at incorrect lags.
+    - name: exog
+      page: null
+      controls: External regressors aligned with the observed series.
+      effect: Future forecasts require matching future exogenous rows.
     tier3:
-      - {name: deterministic, page: null}
-  watch_it_work: {none: true}
+    - name: deterministic
+      page: null
+      controls: Explicit deterministic terms replacing trend specification.
+      effect: Custom terms add flexibility and corresponding coefficients.
+  watch_it_work:
+    none: true
   intuition:
     idea: Predict today from a few past values of the same series.
     analogy: Like guessing today's weather from the last few days.
     animation: none
-    good_at: [one series, simple forecasts, recent memory]
-    bad_at: [several series at once, shifting patterns, long memory]
+    good_at:
+    - one series
+    - simple forecasts
+    - recent memory
+    bad_at:
+    - several series at once
+    - shifting patterns
+    - long memory
     vs_siblings:
-      - {page: arima, note: "Adds differencing and moving-average terms."}
-      - {page: sarimax, note: "Adds seasons and outside drivers."}
-    read_more:
-      - Choose the lags to include.
-      - Fit a regression of the series on those lags.
-      - Use the fitted line to predict the next values.
-  next: [but-beat-simple, but-intervals]
+    - page: arima
+      note: Adds differencing and moving-average terms.
+    - page: sarimax
+      note: Adds seasons and outside drivers.
+    read_more: &id001
+    - Select lag set L and deterministic terms for each time point.
+    - Fit coefficients by least squares using only rows with available lags.
+    - Forecast recursively, substituting earlier forecasts when future lags are unavailable.
+    goal: Estimate current value from selected past observations of the same series.
+    steps: *id001
+    math:
+      notation:
+      - symbol: y_t
+        meaning: series value at time t
+      - symbol: L
+        meaning: selected positive lag numbers
+      - symbol: φ_j
+        meaning: coefficient for lag j
+      - symbol: δ_t
+        meaning: intercept, trend, seasonal or exogenous contribution
+      - symbol: ε_t
+        meaning: unexplained innovation
+      equations:
+      - expression: y_t=δ_t+Σ_{j∈L}φ_j y_{t-j}+ε_t
+        meaning: Each observation is a regression on selected earlier observations and optional deterministic terms.
+      - expression: ŷ_{T+h}=δ_{T+h}+Σ_{j∈L}φ_j z_{T+h-j}
+        meaning: For future positions, z uses observed values when available and prior forecasts otherwise.
+      - expression: min_{δ,φ} Σ_t (y_t-δ_t-Σ_{j∈L}φ_jy_{t-j})²
+        meaning: Least squares chooses coefficients that minimize squared in-sample residuals.
+      prediction: The horizon h counts steps after the last observed point. Recursive forecasts use earlier forecasts
+        as lag inputs.
+  next:
+  - but-beat-simple
+  - but-intervals

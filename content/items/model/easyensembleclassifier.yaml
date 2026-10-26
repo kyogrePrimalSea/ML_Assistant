@@ -1,99 +1,89 @@
 id: easyensembleclassifier
 plain_name: EasyEnsembleClassifier
 code_name: EasyEnsembleClassifier
-aliases: [easy ensemble]
+aliases:
+- easy ensemble
 stage: model
 family: model.trees.balanced
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [rare class, imbalanced classes, tabular data]
-targets: [imblearn.ensemble.EasyEnsembleClassifier]
+question_tags:
+- rare class
+- imbalanced classes
+- tabular data
+targets:
+- imblearn.ensemble.EasyEnsembleClassifier
 pairs_with: []
 clashes: []
-source_urls: ['https://imbalanced-learn.org/stable/references/generated/imblearn.ensemble.EasyEnsembleClassifier.html']
-library_versions: {imbalanced-learn: 0.14.2}
+source_urls:
+- https://imbalanced-learn.org/stable/references/generated/imblearn.ensemble.EasyEnsembleClassifier.html
+library_versions:
+  imbalanced-learn: 0.14.2
 reviewed: false
 rules:
-  task_types: [classification]
+  task_types:
+  - classification
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: breast-cancer, shape: boundary}
-    line: "Many AdaBoost models, each trained on a balanced sample."
+    hero:
+      kind: model
+      dataset: breast-cancer
+      shape: boundary
+    line: Many AdaBoost models, each trained on a balanced sample.
   quick_facts:
     data_size: Tabular data, one rare class
   use_avoid:
-    use_when: [one class is rare, tabular data, want boosted learners]
-    avoid_when: [classes already balanced, images or text, need a simple formula]
+    use_when:
+    - one class is rare
+    - tabular data
+    - want boosted learners
+    avoid_when:
+    - classes already balanced
+    - images or text
+    - need a simple formula
   prep:
-    - step: {family: transform.scale.rescale}
-      status: recommended
-      why: Needed if the inner learner is not a tree.
-      condition: null
-      unless: null
-    - step: {family: clean.impute}
-      status: required
-      why: Missing values stop fit. Impute them first.
-      condition: null
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Text categories must become numbers.
-      condition: {has_categoricals: true}
-      unless: null
-    - step: {family: transform.rebalance.over}
-      status: not_needed
-      why: Each inner learner sees a balanced sample.
-      condition: null
-      unless: null
-    - step: {family: transform.rebalance.under}
-      status: not_needed
-      why: Each inner learner sees a balanced sample.
-      condition: null
-      unless: null
+  - step:
+      family: transform.scale.rescale
+    status: recommended
+    why: Needed if the inner learner is not a tree.
+    condition: null
+    unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Missing values stop fit. Impute them first.
+    condition: null
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Text categories must become numbers.
+    condition:
+      has_categoricals: true
+    unless: null
+  - step:
+      family: transform.rebalance.over
+    status: not_needed
+    why: Each inner learner sees a balanced sample.
+    condition: null
+    unless: null
+  - step:
+      family: transform.rebalance.under
+    status: not_needed
+    why: Each inner learner sees a balanced sample.
+    condition: null
+    unless: null
   code:
-    - library: imbalanced-learn
-      target: imblearn.ensemble.EasyEnsembleClassifier
-      why_this_library: Bag of balanced AdaBoost learners in one call.
-      snippet: |
-        # imbalanced-learn 0.14.2
-        from imblearn.ensemble import EasyEnsembleClassifier
-        from sklearn.datasets import make_classification
-        from sklearn.metrics import balanced_accuracy_score
-        from sklearn.model_selection import train_test_split
-
-        X, y = make_classification(
-            n_samples=1000, weights=[0.9, 0.1], random_state=0
-        )
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, stratify=y, random_state=0
-        )
-
-        model = EasyEnsembleClassifier(n_estimators=10, random_state=0)
-        model.fit(X_train, y_train)
-        print(balanced_accuracy_score(y_test, model.predict(X_test)))
-  what_comes_out:
-    items:
-      - {name: predict, kind: method, task: classification, shape: "(n_samples,)",
-         note: "Class labels, one per row."}
-      - {name: predict_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
-         note: "One column per class, in classes_ order. Keep [:, 1] for two classes."}
-      - {name: decision_function, kind: method, task: classification, shape: "(n_samples,)",
-         note: "Average of the inner learners' scores. Above 0 means class 1."}
-      - {name: predict_log_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
-         note: "Log of the class probabilities, same column order."}
-      - {name: score, kind: method, task: classification, shape: "float",
-         note: "Accuracy on the data given. Misleading when classes are lopsided."}
-      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)",
-         note: "Class labels, in the column order of predict_proba."}
-      - {name: n_features_in_, kind: attribute, task: null, shape: "int",
-         note: "Number of input columns seen in fit."}
-      - {name: feature_names_in_, kind: attribute, task: null, shape: "(n_features,)",
-         note: "Column names, only if fit got a DataFrame."}
-    next_step: ROC AUC and PR curves need predict_proba, not predict.
+  - library: imbalanced-learn
+    target: imblearn.ensemble.EasyEnsembleClassifier
+    why_this_library: Bag of balanced AdaBoost learners in one call.
     snippet: |
       # imbalanced-learn 0.14.2
       from imblearn.ensemble import EasyEnsembleClassifier
@@ -101,44 +91,212 @@ slots:
       from sklearn.model_selection import train_test_split
 
       X, y = make_classification(
-          n_samples=1000, weights=[0.9, 0.1], random_state=0
+          n_samples=160, n_features=5, n_informative=3, n_redundant=0,
+          weights=[0.9, 0.1], random_state=42,
       )
       X_train, X_test, y_train, y_test = train_test_split(
-          X, y, stratify=y, random_state=0
+          X, y, test_size=0.25, stratify=y, random_state=42
       )
-
-      model = EasyEnsembleClassifier(n_estimators=10, random_state=0)
+      model = EasyEnsembleClassifier(n_estimators=5, random_state=42, n_jobs=1)
       model.fit(X_train, y_train)
-      print(model.predict_proba(X_test).shape)
-      print(model.decision_function(X_test).shape)
-      print(model.classes_)
+      y_pred = model.predict(X_test[:3])
+      y_proba = model.predict_proba(X_test[:3])
+      y_score = model.decision_function(X_test[:3])
+      print("y_pred:", y_pred)
+      print("y_proba:")
+      print(y_proba.round(3))
+      print("y_score:", y_score.round(3))
+      print("classes_:", model.classes_)
+      print("balanced ensembles:", len(model.estimators_))
+      print("outer draw size:", len(model.estimators_samples_[0]))
+      first_pipe = model.estimators_[0]
+      sampled = first_pipe.named_steps["sampler"].sample_indices_
+      print("first balanced subset rows:", len(sampled))
+    output: |
+      y_pred: [0 0 0]
+      y_proba:
+      [[0.619 0.381]
+       [0.583 0.417]
+       [0.575 0.425]]
+      y_score: [-0.487 -0.339 -0.309]
+      classes_: [0 1]
+      balanced ensembles: 5
+      outer draw size: 120
+      first balanced subset rows: 24
+  what_comes_out:
+    items:
+    - name: predict
+      kind: method
+      task: classification
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[0, 1, 0]'
+      shape_explanation: One prediction per input row. n_samples is the number of rows; this example has shape (3,).
+      note: Labels chosen from the fitted class scores/probabilities.
+    - name: predict_proba
+      kind: method
+      task: classification
+      shape: (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[[0.80, 0.20], [0.35, 0.65], [0.90, 0.10]]'
+      shape_explanation: A table with n_samples rows and n_classes columns. The example has 3 rows and 2 classes, shape (3, 2).
+      note: One probability column per class, ordered as classes_.
+    - name: decision_function
+      kind: method
+      task: classification
+      shape: (n_samples,) or (n_samples,n_classes)
+      object_type: numpy.ndarray
+      example: '[-0.6, 0.3, -0.8]'
+      shape_explanation: Binary output has one signed score per row, shape (3,). Multiclass output has one score per row and class.
+      note: Raw ensemble score, not a probability; positive binary scores favor classes_[1].
+    - name: classes_
+      kind: attribute
+      task: classification
+      shape: (n_classes,)
+      object_type: numpy.ndarray
+      example: '[0, 1]'
+      shape_explanation: A one-dimensional array with n_classes labels. This two-class example has shape (2,).
+      note: Labels in probability-column order.
+    - name: estimators_
+      kind: attribute
+      task: null
+      shape: (n_estimators,)
+      object_type: list[Pipeline]
+      example: '[Pipeline(steps=[(''sampler'', RandomUnderSampler(...)), (''classifier'', AdaBoostClassifier(...))]), Pipeline(steps=[(''sampler'', RandomUnderSampler(...)), (''classifier'', AdaBoostClassifier(...))])]'
+      shape_explanation: A fitted list contains n_estimators pipelines; this concrete fictional example shows 2. Each pipeline has sampler and classifier steps.
+      note: Each fitted pipeline contains a sampler followed by an AdaBoost classifier.
+    - name: estimators_samples_
+      kind: attribute
+      task: null
+      shape: (n_estimators,) of index arrays
+      object_type: list[numpy.ndarray]
+      example: '[[0, 2, 5, 9], [1, 3, 6, 8]]'
+      shape_explanation: This concrete list shows 2 estimators, each with 4 outer training-row indices. The full fitted list has n_estimators arrays.
+      note: Outer bag row indices before each pipeline sampler; these are training metadata.
+    - name: n_features_in_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: int
+      example: '5'
+      shape_explanation: A scalar integer count of original input columns.
+      note: Number of columns presented to fit.
+    next_step: null
+    snippet: |
+      # imbalanced-learn 0.14.2
+      from imblearn.ensemble import EasyEnsembleClassifier
+      from sklearn.datasets import make_classification
+      from sklearn.model_selection import train_test_split
+
+      X, y = make_classification(
+          n_samples=160, n_features=5, n_informative=3, n_redundant=0,
+          weights=[0.9, 0.1], random_state=42,
+      )
+      X_train, X_test, y_train, y_test = train_test_split(
+          X, y, test_size=0.25, stratify=y, random_state=42
+      )
+      model = EasyEnsembleClassifier(n_estimators=5, random_state=42, n_jobs=1)
+      model.fit(X_train, y_train)
+      y_pred = model.predict(X_test[:3])
+      y_proba = model.predict_proba(X_test[:3])
+      y_score = model.decision_function(X_test[:3])
+      print("y_pred:", y_pred)
+      print("y_proba:")
+      print(y_proba.round(3))
+      print("y_score:", y_score.round(3))
+      print("classes_:", model.classes_)
+      print("balanced ensembles:", len(model.estimators_))
+      print("outer draw size:", len(model.estimators_samples_[0]))
+      first_pipe = model.estimators_[0]
+      sampled = first_pipe.named_steps["sampler"].sample_indices_
+      print("first balanced subset rows:", len(sampled))
     snippet_library: imbalanced-learn
     visual: proba_table
+    guidance:
+    - task: classification
+      text: Use labels for confusion matrices, probabilities for probabilistic ranking, and balanced metrics when class counts differ.
+    output: |
+      y_pred: [0 0 0]
+      y_proba:
+      [[0.619 0.381]
+       [0.583 0.417]
+       [0.575 0.425]]
+      y_score: [-0.487 -0.339 -0.309]
+      classes_: [0 1]
+      balanced ensembles: 5
+      outer draw size: 120
+      first balanced subset rows: 24
   catch_outs:
-    - Missing values stop fit. Impute them first.
-    - Accuracy looks fine on lopsided data. Use balanced accuracy.
-    - Text columns fail. Encode them first.
+  - Missing values stop fit. Impute them first.
+  - Accuracy looks fine on lopsided data. Use balanced accuracy.
+  - Text columns fail. Encode them first.
   key_settings:
     tier1:
-      - {name: sampling_strategy, page: null}
-      - {name: estimator, page: null}
-      - {name: replacement, page: null}
-      - {name: n_estimators, page: n-estimators}
+    - name: sampling_strategy
+      page: null
+      controls: Class counts targeted by each independent random under-sample.
+      effect: More balancing discards more majority examples; too few can lose useful information.
+    - name: estimator
+      page: null
+      controls: AdaBoost classifier trained on each balanced subset.
+      effect: A stronger inner learner can fit more structure but raises cost and overfit risk.
+    - name: replacement
+      page: null
+      controls: Whether majority rows can be drawn more than once in each subset.
+      effect: Replacement may repeat rows; without it the subset contains distinct selected rows.
+    - name: n_estimators
+      page: n-estimators
+      controls: Number of independent balanced AdaBoost ensembles to bag.
+      effect: More learners can stabilise averaged predictions but cost more to fit and predict.
     tier2: []
     tier3: []
-  watch_it_work: {none: true}
+  watch_it_work:
+    none: true
   intuition:
     idea: Many AdaBoost models, each trained on a balanced sample of the rows.
     analogy: Several tutors, each coaching a fair mix of students.
     animation: none
-    good_at: [rare classes, tabular data, boosted learners]
-    bad_at: [tiny data, images or text, need a simple formula]
+    good_at:
+    - rare classes
+    - tabular data
+    - boosted learners
+    bad_at:
+    - tiny data
+    - images or text
+    - need a simple formula
     vs_siblings:
-      - {page: balancedbaggingclassifier, note: "Same bagging idea. Works with any base model."}
-      - {page: ada-boost, note: "One boosted model. This bags many on balanced samples."}
-      - {page: rusboostclassifier, note: "Boosting that under-samples each round."}
+    - page: balancedbaggingclassifier
+      note: Same bagging idea. Works with any base model.
+    - page: ada-boost
+      note: One boosted model. This bags many on balanced samples.
+    - page: rusboostclassifier
+      note: Boosting that under-samples each round.
     read_more:
-      - Draw a balanced sample of the rows.
-      - Fit a small AdaBoost model on it.
-      - Repeat, then combine the models.
-  next: [but-imbalanced-score, but-resample-in-cv]
+    - Draw a balanced sample of the rows.
+    - Fit a small AdaBoost model on it.
+    - Repeat, then combine the models.
+    goal: Bag several AdaBoost classifiers, each trained on its own balanced random under-sample.
+    steps:
+    - Draw an independent balanced subset of training rows for each outer learner
+    - Fit an AdaBoost classifier on that subset
+    - Average the outer learners’ probabilities and combine their margins for scores
+    - Unlike RUSBoost, each learner sees a separate balanced subset rather than resampling every boosting round.
+    math:
+      notation:
+      - symbol: j
+        meaning: Outer balanced-subset learner index.
+      - symbol: S_j
+        meaning: Balanced training subset for outer learner j.
+      - symbol: A_j
+        meaning: AdaBoost model fitted on subset S_j.
+      - symbol: p_j(c|x)
+        meaning: Outer learner j probability for class c.
+      - symbol: J
+        meaning: Number of fitted outer learners.
+      equations:
+      - expression: p(c|x)=J⁻¹Σ_j p_j(c|x)
+        meaning: The ensemble averages probabilities from AdaBoost pipelines trained on separate balanced subsets.
+      prediction: predict_proba averages balanced-learner probabilities; decision_function returns scores, not labels or sampled rows.
+  next:
+  - but-imbalanced-score
+  - but-resample-in-cv

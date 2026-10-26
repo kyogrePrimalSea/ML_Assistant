@@ -10,7 +10,12 @@ export function Code({ tabs }: { tabs: CodeTab[] }) {
       ) : (
         <CodeTabs
           className="min-w-0 [&_[data-slot=tabs-content]]:min-w-0 [&_[data-slot=tabs-content]]:grid-cols-1 [&_[data-slot=code-block]]:min-w-0"
-          tabs={tabs.map((t) => ({ library: t.library, why_this_library: t.why_this_library, code: t.snippet }))} />
+          tabs={tabs.map((t) => ({
+            library: t.library,
+            why_this_library: t.why_this_library,
+            code: t.snippet,
+            output: t.output,
+          }))} />
       )}
     </Slot>
   )

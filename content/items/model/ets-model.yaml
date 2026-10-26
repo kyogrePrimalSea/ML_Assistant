@@ -1,106 +1,256 @@
 id: ets-model
 plain_name: ETSModel
 code_name: ETSModel
-aliases: [ets]
+aliases:
+- ets
 stage: model
 family: model.ts-smooth
-tracks: [time-series]
+tracks:
+- time-series
 archetype: model
-question_tags: [forecast, seasonal, intervals]
-targets: [statsmodels.tsa.exponential_smoothing.ets.ETSModel]
+question_tags:
+- forecast
+- seasonal
+- intervals
+targets:
+- statsmodels.tsa.exponential_smoothing.ets.ETSModel
 pairs_with: []
 clashes: []
-source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.tsa.exponential_smoothing.ets.ETSModel.html']
-library_versions: {statsmodels: 0.15.0}
+source_urls:
+- https://www.statsmodels.org/stable/generated/statsmodels.tsa.exponential_smoothing.ets.ETSModel.html
+- https://www.statsmodels.org/stable/generated/statsmodels.tsa.exponential_smoothing.ets.ETSResults.forecast.html
+- https://www.statsmodels.org/stable/generated/statsmodels.tsa.exponential_smoothing.ets.ETSResults.get_prediction.html
+library_versions:
+  statsmodels: 0.15.0
 reviewed: false
 rules:
-  task_types: [regression]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: airline-passengers, shape: fit_line}
+    hero:
+      kind: model
+      dataset: airline-passengers
+      shape: fit_line
     line: Level, trend and season, with a range around each forecast.
   quick_facts:
     data_size: 2+ seasons, e.g. 24 monthly points
   use_avoid:
-    use_when: [trend and season, need a range, not one number]
-    avoid_when: [outside drivers needed]
+    use_when:
+    - trend and season
+    - need a range
+    - not one number
+    avoid_when:
+    - outside drivers needed
   prep:
-    - step: {family: explore.stationarity}
-      status: recommended
-      why: Check whether the series keeps a steady mean.
-      condition: null
-      unless: null
-    - step: {family: split.time}
-      status: recommended
-      why: Test on the latest months, never on random rows.
-      condition: null
-      unless: null
+  - step:
+      family: explore.stationarity
+    status: recommended
+    why: Check whether the series keeps a steady mean.
+    condition: null
+    unless: null
+  - step:
+      family: split.time
+    status: recommended
+    why: Test on the latest months, never on random rows.
+    condition: null
+    unless: null
   code:
-    - library: statsmodels
-      target: statsmodels.tsa.exponential_smoothing.ets.ETSModel
-      why_this_library: Same smoothing idea, fitted as a statistical model.
-      snippet: |
-        # statsmodels 0.15.0
-        import numpy as np
-        from statsmodels.tsa.exponential_smoothing.ets import ETSModel
+  - library: statsmodels
+    target: statsmodels.tsa.exponential_smoothing.ets.ETSModel
+    why_this_library: Same smoothing idea, fitted as a statistical model.
+    snippet: "# statsmodels 0.15.0\nimport numpy as np\nimport pandas as pd\nfrom statsmodels.tsa.exponential_smoothing.ets\
+      \ import ETSModel\n\nrng = np.random.default_rng(0)\nt = np.arange(144)\ny = 100 + 0.8 * t + 10 * np.sin(2\
+      \ * np.pi * t / 12)\ny = y + rng.normal(0, 2, 144)\ny = pd.Series(y)\n\nmodel = ETSModel(\n    y[:132], error=\"\
+      add\", trend=\"add\", seasonal=\"add\",\n    seasonal_periods=12,\n)\nres = model.fit(disp=False)\ny_pred\
+      \ = res.forecast(3)\npred = res.get_prediction(start=132, end=134)\nci = pred.pred_int()\nprint(\"forecast:\"\
+      , np.round(y_pred, 2).tolist())\nprint(\"interval shape:\", ci.shape)\nprint(\"params shape:\", res.params.shape,\
+      \ \"resid shape:\", res.resid.shape)\n"
+    output: 'forecast: [205.06, 211.32, 216.09]
 
-        rng = np.random.default_rng(0)
-        t = np.arange(144)
-        y = 100 + 0.8 * t + 10 * np.sin(2 * np.pi * t / 12)
-        y = y + rng.normal(0, 2, 144)
+      interval shape: (3, 2)
 
-        model = ETSModel(
-            y[:132], error="add", trend="add", seasonal="add",
-            seasonal_periods=12,
-        )
-        res = model.fit(disp=False)
-        print(np.round(res.predict(132, 143), 1).tolist())
+      params shape: (17,) resid shape: (132,)
+
+      '
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: regression, shape: "(n_obs,) or (n_steps,)",
-         note: "Fitted values in sample, forecasts past the end."}
-      - {name: score, kind: method, task: null, shape: "(n_params,)",
-         note: "Score vector of the likelihood at the given params."}
-      - {name: endog_names, kind: attribute, task: null, shape: "str",
-         note: "Name of the series. 'y' when the input has no name."}
-      - {name: exog_names, kind: attribute, task: null, shape: "None",
-         note: "None here. ETS takes no outside drivers."}
-    next_step: null
+    - name: fitted Results object
+      kind: return
+      task: null
+      shape: results object
+      note: Returned by model.fit(); holds fitted parameters and forecasting methods.
+      object_type: statsmodels ETSResultsWrapper
+      example: ETSResultsWrapper(...)
+      shape_explanation: A fitted Python ETSResultsWrapper object, with no array shape; it holds estimates and prediction
+        methods.
+    - name: forecast result
+      kind: return
+      task: regression
+      shape: (steps,)
+      note: forecast(steps) returns means; get_prediction adds intervals and predict(start,end) selects positions.
+      object_type: pandas.Series
+      example: Series([205.1, 211.3, 216.1], index=[132, 133, 134])
+      shape_explanation: Three forecast values are indexed at future positions 132–134; steps=3, so the Series has
+        shape (3,).
+    - name: prediction interval
+      kind: return
+      task: regression
+      shape: (steps, 2)
+      note: Lower and upper forecast limits; these are uncertainty bounds, not probabilities.
+      object_type: pandas.DataFrame
+      example: 'DataFrame({''lower'': [201.6, 207.8, 212.6], ''upper'': [208.5, 214.8, 219.6]})'
+      shape_explanation: Three forecast rows and lower/upper columns give (steps, 2) = (3, 2); the table has a time
+        index.
+    - name: fitted parameters
+      kind: return
+      task: null
+      shape: (n_params,)
+      note: Estimated coefficients or smoothing states.
+      object_type: numpy.ndarray
+      example: '[0.2, 0.4, 0.1]'
+      shape_explanation: n_params counts estimated entries; this fictional example shows three values.
+    - name: residuals
+      kind: return
+      task: regression
+      shape: (n_effective_obs,)
+      note: Observed minus fitted values on the estimation sample.
+      object_type: numpy.ndarray
+      example: '[0.1, -0.2, 0.05]'
+      shape_explanation: n_effective_obs counts observations used for residuals; this fictional example has three.
+    - name: AIC
+      kind: return
+      task: null
+      shape: scalar
+      note: Likelihood-based fit criterion for comparing compatible models.
+      object_type: numpy.float64
+      example: np.float64(128.4)
+      shape_explanation: A numpy.float64 scalar contains one criterion value and has no array dimensions.
+    next_step: Compare forecasts with a held-out future window and inspect residual patterns.
     visual: null
+    snippet: "# statsmodels 0.15.0\nimport numpy as np\nimport pandas as pd\nfrom statsmodels.tsa.exponential_smoothing.ets\
+      \ import ETSModel\n\nrng = np.random.default_rng(0)\nt = np.arange(144)\ny = 100 + 0.8 * t + 10 * np.sin(2\
+      \ * np.pi * t / 12)\ny = y + rng.normal(0, 2, 144)\ny = pd.Series(y)\n\nmodel = ETSModel(\n    y[:132], error=\"\
+      add\", trend=\"add\", seasonal=\"add\",\n    seasonal_periods=12,\n)\nres = model.fit(disp=False)\ny_pred\
+      \ = res.forecast(3)\npred = res.get_prediction(start=132, end=134)\nci = pred.pred_int()\nprint(\"forecast:\"\
+      , np.round(y_pred, 2).tolist())\nprint(\"intervals:\", np.round(ci.to_numpy(), 2).tolist())\nprint(\"params:\"\
+      , np.round(res.params, 2).tolist())\nprint(\"resid shape:\", res.resid.shape)\nprint(\"AIC:\", round(float(res.aic),\
+      \ 2))\nprint(\"params shape:\", res.params.shape, \"resid shape:\", res.resid.shape)\n"
+    snippet_library: statsmodels
+    output: 'forecast: [205.06, 211.32, 216.09]
+
+      intervals: [[201.57, 208.54], [207.84, 214.81], [212.6, 219.57]]
+
+      params: [0.0, 0.0, 0.0, 98.94, 0.8, -3.73, -8.57, -10.34, -7.92, -3.45, 0.63, 6.35, 8.41, 9.58, 9.44, 5.47,
+      0.0]
+
+      resid shape: (132,)
+
+      AIC: 562.65
+
+      params shape: (17,) resid shape: (132,)
+
+      '
   catch_outs:
-    - Seasonal fits need about two full seasons of history.
-    - No outside drivers. Use sarimax if you have them.
+  - Seasonal fits need about two full seasons of history.
+  - No outside drivers. Use sarimax if you have them.
   key_settings:
     tier1:
-      - {name: seasonal_periods, page: null}
-      - {name: trend, page: null}
-      - {name: seasonal, page: null}
-      - {name: error, page: null}
+    - name: seasonal_periods
+      page: null
+      controls: Number of observations in one seasonal cycle.
+      effect: Wrong cycle length misaligns the seasonal state.
+    - name: trend
+      page: null
+      controls: Component type for trend (additive, multiplicative or absent where supported).
+      effect: Changing trend changes how this component combines with the state and errors.
+    - name: seasonal
+      page: null
+      controls: Component type for seasonal (additive, multiplicative or absent where supported).
+      effect: Changing seasonal changes how this component combines with the state and errors.
+    - name: error
+      page: null
+      controls: Component type for error (additive, multiplicative or absent where supported).
+      effect: Changing error changes how this component combines with the state and errors.
     tier2:
-      - {name: damped_trend, page: null}
-      - {name: initialization_method, page: null}
-      - {name: initial_seasonal, page: null}
-      - {name: bounds, page: null}
+    - name: damped_trend
+      page: null
+      controls: Whether the trend contribution decays with forecast horizon.
+      effect: Damping limits long-range trend growth.
+    - name: initialization_method
+      page: null
+      controls: How starting level, trend and season states are set.
+      effect: Known uses supplied states; estimated fits them; heuristic initializes from data.
+    - name: initial_seasonal
+      page: null
+      controls: Initial seasonal states when initialization is known.
+      effect: Starting states affect early fitted values and optimization.
+    - name: bounds
+      page: null
+      controls: Allowed bounds for smoothing and component parameters.
+      effect: Tighter bounds constrain fitted component dynamics.
     tier3:
-      - {name: initial_level, page: null}
-      - {name: initial_trend, page: null}
-      - {name: missing, page: null}
-  watch_it_work: {none: true}
+    - name: initial_level
+      page: null
+      controls: Known starting level when using known initialization.
+      effect: A supplied level fixes the initial state rather than estimating it.
+    - name: initial_trend
+      page: null
+      controls: Known starting trend when using known initialization.
+      effect: A supplied trend fixes the initial slope rather than estimating it.
+    - name: missing
+      page: null
+      controls: How missing observations are handled.
+      effect: Missing values can break a regular sequence; handle them before fitting.
+  watch_it_work:
+    none: true
   intuition:
     idea: Holt-Winters style smoothing, fitted as a statistical model with a noise term.
     analogy: Like a weather app that gives a forecast with a chance of rain.
     animation: none
-    good_at: [trend and season, ranges around forecasts]
-    bad_at: [outside drivers, very short series]
+    good_at:
+    - trend and season
+    - ranges around forecasts
+    bad_at:
+    - outside drivers
+    - very short series
     vs_siblings:
-      - {page: exponential-smoothing, note: "Same idea, built as a state space model."}
-      - {page: theta-model, note: "A simpler benchmark to beat."}
-    read_more:
-      - Pick the error, trend and seasonal types.
-      - Set seasonal_periods to the season length.
-      - Fit by maximum likelihood, then predict past the end.
+    - page: exponential-smoothing
+      note: Same idea, built as a state space model.
+    - page: theta-model
+      note: A simpler benchmark to beat.
+    read_more: &id001
+    - Choose additive or multiplicative error, trend and seasonal components.
+    - Estimate smoothing and initial-state parameters by likelihood.
+    - Update level, trend and season from each new error, then project states forward.
+    goal: Fit an error, trend and seasonal state-space model and forecast its evolving components.
+    steps: *id001
+    math:
+      notation:
+      - symbol: ℓ_t
+        meaning: level state at time t
+      - symbol: b_t
+        meaning: trend state
+      - symbol: s_t
+        meaning: seasonal state; period m
+      - symbol: α,β,γ
+        meaning: level, trend and seasonal smoothing parameters
+      - symbol: e_t
+        meaning: observation minus one-step forecast
+      - symbol: m
+        meaning: observations per seasonal cycle
+      - symbol: ŷ_{t|t-1}
+        meaning: one-step-ahead forecast before observing y_t
+      equations:
+      - expression: ŷ_{t|t-1}=ℓ_{t-1}+b_{t-1}+s_{t-m}
+        meaning: For additive components, combine prior level, trend and the matching seasonal state.
+      - expression: ℓ_t=ℓ_{t-1}+b_{t-1}+αe_t; b_t=b_{t-1}+βe_t; s_t=s_{t-m}+γe_t
+        meaning: Smoothing parameters determine how new forecast errors update each state.
+      prediction: Project fitted level, trend and seasonal states; multiplicative components combine by products.
   next: []

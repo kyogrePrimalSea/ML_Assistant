@@ -1,107 +1,251 @@
 id: svc
 plain_name: SVC
 code_name: SVC
-aliases: ["support vector classifier", "svm classifier", "svc"]
+aliases:
+- support vector classifier
+- svm classifier
+- svc
 stage: model
 family: model.neighbours.kernel
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: ["curved boundary", "clean scaled data", "small to medium data"]
-targets: ["sklearn.svm.SVC"]
+question_tags:
+- curved boundary
+- clean scaled data
+- small to medium data
+targets:
+- sklearn.svm.SVC
 pairs_with: []
 clashes: []
-source_urls: ["https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html"]
-library_versions: {scikit-learn: "1.9.1"}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: ["classification"]
+  task_types:
+  - classification
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: breast-cancer, shape: boundary}
-    line: "Draws the widest gap between classes, with a kernel."
+    hero:
+      kind: model
+      dataset: breast-cancer
+      shape: boundary
+    line: Choose a kernel boundary with a wide margin while penalizing training points on the wrong side.
   quick_facts:
-    data_size: "Up to about 10,000 rows"
+    data_size: Up to about 10,000 rows
   use_avoid:
-    use_when: ["clean scaled data", "curved boundary", "up to 10,000 rows"]
-    avoid_when: ["large data", "probabilities by default", "images or text"]
+    use_when:
+    - clean scaled data
+    - curved boundary
+    - up to 10,000 rows
+    avoid_when:
+    - large data
+    - probabilities by default
+    - images or text
   prep:
-    - step: {family: transform.scale.rescale}
-      status: required
-      why: "Margins need comparable scales; strong on scaled data."
-      condition: null
-      unless: null
+  - step:
+      family: transform.scale.rescale
+    status: required
+    why: Margins need comparable scales; strong on scaled data.
+    condition: null
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.svm.SVC
-      why_this_library: "Built into scikit-learn; no extra install."
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import load_breast_cancer
-        from sklearn.model_selection import train_test_split
-        from sklearn.pipeline import make_pipeline
-        from sklearn.preprocessing import StandardScaler
-        from sklearn.svm import SVC
+  - library: scikit-learn
+    target: sklearn.svm.SVC
+    why_this_library: Built into scikit-learn; no extra install.
+    snippet: "# scikit-learn 1.9.1\nfrom sklearn.datasets import load_breast_cancer\nfrom sklearn.model_selection\
+      \ import train_test_split\nfrom sklearn.pipeline import make_pipeline\nfrom sklearn.preprocessing\
+      \ import StandardScaler\nfrom sklearn.svm import SVC\n\nX, y = load_breast_cancer(return_X_y=True)\n\
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)\n\nmodel = make_pipeline(\n\
+      \    StandardScaler(),\n    SVC(kernel=\"rbf\", C=1.0),\n)\nmodel.fit(X_train, y_train)\ny_pred\
+      \ = model.predict(X_test[:3])\nprint(\"y_pred:\", y_pred)\nprint(\"score:\", round(model.score(X_test,\
+      \ y_test), 3))"
+    output: 'y_pred: [0 1 1]
 
-        X, y = load_breast_cancer(return_X_y=True)
-        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+      score: 0.965
 
-        model = make_pipeline(
-            StandardScaler(),
-            SVC(kernel="rbf", C=1.0),
-        )
-        model.fit(X_train, y_train)
-        print(round(model.score(X_test, y_test), 3))
+      '
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: classification, shape: "(n_samples,)",
-         note: "Class labels."}
-      - {name: decision_function, kind: method, task: classification, shape: "(n_samples,) for two classes",
-         note: "Signed score per row. Above 0 means classes_[1]."}
-      - {name: score, kind: method, task: classification, shape: "float",
-         note: "Accuracy on the data you pass in."}
-      - {name: support_vectors_, kind: attribute, task: null, shape: "(n_SV, n_features)",
-         note: "The rows the model kept as support vectors."}
-      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)",
-         note: "Class labels, in the order decision_function uses."}
-    next_step: "Set probability=True before fit to get predict_proba."
+    - name: predict
+      kind: method
+      task: classification
+      shape: (n_samples,)
+      note: Class labels.
+      object_type: numpy.ndarray
+      example: '[''class_A'', ''class_B'', ''class_B'']'
+      shape_explanation: One class label per query row; this has three labels, so n_samples=3 and shape
+        (3,).
+    - name: decision_function
+      kind: method
+      task: classification
+      shape: binary (n_samples,); multiclass OVR
+      note: 'Binary: (n_samples,); OVR: (n_samples, n_classes); OVO: (n_samples, n_classes*(n_classes-1)/2).'
+      object_type: numpy.ndarray
+      example: '[-1.2, 0.4, 1.1]'
+      shape_explanation: This fictional example is binary with 3 query rows, hence shape (3,). Multiclass
+        OVR gives one score per class; OVO gives one per class pair.
+    - name: predict_proba
+      kind: method
+      task: classification
+      shape: (n_samples, n_classes)
+      note: Calibrated probabilities; columns follow classes_ order.
+      object_type: numpy.ndarray
+      example: '[[0.8, 0.2], [0.3, 0.7]]'
+      shape_explanation: Rows are query cases and columns follow classes_. This fictional example has
+        2 cases and 2 classes, shape (2, 2).
+    - name: score
+      kind: method
+      task: classification
+      shape: scalar
+      note: 'Accuracy: fraction of supplied rows whose predicted class matches the label.'
+      object_type: float
+      example: '0.82'
+      shape_explanation: A scalar is one value with no array dimensions; 0.82 is one score.
+    - name: support_vectors_
+      kind: attribute
+      task: null
+      shape: (n_SV, n_features)
+      note: The rows the model kept as support vectors.
+      object_type: numpy.ndarray
+      example: '[[0.2, -0.1], [1.0, 0.4]]'
+      shape_explanation: Rows are support vectors and columns are input features; this example has 2 vectors
+        and 2 features, shape (2, 2).
+    - name: classes_
+      kind: attribute
+      task: classification
+      shape: (n_classes,)
+      note: Class labels, in the order decision_function uses.
+      object_type: numpy.ndarray
+      example: '[''class_A'', ''class_B'']'
+      shape_explanation: n_classes is the number of labels learned during fit. This fictional binary example
+        lists two labels, so its shape is (2,).
+    next_step: Use predict_proba only when calibrated probabilities justify SVC’s extra fitting cost.
     visual: null
+    snippet: "# scikit-learn 1.9.1\nfrom sklearn.datasets import load_breast_cancer\nfrom sklearn.svm\
+      \ import SVC\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.pipeline import make_pipeline\n\
+      \ndata = load_breast_cancer(as_frame=True)\nmodel = make_pipeline(\n    StandardScaler(),\n    SVC(kernel=\"\
+      rbf\", C=1.0, probability=True),\n).fit(data.data, data.target)\ny_pred = model.predict(data.data[:3])\n\
+      y_score = model.decision_function(data.data[:3])\ny_proba = model.predict_proba(data.data[:3])\n\
+      svc = model[-1]\nprint(\"y_pred:\", y_pred)\nprint(\"decision_function:\", y_score.round(3))\nprint(\"\
+      predict_proba:\")\nprint(y_proba.round(3))\nprint(\"classes_:\", svc.classes_)\nprint(\"support_vectors_\
+      \ shape:\", svc.support_vectors_.shape)\n"
+    snippet_library: scikit-learn
+    output: "y_pred: [0 0 0]\ndecision_function: [-1.    -1.88  -2.444]\npredict_proba:\n[[0.982 0.018]\n\
+      \ [0.999 0.001]\n [1.    0.   ]]\nclasses_: [0 1]\nsupport_vectors_ shape: (119, 30)\n"
   catch_outs:
-    - "predict_proba is missing unless probability=True is set before fit."
-    - "Unscaled features scored 0.94 here; scaled features scored 0.97."
-    - "Up to about 10,000 rows; training slows past that."
+  - predict_proba is missing unless probability=True is set before fit.
+  - Unscaled features scored 0.94 here; scaled features scored 0.97.
+  - Up to about 10,000 rows; training slows past that.
   key_settings:
     tier1:
-      - {name: kernel, page: null}
-      - {name: C, page: null}
-      - {name: gamma, page: null}
-      - {name: probability, page: null}
+    - name: kernel
+      page: null
+      controls: Similarity function, such as linear, polynomial, or RBF.
+      effect: Nonlinear kernels allow curved boundaries; precomputed expects a kernel matrix.
+    - name: C
+      page: null
+      controls: Penalty strength for errors and margin violations.
+      effect: Larger C fits training rows more closely; smaller C allows more violations for a wider,
+        smoother margin.
+    - name: gamma
+      page: null
+      controls: Kernel coefficient for RBF, polynomial, and sigmoid kernels.
+      effect: Larger gamma makes similarity fall off faster and can create more local fits.
+    - name: probability
+      page: null
+      controls: Enables SVC probability estimates through internal calibration.
+      effect: Costs extra fit time, may disagree with predict, and is deprecated in sklearn 1.9; prefer
+        calibrated classifier.
     tier2:
-      - {name: class_weight, page: null}
-      - {name: decision_function_shape, page: null}
-      - {name: break_ties, page: null}
+    - name: class_weight
+      page: null
+      controls: Class-specific multipliers for C; balanced weights invert class frequencies.
+      effect: Higher weight makes errors for that class more costly.
+    - name: decision_function_shape
+      page: null
+      controls: 'Multiclass decision score layout: one-vs-rest or one-vs-one.'
+      effect: Changes multiclass score columns; training remains one-vs-one.
+    - name: break_ties
+      page: null
+      controls: Resolve multiclass ties using confidence scores when shape is one-vs-rest.
+      effect: Can improve tie handling at extra prediction cost.
     tier3:
-      - {name: degree, page: null}
-      - {name: coef0, page: null}
-      - {name: shrinking, page: null}
-      - {name: tol, page: null}
-      - {name: max_iter, page: null}
-      - {name: cache_size, page: null}
-  watch_it_work: {none: true}
+    - name: degree
+      page: null
+      controls: Polynomial kernel degree.
+      effect: Higher degree makes the polynomial boundary more flexible.
+    - name: coef0
+      page: null
+      controls: Independent term used by polynomial and sigmoid kernels.
+      effect: It changes how higher-order and lower-order terms trade off.
+    - name: shrinking
+      page: null
+      controls: Whether to use the shrinking heuristic during optimization.
+      effect: Can speed optimization; disabling it can help diagnose convergence.
+    - name: tol
+      page: null
+      controls: Optimization stopping tolerance.
+      effect: Smaller tolerance can take longer for a tighter stopping condition.
+    - name: max_iter
+      page: null
+      controls: Iteration cap; -1 means no cap.
+      effect: A low cap may stop before convergence.
+    - name: cache_size
+      page: null
+      controls: Kernel cache size in MB.
+      effect: A larger cache can reduce recomputation at a memory cost.
+  watch_it_work:
+    none: true
   intuition:
-    idea: "Find the widest gap between the classes, set by the rows at the edge."
-    analogy: "Drawing a road between two towns, with the closest houses as the edges."
+    idea: Find the widest gap between the classes, set by the rows at the edge.
+    analogy: Drawing a road between two towns, with the closest houses as the edges.
     animation: none
-    good_at: ["clean scaled data", "curved boundaries", "small to medium tables"]
-    bad_at: ["large data", "probabilities by default", "images or text"]
+    good_at:
+    - clean scaled data
+    - curved boundaries
+    - small to medium tables
+    bad_at:
+    - large data
+    - probabilities by default
+    - images or text
     vs_siblings:
-      - {page: gaussian-process-classifier, note: "GPC gives probabilities by default."}
-      - {page: k-neighbors-classifier, note: "KNN only looks at rows; no fitted boundary."}
-    read_more:
-      - "Pick a kernel to measure how alike two rows are."
-      - "Keep the widest gap that splits the classes."
-      - "Rows on the margin edge are the support vectors."
+    - page: gaussian-process-classifier
+      note: GPC gives probabilities by default.
+    - page: k-neighbors-classifier
+      note: KNN only looks at rows; no fitted boundary.
+    goal: Separate classes with a wide kernel margin while penalizing margin violations according to C.
+    math:
+      notation:
+      - symbol: K(x_i,x)
+        meaning: kernel similarity between two rows
+      - symbol: α_i
+        meaning: dual coefficient for training row i
+      - symbol: y_i
+        meaning: class encoded as -1 or +1 in a binary problem
+      - symbol: C
+        meaning: penalty for margin violations
+      - symbol: SV
+        meaning: training rows with nonzero dual coefficients
+      equations:
+      - expression: min ½||w||²+CΣ_i max(0,1-y_i(w·φ(x_i)+b))
+        meaning: Trade a wide margin against hinge-loss penalties for violations.
+      - expression: f(x)=Σ_{i∈SV} α_i y_i K(x_i,x)+b
+        meaning: The binary decision score is a signed sum of support-vector similarities.
+      - expression: predict(x)=class with greatest one-vs-one vote
+        meaning: Multiclass labels come from pairwise classifiers; OVR scores are built from those comparisons.
+      prediction: 'Binary margins: (n_samples,). Multiclass OVR: (n_samples,n_classes); OVO: (n_samples,n_classes*(n_classes-1)/2).'
+    read_more: &id001
+    - Compute similarities through the selected kernel.
+    - Fit one-vs-one separating hyperplanes using the C-penalized margin objective.
+    - Use pairwise votes for labels; expose binary, one-vs-rest, or one-vs-one decision scores as configured.
+    steps: *id001
   next: []

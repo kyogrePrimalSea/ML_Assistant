@@ -1,89 +1,259 @@
 id: isotonic-regression
 plain_name: IsotonicRegression
 code_name: IsotonicRegression
-aliases: [isotonic, monotone regression, pava]
+aliases:
+- isotonic
+- monotone regression
+- pava
 stage: model
 family: model.awkward.shape
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [only goes up, monotone, trend]
-targets: [sklearn.isotonic.IsotonicRegression]
+question_tags:
+- only goes up
+- monotone
+- trend
+targets:
+- sklearn.isotonic.IsotonicRegression
 pairs_with: []
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.isotonic.IsotonicRegression.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.isotonic.IsotonicRegression.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [regression]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: ames, shape: fit_line}
+    hero:
+      kind: model
+      dataset: ames
+      shape: fit_line
     line: Fits a curve that only goes up, or only down.
   quick_facts:
     data_size: Any size
   use_avoid:
-    use_when: [steady trend, only up or down, no set shape]
-    avoid_when: [wiggly patterns, predictions outside the range, direction changes]
+    use_when:
+    - steady trend
+    - only up or down
+    - no set shape
+    avoid_when:
+    - wiggly patterns
+    - predictions outside the range
+    - direction changes
   prep:
-    - step: {family: clean.impute}
-      status: required
-      why: Stops with an error on NaN.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.scale.rescale}
-      status: not_needed
-      why: Only the order of X matters, not its scale.
-      condition: null
-      unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Stops with an error on NaN.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.scale.rescale
+    status: not_needed
+    why: Only the order of X matters, not its scale.
+    condition: null
+    unless: null
   code:
   - library: scikit-learn
     target: sklearn.isotonic.IsotonicRegression
     why_this_library: The scikit-learn fit, with predict and out-of-range control.
     snippet: |
       # scikit-learn 1.9.1
-      from sklearn.datasets import make_regression
+      import numpy as np
       from sklearn.isotonic import IsotonicRegression
 
-      X, y = make_regression(n_samples=100, n_features=1, noise=10.0,
-                             random_state=0)
-      iso = IsotonicRegression().fit(X[:, 0], y)
-      print(iso.predict([-1.0, 0.0, 1.0]).round(1))
+      X = np.array([0., 1., 2., 3., 4., 5.])
+      y = np.array([0., 2., 1., 3., 2., 5.])
+      model = IsotonicRegression(
+          increasing=True, out_of_bounds="clip", y_min=0.0, y_max=5.0,
+      ).fit(X, y)
+      query = np.array([-1., 1.5, 2.5, 6.])
+      y_pred = model.predict(query)
+      auto_model = IsotonicRegression(increasing="auto").fit(X, y)
+      print("y_pred:", np.round(y_pred, 2))
+      print("X_thresholds_:", model.X_thresholds_)
+      print("y_thresholds_:", model.y_thresholds_)
+      print("bounds:", model.X_min_, model.X_max_)
+      print("increasing_:", model.increasing_, "auto:", auto_model.increasing_)
+      print("score:", round(model.score(X, y), 3))
+    output: |
+      y_pred: [0.  1.5 2.  5. ]
+      X_thresholds_: [0. 1. 2. 3. 4. 5.]
+      y_thresholds_: [0.  1.5 1.5 2.5 2.5 5. ]
+      bounds: 0.0 5.0
+      increasing_: True auto: True
+      score: 0.933
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
-         note: "Linear interpolation. NaN outside the X range by default."}
-      - {name: X_min_, kind: attribute, task: null, shape: "float",
-         note: "Lowest X seen in training."}
-      - {name: X_max_, kind: attribute, task: null, shape: "float",
-         note: "Highest X seen in training."}
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[0.0, 1.5, 3.0, 5.0]'
+      shape_explanation: One fitted numeric value per query. Four query values produce shape (4,). Values between thresholds are linearly interpolated.
+      note: Outside the training range, behavior follows out_of_bounds; this example clips both ends.
+    - name: X_thresholds_
+      kind: attribute
+      task: null
+      shape: (n_thresholds,)
+      object_type: numpy.ndarray
+      example: '[0.0, 1.0, 2.0, 3.0]'
+      shape_explanation: One retained x threshold per knot. n_thresholds counts the knots; four shown values mean shape (4,).
+      note: Strictly increasing x knots used to interpolate the fitted function.
+    - name: y_thresholds_
+      kind: attribute
+      task: null
+      shape: (n_thresholds,)
+      object_type: numpy.ndarray
+      example: '[0.0, 1.5, 1.5, 3.0]'
+      shape_explanation: One monotone fitted y value per x knot; four values mean shape (4,).
+      note: Adjacent equal values create constant prediction intervals.
+    - name: X_min_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: float
+      example: '0.0'
+      shape_explanation: One scalar minimum training x, with no array dimensions.
+      note: Left edge of the fitted input domain.
+    - name: X_max_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: float
+      example: '5.0'
+      shape_explanation: One scalar maximum training x, with no array dimensions.
+      note: Right edge of the fitted input domain.
+    - name: increasing_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: bool
+      example: 'True'
+      shape_explanation: One boolean direction flag, not an array.
+      note: Resolved monotonic direction; increasing="auto" infers it from the sign of Spearman correlation.
+    - name: score
+      kind: method
+      task: regression
+      shape: scalar
+      object_type: float
+      example: '0.91'
+      shape_explanation: One scalar R² value, with no array dimensions.
+      note: Compares predictions with the evaluation target mean; it can be negative.
     next_step: Expect NaN for X outside the training range.
     visual: null
+    snippet: |
+      # scikit-learn 1.9.1
+      import numpy as np
+      from sklearn.isotonic import IsotonicRegression
+
+      X = np.array([0., 1., 2., 3., 4., 5.])
+      y = np.array([0., 2., 1., 3., 2., 5.])
+      model = IsotonicRegression(
+          increasing=True, out_of_bounds="clip", y_min=0.0, y_max=5.0,
+      ).fit(X, y)
+      query = np.array([-1., 1.5, 2.5, 6.])
+      y_pred = model.predict(query)
+      auto_model = IsotonicRegression(increasing="auto").fit(X, y)
+      print("y_pred:", np.round(y_pred, 2))
+      print("X_thresholds_:", model.X_thresholds_)
+      print("y_thresholds_:", model.y_thresholds_)
+      print("bounds:", model.X_min_, model.X_max_)
+      print("increasing_:", model.increasing_, "auto:", auto_model.increasing_)
+      print("score:", round(model.score(X, y), 3))
+    snippet_library: scikit-learn
+    output: |
+      y_pred: [0.  1.5 2.  5. ]
+      X_thresholds_: [0. 1. 2. 3. 4. 5.]
+      y_thresholds_: [0.  1.5 1.5 2.5 2.5 5. ]
+      bounds: 0.0 5.0
+      increasing_: True auto: True
+      score: 0.933
+    guidance:
+    - task: regression
+      text: Check monotonic direction and out_of_bounds behavior before using predictions outside the training domain.
   catch_outs:
-    - Predictions outside the training X range are NaN.
-    - Only the order of X matters, not its spacing.
-    - Set increasing to False for a curve that goes down.
+  - Predictions outside the training X range are NaN.
+  - Only the order of X matters, not its spacing.
+  - Set increasing to False for a curve that goes down.
   key_settings:
     tier1:
-    - {name: increasing, page: null}
-    - {name: out_of_bounds, page: null}
-    - {name: y_min, page: null}
-    - {name: y_max, page: null}
+    - name: increasing
+      page: null
+      controls: Constrains the fitted response to increase, decrease, or infer direction with auto.
+      effect: Changing direction reverses the allowed monotone trend; auto chooses from Spearman correlation sign.
+    - name: out_of_bounds
+      page: null
+      controls: Chooses nan, clip, or raise for inputs outside the fitted x range.
+      effect: nan returns missing predictions, clip uses endpoint values, and raise rejects the call.
+    - name: y_min
+      page: null
+      controls: Sets a lower bound on fitted predictions.
+      effect: Prevents predictions below the bound but does not force the minimum to equal it.
+    - name: y_max
+      page: null
+      controls: Sets an upper bound on fitted predictions.
+      effect: Prevents predictions above the bound but does not force the maximum to equal it.
     tier2: []
     tier3: []
-  watch_it_work: {none: true}
+  watch_it_work:
+    none: true
   intuition:
     idea: Fit steps that never go against the trend, then join them up.
     analogy: A staircase that never goes down, bent to fit the points.
     animation: none
-    good_at: [steady trends, monotone rules, no set shape]
-    bad_at: [wiggly patterns, extrapolation, direction changes]
+    good_at:
+    - steady trends
+    - monotone rules
+    - no set shape
+    bad_at:
+    - wiggly patterns
+    - extrapolation
+    - direction changes
     vs_siblings: []
+    goal: Fit a monotone sequence by least squares, then interpolate between its fitted thresholds.
+    steps:
+    - Sort observations by x and combine ties using their sample weights.
+    - Use the pool-adjacent-violators procedure to merge neighboring blocks that violate the chosen direction.
+    - Assign each block its weighted target average, respecting y_min and y_max.
+    - Store threshold x values and monotone fitted y values.
+    - Predict by linear interpolation between thresholds, with configured out-of-range handling.
+    math:
+      notation:
+      - symbol: x_i
+        meaning: Input for observation i.
+      - symbol: y_i
+        meaning: Observed target for observation i.
+      - symbol: w_i
+        meaning: Optional observation weight; default is one.
+      - symbol: z_i
+        meaning: Fitted monotone target at sorted input x_i.
+      - symbol: z_min,z_max
+        meaning: Optional lower and upper prediction limits.
+      - symbol: x_j^*, y_j^*
+        meaning: Stored x and fitted y threshold pairs.
+      equations:
+      - expression: min_z sum_i w_i (y_i-z_i)^2 subject to z_i <= z_(i+1)
+        meaning: For increasing fit, choose the closest weighted least-squares sequence that never decreases.
+      - expression: yhat(x)=linear_interpolate((x_j^*,y_j^*))
+        meaning: Interpolate linearly between thresholds; equal adjacent y values form a constant segment.
+      - expression: x < X_min_ or x > X_max_ -> nan, endpoint, or error
+        meaning: 'Outside-range predictions follow out_of_bounds: nan, clip to nearest endpoint, or raise.'
+      prediction: predict interpolates between thresholds. Equal y values make plateaus; out-of-range behavior follows the setting.
     read_more:
-      - Sort the points by X.
-      - Find the best steps that never go against the trend.
-      - Join the steps with straight lines to predict.
+    - Sort the points by X.
+    - Find the best steps that never go against the trend.
+    - Join the steps with straight lines to predict.
   next: []

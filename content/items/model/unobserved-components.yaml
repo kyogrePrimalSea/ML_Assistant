@@ -1,108 +1,282 @@
 id: unobserved-components
 plain_name: UnobservedComponents
 code_name: UnobservedComponents
-aliases: [structural time series, state space]
+aliases:
+- structural time series
+- state space
 stage: model
 family: model.ts-changing
-tracks: [time-series]
+tracks:
+- time-series
 archetype: model
-question_tags: [forecast, trend and seasons, slow drift]
-targets: [statsmodels.tsa.statespace.structural.UnobservedComponents]
-pairs_with: [stl]
+question_tags:
+- forecast
+- trend and seasons
+- slow drift
+targets:
+- statsmodels.tsa.statespace.structural.UnobservedComponents
+pairs_with:
+- stl
 clashes: []
-source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.tsa.statespace.structural.UnobservedComponents.html']
-library_versions: {statsmodels: 0.15.0}
+source_urls:
+- https://www.statsmodels.org/stable/generated/statsmodels.tsa.statespace.structural.UnobservedComponents.html
+library_versions:
+  statsmodels: 0.15.0
 reviewed: false
 rules:
-  task_types: [regression]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: airline-passengers, shape: fit_line}
+    hero:
+      kind: model
+      dataset: airline-passengers
+      shape: fit_line
     line: Splits the series into a level, a trend and seasons that can drift.
-  quick_facts: {none: true}
+  quick_facts:
+    none: true
   use_avoid:
-    use_when: [trend and seasons, slow drift, components]
-    avoid_when: [sudden regime switches, several series at once, very short data]
+    use_when:
+    - trend and seasons
+    - slow drift
+    - components
+    avoid_when:
+    - sudden regime switches
+    - several series at once
+    - very short data
   prep:
-    - step: {family: explore.stationarity}
-      status: recommended
-      why: Check stationarity before choosing lags.
-      condition: null
-      unless: null
-    - step: {family: split.time}
-      status: recommended
-      why: Test on the latest rows, never shuffled.
-      condition: null
-      unless: null
+  - step:
+      family: explore.stationarity
+    status: recommended
+    why: Check stationarity before choosing lags.
+    condition: null
+    unless: null
+  - step:
+      family: split.time
+    status: recommended
+    why: Test on the latest rows, never shuffled.
+    condition: null
+    unless: null
   code:
-    - library: statsmodels
-      target: statsmodels.tsa.statespace.structural.UnobservedComponents
-      why_this_library: The statsmodels class for this model.
-      snippet: |
-        # statsmodels 0.15.0
-        import numpy as np
-        from sklearn.datasets import make_regression
-        from statsmodels.tsa.statespace.structural import UnobservedComponents
+  - library: statsmodels
+    target: statsmodels.tsa.statespace.structural.UnobservedComponents
+    why_this_library: The statsmodels class for this model.
+    snippet: "# statsmodels 0.15.0\nimport numpy as np\nfrom statsmodels.tsa.statespace.structural import UnobservedComponents\n\
+      \nrng = np.random.default_rng(5)\nnobs = 60\ntime = np.arange(nobs)\nendog = 10 + 0.2 * time + rng.normal(scale=0.8,\
+      \ size=nobs)\nmodel = UnobservedComponents(\n    endog, level=True, trend=True,\n    stochastic_level=True,\
+      \ stochastic_trend=True,\n)\nresult = model.fit(disp=False, maxiter=200)\nforecast = result.get_forecast(steps=3)\n\
+      y_pred = np.asarray(forecast.predicted_mean)\nprint(\"forecast:\", np.round(y_pred, 2))\nprint(\"state names:\"\
+      , model.state_names)\nprint(\"smoothed state shape:\", result.smoothed_state.shape)\n"
+    output: 'forecast: [22.53 22.75 22.97]
 
-        _, noise = make_regression(
-            n_samples=120, n_features=1, noise=2.0, random_state=0
-        )
-        series = 0.1 * np.arange(120) + noise  # a trend plus noise
+      state names: [''level'', ''trend'']
 
-        model = UnobservedComponents(
-            series,
-            level=True,
-            stochastic_level=True,
-            trend=True,
-            stochastic_trend=True,
-        )
-        res = model.fit(disp=False)
-        print(res.params.round(2))
+      smoothed state shape: (2, 60)
+
+      '
   what_comes_out:
     items:
-      - {name: fit, kind: method, task: null, shape: "results object", note: "Returns the fitted results."}
-      - {name: predict, kind: method, task: null, shape: "(n_obs,)", note: "Fitted values, or forecasts past the sample."}
-      - {name: state_names, kind: attribute, task: null, shape: "list of str", note: "Names of the hidden components, such as level."}
-      - {name: param_names, kind: attribute, task: null, shape: "list of str", note: "Names for each fitted parameter."}
-    next_step: Plot each component to see what the model split out.
-    visual: null
+    - name: predicted_mean
+      kind: return
+      task: regression
+      shape: (steps,)
+      object_type: numpy.ndarray
+      example: '[21.8, 22.0, 22.2]'
+      shape_explanation: One forecast per future time step; 3 steps give shape (3,).
+      note: Observation-scale forecast combines the estimated latent components.
+    - name: conf_int
+      kind: return
+      task: regression
+      shape: (steps, 2)
+      object_type: numpy.ndarray
+      example: '[[21.0, 22.6], [21.1, 22.9], [21.2, 23.2]]'
+      shape_explanation: Each of 3 future rows has lower and upper bounds, so shape (3, 2).
+      note: Bounds quantify observation forecast uncertainty.
+    - name: filtered_state
+      kind: return
+      task: null
+      shape: (k_states, n_obs)
+      object_type: numpy.ndarray
+      example: '[[10.2, 10.4, 10.5], [0.2, 0.1, 0.1]]'
+      shape_explanation: Rows are the 2 states (level, trend); columns are 3 fictional time points, giving shape
+        (2, 3). Filtering uses data only through each time.
+      note: State estimates available in real time at each observation.
+    - name: smoothed_state
+      kind: return
+      task: null
+      shape: (k_states, n_obs)
+      object_type: numpy.ndarray
+      example: '[[10.1, 10.3, 10.5], [0.2, 0.1, 0.1]]'
+      shape_explanation: Rows are the level and trend; columns are 3 fictional times, giving shape (2, 3). Smoothing
+        uses the full observed series.
+      note: Retrospective state estimates may differ from filtered estimates.
+    - name: smoothed_state_cov
+      kind: return
+      task: null
+      shape: (k_states, k_states, n_obs)
+      object_type: numpy.ndarray
+      example: '[[[0.2, 0.18, 0.15], [0.01, 0.01, 0.01]], [[0.01, 0.01, 0.01], [0.1, 0.09, 0.08]]]'
+      shape_explanation: Two state axes form a 2-by-2 covariance matrix at each of 3 fictional times, so shape (2,
+        2, 3).
+      note: Uncertainty and dependence of the smoothed latent states.
+    - name: params
+      kind: return
+      task: null
+      shape: (n_params,)
+      object_type: numpy.ndarray
+      example: '[0.64, 0.02]'
+      shape_explanation: One estimated disturbance variance per parameter; 2 parameters give shape (2,).
+      note: The example estimates level and trend disturbance variances.
+    - name: state_names
+      kind: attribute
+      task: null
+      shape: list of str
+      object_type: list[str]
+      example: '[''level'', ''trend'']'
+      shape_explanation: A two-name list labels the two rows of the state arrays.
+      note: State-axis order is explicit in the model metadata.
+    next_step: null
+    visual: regression_preds
+    snippet: "# statsmodels 0.15.0\nimport numpy as np\nfrom statsmodels.tsa.statespace.structural import UnobservedComponents\n\
+      \nrng = np.random.default_rng(5)\nnobs = 60\ntime = np.arange(nobs)\nendog = 10 + 0.2 * time + rng.normal(scale=0.8,\
+      \ size=nobs)\nmodel = UnobservedComponents(\n    endog, level=True, trend=True,\n    stochastic_level=True,\
+      \ stochastic_trend=True,\n)\nresult = model.fit(disp=False, maxiter=200)\nforecast = result.get_forecast(steps=3)\n\
+      print(\"forecast mean:\", np.round(np.asarray(forecast.predicted_mean), 2))\nprint(\"confidence bounds:\"\
+      , np.round(np.asarray(forecast.conf_int()), 2))\nprint(\"state names:\", model.state_names)\nprint(\"filtered\
+      \ state shape:\", result.filtered_state.shape)\nprint(\"smoothed state shape:\", result.smoothed_state.shape)\n\
+      print(\"smoothed state covariance shape:\", result.smoothed_state_cov.shape)\nprint(\"parameters:\", np.round(result.params,\
+      \ 3))\n"
+    snippet_library: statsmodels
+    guidance:
+    - task: regression
+      text: Keep observations in time order. Interpret filtered and smoothed states as latent components; use forecast
+        intervals to show uncertainty.
+    output: "forecast mean: [22.53 22.75 22.97]\nconfidence bounds: [[20.41 24.65]\n [19.73 25.77]\n [19.24 26.7\
+      \ ]]\nstate names: ['level', 'trend']\nfiltered state shape: (2, 60)\nsmoothed state shape: (2, 60)\nsmoothed\
+      \ state covariance shape: (2, 2, 60)\nparameters: [1.15 0.  ]\n"
   catch_outs:
-    - Without a stochastic setting, the model warns and adds an irregular term.
-    - Turn on stochastic_level or stochastic_trend for a component to move.
-    - cycle_period_bounds only matters when a cycle is included.
+  - Without a stochastic setting, the model warns and adds an irregular term.
+  - Turn on stochastic_level or stochastic_trend for a component to move.
+  - cycle_period_bounds only matters when a cycle is included.
   key_settings:
     tier1:
-      - {name: level, page: null}
-      - {name: trend, page: null}
-      - {name: stochastic_level, page: null}
-      - {name: stochastic_trend, page: null}
+    - name: level
+      page: null
+      controls: Whether to include a latent level component in the observation equation.
+      effect: A level captures the changing baseline; omitting it can force other components to absorb drift.
+    - name: trend
+      page: null
+      controls: Whether to include a slope component alongside level.
+      effect: A slope captures changing level over time but requires level=True and adds state complexity.
+    - name: stochastic_level
+      page: null
+      controls: Whether level disturbances let the latent level evolve randomly.
+      effect: A stochastic level adapts to shocks; a fixed level is smoother but less adaptive.
+    - name: stochastic_trend
+      page: null
+      controls: Whether the slope state receives its own random disturbance.
+      effect: A stochastic slope can adapt to changing growth; it can also overfit short series.
     tier2:
-      - {name: seasonal, page: null}
-      - {name: freq_seasonal, page: null}
-      - {name: stochastic_seasonal, page: null}
-      - {name: irregular, page: null}
+    - name: seasonal
+      page: null
+      controls: Period of a time-domain seasonal state.
+      effect: Seasonal states model repeating cycles but increase the number of states.
+    - name: freq_seasonal
+      page: null
+      controls: One or more Fourier seasonal components with period and optional harmonics.
+      effect: More harmonics capture complex seasonal patterns but add latent states.
+    - name: stochastic_seasonal
+      page: null
+      controls: Whether the seasonal component may change through disturbances.
+      effect: Allowing change adapts to evolving seasonality; fixing it yields a stable seasonal pattern.
+    - name: irregular
+      page: null
+      controls: Whether to include an observation-level irregular noise component.
+      effect: Separates transient noise from latent level and trend; adds a variance parameter.
     tier3:
-      - {name: stochastic_freq_seasonal, page: null}
-      - {name: use_exact_diffuse, page: null}
-      - {name: cycle_period_bounds, page: null}
-      - {name: damped_cycle, page: null}
-      - {name: stochastic_cycle, page: null}
-      - {name: mle_regression, page: null}
-  watch_it_work: {none: true}
+    - name: stochastic_freq_seasonal
+      page: null
+      controls: Whether each frequency-domain seasonal component is stochastic.
+      effect: Stochastic seasonal components adapt over time but add disturbance variances.
+    - name: use_exact_diffuse
+      page: null
+      controls: Whether diffuse states use exact rather than approximate initialization.
+      effect: Exact initialization handles uncertain initial states more precisely but changes filtering setup.
+    - name: cycle_period_bounds
+      page: null
+      controls: Allowed lower and upper period for a cycle component.
+      effect: Narrow bounds constrain implausible cycles; overly tight bounds exclude real periodicity.
+    - name: damped_cycle
+      page: null
+      controls: Whether cycle amplitudes decay over time.
+      effect: Damping makes oscillations fade; without damping their amplitude persists.
+    - name: stochastic_cycle
+      page: null
+      controls: Whether the cycle state receives random shocks.
+      effect: Stochastic cycles can change phase and amplitude; fixed cycles are more rigid.
+    - name: mle_regression
+      page: null
+      controls: Whether regression coefficients are MLE parameters or recursively estimated state terms.
+      effect: MLE estimates fixed coefficients jointly; recursive OLS allows coefficient evolution.
+  watch_it_work:
+    none: true
   intuition:
     idea: Split the series into slow parts that can each drift.
     analogy: Like reading a river as a slow current, ripples and waves that change strength.
     animation: none
-    good_at: [trend and seasons, slow drift, components]
-    bad_at: [sudden regime switches, several series at once, very short data]
+    good_at:
+    - trend and seasons
+    - slow drift
+    - components
+    bad_at:
+    - sudden regime switches
+    - several series at once
+    - very short data
     vs_siblings:
-      - {page: markov-regression, note: "Sudden switches between states, not slow drift."}
+    - page: markov-regression
+      note: Sudden switches between states, not slow drift.
     read_more:
-      - Pick the components, such as level and trend.
-      - Fit the model by maximum likelihood with a Kalman filter.
-      - Read the component estimates, or forecast forward.
-  next: [but-beat-simple, but-intervals]
+    - Observation noise belongs to the measurement equation; level/trend disturbances belong to latent state equations.
+    - Filtered states use observations only through that time.
+    - Smoothed states use later observations too, so they are retrospective estimates.
+    goal: Separate one observed series into latent level, trend, seasonal, cycle, and irregular parts.
+    steps:
+    - Choose latent structural components that match the series.
+    - Write the observation as a sum of components plus irregular observation noise.
+    - Let stochastic components evolve through state disturbances; deterministic components have no such disturbance.
+    - Estimate disturbance variances by maximum likelihood using the Kalman filter.
+    - Use filtering for real-time state estimates and smoothing for retrospective estimates.
+    math:
+      notation:
+      - symbol: y_t
+        meaning: Observed value at time t.
+      - symbol: mu_t
+        meaning: Latent level state.
+      - symbol: beta_t
+        meaning: Latent slope or trend state.
+      - symbol: epsilon_t
+        meaning: Observation-level irregular noise.
+      - symbol: eta_t, zeta_t
+        meaning: Level and slope state disturbances.
+      - symbol: alpha_t
+        meaning: Vector of all latent states.
+      - symbol: Z_t, T_t
+        meaning: Observation and state transition matrices.
+      equations:
+      - expression: y_t = mu_t + epsilon_t
+        meaning: The observation equation links the measured series to latent level plus observation noise.
+      - expression: mu_(t+1) = mu_t + beta_t + eta_t; beta_(t+1) = beta_t + zeta_t
+        meaning: The local linear trend advances level using slope and lets the slope itself drift.
+      - expression: alpha_(t+1) = T_t alpha_t + eta_t
+        meaning: The general state equation evolves the vector of hidden components.
+      prediction: Observation forecasts combine components; filtered states use past data, smoothed states use the
+        full sample.
+  next:
+  - but-beat-simple
+  - but-intervals

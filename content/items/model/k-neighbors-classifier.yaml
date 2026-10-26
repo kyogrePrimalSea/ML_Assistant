@@ -1,102 +1,255 @@
 id: k-neighbors-classifier
 plain_name: KNeighborsClassifier
 code_name: KNeighborsClassifier
-aliases: ["knn", "knn classifier", "k nearest neighbours"]
+aliases:
+- knn
+- knn classifier
+- k nearest neighbours
 stage: model
 family: model.neighbours.knn
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: ["few features", "small data", "nearest examples"]
-targets: ["sklearn.neighbors.KNeighborsClassifier"]
+question_tags:
+- few features
+- small data
+- nearest examples
+targets:
+- sklearn.neighbors.KNeighborsClassifier
 pairs_with: []
 clashes: []
-source_urls: ["https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html"]
-library_versions: {scikit-learn: "1.9.1"}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: ["classification"]
+  task_types:
+  - classification
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: breast-cancer, shape: boundary}
-    line: "Predicts from the labels of the nearest rows."
+    hero:
+      kind: model
+      dataset: breast-cancer
+      shape: boundary
+    line: For each query, count or weight the labels among its k closest training rows, then return the
+      winning class.
   quick_facts:
-    data_size: "Small data, few features"
+    data_size: Small data, few features
   use_avoid:
-    use_when: ["small data", "few features", "nearest examples"]
-    avoid_when: ["large data", "many features", "images or text"]
+    use_when:
+    - small data
+    - few features
+    - nearest examples
+    avoid_when:
+    - large data
+    - many features
+    - images or text
   prep:
-    - step: {family: transform.scale.rescale}
-      status: required
-      why: "Distances need comparable scales; scale first."
-      condition: null
-      unless: null
+  - step:
+      family: transform.scale.rescale
+    status: required
+    why: Distances need comparable scales; scale first.
+    condition: null
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.neighbors.KNeighborsClassifier
-      why_this_library: "Built into scikit-learn; no extra install."
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import load_breast_cancer
-        from sklearn.model_selection import train_test_split
-        from sklearn.neighbors import KNeighborsClassifier
-        from sklearn.pipeline import make_pipeline
-        from sklearn.preprocessing import StandardScaler
+  - library: scikit-learn
+    target: sklearn.neighbors.KNeighborsClassifier
+    why_this_library: Built into scikit-learn; no extra install.
+    snippet: "# scikit-learn 1.9.1\nfrom sklearn.datasets import load_breast_cancer\nfrom sklearn.model_selection\
+      \ import train_test_split\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.pipeline\
+      \ import make_pipeline\nfrom sklearn.preprocessing import StandardScaler\n\nX, y = load_breast_cancer(return_X_y=True)\n\
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)\n\nmodel = make_pipeline(\n\
+      \    StandardScaler(),\n    KNeighborsClassifier(n_neighbors=5),\n)\nmodel.fit(X_train, y_train)\n\
+      y_pred = model.predict(X_test[:3])\nprint(\"y_pred:\", y_pred)\nprint(\"score:\", round(model.score(X_test,\
+      \ y_test), 3))"
+    output: 'y_pred: [0 1 1]
 
-        X, y = load_breast_cancer(return_X_y=True)
-        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+      score: 0.951
 
-        model = make_pipeline(
-            StandardScaler(),
-            KNeighborsClassifier(n_neighbors=5),
-        )
-        model.fit(X_train, y_train)
-        print(round(model.score(X_test, y_test), 3))
+      '
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: null, shape: "(n_samples,)",
-         note: "Class labels from the nearest rows."}
-      - {name: predict_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
-         note: "Share of the nearest rows in each class."}
-      - {name: kneighbors, kind: method, task: null, shape: "(distances, indices)",
-         note: "Distances and row numbers of the nearest rows."}
-      - {name: score, kind: method, task: null, shape: "float",
-         note: "Accuracy on the data you pass in."}
-      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)",
-         note: "Class labels, in predict_proba column order."}
-    next_step: "Try a few n_neighbors values and compare the scores."
+    - name: predict
+      kind: method
+      task: classification
+      shape: (n_samples,)
+      note: Class labels from the nearest rows.
+      object_type: numpy.ndarray
+      example: '[''class_A'', ''class_B'', ''class_A'']'
+      shape_explanation: One class label per query row; this has three labels, so n_samples=3 and shape
+        (3,).
+    - name: predict_proba
+      kind: method
+      task: classification
+      shape: (n_samples, n_classes)
+      note: Share of the nearest rows in each class.
+      object_type: numpy.ndarray
+      example: '[[0.8, 0.2], [0.3, 0.7]]'
+      shape_explanation: Rows are query cases and columns follow classes_. This example has 2 cases and
+        2 classes, so shape (2, 2).
+    - name: kneighbors
+      kind: method
+      task: null
+      shape: 2 arrays of (n_samples, k)
+      note: Distances and row numbers of the nearest rows.
+      object_type: tuple of numpy.ndarray
+      example: (distances [[0.1, 0.3]], indices [[4, 8]])
+      shape_explanation: Returns distance and index arrays with the same shape; this example has one query
+        and k=2 neighbours.
+    - name: score
+      kind: method
+      task: classification
+      shape: scalar
+      note: 'Accuracy: fraction of supplied rows whose predicted class matches the label.'
+      object_type: float
+      example: '0.82'
+      shape_explanation: A scalar is one value with no array dimensions; 0.82 is one score.
+    - name: classes_
+      kind: attribute
+      task: classification
+      shape: (n_classes,)
+      note: Class labels, in predict_proba column order.
+      object_type: numpy.ndarray
+      example: '[''class_A'', ''class_B'']'
+      shape_explanation: One unique fitted label per class; this binary fictional example has n_classes=2
+        and shape (2,).
+    next_step: Try a few n_neighbors values and compare the scores.
     visual: proba_table
+    snippet: '# scikit-learn 1.9.1
+
+      from sklearn.datasets import load_breast_cancer
+
+      from sklearn.neighbors import KNeighborsClassifier
+
+      from sklearn.pipeline import make_pipeline
+
+      from sklearn.preprocessing import StandardScaler
+
+
+      data = load_breast_cancer(as_frame=True)
+
+      model = make_pipeline(StandardScaler(), KNeighborsClassifier(n_neighbors=5))
+
+      model.fit(data.data, data.target)
+
+      knn = model[-1]
+
+      y_pred = model.predict(data.data[:3])
+
+      y_proba = model.predict_proba(data.data[:3])
+
+      distances, indices = knn.kneighbors(model[0].transform(data.data[:3]))
+
+      print("y_pred:", y_pred)
+
+      print("y_proba shape:", y_proba.shape)
+
+      print("classes_:", knn.classes_)
+
+      print("distances shape:", distances.shape, "indices shape:", indices.shape)
+
+      '
+    snippet_library: scikit-learn
+    output: 'y_pred: [0 0 0]
+
+      y_proba shape: (3, 2)
+
+      classes_: [0 1]
+
+      distances shape: (3, 5) indices shape: (3, 5)
+
+      '
   catch_outs:
-    - "Unscaled features scored 0.94 here; scaled features scored 0.95."
-    - "Keeps every training row; there is no fitted formula."
-    - "Distance defaults to Euclidean (minkowski with p=2)."
+  - Unscaled features scored 0.94 here; scaled features scored 0.95.
+  - Keeps every training row; there is no fitted formula.
+  - Distance defaults to Euclidean (minkowski with p=2).
   key_settings:
     tier1:
-      - {name: n_neighbors, page: null}
-      - {name: weights, page: null}
-      - {name: metric, page: null}
+    - name: n_neighbors
+      page: null
+      controls: Number of nearest training rows voting on each label.
+      effect: More voters smooth the boundary but can erase small local groups.
+    - name: weights
+      page: null
+      controls: Uniform or inverse-distance vote weights.
+      effect: Distance weighting lets closer rows count more.
+    - name: metric
+      page: null
+      controls: Distance formula used to find neighbours.
+      effect: A different metric can change both neighbours and predicted labels.
     tier2:
-      - {name: p, page: null}
-      - {name: algorithm, page: null}
-      - {name: leaf_size, page: null}
+    - name: p
+      page: null
+      controls: Minkowski distance power; 1 is Manhattan and 2 is Euclidean.
+      effect: Changing p changes neighbour ranking.
+    - name: algorithm
+      page: null
+      controls: 'Search implementation: auto, ball_tree, kd_tree, or brute.'
+      effect: Choice affects search speed and memory.
+    - name: leaf_size
+      page: null
+      controls: Tree leaf size for ball-tree or kd-tree searches.
+      effect: Changes tree memory and speed.
     tier3:
-      - {name: metric_params, page: null}
-      - {name: n_jobs, page: null}
-  watch_it_work: {none: true}
+    - name: metric_params
+      page: null
+      controls: Extra keyword parameters for the selected metric.
+      effect: Metric-specific parameters alter distances.
+    - name: n_jobs
+      page: null
+      controls: Parallel jobs for neighbour searches.
+      effect: More workers can speed searches while using more CPU.
+  watch_it_work:
+    none: true
   intuition:
-    idea: "Take the labels of the nearest rows and vote."
-    analogy: "Asking the closest neighbours what they think the answer is."
+    idea: Take the labels of the nearest rows and vote.
+    analogy: Asking the closest neighbours what they think the answer is.
     animation: none
-    good_at: ["small data", "few features", "easy to explain"]
-    bad_at: ["large data", "many features", "images or text"]
+    good_at:
+    - small data
+    - few features
+    - easy to explain
+    bad_at:
+    - large data
+    - many features
+    - images or text
     vs_siblings:
-      - {page: k-neighbors-regressor, note: "Same idea; averages the neighbours' values."}
-      - {page: svc, note: "SVC learns a boundary; KNN only looks at rows."}
-    read_more:
-      - "Measure the distance from the new row to every training row."
-      - "Keep the n_neighbors closest rows."
-      - "Vote on their labels, or average them for numbers."
+    - page: k-neighbors-regressor
+      note: Same idea; averages the neighbours' values.
+    - page: svc
+      note: SVC learns a boundary; KNN only looks at rows.
+    goal: Classify each query from the weighted label votes of its k nearest training rows.
+    math:
+      notation:
+      - symbol: x
+        meaning: query row
+      - symbol: N_k(x)
+        meaning: the k closest training rows
+      - symbol: d_i
+        meaning: distance from x to neighbour i
+      - symbol: c_i
+        meaning: class label of neighbour i
+      - symbol: w_i
+        meaning: 'vote weight: uniform or inverse distance'
+      - symbol: C
+        meaning: set of fitted class labels
+      equations:
+      - expression: V_c(x)=Σ_{i∈N_k(x)} w_i 1(c_i=c)
+        meaning: Add the weights of neighbours whose label is c.
+      - expression: P(c|x)=V_c(x)/Σ_{q∈C}V_q(x); predict argmax_c V_c(x)
+        meaning: Probabilities are normalized vote shares; predict returns the largest-vote class.
+      prediction: predict returns a class label, while predict_proba returns one normalized vote share
+        per classes_ entry.
+    read_more: &id001
+    - Compute the configured distance from the query to training rows.
+    - Select the k rows with the smallest distances and give each its configured weight.
+    - Return the class with the largest total vote; normalize vote totals for probabilities.
+    steps: *id001
   next: []

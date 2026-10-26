@@ -29,6 +29,41 @@ function ModelBody({ data }: { data: Extract<IntuitionData, { idea: string }> })
   const [more, setMore] = useState(false)
   return (
     <div className="grid gap-5">
+      {data.goal ? (
+        <Labelled label="What we are trying to do">
+          <p className="m-0">{data.goal}</p>
+        </Labelled>
+      ) : null}
+      {data.steps ? (
+        <Labelled label="How it works">
+          <ol className="m-0 grid gap-2 pl-6">
+            {data.steps.map((step) => <li key={step} className="pl-1">{step}</li>)}
+          </ol>
+        </Labelled>
+      ) : null}
+      {data.math ? (
+        <Labelled label="The mathematics">
+          <div className="grid gap-4">
+            <dl className="m-0 grid gap-2">
+              {data.math.notation.map((item) => (
+                <div key={item.symbol} className="grid grid-cols-[minmax(3rem,auto)_1fr] gap-x-3">
+                  <dt><code>{item.symbol}</code></dt>
+                  <dd className="m-0">{item.meaning}</dd>
+                </div>
+              ))}
+            </dl>
+            <div className="grid gap-3">
+              {data.math.equations.map((equation) => (
+                <div key={equation.expression} className="grid gap-1">
+                  <pre className="m-0 overflow-x-auto whitespace-pre rounded-md border border-border bg-code-bg p-3"><code>{equation.expression}</code></pre>
+                  <p className="m-0 text-sm text-text-muted">{equation.meaning}</p>
+                </div>
+              ))}
+            </div>
+            <p className="m-0">{data.math.prediction}</p>
+          </div>
+        </Labelled>
+      ) : null}
       <Labelled label="The one idea">
         <p className="m-0 text-lg">{data.idea}</p>
       </Labelled>

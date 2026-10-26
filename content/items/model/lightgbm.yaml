@@ -1,163 +1,305 @@
 id: lightgbm
 plain_name: LightGBM
 code_name: LGBMRegressor / LGBMClassifier
-aliases: [lgbm, light gbm, lgb]
+aliases:
+- lgbm
+- light gbm
+- lgb
 stage: model
 family: model.trees.boosting
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [underperforming, tabular data, overfitting, too slow]
-targets: [lightgbm.LGBMRegressor, lightgbm.LGBMClassifier]
-pairs_with: [treeexplainer]
+question_tags:
+- underperforming
+- tabular data
+- overfitting
+- too slow
+targets:
+- lightgbm.LGBMRegressor
+- lightgbm.LGBMClassifier
+pairs_with:
+- treeexplainer
 clashes: []
 source_urls:
-  - https://lightgbm.readthedocs.io/en/stable/pythonapi/lightgbm.LGBMRegressor.html
-  - https://lightgbm.readthedocs.io/en/stable/pythonapi/lightgbm.LGBMClassifier.html
+- https://lightgbm.readthedocs.io/en/stable/pythonapi/lightgbm.LGBMRegressor.html
+- https://lightgbm.readthedocs.io/en/stable/pythonapi/lightgbm.LGBMClassifier.html
 library_versions:
-  lightgbm: "4.7.0"
+  lightgbm: 4.7.0
 reviewed: false
 rules:
-  task_types: [regression, classification]
+  task_types:
+  - regression
+  - classification
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: ames, shape: fit_line}
+    hero:
+      kind: model
+      dataset: ames
+      shape: fit_line
     line: Many small trees, each fixing the last one's mistakes.
   quick_facts:
     data_size: Medium to large tables
   use_avoid:
-    use_when: [tabular data, larger data, missing values]
-    avoid_when: [tiny data, images or text, need a simple formula]
+    use_when:
+    - tabular data
+    - larger data
+    - missing values
+    avoid_when:
+    - tiny data
+    - images or text
+    - need a simple formula
   prep:
-    - step: {family: transform.scale.rescale}
-      status: not_needed
-      why: Trees split on order, not size.
-      condition: null
-      unless: null
-    - step: {family: clean.impute}
-      status: not_needed
-      why: Missing values are handled natively.
-      condition: null
-      unless: null
-    - step: {family: transform.encode.features}
-      status: recommended
-      why: Category dtype works as is. Text needs encoding.
-      condition: {has_categoricals: true}
-      unless: null
-    - step: {family: transform.rebalance.weight}
-      status: recommended
-      why: Use scale_pos_weight or is_unbalance when lopsided.
-      condition: {imbalanced: true, task_type: [classification]}
-      unless: null
-    - step: {page: train-test-split}
-      status: recommended
-      why: A validation set enables early stopping.
-      condition: null
-      unless: null
+  - step:
+      family: transform.scale.rescale
+    status: not_needed
+    why: Trees split on order, not size.
+    condition: null
+    unless: null
+  - step:
+      family: clean.impute
+    status: not_needed
+    why: Missing values are handled natively.
+    condition: null
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: recommended
+    why: Category dtype works as is. Text needs encoding.
+    condition:
+      has_categoricals: true
+    unless: null
+  - step:
+      family: transform.rebalance.weight
+    status: recommended
+    why: Use scale_pos_weight or is_unbalance when lopsided.
+    condition:
+      imbalanced: true
+      task_type:
+      - classification
+    unless: null
+  - step:
+      page: train-test-split
+    status: recommended
+    why: A validation set enables early stopping.
+    condition: null
+    unless: null
   code:
-    - library: lightgbm
-      target: lightgbm.LGBMRegressor
-      why_this_library: Early stopping is a callback passed to fit.
-      snippet: |
-        # lightgbm 4.7.0
-        import lightgbm as lgb
-        from sklearn.datasets import make_regression
-        from sklearn.model_selection import train_test_split
+  - library: lightgbm
+    target: lightgbm.LGBMRegressor
+    why_this_library: Early stopping is a callback passed to fit.
+    snippet: "# lightgbm 4.7.0\nimport numpy as np\nimport lightgbm as lgb\nfrom sklearn.datasets import make_regression\n\
+      from sklearn.model_selection import train_test_split\n\nX, y = make_regression(n_samples=500, n_features=8,\
+      \ noise=10, random_state=0)\nX_train, X_val, y_train, y_val = train_test_split(X, y, random_state=0)\nmodel\
+      \ = lgb.LGBMRegressor(\n    n_estimators=300, learning_rate=0.05, num_leaves=15,\n    n_jobs=1, verbosity=-1,\
+      \ random_state=0,\n)\nmodel.fit(\n    X_train, y_train, eval_set=[(X_val, y_val)],\n    callbacks=[lgb.early_stopping(15,\
+      \ verbose=False)],\n)\ny_pred = model.predict(X_val[:5])\nprint(\"y_pred:\", np.round(y_pred, 1))\nprint(\"\
+      best_iteration_:\", model.best_iteration_)\n"
+    output: 'y_pred: [  6.  -87.  -15.6  97.  145.3]
 
-        X, y = make_regression(n_samples=500, n_features=8, noise=10, random_state=0)
-        X_train, X_val, y_train, y_val = train_test_split(X, y, random_state=0)
+      best_iteration_: 295
 
-        model = lgb.LGBMRegressor(
-            n_estimators=500,
-            learning_rate=0.05,
-            num_leaves=31,
-            verbose=-1,
-        )
-        model.fit(
-            X_train, y_train,
-            eval_X=X_val,
-            eval_y=y_val,
-            callbacks=[lgb.early_stopping(20, verbose=False)],
-        )
-        print(model.best_iteration_)
+      '
   what_comes_out:
     items:
-      - {name: predict_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
-         note: "One column per class, in classes_ order. Keep [:, 1] for two classes."}
-      - {name: predict, kind: method, task: classification, shape: "(n_samples,)",
-         note: "Class labels. Same as a 0.5 cut-off on predict_proba[:, 1]."}
-      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
-         note: "One value per row. Undo a log target before reporting errors."}
-      - {name: decision_function, kind: method, task: classification, shape: "(n_samples,) for two classes",
-         note: "Raw score before the sigmoid. Above 0 means class 1."}
-      - {name: feature_importances_, kind: attribute, task: null, shape: "(n_features,)",
-         note: "One score per input column. Default counts splits."}
-      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)",
-         note: "Class labels, in the column order of predict_proba."}
-      - {name: best_iteration_, kind: attribute, task: null, shape: "int",
-         note: "Best round from the early_stopping callback."}
-    next_step: ROC AUC and PR curves need probabilities, not labels. Undo a log target first.
-    snippet: |
-      # lightgbm 4.7.0
-      import numpy as np
-      from sklearn.datasets import load_breast_cancer, load_diabetes
-      from sklearn.model_selection import train_test_split
-      from lightgbm import LGBMClassifier, LGBMRegressor
-
-      X, y = load_breast_cancer(return_X_y=True)
-      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
-
-      model = LGBMClassifier(n_estimators=50, verbose=-1).fit(X_train, y_train)
-      proba = model.predict_proba(X_test)
-      print(proba.shape)
-      y_score = proba[:, 1]
-      print(y_score.shape)
-
-      # Regression on a log target: undo it before reporting errors.
-      Xd, yd = load_diabetes(return_X_y=True)
-      reg = LGBMRegressor(n_estimators=50, verbose=-1).fit(Xd, np.log1p(yd))
-      y_pred = np.expm1(reg.predict(Xd))
-      print(y_pred.shape)
+    - name: predict_proba
+      kind: method
+      task: classification
+      shape: (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[[0.91, 0.09], [0.18, 0.82]]'
+      shape_explanation: Rows are cases and columns follow classes_. This example has 2 cases and 2 classes, shape
+        (2, 2).
+      note: Each row gives class probabilities; columns follow classes_.
+    - name: decision_function
+      kind: method
+      task: classification
+      shape: (n_samples,); (n_samples,n_classes)
+      object_type: numpy.ndarray
+      example: '[-2.3, 1.5]'
+      shape_explanation: 'The fictional example is binary: two rows give two margins, shape (2,). For multiclass,
+        rows and class-score columns give (n_samples,n_classes).'
+      note: The example is binary; multiclass returns one raw score per class and row.
+    - name: predict
+      kind: method
+      task: classification
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[0, 1]'
+      shape_explanation: One class label per case. n_samples is the number of rows; this example has 2 labels, shape
+        (2,).
+      note: Labels are selected from classes_.
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[245.0, 318.5]'
+      shape_explanation: One numeric prediction per case. n_samples is the number of rows; this example has 2 values,
+        shape (2,).
+      note: Regression prediction is a numeric value for each row.
+    - name: classes_
+      kind: attribute
+      task: classification
+      shape: (n_classes,)
+      object_type: numpy.ndarray
+      example: '[0, 1]'
+      shape_explanation: One label for each class. n_classes is the number of classes; the example has 2 labels,
+        shape (2,).
+      note: Probability columns use this class order.
+    - name: feature_importances_
+      kind: attribute
+      task: null
+      shape: (n_features,)
+      object_type: numpy.ndarray
+      example: '[0.52, 0.31, 0.17]'
+      shape_explanation: One importance per input feature. n_features is the number of columns; the example has
+        3 values, shape (3,).
+      note: importance_type selects split counts or gain.
+    - name: best_iteration_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: int
+      example: '24'
+      shape_explanation: A scalar integer is one selected boosting iteration; it has no array dimensions.
+      note: Set when an early-stopping callback uses a validation set.
+    next_step: null
+    snippet: "# lightgbm 4.7.0\nimport numpy as np\nimport lightgbm as lgb\nfrom sklearn.datasets import load_breast_cancer,\
+      \ load_diabetes\nfrom sklearn.model_selection import train_test_split\n\nX, y = load_breast_cancer(return_X_y=True)\n\
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)\nclf = lgb.LGBMClassifier(\n   \
+      \ n_estimators=40, n_jobs=1, verbosity=-1, random_state=0\n)\nclf.fit(X_train, y_train)\ny_proba = clf.predict_proba(X_test[:3])\n\
+      y_score = clf.decision_function(X_test[:3])\ny_pred = clf.predict(X_test[:3])\nprint(\"classes_:\", clf.classes_)\n\
+      print(\"y_proba:\", np.round(y_proba, 3))\nprint(\"binary margin:\", np.round(y_score, 3))\nprint(\"y_pred:\"\
+      , y_pred)\nprint(\"feature_importances_ shape:\", clf.feature_importances_.shape)\n\nXd, yd = load_diabetes(return_X_y=True)\n\
+      Xd_train, Xd_val, yd_train, yd_val = train_test_split(Xd, yd, random_state=0)\nreg = lgb.LGBMRegressor(\n\
+      \    n_estimators=100, n_jobs=1, verbosity=-1, random_state=0\n)\nreg.fit(Xd_train, yd_train, eval_set=[(Xd_val,\
+      \ yd_val)],\n        callbacks=[lgb.early_stopping(10, verbose=False)])\ny_pred = reg.predict(Xd_val[:3])\n\
+      print(\"regression y_pred:\", np.round(y_pred, 1))\nprint(\"best_iteration_:\", reg.best_iteration_)\n"
     snippet_library: lightgbm
     visual: both
+    output: "classes_: [0 1]\ny_proba: [[0.993 0.007]\n [0.024 0.976]\n [0.008 0.992]]\nbinary margin: [-4.923 \
+      \ 3.706  4.821]\ny_pred: [0 1 1]\nfeature_importances_ shape: (30,)\nregression y_pred: [232.7 222.3 196.1]\n\
+      best_iteration_: 17\n"
+    guidance:
+    - task: classification
+      text: Use predict_proba[:, 1] for binary ROC AUC and PR; decision_function gives binary raw margins, while
+        predict labels serve accuracy and confusion matrices.
+    - task: regression
+      text: Use numeric predict output for held-out regression metrics; no target inverse transform is used in this
+        example.
   catch_outs:
-    - Early stopping needs eval_X, eval_y and the early_stopping callback.
-    - num_leaves (31) limits the tree before max_depth (-1) does.
-    - subsample does nothing until subsample_freq is above 0.
-    - Text columns fail. Use category dtype or encode them.
+  - Early stopping needs eval_X, eval_y and the early_stopping callback.
+  - num_leaves (31) limits the tree before max_depth (-1) does.
+  - subsample does nothing until subsample_freq is above 0.
+  - Text columns fail. Use category dtype or encode them.
   key_settings:
     tier1:
-      - {name: n_estimators, page: n-estimators}
-      - {name: learning_rate, page: learning-rate}
-      - {name: num_leaves, page: null}
-      - {name: max_depth, page: max-depth}
+    - name: n_estimators
+      page: n-estimators
+      controls: Maximum number of boosting rounds.
+      effect: More trees can learn more detail, but take longer and may overfit.
+    - name: learning_rate
+      page: learning-rate
+      controls: Shrinks each new tree contribution.
+      effect: A smaller step is cautious but usually needs more rounds.
+    - name: num_leaves
+      page: null
+      controls: Maximum leaves per tree; LightGBM grows the leaf with best gain.
+      effect: More leaves allow finer local fits, but raise complexity and overfitting risk.
+    - name: max_depth
+      page: max-depth
+      controls: Maximum depth; non-positive values leave depth unlimited.
+      effect: A shallower cap limits growth; coordinate it with num_leaves.
     tier2:
-      - {name: min_child_samples, page: null}
-      - {name: subsample, page: null}
-      - {name: colsample_bytree, page: null}
+    - name: min_child_samples
+      page: null
+      controls: Minimum rows required in a leaf.
+      effect: A larger minimum prevents tiny leaves but can miss small patterns.
+    - name: subsample
+      page: null
+      controls: Fraction of training rows sampled for each tree when subsample_freq is positive.
+      effect: Smaller fractions add randomness; with subsample_freq=0 row sampling is disabled.
+    - name: colsample_bytree
+      page: null
+      controls: Fraction of features sampled when constructing each tree.
+      effect: Smaller values add randomness but can hide useful predictors.
     tier3:
-      - {name: reg_lambda, page: null}
-      - {name: reg_alpha, page: null}
-      - {name: min_split_gain, page: null}
+    - name: reg_lambda
+      page: null
+      controls: L2 penalty on leaf scores.
+      effect: A larger penalty shrinks leaf scores and can underfit.
+    - name: reg_alpha
+      page: null
+      controls: L1 penalty on leaf scores.
+      effect: A larger penalty encourages sparse leaf scores but can underfit.
+    - name: min_split_gain
+      page: null
+      controls: Minimum loss reduction required to split a leaf.
+      effect: A larger threshold makes fewer splits and can miss useful structure.
   watch_it_work:
     dataset: ames
-    control: {name: n_estimators, min: 1, max: 200, step: 1, default: 50}
+    control:
+      name: n_estimators
+      min: 1
+      max: 200
+      step: 1
+      default: 50
   intuition:
     idea: Build small trees one after another, each fixing the mistakes of the last.
     analogy: A team correcting an essay, each person only fixing what is still wrong.
     animation: model/boosting-sequence
-    good_at: [tabular data, larger data, missing values]
-    bad_at: [tiny data, extrapolation, raw text]
+    good_at:
+    - tabular data
+    - larger data
+    - missing values
+    bad_at:
+    - tiny data
+    - extrapolation
+    - raw text
     vs_siblings:
-      - {page: xgboost, note: XGBoost caps depth (max_depth 6). LightGBM caps leaves.}
-      - {page: hist-gradient-boosting, note: "In scikit-learn, no extra install. Fewer settings."}
-      - {page: gradient-boosting, note: Exact splits. Does not take NaN.}
+    - page: xgboost
+      note: XGBoost caps depth (max_depth 6). LightGBM caps leaves.
+    - page: hist-gradient-boosting
+      note: In scikit-learn, no extra install. Fewer settings.
+    - page: gradient-boosting
+      note: Exact splits. Does not take NaN.
     read_more:
-      - Start with a constant prediction.
-      - Fit a small tree to the current errors.
-      - Add it, scaled by learning_rate.
-      - Repeat until n_estimators, or early stopping.
-  next: [model-overfitting, know-feature-importance]
+    - LightGBM grows trees leaf-wise, choosing the current leaf with greatest split gain.
+    - num_leaves limits total leaves; max_depth can separately cap branch depth.
+    - decision_function returns binary raw margins; predict_proba returns class probabilities.
+    goal: Grow boosted trees by repeatedly splitting the leaf with the largest gain.
+    steps:
+    - Start from an initial prediction and compute loss gradients for each row.
+    - For each tree, find the leaf split with the largest gain and grow that leaf, even if another branch is already
+      deeper.
+    - Continue leaf-wise until num_leaves or max_depth stops growth.
+    - Add the tree’s output scaled by learning_rate and repeat; validation early stopping can halt rounds.
+    math:
+      notation:
+      - symbol: F_m(x)
+        meaning: Current model prediction after m boosting rounds.
+      - symbol: h_m(x)
+        meaning: The new decision tree added at round m.
+      - symbol: eta
+        meaning: Learning rate shrinking each tree contribution.
+      - symbol: L(y,F)
+        meaning: Loss for observed target y and prediction F.
+      - symbol: r_i
+        meaning: Negative loss gradient for training row i.
+      equations:
+      - expression: r_i = -dL(y_i, F(x_i))/dF(x_i)
+        meaning: The negative gradient indicates how to change the current prediction to reduce loss.
+      - expression: F_m(x)=F_{m-1}(x)+eta*h_m(x)
+        meaning: Each round adds a shrunken tree; LightGBM grows that tree by repeatedly splitting the leaf with
+          best gain.
+      prediction: Regression returns a numeric score; classification returns labels or probabilities.
+  next:
+  - model-overfitting
+  - know-feature-importance

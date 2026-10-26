@@ -1,99 +1,238 @@
 id: pls-regression
 plain_name: PLSRegression
 code_name: PLSRegression
-aliases: [partial least squares, pls]
+aliases:
+- partial least squares
+- pls
 stage: model
 family: model.linear.shrink
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [more features than rows, combined features]
-targets: [sklearn.cross_decomposition.PLSRegression]
+question_tags:
+- more features than rows
+- combined features
+targets:
+- sklearn.cross_decomposition.PLSRegression
 pairs_with: []
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.cross_decomposition.PLSRegression.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.cross_decomposition.PLSRegression.html
+- https://scikit-learn.org/stable/modules/cross_decomposition.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [regression]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: ames, shape: fit_line}
+    hero:
+      kind: model
+      dataset: ames
+      shape: fit_line
     line: Builds a few combined features that predict the target.
-  quick_facts: {none: true}
+  quick_facts:
+    none: true
   use_avoid:
-    use_when: [more features than rows, features move together]
-    avoid_when: [curved patterns, rows in groups]
+    use_when:
+    - more features than rows
+    - features move together
+    avoid_when:
+    - curved patterns
+    - rows in groups
   prep:
-    - step: {family: clean.impute}
-      status: required
-      why: Scikit-learn rejects NaN in X.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Text categories must become numbers.
-      condition: {has_categoricals: true}
-      unless: null
-    - step: {family: transform.scale.rescale}
-      status: not_needed
-      why: scale=True already scales X and y.
-      condition: null
-      unless: null
-    - step: {page: train-test-split}
-      status: recommended
-      why: A held-out set checks the fit on new rows.
-      condition: null
-      unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Scikit-learn rejects NaN in X.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Text categories must become numbers.
+    condition:
+      has_categoricals: true
+    unless: null
+  - step:
+      family: transform.scale.rescale
+    status: not_needed
+    why: scale=True already scales X and y.
+    condition: null
+    unless: null
+  - step:
+      page: train-test-split
+    status: recommended
+    why: A held-out set checks the fit on new rows.
+    condition: null
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.cross_decomposition.PLSRegression
-      why_this_library: Same fit API as the other scikit-learn models.
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.cross_decomposition import PLSRegression
-        from sklearn.datasets import make_regression
+  - library: scikit-learn
+    target: sklearn.cross_decomposition.PLSRegression
+    why_this_library: Same fit API as the other scikit-learn models.
+    snippet: '# scikit-learn 1.9.1
 
-        X, y = make_regression(n_samples=30, n_features=50, noise=5, random_state=0)
-        model = PLSRegression(n_components=3).fit(X, y)
-        print(round(model.score(X, y), 3))
+      from sklearn.cross_decomposition import PLSRegression
+
+      from sklearn.datasets import make_regression
+
+
+      X, y = make_regression(n_samples=30, n_features=50, noise=5, random_state=0)
+
+      model = PLSRegression(n_components=3).fit(X, y)
+
+      y_pred = model.predict(X[:3]).ravel()
+
+      print(''y_pred:'', y_pred.round(1))
+
+      print(''R2:'', round(model.score(X, y), 3))'
+    output: 'y_pred: [ -23.6  -13.8 -197.4]
+
+      R2: 0.984
+
+      '
   what_comes_out:
     items:
-    - {name: predict, kind: method, task: regression, shape: "(n_samples, n_targets)", note: Predicted target values from the input columns.}
-    - {name: score, kind: method, task: regression, shape: float, note: R squared on the data you pass in.}
-    - {name: coef_, kind: attribute, task: null, shape: "(n_targets, n_features)", note: "One slope per feature, per target."}
-    - {name: x_weights_, kind: attribute, task: null, shape: "(n_features, n_components)", note: Directions that build the combined features.}
-    - {name: n_iter_, kind: attribute, task: null, shape: "(n_components,)", note: Power-method iterations for each component.}
-    next_step: transform() returns the few combined features, not the originals.
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples, n_targets)
+      object_type: numpy.ndarray
+      example: '[[12.4], [-3.1]]'
+      shape_explanation: 'A two-dimensional array: n_samples counts rows and n_targets counts predicted outputs.
+        The example has two rows and one target, so its concrete shape is (2, 1).'
+      note: Predicted values for each row and target.
+    - name: coef_
+      kind: attribute
+      task: null
+      shape: (n_targets, n_features)
+      object_type: numpy.ndarray
+      example: '[[0.4, -1.2, 2.0]]'
+      shape_explanation: 'A two-dimensional coefficient table: rows are n_targets and columns are n_features. The
+        example shows one target and three features, shape (1, 3).'
+      note: One coefficient per target and input column.
+    - name: x_weights_
+      kind: attribute
+      task: null
+      shape: (n_features, n_components)
+      object_type: numpy.ndarray
+      example: '[[0.2, 0.1], [-0.3, 0.4]]'
+      shape_explanation: 'A two-dimensional table: rows are n_features and columns are n_components. This example
+        shows two features and two components, shape (2, 2).'
+      note: Directions used to form input components.
     visual: regression_preds
+    guidance:
+    - task: regression
+      text: Compare predictions on held-out rows; score reports R squared.
+    snippet: '# scikit-learn 1.9.1
+
+      from sklearn.cross_decomposition import PLSRegression
+
+      from sklearn.datasets import make_regression
+
+
+      X, y = make_regression(n_samples=30, n_features=50, noise=5, random_state=0)
+
+      model = PLSRegression(n_components=3).fit(X, y)
+
+      y_pred = model.predict(X[:3]).ravel()
+
+      print(''y_pred:'', y_pred.round(1))
+
+      print(''R2:'', round(model.score(X, y), 3))'
+    snippet_library: scikit-learn
+    output: 'y_pred: [ -23.6  -13.8 -197.4]
+
+      R2: 0.984
+
+      '
+    next_step: Use held-out rows to check predictions and residuals.
   catch_outs:
-    - n_components must be between 1 and the number of features.
-    - The default n_components is 2. Set it on purpose.
-    - Missing values stop the fit. Impute them first.
+  - n_components must be between 1 and the number of features.
+  - The default n_components is 2. Set it on purpose.
+  - Missing values stop the fit. Impute them first.
   key_settings:
     tier1:
-    - {name: n_components, page: null}
-    - {name: scale, page: null}
+    - name: n_components
+      page: null
+      controls: Number of latent components to build.
+      effect: More components can represent more signal but risk fitting noise.
+    - name: scale
+      page: null
+      controls: Whether to scale each input and target before fitting.
+      effect: Turning it off makes component extraction sensitive to measurement units.
     tier2: []
     tier3:
-    - {name: max_iter, page: null}
-    - {name: tol, page: null}
-    - {name: copy, page: null}
-  watch_it_work: {none: true}
+    - name: max_iter
+      page: null
+      controls: Maximum power-method iterations per component.
+      effect: Too few iterations may stop before convergence.
+    - name: tol
+      page: null
+      controls: Convergence threshold for the power method.
+      effect: A looser threshold can stop sooner with less precise components.
+    - name: copy
+      page: null
+      controls: Whether to copy X and y before centering and scaling.
+      effect: Disabling can modify the arrays in place.
+  watch_it_work:
+    none: true
   intuition:
     idea: Build a few combined features, then fit the target on them.
     analogy: Summarising many survey questions into a few scores before judging.
     animation: none
-    good_at: [more features than rows, correlated features, a few combined features]
-    bad_at: [curved patterns, rows in groups]
+    good_at:
+    - more features than rows
+    - correlated features
+    - a few combined features
+    bad_at:
+    - curved patterns
+    - rows in groups
     vs_siblings:
-      - {page: ridge, note: "Keeps every feature and shrinks the slopes."}
-      - {page: linear-regression, note: "Plain fit, with no combined features."}
-    read_more:
-      - Pick a few combined features, one at a time.
-      - Each one aims at the inputs and the target together.
-      - Fit the target on those combined features.
+    - page: ridge
+      note: Keeps every feature and shrinks the slopes.
+    - page: linear-regression
+      note: Plain fit, with no combined features.
+    goal: Build a small set of target-informed latent components, then regress the target on those components.
+    steps: &id001
+    - Pick a few combined features, one at a time.
+    - Each one aims at the inputs and the target together.
+    - Fit the target on those combined features.
+    math:
+      notation:
+      - symbol: X_k
+        meaning: Residual input matrix before component k is extracted.
+      - symbol: Y_k
+        meaning: Residual target matrix before component k is extracted.
+      - symbol: u_k
+        meaning: Input weight direction for component k.
+      - symbol: t_k
+        meaning: Input score vector X_k u_k.
+      - symbol: p_k
+        meaning: Input loading used to reconstruct X_k from t_k.
+      - symbol: q_k
+        meaning: Target loading used to reconstruct Y_k from input score t_k in PLSRegression.
+      - symbol: K
+        meaning: Number of components retained.
+      equations:
+      - expression: u_k is chosen from the cross-covariance X_k^T Y_k
+        meaning: This target-informed direction differs from PCA, which uses input variance alone.
+      - expression: t_k = X_k u_k
+        meaning: Each input score is a weighted combination of the current residual input columns.
+      - expression: X_(k+1) = X_k - t_k p_k^T;  Y_(k+1) = Y_k - t_k q_k^T
+        meaning: PLSRegression removes each component contribution from the inputs and target before finding the
+          next one.
+      - expression: y-hat = X_new coef_^T + intercept_
+        meaning: The fitted coefficient matrix predicts targets directly from new input rows.
+      prediction: PLSRegression forms target-informed components, deflates both matrices, then predicts with coef_
+        and intercept_.
+    read_more: *id001
   next: []

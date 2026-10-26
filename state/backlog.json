@@ -87,6 +87,24 @@
         "E12"
       ]
     },
+    "E13": {
+      "title": "Rich learning-page prototype",
+      "goal": "Prove the deeper shared page format on XGBoost: intuitive and mathematical explanation, meaningful setting guidance, and runnable prediction code with captured output, while preserving the existing 12-slot structure.",
+      "spec": "§5.1, §9, §13; user-approved content review direction 2026-10-26",
+      "status": "Done",
+      "dependencies": [
+        "E05"
+      ]
+    },
+    "E14": {
+      "title": "Rich model-page migration",
+      "goal": "Migrate model pages in source-compatible family batches to the user-approved XGBoost page standard, using low-cost parallel writers and full primary-model review.",
+      "spec": "§5.1, §13.4; docs/CONTENT_SCHEMA.md Reviewed model-page template",
+      "status": "Done",
+      "dependencies": [
+        "E13"
+      ]
+    },
     "E06": {
       "title": "Lookup: relationship lines, semantic zoom and search polish",
       "goal": "Relationship lines on demand (including we_need_but questions to their answers), semantic zoom and search polish. The question door moved to E11.",
@@ -177,6 +195,38 @@
       "T042",
       "T043",
       "T044"
+    ],
+    "Sprint 5 (E13 prototype)": [
+      "T045",
+      "T046",
+      "T047"
+    ],
+    "Sprint 6 (E14 wave 1)": [
+      "T048",
+      "T049",
+      "T050",
+      "T051"
+    ],
+    "Sprint 7 (E14 wave 2)": [
+      "T052",
+      "T053",
+      "T054"
+    ],
+    "Sprint 8 (E14 wave 3)": [
+      "T055",
+      "T056",
+      "T057",
+      "T058"
+    ],
+    "Sprint 9 (E14 wave 4)": [
+      "T059",
+      "T060",
+      "T061"
+    ],
+    "Sprint 10 (E14 wave 5)": [
+      "T062",
+      "T063",
+      "T064"
     ]
   },
   "tasks": {
@@ -598,6 +648,187 @@
         "T043"
       ],
       "epic": "E05"
+    },
+    "T045": {
+      "title": "XGBoost rich shared-page prototype",
+      "file": "tasks/T045-xgboost-rich-page-prototype.md",
+      "status": "Done",
+      "dependencies": [
+        "T044"
+      ],
+      "epic": "E13"
+    },
+    "T046": {
+      "title": "Output row clarity and illustrative examples",
+      "file": "tasks/T046-output-row-clarity-and-examples.md",
+      "status": "Done",
+      "dependencies": [
+        "T045"
+      ],
+      "epic": "E13"
+    },
+    "T047": {
+      "title": "Novice-friendly output shape explanations",
+      "file": "tasks/T047-novice-shape-explanations.md",
+      "status": "Done",
+      "dependencies": [
+        "T046"
+      ],
+      "epic": "E13"
+    },
+    "T048": {
+      "title": "Record the reviewed rich model-page template",
+      "file": "tasks/T048-record-rich-model-template.md",
+      "status": "Done",
+      "dependencies": [
+        "T047"
+      ],
+      "epic": "E14"
+    },
+    "T049": {
+      "title": "Rich model pages: linear foundations",
+      "file": "tasks/T049-rich-models-linear-foundations.md",
+      "status": "Done",
+      "dependencies": [
+        "T048"
+      ],
+      "epic": "E14"
+    },
+    "T050": {
+      "title": "Rich model pages: sparse linear models",
+      "file": "tasks/T050-rich-models-linear-sparse.md",
+      "status": "Done",
+      "dependencies": [
+        "T048"
+      ],
+      "epic": "E14"
+    },
+    "T051": {
+      "title": "Rich model pages: Bayesian, mixed, and robust regression",
+      "file": "tasks/T051-rich-models-bayesian-robust.md",
+      "status": "Done",
+      "dependencies": [
+        "T048"
+      ],
+      "epic": "E14"
+    },
+    "T052": {
+      "title": "Rich model pages: linear classification",
+      "file": "tasks/T052-rich-models-linear-classification.md",
+      "status": "Done",
+      "dependencies": [
+        "T048"
+      ],
+      "epic": "E14"
+    },
+    "T053": {
+      "title": "Rich model pages: GLMs and quantile regression",
+      "file": "tasks/T053-rich-models-glm-quantile.md",
+      "status": "Done",
+      "dependencies": [
+        "T048"
+      ],
+      "epic": "E14"
+    },
+    "T054": {
+      "title": "Rich model pages: large-margin and online linear models",
+      "file": "tasks/T054-rich-models-large-margin-online.md",
+      "status": "Done",
+      "dependencies": [
+        "T048"
+      ],
+      "epic": "E14"
+    },
+    "T055": {
+      "title": "Rich model pages: single trees, bagging, and forests",
+      "file": "tasks/T055-rich-models-trees-foundations.md",
+      "status": "Done",
+      "dependencies": [
+        "T048"
+      ],
+      "epic": "E14"
+    },
+    "T056": {
+      "title": "Rich model pages: boosting and model combination",
+      "file": "tasks/T056-rich-models-boosting-combination.md",
+      "status": "Done",
+      "dependencies": [
+        "T048",
+        "T058"
+      ],
+      "epic": "E14"
+    },
+    "T057": {
+      "title": "Rich model pages: balanced ensembles",
+      "file": "tasks/T057-rich-models-balanced-ensembles.md",
+      "status": "Done",
+      "dependencies": [
+        "T048"
+      ],
+      "epic": "E14"
+    },
+    "T058": {
+      "title": "Allow rich intuition on composer model pages",
+      "file": "tasks/T058-rich-composer-intuition-schema.md",
+      "status": "Done",
+      "dependencies": [
+        "T048"
+      ],
+      "epic": "E14"
+    },
+    "T059": {
+      "title": "Rich model pages: nearest neighbours and kernels",
+      "file": "tasks/T059-rich-models-neighbours-kernels.md",
+      "status": "Done",
+      "dependencies": [
+        "T048"
+      ],
+      "epic": "E14"
+    },
+    "T060": {
+      "title": "Rich model pages: Gaussian processes and Naive Bayes",
+      "file": "tasks/T060-rich-models-gp-naive-bayes.md",
+      "status": "Done",
+      "dependencies": [
+        "T048"
+      ],
+      "epic": "E14"
+    },
+    "T061": {
+      "title": "Rich model pages: discriminant analysis, neural nets, and baselines",
+      "file": "tasks/T061-rich-models-da-neural-baseline.md",
+      "status": "Done",
+      "dependencies": [
+        "T048"
+      ],
+      "epic": "E14"
+    },
+    "T062": {
+      "title": "Rich model pages: autoregressive and smoothing forecasts",
+      "file": "tasks/T062-rich-models-univariate-forecasting.md",
+      "status": "Done",
+      "dependencies": [
+        "T048"
+      ],
+      "epic": "E14"
+    },
+    "T063": {
+      "title": "Rich model pages: multivariate, state-space, and regime forecasts",
+      "file": "tasks/T063-rich-models-multivariate-state-regime.md",
+      "status": "Done",
+      "dependencies": [
+        "T048"
+      ],
+      "epic": "E14"
+    },
+    "T064": {
+      "title": "Rich model pages: curve fitting and shape constraints",
+      "file": "tasks/T064-rich-models-curve-shape.md",
+      "status": "Done",
+      "dependencies": [
+        "T048"
+      ],
+      "epic": "E14"
     }
   }
 }

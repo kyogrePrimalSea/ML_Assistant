@@ -1,95 +1,244 @@
 id: gaussian-nb
 plain_name: GaussianNB
 code_name: GaussianNB
-aliases: [gaussian naive bayes]
+aliases:
+- gaussian naive bayes
 stage: model
 family: model.probabilistic.nb
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [numeric features, quick baseline]
-targets: [sklearn.naive_bayes.GaussianNB]
+question_tags:
+- numeric features
+- quick baseline
+targets:
+- sklearn.naive_bayes.GaussianNB
 pairs_with: []
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.GaussianNB.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.GaussianNB.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [classification]
+  task_types:
+  - classification
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: breast-cancer, shape: boundary}
+    hero:
+      kind: model
+      dataset: breast-cancer
+      shape: boundary
     line: Naive Bayes with one bell curve per feature and class.
-  quick_facts: {none: true}
+  quick_facts:
+    none: true
   use_avoid:
-    use_when: [numeric features, quick baseline, class probabilities]
-    avoid_when: [category codes, word counts, missing values]
+    use_when:
+    - numeric features
+    - quick baseline
+    - class probabilities
+    avoid_when:
+    - category codes
+    - word counts
+    - missing values
   prep:
-    - step: {family: clean.impute}
-      status: required
-      why: Rejects NaN. Fill gaps first.
-      condition: null
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Text categories must become numbers.
-      condition: {has_categoricals: true}
-      unless: null
-    - step: {family: transform.scale.rescale}
-      status: not_needed
-      why: Each feature gets its own mean and variance.
-      condition: null
-      unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Rejects NaN. Fill gaps first.
+    condition: null
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Text categories must become numbers.
+    condition:
+      has_categoricals: true
+    unless: null
+  - step:
+      family: transform.scale.rescale
+    status: not_needed
+    why: Each feature gets its own mean and variance.
+    condition: null
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.naive_bayes.GaussianNB
-      why_this_library: Numeric features with few settings to start.
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import load_breast_cancer
-        from sklearn.model_selection import train_test_split
-        from sklearn.naive_bayes import GaussianNB
-
-        X, y = load_breast_cancer(return_X_y=True)
-        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
-
-        model = GaussianNB().fit(X_train, y_train)
-        print(round(model.score(X_test, y_test), 3))
+  - library: scikit-learn
+    target: sklearn.naive_bayes.GaussianNB
+    why_this_library: Numeric features with few settings to start.
+    snippet: "# scikit-learn 1.9.1\nfrom sklearn.datasets import make_classification\nfrom sklearn.naive_bayes import\
+      \ GaussianNB\nfrom sklearn.model_selection import train_test_split\n\nX, y = make_classification(\n    n_samples=120,\
+      \ n_features=4, n_informative=3, n_redundant=0,\n    class_sep=1.0, random_state=0,\n)\nX_train, X_test, y_train,\
+      \ y_test = train_test_split(X, y, random_state=0)\nmodel = GaussianNB().fit(X_train, y_train)\ny_proba = model.predict_proba(X_test[:3])\n\
+      y_pred = model.predict(X_test[:3])\nprint(\"probabilities:\", y_proba.round(3))\nprint(\"labels:\", y_pred)\n\
+      print(\"score:\", round(model.score(X_test, y_test), 3))\n"
+    output: "probabilities: [[0.612 0.388]\n [0.356 0.644]\n [0.277 0.723]]\nlabels: [0 1 1]\nscore: 0.833\n"
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: null, shape: "(n_samples,)", note: "Predicted class labels."}
-      - {name: predict_proba, kind: method, task: classification, shape: "(n_samples, n_classes)", note: "One column per class, in classes_ order."}
-      - {name: predict_log_proba, kind: method, task: classification, shape: "(n_samples, n_classes)", note: "Log of predict_proba, same columns."}
-      - {name: score, kind: method, task: null, shape: "float", note: "Accuracy on the data given."}
-      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)", note: "Class labels, in predict_proba column order."}
-      - {name: n_features_in_, kind: attribute, task: null, shape: "int", note: "Number of input columns seen in fit."}
-      - {name: feature_names_in_, kind: attribute, task: null, shape: "(n_features,)", note: "Column names seen in fit, if any."}
-    next_step: "Check the score against a baseline before trusting it."
+    - name: predict
+      kind: method
+      task: classification
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[''fruit'', ''vehicle'', ''fruit'']'
+      shape_explanation: Three input rows produce three predicted labels, shape (3,). The trailing comma means one
+        array axis.
+      note: One predicted class label for each input row.
+    - name: predict_proba
+      kind: method
+      task: classification
+      shape: (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[[0.91, 0.09], [0.12, 0.88], [0.73, 0.27]]'
+      shape_explanation: Rows are 3 input cases and columns are the 2 classes in classes_ order, shape (3, 2).
+      note: Normalized class probabilities; columns follow classes_.
+    - name: predict_log_proba
+      kind: method
+      task: classification
+      shape: (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[[-0.09, -2.41], [-2.12, -0.13], [-0.31, -1.31]]'
+      shape_explanation: Three case rows and two class columns give shape (3, 2); values are log probabilities.
+      note: Log of normalized posterior probabilities.
+    - name: predict_joint_log_proba
+      kind: method
+      task: classification
+      shape: (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[[-4.21, -6.53], [-6.24, -4.25], [-4.43, -5.43]]'
+      shape_explanation: Three input rows by two class scores gives shape (3, 2); columns use classes_ order.
+      note: Adds class log prior to class-conditional log likelihood; ComplementNB returns complement scores.
+    - name: classes_
+      kind: attribute
+      task: classification
+      shape: (n_classes,)
+      object_type: numpy.ndarray
+      example: '[''fruit'', ''vehicle'']'
+      shape_explanation: There are two class labels, so this one-dimensional array has shape (2,).
+      note: Defines class-column order for probability and log-score methods.
+    - name: class_prior_
+      kind: attribute
+      task: classification
+      shape: (n_classes,)
+      object_type: numpy.ndarray
+      example: '[0.50, 0.50]'
+      shape_explanation: One prior probability for each of two classes gives shape (2,).
+      note: GaussianNB stores class probabilities, not their logarithms.
+    - name: theta_
+      kind: attribute
+      task: classification
+      shape: (n_classes, n_features)
+      object_type: numpy.ndarray
+      example: '[[0.2, -0.1], [1.1, 0.8]]'
+      shape_explanation: Rows are 2 classes and columns are 2 continuous features, shape (2, 2).
+      note: Estimated Gaussian mean for each class-feature pair.
+    - name: var_
+      kind: attribute
+      task: classification
+      shape: (n_classes, n_features)
+      object_type: numpy.ndarray
+      example: '[[0.7, 0.4], [0.5, 0.9]]'
+      shape_explanation: Rows are 2 classes and columns are 2 continuous features, shape (2, 2).
+      note: Estimated Gaussian variance plus var_smoothing stabilization.
+    next_step: null
     visual: proba_table
+    guidance:
+    - task: classification
+      text: Use predict_proba for posterior probabilities; predict_joint_log_proba contains unnormalized class log
+        scores.
+    snippet: "# scikit-learn 1.9.1\nfrom sklearn.datasets import make_classification\nfrom sklearn.naive_bayes import\
+      \ GaussianNB\n\nX, y = make_classification(\n    n_samples=120, n_features=4, n_informative=3, n_redundant=0,\n\
+      \    class_sep=1.0, random_state=0,\n)\nmodel = GaussianNB().fit(X, y)\nquery = X[:3]\nprint(\"labels:\",\
+      \ model.predict(query))\nprint(\"probability shape:\", model.predict_proba(query).shape)\nprint(\"log probability\
+      \ shape:\", model.predict_log_proba(query).shape)\nprint(\"joint log shape:\", model.predict_joint_log_proba(query).shape)\n\
+      print(\"classes_:\", model.classes_)\nprint(\"class_prior_:\", model.class_prior_.round(3))\nprint(\"theta_\
+      \ shape:\", model.theta_.shape)\nprint(\"var_ shape:\", model.var_.shape)\n"
+    snippet_library: scikit-learn
+    output: 'labels: [1 0 0]
+
+      probability shape: (3, 2)
+
+      log probability shape: (3, 2)
+
+      joint log shape: (3, 2)
+
+      classes_: [0 1]
+
+      class_prior_: [0.483 0.517]
+
+      theta_ shape: (2, 4)
+
+      var_ shape: (2, 4)
+
+      '
   catch_outs:
-    - NaN fails in fit. Impute before the model.
-    - Non-numeric columns fail. Encode them first.
-    - var_smoothing is a share of the largest variance, not an absolute value.
+  - NaN fails in fit. Impute before the model.
+  - Non-numeric columns fail. Encode them first.
+  - var_smoothing is a share of the largest variance, not an absolute value.
   key_settings:
     tier1:
-      - {name: var_smoothing, page: null}
-      - {name: priors, page: null}
+    - name: var_smoothing
+      page: null
+      controls: Fraction of the largest feature variance added to every estimated variance.
+      effect: More smoothing stabilizes near-constant features but can blur class separation.
+    - name: priors
+      page: null
+      controls: Explicit class prior probabilities, replacing priors learned from class frequencies.
+      effect: Use known deployment priors; mismatched priors can bias posterior probabilities.
     tier2: []
     tier3: []
-  watch_it_work: {none: true}
+  watch_it_work:
+    none: true
   intuition:
     idea: Each class gets its own mean and spread for every feature.
     analogy: A typical value and a usual spread for each group.
     animation: none
-    good_at: [numeric features, quick baseline]
-    bad_at: [category codes, word counts]
+    good_at:
+    - numeric features
+    - quick baseline
+    bad_at:
+    - category codes
+    - word counts
     vs_siblings:
-      - {page: categorical-nb, note: "Category codes. GaussianNB needs numbers."}
-      - {page: multinomial-nb, note: "Counts. GaussianNB models means and spreads."}
+    - page: categorical-nb
+      note: Category codes. GaussianNB needs numbers.
+    - page: multinomial-nb
+      note: Counts. GaussianNB models means and spreads.
     read_more:
-      - See the scikit-learn reference page for GaussianNB.
-  next: [evaluate-how-good]
-...
+    - Each class-feature pair has a Gaussian mean and variance.
+    - The conditional-independence assumption multiplies likelihoods, or adds their log likelihoods.
+    - var_smoothing stabilizes variance estimates by adding a global feature-scale term.
+    goal: Classify continuous features by multiplying independent per-feature Gaussian likelihoods within each class.
+    steps:
+    - Estimate a mean and variance for every class-feature pair.
+    - Add variance stabilization based on the largest feature variance.
+    - For each row, sum Gaussian log likelihoods across features and add a class log prior.
+    - Normalize class scores into posterior probabilities and select the largest for predict.
+    math:
+      notation:
+      - symbol: c
+        meaning: Candidate class label.
+      - symbol: j
+        meaning: Feature index.
+      - symbol: mu_cj
+        meaning: Mean of feature j among rows in class c.
+      - symbol: v_cj
+        meaning: Estimated feature variance plus variance smoothing.
+      - symbol: pi_c
+        meaning: Prior probability of class c.
+      - symbol: x_j
+        meaning: Observed continuous value for feature j.
+      equations:
+      - expression: log P(c,x) = log pi_c + sum_j log Normal(x_j; mu_cj, v_cj)
+        meaning: Conditional independence lets Gaussian feature log likelihoods add to the class log prior.
+      - expression: P(c|x) = exp(log P(c,x)) / sum_r exp(log P(r,x))
+        meaning: Normalizing joint class scores gives posterior probabilities across classes.
+      prediction: GaussianNB models each continuous feature as class-conditional normal; its prior is class_prior_,
+        not class_log_prior_.
+  next:
+  - evaluate-how-good

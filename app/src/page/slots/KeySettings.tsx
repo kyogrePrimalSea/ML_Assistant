@@ -24,8 +24,8 @@ export function defaultText(facts: KeySettingFacts | undefined): { text: string;
 
 function Row({ s, facts }: { s: KeySetting; facts: KeySettingFacts | undefined }) {
   const d = defaultText(facts)
-  return (
-    <li className="grid grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] gap-x-4 border-t border-border py-2 first:border-t-0">
+  const summary = (
+    <>
       <code className="w-fit self-start border-0 bg-transparent p-0 font-bold [overflow-wrap:anywhere]">
         {s.page ? <PageLink id={s.page}>{s.name}</PageLink> : s.name}
       </code>
@@ -39,6 +39,34 @@ function Row({ s, facts }: { s: KeySetting; facts: KeySettingFacts | undefined }
           <span className="text-sm text-text-muted">Not listed</span>
         )}
       </span>
+    </>
+  )
+
+  if (!s.controls && !s.effect) {
+    return (
+      <li className="grid grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] gap-x-4 border-t border-border py-2 first:border-t-0">
+        {summary}
+      </li>
+    )
+  }
+
+  return (
+    <li className="grid gap-3 border-t border-border py-3 first:border-t-0">
+      <div className="grid grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] gap-x-4">{summary}</div>
+      <dl className="m-0 grid gap-2 text-sm">
+        {s.controls ? (
+          <div className="grid gap-0.5">
+            <dt className="font-bold text-text-muted">Controls</dt>
+            <dd className="m-0">{s.controls}</dd>
+          </div>
+        ) : null}
+        {s.effect ? (
+          <div className="grid gap-0.5">
+            <dt className="font-bold text-text-muted">Trade-off</dt>
+            <dd className="m-0">{s.effect}</dd>
+          </div>
+        ) : null}
+      </dl>
     </li>
   )
 }

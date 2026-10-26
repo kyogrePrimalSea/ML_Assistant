@@ -1,94 +1,251 @@
 id: theta-model
 plain_name: ThetaModel
 code_name: ThetaModel
-aliases: [theta method]
+aliases:
+- theta method
 stage: model
 family: model.ts-smooth
-tracks: [time-series]
+tracks:
+- time-series
 archetype: model
-question_tags: [forecast, benchmark, seasonal]
-targets: [statsmodels.tsa.forecasting.theta.ThetaModel]
+question_tags:
+- forecast
+- benchmark
+- seasonal
+targets:
+- statsmodels.tsa.forecasting.theta.ThetaModel
 pairs_with: []
 clashes: []
-source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.tsa.forecasting.theta.ThetaModel.html']
-library_versions: {statsmodels: 0.15.0}
+source_urls:
+- https://www.statsmodels.org/stable/generated/statsmodels.tsa.forecasting.theta.ThetaModel.html
+- https://www.statsmodels.org/stable/generated/statsmodels.tsa.forecasting.theta.ThetaModelResults.forecast.html
+- https://www.statsmodels.org/stable/generated/statsmodels.tsa.forecasting.theta.ThetaModelResults.prediction_intervals.html
+- https://www.statsmodels.org/stable/generated/statsmodels.tsa.forecasting.theta.ThetaModelResults.forecast_components.html
+library_versions:
+  statsmodels: 0.15.0
 reviewed: false
 rules:
-  task_types: [regression]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: airline-passengers, shape: fit_line}
-    line: "A simple benchmark: remove the season, then a trend."
+    hero:
+      kind: model
+      dataset: airline-passengers
+      shape: fit_line
+    line: 'A simple benchmark: remove the season, then a trend.'
   quick_facts:
     data_size: 2+ seasons, e.g. 24 monthly points
   use_avoid:
-    use_when: [need a quick benchmark, seasonal series]
-    avoid_when: [outside drivers needed]
+    use_when:
+    - need a quick benchmark
+    - seasonal series
+    avoid_when:
+    - outside drivers needed
   prep:
-    - step: {family: explore.decompose}
-      status: recommended
-      why: Check the season length to set period.
-      condition: null
-      unless: null
-    - step: {family: split.time}
-      status: recommended
-      why: Test on the latest months, never on random rows.
-      condition: null
-      unless: null
+  - step:
+      family: explore.decompose
+    status: recommended
+    why: Check the season length to set period.
+    condition: null
+    unless: null
+  - step:
+      family: split.time
+    status: recommended
+    why: Test on the latest months, never on random rows.
+    condition: null
+    unless: null
   code:
-    - library: statsmodels
-      target: statsmodels.tsa.forecasting.theta.ThetaModel
-      why_this_library: Benchmark built in, with season testing.
-      snippet: |
-        # statsmodels 0.15.0
-        import numpy as np
-        from statsmodels.tsa.forecasting.theta import ThetaModel
+  - library: statsmodels
+    target: statsmodels.tsa.forecasting.theta.ThetaModel
+    why_this_library: Benchmark built in, with season testing.
+    snippet: '# statsmodels 0.15.0
 
-        rng = np.random.default_rng(0)
-        t = np.arange(144)
-        y = 100 + 0.8 * t + 10 * np.sin(2 * np.pi * t / 12)
-        y = y + rng.normal(0, 2, 144)
+      import numpy as np
 
-        model = ThetaModel(y[:132], period=12)
-        res = model.fit()
-        print(np.round(res.forecast(12), 1).tolist())
+      from statsmodels.tsa.forecasting.theta import ThetaModel
+
+
+      rng = np.random.default_rng(0)
+
+      t = np.arange(144)
+
+      y = 100 + 0.8 * t + 10 * np.sin(2 * np.pi * t / 12)
+
+      y = y + rng.normal(0, 2, 144)
+
+
+      model = ThetaModel(y[:132], period=12)
+
+      res = model.fit()
+
+      y_pred = res.forecast(3)
+
+      interval = res.prediction_intervals(steps=3)
+
+      print("forecast:", np.round(y_pred.to_numpy(), 2).tolist())
+
+      '
+    output: 'forecast: [205.91, 214.14, 219.81]
+
+      '
   what_comes_out:
     items:
-      - {name: forecast, kind: return, task: regression, shape: "(steps,) Series",
-         note: "Forecast from the fitted result. Pass the number of steps."}
-      - {name: deseasonalize, kind: attribute, task: null, shape: "bool",
-         note: "True by default. Season is removed before forecasting."}
-      - {name: difference, kind: attribute, task: null, shape: "bool",
-         note: "False by default. Set True to difference first."}
-    next_step: Use as the benchmark that other models must beat.
+    - name: forecast result
+      kind: return
+      task: regression
+      shape: (steps,)
+      note: forecast(steps) returns a future-indexed Series; prediction_intervals gives uncertainty bounds.
+      object_type: pandas.Series
+      example: Series([205.1, 211.3, 216.1], index=[132, 133, 134])
+      shape_explanation: Three forecast values are indexed at future positions 132–134; steps=3, so the Series has
+        shape (3,).
+    - name: prediction intervals
+      kind: return
+      task: regression
+      shape: (steps, 2)
+      note: Lower and upper forecast bounds, not class probabilities.
+      object_type: pandas.DataFrame
+      example: 'DataFrame({''lower'': [197.7, 202.4, 205.4], ''upper'': [214.1, 225.9, 234.3]})'
+      shape_explanation: Three forecast rows and lower/upper columns give shape (steps, 2) = (3, 2).
+    - name: fitted parameters
+      kind: return
+      task: null
+      shape: (n_params,)
+      note: Estimated trend and smoothing parameters.
+      object_type: pandas.Series
+      example: 'Series({''b0'': 0.8, ''alpha'': 0.802})'
+      shape_explanation: A pandas Series stores two fitted values indexed by parameter name; n_params=2, so shape
+        is (2,).
+    - name: forecast components
+      kind: return
+      task: regression
+      shape: (steps, 3)
+      note: Trend, SES and seasonal parts of each forecast.
+      object_type: pandas.DataFrame
+      example: 'DataFrame({''trend'': [2.0, 2.2, 2.4], ''ses'': [10.0, 10.0, 10.0], ''seasonal'': [1.1, 0.9, 0.8]})'
+      shape_explanation: Three forecast rows and trend, SES and seasonal columns give shape (steps, 3) = (3, 3).
+    next_step: Compare the forecast with a seasonal-naive benchmark on future observations.
     visual: null
+    snippet: '# statsmodels 0.15.0
+
+      import numpy as np
+
+      from statsmodels.tsa.forecasting.theta import ThetaModel
+
+
+      rng = np.random.default_rng(0)
+
+      t = np.arange(144)
+
+      y = 100 + 0.8 * t + 10 * np.sin(2 * np.pi * t / 12)
+
+      y = y + rng.normal(0, 2, 144)
+
+
+      model = ThetaModel(y[:132], period=12)
+
+      res = model.fit()
+
+      y_pred = res.forecast(3)
+
+      interval = res.prediction_intervals(steps=3)
+
+      components = res.forecast_components(steps=3)
+
+      print("forecast:", np.round(y_pred.to_numpy(), 2).tolist())
+
+      print("forecast index:", y_pred.index.tolist())
+
+      print("intervals:", np.round(interval.to_numpy(), 2).tolist())
+
+      print("components shape:", components.shape)
+
+      print("params:", res.params.round(3).to_dict())
+
+      '
+    snippet_library: statsmodels
+    output: 'forecast: [205.91, 214.14, 219.81]
+
+      forecast index: [132, 133, 134]
+
+      intervals: [[197.68, 214.14], [202.38, 225.89], [205.36, 234.25]]
+
+      components shape: (3, 3)
+
+      params: {''b0'': 0.8, ''alpha'': 0.802}
+
+      '
   catch_outs:
-    - Has no outside drivers. Use sarimax if you have them.
-    - Season length must be set with period when it is not obvious.
+  - Time order must be preserved; random shuffling invalidates the forecast horizon.
   key_settings:
     tier1:
-      - {name: period, page: null}
-      - {name: method, page: null}
-      - {name: use_test, page: null}
-      - {name: deseasonalize, page: null}
+    - name: period
+      page: null
+      controls: Number of observations in one seasonal cycle.
+      effect: Correct period is needed to remove and restore seasonal effects.
+    - name: method
+      page: null
+      controls: Method used to estimate the simple-smoothing parameter.
+      effect: Different methods can change fitted alpha and forecasts.
+    - name: use_test
+      page: null
+      controls: Test whether seasonality should be removed before fitting.
+      effect: A test can avoid needless deseasonalization.
+    - name: deseasonalize
+      page: null
+      controls: Whether to remove seasonal effects before forecasting and restore them after.
+      effect: Useful for seasonal data when period is correctly specified.
     tier2:
-      - {name: difference, page: null}
+    - name: difference
+      page: null
+      controls: Whether to difference the series as part of Theta fitting.
+      effect: Differencing can address changing levels but alters the modeled series.
     tier3: []
-  watch_it_work: {none: true}
+  watch_it_work:
+    none: true
   intuition:
     idea: Remove the season, then forecast with a simple trend model.
     analogy: Like a quick baseline that a fancy model has to beat.
     animation: none
-    good_at: [strong simple benchmark, seasonal series]
-    bad_at: [outside drivers]
+    good_at:
+    - strong simple benchmark
+    - seasonal series
+    bad_at:
+    - outside drivers
     vs_siblings:
-      - {page: exponential-smoothing, note: "Smooths level, trend and season instead."}
-    read_more:
-      - Set period to the season length.
-      - Seasonality is tested before it is removed.
-      - Fit, then forecast a set number of steps.
+    - page: exponential-smoothing
+      note: Smooths level, trend and season instead.
+    read_more: &id001
+    - Optionally test for seasonality and remove it using the specified cycle length.
+    - Fit simple exponential smoothing and a linear trend to the adjusted series.
+    - Combine the two forecasts with theta and restore seasonality when it was removed.
+    goal: Combine a smoothed level forecast with a linear trend after optional seasonal adjustment.
+    steps: *id001
+    math:
+      notation:
+      - symbol: T
+        meaning: last observed time index
+      - symbol: h
+        meaning: forecast steps ahead
+      - symbol: α
+        meaning: simple exponential smoothing weight
+      - symbol: b₀
+        meaning: slope of the fitted linear trend
+      - symbol: θ
+        meaning: weight parameter; default is 2
+      - symbol: SES_{T+h}
+        meaning: simple exponential smoothing forecast at horizon h
+      equations:
+      - expression: ŷ_{T+h}=((θ-1)/θ)b₀[h-1+1/α-(1-α)^T/α]+SES_{T+h}
+        meaning: Combine a weighted linear-trend forecast with the SES forecast.
+      - expression: θ=2 gives weights 1/2 for trend and SES
+        meaning: The default gives equal weight to the trend and smoothing forecasts.
+      prediction: Forecast intervals quantify uncertainty across future steps; they are not ordinary class probabilities.
   next: []

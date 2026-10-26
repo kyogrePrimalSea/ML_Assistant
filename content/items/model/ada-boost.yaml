@@ -1,134 +1,296 @@
 id: ada-boost
 plain_name: AdaBoost
 code_name: AdaBoostRegressor / AdaBoostClassifier
-aliases: [adaptive boosting]
+aliases:
+- adaptive boosting
 stage: model
 family: model.trees.boosting
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [boosting, tabular data, underperforming]
-targets: [sklearn.ensemble.AdaBoostRegressor, sklearn.ensemble.AdaBoostClassifier]
+question_tags:
+- boosting
+- tabular data
+- underperforming
+targets:
+- sklearn.ensemble.AdaBoostRegressor
+- sklearn.ensemble.AdaBoostClassifier
 pairs_with: []
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostRegressor.html',
-  'https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostClassifier.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostRegressor.html
+- https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.AdaBoostClassifier.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [regression, classification]
+  task_types:
+  - regression
+  - classification
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: ames, shape: fit_line}
-    line: "Boosting, where each new learner focuses on the last one's errors."
+    hero:
+      kind: model
+      dataset: ames
+      shape: fit_line
+    line: Boosting, where each new learner focuses on the last one's errors.
   quick_facts:
     data_size: Tabular data
   use_avoid:
-    use_when: [tabular data, a boosting baseline, learning how boosting works]
-    avoid_when: [noisy labels, images or text, need the best accuracy]
+    use_when:
+    - tabular data
+    - a boosting baseline
+    - learning how boosting works
+    avoid_when:
+    - noisy labels
+    - images or text
+    - need the best accuracy
   prep:
-    - step: {family: transform.scale.rescale}
-      status: not_needed
-      why: Default learners are trees, which ignore scale.
-      condition: null
-      unless: null
-    - step: {family: clean.impute}
-      status: required
-      why: Missing values stop fit. Impute them first.
-      condition: null
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Text categories must become numbers.
-      condition: {has_categoricals: true}
-      unless: null
+  - step:
+      family: transform.scale.rescale
+    status: not_needed
+    why: Default learners are trees, which ignore scale.
+    condition: null
+    unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Missing values stop fit. Impute them first.
+    condition: null
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Text categories must become numbers.
+    condition:
+      has_categoricals: true
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.ensemble.AdaBoostRegressor
-      why_this_library: Built into scikit-learn, same API as the classifier.
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import make_regression
-        from sklearn.ensemble import AdaBoostRegressor
-        from sklearn.model_selection import train_test_split
+  - library: scikit-learn
+    target: sklearn.ensemble.AdaBoostRegressor
+    why_this_library: Built into scikit-learn, same API as the classifier.
+    snippet: "# scikit-learn 1.9.1\nimport numpy as np\nfrom sklearn.datasets import make_regression\nfrom sklearn.ensemble\
+      \ import AdaBoostRegressor\nfrom sklearn.model_selection import train_test_split\n\nX, y = make_regression(n_samples=500,\
+      \ n_features=8, noise=10, random_state=0)\nX_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)\n\
+      model = AdaBoostRegressor(\n    n_estimators=80, learning_rate=0.5, random_state=0,\n)\nmodel.fit(X_train,\
+      \ y_train)\ny_pred = model.predict(X_test[:5])\nprint(\"y_pred:\", np.round(y_pred, 1))\nprint(\"score:\"\
+      , round(model.score(X_test, y_test), 3))\n"
+    output: 'y_pred: [-69.8 -73.1  53.2  37.7  73.3]
 
-        X, y = make_regression(
-            n_samples=500, n_features=8, noise=10, random_state=0
-        )
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, random_state=0
-        )
+      score: 0.698
 
-        model = AdaBoostRegressor(
-            n_estimators=100, learning_rate=0.5, random_state=0
-        )
-        model.fit(X_train, y_train)
-        print(round(model.score(X_test, y_test), 3))
+      '
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: null, shape: "(n_samples,)",
-         note: "Class labels for classification, one value per row for regression."}
-      - {name: predict_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
-         note: "One column per class, in classes_ order. Keep [:, 1] for two classes."}
-      - {name: decision_function, kind: method, task: classification, shape: "(n_samples,)",
-         note: "Summed vote score. Above 0 means class 1 for two classes."}
-      - {name: predict_log_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
-         note: "Log of the class probabilities, same column order."}
-      - {name: score, kind: method, task: null, shape: "float",
-         note: "Accuracy for classifiers, R-squared for regressors."}
-      - {name: feature_importances_, kind: attribute, task: null, shape: "(n_features,)",
-         note: "One score per input column."}
-      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)",
-         note: "Class labels, in the column order of predict_proba."}
-      - {name: n_features_in_, kind: attribute, task: null, shape: "int",
-         note: "Number of input columns seen in fit."}
-    next_step: "Classifiers only. ROC AUC needs predict_proba, not predict."
-    snippet: |
-      # scikit-learn 1.9.1
-      from sklearn.datasets import load_breast_cancer
-      from sklearn.ensemble import AdaBoostClassifier
+    - name: predict
+      kind: method
+      task: classification
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[0, 1]'
+      shape_explanation: One class label per case. n_samples is 2 in this example, so shape (2,).
+      note: Classifier labels use classes_.
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[245.0, 318.5]'
+      shape_explanation: One numeric value per case. n_samples is 2 in this example, so shape (2,).
+      note: AdaBoost.R2 aggregates member predictions by weighted median.
+    - name: predict_proba
+      kind: method
+      task: classification
+      shape: (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[[0.91, 0.09], [0.18, 0.82]]'
+      shape_explanation: Rows are cases and columns follow classes_. This example has 2 cases and 2 classes, shape
+        (2, 2).
+      note: Probabilities aggregate weighted member votes.
+    - name: decision_function
+      kind: method
+      task: classification
+      shape: (n_samples,); (n_samples,n_classes)
+      object_type: numpy.ndarray
+      example: '[-0.8, 1.2]'
+      shape_explanation: This fictional binary example has one vote margin for each of 2 rows, shape (2,). Multiclass
+        gives one class score per row, shape (n_samples,n_classes).
+      note: The example is binary; multiclass returns one vote score per class.
+    - name: classes_
+      kind: attribute
+      task: classification
+      shape: (n_classes,)
+      object_type: numpy.ndarray
+      example: '[0, 1]'
+      shape_explanation: One label per class. n_classes is 2 in this example, so shape (2,).
+      note: Probability columns use this order.
+    - name: estimators_
+      kind: attribute
+      task: null
+      shape: (n_estimators_,)
+      object_type: list
+      example: '[DecisionTreeClassifier(...), DecisionTreeClassifier(...)]'
+      shape_explanation: A list of fitted weak learners. n_estimators_ is the number actually used; this example
+        shows 2 entries.
+      note: Members are cloned base estimators, not the original estimator object.
+    - name: estimator_weights_
+      kind: attribute
+      task: null
+      shape: (n_estimators_,)
+      object_type: numpy.ndarray
+      example: '[1.2, 0.8]'
+      shape_explanation: One vote weight per fitted classifier. n_estimators_ is 2 in this example, giving shape
+        (2,).
+      note: Larger weights give a member more influence.
+    - name: feature_importances_
+      kind: attribute
+      task: null
+      shape: (n_features,)
+      object_type: numpy.ndarray
+      example: '[0.52, 0.31, 0.17]'
+      shape_explanation: One importance per input feature. n_features is 3 in this example, so shape (3,).
+      note: Weighted member importance aggregated by the ensemble.
+    next_step: null
+    snippet: '# scikit-learn 1.9.1
+
+      import numpy as np
+
+      from sklearn.datasets import load_breast_cancer, make_regression
+
+      from sklearn.ensemble import AdaBoostClassifier, AdaBoostRegressor
+
       from sklearn.model_selection import train_test_split
 
-      X, y = load_breast_cancer(return_X_y=True)
-      X_train, X_test, y_train, y_test = train_test_split(
-          X, y, random_state=0
-      )
 
-      model = AdaBoostClassifier(n_estimators=50, random_state=0)
-      model.fit(X_train, y_train)
-      print(model.predict_proba(X_test).shape)
-      print(model.decision_function(X_test).shape)
-      print(model.classes_)
+      X, y = load_breast_cancer(return_X_y=True)
+
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+      clf = AdaBoostClassifier(n_estimators=30, random_state=0).fit(X_train, y_train)
+
+      y_proba = clf.predict_proba(X_test[:3])
+
+      y_score = clf.decision_function(X_test[:3])
+
+      y_pred = clf.predict(X_test[:3])
+
+      print("classes_:", clf.classes_)
+
+      print("y_proba:", np.round(y_proba, 3))
+
+      print("binary vote margin:", np.round(y_score, 3))
+
+      print("y_pred:", y_pred)
+
+      print("estimators_ length:", len(clf.estimators_))
+
+      print("estimator_weights_ shape:", clf.estimator_weights_.shape)
+
+      print("feature_importances_ shape:", clf.feature_importances_.shape)
+
+
+      Xr, yr = make_regression(n_samples=200, n_features=4, noise=10, random_state=0)
+
+      reg = AdaBoostRegressor(n_estimators=30, random_state=0).fit(Xr, yr)
+
+      print("regression y_pred:", np.round(reg.predict(Xr[:3]), 1))
+
+      '
     snippet_library: scikit-learn
     visual: both
+    output: "classes_: [0 1]\ny_proba: [[0.653 0.347]\n [0.411 0.589]\n [0.281 0.719]]\nbinary vote margin: [-0.63\
+      \   0.358  0.938]\ny_pred: [0 1 1]\nestimators_ length: 30\nestimator_weights_ shape: (30,)\nfeature_importances_\
+      \ shape: (30,)\nregression y_pred: [ -74.4   37.5 -144.8]\n"
+    guidance:
+    - task: classification
+      text: Use predict_proba[:, 1] for binary ROC AUC and PR; decision_function gives weighted vote margins, while
+        predict labels serve accuracy and confusion matrices.
+    - task: regression
+      text: Use numeric predictions for held-out regression metrics; AdaBoost.R2 combines member predictions by
+        weighted median.
   catch_outs:
-    - Noisy labels get more weight each round. Check outliers first.
-    - Missing values stop fit. Impute them first.
-    - Pass estimator to change the base learner.
+  - Noisy labels get more weight each round. Check outliers first.
+  - Missing values stop fit. Impute them first.
+  - Pass estimator to change the base learner.
   key_settings:
     tier1:
-      - {name: learning_rate, page: learning-rate}
-      - {name: estimator, page: null}
-      - {name: n_estimators, page: n-estimators}
-      - {name: loss, page: null}
+    - name: learning_rate
+      page: learning-rate
+      controls: Scales each weak learner’s contribution or vote weight.
+      effect: Higher values emphasize each round more, trading off with the estimator count.
+    - name: estimator
+      page: null
+      controls: Base learner cloned for each boosting round; the default is a shallow decision tree.
+      effect: A weak learner that supports sample weights is required; stronger learners can overfit.
+    - name: n_estimators
+      page: n-estimators
+      controls: Maximum number of boosting rounds.
+      effect: More rounds can improve fit but take longer; a perfect fit can stop training early.
+    - name: loss
+      page: null
+      controls: AdaBoost.R2 loss mapping estimator errors to sample reweighting.
+      effect: Exponential reacts strongly to large errors; linear is less sensitive.
     tier2:
-      - {name: random_state, page: null}
+    - name: random_state
+      page: null
+      controls: Seed passed to compatible base estimators and bootstrap-weight sampling.
+      effect: A fixed seed makes runs reproducible when the base estimator uses randomness.
     tier3: []
-  watch_it_work: {none: true}
+  watch_it_work:
+    none: true
   intuition:
     idea: Each new learner focuses on the rows the last ones got wrong.
     analogy: A tutor who spends more time on the questions students keep missing.
     animation: none
-    good_at: [tabular data, simple boosting, teaching]
-    bad_at: [noisy labels, images or text, the best accuracy]
+    good_at:
+    - tabular data
+    - simple boosting
+    - teaching
+    bad_at:
+    - noisy labels
+    - images or text
+    - the best accuracy
     vs_siblings:
-      - {page: gradient-boosting, note: "Fits each new tree to the remaining errors."}
-      - {page: xgboost, note: "Same boosting family, with more regularisation options."}
+    - page: gradient-boosting
+      note: Fits each new tree to the remaining errors.
+    - page: xgboost
+      note: Same boosting family, with more regularisation options.
     read_more:
-      - Give every row the same weight.
-      - Fit a weak learner, then count its mistakes.
-      - Raise the weight of the misses, then repeat.
-  next: [model-overfitting, know-feature-importance]
+    - Classifier rounds reweight rows using weighted classification error.
+    - AdaBoost.R2 changes row weights from prediction errors and uses a weighted median.
+    - The base estimator must support sample weights; the default is a shallow tree.
+    goal: Combine weak learners by changing how strongly each round focuses on difficult training rows.
+    steps:
+    - Give every training row equal initial weight.
+    - Fit a weak base learner using the current sample weights.
+    - For classification, increase the influence of misclassified rows and assign a vote weight from learner error.
+    - For regression, AdaBoost.R2 weights learners by error and combines their predictions with a weighted median.
+    math:
+      notation:
+      - symbol: w_i^m
+        meaning: Training weight for row i at boosting round m.
+      - symbol: e_m
+        meaning: Weighted error rate of classifier m.
+      - symbol: alpha_m
+        meaning: Vote weight assigned to classifier m.
+      - symbol: h_m(x)
+        meaning: Prediction from weak learner m.
+      - symbol: eta
+        meaning: Learning-rate multiplier on member weights.
+      equations:
+      - expression: alpha_m=eta*(log((1-e_m)/e_m)+log(K-1))
+        meaning: For SAMME classification, a learner with lower weighted error gets a larger vote; K is the number
+          of classes.
+      - expression: predict(x)=weighted_median_m h_m(x)
+        meaning: AdaBoost.R2 combines regression learners using the weighted median of their numeric predictions.
+      prediction: Classifier probabilities combine weighted votes; regression uses the weighted median of member
+        predictions.
+  next:
+  - model-overfitting
+  - know-feature-importance

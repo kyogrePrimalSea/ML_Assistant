@@ -1,97 +1,266 @@
 id: stacking
 plain_name: Stacking
 code_name: StackingRegressor / StackingClassifier
-aliases: [stack, stacked ensemble, meta-model]
+aliases:
+- stack
+- stacked ensemble
+- meta-model
 stage: model
 family: model.trees.combine
-tracks: [standard]
+tracks:
+- standard
 archetype: composer
-question_tags: [several good models, combine models, want the best score]
-targets: [sklearn.ensemble.StackingRegressor, sklearn.ensemble.StackingClassifier]
-pairs_with: [pipeline, cross-val-predict]
+question_tags:
+- several good models
+- combine models
+- want the best score
+targets:
+- sklearn.ensemble.StackingRegressor
+- sklearn.ensemble.StackingClassifier
+pairs_with:
+- pipeline
+- cross-val-predict
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.StackingRegressor.html',
-  'https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.StackingClassifier.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.StackingRegressor.html
+- https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.StackingClassifier.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [regression, classification]
+  task_types:
+  - regression
+  - classification
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: composer, boxes: [Forest, KNN, Final model]}
+    hero:
+      kind: composer
+      boxes:
+      - Forest
+      - KNN
+      - Final model
     line: A final model learns how to weigh the others.
   quick_facts:
     facts:
-      - {label: Final model, value: learns how to combine the others}
-      - {label: Trained on, value: out-of-fold predictions}
-      - {label: Raw columns, value: "optional: passthrough"}
+    - label: Final model
+      value: learns how to combine the others
+    - label: Trained on
+      value: out-of-fold predictions
+    - label: Raw columns
+      value: 'optional: passthrough'
   use_avoid:
-    use_when: [several good models, need a stronger score]
-    avoid_when: [simple baseline needed, few rows]
+    use_when:
+    - several good models
+    - need a stronger score
+    avoid_when:
+    - simple baseline needed
+    - few rows
   prep:
-    - step: {page: train-test-split}
-      status: required
-      why: Keep a test set the stack never sees.
-      condition: null
-      unless: null
+  - step:
+      page: train-test-split
+    status: required
+    why: Keep a test set the stack never sees.
+    condition: null
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.ensemble.StackingClassifier
-      why_this_library: Final model trains on out-of-fold predictions.
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import load_breast_cancer
-        from sklearn.ensemble import RandomForestClassifier, StackingClassifier
-        from sklearn.linear_model import LogisticRegression
-        from sklearn.model_selection import train_test_split
-        from sklearn.neighbors import KNeighborsClassifier
-        from sklearn.pipeline import make_pipeline
-        from sklearn.preprocessing import StandardScaler
+  - library: scikit-learn
+    target: sklearn.ensemble.StackingClassifier
+    why_this_library: Final model trains on out-of-fold predictions.
+    snippet: "# scikit-learn 1.9.1\nimport numpy as np\nfrom sklearn.datasets import load_breast_cancer\nfrom sklearn.ensemble\
+      \ import RandomForestClassifier, StackingClassifier\nfrom sklearn.linear_model import LogisticRegression\n\
+      from sklearn.model_selection import train_test_split\nfrom sklearn.neighbors import KNeighborsClassifier\n\
+      from sklearn.pipeline import make_pipeline\nfrom sklearn.preprocessing import StandardScaler\n\nX, y = load_breast_cancer(return_X_y=True)\n\
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)\nstack = StackingClassifier(\n \
+      \   estimators=[\n        (\"forest\", RandomForestClassifier(n_estimators=30, random_state=0)),\n       \
+      \ (\"knn\", make_pipeline(StandardScaler(), KNeighborsClassifier())),\n    ],\n    final_estimator=LogisticRegression(max_iter=5000),\
+      \ cv=5,\n)\nstack.fit(X_train, y_train)\ny_pred = stack.predict(X_test[:5])\ny_proba = stack.predict_proba(X_test[:5])\n\
+      print(\"y_pred:\", y_pred)\nprint(\"y_proba shape:\", y_proba.shape)\nprint(\"score:\", round(stack.score(X_test,\
+      \ y_test), 3))\n"
+    output: 'y_pred: [0 1 1 1 1]
 
-        X, y = load_breast_cancer(return_X_y=True)
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, random_state=0)
+      y_proba shape: (5, 2)
 
-        stack = StackingClassifier(
-            estimators=[
-                ("forest", RandomForestClassifier(random_state=0)),
-                ("knn", make_pipeline(StandardScaler(),
-                                      KNeighborsClassifier())),
-            ],
-            final_estimator=LogisticRegression(max_iter=5000),
-            cv=5,
-        )
-        stack.fit(X_train, y_train)  # final model learns from out-of-fold predictions
-        print(round(stack.score(X_test, y_test), 3))
+      score: 0.951
+
+      '
   what_comes_out:
     items:
-      - {name: fit, kind: method, task: null, shape: "self", note: "Trains the base models, then the final model."}
-      - {name: predict, kind: method, task: null, shape: "(n_samples,)", note: "Final model's prediction for each row."}
-      - {name: predict_proba, kind: method, task: classification, shape: "(n_samples, n_classes)", note: "Final model's class probabilities."}
-      - {name: transform, kind: method, task: null, shape: "(n_samples, n_outputs)", note: "Base model predictions, side by side."}
-      - {name: get_feature_names_out, kind: method, task: null, shape: "array of names", note: "Names for the transform columns."}
-      - {name: feature_names_in_, kind: attribute, task: null, shape: "array of column names", note: "Column names seen during fit."}
-    next_step: "Score it on held-out rows against one base model."
-    visual: null
+    - name: predict
+      kind: method
+      task: classification
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[0, 1]'
+      shape_explanation: One final class label per case. n_samples is 2 in this example, so shape (2,).
+      note: The final estimator makes the class prediction.
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[245.0, 318.5]'
+      shape_explanation: One final numeric prediction per case. n_samples is 2, so shape (2,).
+      note: The final regressor combines base predictions.
+    - name: predict_proba
+      kind: method
+      task: classification
+      shape: (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[[0.91, 0.09], [0.18, 0.82]]'
+      shape_explanation: Rows are cases and columns follow classes_. This example has 2 cases and 2 classes, shape
+        (2, 2).
+      note: Probabilities come from the final classifier.
+    - name: transform
+      kind: method
+      task: classification
+      shape: (n_samples, n_meta_features)
+      object_type: numpy.ndarray
+      example: '[[0.82, 0.70], [0.12, 0.25]]'
+      shape_explanation: This fictional binary probability example has 2 rows and 2 estimators. Each estimator contributes
+        one column because its first class probability is dropped, so shape (2, 2). With multiclass probabilities,
+        each contributes all n_classes columns, giving (n_samples, n_estimators*n_classes).
+      note: Binary predict_proba drops each estimator’s first class column; multiclass keeps all class columns.
+    - name: classes_
+      kind: attribute
+      task: classification
+      shape: (n_classes,)
+      object_type: numpy.ndarray
+      example: '[0, 1]'
+      shape_explanation: One label per class. n_classes is 2 in this example, so shape (2,).
+      note: Class order used by final-estimator probabilities.
+    - name: estimators_
+      kind: attribute
+      task: null
+      shape: (n_estimators,)
+      object_type: list
+      example: '[RandomForestClassifier(...), KNeighborsClassifier(...)]'
+      shape_explanation: One fitted base model per included estimator. This example has 2 members, shape (2,).
+      note: These are fitted on all training rows after out-of-fold meta-features are made.
+    - name: final_estimator_
+      kind: attribute
+      task: null
+      shape: estimator object (no array shape)
+      object_type: estimator object
+      example: LogisticRegression(...)
+      shape_explanation: This is one fitted estimator object, not an array, so it has no array axes or shape.
+      note: Classifier default is LogisticRegression; regressor default is RidgeCV.
+    - name: stack_method_
+      kind: attribute
+      task: null
+      shape: (n_estimators,)
+      object_type: list
+      example: '["predict_proba", "predict_proba"]'
+      shape_explanation: One selected prediction method per base estimator. Two estimators give 2 entries, shape
+        (2,).
+      note: auto prefers probabilities, then decision scores, then labels.
+    next_step: null
+    visual: both
+    snippet: "# scikit-learn 1.9.1\nimport numpy as np\nfrom sklearn.datasets import load_breast_cancer, make_regression\n\
+      from sklearn.ensemble import (\n    RandomForestClassifier, StackingClassifier, StackingRegressor\n)\nfrom\
+      \ sklearn.linear_model import LinearRegression, LogisticRegression, RidgeCV\nfrom sklearn.model_selection\
+      \ import train_test_split\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.pipeline import\
+      \ make_pipeline\nfrom sklearn.preprocessing import StandardScaler\n\nX, y = load_breast_cancer(return_X_y=True)\n\
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)\nstack = StackingClassifier(\n \
+      \   estimators=[\n        (\"forest\", RandomForestClassifier(n_estimators=20, random_state=0)),\n       \
+      \ (\"knn\", make_pipeline(StandardScaler(), KNeighborsClassifier())),\n    ], final_estimator=LogisticRegression(max_iter=5000),\
+      \ cv=5,\n)\nstack.fit(X_train, y_train)\ny_proba = stack.predict_proba(X_test[:3])\nprint(\"classes_:\", stack.classes_)\n\
+      print(\"transform shape:\", stack.transform(X_test[:3]).shape)\nprint(\"stack_method_:\", stack.stack_method_)\n\
+      print(\"final estimator:\", type(stack.final_estimator_).__name__)\nprint(\"y_proba:\", np.round(y_proba,\
+      \ 3))\n\nXr, yr = make_regression(n_samples=200, n_features=4, noise=10, random_state=0)\nreg = StackingRegressor(\n\
+      \    estimators=[(\"linear\", LinearRegression()), (\"ridge\", RidgeCV())], cv=5,\n).fit(Xr, yr)\nprint(\"\
+      regression transform shape:\", reg.transform(Xr[:3]).shape)\nprint(\"regression y_pred:\", np.round(reg.predict(Xr[:3]),\
+      \ 1))\n"
+    snippet_library: scikit-learn
+    output: "classes_: [0 1]\ntransform shape: (3, 2)\nstack_method_: ['predict_proba', 'predict_proba']\nfinal\
+      \ estimator: LogisticRegression\ny_proba: [[0.978 0.022]\n [0.074 0.926]\n [0.025 0.975]]\nregression transform\
+      \ shape: (3, 2)\nregression y_pred: [-100.3   61.5 -183.3]\n"
+    guidance:
+    - task: classification
+      text: Use class probabilities for soft-voting or final-classifier probability metrics.
+    - task: regression
+      text: Use numeric predictions for regression metrics; member transforms expose one column per estimator.
   catch_outs:
-    - The final model trains on out-of-fold predictions, not raw rows.
-    - Set passthrough to add the raw columns for the final model.
-    - Without final_estimator, a default final model is used.
+  - The final model trains on out-of-fold predictions, not raw rows.
+  - Set passthrough to add the raw columns for the final model.
+  - Without final_estimator, a default final model is used.
   key_settings:
     tier1:
-      - {name: estimators, page: null}
-      - {name: final_estimator, page: null}
-      - {name: cv, page: cross-val-predict}
-      - {name: stack_method, page: null}
+    - name: estimators
+      page: null
+      controls: Named base models whose predictions become meta-features.
+      effect: Diverse models can add complementary signal; redundant or weak models add noise and compute.
+    - name: final_estimator
+      page: null
+      controls: Model fitted on out-of-fold base predictions, then used to combine them.
+      effect: A flexible meta-model can capture interactions but can overfit the meta-features.
+    - name: cv
+      page: cross-val-predict
+      controls: Cross-validation splitter used to generate out-of-fold training predictions for the final estimator.
+      effect: More folds increase training cost; cv is for meta-feature construction, not final evaluation.
+    - name: stack_method
+      page: null
+      controls: 'Base method used for classifier meta-features: probabilities, decision scores, or labels.'
+      effect: Probabilities retain confidence but require calibration; labels discard confidence.
     tier2:
-      - {name: passthrough, page: null}
+    - name: passthrough
+      page: null
+      controls: Whether to append original input features to base predictions for the final estimator.
+      effect: Adds direct feature access but increases meta-model dimensions and overfit risk.
     tier3:
-      - {name: n_jobs, page: null}
-      - {name: verbose, page: null}
-  watch_it_work: {none: true}
-  intuition: {text: "A final model learns how much to trust each base model."}
-  next: [but-oof-predictions]
+    - name: n_jobs
+      page: null
+      controls: Parallel jobs used to fit base estimators.
+      effect: More workers can reduce wall time but use more memory and CPU.
+    - name: verbose
+      page: null
+      controls: Whether to print fitting progress.
+      effect: More detail aids monitoring but adds console output.
+  watch_it_work:
+    none: true
+  intuition:
+    idea: A final model learns from held-out predictions how to combine base models.
+    analogy: A referee combines scores from independent judges.
+    animation: none
+    good_at:
+    - combining diverse models
+    - non-linear meta-patterns
+    bad_at:
+    - small datasets
+    - leaky base predictions
+    vs_siblings:
+    - page: voting
+      note: Voting combines predictions directly; stacking trains a final estimator on out-of-fold predictions.
+    read_more:
+    - Train a final estimator on out-of-fold base predictions.
+    - Split training rows into cross-validation folds.
+    - For each base estimator, predict held-out rows while fitting on the other folds.
+    goal: Train a final estimator on out-of-fold base predictions.
+    steps:
+    - Split training rows into cross-validation folds.
+    - For each base estimator, predict held-out rows while fitting on the other folds.
+    - Use the out-of-fold predictions as meta-features to train the final estimator.
+    - Refit base estimators on all rows; at inference, pass their outputs to the final estimator.
+    math:
+      notation:
+      - symbol: z_i
+        meaning: Out-of-fold predictions from base models for row i.
+      - symbol: g
+        meaning: Final estimator mapping meta-features to a prediction.
+      - symbol: f_j
+        meaning: Base estimator j.
+      - symbol: x_i,y_i
+        meaning: Features and target for row i.
+      equations:
+      - expression: z_i = [f_1^{-fold(i)}(x_i), ..., f_M^{-fold(i)}(x_i)]
+        meaning: Each training meta-feature comes from a model that did not train on row i.
+      - expression: yhat_i = g(z_i)
+        meaning: The final estimator learns to combine the base predictions.
+      prediction: The final estimator maps base outputs to labels, probabilities, or numeric predictions.
+  next:
+  - but-oof-predictions

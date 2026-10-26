@@ -1,158 +1,303 @@
 id: gradient-boosting
 plain_name: Gradient boosting
 code_name: GradientBoostingRegressor / GradientBoostingClassifier
-aliases: [gbm, gbdt, gbrt, sklearn gradient boosting]
+aliases:
+- gbm
+- gbdt
+- gbrt
+- sklearn gradient boosting
 stage: model
 family: model.trees.boosting
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [underperforming, tabular data, overfitting]
-targets: [sklearn.ensemble.GradientBoostingRegressor, sklearn.ensemble.GradientBoostingClassifier]
-pairs_with: [treeexplainer]
+question_tags:
+- underperforming
+- tabular data
+- overfitting
+targets:
+- sklearn.ensemble.GradientBoostingRegressor
+- sklearn.ensemble.GradientBoostingClassifier
+pairs_with:
+- treeexplainer
 clashes: []
 source_urls:
-  - https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingRegressor.html
-  - https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingClassifier.html
+- https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingRegressor.html
+- https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingClassifier.html
 library_versions:
-  scikit-learn: "1.9.1"
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [regression, classification]
+  task_types:
+  - regression
+  - classification
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: ames, shape: fit_line}
+    hero:
+      kind: model
+      dataset: ames
+      shape: fit_line
     line: Many small trees, each fixing the last one's mistakes.
   quick_facts:
     data_size: Small to medium tables
   use_avoid:
-    use_when: [tabular data, non-linear effects, complete data]
-    avoid_when: [missing values, images or text, need a simple formula]
+    use_when:
+    - tabular data
+    - non-linear effects
+    - complete data
+    avoid_when:
+    - missing values
+    - images or text
+    - need a simple formula
   prep:
-    - step: {family: transform.scale.rescale}
-      status: not_needed
-      why: Trees split on order, not size.
-      condition: null
-      unless: null
-    - step: {family: clean.impute}
-      status: required
-      why: Fit stops on NaN. Fill gaps first.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Text categories must become numbers.
-      condition: {has_categoricals: true}
-      unless: null
-    - step: {page: train-test-split}
-      status: recommended
-      why: Hold out rows to score honestly.
-      condition: null
-      unless: null
+  - step:
+      family: transform.scale.rescale
+    status: not_needed
+    why: Trees split on order, not size.
+    condition: null
+    unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Fit stops on NaN. Fill gaps first.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Text categories must become numbers.
+    condition:
+      has_categoricals: true
+    unless: null
+  - step:
+      page: train-test-split
+    status: recommended
+    why: Hold out rows to score honestly.
+    condition: null
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.ensemble.GradientBoostingRegressor
-      why_this_library: No extra install. Early stopping via n_iter_no_change.
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import make_regression
-        from sklearn.ensemble import GradientBoostingRegressor
-        from sklearn.model_selection import train_test_split
+  - library: scikit-learn
+    target: sklearn.ensemble.GradientBoostingRegressor
+    why_this_library: No extra install. Early stopping via n_iter_no_change.
+    snippet: "# scikit-learn 1.9.1\nimport numpy as np\nfrom sklearn.datasets import make_regression\nfrom sklearn.ensemble\
+      \ import GradientBoostingRegressor\nfrom sklearn.model_selection import train_test_split\n\nX, y = make_regression(n_samples=500,\
+      \ n_features=8, noise=10, random_state=0)\nX_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)\n\
+      model = GradientBoostingRegressor(\n    n_estimators=300, learning_rate=0.1, max_depth=2,\n    n_iter_no_change=10,\
+      \ random_state=0,\n)\nmodel.fit(X_train, y_train)\ny_pred = model.predict(X_test[:5])\nprint(\"y_pred:\",\
+      \ np.round(y_pred, 1))\nprint(\"n_estimators_:\", model.n_estimators_)\n"
+    output: 'y_pred: [-31.6 -81.  -14.4 169.4 175.7]
 
-        X, y = make_regression(n_samples=500, n_features=8, noise=10, random_state=0)
-        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+      n_estimators_: 300
 
-        model = GradientBoostingRegressor(
-            n_estimators=500,
-            learning_rate=0.1,
-            max_depth=3,
-            n_iter_no_change=10,
-            random_state=0,
-        )
-        model.fit(X_train, y_train)
-        print(model.n_estimators_)
-        print(model.score(X_test, y_test))
+      '
   what_comes_out:
     items:
-      - {name: predict_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
-         note: "One column per class, in classes_ order. Keep [:, 1] for two classes."}
-      - {name: predict, kind: method, task: classification, shape: "(n_samples,)",
-         note: "Class labels. Same as a 0.5 cut-off on predict_proba[:, 1]."}
-      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
-         note: "One value per row. Undo a log target before reporting errors."}
-      - {name: decision_function, kind: method, task: classification, shape: "(n_samples,) for two classes",
-         note: "Raw score before the sigmoid. Above 0 means class 1."}
-      - {name: feature_importances_, kind: attribute, task: null, shape: "(n_features,)",
-         note: "One score per input column. Impurity-based, can mislead."}
-      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)",
-         note: "Class labels, in the column order of predict_proba."}
-      - {name: n_estimators_, kind: attribute, task: null, shape: "int",
-         note: "Trees actually fitted. Less than n_estimators if early stopping ran."}
-    next_step: ROC AUC and PR curves need probabilities, not labels. Undo a log target first.
-    snippet: |
-      # scikit-learn 1.9.1
-      import numpy as np
-      from sklearn.datasets import load_breast_cancer, load_diabetes
-      from sklearn.model_selection import train_test_split
-      from sklearn.ensemble import (
-          GradientBoostingClassifier,
-          GradientBoostingRegressor,
-      )
-
-      X, y = load_breast_cancer(return_X_y=True)
-      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
-
-      model = GradientBoostingClassifier(n_estimators=50).fit(X_train, y_train)
-      proba = model.predict_proba(X_test)
-      print(proba.shape)
-      y_score = proba[:, 1]
-      print(y_score.shape)
-
-      # Regression on a log target: undo it before reporting errors.
-      Xd, yd = load_diabetes(return_X_y=True)
-      reg = GradientBoostingRegressor(n_estimators=50).fit(Xd, np.log1p(yd))
-      y_pred = np.expm1(reg.predict(Xd))
-      print(y_pred.shape)
+    - name: predict_proba
+      kind: method
+      task: classification
+      shape: (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[[0.91, 0.09], [0.18, 0.82]]'
+      shape_explanation: Rows are cases and columns follow classes_. This example has 2 cases and 2 classes, shape
+        (2, 2).
+      note: Probabilities are derived from raw additive class scores.
+    - name: predict
+      kind: method
+      task: classification
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[0, 1]'
+      shape_explanation: One class label per case. n_samples is the number of rows; this example has 2 labels, shape
+        (2,).
+      note: Labels are selected from classes_.
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[245.0, 318.5]'
+      shape_explanation: One numeric prediction per case. n_samples is the number of rows; this example has 2 values,
+        shape (2,).
+      note: Regression returns one value per row.
+    - name: decision_function
+      kind: method
+      task: classification
+      shape: (n_samples,); (n_samples,n_classes)
+      object_type: numpy.ndarray
+      example: '[-2.3, 1.5]'
+      shape_explanation: This fictional binary example has one raw score for each of 2 rows, shape (2,). Multiclass
+        adds a class axis, shape (n_samples,n_classes).
+      note: The example is binary; multiclass returns one additive score per class.
+    - name: classes_
+      kind: attribute
+      task: classification
+      shape: (n_classes,)
+      object_type: numpy.ndarray
+      example: '[0, 1]'
+      shape_explanation: One label per class. n_classes is the class count; this example contains 2 labels, shape
+        (2,).
+      note: Class order used by predict_proba.
+    - name: feature_importances_
+      kind: attribute
+      task: null
+      shape: (n_features,)
+      object_type: numpy.ndarray
+      example: '[0.52, 0.31, 0.17]'
+      shape_explanation: One impurity-based importance per feature. n_features is the number of columns; this example
+        has 3 scores.
+      note: Importance can favor high-cardinality features.
+    - name: n_estimators_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: int
+      example: '27'
+      shape_explanation: A scalar integer is the number of boosting stages actually fitted.
+      note: May be smaller than n_estimators after early stopping.
+    - name: estimators_
+      kind: attribute
+      task: null
+      shape: (n_estimators_, n_trees_per_iteration_)
+      object_type: numpy.ndarray
+      example: '[[tree_0], [tree_1]]'
+      shape_explanation: Rows are fitted stages and columns are trees per stage. This binary example shows 2 stages
+        with 1 tree each, shape (2, 1).
+      note: Multiclass classification fits one tree per class at each stage.
+    next_step: null
+    snippet: "# scikit-learn 1.9.1\nimport numpy as np\nfrom sklearn.datasets import load_breast_cancer, load_diabetes\n\
+      from sklearn.ensemble import (\n    GradientBoostingClassifier, GradientBoostingRegressor\n)\nfrom sklearn.model_selection\
+      \ import train_test_split\n\nX, y = load_breast_cancer(return_X_y=True)\nX_train, X_test, y_train, y_test\
+      \ = train_test_split(X, y, random_state=0)\nclf = GradientBoostingClassifier(\n    n_estimators=40, random_state=0\n\
+      ).fit(X_train, y_train)\ny_proba = clf.predict_proba(X_test[:3])\ny_score = clf.decision_function(X_test[:3])\n\
+      y_pred = clf.predict(X_test[:3])\nprint(\"classes_:\", clf.classes_)\nprint(\"y_proba:\", np.round(y_proba,\
+      \ 3))\nprint(\"binary raw score:\", np.round(y_score, 3))\nprint(\"y_pred:\", y_pred)\nprint(\"estimators_\
+      \ shape:\", clf.estimators_.shape)\nprint(\"feature_importances_ shape:\", clf.feature_importances_.shape)\n\
+      \nXd, yd = load_diabetes(return_X_y=True)\nreg = GradientBoostingRegressor(n_estimators=40, random_state=0).fit(Xd,\
+      \ yd)\nprint(\"regression y_pred:\", np.round(reg.predict(Xd[:3]), 1))\nprint(\"n_estimators_:\", reg.n_estimators_)\n"
     snippet_library: scikit-learn
     visual: both
+    output: "classes_: [0 1]\ny_proba: [[0.977 0.023]\n [0.033 0.967]\n [0.013 0.987]]\nbinary raw score: [-3.75\
+      \   3.384  4.332]\ny_pred: [0 1 1]\nestimators_ shape: (40, 1)\nfeature_importances_ shape: (30,)\nregression\
+      \ y_pred: [190.4  85.8 165.1]\nn_estimators_: 40\n"
+    guidance:
+    - task: classification
+      text: Use predict_proba[:, 1] for binary ROC AUC and PR; decision_function gives binary margins, while predict
+        labels serve accuracy and confusion matrices.
+    - task: regression
+      text: Use numeric predictions for held-out regression metrics; inspect observed-minus-predicted residuals
+        to diagnose remaining error.
   catch_outs:
-    - NaN in X raises an error. Impute first.
-    - Early stopping is off until n_iter_no_change is set.
-    - Early stopping holds out validation_fraction (10%) of the training rows.
-    - Category columns need encoding first. No native support.
+  - NaN in X raises an error. Impute first.
+  - Early stopping is off until n_iter_no_change is set.
+  - Early stopping holds out validation_fraction (10%) of the training rows.
+  - Category columns need encoding first. No native support.
   key_settings:
     tier1:
-      - {name: n_estimators, page: n-estimators}
-      - {name: learning_rate, page: learning-rate}
-      - {name: max_depth, page: max-depth}
-      - {name: n_iter_no_change, page: early-stopping}
+    - name: n_estimators
+      page: n-estimators
+      controls: Maximum boosting stages, each adding one tree per class when multiclass.
+      effect: More stages can improve fit but take longer and may overfit.
+    - name: learning_rate
+      page: learning-rate
+      controls: Shrinks each tree’s contribution to the additive model.
+      effect: Smaller steps are conservative but need more trees.
+    - name: max_depth
+      page: max-depth
+      controls: Maximum depth of each individual tree.
+      effect: Shallower trees limit interactions; deeper trees can overfit.
+    - name: n_iter_no_change
+      page: early-stopping
+      controls: Number of validation iterations without sufficient improvement before stopping.
+      effect: Lower patience stops sooner but may miss later gains.
     tier2:
-      - {name: subsample, page: null}
-      - {name: max_features, page: null}
-      - {name: min_samples_leaf, page: null}
+    - name: subsample
+      page: null
+      controls: Fraction of rows used to fit each stage’s tree.
+      effect: Below 1 adds stochasticity and can reduce variance, but each tree sees less data.
+    - name: max_features
+      page: null
+      controls: Number or fraction of features considered at each split.
+      effect: Fewer candidates speed splits and add randomness but can hide useful features.
+    - name: min_samples_leaf
+      page: null
+      controls: Minimum number of training samples in each leaf.
+      effect: Larger leaves smooth predictions but miss small groups.
     tier3:
-      - {name: loss, page: null}
-      - {name: ccp_alpha, page: null}
-      - {name: max_leaf_nodes, page: null}
+    - name: loss
+      page: null
+      controls: Objective defining the negative gradient fitted at each stage.
+      effect: Robust losses reduce outlier influence but may optimize a different target than squared error.
+    - name: ccp_alpha
+      page: null
+      controls: Minimal cost-complexity pruning strength for each tree.
+      effect: More pruning simplifies trees but may remove useful splits.
+    - name: max_leaf_nodes
+      page: null
+      controls: Maximum leaves in each tree, grown best-first by impurity reduction.
+      effect: A smaller cap limits complexity; a larger cap can fit more local structure.
   watch_it_work:
     dataset: ames
-    control: {name: n_estimators, min: 1, max: 200, step: 1, default: 50}
+    control:
+      name: n_estimators
+      min: 1
+      max: 200
+      step: 1
+      default: 50
   intuition:
     idea: Build small trees one after another, each fixing the mistakes of the last.
     analogy: A team correcting an essay, each person only fixing what is still wrong.
     animation: model/boosting-sequence
-    good_at: [tabular data, non-linear effects, complete data]
-    bad_at: [missing values, extrapolation, raw text]
+    good_at:
+    - tabular data
+    - non-linear effects
+    - complete data
+    bad_at:
+    - missing values
+    - extrapolation
+    - raw text
     vs_siblings:
-      - {page: hist-gradient-boosting, note: "Same idea, binned for speed. Takes NaN."}
-      - {page: xgboost, note: "Adds reg_alpha, reg_lambda and gamma. Takes NaN."}
-      - {page: lightgbm, note: Caps leaves with num_leaves. Takes NaN.}
+    - page: hist-gradient-boosting
+      note: Same idea, binned for speed. Takes NaN.
+    - page: xgboost
+      note: Adds reg_alpha, reg_lambda and gamma. Takes NaN.
+    - page: lightgbm
+      note: Caps leaves with num_leaves. Takes NaN.
     read_more:
-      - Start with a constant prediction.
-      - Fit a small tree to the current errors.
-      - Add it, scaled by learning_rate.
-      - Repeat for n_estimators rounds, or until early stopping.
-  next: [model-overfitting, know-feature-importance]
+    - Each stage fits a regression tree to the negative loss gradient, not necessarily raw residuals.
+    - Exact split search uses feature values rather than pre-binned histograms.
+    - Subsample below 1 creates stochastic gradient boosting.
+    goal: Build an additive model by fitting each new tree to the current loss’s negative gradient.
+    steps:
+    - Initialize a constant prediction chosen to suit the loss.
+    - Compute each training row’s negative loss gradient, which acts as a pseudo-residual.
+    - Fit a shallow regression tree to those gradients and choose leaf values that reduce the loss.
+    - Shrink the tree contribution by learning_rate, add it, and repeat for later stages.
+    math:
+      notation:
+      - symbol: F_m(x)
+        meaning: Current additive prediction after m stages.
+      - symbol: h_m(x)
+        meaning: Tree fitted to the negative gradient at stage m.
+      - symbol: eta
+        meaning: Learning rate shrinking each stage.
+      - symbol: L(y,F)
+        meaning: Chosen differentiable loss.
+      - symbol: r_i
+        meaning: Negative derivative of loss for row i.
+      equations:
+      - expression: r_i=-dL(y_i,F_{m-1}(x_i))/dF
+        meaning: The negative gradient is the direction that locally reduces loss and becomes the tree’s training
+          target.
+      - expression: F_m(x)=F_{m-1}(x)+eta*h_m(x)
+        meaning: The model adds the fitted tree’s contribution at each boosting stage.
+      prediction: Regression returns F(x); classification returns labels or link-transformed probabilities.
+  next:
+  - model-overfitting
+  - know-feature-importance

@@ -4,101 +4,255 @@ code_name: Probit
 aliases: []
 stage: model
 family: model.linear.logit
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [probabilities, p-values, binary outcome]
-targets: [statsmodels.discrete.discrete_model.Probit]
+question_tags:
+- probabilities
+- p-values
+- binary outcome
+targets:
+- statsmodels.discrete.discrete_model.Probit
 pairs_with: []
 clashes: []
-source_urls: ['https://www.statsmodels.org/stable/generated/statsmodels.discrete.discrete_model.Probit.html']
-library_versions: {statsmodels: 0.15.0}
+source_urls:
+- https://www.statsmodels.org/stable/generated/statsmodels.discrete.discrete_model.Probit.html
+library_versions:
+  statsmodels: 0.15.0
 reviewed: false
 rules:
-  task_types: [classification]
+  task_types:
+  - classification
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: breast-cancer, shape: boundary}
+    hero:
+      kind: model
+      dataset: breast-cancer
+      shape: boundary
     line: Yes-no probabilities from a normal curve, with p-values.
-  quick_facts: {none: true}
+  quick_facts:
+    none: true
   use_avoid:
-    use_when: [probabilities, p-values, binary outcome]
-    avoid_when: [three or more classes, curved boundaries, text inputs]
+    use_when:
+    - probabilities
+    - p-values
+    - binary outcome
+    avoid_when:
+    - three or more classes
+    - curved boundaries
+    - text inputs
   prep:
-    - step: {family: clean.impute}
-      status: required
-      why: Raises on missing values unless missing is drop.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Needs numbers, not text.
-      condition: {has_categoricals: true}
-      unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Raises on missing values unless missing is drop.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Needs numbers, not text.
+    condition:
+      has_categoricals: true
+    unless: null
   code:
-    - library: statsmodels
-      target: statsmodels.discrete.discrete_model.Probit
-      why_this_library: Gives p-values and a normal-curve link.
-      snippet: |
-        # statsmodels 0.15.0
-        import statsmodels.api as sm
-        from sklearn.datasets import load_breast_cancer
+  - library: statsmodels
+    target: statsmodels.discrete.discrete_model.Probit
+    why_this_library: Uses a standard-normal CDF link and returns likelihood-based inference.
+    snippet: '# statsmodels 0.15.0
 
-        X, y = load_breast_cancer(return_X_y=True)
-        X = sm.add_constant(X[:, :5])
-        result = sm.Probit(y, X).fit(disp=False)
-        print(result.pvalues.round(3))
-  what_comes_out:
-    items:
-      - {name: predict, kind: method, task: classification, shape: "(n_samples,)",
-         note: "Probability of class 1, not a label."}
-      - {name: score, kind: method, task: null, shape: "(n_params,)",
-         note: "Gradient of the log-likelihood. Not accuracy."}
-      - {name: endog, kind: attribute, task: null, shape: "(n_obs,)",
-         note: "The response vector the model stores."}
-      - {name: exog, kind: attribute, task: null, shape: "(n_obs, n_params)",
-         note: "Design matrix, with the constant if added."}
-      - {name: params, kind: return, task: null, shape: "(n_params,)",
-         note: "Coefficients, on the fitted result."}
-      - {name: pvalues, kind: return, task: null, shape: "(n_params,)",
-         note: "Same order as the exog columns."}
-    next_step: Use predict for probabilities. Choosing a cut-off is up to you.
-    snippet: |
-      # statsmodels 0.15.0
+      import numpy as np
+
       import statsmodels.api as sm
+
       from sklearn.datasets import load_breast_cancer
 
+
       X, y = load_breast_cancer(return_X_y=True)
+
       X = sm.add_constant(X[:, :5])
+
       result = sm.Probit(y, X).fit(disp=False)
-      print(result.predict(X).mean().round(3))
+
+      y_proba = result.predict(X[:3])
+
+      y_pred = (y_proba >= 0.5).astype(int)
+
+      print(''y_pred labels:'', y_pred)
+
+      print(''y_proba class 1:'', np.round(y_proba, 3))
+
+      print(''params:'', np.round(result.params, 3))
+
+      print(''pvalues:'', np.round(result.pvalues, 3))'
+    output: 'y_pred labels: [0 0 0]
+
+      y_proba class 1: [0. 0. 0.]
+
+      params: [ 6.1240e+00  3.5330e+00 -1.9800e-01 -3.3300e-01 -2.4000e-02 -6.3912e+01]
+
+      pvalues: [0.169 0.    0.    0.001 0.001 0.   ]
+
+      '
+  what_comes_out:
+    items:
+    - name: predict
+      kind: method
+      task: classification
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[0.82, 0.27, 0.61]'
+      shape_explanation: Statsmodels Probit returns the probability of class 1 for each row. This fictional example
+        has n_samples=3 values, so shape (3,); the trailing comma marks one dimension.
+      note: These are probabilities, not class labels; threshold only when labels are needed.
+    - name: params
+      kind: return
+      task: null
+      shape: (n_parameters,)
+      object_type: numpy.ndarray
+      example: '[0.2, 0.4, -1.2]'
+      shape_explanation: 'A one-dimensional fitted coefficient array: n_parameters includes the constant in exog
+        if added. This fictional example assumes n_parameters=3 and has shape (3,).'
+      note: Statsmodels Results.params; coefficients use the probit latent-index scale.
+    - name: pvalues
+      kind: return
+      task: null
+      shape: (n_parameters,)
+      object_type: numpy.ndarray
+      example: '[0.4, 0.02, 0.001]'
+      shape_explanation: A one-dimensional array of coefficient tests. This fictional example assumes n_parameters=3
+        and has shape (3,).
+      note: Statsmodels Results.pvalues; inference depends on model assumptions.
+    - name: bse
+      kind: return
+      task: null
+      shape: (n_parameters,)
+      object_type: numpy.ndarray
+      example: '[0.3, 0.2, 0.4]'
+      shape_explanation: A one-dimensional array of coefficient standard errors. This fictional example assumes
+        n_parameters=3 and has shape (3,).
+      note: Statsmodels Results.bse aligns with params and pvalues.
+    - name: llf
+      kind: return
+      task: null
+      shape: scalar
+      object_type: float
+      example: '-42.7'
+      shape_explanation: A scalar is one value with no array dimensions. This fictional example is one fitted log-likelihood.
+      note: Log-likelihood at the fitted Probit coefficients.
+    next_step: null
+    snippet: '# statsmodels 0.15.0
+
+      import numpy as np
+
+      import statsmodels.api as sm
+
+      from sklearn.datasets import load_breast_cancer
+
+
+      X, y = load_breast_cancer(return_X_y=True)
+
+      X = sm.add_constant(X[:, :5])
+
+      result = sm.Probit(y, X).fit(disp=False)
+
+      y_proba = result.predict(X[:3])
+
+      y_pred = (y_proba >= 0.5).astype(int)
+
+      print(''y_pred labels:'', y_pred)
+
+      print(''y_proba class 1:'', np.round(y_proba, 3))
+
+      print(''params:'', np.round(result.params, 3))
+
+      print(''pvalues:'', np.round(result.pvalues, 3))'
     snippet_library: statsmodels
     visual: proba_table
+    guidance:
+    - task: classification
+      text: Use predict_proba or continuous decision scores for ROC AUC and PR curves. Use predicted labels for
+        accuracy or a confusion matrix.
+    output: 'y_pred labels: [0 0 0]
+
+      y_proba class 1: [0. 0. 0.]
+
+      params: [ 6.1240e+00  3.5330e+00 -1.9800e-01 -3.3300e-01 -2.4000e-02 -6.3912e+01]
+
+      pvalues: [0.169 0.    0.    0.001 0.001 0.   ]
+
+      '
   catch_outs:
-    - Missing values raise an error unless missing is drop.
-    - Many correlated columns can make the matrix singular.
-    - Check mle_retvals converged before reading p-values.
+  - Missing values raise an error unless missing is drop.
+  - Many correlated columns can make the matrix singular.
+  - Check mle_retvals converged before reading p-values.
   key_settings:
     tier1:
-      - {name: missing, page: null}
+    - name: missing
+      page: null
+      controls: 'Statsmodels handling of missing observations: none, drop, or raise.'
+      effect: Dropping rows changes the estimation sample; raising stops when missing values are found.
     tier2:
-      - {name: offset, page: null}
-      - {name: check_rank, page: null}
+    - name: offset
+      page: null
+      controls: A known value added to the latent linear predictor with coefficient fixed at one.
+      effect: A misspecified offset shifts every predicted probability.
+    - name: check_rank
+      page: null
+      controls: Whether statsmodels checks the design matrix rank when determining model degrees of freedom.
+      effect: Skipping the check can save setup time for wide designs but may hide rank problems.
     tier3: []
-  watch_it_work: {none: true}
+  watch_it_work:
+    none: true
   intuition:
     idea: Like logit, but the S-curve is the normal curve.
     analogy: Same yes-no scale as logit, with a bell-shaped weight.
     animation: none
-    good_at: [probabilities, p-values, binary outcomes]
-    bad_at: [three or more classes, curved boundaries]
+    good_at:
+    - probabilities
+    - p-values
+    - binary outcomes
+    bad_at:
+    - three or more classes
+    - curved boundaries
     vs_siblings:
-      - {page: logistic-regression, note: "Logistic curve instead of normal curve."}
-    read_more:
-      - Take the weighted sum of the inputs.
-      - Pass it through the normal curve.
-      - Fit by maximum likelihood, then read p-values.
+    - page: logistic-regression
+      note: Logistic curve instead of normal curve.
+    read_more: &id001
+    - Build a weighted sum of the input features.
+    - Map the sum through the standard-normal CDF to get class-1 probability.
+    - Choose coefficients by maximizing the binary likelihood.
+    - Use the fitted Results object for probabilities and inference.
+    goal: Estimate a binary outcome model whose probability follows the standard-normal CDF of a linear predictor.
+    math:
+      notation:
+      - symbol: x_i
+        meaning: Feature vector for case i.
+      - symbol: y_i
+        meaning: Binary target, coded 0 or 1.
+      - symbol: z_i
+        meaning: Linear predictor b_0 + x_i^T b, plus any offset.
+      - symbol: Phi
+        meaning: Cumulative distribution function of a standard normal variable.
+      - symbol: p_i
+        meaning: Probability that case i belongs to class 1.
+      - symbol: b
+        meaning: Coefficient vector for the input features.
+      - symbol: b_0
+        meaning: Intercept in the linear predictor.
+      equations:
+      - expression: p_i = Phi(z_i)
+        meaning: The normal CDF maps the latent predictor to a class-1 probability.
+      - expression: maximize sum_i [y_i log(p_i) + (1-y_i) log(1-p_i)]
+        meaning: Probit maximum likelihood chooses coefficients that assign high probability to observed labels.
+      prediction: predict gives class-1 probabilities; threshold to get labels. Results provide coefficients and
+        p-values.
+    steps: *id001
   next: []

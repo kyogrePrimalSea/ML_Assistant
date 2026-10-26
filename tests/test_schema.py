@@ -160,7 +160,78 @@ def test_snippet_needs_version_stamp(item_validator):
     assert list(item_validator.iter_errors(rec))
 
 
+def test_rich_learning_fields_are_optional_but_non_empty(item_validator):
+    rec = _xgb()
+    tab = rec["slots"]["code"][0]
+    tab["output"] = "y_pred: [1.0]\n"
+    rec["slots"]["what_comes_out"] = {
+        "items": [{"name": "prediction", "kind": "return", "task": None,
+                   "shape": "scalar", "note": "One prediction.",
+                   "object_type": "float", "example": "1.0",
+                   "shape_explanation": "A scalar is one value with no array dimensions."}],
+        "next_step": None,
+        "guidance": [{"task": "regression", "text": "Interpret one prediction per row."}],
+        "snippet": "# xgboost 3.4.1\nprint(1.0)\n",
+        "snippet_library": "xgboost",
+        "output": "1.0\n",
+        "visual": None,
+    }
+    setting = rec["slots"]["key_settings"]["tier1"][0]
+    setting.update(controls="The number of boosting rounds.",
+                   effect="More rounds can fit more detail, but can overfit.")
+    intuition = rec["slots"]["intuition"]
+    intuition.update(
+        goal="Fit the target while controlling tree complexity.",
+        steps=["Add one tree at a time."],
+        math={
+            "notation": [{"symbol": "f", "meaning": "One tree."}],
+            "equations": [{"expression": "y = f(x)", "meaning": "The tree predicts from x."}],
+            "prediction": "The ensemble adds the tree outputs.",
+        },
+    )
+    assert not list(item_validator.iter_errors(rec))
+
+    tab["output"] = ""
+    rec["slots"]["what_comes_out"]["output"] = ""
+    rec["slots"]["what_comes_out"]["items"][0]["object_type"] = ""
+    rec["slots"]["what_comes_out"]["items"][0]["shape_explanation"] = ""
+    rec["slots"]["what_comes_out"]["guidance"] = []
+    intuition["steps"] = []
+    assert list(item_validator.iter_errors(rec))
+
+
 def test_unknown_field_rejected(item_validator):
     rec = _xgb()
     rec["extra"] = 1
+    assert list(item_validator.iter_errors(rec))
+
+
+def test_composer_intuition_accepts_legacy_and_rich_model_forms(item_validator):
+    rec = _xgb()
+    rec["archetype"] = "composer"
+    rec["slots"]["solves"]["hero"] = {"kind": "composer", "boxes": ["Model A", "Model B"]}
+    rec["slots"]["quick_facts"] = {"none": True}
+
+    rec["slots"]["intuition"] = {"text": "Combines models."}
+    assert not list(item_validator.iter_errors(rec))
+
+    rec["slots"]["intuition"] = {
+        "idea": "A final model learns from held-out predictions.",
+        "analogy": "A referee combines independent judges' scores.",
+        "animation": "none",
+        "good_at": ["combining models"],
+        "bad_at": ["small data"],
+        "vs_siblings": [],
+        "read_more": ["Base predictions become meta-features."],
+        "goal": "Learn how to combine model predictions.",
+        "steps": ["Generate out-of-fold predictions.", "Fit a final estimator."],
+        "math": {
+            "notation": [{"symbol": "z_i", "meaning": "Base predictions for row i."}],
+            "equations": [{"expression": "yhat_i = g(z_i)", "meaning": "The final estimator maps meta-features to a prediction."}],
+            "prediction": "The final estimator combines fitted base-model outputs.",
+        },
+    }
+    assert not list(item_validator.iter_errors(rec))
+
+    rec["slots"]["intuition"]["math"]["equations"][0].pop("meaning")
     assert list(item_validator.iter_errors(rec))

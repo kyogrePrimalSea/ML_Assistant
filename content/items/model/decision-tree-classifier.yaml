@@ -1,141 +1,329 @@
 id: decision-tree-classifier
 plain_name: DecisionTreeClassifier
 code_name: DecisionTreeClassifier
-aliases: [decision tree]
+aliases:
+- decision tree
 stage: model
 family: model.trees.single
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [readable rules, tabular data, overfitting]
-targets: [sklearn.tree.DecisionTreeClassifier]
-pairs_with: [treeexplainer]
+question_tags:
+- readable rules
+- tabular data
+- overfitting
+targets:
+- sklearn.tree.DecisionTreeClassifier
+pairs_with:
+- treeexplainer
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.tree.DecisionTreeClassifier.html
+- https://scikit-learn.org/stable/modules/tree.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [classification]
+  task_types:
+  - classification
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: breast-cancer, shape: boundary}
-    line: "One tree of if-then rules that a person can read."
+    hero:
+      kind: model
+      dataset: breast-cancer
+      shape: boundary
+    line: One tree of if-then rules that a person can read.
   quick_facts:
     data_size: Tabular data
   use_avoid:
-    use_when: [rules a person can follow, tabular data, explaining each decision]
-    avoid_when: [accuracy is the top goal, images or text, very noisy data]
+    use_when:
+    - rules a person can follow
+    - tabular data
+    - explaining each decision
+    avoid_when:
+    - accuracy is the top goal
+    - images or text
+    - very noisy data
   prep:
-    - step: {family: transform.scale.rescale}
-      status: not_needed
-      why: Trees split on order, not size.
-      condition: null
-      unless: null
-    - step: {family: clean.impute}
-      status: not_needed
-      why: Missing values are handled natively.
-      condition: null
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Text categories must become numbers.
-      condition: {has_categoricals: true}
-      unless: null
-    - step: {family: transform.rebalance.weight}
-      status: recommended
-      why: Use class_weight='balanced' when classes are lopsided.
-      condition: {imbalanced: true, task_type: [classification]}
-      unless: {setting: class_weight, value: balanced}
+  - step:
+      family: transform.scale.rescale
+    status: not_needed
+    why: Trees split on order, not size.
+    condition: null
+    unless: null
+  - step:
+      family: clean.impute
+    status: not_needed
+    why: Missing values are handled natively.
+    condition: null
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Text categories must become numbers.
+    condition:
+      has_categoricals: true
+    unless: null
+  - step:
+      family: transform.rebalance.weight
+    status: recommended
+    why: Use class_weight='balanced' when classes are lopsided.
+    condition:
+      imbalanced: true
+      task_type:
+      - classification
+    unless:
+      setting: class_weight
+      value: balanced
   code:
-    - library: scikit-learn
-      target: sklearn.tree.DecisionTreeClassifier
-      why_this_library: The single tree in scikit-learn, easiest to read.
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import load_breast_cancer
-        from sklearn.model_selection import train_test_split
-        from sklearn.tree import DecisionTreeClassifier
+  - library: scikit-learn
+    target: sklearn.tree.DecisionTreeClassifier
+    why_this_library: Greedy class-purity splits produce readable if-then rules.
+    snippet: '# scikit-learn 1.9.1
 
-        X, y = load_breast_cancer(return_X_y=True)
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, random_state=0
-        )
+      import numpy as np
 
-        model = DecisionTreeClassifier(max_depth=3, random_state=0)
-        model.fit(X_train, y_train)
-        print(round(model.score(X_test, y_test), 3))
-  what_comes_out:
-    items:
-      - {name: predict, kind: method, task: classification, shape: "(n_samples,)",
-         note: "Class labels, one per row."}
-      - {name: predict_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
-         note: "Share of training rows per class in the leaf each row lands in."}
-      - {name: predict_log_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
-         note: "Log of the class probabilities, same column order."}
-      - {name: score, kind: method, task: classification, shape: "float",
-         note: "Accuracy on the data given. Misleading when classes are lopsided."}
-      - {name: feature_importances_, kind: attribute, task: null, shape: "(n_features,)",
-         note: "One score per input column."}
-      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)",
-         note: "Class labels, in the column order of predict_proba."}
-      - {name: n_features_in_, kind: attribute, task: null, shape: "int",
-         note: "Number of input columns seen in fit."}
-      - {name: feature_names_in_, kind: attribute, task: null, shape: "(n_features,)",
-         note: "Column names, only if fit got a DataFrame."}
-    next_step: ROC AUC works, but probabilities come in steps, one per leaf.
-    snippet: |
-      # scikit-learn 1.9.1
       from sklearn.datasets import load_breast_cancer
+
       from sklearn.model_selection import train_test_split
+
       from sklearn.tree import DecisionTreeClassifier
 
+
       X, y = load_breast_cancer(return_X_y=True)
-      X_train, X_test, y_train, y_test = train_test_split(
-          X, y, random_state=0
-      )
+
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
 
       model = DecisionTreeClassifier(max_depth=3, random_state=0)
+
       model.fit(X_train, y_train)
-      print(model.predict_proba(X_test).shape)
-      print(model.classes_)
-      print(model.feature_importances_.shape)
+
+      y_pred = model.predict(X_test[:3])
+
+      y_proba = model.predict_proba(X_test[:3])
+
+      print(''y_pred labels:'', y_pred)
+
+      print(''y_proba:'', np.round(y_proba, 3))
+
+      print(''classes_:'', model.classes_)
+
+      print(''accuracy:'', round(model.score(X_test, y_test), 3))'
+    output: "y_pred labels: [0 1 1]\ny_proba: [[0.993 0.007]\n [0.016 0.984]\n [0.016 0.984]]\nclasses_: [0 1]\n\
+      accuracy: 0.937\n"
+  what_comes_out:
+    items:
+    - name: predict
+      kind: method
+      task: classification
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[0, 1, 1]'
+      shape_explanation: One class label per row. This fictional example assumes n_samples=3, shape (3,); the trailing
+        comma marks one dimension.
+      note: Leaf class with the largest training share; ties choose the lowest class index.
+    - name: predict_proba
+      kind: method
+      task: classification
+      shape: (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[[0.8, 0.2], [0.1, 0.9], [0.3, 0.7]]'
+      shape_explanation: Rows are cases and columns follow classes_. This fictional example has 3 cases and 2 classes,
+        shape (3, 2).
+      note: Class shares among training rows in each reached leaf.
+    - name: predict_log_proba
+      kind: method
+      task: classification
+      shape: (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[[-0.22, -1.61], [-2.30, -0.11], [-1.20, -0.36]]'
+      shape_explanation: Rows are cases and columns follow classes_. The fictional table is 3 by 2, shape (3, 2).
+      note: Natural logarithm of predict_proba; zero probabilities become negative infinity.
+    - name: classes_
+      kind: attribute
+      task: classification
+      shape: (n_classes,)
+      object_type: numpy.ndarray
+      example: '[0, 1]'
+      shape_explanation: One label per known class. This fictional example has two classes, shape (2,); the trailing
+        comma marks one dimension.
+      note: Column order for predict_proba and predict_log_proba.
+    - name: feature_importances_
+      kind: attribute
+      task: null
+      shape: (n_features,)
+      object_type: numpy.ndarray
+      example: '[0.6, 0.3, 0.1]'
+      shape_explanation: One-dimensional feature scores. This fictional example assumes n_features=3 and has shape
+        (3,).
+      note: Normalized total impurity reductions attributed to each feature.
+    - name: tree_
+      kind: attribute
+      task: null
+      shape: tree object
+      object_type: sklearn.tree._tree.Tree
+      example: Tree with root, split nodes, and leaves
+      shape_explanation: A fitted tree object rather than an array. It stores the root and child nodes, split features
+        and thresholds, and leaf values.
+      note: Use the tree structure to inspect the fitted if-then rules.
+    - name: n_features_in_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: int
+      example: '3'
+      shape_explanation: A scalar is one value with no array axes. This fictional tree was fit with three input
+        columns.
+      note: Count of input columns seen during fit.
+    next_step: null
+    snippet: '# scikit-learn 1.9.1
+
+      import numpy as np
+
+      from sklearn.datasets import load_breast_cancer
+
+      from sklearn.model_selection import train_test_split
+
+      from sklearn.tree import DecisionTreeClassifier
+
+
+      X, y = load_breast_cancer(return_X_y=True)
+
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+      model = DecisionTreeClassifier(max_depth=3, random_state=0)
+
+      model.fit(X_train, y_train)
+
+      y_pred = model.predict(X_test[:3])
+
+      y_proba = model.predict_proba(X_test[:3])
+
+      print(''y_pred labels:'', y_pred)
+
+      print(''y_proba:'', np.round(y_proba, 3))
+
+      print(''classes_:'', model.classes_)
+
+      print(''accuracy:'', round(model.score(X_test, y_test), 3))'
     snippet_library: scikit-learn
     visual: proba_table
+    guidance:
+    - task: regression
+      text: Check regression predictions on held-out rows; tree predictions are piecewise constant and do not extrapolate.
+    - task: classification
+      text: Use probabilities for ROC AUC or PR curves. Use labels for accuracy and confusion matrices.
+    output: "y_pred labels: [0 1 1]\ny_proba: [[0.993 0.007]\n [0.016 0.984]\n [0.016 0.984]]\nclasses_: [0 1]\n\
+      accuracy: 0.937\n"
   catch_outs:
-    - Deep trees overfit. Set max_depth or min_samples_leaf.
-    - Missing values are fine, but text columns fail.
-    - Predict gives labels. Use predict_proba for ROC or PR curves.
+  - Deep trees overfit. Set max_depth or min_samples_leaf.
+  - Missing values are fine, but text columns fail.
+  - Predict gives labels. Use predict_proba for ROC or PR curves.
   key_settings:
     tier1:
-      - {name: max_depth, page: max-depth}
-      - {name: min_samples_leaf, page: null}
-      - {name: class_weight, page: null}
-      - {name: min_impurity_decrease, page: null}
+    - name: max_depth
+      page: max-depth
+      controls: Maximum number of levels from root to leaf.
+      effect: Shallower trees are simpler and less prone to overfit, but can miss interactions.
+    - name: min_samples_leaf
+      page: null
+      controls: Minimum training rows required in each leaf.
+      effect: Larger leaves smooth class probabilities and resist noise, but can miss small groups.
+    - name: class_weight
+      page: null
+      controls: Relative cost assigned to each class during split fitting.
+      effect: Higher class weight makes errors on that class count more.
+    - name: min_impurity_decrease
+      page: null
+      controls: Minimum weighted class-impurity reduction required for a split.
+      effect: A larger threshold stops growth sooner but can miss useful rules.
     tier2:
-      - {name: max_features, page: null}
-      - {name: ccp_alpha, page: null}
-      - {name: min_samples_split, page: null}
-      - {name: criterion, page: null}
-      - {name: monotonic_cst, page: null}
+    - name: max_features
+      page: null
+      controls: Number or fraction of columns randomly considered at each split.
+      effect: Fewer columns add randomness and may reduce overfit, but can weaken splits.
+    - name: ccp_alpha
+      page: null
+      controls: Minimal cost-complexity pruning strength.
+      effect: Larger values prune more branches and may underfit.
+    - name: min_samples_split
+      page: null
+      controls: Minimum rows in a node before it may split.
+      effect: Larger values stop growth earlier and can leave broad leaves.
+    - name: criterion
+      page: null
+      controls: 'Class-purity measure used to rank candidate splits: Gini, entropy, or log loss.'
+      effect: Different measures can choose different boundaries and probabilities.
+    - name: monotonic_cst
+      page: null
+      controls: Per-feature direction constraints on the positive-class probability.
+      effect: Constraints encode known trends but restrict the tree; multiclass or multi-output uses are limited.
     tier3:
-      - {name: splitter, page: null}
-      - {name: max_leaf_nodes, page: null}
-      - {name: min_weight_fraction_leaf, page: null}
-  watch_it_work: {none: true}
+    - name: splitter
+      page: null
+      controls: Whether each node chooses its best split or a random split.
+      effect: Random splitting increases variation and may reduce overfit, with less precise local choices.
+    - name: max_leaf_nodes
+      page: null
+      controls: Maximum terminal leaves, grown by best-first impurity reduction.
+      effect: A lower cap simplifies the rule set but may underfit.
+    - name: min_weight_fraction_leaf
+      page: null
+      controls: Minimum fraction of total sample weight required in a leaf.
+      effect: A larger fraction prevents tiny weighted leaves but can hide small groups.
+  watch_it_work:
+    none: true
   intuition:
     idea: Ask yes-or-no questions about one feature at a time.
     analogy: A flowchart a clinic nurse could follow.
     animation: none
-    good_at: [readable rules, tabular data, explaining decisions]
-    bad_at: [overfitting by default, small changes in data, extrapolation]
+    good_at:
+    - readable rules
+    - tabular data
+    - explaining decisions
+    bad_at:
+    - overfitting by default
+    - small changes in data
+    - extrapolation
     vs_siblings:
-      - {page: random-forest, note: "Many trees, averaged. More accurate, less readable."}
-      - {page: decision-tree-regressor, note: "Same tree, predicting a number instead."}
-    read_more:
-      - Find the feature and cut that splits the rows best.
-      - Repeat on each side of the cut.
-      - Stop at max_depth or when the leaves are pure.
-  next: [model-overfitting, know-feature-importance]
+    - page: random-forest
+      note: Many trees, averaged. More accurate, less readable.
+    - page: decision-tree-regressor
+      note: Same tree, predicting a number instead.
+    read_more: &id001
+    - At a node, test candidate feature splits and rank them by class impurity reduction.
+    - Choose the best split and send each row to its matching child.
+    - Repeat recursively until a stopping rule creates leaves.
+    - Predict the most common leaf class or return its class shares.
+    goal: Create a compact chain of feature tests whose leaves predict class labels and class shares.
+    steps: *id001
+    math:
+      notation:
+      - symbol: A
+        meaning: Rows reaching the current parent node.
+      - symbol: K
+        meaning: Number of classes.
+      - symbol: k
+        meaning: Index for one class.
+      - symbol: p_k(A)
+        meaning: Share of rows in A belonging to class k.
+      - symbol: L, R
+        meaning: Left and right groups created by a split.
+      - symbol: n_L, n_R
+        meaning: Numbers of rows in the two child groups.
+      equations:
+      - expression: Gini(A) = 1 - sum_(k=1..K) p_k(A)^2
+        meaning: Gini impurity is low when a node mostly contains one class.
+      - expression: gain = I(A) - [n_L I(L) + n_R I(R)]/(n_L+n_R)
+        meaning: A split is preferred when its weighted child impurity is lower than the parent impurity.
+      prediction: predict chooses the largest class share in a leaf; predict_proba returns that leaf’s class shares
+        in classes_ order.
+  next:
+  - model-overfitting
+  - know-feature-importance

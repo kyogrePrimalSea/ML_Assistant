@@ -1,93 +1,206 @@
 id: dummyregressor
 plain_name: DummyRegressor
 code_name: DummyRegressor
-aliases: [baseline regressor, mean predictor]
+aliases:
+- baseline regressor
+- mean predictor
 stage: model
 family: model.baseline
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [sanity check, baseline, score to beat]
-targets: [sklearn.dummy.DummyRegressor]
+question_tags:
+- sanity check
+- baseline
+- score to beat
+targets:
+- sklearn.dummy.DummyRegressor
 pairs_with: []
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.dummy.DummyRegressor.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.dummy.DummyRegressor.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [regression]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: ames, shape: fit_line}
+    hero:
+      kind: model
+      dataset: ames
+      shape: fit_line
     line: Predicts one fixed number for every row.
-  quick_facts: {none: true}
+  quick_facts:
+    none: true
   use_avoid:
-    use_when: [a score to beat, sanity check, no features yet]
-    avoid_when: [any real prediction, features should matter]
+    use_when:
+    - a score to beat
+    - sanity check
+    - no features yet
+    avoid_when:
+    - any real prediction
+    - features should matter
   prep:
-    - step: {family: transform.scale.rescale}
-      status: not_needed
-      why: Ignores the features, so scale does not matter.
-      condition: null
-      unless: null
-    - step: {page: train-test-split}
-      status: recommended
-      why: Score the baseline on rows it did not see.
-      condition: null
-      unless: null
+  - step:
+      family: transform.scale.rescale
+    status: not_needed
+    why: Ignores the features, so scale does not matter.
+    condition: null
+    unless: null
+  - step:
+      page: train-test-split
+    status: recommended
+    why: Score the baseline on rows it did not see.
+    condition: null
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.dummy.DummyRegressor
-      why_this_library: The standard baseline in scikit-learn.
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import load_diabetes
-        from sklearn.dummy import DummyRegressor
-        from sklearn.model_selection import train_test_split
+  - library: scikit-learn
+    target: sklearn.dummy.DummyRegressor
+    why_this_library: The standard baseline in scikit-learn.
+    snippet: "# scikit-learn 1.9.1\nimport numpy as np, pandas as pd\nfrom sklearn.dummy import DummyRegressor\nX=pd.DataFrame(\n    np.arange(20).reshape(10,2), columns=['age','fare']\n)\ny=np.arange(10,dtype=float)*10+10\nm=DummyRegressor(strategy='quantile',quantile=.75).fit(X,y)\ny_pred=m.predict(X[:3])\nprint('y_pred:',y_pred)\nprint('constant_:',m.constant_)\nprint('R2:',round(m.score(X,y),3))\nprint('n_features_in_:',m.n_features_in_)\nprint('feature_names_in_:',m.feature_names_in_)\n"
+    output: 'y_pred: [77.5 77.5 77.5]
 
-        X, y = load_diabetes(return_X_y=True)
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, random_state=0
-        )
+      constant_: [[77.5]]
 
-        model = DummyRegressor(strategy="mean")
-        model.fit(X_train, y_train)
-        print(round(model.score(X_test, y_test), 3))
+      R2: -0.614
+
+      n_features_in_: 2
+
+      feature_names_in_: [''age'' ''fare'']
+
+      '
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: null, shape: "(n_samples,)",
-         note: "Same value for every row. Mean of training y by default."}
-      - {name: score, kind: method, task: null, shape: float,
-         note: "R squared on the data given. Can be negative."}
-      - {name: constant_, kind: attribute, task: null, shape: "(1, n_outputs)",
-         note: "The value predicted, set during fit."}
-      - {name: n_features_in_, kind: attribute, task: null, shape: int,
-         note: "Input columns seen during fit."}
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[77.5, 77.5, 77.5]'
+      shape_explanation: One repeated numeric value per row; three predictions give shape (3,).
+      note: Repeats the fitted statistic, independent of features.
+    - name: score
+      kind: method
+      task: regression
+      shape: scalar
+      object_type: float
+      example: '0.0'
+      shape_explanation: One scalar with no array dimensions; may be negative.
+      note: R² against the evaluation target mean.
+    - name: constant_
+      kind: attribute
+      task: null
+      shape: (1, n_outputs)
+      object_type: numpy.ndarray
+      example: '[[77.5]]'
+      shape_explanation: One row of fitted constants and one column per output; one output gives (1, 1).
+      note: Stores the chosen training-target statistic.
+    - name: n_features_in_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: int
+      example: '2'
+      shape_explanation: One integer number of input columns.
+      note: Metadata only; features are ignored.
+    - name: feature_names_in_
+      kind: attribute
+      task: null
+      shape: (n_features_in_,)
+      object_type: numpy.ndarray of str
+      example: '[''age'', ''fare'']'
+      shape_explanation: One name per feature; present only for all-string names at fit.
+      note: Recorded, not used for prediction.
+    - name: n_outputs_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: int
+      example: '1'
+      shape_explanation: One integer target-output count.
+      note: This example has one output.
     next_step: A real model should beat this score on new data.
     visual: null
+    snippet: "# scikit-learn 1.9.1\nimport numpy as np, pandas as pd\nfrom sklearn.dummy import DummyRegressor\nX=pd.DataFrame(\n    np.arange(20).reshape(10,2), columns=['age','fare']\n)\ny=np.arange(10,dtype=float)*10+10\nm=DummyRegressor(strategy='quantile',quantile=.75).fit(X,y)\ny_pred=m.predict(X[:3])\nprint('y_pred:',y_pred)\nprint('constant_:',m.constant_)\nprint('R2:',round(m.score(X,y),3))\nprint('n_features_in_:',m.n_features_in_)\nprint('feature_names_in_:',m.feature_names_in_)\n"
+    output: 'y_pred: [77.5 77.5 77.5]
+
+      constant_: [[77.5]]
+
+      R2: -0.614
+
+      n_features_in_: 2
+
+      feature_names_in_: [''age'' ''fare'']
+
+      '
+    snippet_library: scikit-learn
+    guidance:
+    - task: regression
+      text: Compare held-out R² and error metrics with a feature-independent baseline.
   catch_outs:
-    - Predicts the same value whatever the features say.
-    - A negative score means worse than predicting the mean.
+  - Predicts the same value whatever the features say.
+  - A negative score means worse than predicting the mean.
   key_settings:
     tier1:
-      - {name: strategy, page: null}
-      - {name: quantile, page: null}
-      - {name: constant, page: null}
+    - name: strategy
+      page: null
+      controls: Chooses mean, median, quantile, or constant.
+      effect: Mean minimizes squared error; median minimizes absolute error. Quantile and constant use chosen values.
+    - name: quantile
+      page: null
+      controls: Selects quantile from 0 to 1 when strategy=quantile.
+      effect: Higher values move the prediction up the target distribution; 0.5 is the median.
+    - name: constant
+      page: null
+      controls: Supplies value repeated by strategy=constant.
+      effect: Predictions use that fixed value without consulting features.
     tier2: []
     tier3: []
-  watch_it_work: {none: true}
+  watch_it_work:
+    none: true
   intuition:
     idea: Ignore the features and predict one fixed number.
     analogy: Guessing the average height of a class without looking at anyone.
     animation: none
-    good_at: [a sanity check, a score to beat]
-    bad_at: [any real prediction, using feature information]
+    good_at:
+    - a sanity check
+    - a score to beat
+    bad_at:
+    - any real prediction
+    - using feature information
     vs_siblings: []
+    goal: Fit one target statistic and repeat it as a feature-independent numeric baseline.
+    steps:
+    - Read training targets and ignore feature values.
+    - Compute mean, median, selected quantile, or supplied constant.
+    - Store the value and repeat it for each new row.
+    - Compare held-out R² or error metrics with a model that uses features.
+    math:
+      notation:
+      - symbol: y_i
+        meaning: Training target.
+      - symbol: q
+        meaning: Requested quantile in [0,1].
+      - symbol: c
+        meaning: Fitted constant.
+      - symbol: yhat(x)
+        meaning: Prediction for row x.
+      equations:
+      - expression: c=quantile_q(y_1,...,y_n); yhat(x)=c
+        meaning: Quantile strategy computes one training-target quantile and repeats it.
+      - expression: R^2=1-sum_i(y_i-yhat_i)^2/sum_i(y_i-mean(y))^2
+        meaning: R² is relative to predicting the evaluation target mean and can be negative.
+      prediction: 'predict repeats one numeric statistic per row: mean, median, quantile, or supplied constant.'
     read_more:
-      - "Pick a rule: mean, median, constant or quantile."
-      - Fit stores the value; predict repeats it.
-      - Compare your real model's score to this one.
+    - 'Pick a rule: mean, median, constant or quantile.'
+    - Fit stores the value; predict repeats it.
+    - Compare your real model's score to this one.
   next: []

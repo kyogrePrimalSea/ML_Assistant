@@ -1,148 +1,294 @@
 id: sgd-classifier
 plain_name: SGDClassifier
 code_name: SGDClassifier
-aliases: [sgd classifier, stochastic gradient descent classifier]
+aliases:
+- sgd classifier
+- stochastic gradient descent classifier
 stage: model
 family: model.awkward.big
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [large data, streaming data]
-targets: [sklearn.linear_model.SGDClassifier]
-pairs_with: [linearexplainer]
+question_tags:
+- large data
+- streaming data
+targets:
+- sklearn.linear_model.SGDClassifier
+pairs_with:
+- linearexplainer
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.SGDClassifier.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.SGDClassifier.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [classification]
+  task_types:
+  - classification
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: breast-cancer, shape: boundary}
+    hero:
+      kind: model
+      dataset: breast-cancer
+      shape: boundary
     line: Learns one straight line in small steps over the rows.
   quick_facts:
     data_size: Millions of rows; can learn in batches
   use_avoid:
-    use_when: [millions of rows, streaming data, straight boundary]
-    avoid_when: [small data, curved boundary]
+    use_when:
+    - millions of rows
+    - streaming data
+    - straight boundary
+    avoid_when:
+    - small data
+    - curved boundary
   prep:
-    - step: {family: transform.scale.rescale}
-      status: required
-      why: "Unscaled columns stall the fit: 0.71 against 0.94 scaled."
-      condition: null
-      unless: null
-    - step: {family: clean.impute}
-      status: required
-      why: Linear models reject missing values.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Text categories must become numbers.
-      condition: {has_categoricals: true}
-      unless: null
-    - step: {family: transform.rebalance.weight}
-      status: recommended
-      why: Use class_weight when classes are lopsided.
-      condition: {imbalanced: true, task_type: [classification]}
-      unless: null
+  - step:
+      family: transform.scale.rescale
+    status: required
+    why: 'Unscaled columns stall the fit: 0.71 against 0.94 scaled.'
+    condition: null
+    unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Linear models reject missing values.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Text categories must become numbers.
+    condition:
+      has_categoricals: true
+    unless: null
+  - step:
+      family: transform.rebalance.weight
+    status: recommended
+    why: Use class_weight when classes are lopsided.
+    condition:
+      imbalanced: true
+      task_type:
+      - classification
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.linear_model.SGDClassifier
-      why_this_library: "log_loss gives predict_proba. The default hinge loss does not."
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import load_breast_cancer
-        from sklearn.linear_model import SGDClassifier
-        from sklearn.model_selection import train_test_split
-        from sklearn.pipeline import make_pipeline
-        from sklearn.preprocessing import StandardScaler
-
-        X, y = load_breast_cancer(return_X_y=True)
-        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
-
-        model = make_pipeline(
-            StandardScaler(), SGDClassifier(loss="log_loss", random_state=0)
-        )
-        model.fit(X_train, y_train)
-        print(round(model.score(X_test, y_test), 3))
+  - library: scikit-learn
+    target: sklearn.linear_model.SGDClassifier
+    why_this_library: log_loss gives predict_proba. The default hinge loss does not.
+    snippet: "# scikit-learn 1.9.1\nfrom sklearn.datasets import load_breast_cancer\nfrom sklearn.linear_model\
+      \ import SGDClassifier\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.pipeline\
+      \ import make_pipeline\nfrom sklearn.preprocessing import StandardScaler\n\nX, y = load_breast_cancer(return_X_y=True)\n\
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)\nmodel = make_pipeline(\n\
+      \    StandardScaler(), SGDClassifier(loss=\"log_loss\", random_state=0)\n)\nmodel.fit(X_train, y_train)\n\
+      sgd = model[-1]\ny_proba = model.predict_proba(X_test[:3])\ny_score = model.decision_function(X_test[:3])\n\
+      y_pred = model.predict(X_test[:3])\nprint(\"class labels:\", y_pred)\nprint(\"decision scores:\"\
+      , y_score.round(2))\nprint(\"class probabilities:\")\nprint(y_proba.round(3))\nprint(\"classes_:\"\
+      , sgd.classes_)\n"
+    output: "class labels: [0 1 1]\ndecision scores: [-57.08  15.    31.11]\nclass probabilities:\n[[1.\
+      \ 0.]\n [0. 1.]\n [0. 1.]]\nclasses_: [0 1]\n"
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: null, shape: "(n_samples,)",
-         note: "Class labels for each row."}
-      - {name: predict_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
-         note: "Needs a log_loss fit. The default hinge loss has none."}
-      - {name: decision_function, kind: method, task: classification, shape: "(n_samples,) for two classes",
-         note: "Signed score. Above 0 means classes_[1]."}
-      - {name: predict_log_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
-         note: "Log of predict_proba. Same loss rule."}
-      - {name: score, kind: method, task: null, shape: "float",
-         note: "Accuracy on the rows you pass in."}
-      - {name: coef_, kind: attribute, task: null, shape: "(1, n_features) for two classes",
-         note: "One weight per input column."}
-      - {name: intercept_, kind: attribute, task: null, shape: "(1,) for two classes",
-         note: "The offset added to every score."}
-      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)",
-         note: "Labels, in the order the probability columns use."}
-    next_step: ROC and PR curves take predict_proba or decision_function scores.
-    snippet: |
-      # scikit-learn 1.9.1
-      from sklearn.datasets import load_breast_cancer
-      from sklearn.linear_model import SGDClassifier
-      from sklearn.model_selection import train_test_split
-      from sklearn.pipeline import make_pipeline
-      from sklearn.preprocessing import StandardScaler
-
-      X, y = load_breast_cancer(return_X_y=True)
-      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
-
-      model = make_pipeline(
-          StandardScaler(), SGDClassifier(loss="log_loss", random_state=0)
-      )
-      model.fit(X_train, y_train)
-      sgd = model[-1]
-      print(model.predict(X_test).shape)
-      print(model.predict_proba(X_test).shape)
-      print(model.decision_function(X_test).shape)
-      print(sgd.coef_.shape)
-      print(sgd.intercept_.shape)
-      print(sgd.classes_)
+    - name: predict
+      kind: method
+      task: classification
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[0, 1, 1]'
+      shape_explanation: One predicted label per row. n_samples is the number of input rows; these three
+        labels have shape (3,).
+      note: Predicted labels; labels correspond to classes_.
+    - name: predict_proba
+      kind: method
+      task: classification
+      shape: (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[[0.82, 0.18], [0.27, 0.73], [0.11, 0.89]]'
+      shape_explanation: A table with n_samples rows and n_classes columns. The example has 3 rows and
+        2 classes, shape (3, 2).
+      note: Only with log_loss or modified_huber; columns follow classes_.
+    - name: decision_function
+      kind: method
+      task: classification
+      shape: (n_samples,) or (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[1.2, -0.7, 0.4]'
+      shape_explanation: For binary classification there is one signed score per row, shape (3,). For
+        multiclass there is one score per row and class.
+      note: Raw scores, not probabilities; positive binary scores map to classes_[1].
+    - name: predict_log_proba
+      kind: method
+      task: classification
+      shape: (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[[-0.20, -1.71], [-1.31, -0.31], [-2.21, -0.12]]'
+      shape_explanation: A table with one row per input and one column per class; this example has shape
+        (3, 2).
+      note: Log probabilities for log_loss or modified_huber; columns follow classes_.
+    - name: classes_
+      kind: attribute
+      task: classification
+      shape: (n_classes,)
+      object_type: numpy.ndarray
+      example: '[0, 1]'
+      shape_explanation: A one-dimensional array with n_classes labels. This two-class example has shape
+        (2,).
+      note: Class labels in score/probability column order.
+    - name: coef_
+      kind: attribute
+      task: null
+      shape: (1,n_features) or (n_classes,n_features)
+      object_type: numpy.ndarray
+      example: '[[0.2, -0.1, 0.4]]'
+      shape_explanation: A matrix with one row per fitted class boundary and one column per input feature.
+        The example shows one binary boundary with 3 features.
+      note: One row of coefficients per binary boundary or multiclass one-versus-rest class.
+    - name: intercept_
+      kind: attribute
+      task: null
+      shape: (1,) binary; (n_classes,) multiclass
+      object_type: numpy.ndarray
+      example: '[0.3]'
+      shape_explanation: A one-dimensional array with one offset per class boundary. This binary example
+        has one boundary and shape (1,).
+      note: One offset per fitted decision boundary.
+    - name: n_iter_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: int
+      example: '8'
+      shape_explanation: A scalar integer count of solver passes, with no array dimensions.
+      note: Solver passes used before convergence or hitting max_iter.
+    next_step: null
+    snippet: "# scikit-learn 1.9.1\nfrom sklearn.datasets import load_breast_cancer\nfrom sklearn.linear_model\
+      \ import SGDClassifier\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.pipeline\
+      \ import make_pipeline\nfrom sklearn.preprocessing import StandardScaler\n\nX, y = load_breast_cancer(return_X_y=True)\n\
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)\nmodel = make_pipeline(\n\
+      \    StandardScaler(), SGDClassifier(loss=\"log_loss\", random_state=0)\n)\nmodel.fit(X_train, y_train)\n\
+      sgd = model[-1]\ny_proba = model.predict_proba(X_test[:3])\ny_score = model.decision_function(X_test[:3])\n\
+      y_pred = model.predict(X_test[:3])\nprint(\"class labels:\", y_pred)\nprint(\"decision scores:\"\
+      , y_score.round(2))\nprint(\"class probabilities:\")\nprint(y_proba.round(3))\nprint(\"classes_:\"\
+      , sgd.classes_)\n"
     snippet_library: scikit-learn
     visual: null
+    output: "class labels: [0 1 1]\ndecision scores: [-57.08  15.    31.11]\nclass probabilities:\n[[1.\
+      \ 0.]\n [0. 1.]\n [0. 1.]]\nclasses_: [0 1]\n"
+    guidance:
+    - task: classification
+      text: Use labels for accuracy and confusion matrices. Use decision scores for ranking; use probabilities
+        only when the chosen loss supports them.
   catch_outs:
-    - "The default hinge loss has no predict_proba. Set loss to log_loss."
-    - Stops at max_iter passes, even if not converged.
-    - Missing values and text fail. Impute and encode first.
+  - The default hinge loss has no predict_proba. Set loss to log_loss.
+  - Stops at max_iter passes, even if not converged.
+  - Missing values and text fail. Impute and encode first.
   key_settings:
     tier1:
-      - {name: loss, page: null}
-      - {name: penalty, page: null}
-      - {name: alpha, page: null}
+    - name: loss
+      page: null
+      controls: 'Classification objective: hinge, log_loss, modified_huber, and others.'
+      effect: Loss controls margin versus probability behaviour; log_loss enables probabilities.
+    - name: penalty
+      page: null
+      controls: L2, L1, elastic-net, or no coefficient penalty.
+      effect: L1 can make weights sparse; L2 shrinks smoothly.
+    - name: alpha
+      page: null
+      controls: Strength of regularisation.
+      effect: Larger alpha shrinks weights more and may underfit.
     tier2:
-      - {name: learning_rate, page: null}
-      - {name: eta0, page: null}
-      - {name: early_stopping, page: null}
+    - name: learning_rate
+      page: null
+      controls: Schedule for SGD update sizes.
+      effect: A suitable decay/adaptive schedule stabilises training; a poor one may stall.
+    - name: eta0
+      page: null
+      controls: Initial or constant learning rate, depending on schedule.
+      effect: Too large steps can overshoot; too small steps learn slowly.
+    - name: early_stopping
+      page: null
+      controls: Whether to stop when validation score stops improving.
+      effect: Can reduce overfitting and runtime but reserves validation rows.
     tier3:
-      - {name: class_weight, page: null}
-      - {name: average, page: null}
-      - {name: l1_ratio, page: null}
-  watch_it_work: {none: true}
+    - name: class_weight
+      page: null
+      controls: Per-class multipliers in the loss.
+      effect: Higher weights increase influence of that class.
+    - name: average
+      page: null
+      controls: Whether to average weights across updates.
+      effect: Averaging often stabilises noisy updates but changes the final model.
+    - name: l1_ratio
+      page: null
+      controls: L1 share of elastic-net regularisation.
+      effect: Higher ratios encourage sparse coefficients.
+  watch_it_work:
+    none: true
   intuition:
     idea: Nudge the line using one batch of rows at a time.
     analogy: Adjusting a dartboard aim after each throw, not after all throws.
     animation: none
-    good_at: [millions of rows, streaming data, linear boundaries]
-    bad_at: [curved boundaries, small data]
+    good_at:
+    - millions of rows
+    - streaming data
+    - linear boundaries
+    bad_at:
+    - curved boundaries
+    - small data
     vs_siblings:
-      - {page: perceptron, note: "Same online training. Perceptron has no penalty by default."}
-      - {page: linear-svc, note: "Same straight line. LinearSVC fits all rows at once."}
-      - {page: logistic-regression, note: "Same probabilities. Fitted all at once, not in batches."}
+    - page: perceptron
+      note: Same online training. Perceptron has no penalty by default.
+    - page: linear-svc
+      note: Same straight line. LinearSVC fits all rows at once.
+    - page: logistic-regression
+      note: Same probabilities. Fitted all at once, not in batches.
     read_more:
-      - Start with any straight line.
-      - Take one row or a small batch, and measure its error.
-      - Nudge the line to shrink that error.
-      - Repeat until max_iter, or the loss stops improving.
-  next: [know-feature-importance]
+    - Start with any straight line.
+    - Take one row or a small batch, and measure its error.
+    - Nudge the line to shrink that error.
+    - Repeat until max_iter, or the loss stops improving.
+    goal: Minimise a chosen classification loss and penalty with stochastic gradient updates over examples.
+    steps:
+    - Initialise class weights
+    - Shuffle rows and compute the selected loss gradient for each example or batch
+    - Apply a learning-rate schedule and regularisation update
+    - For multiclass tasks, fit one-versus-rest classifiers
+    - Stop at tolerance, early stopping, or max_iter.
+    math:
+      notation:
+      - symbol: x_i
+        meaning: Feature vector for row i.
+      - symbol: y_i
+        meaning: Binary label coded as -1 or +1.
+      - symbol: w
+        meaning: Coefficient vector.
+      - symbol: b
+        meaning: Intercept.
+      - symbol: f_i
+        meaning: Decision score for row i.
+      - symbol: η_t
+        meaning: Learning rate at update t.
+      - symbol: L
+        meaning: Selected classification loss.
+      - symbol: α
+        meaning: Penalty strength.
+      - symbol: L_i
+        meaning: Chosen per-example classification loss.
+      - symbol: L_log
+        meaning: Binary logistic loss.
+      equations:
+      - expression: w_(t+1)=w_t−η_t(∇L_i(w_t)+α∇R(w_t)); L_hinge=max(0,1−y_if_i)
+        meaning: Each sampled loss gradient updates weights; log loss differs from hinge and supports
+          probabilities.
+      - expression: L_log=log(1+exp(−y_i f_i))
+        meaning: Log loss gives smooth probability estimates; hinge loss gives margins without probabilities.
+      prediction: predict returns labels; margins come from decision_function, probabilities need a supported
+        loss.
+  next:
+  - know-feature-importance

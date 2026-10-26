@@ -1,133 +1,259 @@
 id: linear-svr
 plain_name: LinearSVR
 code_name: LinearSVR
-aliases: [linear svr, linear support vector regression]
+aliases:
+- linear svr
+- linear support vector regression
 stage: model
 family: model.awkward.big
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [large data, margin-based regression]
-targets: [sklearn.svm.LinearSVR]
-pairs_with: [linearexplainer]
+question_tags:
+- large data
+- margin-based regression
+targets:
+- sklearn.svm.LinearSVR
+pairs_with:
+- linearexplainer
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVR.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.svm.LinearSVR.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [regression]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: ames, shape: fit_line}
+    hero:
+      kind: model
+      dataset: ames
+      shape: fit_line
     line: Fits one straight line to a number, ignoring small misses.
-  quick_facts: {data_size: Large data}
+  quick_facts:
+    data_size: Large data
   use_avoid:
-    use_when: [large data, numeric target, straight-line trend]
-    avoid_when: [curved relationships, needs p-values]
+    use_when:
+    - large data
+    - numeric target
+    - straight-line trend
+    avoid_when:
+    - curved relationships
+    - needs p-values
   prep:
-    - step: {family: transform.scale.rescale}
-      status: recommended
-      why: Margins depend on feature size.
-      condition: null
-      unless: null
-    - step: {family: clean.impute}
-      status: required
-      why: Linear models reject missing values.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Text categories must become numbers.
-      condition: {has_categoricals: true}
-      unless: null
+  - step:
+      family: transform.scale.rescale
+    status: recommended
+    why: Margins depend on feature size.
+    condition: null
+    unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Linear models reject missing values.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Text categories must become numbers.
+    condition:
+      has_categoricals: true
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.svm.LinearSVR
-      why_this_library: Same fit and score API as other scikit-learn models.
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import load_diabetes
-        from sklearn.model_selection import train_test_split
-        from sklearn.pipeline import make_pipeline
-        from sklearn.preprocessing import StandardScaler
-        from sklearn.svm import LinearSVR
+  - library: scikit-learn
+    target: sklearn.svm.LinearSVR
+    why_this_library: Same fit and score API as other scikit-learn models.
+    snippet: "# scikit-learn 1.9.1\nfrom sklearn.datasets import load_diabetes\nfrom sklearn.model_selection\
+      \ import train_test_split\nfrom sklearn.pipeline import make_pipeline\nfrom sklearn.preprocessing\
+      \ import StandardScaler\nfrom sklearn.svm import LinearSVR\n\nX, y = load_diabetes(return_X_y=True)\n\
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)\nmodel = make_pipeline(\n\
+      \    StandardScaler(),\n    LinearSVR(C=1.0, random_state=0, max_iter=5000),\n)\nmodel.fit(X_train,\
+      \ y_train)\nsvr = model[-1]\ny_pred = model.predict(X_test[:3])\nprint(\"y_pred:\", y_pred.round(1))\n\
+      print(\"coef_ shape:\", svr.coef_.shape)\nprint(\"n_iter_:\", svr.n_iter_)\n"
+    output: 'y_pred: [183.6 204.  125.1]
 
-        X, y = load_diabetes(return_X_y=True)
-        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+      coef_ shape: (10,)
 
-        model = make_pipeline(StandardScaler(), LinearSVR(C=1.0, random_state=0))
-        model.fit(X_train, y_train)
-        print(round(model.score(X_test, y_test), 3))
+      n_iter_: 23
+
+      '
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: null, shape: "(n_samples,)",
-         note: "One predicted value per row."}
-      - {name: score, kind: method, task: null, shape: "float",
-         note: "R squared. 1 is perfect; 0 is no better than the mean."}
-      - {name: coef_, kind: attribute, task: null, shape: "(n_features,)",
-         note: "One weight per input column."}
-      - {name: intercept_, kind: attribute, task: null, shape: "(1,)",
-         note: "The offset added to every prediction."}
-      - {name: n_iter_, kind: attribute, task: null, shape: "int",
-         note: "Solver passes used. At max_iter, it may not have converged."}
-      - {name: n_features_in_, kind: attribute, task: null, shape: "int",
-         note: "Number of input columns seen in fit."}
-      - {name: feature_names_in_, kind: attribute, task: null, shape: "(n_features_in_,)",
-         note: "Column names. Only set when fit on a DataFrame."}
-    next_step: Undo any log target before reporting errors in original units.
-    snippet: |
-      # scikit-learn 1.9.1
-      from sklearn.datasets import load_diabetes
-      from sklearn.model_selection import train_test_split
-      from sklearn.pipeline import make_pipeline
-      from sklearn.preprocessing import StandardScaler
-      from sklearn.svm import LinearSVR
-
-      X, y = load_diabetes(return_X_y=True)
-      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
-
-      model = make_pipeline(StandardScaler(), LinearSVR(random_state=0))
-      model.fit(X_train, y_train)
-      svr = model[-1]
-      print(model.predict(X_test).shape)
-      print(svr.coef_.shape)
-      print(svr.intercept_.shape)
-      print(svr.n_iter_)
-      print(svr.n_features_in_)
-      print(round(model.score(X_test, y_test), 3))
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[154.2, 120.5, 92.7]'
+      shape_explanation: A one-dimensional array with one continuous prediction per input row. n_samples
+        is the number of rows; this example has shape (3,).
+      note: One numeric estimate for every input row.
+    - name: score
+      kind: method
+      task: regression
+      shape: scalar
+      object_type: float
+      example: '0.42'
+      shape_explanation: A scalar number measuring explained variance relative to the target mean.
+      note: R-squared on the rows passed to score().
+    - name: coef_
+      kind: attribute
+      task: null
+      shape: (n_features,)
+      object_type: numpy.ndarray
+      example: '[0.42, -0.18, 0.73]'
+      shape_explanation: A one-dimensional array with one entry per feature. n_features is the number
+        of input columns; this example has shape (3,).
+      note: One fitted weight per input column.
+    - name: intercept_
+      kind: attribute
+      task: null
+      shape: (1,)
+      object_type: numpy.ndarray
+      example: '[12.5]'
+      shape_explanation: A one-dimensional array with one intercept for this single target; its shape
+        is (1,).
+      note: One fitted offset added to the weighted feature sum.
+    - name: n_iter_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: int
+      example: '8'
+      shape_explanation: A scalar integer count of completed data passes.
+      note: Number of passes used by fit().
+    - name: n_features_in_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: int
+      example: '10'
+      shape_explanation: A scalar integer count of the training feature columns.
+      note: Number of input columns seen during fit.
+    next_step: null
+    snippet: "# scikit-learn 1.9.1\nfrom sklearn.datasets import load_diabetes\nfrom sklearn.model_selection\
+      \ import train_test_split\nfrom sklearn.pipeline import make_pipeline\nfrom sklearn.preprocessing\
+      \ import StandardScaler\nfrom sklearn.svm import LinearSVR\n\nX, y = load_diabetes(return_X_y=True)\n\
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)\nmodel = make_pipeline(\n\
+      \    StandardScaler(),\n    LinearSVR(C=1.0, random_state=0, max_iter=5000),\n)\nmodel.fit(X_train,\
+      \ y_train)\nsvr = model[-1]\ny_pred = model.predict(X_test[:3])\nprint(\"y_pred:\", y_pred.round(1))\n\
+      print(\"coef_ shape:\", svr.coef_.shape)\nprint(\"n_iter_:\", svr.n_iter_)\n"
     snippet_library: scikit-learn
     visual: null
+    output: 'y_pred: [183.6 204.  125.1]
+
+      coef_ shape: (10,)
+
+      n_iter_: 23
+
+      '
+    guidance:
+    - task: regression
+      text: Check residuals in target units. For streaming updates, call partial_fit on batches and keep
+        feature scaling consistent.
   catch_outs:
-    - Scale features first. Unscaled, the diabetes R squared was -0.56.
-    - Errors inside epsilon cost nothing, so small misses look perfect.
-    - Text and missing values fail. Encode and impute first.
+  - Scale features first. Unscaled, the diabetes R squared was -0.56.
+  - Errors inside epsilon cost nothing, so small misses look perfect.
+  - Text and missing values fail. Encode and impute first.
   key_settings:
     tier1:
-      - {name: C, page: null}
-      - {name: epsilon, page: null}
-      - {name: loss, page: null}
+    - name: C
+      page: null
+      controls: Penalty for errors outside the epsilon tube relative to coefficient size.
+      effect: Higher C fits training violations more closely and can overfit.
+    - name: epsilon
+      page: null
+      controls: Width of the no-penalty residual tube.
+      effect: Larger epsilon ignores more residuals and can yield a simpler fit.
+    - name: loss
+      page: null
+      controls: Linear or squared epsilon-insensitive penalty outside the tube.
+      effect: Squared loss penalises large violations more sharply.
     tier2:
-      - {name: fit_intercept, page: null}
-      - {name: dual, page: null}
+    - name: fit_intercept
+      page: null
+      controls: Whether to estimate an intercept.
+      effect: Turning it off forces predictions through zero.
+    - name: dual
+      page: null
+      controls: Whether to solve the dual or primal optimisation problem.
+      effect: The efficient choice depends on rows versus features; some loss/penalty pairs constrain
+        it.
     tier3:
-      - {name: max_iter, page: null}
-      - {name: tol, page: null}
-      - {name: intercept_scaling, page: null}
-  watch_it_work: {none: true}
+    - name: max_iter
+      page: null
+      controls: Maximum solver iterations.
+      effect: A larger limit allows convergence but increases worst-case runtime.
+    - name: tol
+      page: null
+      controls: Solver stopping tolerance.
+      effect: Tighter tolerance may improve optimisation accuracy but take longer.
+    - name: intercept_scaling
+      page: null
+      controls: Synthetic feature scale used for the intercept under L1 penalty.
+      effect: A larger scale weakens regularisation of the intercept relative to features.
+  watch_it_work:
+    none: true
   intuition:
     idea: Fit one straight line, and ignore misses smaller than epsilon.
     analogy: A ruler that forgives misses inside a narrow band.
     animation: none
-    good_at: [large data, numeric targets, straight-line trends]
-    bad_at: [curved relationships, interactions]
+    good_at:
+    - large data
+    - numeric targets
+    - straight-line trends
+    bad_at:
+    - curved relationships
+    - interactions
     vs_siblings:
-      - {page: passive-aggressive-regressor, note: "Also linear. Updates on each miss, one row at a time."}
-      - {page: sgd-regressor, note: "Also linear. Trains in small batches on big data."}
+    - page: passive-aggressive-regressor
+      note: Also linear. Updates on each miss, one row at a time.
+    - page: sgd-regressor
+      note: Also linear. Trains in small batches on big data.
     read_more:
-      - Start with a line through the middle of the data.
-      - Ignore misses smaller than epsilon.
-      - Move the line to shrink the larger misses.
-  next: [know-feature-importance]
+    - Start with a line through the middle of the data.
+    - Ignore misses smaller than epsilon.
+    - Move the line to shrink the larger misses.
+    goal: Find a linear function with a wide epsilon tube, penalising only errors outside the tube.
+    steps:
+    - Choose a linear weight vector and intercept
+    - Ignore residuals inside epsilon
+    - Penalise outside residuals while controlling coefficient size with C
+    - Solve the convex objective using liblinear primal or dual optimisation.
+    math:
+      notation:
+      - symbol: r_i
+        meaning: Residual for row i.
+      - symbol: ε
+        meaning: Width of the insensitive tube.
+      - symbol: L_ε
+        meaning: Epsilon-insensitive loss.
+      - symbol: C
+        meaning: Penalty on violations.
+      - symbol: w
+        meaning: Coefficient vector.
+      - symbol: x_i
+        meaning: Feature vector for row i.
+      - symbol: y_i
+        meaning: Observed target for row i.
+      - symbol: r_i
+        meaning: Observed target minus the predicted target for row i.
+      - symbol: b
+        meaning: Intercept.
+      equations:
+      - expression: min_(w,b) (1/2)||w||² + CΣ_i max(0,|r_i|−ε)
+        meaning: The epsilon tube ignores small residuals while C weights violations against margin size.
+      prediction: predict(X_new) = X_new @ coef_ + intercept_; returns one numeric estimate per input
+        row.
+  next:
+  - know-feature-importance

@@ -1,96 +1,248 @@
 id: complement-nb
 plain_name: ComplementNB
 code_name: ComplementNB
-aliases: [complement naive bayes, cnb]
+aliases:
+- complement naive bayes
+- cnb
 stage: model
 family: model.probabilistic.nb
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [text, lopsided classes]
-targets: [sklearn.naive_bayes.ComplementNB]
+question_tags:
+- text
+- lopsided classes
+targets:
+- sklearn.naive_bayes.ComplementNB
 pairs_with: []
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.ComplementNB.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.ComplementNB.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [classification]
+  task_types:
+  - classification
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: breast-cancer, shape: boundary}
+    hero:
+      kind: model
+      dataset: breast-cancer
+      shape: boundary
     line: Naive Bayes that holds up when classes are lopsided.
-  quick_facts: {none: true}
+  quick_facts:
+    none: true
   use_avoid:
-    use_when: [text counts, lopsided classes]
-    avoid_when: [negative values, missing values, continuous measurements]
+    use_when:
+    - text counts
+    - lopsided classes
+    avoid_when:
+    - negative values
+    - missing values
+    - continuous measurements
   prep:
-    - step: {family: clean.impute}
-      status: required
-      why: Rejects NaN. Fill gaps first.
-      condition: null
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Text must become word counts first.
-      condition: null
-      unless: null
-    - step: {family: transform.rebalance.weight}
-      status: not_needed
-      why: Built for lopsided classes. Skip class weights.
-      condition: null
-      unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Rejects NaN. Fill gaps first.
+    condition: null
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Text must become word counts first.
+    condition: null
+    unless: null
+  - step:
+      family: transform.rebalance.weight
+    status: not_needed
+    why: Built for lopsided classes. Skip class weights.
+    condition: null
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.naive_bayes.ComplementNB
-      why_this_library: The variant meant for lopsided text classes.
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import load_breast_cancer
-        from sklearn.model_selection import train_test_split
-        from sklearn.naive_bayes import ComplementNB
-
-        X, y = load_breast_cancer(return_X_y=True)
-        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
-
-        model = ComplementNB().fit(X_train, y_train)
-        print(round(model.score(X_test, y_test), 3))
+  - library: scikit-learn
+    target: sklearn.naive_bayes.ComplementNB
+    why_this_library: The variant meant for lopsided text classes.
+    snippet: "# scikit-learn 1.9.1\nimport numpy as np\nfrom sklearn.naive_bayes import ComplementNB\n\nX_train\
+      \ = np.array([\n    [4, 0, 1, 0], [3, 1, 0, 0], [2, 0, 0, 1], [4, 1, 0, 0],\n    [0, 3, 0, 1], [0, 2, 1, 1],\
+      \ [0, 4, 0, 0], [1, 2, 0, 1],\n])\ny_train = np.array([\"fruit\"] * 4 + [\"vehicle\"] * 4)\nX_query = np.array([[3,\
+      \ 0, 0, 0], [0, 3, 1, 0], [1, 1, 0, 1]])\nmodel = ComplementNB(alpha=1.0).fit(X_train, y_train)\ny_proba =\
+      \ model.predict_proba(X_query)\ny_pred = model.predict(X_query)\nprint(\"classes:\", model.classes_)\nprint(\"\
+      probabilities:\", y_proba.round(3))\nprint(\"labels:\", y_pred)\n"
+    output: "classes: ['fruit' 'vehicle']\nprobabilities: [[0.997 0.003]\n [0.013 0.987]\n [0.43  0.57 ]]\nlabels:\
+      \ ['fruit' 'vehicle' 'vehicle']\n"
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: null, shape: "(n_samples,)", note: "Predicted class labels."}
-      - {name: predict_proba, kind: method, task: classification, shape: "(n_samples, n_classes)", note: "One column per class, in classes_ order."}
-      - {name: predict_log_proba, kind: method, task: classification, shape: "(n_samples, n_classes)", note: "Log of predict_proba, same columns."}
-      - {name: score, kind: method, task: null, shape: "float", note: "Accuracy on the data given."}
-      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)", note: "Class labels, in predict_proba column order."}
-      - {name: n_features_in_, kind: attribute, task: null, shape: "int", note: "Number of input columns seen in fit."}
-      - {name: feature_names_in_, kind: attribute, task: null, shape: "(n_features,)", note: "Column names seen in fit, if any."}
-    next_step: "Accuracy hides lopsided classes. Check a confusion matrix next."
+    - name: predict
+      kind: method
+      task: classification
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[''fruit'', ''vehicle'', ''fruit'']'
+      shape_explanation: Three input rows produce three predicted labels, shape (3,). The trailing comma means one
+        array axis.
+      note: One predicted class label for each input row.
+    - name: predict_proba
+      kind: method
+      task: classification
+      shape: (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[[0.91, 0.09], [0.12, 0.88], [0.73, 0.27]]'
+      shape_explanation: Rows are 3 input cases and columns are the 2 classes in classes_ order, shape (3, 2).
+      note: Normalized class probabilities; columns follow classes_.
+    - name: predict_log_proba
+      kind: method
+      task: classification
+      shape: (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[[-0.09, -2.41], [-2.12, -0.13], [-0.31, -1.31]]'
+      shape_explanation: Three case rows and two class columns give shape (3, 2); values are log probabilities.
+      note: Log of normalized posterior probabilities.
+    - name: predict_joint_log_proba
+      kind: method
+      task: classification
+      shape: (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[[4.21, 6.53], [6.24, 4.25], [4.43, 5.43]]'
+      shape_explanation: Three input rows by two class scores gives shape (3, 2); columns use classes_ order.
+      note: Adds class log prior to class-conditional log likelihood; ComplementNB returns complement scores.
+    - name: classes_
+      kind: attribute
+      task: classification
+      shape: (n_classes,)
+      object_type: numpy.ndarray
+      example: '[''fruit'', ''vehicle'']'
+      shape_explanation: There are two class labels, so this one-dimensional array has shape (2,).
+      note: Defines class-column order for probability and log-score methods.
+    - name: class_log_prior_
+      kind: attribute
+      task: classification
+      shape: (n_classes,)
+      object_type: numpy.ndarray
+      example: '[-0.69, -0.69]'
+      shape_explanation: One log prior per class; the two-class example has shape (2,).
+      note: Stored class log priors are used only for the single-class training edge case.
+    - name: feature_count_
+      kind: attribute
+      task: classification
+      shape: (n_classes, n_features)
+      object_type: numpy.ndarray
+      example: '[[12, 3], [2, 11]]'
+      shape_explanation: Rows are 2 classes and columns are 2 features, shape (2, 2).
+      note: Weighted or unweighted training counts for each class-feature pair.
+    - name: feature_log_prob_
+      kind: attribute
+      task: classification
+      shape: (n_classes, n_features)
+      object_type: numpy.ndarray
+      example: '[[1.2, 0.4], [0.3, 1.0]]'
+      shape_explanation: Rows are 2 classes and columns are 2 features, shape (2, 2).
+      note: Smoothed negative log feature rates from each class complement; smaller score wins.
+    next_step: null
     visual: proba_table
+    guidance:
+    - task: classification
+      text: Use non-negative counts. Complement joint scores are ranking scores, not generative log likelihoods.
+    snippet: "# scikit-learn 1.9.1\nimport numpy as np\nfrom sklearn.naive_bayes import ComplementNB\n\nX = np.array([\n\
+      \    [4,0,1,0],[3,1,0,0],[2,0,0,1],[4,1,0,0],\n    [0,3,0,1],[0,2,1,1],[0,4,0,0],[1,2,0,1],\n])\ny = np.array([\"\
+      fruit\"] * 4 + [\"vehicle\"] * 4)\nquery = np.array([[3,0,0,0],[0,3,1,0],[1,1,0,1]])\nmodel = ComplementNB(alpha=1.0).fit(X,\
+      \ y)\nprint(\"labels:\", model.predict(query))\nprint(\"probability shape:\", model.predict_proba(query).shape)\n\
+      print(\"log probability shape:\", model.predict_log_proba(query).shape)\nprint(\"complement score shape:\"\
+      , model.predict_joint_log_proba(query).shape)\nprint(\"classes_:\", model.classes_)\nprint(\"class_log_prior_:\"\
+      , model.class_log_prior_.round(3))\nprint(\"feature_count_ shape:\", model.feature_count_.shape)\nprint(\"\
+      complement weights shape:\", model.feature_log_prob_.shape)\n"
+    snippet_library: scikit-learn
+    output: 'labels: [''fruit'' ''vehicle'' ''vehicle'']
+
+      probability shape: (3, 2)
+
+      log probability shape: (3, 2)
+
+      complement score shape: (3, 2)
+
+      classes_: [''fruit'' ''vehicle'']
+
+      class_log_prior_: [-0.693 -0.693]
+
+      feature_count_ shape: (2, 4)
+
+      complement weights shape: (2, 4)
+
+      '
   catch_outs:
-    - Negative values fail in fit. Keep features non-negative.
-    - NaN fails in fit. Impute before the model.
-    - class_prior is not used by this model.
+  - Negative values fail in fit. Keep features non-negative.
+  - NaN fails in fit. Impute before the model.
+  - class_prior is not used by this model.
   key_settings:
     tier1:
-      - {name: alpha, page: null}
-      - {name: norm, page: null}
+    - name: alpha
+      page: null
+      controls: Additive smoothing for counts in each class complement.
+      effect: More smoothing avoids zero complement rates but flattens feature weights.
+    - name: norm
+      page: null
+      controls: Whether to apply the optional second normalization to complement weights.
+      effect: Normalization changes relative feature-weight scale and can change class rankings.
     tier2:
-      - {name: force_alpha, page: null}
+    - name: force_alpha
+      page: null
+      controls: Whether to retain alpha even when it is extremely close to zero.
+      effect: Retaining tiny values can cause numerical issues; clipping changes smoothing.
     tier3:
-      - {name: fit_prior, page: null}
-  watch_it_work: {none: true}
+    - name: fit_prior
+      page: null
+      controls: Only consulted for the single-class training edge case.
+      effect: For ordinary multiclass data it has no effect on fitted predictions.
+  watch_it_work:
+    none: true
   intuition:
     idea: Estimate each class from the counts in all the other classes.
     analogy: Judge a class by what the other classes do not contain.
     animation: none
-    good_at: [text counts, lopsided classes]
-    bad_at: [negative values, continuous measurements]
+    good_at:
+    - text counts
+    - lopsided classes
+    bad_at:
+    - negative values
+    - continuous measurements
     vs_siblings:
-      - {page: multinomial-nb, note: "Same counts. ComplementNB uses the other classes."}
+    - page: multinomial-nb
+      note: Same counts. ComplementNB uses the other classes.
     read_more:
-      - See the scikit-learn reference page for ComplementNB.
-  next: [evaluate-how-good]
-...
+    - Weights for class c are estimated from the other classes’ feature counts.
+    - Prediction selects the class with the smallest weighted complement score.
+    - Complement weights are useful for imbalanced text counts but do not guarantee better results.
+    goal: Classify count vectors using each class’s complement, emphasizing features rare outside that class.
+    steps:
+    - Count each feature overall and within every class.
+    - For each class, subtract its count from the overall count to form complement counts.
+    - Smooth and normalize complement rates, then store negative log rates as feature weights.
+    - Score rows by weighted feature counts; choose the class with the smallest complement score.
+    - Normalize scores only when predict_proba or predict_log_proba is requested.
+    math:
+      notation:
+      - symbol: N_j
+        meaning: Total training count of feature j across classes.
+      - symbol: N_cj
+        meaning: Count of feature j within class c.
+      - symbol: alpha
+        meaning: Additive smoothing applied to complement counts.
+      - symbol: w_cj
+        meaning: Negative log rate of feature j outside class c.
+      - symbol: x_j
+        meaning: Non-negative feature count in the query row.
+      equations:
+      - expression: w_cj = -log((N_j - N_cj + alpha) / sum_l(N_l - N_cl + alpha))
+        meaning: Weights describe smoothed feature rates among all classes other than c.
+      - expression: score_c(x) = sum_j x_j w_cj; predict argmin_c score_c(x)
+        meaning: A row scores a class by its complement weights; lower score selects the class.
+      prediction: Complement weights are scores, not generative log likelihoods; choose the smallest score.
+  next:
+  - evaluate-how-good

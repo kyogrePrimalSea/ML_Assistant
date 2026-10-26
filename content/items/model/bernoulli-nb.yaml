@@ -1,130 +1,253 @@
 id: bernoulli-nb
 plain_name: BernoulliNB
 code_name: BernoulliNB
-aliases: [bernoulli naive bayes, bernoulli nb, bernoulli]
+aliases:
+- bernoulli naive bayes
+- bernoulli nb
+- bernoulli
 stage: model
 family: model.probabilistic.nb
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [yes no features, word present or absent, fast baseline]
-targets: [sklearn.naive_bayes.BernoulliNB]
+question_tags:
+- yes no features
+- word present or absent
+- fast baseline
+targets:
+- sklearn.naive_bayes.BernoulliNB
 pairs_with: []
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.BernoulliNB.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.BernoulliNB.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [classification]
+  task_types:
+  - classification
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: breast-cancer, shape: boundary}
+    hero:
+      kind: model
+      dataset: breast-cancer
+      shape: boundary
     line: Scores each class from which yes or no features are present.
   quick_facts:
     data_size: Any size table with yes or no columns
   use_avoid:
-    use_when: [yes no features, word present or absent, quick baseline]
-    avoid_when: [numeric features, correlated features, need a formula]
+    use_when:
+    - yes no features
+    - word present or absent
+    - quick baseline
+    avoid_when:
+    - numeric features
+    - correlated features
+    - need a formula
   prep:
-    - step: {family: transform.scale.rescale}
-      status: not_needed
-      why: "Binarize sets the cut-off; scaling changes what counts as yes."
-      condition: null
-      unless: null
-    - step: {family: clean.impute}
-      status: required
-      why: Rejects missing values.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Features must be yes or no numbers.
-      condition: {has_categoricals: true}
-      unless: null
+  - step:
+      family: transform.scale.rescale
+    status: not_needed
+    why: Binarize sets the cut-off; scaling changes what counts as yes.
+    condition: null
+    unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Rejects missing values.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Features must be yes or no numbers.
+    condition:
+      has_categoricals: true
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.naive_bayes.BernoulliNB
-      why_this_library: The scikit-learn estimator for this method.
-      snippet: |
-        # scikit-learn 1.9.1
-        import numpy as np
-        from sklearn.datasets import load_breast_cancer
-        from sklearn.model_selection import train_test_split
-        from sklearn.naive_bayes import BernoulliNB
-
-        X, y = load_breast_cancer(return_X_y=True)
-        X = (X > np.median(X, axis=0)).astype(int)
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, random_state=0
-        )
-
-        model = BernoulliNB()
-        model.fit(X_train, y_train)
-        print(round(model.score(X_test, y_test), 3))
+  - library: scikit-learn
+    target: sklearn.naive_bayes.BernoulliNB
+    why_this_library: The scikit-learn estimator for this method.
+    snippet: "# scikit-learn 1.9.1\nimport numpy as np\nfrom sklearn.naive_bayes import BernoulliNB\nfrom sklearn.model_selection\
+      \ import train_test_split\n\nX = np.array([\n    [1, 0, 1, 0], [1, 1, 0, 0], [1, 0, 0, 1], [1, 1, 1, 0],\n\
+      \    [0, 1, 0, 1], [0, 1, 1, 1], [0, 1, 0, 0], [0, 0, 1, 1],\n])\ny = np.array([\"fruit\"] * 4 + [\"vehicle\"\
+      ] * 4)\nX_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)\nmodel = BernoulliNB(binarize=0.5).fit(X_train,\
+      \ y_train)\ny_proba = model.predict_proba(X_test[:3])\ny_pred = model.predict(X_test[:3])\nprint(\"probabilities:\"\
+      , y_proba.round(3))\nprint(\"labels:\", y_pred)\nprint(\"score:\", round(model.score(X_test, y_test), 3))\n"
+    output: "probabilities: [[0.5 0.5]\n [0.5 0.5]]\nlabels: ['fruit' 'fruit']\nscore: 0.5\n"
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: classification, shape: "(n_samples,)",
-         note: "Class with the highest probability."}
-      - {name: predict_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
-         note: "One column per class, in classes_ order."}
-      - {name: predict_log_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
-         note: "Log of predict_proba, same column order."}
-      - {name: score, kind: method, task: classification, shape: "float",
-         note: "Accuracy on the data given."}
-      - {name: class_log_prior_, kind: attribute, task: classification, shape: "(n_classes,)",
-         note: "Log of each class's share of the rows."}
-      - {name: feature_log_prob_, kind: attribute, task: classification, shape: "(n_classes, n_features)",
-         note: "Log chance each feature is yes, per class."}
-      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)",
-         note: "Labels, in the order of the probability columns."}
-      - {name: n_features_in_, kind: attribute, task: null, shape: "int",
-         note: "Columns seen during fit."}
-    next_step: "ROC AUC needs predict_proba[:, 1], not the labels."
-    snippet: |
-      # scikit-learn 1.9.1
-      import numpy as np
-      from sklearn.datasets import load_breast_cancer
-      from sklearn.naive_bayes import BernoulliNB
-
-      X, y = load_breast_cancer(return_X_y=True)
-      X = (X > np.median(X, axis=0)).astype(int)
-      model = BernoulliNB()
-      model.fit(X, y)
-      print(model.predict_proba(X[:3]).shape)
-      print(model.predict_log_proba(X[:3]).shape)
-      print(model.class_log_prior_.shape)
-      print(model.feature_log_prob_.shape)
-      print(model.classes_)
+    - name: predict
+      kind: method
+      task: classification
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[''fruit'', ''vehicle'', ''fruit'']'
+      shape_explanation: Three input rows produce three predicted labels, shape (3,). The trailing comma means one
+        array axis.
+      note: One predicted class label for each input row.
+    - name: predict_proba
+      kind: method
+      task: classification
+      shape: (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[[0.91, 0.09], [0.12, 0.88], [0.73, 0.27]]'
+      shape_explanation: Rows are 3 input cases and columns are the 2 classes in classes_ order, shape (3, 2).
+      note: Normalized class probabilities; columns follow classes_.
+    - name: predict_log_proba
+      kind: method
+      task: classification
+      shape: (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[[-0.09, -2.41], [-2.12, -0.13], [-0.31, -1.31]]'
+      shape_explanation: Three case rows and two class columns give shape (3, 2); values are log probabilities.
+      note: Log of normalized posterior probabilities.
+    - name: predict_joint_log_proba
+      kind: method
+      task: classification
+      shape: (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[[-4.21, -6.53], [-6.24, -4.25], [-4.43, -5.43]]'
+      shape_explanation: Three input rows by two class scores gives shape (3, 2); columns use classes_ order.
+      note: Adds class log prior to class-conditional log likelihood; ComplementNB returns complement scores.
+    - name: classes_
+      kind: attribute
+      task: classification
+      shape: (n_classes,)
+      object_type: numpy.ndarray
+      example: '[''fruit'', ''vehicle'']'
+      shape_explanation: There are two class labels, so this one-dimensional array has shape (2,).
+      note: Defines class-column order for probability and log-score methods.
+    - name: class_log_prior_
+      kind: attribute
+      task: classification
+      shape: (n_classes,)
+      object_type: numpy.ndarray
+      example: '[-0.69, -0.69]'
+      shape_explanation: One log prior per class; the two-class example has shape (2,).
+      note: Log class priors used in class scoring.
+    - name: feature_count_
+      kind: attribute
+      task: classification
+      shape: (n_classes, n_features)
+      object_type: numpy.ndarray
+      example: '[[12, 3], [2, 11]]'
+      shape_explanation: Rows are 2 classes and columns are 2 features, shape (2, 2).
+      note: Weighted or unweighted training counts for each class-feature pair.
+    - name: feature_log_prob_
+      kind: attribute
+      task: classification
+      shape: (n_classes, n_features)
+      object_type: numpy.ndarray
+      example: '[[-0.2, -1.8], [-1.7, -0.3]]'
+      shape_explanation: Rows are 2 classes and columns are 2 features, shape (2, 2).
+      note: Log presence probability per feature; absent features contribute log(1-p).
+    next_step: null
+    snippet: "# scikit-learn 1.9.1\nimport numpy as np\nfrom sklearn.naive_bayes import BernoulliNB\n\nX = np.array([\n\
+      \    [1,0,1,0],[1,1,0,0],[1,0,0,1],[1,1,1,0],\n    [0,1,0,1],[0,1,1,1],[0,1,0,0],[0,0,1,1],\n])\ny = np.array([\"\
+      fruit\"] * 4 + [\"vehicle\"] * 4)\nmodel = BernoulliNB(binarize=0.5).fit(X, y)\nquery = X[:3]\nprint(\"labels:\"\
+      , model.predict(query))\nprint(\"probability shape:\", model.predict_proba(query).shape)\nprint(\"log probability\
+      \ shape:\", model.predict_log_proba(query).shape)\nprint(\"joint log shape:\", model.predict_joint_log_proba(query).shape)\n\
+      print(\"classes_:\", model.classes_)\nprint(\"class_log_prior_:\", model.class_log_prior_.round(3))\nprint(\"\
+      feature_count_ shape:\", model.feature_count_.shape)\nprint(\"feature_log_prob_ shape:\", model.feature_log_prob_.shape)\n"
     snippet_library: scikit-learn
-    visual: null
+    visual: proba_table
+    guidance:
+    - task: classification
+      text: Use binary presence features or set a meaningful binarize threshold; probabilities include absence evidence.
+    output: 'labels: [''fruit'' ''fruit'' ''fruit'']
+
+      probability shape: (3, 2)
+
+      log probability shape: (3, 2)
+
+      joint log shape: (3, 2)
+
+      classes_: [''fruit'' ''vehicle'']
+
+      class_log_prior_: [-0.693 -0.693]
+
+      feature_count_ shape: (2, 4)
+
+      feature_log_prob_ shape: (2, 4)
+
+      '
   catch_outs:
-    - "Assumes features are independent, which correlated columns break."
-    - "Numeric columns are cut at binarize, so their detail is lost."
-    - "NaN values raise an error, so impute first."
+  - Assumes features are independent, which correlated columns break.
+  - Numeric columns are cut at binarize, so their detail is lost.
+  - NaN values raise an error, so impute first.
   key_settings:
     tier1:
-      - {name: alpha, page: null}
-      - {name: binarize, page: null}
-      - {name: force_alpha, page: null}
-      - {name: class_prior, page: null}
+    - name: alpha
+      page: null
+      controls: Additive smoothing for present-feature counts; may be scalar or per feature.
+      effect: More smoothing avoids zero presence probabilities but weakens feature evidence.
+    - name: binarize
+      page: null
+      controls: Threshold converting numeric features to present/absent; None expects binary input.
+      effect: A higher threshold marks fewer features present; a mismatched threshold changes evidence.
+    - name: force_alpha
+      page: null
+      controls: Whether to keep alpha unchanged when it is extremely close to zero.
+      effect: Tiny retained values can cause numerical issues; clipping changes smoothing.
+    - name: class_prior
+      page: null
+      controls: Explicit prior probability for each class.
+      effect: Known priors can reflect deployment rates; incorrect priors bias class scoring.
     tier2:
-      - {name: fit_prior, page: null}
-    tier3:
-      []
-  watch_it_work: {none: true}
+    - name: fit_prior
+      page: null
+      controls: Whether to estimate class priors from label frequencies.
+      effect: False uses a uniform prior instead of reflecting class imbalance.
+    tier3: []
+  watch_it_work:
+    none: true
   intuition:
     idea: Scores each class from which yes or no features are present.
     analogy: A checklist where each box ticked adds weight to one class.
     animation: none
-    good_at: [yes no features, word present or absent, quick baselines]
-    bad_at: [numeric features, correlated features, feature interactions]
+    good_at:
+    - yes no features
+    - word present or absent
+    - quick baselines
+    bad_at:
+    - numeric features
+    - correlated features
+    - feature interactions
     vs_siblings:
-      - {page: categorical-nb, note: "Whole-number category codes, not yes or no."}
+    - page: categorical-nb
+      note: Whole-number category codes, not yes or no.
     read_more:
-      - Turn each feature into yes or no.
-      - Count yes and no per class.
-      - Multiply the chances across features for each class.
+    - Every feature is treated as present or absent after thresholding.
+    - Both ones and zeros contribute likelihood terms.
+    - This is different from MultinomialNB, which uses feature counts.
+    goal: Classify binary feature vectors using both the presence and absence of each feature.
+    steps:
+    - Binarize numeric features at the configured threshold, or accept already binary values.
+    - Estimate smoothed per-class probabilities that each feature is present.
+    - For each row, add presence terms for ones and absence terms for zeros, plus the class log prior.
+    - Normalize the class scores into probabilities and select the largest score.
+    math:
+      notation:
+      - symbol: x_j in {0,1}
+        meaning: Whether feature j is present after binarization.
+      - symbol: theta_cj
+        meaning: Probability feature j is present in class c.
+      - symbol: pi_c
+        meaning: Prior probability of class c.
+      - symbol: alpha
+        meaning: Additive smoothing for present and absent counts.
+      equations:
+      - expression: log P(c,x) = log pi_c + sum_j[x_j log(theta_cj) + (1-x_j)log(1-theta_cj)]
+        meaning: Each feature contributes evidence whether it is present or absent.
+      - expression: P(c|x) = exp(log P(c,x)) / sum_r exp(log P(r,x))
+        meaning: Normalizing the joint scores gives posterior class probabilities.
+      prediction: BernoulliNB uses binary presence and absence evidence; it differs from count-based MultinomialNB.
   next: []

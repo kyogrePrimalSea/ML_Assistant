@@ -71,9 +71,15 @@ export interface CodeTab {
   target: string
   why_this_library: string
   snippet: string
+  output?: string
 }
 
-export interface KeySetting { name: string; page: string | null }
+export interface KeySetting {
+  name: string
+  page: string | null
+  controls?: string
+  effect?: string
+}
 export interface KeySettings { tier1: KeySetting[]; tier2: KeySetting[]; tier3: KeySetting[] }
 
 export type WatchItWork =
@@ -91,6 +97,13 @@ export type Intuition =
       bad_at: string[]
       vs_siblings: { page: string; note: string }[]
       read_more: string[]
+      goal?: string
+      steps?: string[]
+      math?: {
+        notation: { symbol: string; meaning: string }[]
+        equations: { expression: string; meaning: string }[]
+        prediction: string
+      }
     }
 
 export interface WhatComesOutItem {
@@ -99,13 +112,18 @@ export interface WhatComesOutItem {
   task: 'classification' | 'regression' | null
   shape: string
   note: string
+  object_type?: string
+  example?: string
+  shape_explanation?: string
 }
 
 export interface WhatComesOutBody {
   items: WhatComesOutItem[]
   next_step: string | null
+  guidance?: { task: TaskType; text: string }[]
   snippet?: string
   snippet_library?: string
+  output?: string
   visual: 'proba_table' | 'regression_preds' | 'both' | null
 }
 

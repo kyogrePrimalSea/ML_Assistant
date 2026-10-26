@@ -1,107 +1,281 @@
 id: ransac-regressor
 plain_name: RANSACRegressor
 code_name: RANSACRegressor
-aliases: [ransac, random sample consensus]
+aliases:
+- ransac
+- random sample consensus
 stage: model
 family: model.awkward.robust
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [outliers, robust fit, bad data]
-targets: [sklearn.linear_model.RANSACRegressor]
+question_tags:
+- outliers
+- robust fit
+- bad data
+targets:
+- sklearn.linear_model.RANSACRegressor
 pairs_with: []
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.RANSACRegressor.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.RANSACRegressor.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [regression]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: ames, shape: fit_line}
+    hero:
+      kind: model
+      dataset: ames
+      shape: fit_line
     line: Fits a line while ignoring the outlier rows.
   quick_facts:
     data_size: Medium to large tables
   use_avoid:
-    use_when: [many outliers, a clean subset exists, linear shape]
-    avoid_when: [few rows, need every row used, missing values]
+    use_when:
+    - many outliers
+    - a clean subset exists
+    - linear shape
+    avoid_when:
+    - few rows
+    - need every row used
+    - missing values
   prep:
-    - step: {family: clean.impute}
-      status: required
-      why: Stops with an error on NaN.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.scale.rescale}
-      status: not_needed
-      why: A linear fit gives the same answer after scaling.
-      condition: null
-      unless: null
-    - step: {page: train-test-split}
-      status: recommended
-      why: Checks the fit on rows it did not see.
-      condition: null
-      unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Stops with an error on NaN.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.scale.rescale
+    status: not_needed
+    why: A linear fit gives the same answer after scaling.
+    condition: null
+    unless: null
+  - step:
+      page: train-test-split
+    status: recommended
+    why: Checks the fit on rows it did not see.
+    condition: null
+    unless: null
   code:
   - library: scikit-learn
     target: sklearn.linear_model.RANSACRegressor
     why_this_library: The scikit-learn estimator with this name.
-    snippet: |
-      # scikit-learn 1.9.1
+    snippet: '# scikit-learn 1.9.1
+
       from sklearn.datasets import make_regression
+
       from sklearn.linear_model import RANSACRegressor
 
-      X, y = make_regression(n_samples=200, n_features=2, noise=4.0,
-                             random_state=0)
-      y[:40] += 200  # 20% gross outliers
+
+      X, y = make_regression(n_samples=200, n_features=2, noise=4.0, random_state=0)
+
+      y[:40] += 200
+
       model = RANSACRegressor(random_state=0).fit(X, y)
-      print(model.inlier_mask_.sum())
+
+      y_pred = model.predict(X[:3])
+
+      print("y_pred:", y_pred.round(1))
+
+      print("inlier_mask_ shape:", model.inlier_mask_.shape)
+
+      print("inliers:", int(model.inlier_mask_.sum()))
+
+      print("n_trials_:", model.n_trials_, type(model.n_trials_).__name__)
+
+      '
+    output: 'y_pred: [-31.8   2.9  37.5]
+
+      inlier_mask_ shape: (200,)
+
+      inliers: 160
+
+      n_trials_: 7 int
+
+      '
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
-         note: "Predictions from the final model, fitted on inliers."}
-      - {name: inlier_mask_, kind: attribute, task: null, shape: "(n_samples,) of bool",
-         note: "True for each row kept as an inlier."}
-      - {name: estimator_, kind: attribute, task: null, shape: "estimator object",
-         note: "The final model, refit on the inliers."}
-      - {name: n_trials_, kind: attribute, task: null, shape: "int",
-         note: "Random draws used before a stop rule hit."}
-    next_step: Check inlier_mask_ before trusting the fit.
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[-31.8, 2.9, 37.5]'
+      shape_explanation: One prediction per input row. n_samples is the number of rows; this example has
+        shape (3,).
+      note: Delegates to estimator_, refitted on the selected inliers.
+    - name: inlier_mask_
+      kind: attribute
+      task: null
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[True, True, False]'
+      shape_explanation: One boolean per training row. n_samples is the number of training rows; this
+        example has shape (3,).
+      note: Boolean mask over training rows; true marks a consensus inlier.
+    - name: estimator_
+      kind: attribute
+      task: null
+      shape: estimator object
+      object_type: sklearn.linear_model.LinearRegression
+      example: LinearRegression(fit_intercept=True)
+      shape_explanation: A fitted Python estimator object, not a numeric scalar or array. It exposes the
+        chosen inlier-only model and its own prediction methods.
+      note: The base estimator refitted on all selected inliers.
+    - name: n_trials_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: int
+      example: '4'
+      shape_explanation: A scalar is one value, with no array dimensions. The example shows that single
+        value.
+      note: Number of random candidate trials actually run.
+    next_step: null
     visual: null
+    guidance:
+    - task: regression
+      text: Inspect inlier_mask_ and the consensus size before interpreting the fitted estimator.
+    snippet: '# scikit-learn 1.9.1
+
+      from sklearn.datasets import make_regression
+
+      from sklearn.linear_model import RANSACRegressor
+
+
+      X, y = make_regression(n_samples=200, n_features=2, noise=4.0, random_state=0)
+
+      y[:40] += 200
+
+      model = RANSACRegressor(random_state=0).fit(X, y)
+
+      y_pred = model.predict(X[:3])
+
+      print("y_pred:", y_pred.round(1))
+
+      print("inlier_mask_ shape:", model.inlier_mask_.shape)
+
+      print("inliers:", int(model.inlier_mask_.sum()))
+
+      print("n_trials_:", model.n_trials_, type(model.n_trials_).__name__)
+
+      '
+    snippet_library: scikit-learn
+    output: 'y_pred: [-31.8   2.9  37.5]
+
+      inlier_mask_ shape: (200,)
+
+      inliers: 160
+
+      n_trials_: 7 int
+
+      '
   catch_outs:
-    - Random draws change the result unless random_state is set.
-    - A non-linear estimator needs min_samples set by hand.
-    - The default threshold is the MAD of y. Set residual_threshold to tune it.
+  - Random draws change the result unless random_state is set.
+  - A non-linear estimator needs min_samples set by hand.
+  - The default threshold is the MAD of y. Set residual_threshold to tune it.
   key_settings:
     tier1:
-    - {name: min_samples, page: null}
-    - {name: residual_threshold, page: null}
-    - {name: max_trials, page: null}
-    - {name: loss, page: null}
+    - name: min_samples
+      page: null
+      controls: Minimum observations used to fit each candidate.
+      effect: Larger subsets are more stable but harder to draw free of outliers.
+    - name: residual_threshold
+      page: null
+      controls: Maximum residual loss for an observation to count as an inlier.
+      effect: Higher thresholds admit more rows; lower thresholds demand tighter consensus.
+    - name: max_trials
+      page: null
+      controls: Maximum random candidate subsets.
+      effect: More trials improve the chance of finding a clean subset but take longer.
+    - name: loss
+      page: null
+      controls: Residual loss used to compare with the threshold.
+      effect: Changing loss changes which deviations qualify as inliers.
     tier2:
-    - {name: estimator, page: null}
-    - {name: stop_probability, page: null}
-    - {name: is_data_valid, page: null}
+    - name: estimator
+      page: null
+      controls: Base estimator fitted to each subset and final consensus.
+      effect: A more complex estimator changes the model shape and required subset size.
+    - name: stop_probability
+      page: null
+      controls: Probability target for finding an outlier-free subset.
+      effect: Higher confidence may require more trials.
+    - name: is_data_valid
+      page: null
+      controls: Optional check that a sampled subset is usable.
+      effect: Rejecting more samples can avoid invalid fits but increase skipped trials.
     tier3:
-    - {name: stop_score, page: null}
-    - {name: stop_n_inliers, page: null}
-    - {name: max_skips, page: null}
-    - {name: is_model_valid, page: null}
-  watch_it_work: {none: true}
+    - name: stop_score
+      page: null
+      controls: Score at which the search can stop.
+      effect: A higher threshold can terminate earlier if reached.
+    - name: stop_n_inliers
+      page: null
+      controls: Inlier count that ends the search.
+      effect: A lower target can stop before a stronger consensus is found.
+    - name: max_skips
+      page: null
+      controls: Maximum invalid or rejected trials.
+      effect: A larger limit tolerates more skipped samples but takes longer.
+    - name: is_model_valid
+      page: null
+      controls: Optional check on each fitted candidate.
+      effect: Rejecting candidates enforces constraints but can leave fewer trials.
+  watch_it_work:
+    none: true
   intuition:
     idea: Fit small random samples, then keep the line most points agree with.
     analogy: A judge who hears many small groups and trusts the group that agrees most.
     animation: none
-    good_at: [many outliers, a clean subset, gross errors]
-    bad_at: [tiny data, results that change without random_state]
+    good_at:
+    - many outliers
+    - a clean subset
+    - gross errors
+    bad_at:
+    - tiny data
+    - results that change without random_state
     vs_siblings:
-      - {page: huber-regressor, note: "Down-weights outliers. No random draws. Few outliers."}
-      - {page: theil-sen-regression, note: "Median of slopes. Suited to small data."}
+    - page: huber-regressor
+      note: Down-weights outliers. No random draws. Few outliers.
+    - page: theil-sen-regression
+      note: Median of slopes. Suited to small data.
     read_more:
-      - Draw a small random sample of rows.
-      - Fit a line to just that sample.
-      - Count the rows close to that line as inliers.
-      - Keep the best line, then refit it on its inliers.
+    - Draw a small random sample of rows.
+    - Fit a line to just that sample.
+    - Count the rows close to that line as inliers.
+    - Keep the best line, then refit it on its inliers.
+    goal: Random subset consensus isolates a majority pattern; results depend on sampling, threshold and
+      subset size.
+    steps:
+    - Draw a minimally sized subset and fit the base estimator
+    - Classify rows as inliers when their residual is within the threshold
+    - Score candidate models by consensus, retain the best, and refit the estimator on its inliers
+    - Stop at a trial, probability, score, or inlier-count condition.
+    math:
+      notation:
+      - symbol: h
+        meaning: Candidate estimator fitted on a random subset.
+      - symbol: ℓ
+        meaning: Residual loss used by the estimator.
+      - symbol: τ
+        meaning: Residual threshold for inlier membership.
+      equations:
+      - expression: inlier_i = 1 when ℓ(y_i,h(x_i)) ≤ τ
+        meaning: Candidates are ranked by the rows whose residuals fall within threshold τ.
+      prediction: predict delegates to estimator_ refit on inliers and returns one target value per input
+        row.
   next: []

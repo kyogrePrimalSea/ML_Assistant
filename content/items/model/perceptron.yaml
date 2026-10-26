@@ -1,145 +1,281 @@
 id: perceptron
 plain_name: Perceptron
 code_name: Perceptron
-aliases: [perceptron classifier, online perceptron]
+aliases:
+- perceptron classifier
+- online perceptron
 stage: model
 family: model.awkward.big
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [simple baseline, streaming data, very large data]
-targets: [sklearn.linear_model.Perceptron]
-pairs_with: [linearexplainer]
+question_tags:
+- simple baseline
+- streaming data
+- very large data
+targets:
+- sklearn.linear_model.Perceptron
+pairs_with:
+- linearexplainer
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Perceptron.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Perceptron.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [classification]
+  task_types:
+  - classification
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: breast-cancer, shape: boundary}
+    hero:
+      kind: model
+      dataset: breast-cancer
+      shape: boundary
     line: Nudges one straight line each time it gets a row wrong.
   quick_facts:
     data_size: Small to very large tables
   use_avoid:
-    use_when: [simple baseline, streaming data, straight boundary]
-    avoid_when: [needs probabilities, curved boundary]
+    use_when:
+    - simple baseline
+    - streaming data
+    - straight boundary
+    avoid_when:
+    - needs probabilities
+    - curved boundary
   prep:
-    - step: {family: transform.scale.rescale}
-      status: required
-      why: Updates are sized by feature scale; unscaled columns hurt.
-      condition: null
-      unless: null
-    - step: {family: clean.impute}
-      status: required
-      why: Linear models reject missing values.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Text categories must become numbers.
-      condition: {has_categoricals: true}
-      unless: null
-    - step: {family: transform.rebalance.weight}
-      status: recommended
-      why: Use class_weight when classes are lopsided.
-      condition: {imbalanced: true, task_type: [classification]}
-      unless: null
+  - step:
+      family: transform.scale.rescale
+    status: required
+    why: Updates are sized by feature scale; unscaled columns hurt.
+    condition: null
+    unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Linear models reject missing values.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Text categories must become numbers.
+    condition:
+      has_categoricals: true
+    unless: null
+  - step:
+      family: transform.rebalance.weight
+    status: recommended
+    why: Use class_weight when classes are lopsided.
+    condition:
+      imbalanced: true
+      task_type:
+      - classification
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.linear_model.Perceptron
-      why_this_library: Same fit and score API as other scikit-learn models.
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import load_breast_cancer
-        from sklearn.linear_model import Perceptron
-        from sklearn.model_selection import train_test_split
-        from sklearn.pipeline import make_pipeline
-        from sklearn.preprocessing import StandardScaler
+  - library: scikit-learn
+    target: sklearn.linear_model.Perceptron
+    why_this_library: Same fit and score API as other scikit-learn models.
+    snippet: "# scikit-learn 1.9.1\nfrom sklearn.datasets import load_breast_cancer\nfrom sklearn.linear_model\
+      \ import Perceptron\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.pipeline\
+      \ import make_pipeline\nfrom sklearn.preprocessing import StandardScaler\n\nX, y = load_breast_cancer(return_X_y=True)\n\
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)\nmodel = make_pipeline(\n\
+      \    StandardScaler(),\n    Perceptron(max_iter=1000, random_state=0),\n)\nmodel.fit(X_train, y_train)\n\
+      perc = model[-1]\ny_pred = model.predict(X_test[:3])\ny_score = model.decision_function(X_test[:3])\n\
+      print(\"class labels:\", y_pred)\nprint(\"decision scores:\", y_score.round(2))\nprint(\"classes_:\"\
+      , perc.classes_)\nprint(\"coef_ shape:\", perc.coef_.shape)\nprint(\"n_iter_:\", perc.n_iter_)\n"
+    output: 'class labels: [0 1 1]
 
-        X, y = load_breast_cancer(return_X_y=True)
-        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+      decision scores: [-56.97  17.97  43.26]
 
-        model = make_pipeline(StandardScaler(), Perceptron(random_state=0))
-        model.fit(X_train, y_train)
-        print(round(model.score(X_test, y_test), 3))
+      classes_: [0 1]
+
+      coef_ shape: (1, 30)
+
+      n_iter_: 11
+
+      '
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: null, shape: "(n_samples,)",
-         note: "Class labels for each row."}
-      - {name: decision_function, kind: method, task: classification, shape: "(n_samples,) for two classes",
-         note: "Signed score. Above 0 means classes_[1]."}
-      - {name: score, kind: method, task: null, shape: "float",
-         note: "Accuracy on the rows you pass in."}
-      - {name: coef_, kind: attribute, task: null, shape: "(1, n_features) for two classes",
-         note: "One weight per input column."}
-      - {name: intercept_, kind: attribute, task: null, shape: "(1,) for two classes",
-         note: "The offset added to every score."}
-      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)",
-         note: "Labels, in the order decision_function uses."}
-      - {name: n_iter_, kind: attribute, task: null, shape: "int",
-         note: "Passes used. At max_iter it may not have converged."}
-      - {name: n_features_in_, kind: attribute, task: null, shape: "int",
-         note: "Number of input columns seen in fit."}
-    next_step: ROC and PR curves take decision scores. There are no probabilities.
-    snippet: |
-      # scikit-learn 1.9.1
-      from sklearn.datasets import load_breast_cancer
-      from sklearn.linear_model import Perceptron
-      from sklearn.model_selection import train_test_split
-      from sklearn.pipeline import make_pipeline
-      from sklearn.preprocessing import StandardScaler
-
-      X, y = load_breast_cancer(return_X_y=True)
-      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
-
-      model = make_pipeline(StandardScaler(), Perceptron(random_state=0))
-      model.fit(X_train, y_train)
-      perc = model[-1]
-      print(model.predict(X_test).shape)
-      print(model.decision_function(X_test).shape)
-      print(perc.coef_.shape)
-      print(perc.intercept_.shape)
-      print(perc.classes_)
-      print(perc.n_iter_)
-      print(perc.n_features_in_)
+    - name: predict
+      kind: method
+      task: classification
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[0, 1, 1]'
+      shape_explanation: One predicted label per row. n_samples is the number of input rows; these three
+        labels have shape (3,).
+      note: Predicted labels; labels correspond to classes_.
+    - name: decision_function
+      kind: method
+      task: classification
+      shape: (n_samples,) or (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[1.2, -0.7, 0.4]'
+      shape_explanation: For binary classification there is one signed score per row, shape (3,). For
+        multiclass there is one score per row and class.
+      note: Raw scores, not probabilities; positive binary scores map to classes_[1].
+    - name: classes_
+      kind: attribute
+      task: classification
+      shape: (n_classes,)
+      object_type: numpy.ndarray
+      example: '[0, 1]'
+      shape_explanation: A one-dimensional array with n_classes labels. This two-class example has shape
+        (2,).
+      note: Class labels in score/probability column order.
+    - name: coef_
+      kind: attribute
+      task: null
+      shape: (1,n_features) or (n_classes,n_features)
+      object_type: numpy.ndarray
+      example: '[[0.2, -0.1, 0.4]]'
+      shape_explanation: A matrix with one row per fitted class boundary and one column per input feature.
+        The example shows one binary boundary with 3 features.
+      note: One row of coefficients per binary boundary or multiclass one-versus-rest class.
+    - name: intercept_
+      kind: attribute
+      task: null
+      shape: (1,) binary; (n_classes,) multiclass
+      object_type: numpy.ndarray
+      example: '[0.3]'
+      shape_explanation: A one-dimensional array with one offset per class boundary. This binary example
+        has one boundary and shape (1,).
+      note: One offset per fitted decision boundary.
+    - name: n_iter_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: int
+      example: '8'
+      shape_explanation: A scalar integer count of solver passes, with no array dimensions.
+      note: Solver passes used before convergence or hitting max_iter.
+    next_step: null
+    snippet: "# scikit-learn 1.9.1\nfrom sklearn.datasets import load_breast_cancer\nfrom sklearn.linear_model\
+      \ import Perceptron\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.pipeline\
+      \ import make_pipeline\nfrom sklearn.preprocessing import StandardScaler\n\nX, y = load_breast_cancer(return_X_y=True)\n\
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)\nmodel = make_pipeline(\n\
+      \    StandardScaler(),\n    Perceptron(max_iter=1000, random_state=0),\n)\nmodel.fit(X_train, y_train)\n\
+      perc = model[-1]\ny_pred = model.predict(X_test[:3])\ny_score = model.decision_function(X_test[:3])\n\
+      print(\"class labels:\", y_pred)\nprint(\"decision scores:\", y_score.round(2))\nprint(\"classes_:\"\
+      , perc.classes_)\nprint(\"coef_ shape:\", perc.coef_.shape)\nprint(\"n_iter_:\", perc.n_iter_)\n"
     snippet_library: scikit-learn
     visual: null
+    output: 'class labels: [0 1 1]
+
+      decision scores: [-56.97  17.97  43.26]
+
+      classes_: [0 1]
+
+      coef_ shape: (1, 30)
+
+      n_iter_: 11
+
+      '
+    guidance:
+    - task: classification
+      text: Use labels for accuracy and confusion matrices. Use decision scores for ranking; use probabilities
+        only when the chosen loss supports them.
   catch_outs:
-    - No predict_proba. Use decision_function to rank rows.
-    - "Unscaled columns cost accuracy: 0.85 here, 0.97 scaled."
-    - Missing values and text fail. Impute and encode first.
-    - Stops at max_iter passes, even if not converged.
+  - No predict_proba. Use decision_function to rank rows.
+  - 'Unscaled columns cost accuracy: 0.85 here, 0.97 scaled.'
+  - Missing values and text fail. Impute and encode first.
+  - Stops at max_iter passes, even if not converged.
   key_settings:
     tier1:
-      - {name: penalty, page: null}
-      - {name: alpha, page: null}
-      - {name: class_weight, page: null}
+    - name: penalty
+      page: null
+      controls: Optional L2, L1, or elastic-net coefficient penalty.
+      effect: Regularisation may improve generalisation but changes the mistake-driven boundary.
+    - name: alpha
+      page: null
+      controls: Strength of the optional coefficient penalty.
+      effect: Larger alpha shrinks weights more.
+    - name: class_weight
+      page: null
+      controls: Per-class multipliers for mistake updates.
+      effect: Higher weight makes mistakes for that class move weights more.
     tier2:
-      - {name: max_iter, page: null}
-      - {name: tol, page: null}
-      - {name: early_stopping, page: null}
+    - name: max_iter
+      page: null
+      controls: Maximum data passes.
+      effect: More passes can correct more mistakes but cost time.
+    - name: tol
+      page: null
+      controls: Stopping threshold based on improvement.
+      effect: Larger tolerance may stop earlier.
+    - name: early_stopping
+      page: null
+      controls: Whether to stop using a held-out validation score.
+      effect: Can reduce overfitting and runtime but reserves validation rows.
     tier3:
-      - {name: eta0, page: null}
-      - {name: shuffle, page: null}
-      - {name: l1_ratio, page: null}
-  watch_it_work: {none: true}
+    - name: eta0
+      page: null
+      controls: Step size for each mistake update.
+      effect: Larger steps correct faster but may overshoot.
+    - name: shuffle
+      page: null
+      controls: Whether to shuffle rows each pass.
+      effect: Shuffling reduces order effects; disabling preserves input order.
+    - name: l1_ratio
+      page: null
+      controls: L1 share when penalty is elastic net.
+      effect: Higher ratios encourage sparse weights.
+  watch_it_work:
+    none: true
   intuition:
     idea: Nudge one straight line whenever it gets a row wrong.
     analogy: A teacher marking homework, correcting only the wrong answers.
     animation: none
-    good_at: [simple baseline, streaming data, very large data]
-    bad_at: [probabilities, curved boundaries]
+    good_at:
+    - simple baseline
+    - streaming data
+    - very large data
+    bad_at:
+    - probabilities
+    - curved boundaries
     vs_siblings:
-      - {page: sgd-classifier, note: "Same online training. SGDClassifier has an l2 penalty by default."}
-      - {page: linear-svc, note: "Same straight line. LinearSVC fits all rows at once."}
+    - page: sgd-classifier
+      note: Same online training. SGDClassifier has an l2 penalty by default.
+    - page: linear-svc
+      note: Same straight line. LinearSVC fits all rows at once.
     read_more:
-      - Start with any straight line.
-      - "Check each row: is it on the right side?"
-      - Nudge the line on each wrong row, then move on.
-      - Stop after max_iter passes, or sooner when tol is met.
-  next: [know-feature-importance]
+    - Start with any straight line.
+    - 'Check each row: is it on the right side?'
+    - Nudge the line on each wrong row, then move on.
+    - Stop after max_iter passes, or sooner when tol is met.
+    goal: Move a linear boundary after classification mistakes; correct predictions cause no update.
+    steps:
+    - Start with weights and intercept
+    - Process a labelled row and compute its signed score
+    - If the predicted class is wrong, add a step toward that class; otherwise leave the weights unchanged
+    - Continue through shuffled passes until stopping conditions apply.
+    math:
+      notation:
+      - symbol: x_i
+        meaning: Feature vector for row i.
+      - symbol: y_i
+        meaning: Binary label coded as -1 or +1.
+      - symbol: w
+        meaning: Boundary coefficient vector.
+      - symbol: b
+        meaning: Boundary offset.
+      - symbol: η
+        meaning: Step size after a mistake.
+      - symbol: f(x_i)
+        meaning: Signed decision score.
+      - symbol: f_i
+        meaning: Decision score wᵀx_i+b for row i.
+      equations:
+      - expression: 'f_i=wᵀx_i+b; if y_i f_i≤0: w←w+ηy_ix_i, b←b+ηy_i'
+        meaning: The perceptron changes its boundary only on a classification mistake.
+      prediction: predict maps decision scores to labels; scores are signed margins, not probabilities.
+  next:
+  - know-feature-importance

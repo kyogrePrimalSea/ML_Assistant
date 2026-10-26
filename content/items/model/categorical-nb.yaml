@@ -1,106 +1,261 @@
 id: categorical-nb
 plain_name: CategoricalNB
 code_name: CategoricalNB
-aliases: [categorical naive bayes]
+aliases:
+- categorical naive bayes
 stage: model
 family: model.probabilistic.nb
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [categorical features, probabilistic classes]
-targets: [sklearn.naive_bayes.CategoricalNB]
-pairs_with: [ordinalencoder, kbinsdiscretizer]
+question_tags:
+- categorical features
+- probabilistic classes
+targets:
+- sklearn.naive_bayes.CategoricalNB
+pairs_with:
+- ordinalencoder
+- kbinsdiscretizer
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.CategoricalNB.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.CategoricalNB.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [classification]
+  task_types:
+  - classification
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: breast-cancer, shape: boundary}
+    hero:
+      kind: model
+      dataset: breast-cancer
+      shape: boundary
     line: Naive Bayes for columns of category codes.
-  quick_facts: {none: true}
+  quick_facts:
+    none: true
   use_avoid:
-    use_when: [categorical features, class probabilities]
-    avoid_when: [continuous measurements, missing values, raw text]
+    use_when:
+    - categorical features
+    - class probabilities
+    avoid_when:
+    - continuous measurements
+    - missing values
+    - raw text
   prep:
-    - step: {family: clean.impute}
-      status: required
-      why: Rejects NaN. Fill gaps first.
-      condition: null
-      unless: null
-    - step: {family: transform.scale.bin}
-      status: required
-      why: Needs whole-number codes. Bin continuous columns.
-      condition: null
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Text categories must become codes from 0.
-      condition: {has_categoricals: true}
-      unless: null
-    - step: {family: transform.scale.rescale}
-      status: not_needed
-      why: Codes are counted per value, not measured.
-      condition: null
-      unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Rejects NaN. Fill gaps first.
+    condition: null
+    unless: null
+  - step:
+      family: transform.scale.bin
+    status: required
+    why: Needs whole-number codes. Bin continuous columns.
+    condition: null
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Text categories must become codes from 0.
+    condition:
+      has_categoricals: true
+    unless: null
+  - step:
+      family: transform.scale.rescale
+    status: not_needed
+    why: Codes are counted per value, not measured.
+    condition: null
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.naive_bayes.CategoricalNB
-      why_this_library: Built for categorical features, unlike GaussianNB.
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import load_breast_cancer
-        from sklearn.model_selection import train_test_split
-        from sklearn.naive_bayes import CategoricalNB
-        from sklearn.preprocessing import KBinsDiscretizer
-
-        X, y = load_breast_cancer(return_X_y=True)
-        X = KBinsDiscretizer(n_bins=4, encode="ordinal").fit_transform(X)
-        X = X.astype(int)  # whole-number codes from 0
-        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
-
-        model = CategoricalNB().fit(X_train, y_train)
-        print(round(model.score(X_test, y_test), 3))
+  - library: scikit-learn
+    target: sklearn.naive_bayes.CategoricalNB
+    why_this_library: Built for categorical features, unlike GaussianNB.
+    snippet: "# scikit-learn 1.9.1\nimport numpy as np\nfrom sklearn.naive_bayes import CategoricalNB\nfrom sklearn.model_selection\
+      \ import train_test_split\n\nX = np.array([\n    [0, 0, 1], [0, 1, 0], [1, 0, 1], [1, 1, 0],\n    [2, 2, 0],\
+      \ [2, 1, 2], [1, 2, 1], [2, 0, 2],\n], dtype=int)\ny = np.array([\"group-a\"] * 4 + [\"group-b\"] * 4)\nX_train,\
+      \ X_test, y_train, y_test = train_test_split(X, y, random_state=0)\nmodel = CategoricalNB().fit(X_train, y_train)\n\
+      y_proba = model.predict_proba(X_test[:3])\ny_pred = model.predict(X_test[:3])\nprint(\"probabilities:\", y_proba.round(3))\n\
+      print(\"labels:\", y_pred)\nprint(\"score:\", round(model.score(X_test, y_test), 3))\n"
+    output: "probabilities: [[0.667 0.333]\n [0.8   0.2  ]]\nlabels: ['group-a' 'group-a']\nscore: 0.5\n"
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: null, shape: "(n_samples,)", note: "Predicted class labels."}
-      - {name: predict_proba, kind: method, task: classification, shape: "(n_samples, n_classes)", note: "One column per class, in classes_ order."}
-      - {name: predict_log_proba, kind: method, task: classification, shape: "(n_samples, n_classes)", note: "Log of predict_proba, same columns."}
-      - {name: score, kind: method, task: null, shape: "float", note: "Accuracy on the data given."}
-      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)", note: "Class labels, in predict_proba column order."}
-      - {name: n_features_in_, kind: attribute, task: null, shape: "int", note: "Number of input columns seen in fit."}
-      - {name: feature_names_in_, kind: attribute, task: null, shape: "(n_features,)", note: "Column names seen in fit, if any."}
-    next_step: "Pass predict_proba[:, 1] to ROC AUC for two classes."
+    - name: predict
+      kind: method
+      task: classification
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[''fruit'', ''vehicle'', ''fruit'']'
+      shape_explanation: Three input rows produce three predicted labels, shape (3,). The trailing comma means one
+        array axis.
+      note: One predicted class label for each input row.
+    - name: predict_proba
+      kind: method
+      task: classification
+      shape: (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[[0.91, 0.09], [0.12, 0.88], [0.73, 0.27]]'
+      shape_explanation: Rows are 3 input cases and columns are the 2 classes in classes_ order, shape (3, 2).
+      note: Normalized class probabilities; columns follow classes_.
+    - name: predict_log_proba
+      kind: method
+      task: classification
+      shape: (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[[-0.09, -2.41], [-2.12, -0.13], [-0.31, -1.31]]'
+      shape_explanation: Three case rows and two class columns give shape (3, 2); values are log probabilities.
+      note: Log of normalized posterior probabilities.
+    - name: predict_joint_log_proba
+      kind: method
+      task: classification
+      shape: (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[[-4.21, -6.53], [-6.24, -4.25], [-4.43, -5.43]]'
+      shape_explanation: Three input rows by two class scores gives shape (3, 2); columns use classes_ order.
+      note: Adds class log prior to class-conditional log likelihood; ComplementNB returns complement scores.
+    - name: classes_
+      kind: attribute
+      task: classification
+      shape: (n_classes,)
+      object_type: numpy.ndarray
+      example: '[''fruit'', ''vehicle'']'
+      shape_explanation: There are two class labels, so this one-dimensional array has shape (2,).
+      note: Defines class-column order for probability and log-score methods.
+    - name: class_log_prior_
+      kind: attribute
+      task: classification
+      shape: (n_classes,)
+      object_type: numpy.ndarray
+      example: '[-0.69, -0.69]'
+      shape_explanation: One log prior per class; the two-class example has shape (2,).
+      note: Log class priors; learned from frequencies unless overridden.
+    - name: n_categories_
+      kind: attribute
+      task: classification
+      shape: (n_features,)
+      object_type: numpy.ndarray
+      example: '[3, 3, 3]'
+      shape_explanation: One category count per feature; 3 features give this example shape (3,).
+      note: Category codes must be integers in each feature’s fitted range.
+    - name: feature_log_prob_
+      kind: attribute
+      task: classification
+      shape: list[(n_classes,n_categories_i)]
+      object_type: list[numpy.ndarray]
+      example: '[array([[-0.2, -1.5, -0.8], [-1.6, -0.3, -1.1]]), array([[-1.2, -0.4, -0.7], [-0.5, -1.0, -1.2]]),
+        array([[-0.7, -1.1, -0.4], [-1.3, -0.6, -0.9]])]'
+      shape_explanation: A list contains one matrix per feature. With 3 features, 2 classes, and 3 categories each,
+        it has 3 matrices of shape (2, 3).
+      note: Each matrix stores smoothed log P(category | class) for one feature.
+    next_step: null
     visual: proba_table
+    guidance:
+    - task: classification
+      text: Encode category values as non-negative integers within each feature range; the integers do not imply
+        order.
+    snippet: "# scikit-learn 1.9.1\nimport numpy as np\nfrom sklearn.naive_bayes import CategoricalNB\n\nX = np.array([\n\
+      \    [0,0,1],[0,1,0],[1,0,1],[1,1,0],\n    [2,2,0],[2,1,2],[1,2,1],[2,0,2],\n], dtype=int)\ny = np.array([\"\
+      group-a\"] * 4 + [\"group-b\"] * 4)\nmodel = CategoricalNB().fit(X, y)\nquery = X[:3]\nprint(\"labels:\",\
+      \ model.predict(query))\nprint(\"probability shape:\", model.predict_proba(query).shape)\nprint(\"log probability\
+      \ shape:\", model.predict_log_proba(query).shape)\nprint(\"joint log shape:\", model.predict_joint_log_proba(query).shape)\n\
+      print(\"classes_:\", model.classes_)\nprint(\"class_log_prior_:\", model.class_log_prior_.round(3))\nprint(\"\
+      n_categories_:\", model.n_categories_)\nprint(\"feature_log_prob_ shapes:\", [a.shape for a in model.feature_log_prob_])\n"
+    snippet_library: scikit-learn
+    output: 'labels: [''group-a'' ''group-a'' ''group-a'']
+
+      probability shape: (3, 2)
+
+      log probability shape: (3, 2)
+
+      joint log shape: (3, 2)
+
+      classes_: [''group-a'' ''group-b'']
+
+      class_log_prior_: [-0.693 -0.693]
+
+      n_categories_: [3 3 3]
+
+      feature_log_prob_ shapes: [(2, 3), (2, 3), (2, 3)]
+
+      '
   catch_outs:
-    - NaN fails in fit. Impute before the model.
-    - Codes unseen in training break predict. Set min_categories to cover them.
-    - Negative codes are rejected. Start codes at 0.
+  - NaN fails in fit. Impute before the model.
+  - Codes unseen in training break predict. Set min_categories to cover them.
+  - Negative codes are rejected. Start codes at 0.
   key_settings:
     tier1:
-      - {name: alpha, page: null}
-      - {name: min_categories, page: null}
+    - name: alpha
+      page: null
+      controls: Additive smoothing for each class-feature-category count.
+      effect: More smoothing prevents unseen categories from having zero likelihood but flattens them.
+    - name: min_categories
+      page: null
+      controls: Minimum category count per feature, as a shared integer or per-feature array.
+      effect: Larger counts reserve unseen codes but add smoothed probability mass.
     tier2:
-      - {name: force_alpha, page: null}
-      - {name: class_prior, page: null}
+    - name: force_alpha
+      page: null
+      controls: Whether to retain alpha when it is extremely close to zero.
+      effect: Tiny retained values can cause numerical issues; clipping changes smoothing.
+    - name: class_prior
+      page: null
+      controls: Explicit prior probability for each class.
+      effect: Known priors can reflect deployment rates; wrong priors bias class probabilities.
     tier3:
-      - {name: fit_prior, page: null}
-  watch_it_work: {none: true}
+    - name: fit_prior
+      page: null
+      controls: Whether to estimate class priors from class frequencies.
+      effect: False uses a uniform prior instead of reflecting class imbalance.
+  watch_it_work:
+    none: true
   intuition:
     idea: Count each category value per class, then use those counts to classify new rows.
     analogy: A tally of answers for each group, used to guess the group of a new answer.
     animation: none
-    good_at: [categorical features, class probabilities]
-    bad_at: [continuous measurements, missing values]
+    good_at:
+    - categorical features
+    - class probabilities
+    bad_at:
+    - continuous measurements
+    - missing values
     vs_siblings:
-      - {page: multinomial-nb, note: "Counts of features. CategoricalNB counts each category value."}
-      - {page: gaussian-nb, note: "Numbers per feature. CategoricalNB needs category codes."}
+    - page: multinomial-nb
+      note: Counts of features. CategoricalNB counts each category value.
+    - page: gaussian-nb
+      note: Numbers per feature. CategoricalNB needs category codes.
     read_more:
-      - See the scikit-learn reference page for CategoricalNB.
-  next: [evaluate-how-good]
-...
+    - Each input column is a separate categorical variable.
+    - Codes are non-negative integers from zero up to each feature’s category count minus one.
+    - The number of categories can differ by column.
+    goal: Classify integer-coded categorical features from per-class counts of each feature value.
+    steps:
+    - Encode each feature with non-negative integer category codes.
+    - Count each category value separately for every class and feature.
+    - Smooth the category counts to estimate per-feature categorical likelihoods.
+    - Add log likelihoods across features and the class log prior.
+    - Normalize class scores for probabilities, then choose the largest class score.
+    math:
+      notation:
+      - symbol: x_j = r
+        meaning: Feature j takes its integer-coded category r.
+      - symbol: theta_cjr
+        meaning: Smoothed probability of category r for feature j in class c.
+      - symbol: pi_c
+        meaning: Prior probability of class c.
+      - symbol: alpha
+        meaning: Additive smoothing for category counts.
+      equations:
+      - expression: log P(c,x) = log pi_c + sum_j log(theta_cj,x_j)
+        meaning: Each categorical feature contributes the log probability of its observed value.
+      - expression: P(c|x) = exp(log P(c,x)) / sum_r exp(log P(r,x))
+        meaning: Normalizing the class scores gives posterior probabilities.
+      prediction: Use integer codes within each feature range; codes are labels, not ordered numeric values.
+  next:
+  - evaluate-how-good

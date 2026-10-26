@@ -1,119 +1,376 @@
 id: extra-trees
 plain_name: Extra trees
 code_name: ExtraTreesRegressor / ExtraTreesClassifier
-aliases: [extremely randomized trees]
+aliases:
+- extremely randomized trees
 stage: model
 family: model.trees.bagging
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [tabular data, overfitting]
-targets: [sklearn.ensemble.ExtraTreesRegressor, sklearn.ensemble.ExtraTreesClassifier]
-pairs_with: [treeexplainer]
+question_tags:
+- tabular data
+- overfitting
+targets:
+- sklearn.ensemble.ExtraTreesRegressor
+- sklearn.ensemble.ExtraTreesClassifier
+pairs_with:
+- treeexplainer
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.ExtraTreesRegressor.html',
-  'https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.ExtraTreesClassifier.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.ExtraTreesRegressor.html
+- https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.ExtraTreesClassifier.html
+- https://scikit-learn.org/stable/modules/ensemble.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [regression, classification]
+  task_types:
+  - regression
+  - classification
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: ames, shape: fit_line}
+    hero:
+      kind: model
+      dataset: ames
+      shape: fit_line
     line: A forest of trees, more random than a random forest.
-  quick_facts: {none: true}
+  quick_facts:
+    none: true
   use_avoid:
-    use_when: [tabular data, a faster forest, need feature importances]
-    avoid_when: [needs one readable model, text or images]
+    use_when:
+    - tabular data
+    - a faster forest
+    - need feature importances
+    avoid_when:
+    - needs one readable model
+    - text or images
   prep:
-    - step: {family: clean.impute}
-      status: not_needed
-      why: Trees here take missing values natively.
-      condition: null
-      unless: null
-    - step: {family: transform.scale.rescale}
-      status: not_needed
-      why: Trees split on order, not size.
-      condition: null
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Text categories must become numbers.
-      condition: {has_categoricals: true}
-      unless: null
-    - step: {family: transform.rebalance.weight}
-      status: recommended
-      why: Use class_weight when classes are lopsided.
-      condition: {imbalanced: true, task_type: [classification]}
-      unless: null
-    - step: {page: train-test-split}
-      status: recommended
-      why: Keep a test set. Out-of-bag score needs bootstrap=True.
-      condition: null
-      unless: null
+  - step:
+      family: clean.impute
+    status: not_needed
+    why: Trees here take missing values natively.
+    condition: null
+    unless: null
+  - step:
+      family: transform.scale.rescale
+    status: not_needed
+    why: Trees split on order, not size.
+    condition: null
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Text categories must become numbers.
+    condition:
+      has_categoricals: true
+    unless: null
+  - step:
+      family: transform.rebalance.weight
+    status: recommended
+    why: Use class_weight when classes are lopsided.
+    condition:
+      imbalanced: true
+      task_type:
+      - classification
+    unless: null
+  - step:
+      page: train-test-split
+    status: recommended
+    why: Keep a test set. Out-of-bag score needs bootstrap=True.
+    condition: null
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.ensemble.ExtraTreesRegressor
-      why_this_library: Same API as random forest.
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import load_diabetes
-        from sklearn.ensemble import ExtraTreesRegressor
-        from sklearn.model_selection import train_test_split
+  - library: scikit-learn
+    target: sklearn.ensemble.ExtraTreesRegressor
+    why_this_library: Random candidate thresholds add split randomness; the ensemble averages tree predictions.
+    snippet: '# scikit-learn 1.9.1
 
-        X, y = load_diabetes(return_X_y=True)
-        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+      import numpy as np
 
-        model = ExtraTreesRegressor(n_estimators=100, random_state=0)
-        model.fit(X_train, y_train)
-        print(round(model.score(X_test, y_test), 3))
+      from sklearn.datasets import load_diabetes
+
+      from sklearn.ensemble import ExtraTreesRegressor
+
+      from sklearn.model_selection import train_test_split
+
+
+      X, y = load_diabetes(return_X_y=True)
+
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+      model = ExtraTreesRegressor(n_estimators=30, n_jobs=1, random_state=0)
+
+      model.fit(X_train, y_train)
+
+      y_pred = model.predict(X_test[:3])
+
+      print(''y_pred:'', np.round(y_pred, 1))
+
+      print(''R2:'', round(model.score(X_test, y_test), 3))
+
+      print(''bootstrap:'', model.bootstrap)'
+    output: 'y_pred: [292.1 248.6 133. ]
+
+      R2: 0.225
+
+      bootstrap: False
+
+      '
+  - library: scikit-learn
+    target: sklearn.ensemble.ExtraTreesClassifier
+    why_this_library: Random candidate thresholds add split randomness; the ensemble averages class probabilities.
+    snippet: '# scikit-learn 1.9.1
+
+      import numpy as np
+
+      from sklearn.datasets import load_breast_cancer
+
+      from sklearn.ensemble import ExtraTreesClassifier
+
+      from sklearn.model_selection import train_test_split
+
+
+      X, y = load_breast_cancer(return_X_y=True)
+
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+      model = ExtraTreesClassifier(n_estimators=30, n_jobs=1, random_state=0)
+
+      model.fit(X_train, y_train)
+
+      y_pred = model.predict(X_test[:3])
+
+      y_proba = model.predict_proba(X_test[:3])
+
+      print(''y_pred labels:'', y_pred)
+
+      print(''y_proba:'', np.round(y_proba, 3))
+
+      print(''accuracy:'', round(model.score(X_test, y_test), 3))
+
+      print(''bootstrap:'', model.bootstrap)'
+    output: "y_pred labels: [0 1 1]\ny_proba: [[1.    0.   ]\n [0.067 0.933]\n [0.    1.   ]]\naccuracy: 0.979\n\
+      bootstrap: False\n"
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: null, shape: "(n_samples,)", note: "Regression values or class labels."}
-      - {name: predict_proba, kind: method, task: classification, shape: "(n_samples, n_classes)", note: "One column per class, in classes_ order."}
-      - {name: predict_log_proba, kind: method, task: classification, shape: "(n_samples, n_classes)", note: "Log of predict_proba, same columns."}
-      - {name: score, kind: method, task: null, shape: "float", note: "R2 for regression, accuracy for classification."}
-      - {name: feature_importances_, kind: attribute, task: null, shape: "(n_features,)", note: "One score per input column."}
-      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)", note: "Class labels, in predict_proba column order."}
-      - {name: n_features_in_, kind: attribute, task: null, shape: "int", note: "Number of input columns seen in fit."}
-      - {name: feature_names_in_, kind: attribute, task: null, shape: "(n_features,)", note: "Column names seen in fit, if any."}
-    next_step: "Compare the score with a random forest on the same split."
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples,) or (n_samples, n_outputs)
+      object_type: numpy.ndarray
+      example: '[12.4, -3.1, 8.0]'
+      shape_explanation: For one regression target, this is one numeric prediction per row. This fictional example
+        has n_samples=3, shape (3,); multiple targets add an n_outputs column axis.
+      note: Regression values are averaged across the trees or base estimators.
+    - name: predict
+      kind: method
+      task: classification
+      shape: (n_samples,) or (n_samples, n_outputs)
+      object_type: numpy.ndarray
+      example: '[0, 1, 1]'
+      shape_explanation: For one classification output, this is one class label per row. This fictional example
+        has n_samples=3, shape (3,); multiple outputs add a column per output.
+      note: Class label with greatest mean tree probability; multi-output predicts one label per output.
+    - name: predict_proba
+      kind: method
+      task: classification
+      shape: (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[[0.8, 0.2], [0.1, 0.9], [0.3, 0.7]]'
+      shape_explanation: Rows are cases and columns follow classes_. This fictional single-output example has 3
+        cases and 2 classes, shape (3, 2).
+      note: Forest classifiers average tree probabilities; multi-output classification returns a list of probability
+        arrays.
+    - name: feature_importances_
+      kind: attribute
+      task: null
+      shape: (n_features,)
+      object_type: numpy.ndarray
+      example: '[0.6, 0.3, 0.1]'
+      shape_explanation: One normalized score per input feature. This fictional example assumes n_features=3 and
+        has shape (3,).
+      note: Mean impurity reduction across trees; can favor high-cardinality features.
+    - name: estimators_
+      kind: attribute
+      task: null
+      shape: (n_estimators,)
+      object_type: list of fitted trees
+      example: '[DecisionTreeRegressor(...), DecisionTreeRegressor(...)]'
+      shape_explanation: A list containing one fitted tree per forest member. This fictional example depicts two
+        members, so its concrete length is 2.
+      note: Trees are independent members; inspect one tree to see its own rules.
+    - name: oob_score_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: float
+      example: '0.71'
+      shape_explanation: A scalar is one value with no array axes. This fictional example is one out-of-bag score.
+      note: R squared for regression or accuracy for classification; requires bootstrap=True and oob_score=True.
+    - name: oob_decision_function_
+      kind: attribute
+      task: classification
+      shape: (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[[0.8, 0.2], [0.1, 0.9], [0.3, 0.7]]'
+      shape_explanation: Rows are cases and columns are classes. This fictional single-output example has shape
+        (3, 2); multi-output adds an output axis.
+      note: Out-of-bag class probabilities; available only with bootstrap=True.
+    - name: classes_
+      kind: attribute
+      task: classification
+      shape: (n_classes,) or list
+      object_type: numpy.ndarray or list of arrays
+      example: '[0, 1]'
+      shape_explanation: For one output, one label per class; this fictional binary example has shape (2,). For
+        multiple outputs, classes_ is one label array per output.
+      note: Label order for predict_proba columns, separately for each output.
+    next_step: null
     visual: both
+    guidance:
+    - task: regression
+      text: Check regression predictions on held-out rows; tree predictions are piecewise constant and do not extrapolate.
+    - task: classification
+      text: Use probabilities for ROC AUC or PR curves. Use labels for accuracy and confusion matrices.
+    snippet: "# scikit-learn 1.9.1\nimport numpy as np\nfrom sklearn.datasets import load_breast_cancer, load_diabetes\n\
+      from sklearn.ensemble import ExtraTreesClassifier, ExtraTreesRegressor\nfrom sklearn.model_selection import\
+      \ train_test_split\n\nXd, yd = load_diabetes(return_X_y=True)\nXd_tr, Xd_te, yd_tr, yd_te = train_test_split(Xd,\
+      \ yd, random_state=0)\nreg = ExtraTreesRegressor(\n    n_estimators=30, bootstrap=True, oob_score=True, n_jobs=1,\
+      \ random_state=0\n)\nreg.fit(Xd_tr, yd_tr)\ny_pred = reg.predict(Xd_te[:3])\nprint('regression y_pred:', np.round(y_pred,\
+      \ 1))\nprint('regression oob_score_:', round(reg.oob_score_, 3))\nXc, yc = load_breast_cancer(return_X_y=True)\n\
+      Xc_tr, Xc_te, yc_tr, yc_te = train_test_split(Xc, yc, random_state=0)\nclf = ExtraTreesClassifier(\n    n_estimators=30,\
+      \ bootstrap=True, oob_score=True, n_jobs=1, random_state=0\n)\nclf.fit(Xc_tr, yc_tr)\ny_pred = clf.predict(Xc_te[:3])\n\
+      y_proba = clf.predict_proba(Xc_te[:3])\nprint('classification y_pred:', y_pred)\nprint('classification y_proba:',\
+      \ np.round(y_proba, 3))\nprint('classifier oob_score_:', round(clf.oob_score_, 3))\nprint(\n    'classifier\
+      \ oob probabilities:',\n    np.round(clf.oob_decision_function_[:3], 3),\n)\nprint('estimators_ count:', len(clf.estimators_))"
+    snippet_library: scikit-learn
+    output: "regression y_pred: [279.2 229.  151.1]\nregression oob_score_: 0.454\nclassification y_pred: [0 1 1]\n\
+      classification y_proba: [[0.967 0.033]\n [0.1   0.9  ]\n [0.033 0.967]]\nclassifier oob_score_: 0.962\nclassifier\
+      \ oob probabilities: [[0. 1.]\n [0. 1.]\n [1. 0.]]\nestimators_ count: 30\n"
   catch_outs:
-    - oob_score needs bootstrap=True, and bootstrap is off by default here.
-    - Text columns fail. Encode them first.
+  - oob_score needs bootstrap=True, and bootstrap is off by default here.
+  - Text columns fail. Encode them first.
   key_settings:
     tier1:
-      - {name: n_estimators, page: n-estimators}
-      - {name: max_depth, page: max-depth}
-      - {name: max_features, page: null}
-      - {name: min_samples_leaf, page: null}
+    - name: n_estimators
+      page: n-estimators
+      controls: Number of extremely randomized trees in the ensemble.
+      effect: More trees usually stabilize the average, with higher training time and memory.
+    - name: max_depth
+      page: max-depth
+      controls: Maximum levels each tree may grow.
+      effect: Shallower trees reduce variance but can underfit.
+    - name: max_features
+      page: null
+      controls: Number or fraction of columns sampled at each split before random thresholds are drawn.
+      effect: Smaller subsets diversify trees but can increase bias.
+    - name: min_samples_leaf
+      page: null
+      controls: Minimum training rows per leaf.
+      effect: Larger leaves smooth predictions and probabilities, but can miss small patterns.
     tier2:
-      - {name: class_weight, page: null}
-      - {name: criterion, page: null}
-      - {name: max_samples, page: null}
+    - name: class_weight
+      page: null
+      controls: Relative class costs used when fitting classifier trees.
+      effect: Higher weight makes errors for that class count more.
+    - name: criterion
+      page: null
+      controls: Split impurity or regression error measure used inside each tree.
+      effect: The criterion changes which random candidate splits are preferred.
+    - name: max_samples
+      page: null
+      controls: Rows drawn per tree when bootstrap=True.
+      effect: Smaller samples diversify trees but may weaken each tree.
+    - name: bootstrap
+      page: null
+      controls: Whether tree samples use rows drawn with replacement; default is False.
+      effect: Turning it on adds sample randomness and permits OOB estimates, alongside randomized thresholds.
     tier3:
-      - {name: oob_score, page: null}
-      - {name: min_impurity_decrease, page: null}
-      - {name: min_samples_split, page: null}
-      - {name: min_weight_fraction_leaf, page: null}
-      - {name: max_leaf_nodes, page: null}
-      - {name: ccp_alpha, page: null}
-      - {name: monotonic_cst, page: null}
-  watch_it_work: {none: true}
+    - name: oob_score
+      page: null
+      controls: Whether to score rows omitted from bootstrap samples.
+      effect: Requires bootstrap=True and gives a built-in validation estimate at extra cost.
+    - name: min_impurity_decrease
+      page: null
+      controls: Minimum impurity reduction required for a split.
+      effect: A higher threshold creates smaller trees and may miss useful patterns.
+    - name: min_samples_split
+      page: null
+      controls: Minimum rows required before a node may split.
+      effect: Larger values limit growth and smooth predictions.
+    - name: min_weight_fraction_leaf
+      page: null
+      controls: Minimum fraction of total weight required in a leaf.
+      effect: Larger values avoid tiny weighted leaves but may miss small groups.
+    - name: max_leaf_nodes
+      page: null
+      controls: Maximum terminal leaves per tree.
+      effect: Fewer leaves simplify trees but can underfit.
+    - name: ccp_alpha
+      page: null
+      controls: Cost-complexity pruning strength applied to each tree.
+      effect: Larger values prune more branches and can underfit.
+    - name: monotonic_cst
+      page: null
+      controls: Per-feature monotonic constraints on fitted predictions.
+      effect: Constraints encode known direction but reduce flexibility.
+  watch_it_work:
+    none: true
   intuition:
     idea: Many trees, each trained on all rows, with random split choices.
     analogy: A committee of quick, slightly random judges.
     animation: none
-    good_at: [tabular data, missing values]
-    bad_at: [text or images, one readable model]
+    good_at:
+    - tabular data
+    - missing values
+    bad_at:
+    - text or images
+    - one readable model
     vs_siblings:
-      - {page: random-forest, note: "Bootstrap is on by default there, off here."}
-      - {page: bagging, note: "Bagging takes any base model. Extra trees is trees only."}
-    read_more:
-      - See the scikit-learn reference pages for both ExtraTrees classes.
-  next: [model-overfitting]
-...
+    - page: random-forest
+      note: Bootstrap is on by default there, off here.
+    - page: bagging
+      note: Bagging takes any base model. Extra trees is trees only.
+    read_more: &id001
+    - By default, give each tree the full training rows.
+    - At each split, sample candidate features and draw random thresholds for them.
+    - Choose the best of those random thresholds, then continue each tree independently.
+    - Average regression values or class probabilities across the trees.
+    goal: Reduce variance by averaging trees with randomized split thresholds; by default each tree sees all training
+      rows.
+    steps: *id001
+    math:
+      notation:
+      - symbol: b=1,...,B
+        meaning: Index of a tree among B fitted trees.
+      - symbol: T_b(x)
+        meaning: Prediction from tree b for input x.
+      - symbol: p_bk(x)
+        meaning: Tree b probability for class k.
+      - symbol: t_b,j
+        meaning: Random threshold drawn for feature j in tree b.
+      - symbol: B
+        meaning: Number of fitted trees.
+      - symbol: x
+        meaning: Input row to predict.
+      - symbol: k
+        meaning: Class index.
+      equations:
+      - expression: choose best (j,t_b,j) among randomly drawn feature thresholds
+        meaning: Unlike a random forest, the split threshold itself is randomized before the best sampled threshold
+          is selected.
+      - expression: 'regression: f(x) = (1/B) sum_b T_b(x)'
+        meaning: A regression ExtraTrees ensemble averages the values from its randomized trees.
+      - expression: 'classification: p_k(x) = (1/B) sum_b p_bk(x)'
+        meaning: A classifier ExtraTrees ensemble averages class probabilities across randomized trees.
+      prediction: Trees use all rows by default and random thresholds. The ensemble averages tree outputs; bootstrap
+        is optional.
+  next:
+  - model-overfitting

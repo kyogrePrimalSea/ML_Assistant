@@ -1,99 +1,90 @@
 id: balancedrandomforestclassifier
 plain_name: BalancedRandomForestClassifier
 code_name: BalancedRandomForestClassifier
-aliases: [balanced random forest]
+aliases:
+- balanced random forest
 stage: model
 family: model.trees.balanced
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [rare class, imbalanced classes, tabular data]
-targets: [imblearn.ensemble.BalancedRandomForestClassifier]
-pairs_with: [treeexplainer]
+question_tags:
+- rare class
+- imbalanced classes
+- tabular data
+targets:
+- imblearn.ensemble.BalancedRandomForestClassifier
+pairs_with:
+- treeexplainer
 clashes: []
-source_urls: ['https://imbalanced-learn.org/stable/references/generated/imblearn.ensemble.BalancedRandomForestClassifier.html']
-library_versions: {imbalanced-learn: 0.14.2}
+source_urls:
+- https://imbalanced-learn.org/stable/references/generated/imblearn.ensemble.BalancedRandomForestClassifier.html
+library_versions:
+  imbalanced-learn: 0.14.2
 reviewed: false
 rules:
-  task_types: [classification]
+  task_types:
+  - classification
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: breast-cancer, shape: boundary}
-    line: "A forest of trees, each trained on a balanced sample of rows."
+    hero:
+      kind: model
+      dataset: breast-cancer
+      shape: boundary
+    line: A forest of trees, each trained on a balanced sample of rows.
   quick_facts:
     data_size: Tabular data, one rare class
   use_avoid:
-    use_when: [one class is rare, tabular data, need tree accuracy]
-    avoid_when: [classes already balanced, images or text, need a simple formula]
+    use_when:
+    - one class is rare
+    - tabular data
+    - need tree accuracy
+    avoid_when:
+    - classes already balanced
+    - images or text
+    - need a simple formula
   prep:
-    - step: {family: transform.scale.rescale}
-      status: not_needed
-      why: Trees split on order, not size.
-      condition: null
-      unless: null
-    - step: {family: clean.impute}
-      status: not_needed
-      why: Missing values are handled natively.
-      condition: null
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Text categories must become numbers.
-      condition: {has_categoricals: true}
-      unless: null
-    - step: {family: transform.rebalance.over}
-      status: not_needed
-      why: Balance comes from under-sampling inside each tree.
-      condition: null
-      unless: null
-    - step: {family: transform.rebalance.under}
-      status: not_needed
-      why: Each tree already undersamples the common class.
-      condition: null
-      unless: null
+  - step:
+      family: transform.scale.rescale
+    status: not_needed
+    why: Trees split on order, not size.
+    condition: null
+    unless: null
+  - step:
+      family: clean.impute
+    status: not_needed
+    why: Missing values are handled natively.
+    condition: null
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Text categories must become numbers.
+    condition:
+      has_categoricals: true
+    unless: null
+  - step:
+      family: transform.rebalance.over
+    status: not_needed
+    why: Balance comes from under-sampling inside each tree.
+    condition: null
+    unless: null
+  - step:
+      family: transform.rebalance.under
+    status: not_needed
+    why: Each tree already undersamples the common class.
+    condition: null
+    unless: null
   code:
-    - library: imbalanced-learn
-      target: imblearn.ensemble.BalancedRandomForestClassifier
-      why_this_library: Balanced sampling inside each tree, with the scikit-learn API.
-      snippet: |
-        # imbalanced-learn 0.14.2
-        from imblearn.ensemble import BalancedRandomForestClassifier
-        from sklearn.datasets import make_classification
-        from sklearn.metrics import balanced_accuracy_score
-        from sklearn.model_selection import train_test_split
-
-        X, y = make_classification(
-            n_samples=1000, weights=[0.9, 0.1], random_state=0
-        )
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, stratify=y, random_state=0
-        )
-
-        model = BalancedRandomForestClassifier(n_estimators=200, random_state=0)
-        model.fit(X_train, y_train)
-        print(balanced_accuracy_score(y_test, model.predict(X_test)))
-  what_comes_out:
-    items:
-      - {name: predict, kind: method, task: classification, shape: "(n_samples,)",
-         note: "Class labels. Picks the class with the highest probability."}
-      - {name: predict_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
-         note: "One column per class, in classes_ order. Keep [:, 1] for two classes."}
-      - {name: predict_log_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
-         note: "Log of the class probabilities, same column order."}
-      - {name: score, kind: method, task: classification, shape: "float",
-         note: "Accuracy on the data given. Misleading when classes are lopsided."}
-      - {name: feature_importances_, kind: attribute, task: null, shape: "(n_features,)",
-         note: "One score per input column."}
-      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)",
-         note: "Class labels, in the column order of predict_proba."}
-      - {name: n_features_in_, kind: attribute, task: null, shape: "int",
-         note: "Number of input columns seen in fit."}
-      - {name: feature_names_in_, kind: attribute, task: null, shape: "(n_features,)",
-         note: "Column names, only if fit got a DataFrame."}
-    next_step: ROC AUC and PR curves need predict_proba, not predict.
+  - library: imbalanced-learn
+    target: imblearn.ensemble.BalancedRandomForestClassifier
+    why_this_library: Balanced sampling inside each tree, with the scikit-learn API.
     snippet: |
       # imbalanced-learn 0.14.2
       from imblearn.ensemble import BalancedRandomForestClassifier
@@ -101,52 +92,236 @@ slots:
       from sklearn.model_selection import train_test_split
 
       X, y = make_classification(
-          n_samples=1000, weights=[0.9, 0.1], random_state=0
+          n_samples=160, n_features=5, n_informative=3, n_redundant=0,
+          weights=[0.9, 0.1], random_state=42,
       )
       X_train, X_test, y_train, y_test = train_test_split(
-          X, y, stratify=y, random_state=0
+          X, y, test_size=0.25, stratify=y, random_state=42
       )
-
-      model = BalancedRandomForestClassifier(n_estimators=50, random_state=0)
+      model = BalancedRandomForestClassifier(
+          n_estimators=8, random_state=42, n_jobs=1
+      )
       model.fit(X_train, y_train)
-      print(model.predict_proba(X_test).shape)
-      print(model.classes_)
-      print(model.feature_importances_.shape)
+      y_pred = model.predict(X_test[:3])
+      y_proba = model.predict_proba(X_test[:3])
+      print("y_pred:", y_pred)
+      print("y_proba:")
+      print(y_proba.round(3))
+      print("classes_:", model.classes_)
+      print("tree count:", len(model.estimators_))
+      print("tree 0 balanced rows:", len(model.samplers_[0].sample_indices_))
+      print("feature_importances_ shape:", model.feature_importances_.shape)
+    output: |
+      y_pred: [0 0 0]
+      y_proba:
+      [[1. 0.]
+       [1. 0.]
+       [1. 0.]]
+      classes_: [0 1]
+      tree count: 8
+      tree 0 balanced rows: 24
+      feature_importances_ shape: (5,)
+  what_comes_out:
+    items:
+    - name: predict
+      kind: method
+      task: classification
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[0, 1, 0]'
+      shape_explanation: One prediction per input row. n_samples is the number of rows; this example has shape (3,).
+      note: Labels chosen from the fitted class scores/probabilities.
+    - name: predict_proba
+      kind: method
+      task: classification
+      shape: (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[[0.80, 0.20], [0.35, 0.65], [0.90, 0.10]]'
+      shape_explanation: A table with n_samples rows and n_classes columns. The example has 3 rows and 2 classes, shape (3, 2).
+      note: One probability column per class, ordered as classes_.
+    - name: predict_log_proba
+      kind: method
+      task: classification
+      shape: (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[[-0.22, -1.61], [-1.05, -0.43], [-0.11, -2.30]]'
+      shape_explanation: A table with n_samples rows and n_classes columns. The example has 3 rows and 2 classes, shape (3, 2).
+      note: Natural logs of predict_proba; columns stay in classes_ order.
+    - name: classes_
+      kind: attribute
+      task: classification
+      shape: (n_classes,)
+      object_type: numpy.ndarray
+      example: '[0, 1]'
+      shape_explanation: A one-dimensional array with n_classes labels. This two-class example has shape (2,).
+      note: Labels in probability-column order.
+    - name: estimators_
+      kind: attribute
+      task: null
+      shape: (n_estimators,)
+      object_type: list[DecisionTreeClassifier]
+      example: '[DecisionTreeClassifier(...), DecisionTreeClassifier(...)]'
+      shape_explanation: A fitted list contains n_estimators trees; this concrete fictional example shows 2 tree objects.
+      note: One fitted tree for each ensemble member.
+    - name: samplers_
+      kind: attribute
+      task: null
+      shape: (n_estimators,)
+      object_type: list[RandomUnderSampler]
+      example: '[RandomUnderSampler(...), RandomUnderSampler(...)]'
+      shape_explanation: A fitted list contains one sampler per tree; this concrete fictional example shows 2 sampler objects.
+      note: Fitted sampler for each tree; sample_indices_ identifies its balanced training rows.
+    - name: feature_importances_
+      kind: attribute
+      task: null
+      shape: (n_features,)
+      object_type: numpy.ndarray
+      example: '[0.28, 0.11, 0.24, 0.19, 0.18]'
+      shape_explanation: One value per input feature. n_features is the number of columns; this example has shape (5,).
+      note: Mean impurity-based importance across fitted trees.
+    next_step: null
+    snippet: |
+      # imbalanced-learn 0.14.2
+      from imblearn.ensemble import BalancedRandomForestClassifier
+      from sklearn.datasets import make_classification
+      from sklearn.model_selection import train_test_split
+
+      X, y = make_classification(
+          n_samples=160, n_features=5, n_informative=3, n_redundant=0,
+          weights=[0.9, 0.1], random_state=42,
+      )
+      X_train, X_test, y_train, y_test = train_test_split(
+          X, y, test_size=0.25, stratify=y, random_state=42
+      )
+      model = BalancedRandomForestClassifier(
+          n_estimators=8, random_state=42, n_jobs=1
+      )
+      model.fit(X_train, y_train)
+      y_pred = model.predict(X_test[:3])
+      y_proba = model.predict_proba(X_test[:3])
+      print("y_pred:", y_pred)
+      print("y_proba:")
+      print(y_proba.round(3))
+      print("classes_:", model.classes_)
+      print("tree count:", len(model.estimators_))
+      print("tree 0 balanced rows:", len(model.samplers_[0].sample_indices_))
+      print("feature_importances_ shape:", model.feature_importances_.shape)
     snippet_library: imbalanced-learn
     visual: proba_table
+    guidance:
+    - task: classification
+      text: Use labels for confusion matrices, probabilities for probabilistic ranking, and balanced metrics when class counts differ.
+    output: |
+      y_pred: [0 0 0]
+      y_proba:
+      [[1. 0.]
+       [1. 0.]
+       [1. 0.]]
+      classes_: [0 1]
+      tree count: 8
+      tree 0 balanced rows: 24
+      feature_importances_ shape: (5,)
   catch_outs:
-    - Accuracy looks fine on lopsided data. Use balanced accuracy.
-    - Predict gives labels. Use predict_proba for ROC or PR curves.
-    - Text columns fail. Encode them first.
+  - Accuracy looks fine on lopsided data. Use balanced accuracy.
+  - Predict gives labels. Use predict_proba for ROC or PR curves.
+  - Text columns fail. Encode them first.
   key_settings:
     tier1:
-      - {name: n_estimators, page: n-estimators}
-      - {name: max_depth, page: max-depth}
-      - {name: sampling_strategy, page: null}
-      - {name: class_weight, page: null}
+    - name: n_estimators
+      page: n-estimators
+      controls: Maximum number of balanced trees to fit.
+      effect: More trees can stabilise votes but increase training and prediction cost.
+    - name: max_depth
+      page: max-depth
+      controls: Maximum depth of each decision tree.
+      effect: Deeper trees capture more interactions but can overfit and cost more.
+    - name: sampling_strategy
+      page: null
+      controls: Which classes and target counts the under-sampler uses per tree.
+      effect: More aggressive balancing discards more majority rows; the chosen counts affect class coverage.
+    - name: class_weight
+      page: null
+      controls: Additional class weights applied within the trees.
+      effect: Higher minority weight increases its split/loss influence on top of balanced sampling.
     tier2:
-      - {name: max_features, page: null}
-      - {name: max_samples, page: null}
-      - {name: bootstrap, page: null}
-      - {name: min_samples_split, page: null}
+    - name: max_features
+      page: null
+      controls: Number or share of features considered at each split.
+      effect: Fewer candidates decorrelate trees but may hide useful predictors.
+    - name: max_samples
+      page: null
+      controls: Rows drawn for a tree when bootstrap is enabled.
+      effect: Smaller samples reduce fit cost but can make trees less informed.
+    - name: bootstrap
+      page: null
+      controls: Whether each tree also bootstraps its balanced sample.
+      effect: Enables bootstrap/OOB behavior but adds another sampling stage.
+    - name: min_samples_split
+      page: null
+      controls: Minimum rows required to split an internal node.
+      effect: Higher values make trees shallower and can reduce overfitting.
     tier3:
-      - {name: min_samples_leaf, page: null}
-      - {name: replacement, page: null}
-      - {name: ccp_alpha, page: null}
-      - {name: criterion, page: null}
-  watch_it_work: {none: true}
+    - name: min_samples_leaf
+      page: null
+      controls: Minimum rows required in a leaf.
+      effect: Larger leaves smooth predictions but may miss small patterns.
+    - name: replacement
+      page: null
+      controls: Whether the internal under-sampler draws majority rows with replacement.
+      effect: Replacement can repeat selected rows; without it each selected row is unique.
+    - name: ccp_alpha
+      page: null
+      controls: Minimal cost-complexity pruning strength for each tree.
+      effect: Higher alpha prunes more branches and may underfit.
+    - name: criterion
+      page: null
+      controls: Impurity measure used to choose tree splits.
+      effect: Gini and entropy can rank splits differently; this can change each tree.
+  watch_it_work:
+    none: true
   intuition:
     idea: Many trees, each grown on a balanced sample of the rows.
     analogy: A panel of judges, each shown an even mix of both outcomes.
     animation: none
-    good_at: [rare classes, tabular data, non-linear effects]
-    bad_at: [tiny data, extrapolation, raw text]
+    good_at:
+    - rare classes
+    - tabular data
+    - non-linear effects
+    bad_at:
+    - tiny data
+    - extrapolation
+    - raw text
     vs_siblings:
-      - {page: random-forest, note: "Same trees. This one balances each tree's sample."}
-      - {page: balancedbaggingclassifier, note: "Balanced bagging around any base model."}
-      - {page: easyensembleclassifier, note: "Bags boosted models instead of trees."}
+    - page: random-forest
+      note: Same trees. This one balances each tree's sample.
+    - page: balancedbaggingclassifier
+      note: Balanced bagging around any base model.
+    - page: easyensembleclassifier
+      note: Bags boosted models instead of trees.
     read_more:
-      - Split the rows into the rare and common classes.
-      - Draw a balanced sample for each tree.
-      - Grow each tree, then combine the trees' votes.
-  next: [but-imbalanced-score, know-feature-importance]
+    - Split the rows into the rare and common classes.
+    - Draw a balanced sample for each tree.
+    - Grow each tree, then combine the trees' votes.
+    goal: Build each decision tree from a fresh class-balanced under-sample, then aggregate tree probabilities.
+    steps:
+    - For each tree, draw a balanced training subset using RandomUnderSampler
+    - Fit one randomized decision tree to that subset
+    - Average class probabilities from all trees and select the largest class probability
+    - Resampling is repeated per tree; it does not alter prediction rows.
+    math:
+      notation:
+      - symbol: j
+        meaning: Tree index.
+      - symbol: S_j
+        meaning: Balanced row sample used to fit tree j.
+      - symbol: p_j(c|x)
+        meaning: Tree j probability for class c at input x.
+      - symbol: J
+        meaning: Number of fitted trees.
+      equations:
+      - expression: p(c|x)=J⁻¹Σ_j p_j(c|x); ŷ=argmax_c p(c|x)
+        meaning: The forest averages balanced-tree probabilities, then chooses the most probable class.
+      prediction: predict_proba averages tree probabilities in classes_ order; predict returns the highest-probability class.
+  next:
+  - but-imbalanced-score
+  - know-feature-importance

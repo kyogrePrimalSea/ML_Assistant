@@ -1,120 +1,264 @@
 id: ard-regression
 plain_name: ARDRegression
 code_name: ARDRegression
-aliases: [ARD, automatic relevance determination]
+aliases:
+- ARD
+- automatic relevance determination
 stage: model
 family: model.linear.bayes
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [too many features, uncertainty]
-targets: [sklearn.linear_model.ARDRegression]
+question_tags:
+- too many features
+- uncertainty
+targets:
+- sklearn.linear_model.ARDRegression
 pairs_with: []
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.ARDRegression.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.ARDRegression.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [regression]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: ames, shape: fit_line}
+    hero:
+      kind: model
+      dataset: ames
+      shape: fit_line
     line: Straight line that switches off features it does not need.
-  quick_facts: {none: true}
+  quick_facts:
+    none: true
   use_avoid:
-    use_when: [many features, some useless, linear effects]
-    avoid_when: [target is a class label, missing values, curved effects]
+    use_when:
+    - many features
+    - some useless
+    - linear effects
+    avoid_when:
+    - target is a class label
+    - missing values
+    - curved effects
   prep:
-    - step: {family: clean.impute}
-      status: required
-      why: Rejects missing values with an error.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Needs numbers, not text.
-      condition: {has_categoricals: true}
-      unless: null
-    - step: {family: transform.scale.rescale}
-      status: recommended
-      why: Pruning uses weight precision, which depends on scale.
-      condition: null
-      unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Rejects missing values with an error.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Needs numbers, not text.
+    condition:
+      has_categoricals: true
+    unless: null
+  - step:
+      family: transform.scale.rescale
+    status: recommended
+    why: Pruning uses weight precision, which depends on scale.
+    condition: null
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.linear_model.ARDRegression
-      why_this_library: Per-weight priors and pruning are built in.
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import load_diabetes
-        from sklearn.linear_model import ARDRegression
-        from sklearn.model_selection import train_test_split
+  - library: scikit-learn
+    target: sklearn.linear_model.ARDRegression
+    why_this_library: Per-weight priors and pruning are built in.
+    snippet: '# scikit-learn 1.9.1
 
-        X, y = load_diabetes(return_X_y=True)
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, random_state=0
-        )
-
-        model = ARDRegression().fit(X_train, y_train)
-        print(round(model.score(X_test, y_test), 3))
-  what_comes_out:
-    items:
-      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
-         note: "One predicted value per row."}
-      - {name: score, kind: method, task: null, shape: "float",
-         note: "R squared on the data you pass."}
-      - {name: coef_, kind: attribute, task: null, shape: "(n_features,)",
-         note: "One weight per column, in the input scale."}
-      - {name: intercept_, kind: attribute, task: null, shape: "float",
-         note: "Prediction when every input is zero."}
-      - {name: n_iter_, kind: attribute, task: null, shape: "int",
-         note: "Iterations run before it stopped."}
-      - {name: n_features_in_, kind: attribute, task: null, shape: "int",
-         note: "Number of columns seen at fit."}
-      - {name: feature_names_in_, kind: attribute, task: null,
-         shape: "(n_features,)", note: "Only set when fit on a DataFrame."}
-    next_step: Read coef_ against the feature scales before comparing effects.
-    snippet: |
-      # scikit-learn 1.9.1
       from sklearn.datasets import load_diabetes
+
       from sklearn.linear_model import ARDRegression
 
+      from sklearn.model_selection import train_test_split
+
+
       X, y = load_diabetes(return_X_y=True, as_frame=True)
-      model = ARDRegression().fit(X, y)
-      print(model.predict(X).shape)
-      print(model.coef_.shape)
-      print(model.feature_names_in_)
+
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+      model = ARDRegression().fit(X_train, y_train)
+
+      y_pred = model.predict(X_test[:3])
+
+      print("y_pred:", y_pred.round(1))
+
+      print("feature_names_in_:", model.feature_names_in_[:3].tolist())
+
+      print("n_iter_:", model.n_iter_, type(model.n_iter_).__name__)
+
+      '
+    output: 'y_pred: [239.9 248.4 165.6]
+
+      feature_names_in_: [''age'', ''sex'', ''bmi'']
+
+      n_iter_: 18 int
+
+      '
+  what_comes_out:
+    items:
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[154.2, 120.5, 92.7]'
+      shape_explanation: A one-dimensional array with one value per input row. n_samples is the number
+        of rows; this example has shape (3,).
+      note: One posterior mean per row.
+    - name: coef_
+      kind: attribute
+      task: null
+      shape: (n_features,)
+      object_type: numpy.ndarray
+      example: '[0.42, -0.18, 0.73]'
+      shape_explanation: A one-dimensional array with one entry per input feature. n_features is the number
+        of columns; this example has shape (3,).
+      note: Posterior coefficient means; large learned precision can shrink a coefficient near zero.
+    - name: n_iter_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: int
+      example: '12'
+      shape_explanation: A scalar is one value, with no array dimensions. The example shows that single
+        value.
+      note: Number of evidence iterations run.
+    - name: feature_names_in_
+      kind: attribute
+      task: null
+      shape: (n_features,)
+      object_type: numpy.ndarray
+      example: '[''age'', ''fare'', ''pclass'']'
+      shape_explanation: A one-dimensional string array containing one original name per input feature.
+        n_features is the number of columns; these three names illustrate shape (3,).
+      note: Available only when fit receives a DataFrame with all-string column names.
+    next_step: null
+    snippet: '# scikit-learn 1.9.1
+
+      from sklearn.datasets import load_diabetes
+
+      from sklearn.linear_model import ARDRegression
+
+      from sklearn.model_selection import train_test_split
+
+
+      X, y = load_diabetes(return_X_y=True, as_frame=True)
+
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+      model = ARDRegression().fit(X_train, y_train)
+
+      y_pred = model.predict(X_test[:3])
+
+      print("y_pred:", y_pred.round(1))
+
+      print("feature_names_in_:", model.feature_names_in_[:3].tolist())
+
+      print("n_iter_:", model.n_iter_, type(model.n_iter_).__name__)
+
+      '
     snippet_library: scikit-learn
     visual: regression_preds
+    guidance:
+    - task: regression
+      text: Inspect coefficient magnitudes only after considering feature scale and correlated predictors.
+    output: 'y_pred: [239.9 248.4 165.6]
+
+      feature_names_in_: [''age'', ''sex'', ''bmi'']
+
+      n_iter_: 18 int
+
+      '
   catch_outs:
-    - Missing values raise an error. Impute first.
-    - Text columns fail. Encode them first.
-    - Coefficients are only comparable on scaled inputs.
+  - Missing values raise an error. Impute first.
+  - Text columns fail. Encode them first.
+  - Coefficients are only comparable on scaled inputs.
   key_settings:
     tier1:
-      - {name: threshold_lambda, page: null}
-      - {name: fit_intercept, page: null}
+    - name: threshold_lambda
+      page: null
+      controls: Precision above which a coefficient is pruned.
+      effect: A lower threshold prunes more aggressively; a higher one retains more weights.
+    - name: fit_intercept
+      page: null
+      controls: Whether to estimate an intercept.
+      effect: Turning it off forces predictions through zero.
     tier2:
-      - {name: max_iter, page: null}
-      - {name: tol, page: null}
+    - name: max_iter
+      page: null
+      controls: Maximum evidence-update iterations.
+      effect: More iterations allow convergence but take longer.
+    - name: tol
+      page: null
+      controls: Convergence tolerance for coefficient updates.
+      effect: Tighter tolerance may improve convergence precision at added cost.
     tier3:
-      - {name: alpha_1, page: null}
-      - {name: lambda_1, page: null}
-      - {name: compute_score, page: null}
-  watch_it_work: {none: true}
+    - name: alpha_1
+      page: null
+      controls: Shape hyperparameter of the noise-precision prior.
+      effect: It changes prior influence on estimated noise precision.
+    - name: lambda_1
+      page: null
+      controls: Shape hyperparameter of each coefficient-precision prior.
+      effect: It changes prior influence on feature-specific shrinkage.
+    - name: compute_score
+      page: null
+      controls: Whether to record marginal log-likelihood by iteration.
+      effect: Adds diagnostics with extra computation.
+  watch_it_work:
+    none: true
   intuition:
     idea: Each weight gets its own prior, so weak ones are pushed to zero.
     analogy: A budget review that cuts the line items that never earn their keep.
     animation: none
-    good_at: [many features, sparse effects, linear effects]
-    bad_at: [curved effects, classification targets]
+    good_at:
+    - many features
+    - sparse effects
+    - linear effects
+    bad_at:
+    - curved effects
+    - classification targets
     vs_siblings:
-      - {page: bayesian-ridge, note: "BayesianRidge has one weight precision. ARD has one per weight."}
+    - page: bayesian-ridge
+      note: BayesianRidge has one weight precision. ARD has one per weight.
     read_more:
-      - Give each weight a Gamma prior on its precision.
-      - Prune weights whose precision passes threshold_lambda.
-      - Refit until tol or max_iter stops it.
-  next: [but-wide-data]
+    - Give each weight a Gamma prior on its precision.
+    - Prune weights whose precision passes threshold_lambda.
+    - Refit until tol or max_iter stops it.
+    goal: Per-coefficient Bayesian shrinkage can suppress weak features; coefficients are not an automatic
+      causal ranking.
+    steps:
+    - Start with one Gaussian prior for each coefficient.
+    - Estimate each precision from evidence; weak coefficients shrink toward zero.
+    - Repeat until convergence or the iteration limit.
+    math:
+      notation:
+      - symbol: i
+        meaning: Observation index.
+      - symbol: x_i
+        meaning: Feature vector for observation i.
+      - symbol: y_i
+        meaning: Observed target for observation i.
+      - symbol: w_j
+        meaning: Coefficient for feature j.
+      - symbol: b
+        meaning: Intercept.
+      - symbol: α_j
+        meaning: Prior precision for coefficient j.
+      equations:
+      - expression: y_i = x_iᵀw + b + ε_i;  w_j ~ N(0, α_j⁻¹)
+        meaning: A separate precision controls shrinkage for each coefficient.
+      prediction: y_pred = x @ coef_ + intercept_; predict returns one posterior mean per row and no uncertainty
+        estimate.
+  next:
+  - but-wide-data

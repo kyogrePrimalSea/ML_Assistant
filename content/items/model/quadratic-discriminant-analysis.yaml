@@ -1,138 +1,292 @@
 id: quadratic-discriminant-analysis
 plain_name: QuadraticDiscriminantAnalysis
 code_name: QuadraticDiscriminantAnalysis
-aliases: [qda, quadratic discriminant]
+aliases:
+- qda
+- quadratic discriminant
 stage: model
 family: model.probabilistic.da
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [classes differ in spread, curved boundary, many rows]
-targets: [sklearn.discriminant_analysis.QuadraticDiscriminantAnalysis]
+question_tags:
+- classes differ in spread
+- curved boundary
+- many rows
+targets:
+- sklearn.discriminant_analysis.QuadraticDiscriminantAnalysis
 pairs_with: []
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.discriminant_analysis.QuadraticDiscriminantAnalysis.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.discriminant_analysis.QuadraticDiscriminantAnalysis.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [classification]
+  task_types:
+  - classification
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: breast-cancer, shape: boundary}
+    hero:
+      kind: model
+      dataset: breast-cancer
+      shape: boundary
     line: Gives each class its own spread, so the boundary can curve.
   quick_facts:
     data_size: Enough rows in every class
   use_avoid:
-    use_when: [classes differ in spread, curved boundaries, many rows per class]
-    avoid_when: [few rows per class, similar spread, collinear columns]
+    use_when:
+    - classes differ in spread
+    - curved boundaries
+    - many rows per class
+    avoid_when:
+    - few rows per class
+    - similar spread
+    - collinear columns
   prep:
-    - step: {family: transform.scale.rescale}
-      status: recommended
-      why: "Scale first: reg_param acts on the raw spread."
-      condition: null
-      unless: null
-    - step: {family: clean.impute}
-      status: required
-      why: Rejects missing values.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Text categories must become numbers.
-      condition: {has_categoricals: true}
-      unless: null
+  - step:
+      family: transform.scale.rescale
+    status: recommended
+    why: 'Scale first: reg_param acts on the raw spread.'
+    condition: null
+    unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Rejects missing values.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Text categories must become numbers.
+    condition:
+      has_categoricals: true
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.discriminant_analysis.QuadraticDiscriminantAnalysis
-      why_this_library: The scikit-learn estimator for this method.
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import load_breast_cancer
-        from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
-        from sklearn.model_selection import train_test_split
-        from sklearn.pipeline import make_pipeline
-        from sklearn.preprocessing import StandardScaler
-
-        X, y = load_breast_cancer(return_X_y=True)
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, random_state=0
-        )
-
-        model = make_pipeline(
-            StandardScaler(),
-            QuadraticDiscriminantAnalysis(reg_param=0.3),
-        )
-        model.fit(X_train, y_train)
-        print(round(model.score(X_test, y_test), 3))
-  what_comes_out:
-    items:
-      - {name: predict, kind: method, task: classification, shape: "(n_samples,)",
-         note: "Class with the highest probability."}
-      - {name: predict_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
-         note: "One column per class, in classes_ order."}
-      - {name: predict_log_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
-         note: "Log of predict_proba, same column order."}
-      - {name: decision_function, kind: method, task: classification, shape: "(n_samples,) for two classes",
-         note: "Score before the probability. Above 0 means class 1."}
-      - {name: score, kind: method, task: classification, shape: "float",
-         note: "Accuracy on the data given."}
-      - {name: means_, kind: attribute, task: null, shape: "(n_classes, n_features)",
-         note: "Mean of each class, one row per class."}
-      - {name: n_features_in_, kind: attribute, task: null, shape: "int",
-         note: "Columns seen during fit."}
-      - {name: feature_names_in_, kind: attribute, task: null, shape: "(n_features,)",
-         note: "Column names. Set only when fit on a DataFrame."}
-    next_step: "ROC AUC needs predict_proba[:, 1], not the labels."
+  - library: scikit-learn
+    target: sklearn.discriminant_analysis.QuadraticDiscriminantAnalysis
+    why_this_library: The scikit-learn estimator for this method.
     snippet: |
       # scikit-learn 1.9.1
-      import pandas as pd
+      import numpy as np
       from sklearn.datasets import load_breast_cancer
       from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
-      from sklearn.preprocessing import StandardScaler
-
-      data = load_breast_cancer(as_frame=True)
-      X = pd.DataFrame(
-          StandardScaler().fit_transform(data.data),
-          columns=data.feature_names,
-      )
-      model = QuadraticDiscriminantAnalysis(reg_param=0.3)
-      model.fit(X, data.target)
-      print(model.predict_proba(X[:3]).shape)
-      print(model.decision_function(X[:3]).shape)
-      print(model.n_features_in_)
-      print(model.feature_names_in_[:3])
+      from sklearn.model_selection import train_test_split
+      X,y=load_breast_cancer(return_X_y=True)
+      X=X[:,:3]
+      Xt,Xv,yt,yv=train_test_split(X,y,test_size=.25,stratify=y,random_state=0)
+      m=QuadraticDiscriminantAnalysis(reg_param=.1,store_covariance=True).fit(Xt,yt)
+      y_pred=m.predict(Xv[:3])
+      y_proba=m.predict_proba(Xv[:3])
+      y_score=m.decision_function(Xv[:3])
+      print('y_pred:',y_pred)
+      print('y_proba:')
+      print(np.round(y_proba,3))
+      print('y_score:',np.round(y_score,3))
+      print('classes_:',m.classes_,'priors_:',np.round(m.priors_,3))
+      print('means:',m.means_.shape,'covariances:',
+            len(m.covariance_),m.covariance_[0].shape)
+      print('accuracy:',round(m.score(Xv,yv),3))
+    output: |
+      y_pred: [1 0 0]
+      y_proba:
+      [[0.067 0.933]
+       [1.    0.   ]
+       [0.998 0.002]]
+      y_score: [  2.629 -10.236  -6.062]
+      classes_: [0 1] priors_: [0.373 0.627]
+      means: (2, 3) covariances: 2 (3, 3)
+      accuracy: 0.881
+  what_comes_out:
+    items:
+    - name: predict
+      kind: method
+      task: classification
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[0, 1, 0]'
+      shape_explanation: One label per input row; three labels give shape (3,).
+      note: Chooses the class with the largest quadratic discriminant score.
+    - name: predict_proba
+      kind: method
+      task: classification
+      shape: (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[[0.9, 0.1], [0.2, 0.8]]'
+      shape_explanation: Rows are cases and columns are classes; two by two gives shape (2, 2).
+      note: Columns follow classes_ order.
+    - name: decision_function
+      kind: method
+      task: classification
+      shape: (n_samples,) or (n_samples,n_classes)
+      object_type: numpy.ndarray
+      example: '[-2.1, 1.7, -0.8]'
+      shape_explanation: 'This fictional example is binary: one score per row gives shape (3,). With multiple classes, scores form an (n_samples, n_classes) matrix.'
+      note: Binary positive scores favor classes_[1]; multiclass has one score per class.
+    - name: classes_
+      kind: attribute
+      task: classification
+      shape: (n_classes,)
+      object_type: numpy.ndarray
+      example: '[0, 1]'
+      shape_explanation: One label per class; shape (2,) here.
+      note: Probability-column order.
+    - name: means_
+      kind: attribute
+      task: null
+      shape: (n_classes, n_features)
+      object_type: numpy.ndarray
+      example: '[[1.2, 0.4], [2.1, 0.9]]'
+      shape_explanation: One row per class, one column per feature; this example is (2, 2).
+      note: Class-specific means.
+    - name: covariance_
+      kind: attribute
+      task: null
+      shape: list of n_classes square matrices
+      object_type: list[numpy.ndarray]
+      example: '[[[1.0, 0.2], [0.2, 0.8]], [[0.7, 0.1], [0.1, 1.2]]]'
+      shape_explanation: One square covariance per class; two classes and two features mean two (2, 2) matrices.
+      note: Present only with store_covariance=True; one class-specific covariance per class.
+    - name: priors_
+      kind: attribute
+      task: null
+      shape: (n_classes,)
+      object_type: numpy.ndarray
+      example: '[0.7, 0.3]'
+      shape_explanation: One prior per class; shape (2,) for two classes.
+      note: Defaults to training class frequencies.
+    - name: score
+      kind: method
+      task: classification
+      shape: scalar
+      object_type: float
+      example: '0.88'
+      shape_explanation: One number, no array dimensions.
+      note: Classification score is accuracy.
+    next_step: ROC AUC needs predict_proba[:, 1], not the labels.
+    snippet: |
+      # scikit-learn 1.9.1
+      import numpy as np
+      from sklearn.datasets import load_breast_cancer
+      from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
+      from sklearn.model_selection import train_test_split
+      X,y=load_breast_cancer(return_X_y=True)
+      X=X[:,:3]
+      Xt,Xv,yt,yv=train_test_split(X,y,test_size=.25,stratify=y,random_state=0)
+      m=QuadraticDiscriminantAnalysis(reg_param=.1,store_covariance=True).fit(Xt,yt)
+      y_pred=m.predict(Xv[:3])
+      y_proba=m.predict_proba(Xv[:3])
+      y_score=m.decision_function(Xv[:3])
+      print('y_pred:',y_pred)
+      print('y_proba:')
+      print(np.round(y_proba,3))
+      print('y_score:',np.round(y_score,3))
+      print('classes_:',m.classes_,'priors_:',np.round(m.priors_,3))
+      print('means:',m.means_.shape,'covariances:',
+            len(m.covariance_),m.covariance_[0].shape)
+      print('accuracy:',round(m.score(Xv,yv),3))
     snippet_library: scikit-learn
     visual: null
+    output: |
+      y_pred: [1 0 0]
+      y_proba:
+      [[0.067 0.933]
+       [1.    0.   ]
+       [0.998 0.002]]
+      y_score: [  2.629 -10.236  -6.062]
+      classes_: [0 1] priors_: [0.373 0.627]
+      means: (2, 3) covariances: 2 (3, 3)
+      accuracy: 0.881
+    guidance:
+    - task: classification
+      text: Use class labels for accuracy and probabilities/scores for ranking; check the shared-versus-class-specific covariance assumption.
   catch_outs:
-    - "Collinear columns can make a class covariance singular and raise LinAlgError."
-    - "The default reg_param of 0 failed on the breast cancer data."
-    - "Each class has its own spread, so it needs more rows than LDA."
+  - Collinear columns can make a class covariance singular and raise LinAlgError.
+  - The default reg_param of 0 failed on the breast cancer data.
+  - Each class has its own spread, so it needs more rows than LDA.
   key_settings:
     tier1:
-      - {name: reg_param, page: null}
-      - {name: shrinkage, page: null}
-      - {name: solver, page: null}
-      - {name: covariance_estimator, page: null}
+    - name: reg_param
+      page: null
+      controls: Moves class covariances toward identity.
+      effect: More regularization helps with limited or collinear class samples but reduces class-specific detail.
+    - name: priors
+      page: null
+      controls: Sets class prior probabilities.
+      effect: Shifts class posterior scores and predicted regions.
+    - name: store_covariance
+      page: null
+      controls: Stores one estimated covariance matrix per class.
+      effect: Allows inspection at extra memory cost.
     tier2:
-      - {name: tol, page: null}
-      - {name: store_covariance, page: null}
-      - {name: priors, page: null}
-    tier3:
-      []
-  watch_it_work: {none: true}
+    - name: solver
+      page: null
+      controls: Chooses the numerical decomposition approach.
+      effect: Solver choices alter numerical behavior and which covariance controls are supported.
+    - name: shrinkage
+      page: null
+      controls: Requests covariance shrinkage where supported.
+      effect: Can stabilize estimates but makes class spreads more alike.
+    - name: covariance_estimator
+      page: null
+      controls: Supplies a custom covariance estimation method.
+      effect: Changes each class spread and must support the expected estimator interface.
+    - name: tol
+      page: null
+      controls: Sets the rank-deficiency cutoff.
+      effect: Higher tolerance flags weak covariance directions sooner.
+    tier3: []
+  watch_it_work:
+    none: true
   intuition:
     idea: Give each class its own spread, so the boundary can curve.
     analogy: A separate fence around each group, not one shared fence.
     animation: none
-    good_at: [different spreads, curved boundaries, many rows]
-    bad_at: [few rows per class, collinear columns, a simple line]
+    good_at:
+    - different spreads
+    - curved boundaries
+    - many rows
+    bad_at:
+    - few rows per class
+    - collinear columns
+    - a simple line
     vs_siblings:
-      - {page: linear-discriminant-analysis, note: "Same family. One shared spread and a straight boundary."}
+    - page: linear-discriminant-analysis
+      note: Same family. One shared spread and a straight boundary.
+    goal: Estimate a separate covariance for each class and choose the largest quadratic discriminant score.
+    steps:
+    - Estimate a mean and covariance separately from each class.
+    - Regularize each class covariance when reg_param is nonzero.
+    - Score each class using its covariance-aware distance, determinant, and prior.
+    - Choose the class with highest score; different covariances create quadratic boundaries.
+    math:
+      notation:
+      - symbol: x
+        meaning: Input feature vector.
+      - symbol: mu_k
+        meaning: Mean vector for class k.
+      - symbol: Sigma_k
+        meaning: Covariance estimated from class k only.
+      - symbol: pi_k
+        meaning: Prior probability for class k.
+      - symbol: delta_k(x)
+        meaning: Quadratic class score.
+      equations:
+      - expression: delta_k(x)=-1/2 log|Sigma_k|-1/2(x-mu_k)^T Sigma_k^{-1}(x-mu_k)+log(pi_k)
+        meaning: Each class has its own covariance, so class-score differences can be quadratic.
+      - expression: predict(x)=argmax_k delta_k(x)
+        meaning: Choose the class with the largest quadratic score.
+      prediction: predict returns one label per row; predict_proba gives posterior columns. Binary decision_function is a signed score.
     read_more:
-      - Estimate each class mean and spread.
-      - Score each class with its own shape.
-      - Pick the class with the highest score.
+    - Estimate each class mean and spread.
+    - Score each class with its own shape.
+    - Pick the class with the highest score.
   next: []

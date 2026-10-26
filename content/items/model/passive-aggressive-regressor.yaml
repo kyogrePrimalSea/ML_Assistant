@@ -1,139 +1,284 @@
 id: passive-aggressive-regressor
 plain_name: PassiveAggressiveRegressor
 code_name: PassiveAggressiveRegressor
-aliases: [passive aggressive regression, pa regressor]
+aliases:
+- passive aggressive regression
+- pa regressor
 stage: model
 family: model.awkward.big
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [streaming data, updates on each mistake]
-targets: [sklearn.linear_model.PassiveAggressiveRegressor]
-pairs_with: [linearexplainer]
+question_tags:
+- streaming data
+- updates on each mistake
+targets:
+- sklearn.linear_model.PassiveAggressiveRegressor
+pairs_with:
+- linearexplainer
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.PassiveAggressiveRegressor.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.PassiveAggressiveRegressor.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [regression]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: ames, shape: fit_line}
+    hero:
+      kind: model
+      dataset: ames
+      shape: fit_line
     line: Fits a straight line, and changes it only after a clear miss.
-  quick_facts: {data_size: Streaming data}
+  quick_facts:
+    data_size: Streaming data
   use_avoid:
-    use_when: [streaming data, numeric target, straight-line trend]
-    avoid_when: [curved relationships, needs p-values]
+    use_when:
+    - streaming data
+    - numeric target
+    - straight-line trend
+    avoid_when:
+    - curved relationships
+    - needs p-values
   prep:
-    - step: {family: transform.scale.rescale}
-      status: recommended
-      why: Linear fits behave better on one scale.
-      condition: null
-      unless: null
-    - step: {family: clean.impute}
-      status: required
-      why: Linear models reject missing values.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Text categories must become numbers.
-      condition: {has_categoricals: true}
-      unless: null
+  - step:
+      family: transform.scale.rescale
+    status: recommended
+    why: Linear fits behave better on one scale.
+    condition: null
+    unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Linear models reject missing values.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Text categories must become numbers.
+    condition:
+      has_categoricals: true
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.linear_model.PassiveAggressiveRegressor
-      why_this_library: Has partial_fit, so it can learn from streams.
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import load_diabetes
-        from sklearn.linear_model import PassiveAggressiveRegressor
-        from sklearn.model_selection import train_test_split
-        from sklearn.pipeline import make_pipeline
-        from sklearn.preprocessing import StandardScaler
+  - library: scikit-learn
+    target: sklearn.linear_model.PassiveAggressiveRegressor
+    why_this_library: Has partial_fit, so it can learn from streams.
+    snippet: "# scikit-learn 1.9.1\nfrom sklearn.datasets import load_diabetes\nfrom sklearn.linear_model\
+      \ import PassiveAggressiveRegressor\nfrom sklearn.model_selection import train_test_split\nfrom\
+      \ sklearn.pipeline import make_pipeline\nfrom sklearn.preprocessing import StandardScaler\n\nX,\
+      \ y = load_diabetes(return_X_y=True)\nX_train, X_test, y_train, y_test = train_test_split(X, y,\
+      \ random_state=0)\nmodel = make_pipeline(\n    StandardScaler(),\n    PassiveAggressiveRegressor(C=1.0,\
+      \ random_state=0),\n)\nmodel.fit(X_train, y_train)\npa = model[-1]\ny_pred = model.predict(X_test[:3])\n\
+      print(\"y_pred:\", y_pred.round(1))\nprint(\"coef_ shape:\", pa.coef_.shape)\nprint(\"n_iter_:\"\
+      , pa.n_iter_)\n"
+    output: 'y_pred: [237.2 264.7 163.8]
 
-        X, y = load_diabetes(return_X_y=True)
-        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+      coef_ shape: (10,)
 
-        model = make_pipeline(
-            StandardScaler(),
-            PassiveAggressiveRegressor(C=1.0, random_state=0),
-        )
-        model.fit(X_train, y_train)
-        print(round(model.score(X_test, y_test), 3))
+      n_iter_: 10
+
+      '
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: null, shape: "(n_samples,)",
-         note: "One predicted value per row."}
-      - {name: score, kind: method, task: null, shape: "float",
-         note: "R squared. 1 is perfect; 0 is no better than the mean."}
-      - {name: coef_, kind: attribute, task: null, shape: "(n_features,)",
-         note: "One weight per input column. Averaged if average is on."}
-      - {name: intercept_, kind: attribute, task: null, shape: "(1,)",
-         note: "The offset added to every prediction."}
-      - {name: n_iter_, kind: attribute, task: null, shape: "int",
-         note: "Passes over the data used. At max_iter, it stopped early."}
-      - {name: n_features_in_, kind: attribute, task: null, shape: "int",
-         note: "Number of input columns seen in fit."}
-      - {name: feature_names_in_, kind: attribute, task: null, shape: "(n_features_in_,)",
-         note: "Column names. Only set when fit on a DataFrame."}
-    next_step: Undo any log target before reporting errors in original units.
-    snippet: |
-      # scikit-learn 1.9.1
-      from sklearn.datasets import load_diabetes
-      from sklearn.linear_model import PassiveAggressiveRegressor
-      from sklearn.model_selection import train_test_split
-      from sklearn.pipeline import make_pipeline
-      from sklearn.preprocessing import StandardScaler
-
-      X, y = load_diabetes(return_X_y=True)
-      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
-
-      model = make_pipeline(StandardScaler(),
-                            PassiveAggressiveRegressor(random_state=0))
-      model.fit(X_train, y_train)
-      pa = model[-1]
-      print(model.predict(X_test).shape)
-      print(pa.coef_.shape)
-      print(pa.intercept_.shape)
-      print(pa.n_iter_)
-      print(pa.n_features_in_)
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[154.2, 120.5, 92.7]'
+      shape_explanation: A one-dimensional array with one continuous prediction per input row. n_samples
+        is the number of rows; this example has shape (3,).
+      note: One numeric estimate for every input row.
+    - name: score
+      kind: method
+      task: regression
+      shape: scalar
+      object_type: float
+      example: '0.42'
+      shape_explanation: A scalar number measuring explained variance relative to the target mean.
+      note: R-squared on the rows passed to score().
+    - name: coef_
+      kind: attribute
+      task: null
+      shape: (n_features,)
+      object_type: numpy.ndarray
+      example: '[0.42, -0.18, 0.73]'
+      shape_explanation: A one-dimensional array with one entry per feature. n_features is the number
+        of input columns; this example has shape (3,).
+      note: One fitted weight per input column.
+    - name: intercept_
+      kind: attribute
+      task: null
+      shape: (1,)
+      object_type: numpy.ndarray
+      example: '[12.5]'
+      shape_explanation: A one-dimensional array with one intercept for this single target; its shape
+        is (1,).
+      note: One fitted offset added to the weighted feature sum.
+    - name: n_iter_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: int
+      example: '8'
+      shape_explanation: A scalar integer count of completed data passes.
+      note: Number of passes used by fit().
+    - name: n_features_in_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: int
+      example: '10'
+      shape_explanation: A scalar integer count of the training feature columns.
+      note: Number of input columns seen during fit.
+    - name: partial_fit
+      kind: method
+      task: regression
+      shape: estimator object (no array shape)
+      object_type: PassiveAggressiveRegressor
+      example: PassiveAggressiveRegressor(...)
+      shape_explanation: partial_fit returns self, the same estimator after one incremental update. It
+        is a Python model object, not an array or predictions.
+      note: One incremental update call; it does not return predictions.
+    next_step: null
+    snippet: "# scikit-learn 1.9.1\nfrom sklearn.datasets import load_diabetes\nfrom sklearn.linear_model\
+      \ import PassiveAggressiveRegressor\nfrom sklearn.model_selection import train_test_split\nfrom\
+      \ sklearn.pipeline import make_pipeline\nfrom sklearn.preprocessing import StandardScaler\n\nX,\
+      \ y = load_diabetes(return_X_y=True)\nX_train, X_test, y_train, y_test = train_test_split(X, y,\
+      \ random_state=0)\nmodel = make_pipeline(\n    StandardScaler(),\n    PassiveAggressiveRegressor(C=1.0,\
+      \ random_state=0),\n)\nmodel.fit(X_train, y_train)\npa = model[-1]\ny_pred = model.predict(X_test[:3])\n\
+      print(\"y_pred:\", y_pred.round(1))\nprint(\"coef_ shape:\", pa.coef_.shape)\nprint(\"n_iter_:\"\
+      , pa.n_iter_)\n"
     snippet_library: scikit-learn
     visual: null
+    output: 'y_pred: [237.2 264.7 163.8]
+
+      coef_ shape: (10,)
+
+      n_iter_: 10
+
+      '
+    guidance:
+    - task: regression
+      text: Check residuals in target units. For streaming updates, call partial_fit on batches and keep
+        feature scaling consistent.
   catch_outs:
-    - early_stopping is off by default. Turn it on for a validation split.
-    - shuffle is on by default. Set random_state for repeatable runs.
-    - fit starts fresh each call unless warm_start is True.
+  - early_stopping is off by default. Turn it on for a validation split.
+  - shuffle is on by default. Set random_state for repeatable runs.
+  - fit starts fresh each call unless warm_start is True.
   key_settings:
     tier1:
-      - {name: average, page: null}
-      - {name: early_stopping, page: null}
-      - {name: C, page: null}
-      - {name: max_iter, page: null}
+    - name: average
+      page: null
+      controls: Whether to average weights across updates.
+      effect: Averaging can stabilise noisy online steps but changes the final weights.
+    - name: early_stopping
+      page: null
+      controls: Whether to stop using a held-out validation score.
+      effect: May reduce overfitting and runtime, but withholds validation_fraction of rows.
+    - name: C
+      page: null
+      controls: Upper bound on the size of each corrective update.
+      effect: Higher C permits larger corrections; too large can make updates unstable.
+    - name: max_iter
+      page: null
+      controls: Maximum passes over the training data.
+      effect: More passes can reduce remaining errors but cost time and may overfit.
     tier2:
-      - {name: validation_fraction, page: null}
-      - {name: loss, page: null}
-      - {name: tol, page: null}
-      - {name: fit_intercept, page: null}
+    - name: validation_fraction
+      page: null
+      controls: Share of training data reserved for early-stopping validation.
+      effect: A larger share improves validation data but leaves fewer rows for fitting.
+    - name: loss
+      page: null
+      controls: PA-I hinge or PA-II squared hinge loss beyond epsilon.
+      effect: PA-II penalises large misses more strongly; both ignore epsilon-sized errors.
+    - name: tol
+      page: null
+      controls: Minimum improvement threshold for stopping.
+      effect: Larger tolerance can stop sooner; smaller tolerance may use more passes.
+    - name: fit_intercept
+      page: null
+      controls: Whether to learn a constant offset.
+      effect: Turning it off forces the line through zero.
     tier3:
-      - {name: epsilon, page: null}
-      - {name: n_iter_no_change, page: null}
-      - {name: shuffle, page: null}
-  watch_it_work: {none: true}
+    - name: epsilon
+      page: null
+      controls: Width of the no-update tube around the prediction.
+      effect: Larger epsilon ignores more small errors; smaller epsilon triggers more updates.
+    - name: n_iter_no_change
+      page: null
+      controls: Unimproved passes allowed before early stopping.
+      effect: Lower values stop sooner; higher values allow more opportunities to improve.
+    - name: shuffle
+      page: null
+      controls: Whether to shuffle row order each pass.
+      effect: Shuffling reduces order effects; disabling it preserves stream order.
+  watch_it_work:
+    none: true
   intuition:
     idea: Take a step only when a row misses by more than epsilon.
     analogy: A coach who changes the plan only after a clear miss.
     animation: none
-    good_at: [streaming data, numeric targets, one row at a time]
-    bad_at: [curved relationships, needs p-values]
+    good_at:
+    - streaming data
+    - numeric targets
+    - one row at a time
+    bad_at:
+    - curved relationships
+    - needs p-values
     vs_siblings:
-      - {page: sgd-regressor, note: "Also linear, learns in small batches. Has a learning rate."}
-      - {page: linear-svr, note: "Also linear. Fits the whole set in one call."}
+    - page: sgd-regressor
+      note: Also linear, learns in small batches. Has a learning rate.
+    - page: linear-svr
+      note: Also linear. Fits the whole set in one call.
     read_more:
-      - Start with a line through the middle of the data.
-      - Step only when a row misses by more than epsilon.
-      - Repeat over the data, shuffled each pass.
-  next: [know-feature-importance]
+    - Start with a line through the middle of the data.
+    - Step only when a row misses by more than epsilon.
+    - Repeat over the data, shuffled each pass.
+    goal: Update the line only when a target lies outside an epsilon-wide no-loss tube.
+    steps:
+    - Read a row and measure absolute residual
+    - Make no update inside epsilon
+    - Outside the tube, compute a corrective step capped by C, then update the weight vector and intercept
+    - Repeat rows across passes or call partial_fit on arriving batches.
+    math:
+      notation:
+      - symbol: r_i
+        meaning: Residual for row i.
+      - symbol: ε
+        meaning: Width of the no-loss tube.
+      - symbol: ℓ_i
+        meaning: Residual violation beyond epsilon.
+      - symbol: C
+        meaning: Maximum update size.
+      - symbol: τ_i
+        meaning: Step size for row i.
+      - symbol: x_i
+        meaning: Feature vector for row i.
+      - symbol: y_i
+        meaning: Observed target for row i.
+      - symbol: w
+        meaning: Coefficient vector.
+      - symbol: '||x_i||²'
+        meaning: Squared length of the feature vector for row i.
+      equations:
+      - expression: ℓ_i=max(0,|r_i|−ε); τ_i=min(C,ℓ_i/(||x_i||²+1))
+        meaning: PA-I skips errors inside epsilon and caps each corrective step at C.
+      - expression: w_next=w+τ_i sign(r_i)x_i; b_next=b+τ_i sign(r_i)
+        meaning: The signed update moves the line toward the missed target; epsilon-sized errors cause
+          no move.
+      prediction: predict(X_new) = X_new @ coef_ + intercept_; returns one numeric estimate per input
+        row.
+  next:
+  - know-feature-importance

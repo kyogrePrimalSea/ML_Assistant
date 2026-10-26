@@ -13,6 +13,7 @@ clashes: []
 source_urls:
   - https://xgboost.readthedocs.io/en/stable/python/python_api.html
   - https://xgboost.readthedocs.io/en/stable/parameter.html
+  - https://xgboost.readthedocs.io/en/stable/tutorials/model.html
 library_versions:
   xgboost: "3.4.1"
   scikit-learn: "1.9.1"
@@ -64,36 +65,112 @@ slots:
       why_this_library: Native early stopping and categorical support.
       snippet: |
         # xgboost 3.4.1
+        import numpy as np
         from sklearn.datasets import make_regression
         from sklearn.model_selection import train_test_split
         from xgboost import XGBRegressor
 
-        X, y = make_regression(n_samples=500, n_features=8, noise=10, random_state=0)
-        X_train, X_val, y_train, y_val = train_test_split(X, y, random_state=0)
+        X, y = make_regression(
+            n_samples=500,
+            n_features=8,
+            noise=10,
+            random_state=0,
+        )
+        X_train, X_val, y_train, y_val = train_test_split(
+            X,
+            y,
+            random_state=0,
+        )
 
         model = XGBRegressor(
             n_estimators=500,
             learning_rate=0.05,
             max_depth=4,
             early_stopping_rounds=20,
+            n_jobs=1,
+            random_state=0,
         )
         model.fit(X_train, y_train, eval_set=[(X_val, y_val)], verbose=False)
-        print(model.best_iteration)
+        y_pred = model.predict(X_val[:5])
+        print("y_pred:", ", ".join(f"{value:.1f}" for value in y_pred))
+      output: "y_pred: 18.2, -90.9, 37.8, 84.4, 98.6\n"
   what_comes_out:
     items:
-      - {name: predict_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
-         note: "One column per class, in classes_ order. Keep [:, 1] for two classes."}
-      - {name: predict, kind: method, task: classification, shape: "(n_samples,)",
-         note: "Class labels. Same as a 0.5 cut-off on predict_proba[:, 1]."}
-      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
-         note: "One value per row. Undo a log target before reporting errors."}
-      - {name: feature_importances_, kind: attribute, task: null, shape: "(n_features,)",
-         note: "One score per input column. Check importance_type."}
-      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)",
-         note: "Class labels, in the column order of predict_proba."}
-      - {name: best_iteration, kind: attribute, task: null, shape: "int",
-         note: "Only set when early stopping runs. Counts from 0."}
-    next_step: ROC AUC and PR curves need probabilities, not labels. Undo a log target first.
+      - name: predict_proba
+        kind: method
+        task: classification
+        shape: "(n_samples, n_classes)"
+        object_type: numpy.ndarray
+        example: "[[0.82, 0.18],\n [0.27, 0.73]]"
+        shape_explanation: >-
+          A two-dimensional table. The shape is written as (rows, columns), in that order.
+          n_samples is the number of input rows or cases being predicted. n_classes is the
+          number of possible categories. The example has 2 cases and 2 classes, so its
+          concrete shape is (2, 2).
+        note: "One column per class, in classes_ order. Keep [:, 1] for two classes."
+      - name: predict
+        kind: method
+        task: classification
+        shape: "(n_samples,)"
+        object_type: numpy.ndarray
+        example: "[0, 1, 1]"
+        shape_explanation: >-
+          A one-dimensional array. n_samples is the number of input rows or cases being
+          predicted. There is one class label for each case. The trailing comma in
+          (n_samples,) means the array has one dimension. The example contains 3 labels,
+          so its concrete shape is (3,).
+        note: "Class labels. Same as a 0.5 cut-off on predict_proba[:, 1]."
+      - name: predict
+        kind: method
+        task: regression
+        shape: "(n_samples,)"
+        object_type: numpy.ndarray
+        example: "[245000.0, 318500.0]"
+        shape_explanation: >-
+          A one-dimensional array. n_samples is the number of input rows or cases being
+          predicted. There is one predicted value for each case. The trailing comma in
+          (n_samples,) means the array has one dimension. The example contains 2 predictions,
+          so its concrete shape is (2,).
+        note: "One value per row. Undo a log target before reporting errors."
+      - name: feature_importances_
+        kind: attribute
+        task: null
+        shape: "(n_features,)"
+        object_type: numpy.ndarray
+        example: "[0.52, 0.31, 0.17]"
+        shape_explanation: >-
+          A one-dimensional array. n_features is the number of input columns or features.
+          There is one importance score for each feature. The trailing comma in (n_features,)
+          means the array has one dimension. The example contains 3 scores, so its concrete
+          shape is (3,).
+        note: "One score per input column. Check importance_type."
+      - name: classes_
+        kind: attribute
+        task: classification
+        shape: "(n_classes,)"
+        object_type: numpy.ndarray
+        example: "[0, 1]"
+        shape_explanation: >-
+          A one-dimensional array. n_classes is the number of possible categories. There is
+          one label for each class. The trailing comma in (n_classes,) means the array has one
+          dimension. The example contains 2 class labels, so its concrete shape is (2,).
+        note: "Class labels, in the column order of predict_proba."
+      - name: best_iteration
+        kind: attribute
+        task: null
+        shape: "scalar"
+        object_type: int
+        example: "42"
+        shape_explanation: >-
+          A scalar is one value, not an array. It has no rows or columns. The example is the
+          single integer 42, so its shape is scalar.
+        note: "Only set when early stopping runs. Counts from 0."
+    next_step: null
+    guidance:
+      - task: classification
+        text: Use probability scores from y_proba or y_score for ROC AUC and PR curves. Use y_pred for label-based metrics such as accuracy or a confusion matrix.
+      - task: regression
+        text: Reverse a target transform before interpreting y_pred or reporting errors. Use np.expm1 only after np.log1p.
     snippet: |
       # xgboost 3.4.1
       import numpy as np
@@ -104,18 +181,39 @@ slots:
       X, y = load_breast_cancer(return_X_y=True)
       X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
 
-      model = XGBClassifier(n_estimators=50).fit(X_train, y_train)
-      proba = model.predict_proba(X_test)
-      print(proba.shape)
-      y_score = proba[:, 1]
-      print(y_score.shape)
+      model = XGBClassifier(
+          n_estimators=50,
+          max_depth=3,
+          n_jobs=1,
+          random_state=0,
+      ).fit(X_train, y_train)
+      y_proba = model.predict_proba(X_test[:3])
+      y_score = y_proba[:, 1]
+      y_pred = model.predict(X_test[:3])
+      print("classification y_proba:")
+      print(np.round(y_proba, 3))
+      print("classification y_score:", np.round(y_score, 3))
+      print("classification y_pred:", y_pred)
 
       # Regression on a log target: undo it before reporting errors.
       Xd, yd = load_diabetes(return_X_y=True)
-      reg = XGBRegressor(n_estimators=50).fit(Xd, np.log1p(yd))
-      y_pred = np.expm1(reg.predict(Xd))
-      print(y_pred.shape)
+      reg = XGBRegressor(
+          n_estimators=50,
+          max_depth=3,
+          n_jobs=1,
+          random_state=0,
+      ).fit(Xd, np.log1p(yd))
+      y_pred = np.expm1(reg.predict(Xd[:3]))
+      print("regression y_pred:", np.round(y_pred, 1))
     snippet_library: xgboost
+    output: |
+      classification y_proba:
+      [[0.999 0.001]
+       [0.014 0.986]
+       [0.001 0.999]]
+      classification y_score: [0.001 0.986 0.999]
+      classification y_pred: [0 1 1]
+      regression y_pred: [174.1  81.8 148.9]
     visual: both
   catch_outs:
     - Without early_stopping_rounds, n_estimators alone will overfit.
@@ -124,18 +222,48 @@ slots:
     - enable_categorical already defaults to True here.
   key_settings:
     tier1:
-      - {name: n_estimators, page: n-estimators}
-      - {name: learning_rate, page: learning-rate}
-      - {name: max_depth, page: max-depth}
-      - {name: early_stopping_rounds, page: early-stopping}
+      - name: n_estimators
+        page: n-estimators
+        controls: The maximum number of boosting rounds, with one tree added per round.
+        effect: More rounds can learn more detail, but take longer and can overfit.
+      - name: learning_rate
+        page: learning-rate
+        controls: How much each new tree changes the ensemble prediction.
+        effect: A smaller value is more conservative, but usually needs more trees.
+      - name: max_depth
+        page: max-depth
+        controls: The maximum depth allowed for each tree.
+        effect: Deeper trees learn more interactions, but use more memory and can overfit.
+      - name: early_stopping_rounds
+        page: early-stopping
+        controls: How many rounds may pass without validation-score improvement.
+        effect: A smaller value stops sooner, but may stop before later gains.
     tier2:
-      - {name: subsample, page: null}
-      - {name: colsample_bytree, page: null}
-      - {name: min_child_weight, page: null}
+      - name: subsample
+        page: null
+        controls: The fraction of training rows sampled before each boosting round.
+        effect: A smaller fraction can limit overfitting, but too little data can weaken each tree.
+      - name: colsample_bytree
+        page: null
+        controls: The fraction of feature columns available when each tree is built.
+        effect: A smaller fraction can limit overfitting, but may hide useful features from a tree.
+      - name: min_child_weight
+        page: null
+        controls: The minimum summed instance weight required in a child node.
+        effect: A larger value prevents small leaves, but can miss useful local patterns.
     tier3:
-      - {name: reg_lambda, page: null}
-      - {name: reg_alpha, page: null}
-      - {name: gamma, page: null}
+      - name: reg_lambda
+        page: null
+        controls: The L2 penalty applied to leaf weights.
+        effect: A larger penalty makes leaf scores more conservative, but can underfit.
+      - name: reg_alpha
+        page: null
+        controls: The L1 penalty applied to leaf weights.
+        effect: A larger penalty makes the model more conservative, but can underfit.
+      - name: gamma
+        page: null
+        controls: The minimum loss reduction required to add a split.
+        effect: A larger value makes fewer splits, but can miss useful structure.
   watch_it_work:
     dataset: ames
     control: {name: n_estimators, min: 1, max: 200, step: 1, default: 50}
@@ -143,6 +271,52 @@ slots:
     idea: Build small trees one after another, each fixing the mistakes of the last.
     analogy: A team correcting an essay, each person only fixing what is still wrong.
     animation: model/boosting-sequence
+    goal: Learn a strong predictor while penalising trees that are more complex than the data justifies.
+    steps:
+      - Begin with one base prediction for every row.
+      - Measure how the current predictions affect the chosen loss.
+      - Build one tree whose leaf scores improve that loss.
+      - Shrink the new tree's contribution by the learning rate.
+      - Add the tree to the existing prediction and repeat.
+      - Stop when the round limit is reached or validation performance stops improving.
+    math:
+      notation:
+        - {symbol: "i, j, t", meaning: "Indices for training rows, leaves, and boosting rounds."}
+        - {symbol: "Σ", meaning: "Add the following quantity over the shown index."}
+        - {symbol: "∂", meaning: "Take a derivative while holding the other quantities fixed."}
+        - {symbol: "x_i and y_i", meaning: "The features and observed target for training row i."}
+        - {symbol: "ŷ_i or ŷ_i^(t)", meaning: "The ensemble score for row i, optionally after round t."}
+        - {symbol: "f_t", meaning: "The new tree added at round t."}
+        - {symbol: "η", meaning: "The learning rate that shrinks each new tree's contribution."}
+        - {symbol: "l", meaning: "The training loss for one observed target and prediction."}
+        - {symbol: "g_i", meaning: "The first derivative of loss at row i's current prediction."}
+        - {symbol: "h_i", meaning: "The second derivative of loss at row i's current prediction."}
+        - {symbol: "T", meaning: "The number of leaves in one tree."}
+        - {symbol: "w_j and w_j*", meaning: "A leaf score and its best value for the fixed tree."}
+        - {symbol: "G_j and H_j", meaning: "The sums of g_i and h_i for rows reaching leaf j."}
+        - {symbol: "G_L, H_L, G_R, H_R", meaning: "Those gradient and Hessian sums for a split's left and right leaves."}
+        - {symbol: "γ", meaning: "The penalty for adding a leaf, controlled by gamma."}
+        - {symbol: "λ", meaning: "The L2 penalty on leaf scores, controlled by reg_lambda."}
+        - {symbol: "obj^(t)", meaning: "The approximate objective for the tree added at round t."}
+        - {symbol: "Gain", meaning: "The objective improvement from making one split."}
+        - {symbol: "p_i", meaning: "The predicted positive-class probability for row i."}
+        - {symbol: "e", meaning: "The base of the natural logarithm."}
+      equations:
+        - expression: "ŷ_i^(t) = ŷ_i^(t-1) + η f_t(x_i)"
+          meaning: Each round adds one shrunken tree to the prediction already learned.
+        - expression: "g_i = ∂l(y_i, ŷ_i^(t-1)) / ∂ŷ_i^(t-1)"
+          meaning: The gradient says which direction reduces row i's loss.
+        - expression: "h_i = ∂²l(y_i, ŷ_i^(t-1)) / ∂(ŷ_i^(t-1))²"
+          meaning: The Hessian says how sharply row i's loss curves.
+        - expression: "obj^(t) ≈ Σ_j [G_j w_j + (1/2)(H_j + λ)w_j²] + γT"
+          meaning: XGBoost scores a tree using loss derivatives and a complexity penalty.
+        - expression: "w_j* = -G_j / (H_j + λ)"
+          meaning: This is the best score for leaf j when its rows are fixed.
+        - expression: "Gain = (1/2)[G_L²/(H_L+λ) + G_R²/(H_R+λ) - (G_L+G_R)²/(H_L+H_R+λ)] - γ"
+          meaning: XGBoost keeps a split only when its improvement clears the leaf penalty.
+        - expression: "p_i = 1 / (1 + e^(-ŷ_i))"
+          meaning: This score-to-probability link applies only to the binary logistic objective.
+      prediction: Regression returns its score directly. Binary logistic classification transforms the score with the equation above.
     good_at: [tabular data, non-linear effects, missing values]
     bad_at: [extrapolation, tiny data, raw text]
     vs_siblings:

@@ -312,13 +312,17 @@ def test_stem_cap_exactly_seven_ok(tree):
 WOC = {
     "items": [
         {"name": "predict_proba", "kind": "method", "task": "classification",
-         "shape": "(n_samples, n_classes)", "note": "One column per class, in classes_ order."},
+         "shape": "(n_samples, n_classes)", "note": "One column per class, in classes_ order.",
+         "object_type": "numpy.ndarray", "example": "[[0.8, 0.2]]",
+         "shape_explanation": "A table with one row per case and one column per class."},
         {"name": "best_iteration", "kind": "attribute", "task": None,
          "shape": "int", "note": "Round that scored best on the validation set."},
     ],
     "next_step": "Keep [:, 1] as y_score for ROC AUC.",
+    "guidance": [{"task": "classification", "text": "Use scores for ranking metrics."}],
     "snippet": "# xgboost 3.4.1\nprint(1)\n",
     "snippet_library": "xgboost",
+    "output": "1\n",
     "visual": "proba_table",
 }
 XGB_CLF = "extraction/xgboost/xgboost.XGBClassifier.json"
@@ -393,6 +397,19 @@ def test_what_comes_out_schema_rejections(tree):
     has(tree, XGB, "slots.what_comes_out", "not valid under any")
     with_woc(tree)
     edit(tree, XGB, lambda d: d["slots"]["what_comes_out"].update(items=[]))
+    has(tree, XGB, "slots.what_comes_out", "not valid under any")
+    with_woc(tree, output="")
+    has(tree, XGB, "slots.what_comes_out", "not valid under any")
+    with_woc(tree, guidance=[])
+    has(tree, XGB, "slots.what_comes_out", "not valid under any")
+    with_woc(tree)
+    edit(tree, XGB, lambda d: d["slots"]["what_comes_out"]["items"][0].update(example=""))
+    has(tree, XGB, "slots.what_comes_out", "not valid under any")
+    with_woc(tree)
+    edit(tree, XGB, lambda d: d["slots"]["what_comes_out"]["items"][0].update(shape_explanation=""))
+    has(tree, XGB, "slots.what_comes_out", "not valid under any")
+    with_woc(tree)
+    edit(tree, XGB, lambda d: d["slots"]["what_comes_out"].pop("snippet"))
     has(tree, XGB, "slots.what_comes_out", "not valid under any")
 
 

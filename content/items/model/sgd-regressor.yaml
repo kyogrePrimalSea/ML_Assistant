@@ -1,136 +1,332 @@
 id: sgd-regressor
 plain_name: SGDRegressor
 code_name: SGDRegressor
-aliases: [sgd regressor, stochastic gradient descent regressor]
+aliases:
+- sgd regressor
+- stochastic gradient descent regressor
 stage: model
 family: model.awkward.big
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [large data, streaming data]
-targets: [sklearn.linear_model.SGDRegressor]
-pairs_with: [linearexplainer]
+question_tags:
+- large data
+- streaming data
+targets:
+- sklearn.linear_model.SGDRegressor
+pairs_with:
+- linearexplainer
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.SGDRegressor.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.SGDRegressor.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: [regression]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: ames, shape: fit_line}
+    hero:
+      kind: model
+      dataset: ames
+      shape: fit_line
     line: Fits a straight line to numbers, a small step at a time.
   quick_facts:
     data_size: Millions of rows; can learn in batches
   use_avoid:
-    use_when: [millions of rows, streaming data, straight-line trend]
-    avoid_when: [small data, curved trend]
+    use_when:
+    - millions of rows
+    - streaming data
+    - straight-line trend
+    avoid_when:
+    - small data
+    - curved trend
   prep:
-    - step: {family: transform.scale.rescale}
-      status: required
-      why: Unequal column sizes can make the fit diverge.
-      condition: null
-      unless: null
-    - step: {family: clean.impute}
-      status: required
-      why: Linear models reject missing values.
-      condition: {has_missing: true}
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Text categories must become numbers.
-      condition: {has_categoricals: true}
-      unless: null
+  - step:
+      family: transform.scale.rescale
+    status: required
+    why: Unequal column sizes can make the fit diverge.
+    condition: null
+    unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Linear models reject missing values.
+    condition:
+      has_missing: true
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Text categories must become numbers.
+    condition:
+      has_categoricals: true
+    unless: null
   code:
-    - library: scikit-learn
-      target: sklearn.linear_model.SGDRegressor
-      why_this_library: Same fit and score API as other scikit-learn models.
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import load_diabetes
-        from sklearn.linear_model import SGDRegressor
-        from sklearn.model_selection import train_test_split
-        from sklearn.pipeline import make_pipeline
-        from sklearn.preprocessing import StandardScaler
+  - library: scikit-learn
+    target: sklearn.linear_model.SGDRegressor
+    why_this_library: Same fit and score API as other scikit-learn models.
+    snippet: '# scikit-learn 1.9.1
 
-        X, y = load_diabetes(return_X_y=True)
-        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
-
-        model = make_pipeline(StandardScaler(), SGDRegressor(random_state=0))
-        model.fit(X_train, y_train)
-        print(round(model.score(X_test, y_test), 3))
-  what_comes_out:
-    items:
-      - {name: predict, kind: method, task: null, shape: "(n_samples,)",
-         note: "One value per row."}
-      - {name: score, kind: method, task: null, shape: "float",
-         note: "R-squared on the rows you pass in."}
-      - {name: coef_, kind: attribute, task: null, shape: "(n_features,)",
-         note: "One weight per input column."}
-      - {name: intercept_, kind: attribute, task: null, shape: "(1,)",
-         note: "The offset added to every prediction."}
-      - {name: n_iter_, kind: attribute, task: null, shape: "int",
-         note: "Passes used. At max_iter it may not have converged."}
-      - {name: n_features_in_, kind: attribute, task: null, shape: "int",
-         note: "Number of input columns seen in fit."}
-      - {name: feature_names_in_, kind: attribute, task: null, shape: "(n_features_in_,)",
-         note: "Column names. Set only when fit gets a DataFrame."}
-    next_step: Check residuals against fitted values before trusting the line.
-    snippet: |
-      # scikit-learn 1.9.1
       from sklearn.datasets import load_diabetes
+
       from sklearn.linear_model import SGDRegressor
+
       from sklearn.model_selection import train_test_split
+
       from sklearn.pipeline import make_pipeline
+
       from sklearn.preprocessing import StandardScaler
 
+
       X, y = load_diabetes(return_X_y=True)
+
       X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
 
       model = make_pipeline(StandardScaler(), SGDRegressor(random_state=0))
+
       model.fit(X_train, y_train)
+
       sgd = model[-1]
-      print(model.predict(X_test).shape)
-      print(sgd.coef_.shape)
-      print(sgd.intercept_.shape)
-      print(sgd.n_iter_)
-      print(sgd.n_features_in_)
+
+      y_pred = model.predict(X_test[:3])
+
+      print("y_pred:", y_pred.round(1))
+
+      print("coef_ shape:", sgd.coef_.shape)
+
+      print("n_iter_:", sgd.n_iter_)
+
+      '
+    output: 'y_pred: [239.9 250.7 163.8]
+
+      coef_ shape: (10,)
+
+      n_iter_: 33
+
+      '
+  what_comes_out:
+    items:
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[154.2, 120.5, 92.7]'
+      shape_explanation: A one-dimensional array with one continuous prediction per input row. n_samples
+        is the number of rows; this example has shape (3,).
+      note: One numeric estimate for every input row.
+    - name: score
+      kind: method
+      task: regression
+      shape: scalar
+      object_type: float
+      example: '0.42'
+      shape_explanation: A scalar number measuring explained variance relative to the target mean.
+      note: R-squared on the rows passed to score().
+    - name: coef_
+      kind: attribute
+      task: null
+      shape: (n_features,)
+      object_type: numpy.ndarray
+      example: '[0.42, -0.18, 0.73]'
+      shape_explanation: A one-dimensional array with one entry per feature. n_features is the number
+        of input columns; this example has shape (3,).
+      note: One fitted weight per input column.
+    - name: intercept_
+      kind: attribute
+      task: null
+      shape: (1,)
+      object_type: numpy.ndarray
+      example: '[12.5]'
+      shape_explanation: A one-dimensional array with one intercept for this single target; its shape
+        is (1,).
+      note: One fitted offset added to the weighted feature sum.
+    - name: n_iter_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: int
+      example: '8'
+      shape_explanation: A scalar integer count of completed data passes.
+      note: Number of passes used by fit().
+    - name: n_features_in_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: int
+      example: '10'
+      shape_explanation: A scalar integer count of the training feature columns.
+      note: Number of input columns seen during fit.
+    - name: partial_fit
+      kind: method
+      task: regression
+      shape: estimator object (no array shape)
+      object_type: SGDRegressor
+      example: SGDRegressor(...)
+      shape_explanation: partial_fit returns self, the same estimator after one incremental update. It
+        is a Python model object, not an array or predictions.
+      note: One incremental update call; it does not return predictions.
+    next_step: null
+    snippet: '# scikit-learn 1.9.1
+
+      from sklearn.datasets import load_diabetes
+
+      from sklearn.linear_model import SGDRegressor
+
+      from sklearn.model_selection import train_test_split
+
+      from sklearn.pipeline import make_pipeline
+
+      from sklearn.preprocessing import StandardScaler
+
+
+      X, y = load_diabetes(return_X_y=True)
+
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+      model = make_pipeline(StandardScaler(), SGDRegressor(random_state=0))
+
+      model.fit(X_train, y_train)
+
+      sgd = model[-1]
+
+      y_pred = model.predict(X_test[:3])
+
+      print("y_pred:", y_pred.round(1))
+
+      print("coef_ shape:", sgd.coef_.shape)
+
+      print("n_iter_:", sgd.n_iter_)
+
+      '
     snippet_library: scikit-learn
     visual: null
+    output: 'y_pred: [239.9 250.7 163.8]
+
+      coef_ shape: (10,)
+
+      n_iter_: 33
+
+      '
+    guidance:
+    - task: regression
+      text: Check residuals in target units. For streaming updates, call partial_fit on batches and keep
+        feature scaling consistent.
   catch_outs:
-    - Scale features first. Unequal column sizes can make it diverge.
-    - Stops at max_iter passes, even if not converged.
-    - Missing values and text fail. Impute and encode first.
+  - Scale features first. Unequal column sizes can make it diverge.
+  - Stops at max_iter passes, even if not converged.
+  - Missing values and text fail. Impute and encode first.
   key_settings:
     tier1:
-      - {name: loss, page: null}
-      - {name: penalty, page: null}
-      - {name: alpha, page: null}
+    - name: loss
+      page: null
+      controls: 'Per-row regression loss: squared, Huber, epsilon-insensitive, or squared epsilon-insensitive.'
+      effect: Robust or margin losses reduce sensitivity to some residuals but change the fitted target
+        trade-off.
+    - name: penalty
+      page: null
+      controls: 'Coefficient penalty: L2, L1, elastic net, or none.'
+      effect: L1 can set weights to zero; L2 shrinks smoothly; elastic net combines both.
+    - name: alpha
+      page: null
+      controls: Strength of the coefficient penalty and regularisation term.
+      effect: Larger alpha shrinks weights more and can underfit.
     tier2:
-      - {name: learning_rate, page: null}
-      - {name: eta0, page: null}
-      - {name: early_stopping, page: null}
+    - name: learning_rate
+      page: null
+      controls: Rule that changes the step size during updates.
+      effect: Adaptive or decaying rates can stabilise late training; a poor schedule may stall.
+    - name: eta0
+      page: null
+      controls: Initial or fixed learning rate, depending on learning_rate.
+      effect: Too large steps can overshoot; too small steps learn slowly.
+    - name: early_stopping
+      page: null
+      controls: Whether to stop when validation score stops improving.
+      effect: Can reduce wasted epochs and overfitting, but reserves validation rows.
     tier3:
-      - {name: average, page: null}
-      - {name: l1_ratio, page: null}
-      - {name: max_iter, page: null}
-  watch_it_work: {none: true}
+    - name: average
+      page: null
+      controls: Whether to use averaged SGD weights.
+      effect: Averaging often stabilises noisy updates but changes the final estimator.
+    - name: l1_ratio
+      page: null
+      controls: L1 share of the elastic-net penalty.
+      effect: Higher values encourage sparse weights; lower values act more like L2.
+    - name: max_iter
+      page: null
+      controls: Maximum passes over the training data.
+      effect: More passes allow convergence but cost time and can overfit.
+  watch_it_work:
+    none: true
   intuition:
     idea: Fit a line to numbers, nudging it with one batch of rows at a time.
     analogy: Tuning a radio dial in small turns, checking the sound after each turn.
     animation: none
-    good_at: [millions of rows, streaming data, straight-line trends]
-    bad_at: [curved trends, small data]
+    good_at:
+    - millions of rows
+    - streaming data
+    - straight-line trends
+    bad_at:
+    - curved trends
+    - small data
     vs_siblings:
-      - {page: linear-regression, note: "Same line, fitted all at once. statsmodels adds p-values."}
-      - {page: ridge, note: "Same penalty idea, solved directly rather than in steps."}
-      - {page: linear-svr, note: "Margin-based line for numbers. Fits all rows at once."}
+    - page: linear-regression
+      note: Same line, fitted all at once. statsmodels adds p-values.
+    - page: ridge
+      note: Same penalty idea, solved directly rather than in steps.
+    - page: linear-svr
+      note: Margin-based line for numbers. Fits all rows at once.
     read_more:
-      - Start with a flat guess line.
-      - Take one row or a small batch, and measure its error.
-      - Nudge the line to shrink that error.
-      - Repeat until max_iter, or the loss stops improving.
-  next: [know-feature-importance]
+    - Start with a flat guess line.
+    - Take one row or a small batch, and measure its error.
+    - Nudge the line to shrink that error.
+    - Repeat until max_iter, or the loss stops improving.
+    goal: Minimise a chosen regression loss plus a coefficient penalty using stochastic updates over rows.
+    steps:
+    - Start with initial weights and intercept
+    - Shuffle training rows and compute a loss gradient for a row or small batch
+    - Update the coefficients using the selected learning-rate schedule and penalty
+    - Repeat passes until tolerance or max_iter stops training.
+    math:
+      notation:
+      - symbol: x_i
+        meaning: Features for row i.
+      - symbol: y_i
+        meaning: Observed numeric target for row i.
+      - symbol: w
+        meaning: Coefficient vector.
+      - symbol: b
+        meaning: Intercept.
+      - symbol: η_t
+        meaning: Learning rate at update t.
+      - symbol: L_i
+        meaning: Selected loss for row i.
+      - symbol: R
+        meaning: Selected coefficient penalty.
+      - symbol: α
+        meaning: Penalty strength.
+      - symbol: r_i
+        meaning: Observed target minus prediction for row i.
+      - symbol: ε
+        meaning: Insensitive width used by epsilon-based regression losses.
+      - symbol: L_ε
+        meaning: Epsilon-insensitive loss for one residual.
+      equations:
+      - expression: w_(t+1) = w_t − η_t(∇L_i(w_t) + α∇R(w_t))
+        meaning: Each stochastic step follows one row’s loss gradient and the selected penalty.
+      - expression: L_ε(r_i)=max(0,|r_i|−ε)
+        meaning: Epsilon-insensitive SGD ignores residuals within epsilon and penalises violations outside
+          it.
+      prediction: predict(X_new) = X_new @ coef_ + intercept_; returns one numeric estimate per input
+        row.
+  next:
+  - know-feature-importance

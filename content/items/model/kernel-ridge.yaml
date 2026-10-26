@@ -1,92 +1,210 @@
 id: kernel-ridge
 plain_name: KernelRidge
 code_name: KernelRidge
-aliases: ["kernel ridge regression", "krr"]
+aliases:
+- kernel ridge regression
+- krr
 stage: model
 family: model.neighbours.kernel
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: ["small data", "curved trends", "fast fit"]
-targets: ["sklearn.kernel_ridge.KernelRidge"]
+question_tags:
+- small data
+- curved trends
+- fast fit
+targets:
+- sklearn.kernel_ridge.KernelRidge
 pairs_with: []
 clashes: []
-source_urls: ["https://scikit-learn.org/stable/modules/generated/sklearn.kernel_ridge.KernelRidge.html"]
-library_versions: {scikit-learn: "1.9.1"}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.kernel_ridge.KernelRidge.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: ["regression"]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: ames, shape: fit_line}
-    line: "Ridge regression that bends to follow a kernel."
+    hero:
+      kind: model
+      dataset: ames
+      shape: fit_line
+    line: Fit a smooth prediction function from pairwise kernel similarities, penalizing its dual weights.
   quick_facts:
-    data_size: "Small data"
+    data_size: Small data
   use_avoid:
-    use_when: ["small data", "curved trends", "need a fast fit"]
-    avoid_when: ["large data", "images or text", "need a simple formula"]
+    use_when:
+    - small data
+    - curved trends
+    - need a fast fit
+    avoid_when:
+    - large data
+    - images or text
+    - need a simple formula
   prep: []
   code:
-    - library: scikit-learn
-      target: sklearn.kernel_ridge.KernelRidge
-      why_this_library: "Built into scikit-learn; no extra install."
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import make_friedman1
-        from sklearn.kernel_ridge import KernelRidge
-        from sklearn.model_selection import train_test_split
-        from sklearn.pipeline import make_pipeline
-        from sklearn.preprocessing import StandardScaler
+  - library: scikit-learn
+    target: sklearn.kernel_ridge.KernelRidge
+    why_this_library: Built into scikit-learn; no extra install.
+    snippet: "# scikit-learn 1.9.1\nfrom sklearn.datasets import make_friedman1\nfrom sklearn.kernel_ridge\
+      \ import KernelRidge\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.pipeline\
+      \ import make_pipeline\nfrom sklearn.preprocessing import StandardScaler\n\nX, y = make_friedman1(n_samples=300,\
+      \ noise=0.5, random_state=0)\nX_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)\n\
+      \nmodel = make_pipeline(\n    StandardScaler(),\n    KernelRidge(alpha=0.1, kernel=\"rbf\"),\n)\n\
+      model.fit(X_train, y_train)\ny_pred = model.predict(X_test[:3])\nprint(\"y_pred:\", y_pred)\nprint(\"\
+      score:\", round(model.score(X_test, y_test), 3))"
+    output: 'y_pred: [13.5135731  12.08031406 20.72113109]
 
-        X, y = make_friedman1(n_samples=300, noise=0.5, random_state=0)
-        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+      score: 0.655
 
-        model = make_pipeline(
-            StandardScaler(),
-            KernelRidge(alpha=0.1, kernel="rbf"),
-        )
-        model.fit(X_train, y_train)
-        print(round(model.score(X_test, y_test), 3))
+      '
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
-         note: "One value per row."}
-      - {name: score, kind: method, task: regression, shape: "float",
-         note: "R squared on the data you pass in."}
-      - {name: dual_coef_, kind: attribute, task: null, shape: "(n_samples,)",
-         note: "One weight per training row."}
-      - {name: X_fit_, kind: attribute, task: null, shape: "(n_samples, n_features)",
-         note: "Training rows kept for predicting."}
-    next_step: "Try a few alpha values; the default alpha is 1."
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples,)
+      note: One value per row.
+      object_type: numpy.ndarray
+      example: '[0.25, 0.40, 0.65]'
+      shape_explanation: One predicted value per query row; three values give n_samples=3 and shape (3,).
+    - name: score
+      kind: method
+      task: regression
+      shape: scalar
+      note: R² on supplied data; 1 is perfect and 0 matches the mean baseline.
+      object_type: float
+      example: '0.82'
+      shape_explanation: A scalar is one value with no array dimensions; 0.82 is one score.
+    - name: dual_coef_
+      kind: attribute
+      task: null
+      shape: (n_samples,)
+      note: One weight per training row.
+      object_type: numpy.ndarray
+      example: '[0.2, -0.5, 0.3]'
+      shape_explanation: One coefficient per training row; this example has 3 rows, so shape (3,).
+    - name: X_fit_
+      kind: attribute
+      task: null
+      shape: (n_samples, n_features)
+      note: Training rows kept for predicting.
+      object_type: numpy.ndarray
+      example: '[[0.2, -0.1], [1.0, 0.4]]'
+      shape_explanation: Stored training features; this fictional example has 2 rows and 2 columns, shape
+        (2, 2).
+    next_step: Try a few alpha values; the default alpha is 1.
     visual: regression_preds
+    snippet: '# scikit-learn 1.9.1
+
+      from sklearn.datasets import make_friedman1
+
+      from sklearn.kernel_ridge import KernelRidge
+
+
+      X, y = make_friedman1(n_samples=100, noise=0.5, random_state=0)
+
+      model = KernelRidge(alpha=0.1, kernel="rbf").fit(X, y)
+
+      y_pred = model.predict(X[:3])
+
+      print("y_pred:", y_pred.round(3))
+
+      print("dual_coef_ shape:", model.dual_coef_.shape)
+
+      print("X_fit_ shape:", model.X_fit_.shape)
+
+      '
+    snippet_library: scikit-learn
+    output: 'y_pred: [16.717 17.912 19.304]
+
+      dual_coef_ shape: (100,)
+
+      X_fit_ shape: (100, 10)
+
+      '
   catch_outs:
-    - "kernel defaults to 'linear'; set 'rbf' to fit curves."
-    - "Larger alpha means stronger regularization."
-    - "Keeps every training row, so memory grows with the data."
+  - kernel defaults to 'linear'; set 'rbf' to fit curves.
+  - Larger alpha means stronger regularization.
+  - Keeps every training row, so memory grows with the data.
   key_settings:
     tier1:
-      - {name: kernel, page: null}
-      - {name: alpha, page: null}
-      - {name: gamma, page: null}
+    - name: kernel
+      page: null
+      controls: Similarity function, such as linear, polynomial, or RBF.
+      effect: Nonlinear kernels allow curved boundaries; precomputed expects a kernel matrix.
+    - name: alpha
+      page: null
+      controls: L2 penalty on the dual coefficients.
+      effect: Larger alpha shrinks the fitted coefficients more.
+    - name: gamma
+      page: null
+      controls: Kernel coefficient for RBF, polynomial, and sigmoid kernels.
+      effect: Larger gamma makes similarity fall off faster and can create more local fits.
     tier2:
-      - {name: degree, page: null}
-      - {name: coef0, page: null}
+    - name: degree
+      page: null
+      controls: Polynomial kernel degree.
+      effect: Higher degree makes the polynomial boundary more flexible.
+    - name: coef0
+      page: null
+      controls: Independent term used by polynomial and sigmoid kernels.
+      effect: It changes how higher-order and lower-order terms trade off.
     tier3:
-      - {name: kernel_params, page: null}
-  watch_it_work: {none: true}
+    - name: kernel_params
+      page: null
+      controls: Extra parameters for a callable kernel.
+      effect: They alter the callable similarity calculation.
+  watch_it_work:
+    none: true
   intuition:
-    idea: "Ridge regression on a kernel's view of similarity, so it can fit curves."
-    analogy: "A ruler that can bend to follow the points."
+    idea: Ridge regression on a kernel's view of similarity, so it can fit curves.
+    analogy: A ruler that can bend to follow the points.
     animation: none
-    good_at: ["small data", "curved trends", "smooth fits"]
-    bad_at: ["large data", "images or text", "a simple formula"]
+    good_at:
+    - small data
+    - curved trends
+    - smooth fits
+    bad_at:
+    - large data
+    - images or text
+    - a simple formula
     vs_siblings:
-      - {page: svr, note: "SVR ignores errors inside a tube. Kernel ridge does not."}
-    read_more:
-      - "Start with a kernel that says how alike rows are."
-      - "Solve for one weight per training row."
-      - "Larger alpha means stronger regularization."
+    - page: svr
+      note: SVR ignores errors inside a tube. Kernel ridge does not.
+    goal: Fit a kernel similarity-based regression function by minimizing squared error plus an L2 penalty.
+    math:
+      notation:
+      - symbol: K
+        meaning: n by n training kernel matrix
+      - symbol: y
+        meaning: vector of n training targets
+      - symbol: α
+        meaning: n fitted dual coefficients
+      - symbol: λ
+        meaning: positive regularization strength, exposed as alpha
+      - symbol: k(x,X)
+        meaning: similarities from query x to training rows
+      equations:
+      - expression: α=(K+λI)⁻¹y
+        meaning: Closed-form dual solution for squared loss with L2 regularization.
+      - expression: f(x)=k(x,X)ᵀα
+        meaning: Prediction is the weighted sum of query-to-training kernel similarities.
+      - expression: min_α ||y-Kα||²+λ αᵀKα
+        meaning: Fit training targets while penalizing large kernel-space coefficients.
+      prediction: Solve dual ridge weights, then sum each query’s kernel similarities weighted by those
+        coefficients.
+    read_more: &id001
+    - Compute the training kernel matrix K from pairwise row similarities.
+    - Solve the regularized linear system for one dual coefficient per training row.
+    - For each query, combine its kernel similarities with the fitted coefficients.
+    steps: *id001
   next: []

@@ -1,144 +1,319 @@
 id: rusboostclassifier
 plain_name: RUSBoostClassifier
 code_name: RUSBoostClassifier
-aliases: [rus boost]
+aliases:
+- rus boost
 stage: model
 family: model.trees.balanced
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: [rare class, imbalanced classes, tabular data]
-targets: [imblearn.ensemble.RUSBoostClassifier]
+question_tags:
+- rare class
+- imbalanced classes
+- tabular data
+targets:
+- imblearn.ensemble.RUSBoostClassifier
 pairs_with: []
 clashes: []
-source_urls: ['https://imbalanced-learn.org/stable/references/generated/imblearn.ensemble.RUSBoostClassifier.html']
-library_versions: {imbalanced-learn: 0.14.2}
+source_urls:
+- https://imbalanced-learn.org/stable/references/generated/imblearn.ensemble.RUSBoostClassifier.html
+library_versions:
+  imbalanced-learn: 0.14.2
 reviewed: false
 rules:
-  task_types: [classification]
+  task_types:
+  - classification
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: breast-cancer, shape: boundary}
-    line: "Boosting, with the common class under-sampled each round."
+    hero:
+      kind: model
+      dataset: breast-cancer
+      shape: boundary
+    line: Boosting, with the common class under-sampled each round.
   quick_facts:
     data_size: Tabular data, one rare class
   use_avoid:
-    use_when: [one class is rare, tabular data, want boosting]
-    avoid_when: [classes already balanced, images or text, missing values present]
+    use_when:
+    - one class is rare
+    - tabular data
+    - want boosting
+    avoid_when:
+    - classes already balanced
+    - images or text
+    - missing values present
   prep:
-    - step: {family: transform.scale.rescale}
-      status: recommended
-      why: Needed if the base learner is not a tree.
-      condition: null
-      unless: null
-    - step: {family: clean.impute}
-      status: required
-      why: Missing values stop fit. Impute them first.
-      condition: null
-      unless: null
-    - step: {family: transform.encode.features}
-      status: required
-      why: Text categories must become numbers.
-      condition: {has_categoricals: true}
-      unless: null
-    - step: {family: transform.rebalance.over}
-      status: not_needed
-      why: Nothing is copied. Each round under-samples instead.
-      condition: null
-      unless: null
-    - step: {family: transform.rebalance.under}
-      status: not_needed
-      why: Each round already under-samples the common class.
-      condition: null
-      unless: null
+  - step:
+      family: transform.scale.rescale
+    status: recommended
+    why: Needed if the base learner is not a tree.
+    condition: null
+    unless: null
+  - step:
+      family: clean.impute
+    status: required
+    why: Missing values stop fit. Impute them first.
+    condition: null
+    unless: null
+  - step:
+      family: transform.encode.features
+    status: required
+    why: Text categories must become numbers.
+    condition:
+      has_categoricals: true
+    unless: null
+  - step:
+      family: transform.rebalance.over
+    status: not_needed
+    why: Nothing is copied. Each round under-samples instead.
+    condition: null
+    unless: null
+  - step:
+      family: transform.rebalance.under
+    status: not_needed
+    why: Each round already under-samples the common class.
+    condition: null
+    unless: null
   code:
-    - library: imbalanced-learn
-      target: imblearn.ensemble.RUSBoostClassifier
-      why_this_library: Under-samples each boosting round, so no new rows.
-      snippet: |
-        # imbalanced-learn 0.14.2
-        from imblearn.ensemble import RUSBoostClassifier
-        from sklearn.datasets import make_classification
-        from sklearn.metrics import balanced_accuracy_score
-        from sklearn.model_selection import train_test_split
-
-        X, y = make_classification(
-            n_samples=1000, weights=[0.9, 0.1], random_state=0
-        )
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, stratify=y, random_state=0
-        )
-
-        model = RUSBoostClassifier(n_estimators=50, random_state=0)
-        model.fit(X_train, y_train)
-        print(balanced_accuracy_score(y_test, model.predict(X_test)))
-  what_comes_out:
-    items:
-      - {name: predict, kind: method, task: classification, shape: "(n_samples,)",
-         note: "Class labels, one per row."}
-      - {name: predict_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
-         note: "One column per class, in classes_ order. Keep [:, 1] for two classes."}
-      - {name: decision_function, kind: method, task: classification, shape: "(n_samples,)",
-         note: "Summed vote score. Above 0 means class 1 for two classes."}
-      - {name: predict_log_proba, kind: method, task: classification, shape: "(n_samples, n_classes)",
-         note: "Log of the class probabilities, same column order."}
-      - {name: score, kind: method, task: classification, shape: "float",
-         note: "Accuracy on the data given. Misleading when classes are lopsided."}
-      - {name: feature_importances_, kind: attribute, task: null, shape: "(n_features,)",
-         note: "One score per input column."}
-      - {name: classes_, kind: attribute, task: classification, shape: "(n_classes,)",
-         note: "Class labels, in the column order of predict_proba."}
-      - {name: n_features_in_, kind: attribute, task: null, shape: "int",
-         note: "Number of input columns seen in fit."}
-    next_step: ROC AUC and PR curves need predict_proba, not predict.
+  - library: imbalanced-learn
+    target: imblearn.ensemble.RUSBoostClassifier
+    why_this_library: Under-samples each boosting round, so no new rows.
     snippet: |
       # imbalanced-learn 0.14.2
       from imblearn.ensemble import RUSBoostClassifier
       from sklearn.datasets import make_classification
       from sklearn.model_selection import train_test_split
+      from sklearn.tree import DecisionTreeClassifier
 
       X, y = make_classification(
-          n_samples=1000, weights=[0.9, 0.1], random_state=0
+          n_samples=160, n_features=5, n_informative=3, n_redundant=0,
+          weights=[0.9, 0.1], random_state=42,
       )
       X_train, X_test, y_train, y_test = train_test_split(
-          X, y, stratify=y, random_state=0
+          X, y, test_size=0.25, stratify=y, random_state=42
       )
-
-      model = RUSBoostClassifier(n_estimators=50, random_state=0)
+      model = RUSBoostClassifier(
+          estimator=DecisionTreeClassifier(max_depth=1, random_state=42),
+          n_estimators=8, learning_rate=0.1, random_state=42,
+      )
       model.fit(X_train, y_train)
-      print(model.predict_proba(X_test).shape)
-      print(model.decision_function(X_test).shape)
-      print(model.feature_importances_.shape)
+      y_pred = model.predict(X_test[:3])
+      y_proba = model.predict_proba(X_test[:3])
+      y_score = model.decision_function(X_test[:3])
+      print("y_pred:", y_pred)
+      print("y_proba:")
+      print(y_proba.round(3))
+      print("y_score:", y_score.round(3))
+      print("classes_:", model.classes_)
+      print("boosting rounds fitted:", len(model.estimators_))
+      print("round 0 sampled rows:", len(model.samplers_[0].sample_indices_))
+      print("estimator_weights_:", model.estimator_weights_.round(3))
+    output: |
+      y_pred: [0 0 0]
+      y_proba:
+      [[0.881 0.119]
+       [0.881 0.119]
+       [0.881 0.119]]
+      y_score: [-2. -2. -2.]
+      classes_: [0 1]
+      boosting rounds fitted: 8
+      round 0 sampled rows: 24
+      estimator_weights_: [0.337 0.164 0.262 0.141 0.229 0.121 0.109 0.108]
+  what_comes_out:
+    items:
+    - name: predict
+      kind: method
+      task: classification
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[0, 1, 0]'
+      shape_explanation: One prediction per input row. n_samples is the number of rows; this example has shape (3,).
+      note: Labels chosen from the fitted class scores/probabilities.
+    - name: predict_proba
+      kind: method
+      task: classification
+      shape: (n_samples, n_classes)
+      object_type: numpy.ndarray
+      example: '[[0.80, 0.20], [0.35, 0.65], [0.90, 0.10]]'
+      shape_explanation: A table with n_samples rows and n_classes columns. The example has 3 rows and 2 classes, shape (3, 2).
+      note: One probability column per class, ordered as classes_.
+    - name: decision_function
+      kind: method
+      task: classification
+      shape: (n_samples,) or (n_samples,n_classes)
+      object_type: numpy.ndarray
+      example: '[-0.6, 0.3, -0.8]'
+      shape_explanation: Binary output has one signed score per row, shape (3,). Multiclass output has one score per row and class.
+      note: Raw ensemble score, not a probability; positive binary scores favor classes_[1].
+    - name: classes_
+      kind: attribute
+      task: classification
+      shape: (n_classes,)
+      object_type: numpy.ndarray
+      example: '[0, 1]'
+      shape_explanation: A one-dimensional array with n_classes labels. This two-class example has shape (2,).
+      note: Labels in probability-column order.
+    - name: estimators_
+      kind: attribute
+      task: null
+      shape: (n_fitted_estimators,)
+      object_type: list[Classifier]
+      example: '[DecisionTreeClassifier(...), DecisionTreeClassifier(...)]'
+      shape_explanation: One fitted weak classifier per completed round; this concrete example shows 2 classifiers.
+      note: Weak learners fitted across boosting rounds; early stopping may make the list shorter than n_estimators.
+    - name: samplers_
+      kind: attribute
+      task: null
+      shape: (n_fitted_estimators,)
+      object_type: list[RandomUnderSampler]
+      example: '[RandomUnderSampler(...), RandomUnderSampler(...)]'
+      shape_explanation: One sampler per completed round; this concrete example shows 2 samplers.
+      note: Fitted under-sampler for each boosting round.
+    - name: estimator_weights_
+      kind: attribute
+      task: null
+      shape: (n_estimators,)
+      object_type: numpy.ndarray
+      example: '[1.0, 0.6, 0.3]'
+      shape_explanation: One weight per boosting round. This example shows 3 weights, so its shape is (3,).
+      note: Boosting contribution weight for each fitted weak learner.
+    - name: feature_importances_
+      kind: attribute
+      task: null
+      shape: (n_features,)
+      object_type: numpy.ndarray
+      example: '[0.28, 0.11, 0.24, 0.19, 0.18]'
+      shape_explanation: One value per input feature. n_features is the number of columns; this example has shape (5,).
+      note: Importance aggregated from the fitted weak learners.
+    next_step: null
+    snippet: |
+      # imbalanced-learn 0.14.2
+      from imblearn.ensemble import RUSBoostClassifier
+      from sklearn.datasets import make_classification
+      from sklearn.model_selection import train_test_split
+      from sklearn.tree import DecisionTreeClassifier
+
+      X, y = make_classification(
+          n_samples=160, n_features=5, n_informative=3, n_redundant=0,
+          weights=[0.9, 0.1], random_state=42,
+      )
+      X_train, X_test, y_train, y_test = train_test_split(
+          X, y, test_size=0.25, stratify=y, random_state=42
+      )
+      model = RUSBoostClassifier(
+          estimator=DecisionTreeClassifier(max_depth=1, random_state=42),
+          n_estimators=8, learning_rate=0.1, random_state=42,
+      )
+      model.fit(X_train, y_train)
+      y_pred = model.predict(X_test[:3])
+      y_proba = model.predict_proba(X_test[:3])
+      y_score = model.decision_function(X_test[:3])
+      print("y_pred:", y_pred)
+      print("y_proba:")
+      print(y_proba.round(3))
+      print("y_score:", y_score.round(3))
+      print("classes_:", model.classes_)
+      print("boosting rounds fitted:", len(model.estimators_))
+      print("round 0 sampled rows:", len(model.samplers_[0].sample_indices_))
+      print("estimator_weights_:", model.estimator_weights_.round(3))
     snippet_library: imbalanced-learn
     visual: proba_table
+    guidance:
+    - task: classification
+      text: Use labels for confusion matrices, probabilities for probabilistic ranking, and balanced metrics when class counts differ.
+    output: |
+      y_pred: [0 0 0]
+      y_proba:
+      [[0.881 0.119]
+       [0.881 0.119]
+       [0.881 0.119]]
+      y_score: [-2. -2. -2.]
+      classes_: [0 1]
+      boosting rounds fitted: 8
+      round 0 sampled rows: 24
+      estimator_weights_: [0.337 0.164 0.262 0.141 0.229 0.121 0.109 0.108]
   catch_outs:
-    - Accuracy looks fine on lopsided data. Use balanced accuracy.
-    - Missing values stop fit. Impute them first.
-    - learning_rate and n_estimators trade off. Tune them together.
+  - Accuracy looks fine on lopsided data. Use balanced accuracy.
+  - Missing values stop fit. Impute them first.
+  - learning_rate and n_estimators trade off. Tune them together.
   key_settings:
     tier1:
-      - {name: sampling_strategy, page: null}
-      - {name: estimator, page: null}
-      - {name: learning_rate, page: learning-rate}
+    - name: sampling_strategy
+      page: null
+      controls: Class counts used by the under-sampler at each boosting round.
+      effect: More aggressive balancing removes more majority rows from every round.
+    - name: estimator
+      page: null
+      controls: Weak classifier fitted after each round’s under-sampling.
+      effect: More complex learners fit each sample better but can overfit and slow boosting.
+    - name: learning_rate
+      page: learning-rate
+      controls: Scales each boosted learner’s contribution.
+      effect: Smaller values are conservative and usually need more rounds.
     tier2:
-      - {name: n_estimators, page: n-estimators}
-      - {name: replacement, page: null}
+    - name: n_estimators
+      page: n-estimators
+      controls: Maximum number of boosting rounds.
+      effect: More rounds can improve fit but cost time and can overfit.
+    - name: replacement
+      page: null
+      controls: Whether the per-round under-sampler samples majority rows with replacement.
+      effect: Replacement allows repeats; without replacement each selected row is unique.
     tier3: []
-  watch_it_work: {none: true}
+  watch_it_work:
+    none: true
   intuition:
     idea: Boosting rounds, each under-sampling the common class.
     analogy: Coaches who each study a fair set of the hard cases.
     animation: none
-    good_at: [rare classes, tabular data, boosted accuracy]
-    bad_at: [tiny data, images or text, missing values]
+    good_at:
+    - rare classes
+    - tabular data
+    - boosted accuracy
+    bad_at:
+    - tiny data
+    - images or text
+    - missing values
     vs_siblings:
-      - {page: ada-boost, note: "Same boosting. Adds under-sampling each round."}
-      - {page: easyensembleclassifier, note: "Bags boosted models instead of boosting once."}
+    - page: ada-boost
+      note: Same boosting. Adds under-sampling each round.
+    - page: easyensembleclassifier
+      note: Bags boosted models instead of boosting once.
     read_more:
-      - Start with equal weight on every row.
-      - Under-sample the common class, then fit a learner.
-      - Re-weight the mistakes and repeat.
-  next: [but-imbalanced-score, but-wrong-cutoff]
+    - Start with equal weight on every row.
+    - Under-sample the common class, then fit a learner.
+    - Re-weight the mistakes and repeat.
+    goal: At every boosting round, under-sample the majority class, fit a weak learner, then update boosting weights.
+    steps:
+    - Begin with observation weights
+    - Under-sample the majority class for the current round
+    - Fit a weak classifier to that balanced subset
+    - Update boosting weights so later learners focus more on mistakes, then combine learner scores
+    - Stop at the maximum rounds or when the boosting fit terminates early.
+    math:
+      notation:
+      - symbol: t
+        meaning: Boosting round index.
+      - symbol: S_t
+        meaning: Balanced sample drawn for boosting round t.
+      - symbol: h_t
+        meaning: Weak classifier fitted at round t.
+      - symbol: α_t
+        meaning: Boosting weight determined by round t errors.
+      - symbol: η
+        meaning: learning_rate scaling each learner contribution.
+      - symbol: F_t
+        meaning: Combined score after round t.
+      equations:
+      - expression: F_t(x)=F_(t−1)(x)+ηα_t h_t(x)
+        meaning: Each weak learner adds a weighted vote after its round-specific resampling.
+      prediction: decision_function returns boosted scores; predict_proba returns class probabilities and predict returns labels.
+  next:
+  - but-imbalanced-score
+  - but-wrong-cutoff

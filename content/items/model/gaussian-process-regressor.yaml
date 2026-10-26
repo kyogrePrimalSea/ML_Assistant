@@ -1,96 +1,257 @@
 id: gaussian-process-regressor
 plain_name: GaussianProcessRegressor
 code_name: GaussianProcessRegressor
-aliases: ["gpr", "gaussian process regression", "gp regressor"]
+aliases:
+- gpr
+- gaussian process regression
+- gp regressor
 stage: model
 family: model.neighbours.gp
-tracks: [standard]
+tracks:
+- standard
 archetype: model
-question_tags: ["small data", "error bars", "uncertainty"]
-targets: ["sklearn.gaussian_process.GaussianProcessRegressor"]
+question_tags:
+- small data
+- error bars
+- uncertainty
+targets:
+- sklearn.gaussian_process.GaussianProcessRegressor
 pairs_with: []
 clashes: []
-source_urls: ["https://scikit-learn.org/stable/modules/generated/sklearn.gaussian_process.GaussianProcessRegressor.html"]
-library_versions: {scikit-learn: "1.9.1"}
+source_urls:
+- https://scikit-learn.org/stable/modules/generated/sklearn.gaussian_process.GaussianProcessRegressor.html
+library_versions:
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
-  task_types: ["regression"]
+  task_types:
+  - regression
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: model, dataset: ames, shape: fit_line}
-    line: "Predicts a value and a spread for each row."
+    hero:
+      kind: model
+      dataset: ames
+      shape: fit_line
+    line: Predicts a value and a spread for each row.
   quick_facts:
-    data_size: "Small data"
+    data_size: Small data
   use_avoid:
-    use_when: ["small data", "need error bars", "smooth curves"]
-    avoid_when: ["large data", "images or text", "need a simple formula"]
+    use_when:
+    - small data
+    - need error bars
+    - smooth curves
+    avoid_when:
+    - large data
+    - images or text
+    - need a simple formula
   prep: []
   code:
-    - library: scikit-learn
-      target: sklearn.gaussian_process.GaussianProcessRegressor
-      why_this_library: "Built into scikit-learn; returns a standard deviation too."
-      snippet: |
-        # scikit-learn 1.9.1
-        from sklearn.datasets import make_friedman1
-        from sklearn.gaussian_process import GaussianProcessRegressor
-        from sklearn.model_selection import train_test_split
-        from sklearn.pipeline import make_pipeline
-        from sklearn.preprocessing import StandardScaler
+  - library: scikit-learn
+    target: sklearn.gaussian_process.GaussianProcessRegressor
+    why_this_library: Built into scikit-learn; returns a standard deviation too.
+    snippet: "# scikit-learn 1.9.1\nfrom sklearn.datasets import make_friedman1\nfrom sklearn.gaussian_process import\
+      \ GaussianProcessRegressor\nfrom sklearn.gaussian_process.kernels import ConstantKernel, RBF\nfrom sklearn.model_selection\
+      \ import train_test_split\nfrom sklearn.pipeline import make_pipeline\nfrom sklearn.preprocessing import StandardScaler\n\
+      \nX, y = make_friedman1(n_samples=100, n_features=5, noise=0.4, random_state=0)\nX_train, X_test, y_train,\
+      \ y_test = train_test_split(X, y, random_state=0)\nmodel = make_pipeline(\n    StandardScaler(),\n    GaussianProcessRegressor(\n\
+      \        kernel=ConstantKernel(1.0, (0.1, 10.0)) * RBF(1.0, (0.1, 10.0)),\n        alpha=0.05,\n        normalize_y=True,\n\
+      \        random_state=0,\n    ),\n).fit(X_train, y_train)\ngp = model.named_steps[\"gaussianprocessregressor\"\
+      ]\ny_mean, y_std = model.predict(X_test[:3], return_std=True)\nprint(\"posterior mean:\", y_mean.round(2))\n\
+      print(\"posterior std:\", y_std.round(2))\nprint(\"score:\", round(model.score(X_test, y_test), 3))\n"
+    output: 'posterior mean: [14.73 15.34 17.5 ]
 
-        X, y = make_friedman1(n_samples=300, noise=0.5, random_state=0)
-        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+      posterior std: [0.86 0.57 1.16]
 
-        model = make_pipeline(
-            StandardScaler(),
-            GaussianProcessRegressor(normalize_y=True, random_state=0),
-        )
-        model.fit(X_train, y_train)
-        mean, std = model.predict(X_test, return_std=True)
-        print(std.shape)
-        print(round(model.score(X_test, y_test), 3))
+      score: 0.888
+
+      '
   what_comes_out:
     items:
-      - {name: predict, kind: method, task: regression, shape: "(n_samples,)",
-         note: "One value per row. return_std=True adds the spread."}
-      - {name: score, kind: method, task: regression, shape: "float",
-         note: "R squared on the data you pass in."}
-      - {name: sample_y, kind: method, task: regression, shape: "(n_samples, n_draws)",
-         note: "Random curves drawn from the fitted model."}
-      - {name: kernel_, kind: attribute, task: null, shape: "fitted kernel object",
-         note: "The kernel after fit, with tuned length scales."}
-    next_step: "Use predict(X, return_std=True) to get the error bars."
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples,)
+      object_type: numpy.ndarray
+      example: '[2.41, 3.08, 2.76]'
+      shape_explanation: For this single-target example, one posterior mean per 3 query rows gives shape (3,).
+      note: Default returns means; a multi-target fit adds a target axis.
+    - name: predict
+      kind: method
+      task: regression
+      shape: (n_samples,), (n_samples,)
+      object_type: tuple[numpy.ndarray,numpy.ndarray]
+      example: ([2.41, 3.08, 2.76], [0.31, 0.44, 0.28])
+      shape_explanation: 'return_std=True returns a tuple: posterior mean and standard deviation. Each array has
+        one value per 3 query rows, shape (3,).'
+      note: The second array is marginal posterior standard deviation, not predicted values.
+    - name: predict(return_cov=True)
+      kind: return
+      task: regression
+      shape: (n_samples,), (n_samples,n_samples)
+      object_type: tuple[numpy.ndarray,numpy.ndarray]
+      example: ([2.41, 3.08, 2.76], [[0.10, 0.02, 0.01], [0.02, 0.19, 0.03], [0.01, 0.03, 0.08]])
+      shape_explanation: return_cov=True returns mean values for 3 rows and their 3-by-3 covariance matrix, so the
+        tuple contains shapes (3,) and (3, 3).
+      note: The covariance array gives joint uncertainty across query rows.
+    - name: sample_y
+      kind: method
+      task: regression
+      shape: (n_samples, n_draws)
+      object_type: numpy.ndarray
+      example: '[[2.1, 2.7], [3.3, 2.9], [2.5, 2.8]]'
+      shape_explanation: Rows are 3 query inputs and columns are 2 sampled function draws, shape (3, 2).
+      note: Draws from the fitted posterior at query inputs.
+    - name: kernel_
+      kind: attribute
+      task: null
+      shape: kernel object
+      object_type: kernel object
+      example: 1.24**2 * RBF(length_scale=[0.8, 1.2])
+      shape_explanation: One fitted kernel object has no array axes. This fictional two-feature RBF uses one length
+        scale for each of its two feature dimensions.
+      note: Hyperparameters are optimized by maximizing log marginal likelihood.
+    - name: log_marginal_likelihood_value_
+      kind: attribute
+      task: null
+      shape: scalar
+      object_type: numpy.float64
+      example: '-32.415'
+      shape_explanation: One fitted likelihood value is a NumPy float64 scalar, not an array, so it has no array
+        dimensions.
+      note: Value of the log marginal likelihood at fitted kernel parameters.
+    - name: L_
+      kind: attribute
+      task: null
+      shape: (n_train, n_train)
+      object_type: numpy.ndarray
+      example: '[[1.0, 0.0], [0.2, 0.8]]'
+      shape_explanation: Rows and columns index training cases. This fictional example has 2 training rows, so its
+        matrix is (2, 2); 75 actual training rows produce (75, 75).
+      note: Cholesky factorization reflects cubic training and quadratic storage costs.
+    next_step: null
     visual: regression_preds
+    guidance:
+    - task: regression
+      text: Use the posterior mean for point metrics; inspect return_std or return_cov separately to assess uncertainty.
+    snippet: "# scikit-learn 1.9.1\nfrom sklearn.datasets import make_friedman1\nfrom sklearn.gaussian_process import\
+      \ GaussianProcessRegressor\nfrom sklearn.gaussian_process.kernels import ConstantKernel, RBF\nfrom sklearn.model_selection\
+      \ import train_test_split\nfrom sklearn.pipeline import make_pipeline\nfrom sklearn.preprocessing import StandardScaler\n\
+      \nX, y = make_friedman1(n_samples=100, n_features=5, noise=0.4, random_state=0)\nX_train, X_test, y_train,\
+      \ y_test = train_test_split(X, y, random_state=0)\nmodel = make_pipeline(StandardScaler(), GaussianProcessRegressor(\n\
+      \    kernel=ConstantKernel(1.0, (0.1, 10.0)) * RBF(1.0, (0.1, 10.0)),\n    alpha=0.05, normalize_y=True, random_state=0,\n\
+      )).fit(X_train, y_train)\ngp = model.named_steps[\"gaussianprocessregressor\"]\nmean, std = gp.predict(X_test[:3],\
+      \ return_std=True)\n_, cov = gp.predict(X_test[:3], return_cov=True)\ndraws = gp.sample_y(X_test[:3], n_samples=2,\
+      \ random_state=0)\nprint(\"mean/std:\", mean.round(2), std.round(2))\nprint(\"covariance shape:\", cov.shape)\n\
+      print(\"sample_y shape:\", draws.shape)\nprint(\"kernel_:\", gp.kernel_)\nprint(\"LML value:\", round(gp.log_marginal_likelihood_value_,\
+      \ 3))\nprint(\"L_ shape:\", gp.L_.shape)\n"
+    snippet_library: scikit-learn
+    output: 'mean/std: [18.55 19.71 20.93] [0.63 0.58 0.63]
+
+      covariance shape: (3, 3)
+
+      sample_y shape: (3, 2)
+
+      kernel_: 1.68**2 * RBF(length_scale=3.08)
+
+      LML value: -32.415
+
+      L_ shape: (75, 75)
+
+      '
   catch_outs:
-    - "normalize_y is off by default; turn it on to centre the targets."
-    - "alpha is added to the diagonal to avoid numerical errors."
-    - "Stores a copy of the training data by default."
-    - "Built for small data; training slows as rows grow."
+  - normalize_y is off by default; turn it on to centre the targets.
+  - alpha is added to the diagonal to avoid numerical errors.
+  - Stores a copy of the training data by default.
+  - Built for small data; training slows as rows grow.
   key_settings:
     tier1:
-      - {name: kernel, page: null}
-      - {name: alpha, page: null}
-      - {name: normalize_y, page: null}
-      - {name: n_restarts_optimizer, page: null}
+    - name: kernel
+      page: null
+      controls: Covariance function defining similarity and smoothness between input rows.
+      effect: A more appropriate kernel can model the pattern; a poor choice limits fit.
+    - name: alpha
+      page: null
+      controls: Noise variance added to the training kernel diagonal; scalar or one value per training row.
+      effect: More noise stabilizes factorization and smooths fit, but can hide signal.
+    - name: normalize_y
+      page: null
+      controls: Whether to center and scale targets before fitting, then reverse it for predictions.
+      effect: Normalization helps when the prior assumes standardized targets; predictions return to original units.
+    - name: n_restarts_optimizer
+      page: null
+      controls: Number of extra log-uniform starts for kernel hyperparameter optimization.
+      effect: More starts may find a better likelihood maximum but increase fitting time.
     tier2:
-      - {name: optimizer, page: null}
+    - name: optimizer
+      page: null
+      controls: Optimizer used to maximize log marginal likelihood over kernel parameters.
+      effect: None holds kernel parameters fixed; optimizing may improve fit but can find local optima.
     tier3:
-      - {name: copy_X_train, page: null}
-      - {name: n_targets, page: null}
-  watch_it_work: {none: true}
+    - name: copy_X_train
+      page: null
+      controls: Whether to keep a persistent copy of training inputs for later predictions.
+      effect: Copying uses more memory; without it, external edits to X can affect predictions.
+    - name: n_targets
+      page: null
+      controls: Number of outputs for prior sampling before fit; ignored once fitted.
+      effect: Set it only when drawing prior samples with multiple outputs; it does not alter fitted targets.
+  watch_it_work:
+    none: true
   intuition:
-    idea: "Learn a smooth curve through the points, and report how sure it is."
-    analogy: "A map with a best-guess line and a shaded zone of doubt."
+    idea: Learn a smooth curve through the points, and report how sure it is.
+    analogy: A map with a best-guess line and a shaded zone of doubt.
     animation: none
-    good_at: ["small data", "error bars", "smooth curves"]
-    bad_at: ["large data", "images or text", "fast training"]
+    good_at:
+    - small data
+    - error bars
+    - smooth curves
+    bad_at:
+    - large data
+    - images or text
+    - fast training
     vs_siblings:
-      - {page: kernel-ridge, note: "Same kernel idea. Kernel ridge gives no error bars."}
+    - page: kernel-ridge
+      note: Same kernel idea. Kernel ridge gives no error bars.
     read_more:
-      - "A kernel says how alike two rows are."
-      - "Fitting tunes the kernel to the training rows."
-      - "predict adds the spread when return_std is on."
+    - A kernel defines prior covariance; similar input rows have related function values.
+    - The fitted kernel parameters maximize log marginal likelihood.
+    - Dense Cholesky factorization is cubic in training rows and stores a quadratic matrix.
+    goal: Infer a smooth latent function and a posterior uncertainty from kernel similarities among training rows.
+    steps:
+    - Choose a kernel that defines prior covariance between rows.
+    - Add alpha to the training covariance diagonal to represent noise and stabilize factorization.
+    - Optimize kernel parameters by maximizing log marginal likelihood.
+    - Condition the Gaussian prior on observed targets to obtain a posterior mean and covariance.
+    - Return the mean and, when requested, standard deviation or covariance for query rows.
+    math:
+      notation:
+      - symbol: k(x,x′)
+        meaning: Kernel covariance between inputs x and x-prime.
+      - symbol: K
+        meaning: Training covariance matrix with alpha added to its diagonal.
+      - symbol: k_*
+        meaning: Covariances from training inputs to a query input.
+      - symbol: y
+        meaning: Observed training target vector.
+      - symbol: mu_*
+        meaning: Posterior predictive mean.
+      - symbol: sigma_*^2
+        meaning: Posterior predictive variance.
+      - symbol: n_train
+        meaning: Number of training rows used in the kernel matrix.
+      equations:
+      - expression: K = [k(x_i,x_j)] + alpha I
+        meaning: The kernel fills pairwise training covariances; alpha adds diagonal noise.
+      - expression: mu_* = k_*^T K^-1 y
+        meaning: The posterior mean weights training targets by their covariance with the query.
+      - expression: sigma_*^2 = k(x_*,x_*) - k_*^T K^-1 k_*
+        meaning: Uncertainty is prior query variance minus information supplied by training rows.
+      prediction: Means are point predictions; return_std gives marginal SD and return_cov joint covariance. Dense
+        fitting is cubic.
   next: []
