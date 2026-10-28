@@ -656,6 +656,9 @@
                   },
                   {
                     "$ref": "#/$defs/short_intuition"
+                  },
+                  {
+                    "$ref": "#/$defs/model_intuition"
                   }
                 ]
               }

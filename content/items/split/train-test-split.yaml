@@ -41,6 +41,7 @@ slots:
       why_this_library: One call returns the train and test pieces.
       snippet: |
         # scikit-learn 1.9.1
+        import numpy as np
         from sklearn.datasets import make_regression
         from sklearn.model_selection import train_test_split
 
@@ -49,23 +50,156 @@ slots:
             X, y, test_size=0.25, random_state=0
         )
 
-        print(X_train.shape, X_test.shape)
-  what_comes_out: {none: true}
+        print("X_train:", X_train.shape)
+        print("X_test:", X_test.shape)
+        print("y_train:", y_train.shape)
+        print("y_test:", y_test.shape)
+        again = train_test_split(X, y, test_size=0.25, random_state=0)
+        print("same split again:", np.array_equal(X_test, again[1]))
+        _, ordered_test = train_test_split(np.arange(8), test_size=0.25, shuffle=False)
+        print("shuffle=False test rows:", ordered_test)
+      output: |
+        X_train: (150, 3)
+        X_test: (50, 3)
+        y_train: (150,)
+        y_test: (50,)
+        same split again: True
+        shuffle=False test rows: [6 7]
+  what_comes_out:
+    items:
+      - name: X_train
+        kind: return
+        task: null
+        shape: "(n_train, n_features)"
+        object_type: numpy.ndarray
+        example: "[[0.4, -1.2, 0.9],\n [1.1, 0.3, -0.5]]"
+        shape_explanation: >-
+          A two-dimensional table, written (rows, columns). n_train is the number of
+          rows kept for training. n_features is the number of input columns. The example
+          has 2 rows and 3 columns, so its concrete shape is (2, 3). Made-up values.
+        note: "The rows the model learns from. Same type as the input you passed."
+      - name: X_test
+        kind: return
+        task: null
+        shape: "(n_test, n_features)"
+        object_type: numpy.ndarray
+        example: "[[-0.7, 0.2, 1.5]]"
+        shape_explanation: >-
+          A two-dimensional table, written (rows, columns). n_test is the number of rows
+          held back. It has the same n_features columns as X_train. The example has 1 row
+          and 3 columns, so its concrete shape is (1, 3). Made-up values.
+        note: "The held-back rows. Score on these once, after fitting."
+      - name: y_train
+        kind: return
+        task: null
+        shape: "(n_train,)"
+        object_type: numpy.ndarray
+        example: "[12.5, -3.1]"
+        shape_explanation: >-
+          A one-dimensional array. n_train is the number of training rows, one target per
+          row. The trailing comma in (n_train,) means one dimension. The example has 2
+          targets, so its concrete shape is (2,). Made-up values.
+        note: "Targets for X_train, in the same row order."
+      - name: y_test
+        kind: return
+        task: null
+        shape: "(n_test,)"
+        object_type: numpy.ndarray
+        example: "[7.8]"
+        shape_explanation: >-
+          A one-dimensional array. n_test is the number of held-back rows, one target per
+          row. The example has 1 target, so its concrete shape is (1,). Made-up values.
+        note: "Targets for X_test. Keep them away from fit."
+    next_step: null
+    snippet: |
+      # scikit-learn 1.9.1
+      import numpy as np
+      from sklearn.datasets import load_breast_cancer
+      from sklearn.model_selection import train_test_split
+
+      X, y = load_breast_cancer(return_X_y=True)
+      X_train, X_test, y_train, y_test = train_test_split(
+          X, y, test_size=0.2, stratify=y, random_state=0
+      )
+
+      print("rows:", len(X_train), len(X_test))
+      print("positive share, all:", round(y.mean(), 3))
+      print("positive share, train:", round(y_train.mean(), 3))
+      print("positive share, test:", round(y_test.mean(), 3))
+      print("type of X_train:", type(X_train).__name__)
+    snippet_library: scikit-learn
+    output: |
+      rows: 455 114
+      positive share, all: 0.627
+      positive share, train: 0.626
+      positive share, test: 0.632
+      type of X_train: ndarray
+    visual: null
   catch_outs:
     - Fit scalers and encoders after the split, on training rows only.
     - Set random_state, or the split changes every run.
     - Shuffling mixes time order. Use TimeSeriesSplit for time data.
     - Pass stratify to keep class shares equal in both pieces.
+    - It returns one flat list, so unpack it as train, test for each array passed in.
+    - With shuffle=False, stratify must be None, or it raises an error.
   key_settings:
     tier1:
-      - {name: test_size, page: null}
-      - {name: random_state, page: null}
+      - name: test_size
+        page: null
+        controls: The share (a float) or number (an int) of rows held back for testing.
+        effect: A bigger test set scores more steadily, but leaves fewer rows to learn from.
+      - name: random_state
+        page: null
+        controls: The seed for the shuffle. None gives a different split each run.
+        effect: Any fixed int repeats the same split, so scores can be compared.
     tier2:
-      - {name: stratify, page: null}
-      - {name: shuffle, page: null}
+      - name: stratify
+        page: null
+        controls: Class labels to keep in the same shares in both pieces.
+        effect: Keeps a rare class in the test set, but needs labels and shuffle on.
+      - name: shuffle
+        page: null
+        controls: Whether rows are shuffled before the cut. The default is True.
+        effect: Off keeps row order, with the first rows for training and the last for testing.
     tier3:
-      - {name: train_size, page: null}
+      - name: train_size
+        page: null
+        controls: The share or number of rows for training. None uses what test_size leaves.
+        effect: Setting both lets you leave some rows out of both pieces.
   watch_it_work: {none: true}
   intuition:
-    text: Shuffle the rows, then cut them into a learning pile and an exam pile.
+    idea: Shuffle the rows, then cut them into a learning pile and an exam pile.
+    analogy: Setting aside some past exam questions before you study, so you can test yourself honestly.
+    animation: none
+    goal: Get a score from rows the model never saw while learning.
+    steps:
+      - Pass in one or more arrays with the same number of rows.
+      - Work out how many rows go to the test piece from test_size.
+      - Shuffle the row positions, seeded by random_state.
+      - Take the first rows of the shuffled order for the test piece.
+      - Take the next rows for the training piece.
+      - Cut every array you passed at the same positions, so rows stay matched.
+      - Fit on the training piece only, then score once on the test piece.
+    math:
+      notation:
+        - {symbol: "N", meaning: "The number of rows you pass in."}
+        - {symbol: "f", meaning: "The test share, set by test_size when it is a float."}
+        - {symbol: "n_test", meaning: "The number of rows in the test piece."}
+        - {symbol: "n_train", meaning: "The number of rows in the training piece."}
+      equations:
+        - expression: "n_test = ceil(f × N)"
+          meaning: A float test_size is turned into a row count, rounded up.
+        - expression: "n_train = N − n_test"
+          meaning: With train_size unset, every other row goes to training.
+      prediction: "Example: 200 rows and test_size=0.25 give n_test = 50 and n_train = 150."
+    good_at: [one quick holdout, any row order, any array type]
+    bad_at: [time-ordered data, tiny data, a steady score estimate]
+    vs_siblings:
+      - {page: shufflesplit, note: "Makes several random splits, as a cv splitter."}
+      - {page: kfold, note: "Rotates the test piece so every row is tested once."}
+      - {page: timeseriessplit, note: "Keeps time order, so training rows come first."}
+    read_more:
+      - It returns train and test pieces for every array you pass.
+      - Without shuffle it takes the first rows to train and the last to test.
+      - One test score depends on which rows landed in it.
   next: []
