@@ -46,12 +46,14 @@ slots:
         from sklearn.model_selection import cross_val_score
 
         X, y = load_breast_cancer(return_X_y=True)
+        print("in: X", X.shape, "y", y.shape)
         model = LogisticRegression(max_iter=5000)
 
         scores = cross_val_score(model, X, y, cv=5, scoring="accuracy",
                                  n_jobs=1)
         print(scores.round(3))
       output: |
+        in: X (569, 30) y (569,)
         [0.939 0.947 0.982 0.93  0.956]
   what_comes_out:
     items:

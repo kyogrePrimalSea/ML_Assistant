@@ -90,6 +90,7 @@ slots:
 
       y = np.array([0] * 8 + [1] * 4)
       X = np.arange(12).reshape(-1, 1)
+      print("in: X", X.shape, "y", y.shape)
 
       rskf = RepeatedStratifiedKFold(n_splits=4, n_repeats=2, random_state=0)
       print("get_n_splits:", rskf.get_n_splits())
@@ -99,6 +100,7 @@ slots:
       print("times each row is tested:", times_tested)
     snippet_library: scikit-learn
     output: |
+      in: X (12, 1) y (12,)
       get_n_splits: 8
       times each row is tested: [2 2 2 2 2 2 2 2 2 2 2 2]
     visual: null

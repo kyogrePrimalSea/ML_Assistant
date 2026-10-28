@@ -45,11 +45,13 @@ slots:
         from sklearn.model_selection import ShuffleSplit
 
         X = np.arange(10)
+        print("in: X has", len(X), "rows")
         splitter = ShuffleSplit(n_splits=3, test_size=0.25, random_state=0)
         for train_idx, test_idx in splitter.split(X):
             print("train", train_idx, "test", test_idx)
         print("get_n_splits:", splitter.get_n_splits(X))
       output: |
+        in: X has 10 rows
         train [9 1 6 7 3 0 5] test [2 8 4]
         train [2 9 8 0 6 7 4] test [3 5 1]
         train [4 5 1 0 6 9 7] test [2 3 8]

@@ -46,6 +46,7 @@ slots:
         from sklearn.model_selection import cross_validate
 
         X, y = load_breast_cancer(return_X_y=True)
+        print("in: X", X.shape, "y", y.shape)
         model = LogisticRegression(max_iter=5000)
 
         results = cross_validate(
@@ -60,6 +61,7 @@ slots:
         print("test roc_auc, mean:",
               results["test_roc_auc"].mean().round(3))
       output: |
+        in: X (569, 30) y (569,)
         ['fit_time', 'score_time', 'test_accuracy', 'test_roc_auc', 'train_accuracy', 'train_roc_auc']
         test accuracy, mean: 0.951
         test roc_auc, mean: 0.992
@@ -172,7 +174,7 @@ slots:
       - name: return_train_score
         page: null
         controls: Adds train_ arrays with scores on each fold's training rows.
-        effect: Helps spot overfitting, but adds scoring work on each fold.
+        effect: Helps spot overfitting, but can be computationally expensive.
     tier2:
       - name: error_score
         page: null
@@ -186,11 +188,11 @@ slots:
       - name: return_estimator
         page: null
         controls: Keeps the model fitted on each fold in the result.
-        effect: Lets you inspect each fold's model, but keeps more objects in memory.
+        effect: Lets you inspect the model fitted on each fold.
       - name: return_indices
         page: null
         controls: Adds the train and test row positions used by each fold.
-        effect: Shows which rows landed in each fold, at a cost in memory.
+        effect: Shows which rows landed in each fold, as train and test index arrays.
   watch_it_work: {none: true}
   intuition:
     idea: Run cross-validation and keep several scores and timings for each fold.
