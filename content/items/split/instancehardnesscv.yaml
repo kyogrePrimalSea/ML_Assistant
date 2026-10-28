@@ -28,10 +28,10 @@ slots:
   quick_facts:
     facts:
       - {label: Default folds, value: "5"}
-      - {label: Needs, value: "A classifier"}
+      - {label: Needs, value: "A binary classifier"}
   use_avoid:
-    use_when: [classification, rows in any order]
-    avoid_when: [regression target, time-ordered data]
+    use_when: [binary classification, rows in any order]
+    avoid_when: [regression target, more than two classes, time-ordered data]
   prep: []
   code:
     - library: imbalanced-learn
