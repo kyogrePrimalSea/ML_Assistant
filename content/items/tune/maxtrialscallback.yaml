@@ -69,7 +69,72 @@ slots:
         trials run: 10
         complete trials: 10
         best alpha: 0.3833
-  what_comes_out: {none: true}
+  what_comes_out:
+    items:
+      - name: study.trials
+        kind: return
+        task: null
+        shape: "(n_trials,) list of FrozenTrial"
+        object_type: list
+        example: "[FrozenTrial, FrozenTrial, FrozenTrial] (made-up values)"
+        shape_explanation: >-
+          A one-dimensional list with one FrozenTrial for each trial that ran, in any state. The trailing comma in (n_trials,) means one dimension. The example has 3 trials, so its concrete shape is (3,).
+        note: "Every trial that ran, in any state."
+      - name: study.get_trials(states=(TrialState.COMPLETE,))
+        kind: return
+        task: null
+        shape: "(n_complete,) list of FrozenTrial"
+        object_type: list
+        example: "[FrozenTrial] (made-up values)"
+        shape_explanation: >-
+          A one-dimensional list with one FrozenTrial for each completed trial. n_complete is the number of completed trials. The example has 1 trial, so its concrete shape is (1,).
+        note: "Only completed trials. The default limit counts these."
+      - name: study.best_params
+        kind: return
+        task: null
+        shape: "dict"
+        object_type: dict
+        example: "{'x': 8} (made-up values)"
+        shape_explanation: >-
+          A dictionary has no rows or columns. Each key is a setting name passed to a suggest call. The example has 1 key, so it covers 1 setting.
+        note: "Best completed trial only. Failed trials are skipped."
+    next_step: Compare study.trials with the completed list to see what was counted.
+    snippet: |
+      # optuna 5.0.0
+      import optuna
+      from optuna.study import MaxTrialsCallback
+      from optuna.trial import TrialState
+
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+
+
+      def objective(trial):
+          x = trial.suggest_int("x", 0, 9)
+          if x % 3 == 0:
+              raise ValueError("made-up failure")
+          return float(x)
+
+
+      study = optuna.create_study(
+          direction="maximize",
+          sampler=optuna.samplers.RandomSampler(seed=0),
+      )
+      callback = MaxTrialsCallback(4)
+      study.optimize(
+          objective, n_trials=100, callbacks=[callback], catch=(ValueError,)
+      )
+      complete = study.get_trials(states=(TrialState.COMPLETE,))
+      print("trials run:", len(study.trials))
+      print("complete trials:", len(complete))
+      print("failed trials:", len(study.get_trials(states=(TrialState.FAIL,))))
+      print("best_params:", study.best_params)
+    snippet_library: optuna
+    output: |
+      trials run: 5
+      complete trials: 4
+      failed trials: 1
+      best_params: {'x': 7}
+    visual: null
   catch_outs:
     - Only completed trials count by default, so pruned and failed trials do not.
     - Add TrialState.PRUNED to states to count pruned trials too.

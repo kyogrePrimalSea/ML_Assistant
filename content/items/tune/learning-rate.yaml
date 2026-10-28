@@ -104,11 +104,88 @@ slots:
         0.01 0.513
         0.1 0.883
         0.5 0.848
-  what_comes_out: {none: true}
+  what_comes_out:
+    items:
+      - name: train_score_
+        kind: attribute
+        task: null
+        shape: "(n_estimators,)"
+        object_type: numpy.ndarray
+        example: "[27.3, 19.8, 14.1] (made-up values)"
+        shape_explanation: >-
+          A one-dimensional array with one training loss value per tree. n_estimators
+          is the number of trees you asked for. The trailing comma in (n_estimators,)
+          means one dimension. The example has 3 trees, so its concrete shape is (3,).
+        note: "Training loss after each tree. Not a test score."
+      - name: staged_predict
+        kind: method
+        task: regression
+        shape: "one (n_samples,) array per tree"
+        object_type: generator
+        example: "[array([10.2, 4.1]), array([11.0, 3.9])] (made-up values)"
+        shape_explanation: >-
+          A generator that yields one array per tree, in order. n_samples is the number
+          of input rows. Each array has shape (n_samples,), so it holds one prediction per
+          row. The example has 2 trees and 2 rows, so its concrete shape is 2 arrays of
+          (2,).
+        note: "Yields the prediction after each tree. Wrap in list() to keep them."
+      - name: predict
+        kind: method
+        task: regression
+        shape: "(n_samples,)"
+        object_type: numpy.ndarray
+        example: "[11.0, 3.9] (made-up values)"
+        shape_explanation: >-
+          A one-dimensional array with one prediction per input row. n_samples is the
+          number of rows. The trailing comma in (n_samples,) means one dimension. The
+          example has 2 rows, so its concrete shape is (2,).
+        note: "Uses all trees. Matches the last staged prediction."
+      - name: evals_result_
+        kind: attribute
+        task: null
+        shape: "dict of lists"
+        object_type: dict
+        example: "{'my_val': {'my_metric': [9.5, 8.1]}} (made-up values)"
+        shape_explanation: >-
+          A dictionary of dictionaries, not an array. The outer keys name each validation
+          set. The inner keys name each metric, and each value is a list with one score
+          per round. The example has 1 validation set, 1 metric and 2 rounds.
+        note: "LightGBM. Filled when you pass validation sets to fit."
+    next_step: Compare train_score_ with a validation score from staged_predict.
+    snippet: |
+      # scikit-learn 1.9.1
+      import numpy as np
+      from sklearn.datasets import make_regression
+      from sklearn.ensemble import GradientBoostingRegressor
+      from sklearn.model_selection import train_test_split
+
+      X, y = make_regression(n_samples=500, n_features=8, noise=10, random_state=0)
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+      model = GradientBoostingRegressor(
+          learning_rate=0.1, n_estimators=100, random_state=0
+      )
+      model.fit(X_train, y_train)
+      print("train_score_ shape:", model.train_score_.shape)
+      stages = list(model.staged_predict(X_test))
+      print("staged predictions:", len(stages))
+      print("first stage shape:", stages[0].shape)
+      print(
+          "last stage matches predict:",
+          np.allclose(stages[-1], model.predict(X_test)),
+      )
+    output: |
+      train_score_ shape: (100,)
+      staged predictions: 100
+      first stage shape: (125,)
+      last stage matches predict: True
+    snippet_library: scikit-learn
+    visual: null
   catch_outs:
     - XGBoost defaults to 0.3. The others default to 0.1.
     - Lower learning_rate needs more trees (n_estimators).
-    - A fixed tree count with a tiny rate underfits.
+    - A fixed tree count with a tiny rate may underfit.
+    - LightGBM's reset_parameter callback can change the rate during fit.
   key_settings:
     tier1: []
     tier2: []
@@ -117,5 +194,42 @@ slots:
     dataset: ames
     control: {name: learning_rate, min: 0.01, max: 1, step: 0.01, default: 0.1}
   intuition:
-    text: Small steps learn slowly but overfit less. Big steps risk overshooting.
+    idea: Each new tree adds only a fraction of its suggested change to the running prediction.
+    analogy: Like walking downhill in small steps. Short steps take longer, but each one is steadier.
+    animation: none
+    goal: Choose how far each new tree moves the prediction, and so how many trees you need.
+    steps:
+      - Start from one simple guess for every row.
+      - Fit a small tree to the errors that are left.
+      - Multiply that tree's output by learning_rate.
+      - Add the scaled output to the running prediction.
+      - Repeat until n_estimators trees are built, or early stopping ends training first.
+      - A small learning_rate moves the prediction less with each tree.
+      - So a small learning_rate needs more trees to reach the same training score.
+      - The scikit-learn docs say small values often give better test error.
+      - A large learning_rate reaches its best validation score in fewer trees.
+      - After that, validation error can rise while training error keeps falling.
+      - Set n_estimators and learning_rate together, not one at a time.
+    math:
+      notation:
+        - {symbol: "x", meaning: "One input row."}
+        - {symbol: "m", meaning: "The index of a tree, counting from 1."}
+        - {symbol: "F_m(x)", meaning: "The running prediction for row x after m trees."}
+        - {symbol: "F_(m-1)(x)", meaning: "The running prediction for row x before tree m."}
+        - {symbol: "h_m(x)", meaning: "What tree m proposes to add for row x."}
+        - {symbol: "ν", meaning: "The learning rate, which is learning_rate in code."}
+      equations:
+        - expression: "F_m(x) = F_(m-1)(x) + ν × h_m(x)"
+          meaning: Each tree adds only ν of its proposal to the running prediction.
+      prediction: Halving ν halves what each tree adds, so reaching the same total change takes more trees.
+    good_at: [smaller steps, steadier fits, trade-off with n_estimators]
+    bad_at: [speed with a tiny rate, fixing too few trees]
+    vs_siblings:
+      - {page: n-estimators, note: "Sets how many trees you add. Pair it with learning_rate."}
+      - {page: early-stopping, note: "Stops adding trees once validation stops improving."}
+      - {page: max-depth, note: "Sets how big each tree is, not how far it moves."}
+    read_more:
+      - scikit-learn user guide, section on shrinkage via learning rate.
+      - XGBoost parameters page, eta and its default of 0.3.
+      - LightGBM parameters page, learning_rate and the reset_parameter callback.
   next: [model-overfitting]

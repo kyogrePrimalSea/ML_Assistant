@@ -141,7 +141,7 @@ slots:
     visual: null
   catch_outs:
     - In HistGradientBoosting the name is max_iter.
-    - More trees without early stopping can overfit.
+    - Scikit-learn calls gradient boosting fairly robust to many trees. Still watch a validation score.
     - Lower learning_rate usually needs more trees.
   key_settings:
     tier1: []
@@ -151,5 +151,43 @@ slots:
     dataset: ames
     control: {name: n_estimators, min: 1, max: 200, step: 1, default: 50}
   intuition:
-    text: Each tree fixes some error. Too many fit the noise.
+    idea: Sets how many small trees the model adds, one round at a time.
+    analogy: Like sanding a board, where each pass removes a little more and you choose how many passes to make.
+    animation: none
+    goal: Pick a tree count that scores best on rows the model did not train on.
+    steps:
+      - Start with one simple first prediction for every row.
+      - Fit one small tree that moves the predictions toward the target.
+      - Scale that tree by the learning rate before adding it.
+      - Repeat for each round, up to n_estimators rounds.
+      - Train scores tend to keep rising as trees are added.
+      - Validation scores can flatten out, so more trees stop helping.
+      - Early stopping can end training once validation score stops improving.
+      - Compare train and validation scores at several tree counts.
+      - Pick the count where validation score stops improving.
+    math:
+      notation:
+        - {symbol: "M", meaning: "The number of trees, set by n_estimators."}
+        - {symbol: "m", meaning: "The index of one boosting round, from 1 to M."}
+        - {symbol: "F_m(x)", meaning: "The model's prediction for input x after round m."}
+        - {symbol: "ν", meaning: "The learning rate, set by learning_rate."}
+        - {symbol: "h_m(x)", meaning: "The small tree added in round m."}
+      equations:
+        - expression: "F_m(x) = F_{m-1}(x) + ν h_m(x)"
+          meaning: Each round adds one tree, scaled by the learning rate, to the running prediction.
+        - expression: "M = n_estimators"
+          meaning: The number of rounds equals the number of trees the model adds.
+      prediction: The final prediction is F_M(x), the starting prediction plus M scaled trees.
+    good_at: [steady gains with more trees, early stopping, pairs with learning rate]
+    bad_at: [choosing without validation, slow training with many trees, judging by train score]
+    vs_siblings:
+      - {page: learning-rate, note: "Shrinks each tree. Smaller values usually need more trees."}
+      - {page: early-stopping, note: "Picks the tree count for you, from a validation score."}
+      - {page: max-depth, note: "Sets how big each tree grows, not how many are added."}
+    read_more:
+      - In gradient boosting, n_estimators is the number of stages, with one tree per stage.
+      - The GradientBoosting docs say a large number usually gives better performance.
+      - Early stopping in gradient boosting only runs when n_iter_no_change is set.
+      - HistGradientBoosting uses max_iter, and enables early stopping by default above 10,000 samples.
+      - XGBoost reports the kept round in best_iteration, and LightGBM reports fitted trees in n_estimators_.
   next: [model-overfitting]

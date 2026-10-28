@@ -81,7 +81,59 @@ slots:
         max_depth values tried: [6]
         best_params: {'max_depth': 6, 'min_samples_leaf': 1}
         best_value: 0.703
-  what_comes_out: {none: true}
+  what_comes_out:
+    items:
+      - name: trial.params
+        kind: return
+        task: null
+        shape: "dict"
+        object_type: dict
+        example: "{'a': 4, 'b': 3} (made-up values)"
+        shape_explanation: >-
+          A dictionary has no rows or columns. Each key is a setting name the objective suggested. Fixed settings appear here too, with their set value. The example has 2 keys, so the trial has 2 settings.
+        note: "Fixed settings show their set value, not a searched one."
+      - name: study.best_params
+        kind: return
+        task: null
+        shape: "dict"
+        object_type: dict
+        example: "{'a': 4, 'b': 4} (made-up values)"
+        shape_explanation: >-
+          A dictionary has no rows or columns. Each key is a setting name, and each value is the choice in the best trial. The example has 2 keys, so it covers 2 settings.
+        note: "Fixed settings are included with their set values."
+    next_step: Read trial.params to check that fixed settings kept their values.
+    snippet: |
+      # optuna 5.0.0
+      import warnings
+
+      import optuna
+      from optuna.exceptions import ExperimentalWarning
+      from optuna.samplers import PartialFixedSampler, TPESampler
+
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+      # PartialFixedSampler is experimental and warns on every use.
+      warnings.filterwarnings("ignore", category=ExperimentalWarning)
+
+
+      def objective(trial):
+          a = trial.suggest_int("a", 1, 5)
+          b = trial.suggest_int("b", 1, 5)
+          return a + b
+
+
+      # "zzz" is never suggested, so it has no effect. "a" is fixed at 4.
+      sampler = PartialFixedSampler({"zzz": 3, "a": 4}, TPESampler(seed=0))
+      study = optuna.create_study(direction="maximize", sampler=sampler)
+      study.optimize(objective, n_trials=3)
+      print("params per trial:", [t.params for t in study.trials])
+      print("best_params:", study.best_params)
+      print("best_value:", study.best_value)
+    snippet_library: optuna
+    output: |
+      params per trial: [{'a': 4, 'b': 3}, {'a': 4, 'b': 4}, {'a': 4, 'b': 4}]
+      best_params: {'a': 4, 'b': 4}
+      best_value: 8.0
+    visual: null
   catch_outs:
     - A fixed name the objective never suggests does nothing.
     - Fixed values are used as given, never searched.

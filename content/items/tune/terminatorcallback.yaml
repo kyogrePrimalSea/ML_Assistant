@@ -77,7 +77,78 @@ slots:
         print("trials run:", len(study.trials))
       output: |
         trials run: 20
-  what_comes_out: {none: true}
+  what_comes_out:
+    items:
+      - name: study.trials
+        kind: return
+        task: null
+        shape: "(n_trials,) list of FrozenTrial"
+        object_type: list
+        example: "[FrozenTrial, FrozenTrial] (made-up values)"
+        shape_explanation: >-
+          A one-dimensional list with one FrozenTrial for each trial that ran before the stop. The trailing comma in (n_trials,) means one dimension. n_trials is the number of trials run. The example has 2 trials, so its concrete shape is (2,).
+        note: "Every trial that ran before the study stopped."
+      - name: study.best_value
+        kind: return
+        task: null
+        shape: "scalar"
+        object_type: float
+        example: "0.95 (made-up value)"
+        shape_explanation: >-
+          A scalar is one value, not an array. It has no rows or columns. The example is the single number 0.95, so its shape is scalar.
+        note: "Best score found before the study stopped."
+    next_step: Read study.trials to see how many trials ran before the stop.
+    snippet: |
+      # optuna 5.0.0
+      import warnings
+
+      import optuna
+      from optuna.terminator import BestValueStagnationEvaluator
+      from optuna.terminator import Terminator
+      from optuna.terminator import TerminatorCallback
+      from optuna.terminator import report_cross_validation_scores
+      from sklearn.datasets import make_regression
+      from sklearn.linear_model import Ridge
+      from sklearn.model_selection import cross_val_score
+
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+      X, y = make_regression(n_samples=200, n_features=8, noise=15,
+                             random_state=0)
+
+
+      def objective(trial):
+          alpha = trial.suggest_float("alpha", 1e-3, 10.0, log=True)
+          scores = cross_val_score(Ridge(alpha=alpha), X, y, cv=5)
+          report_cross_validation_scores(trial, scores)
+          return scores.mean()
+
+
+      # The constructors warn that the module is deprecated. Catch it here
+      # so the warning can be shown on stdout.
+      with warnings.catch_warnings(record=True) as caught:
+          warnings.simplefilter("always")
+          terminator = Terminator(
+              improvement_evaluator=BestValueStagnationEvaluator(
+                  max_stagnation_trials=5
+              ),
+          )
+          callback = TerminatorCallback(terminator)
+      future = [w for w in caught if w.category is FutureWarning]
+      print("FutureWarning raised:", len(future) > 0)
+
+      study = optuna.create_study(
+          direction="maximize",
+          sampler=optuna.samplers.RandomSampler(seed=0),
+      )
+      study.optimize(objective, n_trials=100, callbacks=[callback])
+      print("trials run:", len(study.trials))
+      print("best_value:", round(study.best_value, 4))
+    snippet_library: optuna
+    output: |
+      FutureWarning raised: True
+      trials run: 20
+      best_value: 0.9888
+    visual: null
   catch_outs:
     - Won't stop before min_n_trials trials (default 20).
     - The whole optuna.terminator module is deprecated since 4.9.0 and is removed in 6.0.0.

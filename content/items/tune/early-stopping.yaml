@@ -179,7 +179,7 @@ slots:
     snippet_library: scikit-learn
     visual: null
   catch_outs:
-    - XGBoost needs eval_set in fit. LightGBM needs eval_X and eval_y.
+    - XGBoost needs eval_set in fit. LightGBM needs eval_X and eval_y, since eval_set is deprecated in 4.7.
     - With several eval sets, XGBoost watches the last one.
     - scikit-learn holds out validation_fraction (10%) of your training rows.
     - XGBoost best_iteration counts from 0.
@@ -192,5 +192,40 @@ slots:
     dataset: ames
     control: {name: early_stopping_rounds, min: 1, max: 50, step: 1, default: 10}
   intuition:
-    text: Watch the held-out score. When it stops improving, stop adding trees.
+    idea: Stop adding trees once the held-out score stops getting better.
+    analogy: Like checking a practice test after each study session, and stopping when the score stops rising.
+    animation: none
+    goal: Stop at a sensible tree count, without guessing n_estimators in advance.
+    steps:
+      - Hold out validation rows, yourself or with validation_fraction.
+      - Add one tree and score the model on the validation rows.
+      - Compare that score with a reference score from earlier trees.
+      - Stop when none of the last n_iter_no_change scores beats the reference.
+      - A tolerance, tol, sets how much better a score must be to count.
+      - XGBoost predicts with its best round, though extra trees stay in the model.
+      - scikit-learn reports the trees it kept in n_estimators_ or n_iter_.
+      - Different validation rows can stop training at a different round.
+    math:
+      notation:
+        - {symbol: "t", meaning: "The current round, counting from 1."}
+        - {symbol: "k", meaning: "n_iter_no_change, how many recent scores are checked."}
+        - {symbol: "s_t", meaning: "The validation score after tree t. Higher is better here."}
+        - {symbol: "tol", meaning: "The tolerance, the smallest gain that counts as an improvement."}
+        - {symbol: "L_t", meaning: "The validation loss after tree t. Lower is better here."}
+        - {symbol: "B", meaning: "The last k losses kept, starting as infinity."}
+      equations:
+        - expression: "stop at t if s_j <= s_(t-k) + tol for every j from t-k+1 to t"
+          meaning: Stop when no recent score beats the reference score by more than tol.
+        - expression: "continue if L_t + tol < max(B)"
+          meaning: Keep training while this loss beats at least one stored loss by more than tol.
+      prediction: With n_iter_no_change of 10, HistGradientBoosting stops once ten recent scores fail to beat the reference.
+    good_at: [stopping without guessing n_estimators, saving time on long runs]
+    bad_at: [no validation rows, scores that wobble from noise]
+    vs_siblings:
+      - {page: n-estimators, note: "Sets a fixed tree count. Early stopping picks the count for you."}
+      - {page: learning-rate, note: "Changes how many trees are needed before the score stops improving."}
+    read_more:
+      - scikit-learn user guide, Usage section, on early stopping in HistGradientBoosting.
+      - XGBoost API, early_stopping_rounds and the best_iteration attribute.
+      - LightGBM API, the early_stopping callback.
   next: [model-overfitting]

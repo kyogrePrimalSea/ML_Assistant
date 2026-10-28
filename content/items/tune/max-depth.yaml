@@ -131,5 +131,41 @@ slots:
     dataset: ames
     control: {name: max_depth, min: 1, max: 16, step: 1, default: 3}
   intuition:
-    text: Deeper trees fit finer detail, and also fit noise.
+    idea: Caps how many questions each tree may ask in a row, from the top down.
+    analogy: Like twenty questions with a fixed limit, where you may ask only so many questions before you must guess.
+    animation: none
+    goal: Pick a depth where validation score stops improving, so the tree learns the pattern and not the noise.
+    steps:
+      - A tree starts with every training row in one group.
+      - It splits that group in two, choosing the split that best separates the target values.
+      - Each side can then be split again, one level deeper.
+      - Depth counts the splits on the path from the root to a leaf.
+      - When a path reaches max_depth, that branch stops and becomes a leaf.
+      - Each leaf gives one prediction to every row that reaches it.
+      - A shallow tree makes a few broad groups, so it misses detail.
+      - A deep tree makes many small groups, which can follow noise in the training rows.
+      - Compare train and validation scores at several depths.
+      - Look for the depth where validation score stops improving.
+    math:
+      notation:
+        - {symbol: "d", meaning: "The depth of a leaf: the number of splits from the root to it."}
+        - {symbol: "D", meaning: "The value of max_depth, the deepest any path may go."}
+        - {symbol: "L", meaning: "The number of leaves in one tree."}
+      equations:
+        - expression: "d <= D"
+          meaning: Every leaf sits at depth D or less, so no path has more than max_depth splits.
+        - expression: "L <= 2^D"
+          meaning: A binary tree of depth D has at most 2 to the power D leaves.
+      prediction: With max_depth = 3, one tree has at most 2^3 = 8 leaves, so at most 8 leaf predictions.
+    good_at: [limits tree size, controls overfitting, feature interactions]
+    bad_at: [smooth trends, one value for every dataset, very deep patterns]
+    vs_siblings:
+      - {page: n-estimators, note: "Counts trees. This setting sets how big each tree grows."}
+      - {page: learning-rate, note: "Shrinks each tree. Smaller values usually need more trees."}
+      - {page: early-stopping, note: "Picks the number of boosting rounds from a validation score."}
+    read_more:
+      - Trees can stop earlier, when leaves are pure or too small to split.
+      - None means no depth limit in scikit-learn, for both the single tree and the forest.
+      - XGBoost defaults to 6, and LightGBM's max_depth of -1 means no limit.
+      - LightGBM advises num_leaves <= 2^max_depth when max_depth is set.
   next: [model-overfitting]

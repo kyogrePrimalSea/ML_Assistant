@@ -82,7 +82,77 @@ slots:
       output: |
         states: {'COMPLETE': 13, 'PRUNED': 7}
         7 of 20 trials pruned
-  what_comes_out: {none: true}
+  what_comes_out:
+    items:
+      - name: study.trials
+        kind: return
+        task: null
+        shape: "(n_trials,) list of FrozenTrial"
+        object_type: list
+        example: "[FrozenTrial, FrozenTrial] (made-up values)"
+        shape_explanation: >-
+          A one-dimensional list with one FrozenTrial for each trial, pruned or not. The trailing comma in (n_trials,) means one dimension. n_trials is the number of trials run. The example has 2 trials, so its concrete shape is (2,).
+        note: "Every trial, pruned ones included, in trial-number order."
+      - name: trial.state
+        kind: return
+        task: null
+        shape: "scalar"
+        object_type: TrialState
+        example: "TrialState.PRUNED (made-up value)"
+        shape_explanation: >-
+          A scalar is one value, not an array. It is one state name, so it has no rows or columns. The example is one state, so its shape is scalar.
+        note: "PRUNED after TrialPruned is raised, COMPLETE after a return."
+      - name: study.best_params
+        kind: return
+        task: null
+        shape: "dict"
+        object_type: dict
+        example: "{'alpha': 12.5} (made-up values)"
+        shape_explanation: >-
+          A dictionary has no rows or columns. Each key is a setting name passed to a suggest call. The example has 1 key, so it covers 1 setting.
+        note: "Best completed trial only. Pruned trials are skipped."
+    next_step: Read study.trials to see which trials were pruned.
+    snippet: |
+      # optuna 5.0.0
+      import optuna
+      from optuna.trial import TrialState
+
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+
+
+      def objective(trial):
+          x = trial.suggest_float("x", 0.0, 1.0)
+          for step in range(3):
+              trial.report(x * (step + 1), step)
+              if step == 1 and x < 0.5:  # our rule: stop weak trials at step 1
+                  raise optuna.TrialPruned()
+          return x
+
+
+      study = optuna.create_study(
+          direction="maximize",
+          sampler=optuna.samplers.TPESampler(seed=0),
+          pruner=optuna.pruners.NopPruner(),
+      )
+      study.optimize(objective, n_trials=6)
+      pruned = study.get_trials(states=(TrialState.PRUNED,))
+      print("trials:", len(study.trials))
+      print("pruned:", len(pruned))
+      print("state of first pruned trial:", pruned[0].state)
+      print("its last reported value:", round(pruned[0].value, 3))
+      print("best_value:", round(study.best_value, 3))
+      print("best_trial state:", study.best_trial.state)
+      print("best_params:", {k: round(v, 3) for k, v in study.best_params.items()})
+    snippet_library: optuna
+    output: |
+      trials: 6
+      pruned: 1
+      state of first pruned trial: TrialState.PRUNED
+      its last reported value: 0.847
+      best_value: 0.715
+      best_trial state: TrialState.COMPLETE
+      best_params: {'x': 0.715}
+    visual: null
   catch_outs:
     - A pruned trial keeps its last reported value, but best_trial ignores it.
     - Returning normally makes the trial COMPLETE, even after a bad score.
