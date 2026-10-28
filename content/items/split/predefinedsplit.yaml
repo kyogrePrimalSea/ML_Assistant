@@ -38,33 +38,105 @@ slots:
       snippet: |
         # scikit-learn 1.9.1
         import numpy as np
-        from sklearn.datasets import make_regression
         from sklearn.model_selection import PredefinedSplit
 
-        X, y = make_regression(n_samples=20, n_features=3, random_state=0)
-
-        # first 12 rows always train; rows 12-15 are fold 0, rows 16-19 fold 1
-        test_fold = np.array([-1] * 12 + [0] * 4 + [1] * 4)
-
+        # made-up fold labels: -1 rows always train; 0, 1 and 2 are test folds
+        test_fold = np.array([0, 0, -1, -1, 1, 1, 2, 2])
         ps = PredefinedSplit(test_fold)
-        for train_idx, test_idx in ps.split():
-            print("train rows:", len(train_idx), "test rows:", len(test_idx))
+        for i, (train, test) in enumerate(ps.split()):
+            print(f"fold {i}: train rows {train}, test rows {test}")
+      output: |
+        fold 0: train rows [2 3 4 5 6 7], test rows [0 1]
+        fold 1: train rows [0 1 2 3 6 7], test rows [4 5]
+        fold 2: train rows [0 1 2 3 4 5], test rows [6 7]
   what_comes_out:
     items:
-      - {name: split, kind: method, task: null, shape: "generator of (train, test) indices", note: "One pair per distinct test_fold value."}
-      - {name: get_n_splits, kind: method, task: null, shape: "int", note: "Counts distinct test_fold values, not -1."}
-    next_step: "Train on the train rows, then score the test rows."
+      - name: split
+        kind: method
+        task: null
+        shape: "generator of (train, test) index arrays"
+        object_type: generator of tuples
+        example: "([2, 3, 4, 5, 6, 7], [0, 1])"
+        shape_explanation: >-
+          The generator yields one (train, test) pair per distinct test_fold value,
+          leaving out -1. Each pair holds two one-dimensional arrays of row positions,
+          written (n_train,) and (n_test,). n_train plus n_test equals the number of rows.
+          The example pair has 6 training rows and 2 test rows. Made-up values.
+        note: "One pair per distinct test_fold value, not -1."
+      - name: get_n_splits
+        kind: method
+        task: null
+        shape: "int"
+        object_type: int
+        example: "3"
+        shape_explanation: >-
+          A single whole number: the count of distinct test_fold values, not counting -1.
+          The example has 3 folds, so the value is 3. Made-up value.
+        note: "Counts distinct test_fold values, not -1."
+    next_step: null
+    snippet: |
+      # scikit-learn 1.9.1
+      import numpy as np
+      from sklearn.model_selection import PredefinedSplit
+
+      test_fold = np.array([0, 0, -1, -1, 1, 1, 2, 2])
+      ps = PredefinedSplit(test_fold)
+      print("get_n_splits:", ps.get_n_splits())
+      pairs = list(ps.split())
+      print("pairs:", len(pairs))
+      print("test rows per fold:", [len(test) for _, test in pairs])
+    snippet_library: scikit-learn
+    output: |
+      get_n_splits: 3
+      pairs: 3
+      test rows per fold: [2, 2, 2]
     visual: null
   catch_outs:
     - Use -1 for rows that must always stay in training.
     - Give every row a test_fold label, even the training rows.
     - Nothing is shuffled, so you choose the folds yourself.
+    - Labels need not run from 0; each distinct value is one fold, in sorted order.
   key_settings:
     tier1:
-      - {name: test_fold, page: null}
+      - name: test_fold
+        page: null
+        controls: One integer per row, naming the test fold it belongs to, or -1 to always train.
+        effect: The labels fix every split, so one wrong label changes the scores.
     tier2: []
     tier3: []
   watch_it_work: {none: true}
   intuition:
-    text: Mark each row with its fold, and the split follows your marks.
+    idea: Mark each row with the fold it should be tested in, and the splits follow your marks.
+    analogy: Writing a box number on each exam paper, so each box is marked as a separate group.
+    animation: none
+    goal: Use a validation set you already chose, instead of a random one.
+    steps:
+      - Make one integer label per row.
+      - Label each row that belongs in a test piece with that fold's number.
+      - Label each row that must always train with -1.
+      - Find the distinct labels, leaving out -1, and sort them.
+      - For each label f, mark the rows labelled f as the test piece.
+      - Make the training piece from every other row, including the -1 rows.
+      - Yield one (train, test) pair for each label.
+    math:
+      notation:
+        - {symbol: "N", meaning: "The number of rows, one label each."}
+        - {symbol: "K", meaning: "The number of distinct labels, not counting -1."}
+        - {symbol: "n_f", meaning: "The number of rows labelled f."}
+      equations:
+        - expression: "n_splits = K"
+          meaning: One split is made for each distinct label, not counting -1.
+        - expression: "n_train(f) = N - n_f"
+          meaning: The training piece for fold f is every row not labelled f, including the -1 rows.
+      prediction: "Example: labels [0, 0, -1, -1, 1, 1, 2, 2] give K = 3 and 2 test rows per fold, so 6 training rows."
+    good_at: [fixed validation set, custom folds, rows kept in training]
+    bad_at: [random repeats, no fixed split yet, labels typed in by mistake]
+    vs_siblings:
+      - {page: kfold, note: "Makes folds for you, by row order."}
+      - {page: timeseriessplit, note: "Makes time-ordered folds for you."}
+      - {page: train-test-split, note: "One random hold-out, made for you."}
+    read_more:
+      - The X, y and groups arguments to split are ignored, so split can be called with no data.
+      - get_n_splits counts the distinct labels, not counting -1.
+      - Passing groups gives a warning, because they are ignored.
   next: []

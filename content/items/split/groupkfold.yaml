@@ -38,33 +38,130 @@ slots:
       snippet: |
         # scikit-learn 1.9.1
         import numpy as np
-        from sklearn.datasets import make_regression
         from sklearn.model_selection import GroupKFold
 
-        X, y = make_regression(n_samples=20, n_features=3, random_state=0)
-        groups = np.repeat([0, 1, 2, 3], 5)  # 4 groups, 5 rows each
+        X = np.arange(20).reshape(10, 2)  # made-up: 10 rows, 2 columns
+        y = np.arange(10) % 2             # made-up labels
+        groups = np.array([0, 0, 1, 1, 1, 2, 2, 3, 3, 3])  # made-up: 4 groups
 
-        gkf = GroupKFold(n_splits=4)
-        for train_idx, test_idx in gkf.split(X, y, groups=groups):
-            print("test groups:", np.unique(groups[test_idx]))
+        gkf = GroupKFold(n_splits=2)
+        for fold, (train_idx, test_idx) in enumerate(
+            gkf.split(X, y, groups=groups)
+        ):
+            print("fold", fold)
+            print("  train rows:", train_idx)
+            print("  test rows:", test_idx)
+            print("  test groups:", np.unique(groups[test_idx]))
+      output: |
+        fold 0
+          train rows: [0 1 2 3 4]
+          test rows: [5 6 7 8 9]
+          test groups: [2 3]
+        fold 1
+          train rows: [5 6 7 8 9]
+          test rows: [0 1 2 3 4]
+          test groups: [0 1]
   what_comes_out:
     items:
-      - {name: split, kind: method, task: null, shape: "generator of (train, test) indices", note: "Needs groups=; one pair per fold."}
-      - {name: get_n_splits, kind: method, task: null, shape: "int", note: "Returns the fold count, 5 by default."}
+      - name: split
+        kind: method
+        task: null
+        shape: "n_splits pairs of index arrays"
+        object_type: "generator of (train, test) tuples"
+        example: "(array([0, 1, 2, 3]), array([4, 5]))"
+        shape_explanation: >-
+          A generator. Each step yields one pair: the train row numbers, then the test
+          row numbers. There is one pair per fold, so n_splits pairs in total. The example
+          is one made-up pair with 4 train rows and 2 test rows.
+        note: "Needs groups=; one pair per fold."
+      - name: get_n_splits
+        kind: method
+        task: null
+        shape: "int"
+        object_type: int
+        example: "2"
+        shape_explanation: >-
+          A single whole number, so it is a scalar with no rows or columns. The example
+          is 2, a made-up fold count equal to n_splits.
+        note: "Returns the fold count, 5 by default."
     next_step: "Fit on train and score on test for each fold."
+    snippet: |
+      # scikit-learn 1.9.1
+      import numpy as np
+      from sklearn.model_selection import GroupKFold
+
+      X = np.arange(20).reshape(10, 2)
+      y = np.arange(10) % 2
+      groups = np.array([0, 0, 1, 1, 1, 2, 2, 3, 3, 3])
+
+      gkf = GroupKFold(n_splits=2)
+      print("get_n_splits:", gkf.get_n_splits(X, y, groups))
+      pairs = list(gkf.split(X, y, groups=groups))
+      print("pairs:", len(pairs))
+      print("first pair length:", len(pairs[0]))
+      print("test rows per fold:", [len(te) for _, te in pairs])
+    snippet_library: scikit-learn
+    output: |
+      get_n_splits: 2
+      pairs: 2
+      first pair length: 2
+      test rows per fold: [5, 5]
     visual: null
   catch_outs:
     - Pass groups=, or it raises an error.
     - Fold sizes follow group sizes, so they can differ a lot.
     - Groups are not shuffled unless shuffle=True.
+    - n_splits cannot be more than the number of groups.
   key_settings:
     tier1:
-      - {name: n_splits, page: null}
+      - name: n_splits
+        page: null
+        controls: The number of folds, at least 2. Each fold is the test piece once.
+        effect: More folds means more fits. Each fold holds fewer groups.
     tier2:
-      - {name: shuffle, page: null}
-      - {name: random_state, page: null}
+      - name: shuffle
+        page: null
+        controls: Whether the group labels are shuffled before they are cut into folds.
+        effect: Changes which groups share a fold. Off, the same groups are grouped every run.
+      - name: random_state
+        page: null
+        controls: The seed for the group shuffle. Used only when shuffle is True.
+        effect: A fixed int repeats the same folds. None gives new folds each run.
     tier3: []
   watch_it_work: {none: true}
   intuition:
-    text: Deal whole groups into the folds, so none is split across them.
+    idea: Deal whole groups into the folds, so no group is split across them.
+    analogy: Seating each school's pupils in the same exam room, so no school is split up.
+    animation: none
+    goal: Score a model on groups it has never seen, one fold at a time.
+    steps:
+      - Find the distinct group labels in groups=.
+      - Count the rows in each group.
+      - Sort the groups from largest to smallest.
+      - Give each group, in turn, to the fold with the fewest rows so far.
+      - With shuffle=True, shuffle the group labels and cut them into equal-count batches instead.
+      - Use each fold's rows as the test piece, in turn.
+      - The rows of the other folds form the training piece for that fold.
+      - Every row is tested exactly once across all the folds.
+    math:
+      notation:
+        - {symbol: "N", meaning: "The number of rows you pass in."}
+        - {symbol: "k", meaning: "The number of folds, set by n_splits."}
+        - {symbol: "n_test_f", meaning: "The number of rows in the test piece of fold f."}
+      equations:
+        - expression: "n_test_1 + n_test_2 + ... + n_test_k = N"
+          meaning: Every row is held out in exactly one fold.
+        - expression: "n_test_f = sum of the sizes of the groups given to fold f"
+          meaning: A fold's test size comes from which whole groups it receives.
+      prediction: "Example: group sizes 2, 3, 2, 3 with n_splits=2 give two test folds of 5 rows each (made-up)."
+    good_at: [groups never split, many rows per group, a fixed fold count]
+    bad_at: [equal fold sizes, very few groups, time-ordered data]
+    vs_siblings:
+      - {page: groupshufflesplit, note: "Random group holdouts, repeated, not one test per group."}
+      - {page: stratifiedgroupkfold, note: "Keeps groups whole and also balances the classes."}
+      - {page: kfold, note: "Ignores groups, so one group can span folds."}
+    read_more:
+      - Each group lands in exactly one test fold.
+      - Fold sizes are as even as the group sizes allow, not exactly equal.
+      - Pass a seed with shuffle=True to get the same folds each run.
   next: []

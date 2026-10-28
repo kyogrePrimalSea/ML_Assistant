@@ -36,34 +36,124 @@ slots:
   code:
     - library: scikit-learn
       target: sklearn.model_selection.StratifiedKFold
-      why_this_library: Keeps each class's share the same in every fold.
+      why_this_library: Keeps each class's share even across folds, within one row.
       snippet: |
         # scikit-learn 1.9.1
-        from sklearn.datasets import load_breast_cancer
+        import numpy as np
         from sklearn.model_selection import StratifiedKFold
 
-        X, y = load_breast_cancer(return_X_y=True)
-        skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=0)
+        # made-up labels: 8 rows of class 0, 4 rows of class 1
+        y = np.array([0] * 8 + [1] * 4)
+        X = np.arange(12).reshape(-1, 1)
 
-        print([round(float(y[test].mean()), 3) for _, test in skf.split(X, y)])
+        skf = StratifiedKFold(n_splits=4)
+        for i, (train, test) in enumerate(skf.split(X, y)):
+            print(f"fold {i}: test rows {test}, class counts {np.bincount(y[test])}")
+      output: |
+        fold 0: test rows [0 1 8], class counts [2 1]
+        fold 1: test rows [2 3 9], class counts [2 1]
+        fold 2: test rows [ 4  5 10], class counts [2 1]
+        fold 3: test rows [ 6  7 11], class counts [2 1]
   what_comes_out:
     items:
-      - {name: split, kind: method, task: classification, shape: "generator of (train, test) index arrays", note: "Yields one index pair per fold."}
-      - {name: get_n_splits, kind: method, task: null, shape: "int", note: "Number of folds, 5 by default."}
-    next_step: Fit on each train fold, then score on its test fold.
+      - name: split
+        kind: method
+        task: classification
+        shape: "generator of (train, test) index arrays"
+        object_type: generator of tuples
+        example: "([3, 4, 5], [0, 1, 2])"
+        shape_explanation: >-
+          The generator yields one (train, test) pair per fold, so n_splits pairs in
+          total. Each pair holds two one-dimensional arrays of row positions, written
+          (n_train,) and (n_test,). n_train plus n_test equals the number of rows. The
+          example pair has 3 training rows and 3 test rows, so its concrete shape is
+          (3,) for each. Made-up values.
+        note: "One pair per fold. Use list() to collect them all."
+      - name: get_n_splits
+        kind: method
+        task: null
+        shape: "int"
+        object_type: int
+        example: "4"
+        shape_explanation: >-
+          A single whole number, the value of n_splits. The example uses 4 folds, so the
+          value is 4. Made-up value.
+        note: "Number of folds, 5 by default."
+    next_step: null
+    snippet: |
+      # scikit-learn 1.9.1
+      import numpy as np
+      from sklearn.model_selection import StratifiedKFold
+
+      y = np.array([0] * 8 + [1] * 4)
+      X = np.arange(12).reshape(-1, 1)
+
+      skf = StratifiedKFold(n_splits=4)
+      print("get_n_splits:", skf.get_n_splits())
+      pairs = list(skf.split(X, y))
+      print("pairs:", len(pairs))
+      print("train and test sizes, fold 0:", len(pairs[0][0]), len(pairs[0][1]))
+    snippet_library: scikit-learn
+    output: |
+      get_n_splits: 4
+      pairs: 4
+      train and test sizes, fold 0: 9 3
     visual: null
   catch_outs:
     - Shuffle is off by default; turn it on to mix the rows.
     - Shuffle mixes rows within each class, not across classes.
-    - random_state only matters when shuffle is on.
+    - random_state with shuffle=False raises ValueError, so leave it at None.
+    - A class with fewer rows than n_splits gives a UserWarning, and some folds get none of it.
   key_settings:
     tier1:
-      - {name: shuffle, page: null}
-      - {name: n_splits, page: null}
+      - name: shuffle
+        page: null
+        controls: Whether each class's rows are shuffled before they are dealt into folds.
+        effect: Off gives the same folds every run. On mixes rows within each class.
+      - name: n_splits
+        page: null
+        controls: The number of folds, at least 2.
+        effect: Each fold is one fit, so more folds means more fits and smaller test folds.
     tier2:
-      - {name: random_state, page: null}
+      - name: random_state
+        page: null
+        controls: The seed for shuffling within each class. None gives new folds each run.
+        effect: A fixed int repeats the same folds. It needs shuffle=True.
     tier3: []
   watch_it_work: {none: true}
   intuition:
-    text: Deal each class's rows across the folds in turn, so every fold gets its share.
+    idea: Deal each class's rows across the folds in turn, so every fold keeps its share.
+    analogy: Dealing a deck of red and black cards into piles, so each pile gets the same mix.
+    animation: none
+    goal: Give every fold about the same class mix as the full dataset.
+    steps:
+      - Count the rows in each class.
+      - Work out how many rows of each class each fold should hold, as even as whole rows allow.
+      - Walk through the rows class by class, in row order.
+      - Give the first rows of each class to fold 0, the next rows to fold 1, and so on.
+      - Use one fold as the test piece and the other folds together as the training piece.
+      - Repeat so that every fold is the test piece once.
+      - With shuffle=True, shuffle the rows inside each class before filling the folds.
+    math:
+      notation:
+        - {symbol: "k", meaning: "One class label."}
+        - {symbol: "c_k", meaning: "The number of rows in class k."}
+        - {symbol: "n", meaning: "The number of folds, set by n_splits."}
+        - {symbol: "t(i,k)", meaning: "The number of class k rows in test fold i."}
+      equations:
+        - expression: "t(i,k) = floor(c_k / n) or ceil(c_k / n)"
+          meaning: Each fold gets the rounded-down or rounded-up share of every class.
+        - expression: "sum over i of t(i,k) = c_k"
+          meaning: Across all folds, every class k row is a test row exactly once.
+      prediction: "Example: 8 rows of class 0 and n = 4 give 2 class-0 rows per fold. 4 class-1 rows give 1 per fold."
+    good_at: [classification, one rare class, even class mix per fold]
+    bad_at: [regression target, time-ordered data, classes smaller than n_splits]
+    vs_siblings:
+      - {page: kfold, note: "Same folds, but no class balance."}
+      - {page: stratifiedshufflesplit, note: "Random hold-outs that keep the class mix."}
+      - {page: repeatedstratifiedkfold, note: "Runs this split several times with new shuffles."}
+    read_more:
+      - Without shuffle, the same folds come back every run.
+      - Stratification uses the class labels in y, so y must be given.
+      - A class with fewer rows than n_splits gives a warning, and some folds get none of it.
   next: []

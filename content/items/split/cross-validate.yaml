@@ -52,32 +52,177 @@ slots:
             model, X, y, cv=5,
             scoring=["accuracy", "roc_auc"],
             return_train_score=True,
+            n_jobs=1,
         )
         print(sorted(results))
-        print(results["test_accuracy"].mean().round(3),
+        print("test accuracy, mean:",
+              results["test_accuracy"].mean().round(3))
+        print("test roc_auc, mean:",
               results["test_roc_auc"].mean().round(3))
+      output: |
+        ['fit_time', 'score_time', 'test_accuracy', 'test_roc_auc', 'train_accuracy', 'train_roc_auc']
+        test accuracy, mean: 0.951
+        test roc_auc, mean: 0.992
   what_comes_out:
     items:
-      - {name: cross_validate, kind: return, task: null, shape: "dict of arrays, each (n_splits,)", note: "Test scores, plus fit and score times per fold."}
-    next_step: Compare test and train scores to spot overfitting.
+      - name: results
+        kind: return
+        task: null
+        shape: "dict"
+        object_type: dict
+        example: "{'fit_time': [...], 'test_accuracy': [...]}"
+        shape_explanation: >-
+          A dictionary has no rows or columns. Each key names one array, and the arrays
+          are read by key. The example has 2 keys, shown in brackets, so it holds 2
+          arrays. The real dictionary holds one array per key listed below.
+        note: "Read each array by its key, such as results['test_accuracy']."
+      - name: fit_time
+        kind: return
+        task: null
+        shape: "(n_splits,)"
+        object_type: numpy.ndarray
+        example: "[0.02, 0.01, 0.02]"
+        shape_explanation: >-
+          A one-dimensional array with one time per fold, written (n_splits,). n_splits is
+          the number of folds, set by cv. The example has 3 folds, so its concrete shape is
+          (3,). Made-up values.
+        note: "Time taken to fit on each fold's training rows."
+      - name: score_time
+        kind: return
+        task: null
+        shape: "(n_splits,)"
+        object_type: numpy.ndarray
+        example: "[0.01, 0.01, 0.00]"
+        shape_explanation: >-
+          A one-dimensional array with one time per fold, written (n_splits,). The example
+          has 3 folds, so its concrete shape is (3,). Made-up values.
+        note: "Time taken to score each fold's test rows."
+      - name: test_accuracy
+        kind: return
+        task: classification
+        shape: "(n_splits,)"
+        object_type: numpy.ndarray
+        example: "[0.94, 0.96, 0.95]"
+        shape_explanation: >-
+          A one-dimensional array with one score per fold, written (n_splits,). The
+          example has 3 scores, so its concrete shape is (3,). Made-up values.
+        note: "Key is test_ plus the metric name. One value per fold."
+      - name: test_roc_auc
+        kind: return
+        task: classification
+        shape: "(n_splits,)"
+        object_type: numpy.ndarray
+        example: "[0.98, 0.99, 0.97]"
+        shape_explanation: >-
+          A one-dimensional array with one score per fold, written (n_splits,). The
+          example has 3 scores, so its concrete shape is (3,). Made-up values.
+        note: "Same layout as test_accuracy, for the second metric."
+      - name: train_accuracy
+        kind: return
+        task: classification
+        shape: "(n_splits,)"
+        object_type: numpy.ndarray
+        example: "[0.97, 0.98, 0.97]"
+        shape_explanation: >-
+          A one-dimensional array with one score per fold, written (n_splits,). The
+          example has 3 scores, so its concrete shape is (3,). Made-up values.
+        note: "Only present when return_train_score=True."
+    next_step: null
     visual: null
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import load_breast_cancer
+      from sklearn.linear_model import LogisticRegression
+      from sklearn.model_selection import cross_validate
+
+      X, y = load_breast_cancer(return_X_y=True)
+      model = LogisticRegression(max_iter=5000)
+      results = cross_validate(model, X, y, cv=5, n_jobs=1)
+
+      print("type:", type(results).__name__)
+      print("keys:", sorted(results))
+      print("fit_time shape:", results["fit_time"].shape)
+      print("test_score shape:", results["test_score"].shape)
+      print("test_score, per fold:", results["test_score"].round(3))
+    snippet_library: scikit-learn
+    output: |
+      type: dict
+      keys: ['fit_time', 'score_time', 'test_score']
+      fit_time shape: (5,)
+      test_score shape: (5,)
+      test_score, per fold: [0.939 0.947 0.982 0.93  0.956]
   catch_outs:
     - Train scores are off by default; turn them on to compare.
     - Keys are test_<metric>, plus train_<metric> when turned on.
     - Pass a list to scoring to get several metrics at once.
   key_settings:
     tier1:
-      - {name: cv, page: null}
-      - {name: scoring, page: null}
-      - {name: groups, page: null}
-      - {name: return_train_score, page: null}
+      - name: cv
+        page: null
+        controls: How rows are split into folds. An int sets the fold count. A splitter object sets its own rule.
+        effect: With an int and a classifier, folds are stratified, so class shares stay similar.
+      - name: scoring
+        page: null
+        controls: The metric or metrics to compute on each test fold. A list gives several.
+        effect: Each metric adds its own test_ arrays to the dictionary.
+      - name: groups
+        page: null
+        controls: A group label for each row, used by group-aware splitters.
+        effect: Keeps rows from one group in the same fold. Needs a group-aware cv, such as GroupKFold.
+      - name: return_train_score
+        page: null
+        controls: Adds train_ arrays with scores on each fold's training rows.
+        effect: Helps spot overfitting, but adds scoring work on each fold.
     tier2:
-      - {name: error_score, page: null}
-      - {name: params, page: null}
+      - name: error_score
+        page: null
+        controls: The score used for a fold whose fit raises an error. 'raise' stops instead.
+        effect: The default nan lets the run finish, so check for nan scores.
+      - name: params
+        page: null
+        controls: Extra values sent to the fit, the scorer and the splitter.
+        effect: Sends each value to the step that needs it, by name.
     tier3:
-      - {name: return_estimator, page: null}
-      - {name: return_indices, page: null}
+      - name: return_estimator
+        page: null
+        controls: Keeps the model fitted on each fold in the result.
+        effect: Lets you inspect each fold's model, but keeps more objects in memory.
+      - name: return_indices
+        page: null
+        controls: Adds the train and test row positions used by each fold.
+        effect: Shows which rows landed in each fold, at a cost in memory.
   watch_it_work: {none: true}
   intuition:
-    text: Score the model on each fold, and time the fits as it goes.
+    idea: Run cross-validation and keep several scores and timings for each fold.
+    analogy: Like marking one practice exam several ways, and noting how long each marking took.
+    animation: none
+    goal: Get several scores per fold, plus fit and score times, in one call.
+    steps:
+      - Split the rows into folds using cv.
+      - Take one fold as the test rows. Use the rest for training.
+      - Clone the estimator, so every fold starts from an unfitted model.
+      - Time the fit on the training rows.
+      - Score the fitted clone on the test rows, once for each metric.
+      - Time the scoring.
+      - If return_train_score is on, also score the training rows.
+      - Repeat for each fold, so every row is tested once.
+      - Return one dictionary, with one array per key.
+    math:
+      notation:
+        - {symbol: "k", meaning: "The number of folds, n_splits."}
+        - {symbol: "s_i", meaning: "The test score on fold i, for one metric."}
+      equations:
+        - expression: "mean = (s_1 + s_2 + … + s_k) ÷ k"
+          meaning: The average of the per-fold test scores, which the snippet prints.
+      prediction: "Example: 5 folds with test scores 0.94, 0.96, 0.95, 0.93 and 0.97 give a mean of 0.95."
+    good_at: [several metrics at once, timing each fit, checking overfitting]
+    bad_at: [time-ordered rows, one score only, a single model object]
+    vs_siblings:
+      - {page: cross-val-score, note: "Returns one metric as an array, with no timings."}
+      - {page: cross-val-predict, note: "Returns a prediction for each row, not scores."}
+      - {page: kfold, note: "Makes the folds only, with no fitting or scoring."}
+    read_more:
+      - It returns a dictionary, not an array. Read each array by its key.
+      - Each array has one entry per fold, in fold order.
+      - return_train_score and return_estimator are off by default.
   next: []

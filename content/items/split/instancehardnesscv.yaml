@@ -36,35 +36,121 @@ slots:
   code:
     - library: imbalanced-learn
       target: imblearn.model_selection.InstanceHardnessCV
-      why_this_library: A classifier ranks how hard each row is to predict.
+      why_this_library: Ranks rows by a classifier's predicted probability, then deals them out.
       snippet: |
         # imbalanced-learn 0.14.2
         from imblearn.model_selection import InstanceHardnessCV
-        from sklearn.datasets import load_breast_cancer
+        from sklearn.datasets import make_classification
         from sklearn.linear_model import LogisticRegression
 
-        X, y = load_breast_cancer(return_X_y=True)
-        cv = InstanceHardnessCV(LogisticRegression(max_iter=5000), n_splits=5)
-
-        print([len(test) for _, test in cv.split(X, y)])
+        X, y = make_classification(n_samples=20, n_features=4, random_state=0)
+        cv = InstanceHardnessCV(LogisticRegression(max_iter=1000), n_splits=4)
+        for i, (train, test) in enumerate(cv.split(X, y)):
+            print(f"fold {i}: test rows {len(test)}, positive rows {y[test].sum()}")
+      output: |
+        fold 0: test rows 5, positive rows 2
+        fold 1: test rows 5, positive rows 2
+        fold 2: test rows 5, positive rows 3
+        fold 3: test rows 5, positive rows 3
   what_comes_out:
     items:
-      - {name: split, kind: method, task: classification, shape: "generator of (train, test) index arrays", note: "Yields one index pair per fold."}
-      - {name: get_n_splits, kind: method, task: null, shape: "int", note: "Number of folds, 5 by default."}
-    next_step: Fit on each train fold, then score on its test fold.
+      - name: split
+        kind: method
+        task: classification
+        shape: "generator of (train, test) index arrays"
+        object_type: generator of tuples
+        example: "([0, 2, 3], [1, 4])"
+        shape_explanation: >-
+          The generator yields one (train, test) pair per fold, so n_splits pairs in
+          total. Each pair holds two one-dimensional arrays of row positions, written
+          (n_train,) and (n_test,). The example pair has 3 training rows and 2 test rows.
+          Made-up values.
+        note: "One index pair per fold. Runs the estimator first."
+      - name: get_n_splits
+        kind: method
+        task: null
+        shape: "int"
+        object_type: int
+        example: "4"
+        shape_explanation: >-
+          A single whole number, the value of n_splits. The example has 4 folds, so the
+          value is 4. Made-up value.
+        note: "Number of folds, 5 by default."
+    next_step: null
+    snippet: |
+      # imbalanced-learn 0.14.2
+      from imblearn.model_selection import InstanceHardnessCV
+      from sklearn.datasets import make_classification
+      from sklearn.linear_model import LogisticRegression
+
+      X, y = make_classification(n_samples=20, n_features=4, random_state=0)
+      cv = InstanceHardnessCV(LogisticRegression(max_iter=1000), n_splits=4)
+      print("get_n_splits:", cv.get_n_splits())
+      pairs = list(cv.split(X, y))
+      print("pairs:", len(pairs))
+      print("test sizes:", [len(test) for _, test in pairs])
+    snippet_library: imbalanced-learn
+    output: |
+      get_n_splits: 4
+      pairs: 4
+      test sizes: [5, 5, 5, 5]
     visual: null
   catch_outs:
-    - Needs a classifier, which it fits to rank the rows.
-    - Set pos_label to choose which class counts as positive.
+    - Needs a classifier with predict_proba, which it fits to rank the rows.
+    - Targets must be binary; a three-class y raises ValueError.
+    - Set pos_label to choose which class's probability ranks the rows.
+    - Calling split first runs cross-validation on the estimator, so it is slower than KFold.
     - Use StratifiedKFold when class balance is the only concern.
   key_settings:
     tier1:
-      - {name: estimator, page: null}
-      - {name: n_splits, page: null}
-      - {name: pos_label, page: null}
+      - name: estimator
+        page: null
+        controls: The classifier that scores how hard each row is. It must have predict_proba.
+        effect: A weak classifier ranks rows poorly, so the spread is less useful.
+      - name: n_splits
+        page: null
+        controls: The number of folds, at least 2.
+        effect: More folds means smaller test folds and more estimator fits.
+      - name: pos_label
+        page: null
+        controls: Which class's predicted probability ranks the rows. None uses classes_[1].
+        effect: Choosing the other class reverses the ranking within each class.
     tier2: []
     tier3: []
   watch_it_work: {none: true}
   intuition:
-    text: Rank the rows by how hard they are, then deal them out evenly.
+    idea: Rank the rows by how the model predicts them, then deal the ranked rows across folds.
+    analogy: Dealing the hardest practice questions evenly to each study group.
+    animation: none
+    goal: Give every fold a similar mix of easy and hard rows.
+    steps:
+      - Get a predicted probability for each row, from cross-validation with n_splits folds.
+      - Sort the rows by class.
+      - Within each class, sort the rows by the predicted probability of the positive class.
+      - Number the sorted rows 0, 1, 2, and so on.
+      - Send sorted row p to fold p mod n_splits, so the folds take turns.
+      - Each fold gets rows across the whole range of probabilities.
+      - Use one fold as the test piece and the rest for training.
+      - Repeat so that every fold is the test piece once.
+    math:
+      notation:
+        - {symbol: "N", meaning: "The number of rows you pass in."}
+        - {symbol: "n", meaning: "The number of folds, set by n_splits."}
+        - {symbol: "p", meaning: "A row's position in the sorted order, from 0 to N - 1."}
+      equations:
+        - expression: "fold(p) = p mod n"
+          meaning: The row at sorted position p goes to fold p mod n, so folds take turns.
+        - expression: "test size of each fold = floor(N / n) or ceil(N / n)"
+          meaning: Each fold gets either the rounded-down or the rounded-up share of rows.
+      prediction: "Example: 23 rows and 5 folds give test folds of 5, 5, 5, 4 and 4 rows."
+    good_at: [binary classification, spreading hard rows, rows in any order]
+    bad_at: [multiclass targets, regression, a quick split]
+    vs_siblings:
+      - {page: stratifiedkfold, note: "Balances class counts, but ignores how hard rows are."}
+      - {page: kfold, note: "Plain folds, with no ranking by the model."}
+      - {page: repeatedstratifiedkfold, note: "Repeats class-balanced folds with new shuffles."}
+    read_more:
+      - Rows are ranked by the predicted probability of the positive class, not a separate score.
+      - The ranking comes from the estimator, so a different estimator gives different folds.
+      - Each call to split runs the estimator again, so the folds are recomputed.
   next: []

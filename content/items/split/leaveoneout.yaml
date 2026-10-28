@@ -10,8 +10,10 @@ question_tags: [very small data, one row at a time]
 targets: [sklearn.model_selection.LeaveOneOut]
 pairs_with: []
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.LeaveOneOut.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.LeaveOneOut.html
+library_versions:
+  scikit-learn: "1.9.1"
 reviewed: false
 rules:
   task_types: [regression, classification]
@@ -25,39 +27,115 @@ slots:
     line: Tests one row at a time, so every row is tested alone.
   quick_facts:
     facts:
-    - {label: Splits, value: one per row}
-    - {label: Rows per test set, value: "1"}
+      - {label: Splits, value: one per row}
+      - {label: Rows per test set, value: "1"}
   use_avoid:
     use_when: [very small data, every row tested alone]
     avoid_when: [large data, slow fits]
   prep: []
   code:
-  - library: scikit-learn
-    target: sklearn.model_selection.LeaveOneOut
-    why_this_library: One splitter that holds out a single row per split.
-    snippet: |
-      # scikit-learn 1.9.1
-      from sklearn.datasets import make_regression
-      from sklearn.model_selection import LeaveOneOut
+    - library: scikit-learn
+      target: sklearn.model_selection.LeaveOneOut
+      why_this_library: One splitter that holds out a single row per split.
+      snippet: |
+        # scikit-learn 1.9.1
+        import numpy as np
+        from sklearn.model_selection import LeaveOneOut
 
-      X, _ = make_regression(n_samples=6, n_features=2, random_state=0)
-      loo = LeaveOneOut()
-      for train_idx, test_idx in loo.split(X):
-          print("test", test_idx)
-      print("splits", loo.get_n_splits(X))
+        X = np.arange(5)
+        loo = LeaveOneOut()
+        for train_idx, test_idx in loo.split(X):
+            print("train", train_idx, "test", test_idx)
+        print("get_n_splits:", loo.get_n_splits(X))
+      output: |
+        train [1 2 3 4] test [0]
+        train [0 2 3 4] test [1]
+        train [0 1 3 4] test [2]
+        train [0 1 2 4] test [3]
+        train [0 1 2 3] test [4]
+        get_n_splits: 5
   what_comes_out:
     items:
-    - {name: split, kind: method, task: null, shape: "generator of (train, test) index arrays", note: "One split per row, with that row in test."}
-    - {name: get_n_splits, kind: method, task: null, shape: "int", note: "Equals the number of rows."}
+      - name: split
+        kind: method
+        task: null
+        shape: "(train, test) pairs"
+        object_type: generator of tuples
+        example: "(array([0, 2, 3]), array([1]))"
+        shape_explanation: >-
+          A generator. It yields one (train, test) pair per row, one pair at a time.
+          The test part is a one-dimensional array holding one row position, written
+          (1,). The train part holds the other rows, written (n_train,), where n_train
+          is N minus 1. The example is made-up: 3 training rows and 1 test row.
+        note: "One pair per row. The test part always holds one row."
+      - name: get_n_splits
+        kind: method
+        task: null
+        shape: "int"
+        object_type: int
+        example: "5"
+        shape_explanation: >-
+          A single whole number, not an array, so it has no rows or columns. It equals
+          N, the number of rows. The example is made-up: 5 rows give the value 5.
+        note: "Equals the number of rows."
     next_step: Average the one-row errors into one score.
+    snippet: |
+      # scikit-learn 1.9.1
+      import numpy as np
+      from sklearn.model_selection import LeaveOneOut
+
+      X = np.arange(5)
+      loo = LeaveOneOut()
+      splits = list(loo.split(X))
+      print("pairs:", len(splits))
+      print("test sizes:", sorted({len(t) for _, t in splits}))
+      print("train sizes:", sorted({len(tr) for tr, _ in splits}))
+      print("rows tested:", sorted(int(t[0]) for _, t in splits))
+    snippet_library: scikit-learn
+    output: |
+      pairs: 5
+      test sizes: [1]
+      train sizes: [4]
+      rows tested: [0, 1, 2, 3, 4]
     visual: null
   catch_outs:
-  - Slow on big data, since it fits once per row.
-  - Each test score rests on a single row.
+    - Slow on big data, since it fits once per row.
+    - Each test score rests on a single row.
   key_settings:
     tier1: []
     tier2: []
     tier3: []
   watch_it_work: {none: true}
-  intuition: {text: "Leave one row out, train on the rest, test on that row, and repeat for every row."}
+  intuition:
+    idea: Leave one row out, train on the rest, test on that row, and repeat for every row.
+    analogy: Grading each student's essay with a model learned from all the other essays, one student at a time.
+    animation: none
+    goal: Give every row a test score from a model that never saw that row.
+    steps:
+      - Pass in N rows. Each row takes a turn as the test set.
+      - Take the first row as the test set.
+      - Put the other N minus 1 rows in the training set.
+      - Fit on the training rows, then score on the test row.
+      - Move to the next row as the test set, and repeat.
+      - Stop after the last row has been the test set.
+      - Average the N scores yourself.
+    math:
+      notation:
+        - {symbol: "N", meaning: "The number of rows you pass in."}
+        - {symbol: "n_train", meaning: "The number of training rows in each split."}
+      equations:
+        - expression: "number of splits = N"
+          meaning: One split for each row, so N fits in total.
+        - expression: "n_train = N − 1"
+          meaning: Every split trains on all rows except the one held out.
+      prediction: "Example: 5 rows give 5 splits, each with 4 training rows and 1 test row."
+    good_at: [very small data, every row tested alone]
+    bad_at: [large data, slow fits, noisy single-row scores]
+    vs_siblings:
+      - {page: leavepout, note: "Holds out p rows at a time, in every combination."}
+      - {page: kfold, note: "Holds out whole folds, so each fit tests many rows."}
+      - {page: shufflesplit, note: "Random holdouts, not one row at a time."}
+    read_more:
+      - LeavePOut with p equal to 1 gives the same splits as this page.
+      - Every row is the test set exactly once.
   next: []

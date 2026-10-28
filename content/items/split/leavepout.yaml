@@ -10,8 +10,10 @@ question_tags: [tiny data, every combination]
 targets: [sklearn.model_selection.LeavePOut]
 pairs_with: []
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.LeavePOut.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.LeavePOut.html
+library_versions:
+  scikit-learn: "1.9.1"
 reviewed: false
 rules:
   task_types: [regression, classification]
@@ -25,40 +27,123 @@ slots:
     line: Tests every possible group of p rows, one group at a time.
   quick_facts:
     facts:
-    - {label: Rows per test set, value: p}
-    - {label: Splits, value: one per p-row group}
+      - {label: Rows per test set, value: p}
+      - {label: Splits, value: one per p-row group}
   use_avoid:
     use_when: [tiny data, need every p-row test set]
     avoid_when: [large data, slow fits]
   prep: []
   code:
-  - library: scikit-learn
-    target: sklearn.model_selection.LeavePOut
-    why_this_library: One splitter that tests every group of p rows.
-    snippet: |
-      # scikit-learn 1.9.1
-      from sklearn.datasets import make_regression
-      from sklearn.model_selection import LeavePOut
+    - library: scikit-learn
+      target: sklearn.model_selection.LeavePOut
+      why_this_library: One splitter that tests every group of p rows.
+      snippet: |
+        # scikit-learn 1.9.1
+        import numpy as np
+        from sklearn.model_selection import LeavePOut
 
-      X, _ = make_regression(n_samples=6, n_features=2, random_state=0)
-      lpo = LeavePOut(p=2)
-      train_idx, test_idx = next(lpo.split(X))
-      print("first test", test_idx)
-      print("splits", lpo.get_n_splits(X))
+        X = np.arange(6)
+        lpo = LeavePOut(p=2)
+        pairs = list(lpo.split(X))
+        print("first three test sets:", [t.tolist() for _, t in pairs[:3]])
+        print("get_n_splits:", lpo.get_n_splits(X))
+        print("train size:", len(pairs[0][0]))
+      output: |
+        first three test sets: [[0, 1], [0, 2], [0, 3]]
+        get_n_splits: 15
+        train size: 4
   what_comes_out:
     items:
-    - {name: split, kind: method, task: null, shape: "generator of (train, test) index arrays", note: "One split per group of p test rows."}
-    - {name: get_n_splits, kind: method, task: null, shape: "int", note: "Counts all p-row groups, 15 in the demo."}
+      - name: split
+        kind: method
+        task: null
+        shape: "(train, test) pairs"
+        object_type: generator of tuples
+        example: "(array([2, 3, 4, 5]), array([0, 1]))"
+        shape_explanation: >-
+          A generator. It yields one (train, test) pair per group of p rows. The test part
+          is a one-dimensional array of p row positions, written (p,). The train part is
+          written (n_train,), where n_train is N minus p. The example is made-up: N = 6
+          and p = 2, so the test part has 2 rows and the train part has 4.
+        note: "One pair per p-row group. Groups come in a fixed order."
+      - name: get_n_splits
+        kind: method
+        task: null
+        shape: "int"
+        object_type: int
+        example: "15"
+        shape_explanation: >-
+          A single whole number, not an array, so it has no rows or columns. It equals
+          C(N, p), the number of ways to pick p rows from N. The example is made-up:
+          6 rows with p = 2 give 15 groups.
+        note: "Counts every p-row group, C(N, p)."
     next_step: Average the scores over every group.
+    snippet: |
+      # scikit-learn 1.9.1
+      import numpy as np
+      from math import comb
+      from sklearn.model_selection import LeavePOut
+
+      X = np.arange(6)
+      lpo = LeavePOut(p=2)
+      pairs = list(lpo.split(X))
+      print("pairs:", len(pairs))
+      print("comb(6, 2):", comb(6, 2))
+      print("test sizes:", sorted({len(t) for _, t in pairs}))
+      print("train sizes:", sorted({len(tr) for tr, _ in pairs}))
+      print("last test set:", pairs[-1][1].tolist())
+    snippet_library: scikit-learn
+    output: |
+      pairs: 15
+      comb(6, 2): 15
+      test sizes: [2]
+      train sizes: [4]
+      last test set: [4, 5]
     visual: null
   catch_outs:
-  - The number of splits grows fast with rows and p.
-  - p must be below the number of rows.
+    - The number of splits grows fast with rows and p.
+    - p must be below the number of rows.
+    - Each split trains on N minus p rows, so training sets shrink as p grows.
   key_settings:
     tier1:
-    - {name: p, page: null}
+      - name: p
+        page: null
+        controls: The size of each test set. It must be strictly less than the number of rows.
+        effect: A bigger p makes far more splits, and each test set holds more rows.
     tier2: []
     tier3: []
   watch_it_work: {none: true}
-  intuition: {text: "Hold out every possible group of p rows, one group at a time."}
+  intuition:
+    idea: Hold out every possible group of p rows, one group at a time.
+    analogy: Trying every possible pair of guests as the ones set aside, one pair at a time.
+    animation: none
+    goal: Score on every possible p-row test set, so no combination is skipped.
+    steps:
+      - Pass in N rows, and set p, the size of each test set.
+      - List every way to choose p of the N row positions.
+      - Take the first group as the test set.
+      - Put the other N minus p rows in the training set.
+      - Fit on the training rows, then score on the test rows.
+      - Move to the next group, and repeat.
+      - Stop after the last group.
+      - Average the scores yourself.
+    math:
+      notation:
+        - {symbol: "N", meaning: "The number of rows you pass in."}
+        - {symbol: "p", meaning: "The number of rows in each test set, set by the p setting."}
+        - {symbol: "C(N, p)", meaning: "The number of ways to pick p rows from N, order ignored."}
+      equations:
+        - expression: "number of splits = C(N, p) = N! / (p! × (N − p)!)"
+          meaning: Each p-row group is one split, so this counts the splits.
+        - expression: "n_train = N − p"
+          meaning: Every split trains on all rows except its p test rows.
+      prediction: "Example: N = 6 and p = 2 give C(6, 2) = 15 splits, each with 4 training rows."
+    good_at: [tiny data, every p-row test set]
+    bad_at: [large data, slow fits, many splits]
+    vs_siblings:
+      - {page: leaveoneout, note: "The same idea with p equal to 1."}
+      - {page: kfold, note: "Holds out whole folds, not every combination."}
+    read_more:
+      - p must be strictly less than the number of rows.
+      - Splits come out in the order of itertools combinations.
   next: []

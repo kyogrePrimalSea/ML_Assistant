@@ -29,6 +29,7 @@ slots:
     facts:
       - {label: Default folds, value: "5"}
       - {label: Order kept, value: "yes"}
+      - {label: Default test size, value: "n // (folds + 1)"}
   use_avoid:
     use_when: [time-ordered data, forecasting]
     avoid_when: [shuffled rows, no time order]
@@ -45,24 +46,150 @@ slots:
         X = np.arange(12).reshape(-1, 1)  # 12 rows, oldest first
 
         tscv = TimeSeriesSplit(n_splits=3)
+        print("splits:", tscv.get_n_splits(X))
         for fold, (train_idx, test_idx) in enumerate(tscv.split(X)):
-            print(fold, "train", train_idx, "test", test_idx)
-  what_comes_out: {none: true}
+            print(f"fold {fold} train {train_idx} test {test_idx}")
+      output: |
+        splits: 3
+        fold 0 train [0 1 2] test [3 4 5]
+        fold 1 train [0 1 2 3 4 5] test [6 7 8]
+        fold 2 train [0 1 2 3 4 5 6 7 8] test [ 9 10 11]
+  what_comes_out:
+    items:
+      - name: split
+        kind: method
+        task: null
+        shape: "n_splits pairs of 1-D index arrays"
+        object_type: generator of tuples
+        example: "(array([0, 1, 2]), array([3, 4]))"
+        shape_explanation: >-
+          split(X) returns a generator. It yields one (train_index, test_index) pair per
+          fold, and nothing is computed until you loop over it. Each index array is
+          one-dimensional, written (n,), where n is the number of rows in that piece. The
+          number of pairs is n_splits. The example is one made-up fold with 3 training
+          rows and 2 test rows, so its arrays have shapes (3,) and (2,).
+        note: "Loop over it. Use each pair to index X and y."
+      - name: get_n_splits
+        kind: method
+        task: null
+        shape: "scalar"
+        object_type: int
+        example: "3"
+        shape_explanation: >-
+          A scalar is one whole number, not an array. It returns n_splits, the number
+          of folds set when you created the splitter. The X argument is ignored. The
+          example value 3 is made up.
+        note: "Number of folds. Equal to the number of pairs from split."
+      - name: train_index
+        kind: return
+        task: null
+        shape: "(n_train,)"
+        object_type: numpy.ndarray
+        example: "[0, 1, 2]"
+        shape_explanation: >-
+          A one-dimensional array of row positions, written (n_train,). n_train is the
+          number of training rows in this fold, and it grows with each fold by default.
+          The example holds 3 positions, so its concrete shape is (3,). Made-up values.
+        note: "Earlier rows only. Use it as X[train_index]."
+      - name: test_index
+        kind: return
+        task: null
+        shape: "(n_test,)"
+        object_type: numpy.ndarray
+        example: "[3, 4]"
+        shape_explanation: >-
+          A one-dimensional array of row positions, written (n_test,). n_test is the
+          number of test rows in this fold. By default every fold has the same n_test.
+          The example holds 2 positions, so its concrete shape is (2,). Made-up values.
+        note: "Rows that come right after the training rows."
+    next_step: null
+    visual: null
+    snippet: |
+      # scikit-learn 1.9.1
+      import numpy as np
+      from sklearn.model_selection import TimeSeriesSplit
+
+      X = np.arange(12).reshape(-1, 1)
+      tscv = TimeSeriesSplit(n_splits=3)
+      print("get_n_splits:", tscv.get_n_splits(X))
+      print("split returns:", type(tscv.split(X)).__name__)
+
+      splits = list(tscv.split(X))
+      print("pairs:", len(splits))
+      train_idx, test_idx = splits[0]
+      print("train_index shape:", train_idx.shape)
+      print("test_index shape:", test_idx.shape)
+      print("first train rows:", X[train_idx].ravel())
+    snippet_library: scikit-learn
+    output: |
+      get_n_splits: 3
+      split returns: generator
+      pairs: 3
+      train_index shape: (3,)
+      test_index shape: (3,)
+      first train rows: [0 1 2]
   catch_outs:
     - Rows must already be sorted oldest to newest.
     - Early folds train on little data.
     - Use gap to skip rows that leak into the test window.
+    - Shuffling the rows first defeats the split. Keep the time order.
   key_settings:
     tier1:
-      - {name: n_splits, page: null}
+      - name: n_splits
+        page: null
+        controls: How many train and test splits to make. It must be at least 2. The default is 5.
+        effect: More folds give more test scores. With the default test size, each test piece is smaller.
     tier2:
-      - {name: test_size, page: null}
-      - {name: gap, page: null}
+      - name: test_size
+        page: null
+        controls: Rows in each test piece. The default is n_samples // (n_splits + 1).
+        effect: A bigger test piece gives steadier scores, but leaves fewer rows for the first training piece.
+      - name: gap
+        page: null
+        controls: Rows dropped just before each test piece, from the end of its training piece.
+        effect: Keeps nearby rows out of the test piece, but leaves less training data.
     tier3:
-      - {name: max_train_size, page: null}
-  watch_it_work:
-    dataset: airline-passengers
-    control: {name: n_splits, min: 2, max: 8, step: 1, default: 5}
+      - name: max_train_size
+        page: null
+        controls: Caps the training piece at this many of the most recent rows.
+        effect: Keeps training windows the same size, but drops older rows.
+  watch_it_work: {none: true}
   intuition:
-    text: Train on the past, test on the next slice, then move forward.
+    idea: Train on the past, test on the next slice, then move forward.
+    analogy: Like a weather forecaster who learns from past days, then checks the next few days.
+    animation: none
+    goal: Score a model on later rows, without training on the future.
+    steps:
+      - Keep the rows in time order. The split does not shuffle them.
+      - Work out the test size. By default it is n_samples // (n_splits + 1).
+      - Fold 0 trains on the first rows, up to where its test piece starts.
+      - Its test piece is the block of test_size rows right after that training piece.
+      - Fold 1 adds the old test piece to training, then tests on the next block.
+      - Repeat until the last fold, which tests on the final rows.
+      - With gap set, drop that many rows before each test piece from training.
+      - With max_train_size set, keep only the most recent training rows.
+      - Fit on each training piece, then score on its test piece.
+    math:
+      notation:
+        - {symbol: "N", meaning: "The number of rows, n_samples."}
+        - {symbol: "k", meaning: "The number of folds, n_splits."}
+        - {symbol: "t", meaning: "The number of rows in each test piece."}
+        - {symbol: "g", meaning: "The gap, in rows."}
+        - {symbol: "i", meaning: "The fold number, counting from 0."}
+      equations:
+        - expression: "t = N // (k + 1)"
+          meaning: With test_size unset, each test piece has this many rows, rounded down.
+        - expression: "n_train(i) = N − (k − i) × t − g"
+          meaning: With max_train_size unset, fold i trains on this many rows.
+      prediction: "Example: 12 rows and 3 folds give t = 3. Fold 0 trains on 3 rows and fold 2 on 9 rows."
+    good_at: [time-ordered data, growing training windows, forecasting checks]
+    bad_at: [shuffled rows, very short series, many folds on little data]
+    vs_siblings:
+      - {page: kfold, note: "Shuffles nothing and trains on the past, so folds are not random."}
+      - {page: shufflesplit, note: "Makes random splits, which mix time order."}
+      - {page: train-test-split, note: "Makes one split, with no forward steps."}
+    read_more:
+      - The split returns row positions, not data. Index X and y with them.
+      - Each test piece comes after its training rows.
+      - Early folds have the least training data.
   next: []

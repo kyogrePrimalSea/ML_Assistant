@@ -37,6 +37,7 @@ slots:
     why_this_library: One call returns out-of-fold predictions for all rows.
     snippet: |
       # scikit-learn 1.9.1
+      import numpy as np
       from sklearn.datasets import make_regression
       from sklearn.linear_model import LinearRegression
       from sklearn.model_selection import cross_val_predict
@@ -44,25 +45,129 @@ slots:
       X, y = make_regression(n_samples=100, n_features=3, noise=10,
                              random_state=0)
       preds = cross_val_predict(LinearRegression(), X, y, cv=5)
-      print("shape", preds.shape, "first", round(float(preds[0]), 2))
+
+      print("shape:", preds.shape)
+      print("first 3 predictions:", preds[:3].round(2))
+      print("first 3 targets:", y[:3].round(2))
+      print("mean absolute error:", np.abs(preds - y).mean().round(2))
+    output: |
+      shape: (100,)
+      first 3 predictions: [-34.88  -8.16 -85.7 ]
+      first 3 targets: [-42.79   2.67 -89.43]
+      mean absolute error: 8.13
   what_comes_out:
     items:
-    - {name: cross_val_predict, kind: return, task: null, shape: "array of shape (n_samples,)", note: "Each row predicted by a fold that did not train on it."}
-    next_step: Compare these predictions with y to see the errors.
+    - name: predictions
+      kind: return
+      task: null
+      shape: "(n_samples,)"
+      object_type: numpy.ndarray
+      example: "[2.4, -1.1, 0.7]"
+      shape_explanation: >-
+        A one-dimensional array with one prediction per row, written (n_samples,).
+        n_samples is the number of rows you passed in. The example has 3 predictions, so
+        its concrete shape is (3,). Made-up values.
+      note: "Row order matches X. Each value comes from a fold model."
+    - name: probabilities
+      kind: return
+      task: classification
+      shape: "(n_samples, n_classes)"
+      object_type: numpy.ndarray
+      example: "[[0.8, 0.2], [0.3, 0.7]]"
+      shape_explanation: >-
+        A two-dimensional table, written (rows, columns). n_samples is the number of rows,
+        and n_classes is the number of classes. One column per class, in classes_ order.
+        The example has 2 rows and 2 classes, so its concrete shape is (2, 2). Made-up
+        values.
+      note: "From method='predict_proba'. Needs a classifier that has it."
+    next_step: null
     visual: null
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import load_breast_cancer
+      from sklearn.linear_model import LogisticRegression
+      from sklearn.model_selection import cross_val_predict
+
+      X, y = load_breast_cancer(return_X_y=True)
+      model = LogisticRegression(max_iter=5000)
+
+      labels = cross_val_predict(model, X, y, cv=5, n_jobs=1)
+      print("labels shape:", labels.shape)
+      print("first labels:", labels[:5])
+
+      proba = cross_val_predict(model, X, y, cv=5, method="predict_proba",
+                                n_jobs=1)
+      print("proba shape:", proba.shape)
+      print("first row:", proba[0].round(3))
+    snippet_library: scikit-learn
+    output: |
+      labels shape: (569,)
+      first labels: [0 0 0 1 0]
+      proba shape: (569, 2)
+      first row: [1. 0.]
   catch_outs:
   - Use cross_val_score when you need one score per fold.
   - Pass groups only with a group-aware cv splitter.
+  - Returns predictions only. The fold models are not kept.
   key_settings:
     tier1:
-    - {name: estimator, page: null}
-    - {name: cv, page: null}
-    - {name: groups, page: null}
+    - name: estimator
+      page: null
+      controls: The model to fit on each fold's training rows. It must have the method named in method.
+      effect: A model without that method cannot be used here.
+    - name: cv
+      page: null
+      controls: How rows are split into folds. An int sets the fold count. A splitter object sets its own rule.
+      effect: Int cv uses unshuffled folds, so repeat calls match. A shuffled splitter changes the predictions.
+    - name: groups
+      page: null
+      controls: A group label for each row, used by group-aware splitters.
+      effect: Keeps rows from one group in the same fold. Needs a group-aware cv, such as GroupKFold.
     tier2:
-    - {name: method, page: null}
-    - {name: params, page: null}
+    - name: method
+      page: null
+      controls: Which estimator method gives the output, such as predict or predict_proba.
+      effect: predict gives one value per row. predict_proba gives one column per class.
+    - name: params
+      page: null
+      controls: Extra values sent to the fit and the splitter.
+      effect: Sends each value to the step that needs it, by name.
     tier3:
-    - {name: pre_dispatch, page: null}
+    - name: pre_dispatch
+      page: null
+      controls: Limits how many jobs are queued when n_jobs runs them in parallel.
+      effect: Lower values can avoid memory spikes when many jobs run in parallel.
   watch_it_work: {none: true}
-  intuition: {text: "Each row gets a prediction from a model that was trained without it."}
+  intuition:
+    idea: Each row gets a prediction from a model that was trained without it.
+    analogy: Like marking each exam with a grader who never read that exam during training.
+    animation: none
+    goal: Get one honest prediction per row, to check errors row by row.
+    steps:
+      - Split the rows into folds with cv.
+      - Take one fold as the test rows. Train a fresh copy on the rest.
+      - Call the method named in method, usually predict, on the test rows.
+      - Write those predictions into the matching rows of one output array.
+      - Repeat for each fold, so every row is filled once.
+      - Return the full array, in the original row order.
+    math:
+      notation:
+        - {symbol: "N", meaning: "The number of rows."}
+        - {symbol: "k", meaning: "The number of folds, n_splits."}
+        - {symbol: "f_-j", meaning: "The model trained on every fold except fold j."}
+      equations:
+        - expression: "n_1 + n_2 + … + n_k = N"
+          meaning: The fold test pieces add up to every row, so each row gets one prediction.
+        - expression: "ŷ_i = f_-j(x_i), where row i is in fold j"
+          meaning: Each row's prediction comes from the model that never trained on its fold.
+      prediction: "Example: 100 rows and 5 folds. Each fold holds 20 rows, so each fold model predicts 20 rows."
+    good_at: [one prediction per row, row-by-row errors, predicted against actual plots]
+    bad_at: [one score per fold, time-ordered rows, groups without a group-aware cv]
+    vs_siblings:
+      - {page: cross-val-score, note: "Returns one score per fold, not predictions."}
+      - {page: cross-validate, note: "Returns scores and timings, not predictions."}
+      - {page: kfold, note: "Makes the folds only, with no fitting."}
+    read_more:
+      - The output is a plain array, with no fold numbers.
+      - The predictions do not come from one final model. Each row has its own fold model.
   next: []

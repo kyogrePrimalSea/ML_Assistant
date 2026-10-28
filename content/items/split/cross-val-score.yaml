@@ -48,28 +48,110 @@ slots:
         X, y = load_breast_cancer(return_X_y=True)
         model = LogisticRegression(max_iter=5000)
 
-        scores = cross_val_score(model, X, y, cv=5, scoring="accuracy")
+        scores = cross_val_score(model, X, y, cv=5, scoring="accuracy",
+                                 n_jobs=1)
         print(scores.round(3))
+      output: |
+        [0.939 0.947 0.982 0.93  0.956]
   what_comes_out:
     items:
-      - {name: cross_val_score, kind: return, task: null, shape: "float array, shape (n_splits,)", note: "One score per fold."}
-    next_step: Compare the mean and the spread across folds.
+      - name: cross_val_score
+        kind: return
+        task: null
+        shape: "(n_splits,)"
+        object_type: numpy.ndarray
+        example: "[0.91, 0.95, 0.93]"
+        shape_explanation: >-
+          A one-dimensional array with one score per fold, written (n_splits,). n_splits
+          is the number of folds, set by cv. The example has 3 scores, so its concrete
+          shape is (3,). Made-up values.
+        note: "One score per fold. Take the mean and the spread."
+    next_step: null
     visual: null
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import load_breast_cancer
+      from sklearn.linear_model import LogisticRegression
+      from sklearn.model_selection import cross_val_score
+
+      X, y = load_breast_cancer(return_X_y=True)
+      model = LogisticRegression(max_iter=5000)
+      scores = cross_val_score(model, X, y, cv=5, scoring="accuracy",
+                               n_jobs=1)
+
+      print("type:", type(scores).__name__)
+      print("shape:", scores.shape)
+      print("mean:", scores.mean().round(3))
+      print("spread (std):", scores.std().round(3))
+    snippet_library: scikit-learn
+    output: |
+      type: ndarray
+      shape: (5,)
+      mean: 0.951
+      spread (std): 0.018
   catch_outs:
     - Report the spread across folds, not just the mean.
     - Use cross_validate when you need several metrics or fit times.
     - Pass groups when one person or unit appears in many rows.
   key_settings:
     tier1:
-      - {name: cv, page: null}
-      - {name: scoring, page: null}
-      - {name: groups, page: null}
+      - name: cv
+        page: null
+        controls: How rows are split into folds. An int sets the fold count. A splitter object sets its own rule.
+        effect: With an int and a classifier, folds are stratified, so class shares stay similar.
+      - name: scoring
+        page: null
+        controls: The one metric to compute on each fold. A string, a callable, or None for the model's default.
+        effect: Pick the metric that matches your goal. None uses the estimator's own default score.
+      - name: groups
+        page: null
+        controls: A group label for each row, used by group-aware splitters.
+        effect: Keeps rows from one group in the same fold. Needs a group-aware cv, such as GroupKFold.
     tier2:
-      - {name: error_score, page: null}
-      - {name: params, page: null}
-      - {name: estimator, page: null}
+      - name: error_score
+        page: null
+        controls: The score used for a fold whose fit raises an error. 'raise' stops instead.
+        effect: The default nan lets the run finish, so check for nan scores.
+      - name: params
+        page: null
+        controls: Extra values sent to the fit, the scorer and the splitter.
+        effect: Sends each value to the step that needs it, by name.
+      - name: estimator
+        page: null
+        controls: The model to score. It is cloned for each fold, so the object you pass is not fitted.
+        effect: Each fold starts from an unfitted copy, so folds do not share learned values.
     tier3: []
   watch_it_work: {none: true}
   intuition:
-    text: Hold out one fold, score the model on it, then repeat for each fold.
+    idea: Hold out one fold, score the model on it, then repeat for each fold.
+    analogy: Like rotating which practice paper you keep for the exam, so each paper is used once.
+    animation: none
+    goal: Get one honest score per fold, from one call.
+    steps:
+      - Split the rows into cv folds.
+      - Take one fold as the test rows. Use the rest for training.
+      - Clone the estimator and fit the clone on the training rows.
+      - Score the clone on the test rows with scoring.
+      - Keep that one score.
+      - Repeat for each fold, so every row is tested once.
+      - Return the scores as one array, one value per fold.
+    math:
+      notation:
+        - {symbol: "N", meaning: "The number of rows."}
+        - {symbol: "k", meaning: "The number of folds, n_splits."}
+        - {symbol: "n_i", meaning: "The number of test rows in fold i."}
+      equations:
+        - expression: "n_1 + n_2 + … + n_k = N"
+          meaning: The test pieces add up to every row, so each row is tested once.
+      prediction: "Example: plain KFold with 5 folds on 569 rows gives test sizes 114, 114, 114, 114 and 113."
+    good_at: [one metric, any row order, a steadier estimate]
+    bad_at: [time-ordered rows, several metrics, fit times]
+    vs_siblings:
+      - {page: cross-validate, note: "Returns several metrics and fit times."}
+      - {page: cross-val-predict, note: "Returns a prediction for each row, not a score."}
+      - {page: kfold, note: "Makes the folds only, with no fitting."}
+    read_more:
+      - It returns one score per fold, not the fitted model.
+      - Pass a metric name, or None for the model's default.
+      - Pass groups with a group-aware cv, or one group can sit in both train and test.
   next: []

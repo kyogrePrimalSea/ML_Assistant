@@ -38,36 +38,133 @@ slots:
       snippet: |
         # scikit-learn 1.9.1
         import numpy as np
-        from sklearn.datasets import make_classification
         from sklearn.model_selection import StratifiedGroupKFold
 
-        X, y = make_classification(n_samples=40, n_features=3, n_informative=2,
-                                   n_redundant=0, weights=[0.8, 0.2],
-                                   random_state=0)
-        groups = np.repeat(np.arange(10), 4)  # 10 groups, 4 rows each
+        X = np.arange(48).reshape(24, 2)     # made-up: 24 rows, 2 columns
+        groups = np.repeat(np.arange(8), 3)  # made-up: 8 groups, 3 rows each
+        y = np.array([1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0,
+                      1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0])  # made-up labels
 
         sgkf = StratifiedGroupKFold(n_splits=4, shuffle=True, random_state=0)
-        for train_idx, test_idx in sgkf.split(X, y, groups=groups):
-            print("test rows:", len(test_idx), "positives:", y[test_idx].sum())
+        for fold, (train_idx, test_idx) in enumerate(
+            sgkf.split(X, y, groups=groups)
+        ):
+            print("fold", fold, "test groups:", np.unique(groups[test_idx]))
+            print("  test rows:", len(test_idx), "positives:", y[test_idx].sum())
+      output: |
+        fold 0 test groups: [1 3]
+          test rows: 6 positives: 1
+        fold 1 test groups: [0 6]
+          test rows: 6 positives: 2
+        fold 2 test groups: [2 4]
+          test rows: 6 positives: 3
+        fold 3 test groups: [5 7]
+          test rows: 6 positives: 2
   what_comes_out:
     items:
-      - {name: split, kind: method, task: classification, shape: "generator of (train, test) indices", note: "Needs y and groups; one pair per fold."}
-      - {name: get_n_splits, kind: method, task: null, shape: "int", note: "Returns n_splits, 5 by default."}
+      - name: split
+        kind: method
+        task: classification
+        shape: "n_splits pairs of index arrays"
+        object_type: "generator of (train, test) tuples"
+        example: "(array([0, 1, 2, 3]), array([4, 5]))"
+        shape_explanation: >-
+          A generator. Each step yields one pair: the train row numbers, then the test
+          row numbers. There is one pair per fold, so n_splits pairs in total. The example
+          is one made-up pair with 4 train rows and 2 test rows.
+        note: "Needs y and groups; one pair per fold."
+      - name: get_n_splits
+        kind: method
+        task: null
+        shape: "int"
+        object_type: int
+        example: "4"
+        shape_explanation: >-
+          A single whole number, so it is a scalar with no rows or columns. The example
+          is 4, a made-up fold count equal to n_splits.
+        note: "Returns n_splits, 5 by default."
     next_step: "Fit on train and score on test for each fold."
+    snippet: |
+      # scikit-learn 1.9.1
+      import numpy as np
+      from sklearn.model_selection import StratifiedGroupKFold
+
+      X = np.arange(48).reshape(24, 2)
+      groups = np.repeat(np.arange(8), 3)
+      y = np.array([1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0,
+                    1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0])
+
+      sgkf = StratifiedGroupKFold(n_splits=4, shuffle=True, random_state=0)
+      print("get_n_splits:", sgkf.get_n_splits(X, y, groups))
+      pairs = list(sgkf.split(X, y, groups=groups))
+      print("pairs:", len(pairs))
+      print("positives per fold:", [int(y[te].sum()) for _, te in pairs])
+      print("total positives:", int(y.sum()))
+      print("rows per fold:", [len(te) for _, te in pairs])
+    snippet_library: scikit-learn
+    output: |
+      get_n_splits: 4
+      pairs: 4
+      positives per fold: [1, 2, 3, 2]
+      total positives: 8
+      rows per fold: [6, 6, 6, 6]
     visual: null
   catch_outs:
-    - Classification only, so y must hold class labels.
+    - Classification only, so y must hold class labels, not continuous values.
     - Pass groups=, or it raises an error.
-    - Shuffle only mixes rows inside each class.
+    - Shuffle only reorders groups with similar class mixes, so it is not a full shuffle.
     - Class shares per fold are close, not exact.
+    - n_splits above the smallest class count raises a warning.
   key_settings:
     tier1:
-      - {name: n_splits, page: null}
+      - name: n_splits
+        page: null
+        controls: The number of folds, at least 2. Each fold is the test piece once.
+        effect: More folds give smaller test pieces and more fits. Must not exceed the group count.
     tier2:
-      - {name: shuffle, page: null}
-      - {name: random_state, page: null}
+      - name: shuffle
+        page: null
+        controls: Whether each class's groups are shuffled before they are dealt into folds.
+        effect: Changes the folds. Off, the same folds appear every run.
+      - name: random_state
+        page: null
+        controls: The seed for the shuffle. Used only when shuffle is True.
+        effect: A fixed int repeats the same folds. None gives new folds each run.
     tier3: []
   watch_it_work: {none: true}
   intuition:
-    text: Deal whole groups into folds, keeping each class in similar shares.
+    idea: Deal whole groups into folds, keeping each class in similar shares.
+    analogy: Dealing families to tables at a dinner, so each table gets a similar mix of ages.
+    animation: none
+    goal: Score a model on unseen groups, with each fold showing a similar class mix.
+    steps:
+      - Find the distinct group labels and the class of each row.
+      - Count how many rows of each class sit in each group.
+      - Sort the groups from most uneven class mix to least.
+      - Give each group, in turn, to the fold whose class counts suit it best.
+      - Each fold's groups become its test piece, with all their rows.
+      - The rows of the other folds form the training piece for that fold.
+      - Every row is tested exactly once across all the folds.
+    math:
+      notation:
+        - {symbol: "N", meaning: "The number of rows you pass in."}
+        - {symbol: "P", meaning: "The total number of positive rows, in a binary y."}
+        - {symbol: "k", meaning: "The number of folds, set by n_splits."}
+        - {symbol: "p_f", meaning: "The number of positive rows in the test piece of fold f."}
+      equations:
+        - expression: "p_1 + p_2 + ... + p_k = P"
+          meaning: Every positive row is held out in exactly one fold.
+        - expression: "P / k"
+          meaning: The ideal positives per fold. The folds aim near this, but do not hit it exactly.
+      prediction: "Example: P = 8 positives and k = 4 folds give an ideal of 2 per fold. The made-up run gave [1, 2, 3, 2]."
+    good_at: [groups plus a rare class, close class shares, a fixed fold count]
+    bad_at: [regression targets, very few groups, exact class counts]
+    vs_siblings:
+      - {page: groupkfold, note: "Keeps groups whole, but ignores class shares."}
+      - {page: stratifiedkfold, note: "Balances classes, but ignores groups."}
+      - {page: kfold, note: "Ignores both groups and classes."}
+    read_more:
+      - Each group lands in exactly one test fold.
+      - Shares per fold are close to the overall shares, not exact.
+      - n_splits must not be more than the number of groups.
   next: []

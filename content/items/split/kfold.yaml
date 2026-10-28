@@ -10,8 +10,10 @@ question_tags: [rotate test set, every row tested]
 targets: [sklearn.model_selection.KFold]
 pairs_with: []
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.KFold.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.KFold.html
+library_versions:
+  scikit-learn: "1.9.1"
 reviewed: false
 rules:
   task_types: [regression, classification]
@@ -25,41 +27,130 @@ slots:
     line: Takes turns using each slice of rows as the test set.
   quick_facts:
     facts:
-    - {label: Default folds, value: "5"}
-    - {label: Shuffled by default, value: "no"}
+      - {label: Default folds, value: "5"}
+      - {label: Shuffled by default, value: "no"}
   use_avoid:
     use_when: [rows are independent, steadier score from many folds]
     avoid_when: [time-ordered data, one class is rare]
   prep: []
   code:
-  - library: scikit-learn
-    target: sklearn.model_selection.KFold
-    why_this_library: One splitter that rotates the test fold through all rows.
-    snippet: |
-      # scikit-learn 1.9.1
-      from sklearn.datasets import make_regression
-      from sklearn.model_selection import KFold
+    - library: scikit-learn
+      target: sklearn.model_selection.KFold
+      why_this_library: One splitter that rotates the test fold through all rows.
+      snippet: |
+        # scikit-learn 1.9.1
+        import numpy as np
+        from sklearn.model_selection import KFold
 
-      X, _ = make_regression(n_samples=10, n_features=2, random_state=0)
-      kf = KFold(n_splits=5)
-      for train_idx, test_idx in kf.split(X):
-          print("test", test_idx)
+        X = np.arange(10)
+        kf = KFold(n_splits=3)
+        for train_idx, test_idx in kf.split(X):
+            print("train", train_idx, "test", test_idx)
+      output: |
+        train [4 5 6 7 8 9] test [0 1 2 3]
+        train [0 1 2 3 7 8 9] test [4 5 6]
+        train [0 1 2 3 4 5 6] test [7 8 9]
   what_comes_out:
     items:
-    - {name: split, kind: method, task: null, shape: "generator of (train, test) index arrays", note: "One train and test pair per fold."}
-    - {name: get_n_splits, kind: method, task: null, shape: "int", note: "Returns n_splits, 5 by default."}
+      - name: split
+        kind: method
+        task: null
+        shape: "(train, test) pairs"
+        object_type: generator of tuples
+        example: "(array([2, 3]), array([0, 1]))"
+        shape_explanation: >-
+          A generator. It yields one (train, test) pair per fold, one pair at a time.
+          Each part is a one-dimensional array of row positions, written (n_train,) or
+          (n_test,). n_test is the size of the held-out fold. The example is made-up:
+          2 training rows and 2 test rows, so both parts have shape (2,).
+        note: "One train and test pair per fold. Fold sizes differ by at most one."
+      - name: get_n_splits
+        kind: method
+        task: null
+        shape: "int"
+        object_type: int
+        example: "3"
+        shape_explanation: >-
+          A single whole number, not an array, so it has no rows or columns. It equals
+          n_splits. The example is made-up: the value 3 means three folds.
+        note: "Returns n_splits, 5 by default."
     next_step: Fit one model per fold and average the scores.
+    snippet: |
+      # scikit-learn 1.9.1
+      import numpy as np
+      from sklearn.model_selection import KFold
+
+      X = np.arange(10)
+      kf = KFold(n_splits=3)
+      pairs = list(kf.split(X))
+      print("pairs:", len(pairs))
+      print("get_n_splits:", kf.get_n_splits(X))
+      print("test sizes:", [len(test) for _, test in pairs])
+      print("type of train:", type(pairs[0][0]).__name__)
+    snippet_library: scikit-learn
+    output: |
+      pairs: 3
+      get_n_splits: 3
+      test sizes: [4, 3, 3]
+      type of train: ndarray
     visual: null
   catch_outs:
-  - Shuffle is off by default, so row order decides the folds.
-  - Use StratifiedKFold when one class is rare.
+    - Shuffle is off by default, so row order decides the folds.
+    - Sorted labels with no shuffle can leave a class out of a test fold.
+    - When rows do not divide evenly, the first folds get one extra row.
   key_settings:
     tier1:
-    - {name: n_splits, page: null}
-    - {name: shuffle, page: null}
+      - name: n_splits
+        page: null
+        controls: The number of folds. It must be at least 2.
+        effect: More folds train on more rows each time, but fit more models.
+      - name: shuffle
+        page: null
+        controls: Whether rows are shuffled before they are cut into folds. Default is False.
+        effect: Off keeps row order, so sorted rows make unfair folds. On mixes the rows first.
     tier2:
-    - {name: random_state, page: null}
+      - name: random_state
+        page: null
+        controls: The seed for the shuffle. It only matters when shuffle is True.
+        effect: A fixed int repeats the same folds, so scores can be compared.
     tier3: []
   watch_it_work: {none: true}
-  intuition: {text: "Cut the rows into k slices, and let each slice take a turn as the test set."}
+  intuition:
+    idea: Cut the rows into k slices, and let each slice take a turn as the test set.
+    analogy: Passing a stack of practice tests around a group, so each person sits the test once.
+    animation: none
+    goal: Get a test score for every row, with each row tested exactly once.
+    steps:
+      - Pass in the rows and set n_splits, the number of folds.
+      - Optionally shuffle the row positions, seeded by random_state.
+      - Cut the positions into n_splits slices.
+      - Make the first N mod k slices one row longer than the rest.
+      - Take the first slice as the test rows.
+      - Take every other row as the training rows.
+      - Fit on the training rows, then score on the test rows.
+      - Move to the next slice as the test rows, and repeat until every slice has had a turn.
+      - Keep the scores, then average them yourself.
+    math:
+      notation:
+        - {symbol: "N", meaning: "The number of rows you pass in."}
+        - {symbol: "k", meaning: "The number of folds, set by n_splits."}
+        - {symbol: "r", meaning: "The leftover rows, N mod k."}
+        - {symbol: "s_i", meaning: "The size of fold i, counting from 1 to k."}
+      equations:
+        - expression: "s_i = floor(N / k) + 1 if i <= r, otherwise floor(N / k)"
+          meaning: Every fold is about the same size. The first r folds get one extra row.
+        - expression: "number of splits = k"
+          meaning: Each fold is the test set once, so the loop runs k times.
+      prediction: "Example: N = 10 and k = 3 give r = 1, so the fold sizes are 4, 3 and 3."
+    good_at: [rows are independent, steadier score across folds]
+    bad_at: [time-ordered data, rare classes]
+    vs_siblings:
+      - {page: stratifiedkfold, note: "Keeps class shares steady in each fold."}
+      - {page: repeatedkfold, note: "Runs the same rotation again with new shuffles."}
+      - {page: shufflesplit, note: "Draws random test sets that can overlap."}
+      - {page: timeseriessplit, note: "Keeps time order, so training rows come first."}
+    read_more:
+      - Each row is in exactly one test fold per run.
+      - Fold sizes differ by at most one row, as the source code shows.
+      - Shuffling changes which rows share a fold, not the fold sizes.
   next: []

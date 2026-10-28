@@ -10,8 +10,10 @@ question_tags: [small data, steadier score]
 targets: [sklearn.model_selection.RepeatedKFold]
 pairs_with: []
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RepeatedKFold.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RepeatedKFold.html
+library_versions:
+  scikit-learn: "1.9.1"
 reviewed: false
 rules:
   task_types: [regression, classification]
@@ -25,42 +27,129 @@ slots:
     line: Repeats k-fold with fresh random splits to steady the score.
   quick_facts:
     facts:
-    - {label: Default folds, value: "5"}
-    - {label: Default repeats, value: "10"}
+      - {label: Default folds, value: "5"}
+      - {label: Default repeats, value: "10"}
   use_avoid:
     use_when: [small data, want a steadier score]
     avoid_when: [big data, slow fits]
   prep: []
   code:
-  - library: scikit-learn
-    target: sklearn.model_selection.RepeatedKFold
-    why_this_library: One splitter that repeats k-fold with new random splits.
-    snippet: |
-      # scikit-learn 1.9.1
-      from sklearn.datasets import make_regression
-      from sklearn.model_selection import RepeatedKFold
+    - library: scikit-learn
+      target: sklearn.model_selection.RepeatedKFold
+      why_this_library: One splitter that repeats k-fold with new random splits.
+      snippet: |
+        # scikit-learn 1.9.1
+        import numpy as np
+        from sklearn.model_selection import RepeatedKFold
 
-      X, _ = make_regression(n_samples=6, n_features=2, random_state=0)
-      rkf = RepeatedKFold(n_splits=3, n_repeats=2, random_state=0)
-      for train_idx, test_idx in rkf.split(X):
-          print("test", test_idx)
-      print("splits", rkf.get_n_splits(X))
+        X = np.arange(6)
+        rkf = RepeatedKFold(n_splits=3, n_repeats=2, random_state=0)
+        for i, (train_idx, test_idx) in enumerate(rkf.split(X)):
+            print("split", i, "test", test_idx)
+        print("get_n_splits:", rkf.get_n_splits(X))
+      output: |
+        split 0 test [2 5]
+        split 1 test [1 3]
+        split 2 test [0 4]
+        split 3 test [1 3]
+        split 4 test [0 4]
+        split 5 test [2 5]
+        get_n_splits: 6
   what_comes_out:
     items:
-    - {name: split, kind: method, task: null, shape: "generator of (train, test) index arrays", note: "One pair per fold in every repeat."}
-    - {name: get_n_splits, kind: method, task: null, shape: "int", note: "n_splits times n_repeats, 50 by default."}
+      - name: split
+        kind: method
+        task: null
+        shape: "(train, test) pairs"
+        object_type: generator of tuples
+        example: "(array([0, 1, 4, 5]), array([2, 3]))"
+        shape_explanation: >-
+          A generator. It yields one (train, test) pair per fold, in every repeat. Each
+          part is a one-dimensional array of row positions, written (n_train,) or
+          (n_test,). n_test is the size of the held-out fold. The example is made-up:
+          4 training rows and 2 test rows, so the shapes are (4,) and (2,).
+        note: "One pair per fold in every repeat. Each repeat reshuffles the rows."
+      - name: get_n_splits
+        kind: method
+        task: null
+        shape: "int"
+        object_type: int
+        example: "6"
+        shape_explanation: >-
+          A single whole number, not an array, so it has no rows or columns. It equals
+          n_splits times n_repeats. The example is made-up: 3 folds and 2 repeats give 6.
+        note: "n_splits times n_repeats, 50 by default."
     next_step: Average the scores over all folds and repeats.
+    snippet: |
+      # scikit-learn 1.9.1
+      import numpy as np
+      from sklearn.model_selection import RepeatedKFold
+
+      X = np.arange(6)
+      rkf = RepeatedKFold(n_splits=3, n_repeats=2, random_state=0)
+      splits = list(rkf.split(X))
+      print("pairs:", len(splits))
+      print("get_n_splits:", rkf.get_n_splits(X))
+      for r in range(2):
+          tested = np.concatenate([t for _, t in splits[3 * r:3 * r + 3]])
+          print("repeat", r, "tests every row once:",
+                sorted(tested.tolist()) == list(range(6)))
+    snippet_library: scikit-learn
+    output: |
+      pairs: 6
+      get_n_splits: 6
+      repeat 0 tests every row once: True
+      repeat 1 tests every row once: True
     visual: null
   catch_outs:
-  - Costs n_splits times n_repeats fits, so it is slow.
-  - Each repeat reshuffles rows, so a row can move between folds.
+    - Costs n_splits times n_repeats fits, so it is slow.
+    - Each repeat reshuffles rows, so a row can move between folds.
   key_settings:
     tier1:
-    - {name: n_repeats, page: null}
-    - {name: n_splits, page: null}
-    - {name: random_state, page: null}
-    tier2: []
+      - name: n_repeats
+        page: null
+        controls: How many times the k-fold split is repeated. Default is 10.
+        effect: More repeats steady the score, but multiply the number of fits.
+      - name: n_splits
+        page: null
+        controls: The number of folds in each repeat. It must be at least 2.
+        effect: More folds train on more rows each time, but fit more models per repeat.
+    tier2:
+      - name: random_state
+        page: null
+        controls: Seeds the shuffle used for each repeat.
+        effect: A fixed int repeats the same folds. None gives new folds on each run.
     tier3: []
   watch_it_work: {none: true}
-  intuition: {text: "Run the k-fold rotation again with a fresh shuffle, then average all of it."}
+  intuition:
+    idea: Run the k-fold rotation again with a fresh shuffle, then keep every score.
+    analogy: Dealing a deck into piles again and again, so one lucky deal does not decide the score.
+    animation: none
+    goal: Get more test scores from the same rows, so the average is steadier.
+    steps:
+      - Pass in the rows, then set n_splits and n_repeats.
+      - Shuffle the row positions for the first repeat, seeded by random_state.
+      - Cut the shuffled rows into n_splits folds, as KFold does.
+      - Yield one train and test pair for each fold.
+      - Shuffle again for the next repeat.
+      - Cut and yield the folds for that repeat.
+      - Stop after n_repeats repeats.
+      - Score each pair yourself, then average all the scores.
+    math:
+      notation:
+        - {symbol: "k", meaning: "The number of folds in each repeat, set by n_splits."}
+        - {symbol: "R", meaning: "The number of repeats, set by n_repeats."}
+      equations:
+        - expression: "total splits = k × R"
+          meaning: Each repeat gives k pairs, and there are R repeats.
+      prediction: "Example: k = 3 and R = 2 give 6 pairs, as get_n_splits reports."
+    good_at: [small data, a steadier score]
+    bad_at: [big data, slow fits]
+    vs_siblings:
+      - {page: kfold, note: "One pass of the same rotation, without repeats."}
+      - {page: repeatedstratifiedkfold, note: "The same repeats, with class shares kept."}
+      - {page: shufflesplit, note: "Random test sets that can overlap."}
+    read_more:
+      - Each repeat is a full k-fold run with its own shuffle.
+      - Each row is in one test fold per repeat, so it is tested R times.
   next: []

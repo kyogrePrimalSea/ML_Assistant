@@ -10,8 +10,10 @@ question_tags: [several test sets, random splits]
 targets: [sklearn.model_selection.ShuffleSplit]
 pairs_with: []
 clashes: []
-source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.ShuffleSplit.html']
-library_versions: {scikit-learn: 1.9.1}
+source_urls:
+  - https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.ShuffleSplit.html
+library_versions:
+  scikit-learn: "1.9.1"
 reviewed: false
 rules:
   task_types: [regression, classification]
@@ -27,42 +29,140 @@ slots:
     line: Draws several random test sets from the same rows.
   quick_facts:
     facts:
-    - {label: Default splits, value: "10"}
-    - {label: Reshuffled every split, value: "yes"}
+      - {label: Default splits, value: "10"}
+      - {label: Reshuffled every split, value: "yes"}
   use_avoid:
     use_when: [several random holdouts, rows in any order]
     avoid_when: [time-ordered data, every row tested once]
   prep: []
   code:
-  - library: scikit-learn
-    target: sklearn.model_selection.ShuffleSplit
-    why_this_library: One splitter gives repeated random train and test sets.
-    snippet: |
-      # scikit-learn 1.9.1
-      from sklearn.datasets import make_regression
-      from sklearn.model_selection import ShuffleSplit
+    - library: scikit-learn
+      target: sklearn.model_selection.ShuffleSplit
+      why_this_library: One splitter gives repeated random train and test sets.
+      snippet: |
+        # scikit-learn 1.9.1
+        import numpy as np
+        from sklearn.model_selection import ShuffleSplit
 
-      X, _ = make_regression(n_samples=20, n_features=3, random_state=0)
-      splitter = ShuffleSplit(n_splits=3, test_size=0.25, random_state=0)
-      for train_idx, test_idx in splitter.split(X):
-          print("train", len(train_idx), "test", test_idx)
+        X = np.arange(10)
+        splitter = ShuffleSplit(n_splits=3, test_size=0.25, random_state=0)
+        for train_idx, test_idx in splitter.split(X):
+            print("train", train_idx, "test", test_idx)
+        print("get_n_splits:", splitter.get_n_splits(X))
+      output: |
+        train [9 1 6 7 3 0 5] test [2 8 4]
+        train [2 9 8 0 6 7 4] test [3 5 1]
+        train [4 5 1 0 6 9 7] test [2 3 8]
+        get_n_splits: 3
   what_comes_out:
     items:
-    - {name: split, kind: method, task: null, shape: "generator of (train, test) index arrays", note: "Each split yields row positions for one fit."}
-    - {name: get_n_splits, kind: method, task: null, shape: "int", note: "Returns n_splits, 10 by default."}
+      - name: split
+        kind: method
+        task: null
+        shape: "(train, test) pairs"
+        object_type: generator of tuples
+        example: "(array([0, 1, 4]), array([2, 3]))"
+        shape_explanation: >-
+          A generator. It yields one (train, test) pair per split, and each split is a
+          fresh random draw. The test part is a one-dimensional array written (n_test,).
+          The train part is written (n_train,). The example is made-up: 3 training rows
+          and 2 test rows, so the shapes are (3,) and (2,).
+        note: "One random train and test pair per split. Test sets can overlap."
+      - name: get_n_splits
+        kind: method
+        task: null
+        shape: "int"
+        object_type: int
+        example: "3"
+        shape_explanation: >-
+          A single whole number, not an array, so it has no rows or columns. It equals
+          n_splits. The example is made-up: the value 3 means three splits.
+        note: "Returns n_splits, 10 by default."
     next_step: Fit one model per split and average the test scores.
+    snippet: |
+      # scikit-learn 1.9.1
+      import numpy as np
+      from collections import Counter
+      from sklearn.model_selection import ShuffleSplit
+
+      X = np.arange(10)
+      splitter = ShuffleSplit(n_splits=3, test_size=0.25, random_state=0)
+      splits = list(splitter.split(X))
+      tested = [int(r) for _, t in splits for r in t]
+      counts = Counter(tested)
+      print("pairs:", len(splits))
+      print("test sizes:", [len(t) for _, t in splits])
+      print("train sizes:", [len(tr) for tr, _ in splits])
+      print("rows never tested:", sorted(set(range(10)) - set(tested)))
+      print("tested more than once:", sorted(r for r in counts if counts[r] > 1))
+    snippet_library: scikit-learn
+    output: |
+      pairs: 3
+      test sizes: [3, 3, 3]
+      train sizes: [7, 7, 7]
+      rows never tested: [0, 6, 7, 9]
+      tested more than once: [2, 3, 8]
     visual: null
   catch_outs:
-  - Test sets overlap, so some rows are tested more than once.
-  - Some rows may never appear in any test set.
+    - Test sets overlap, so some rows are tested more than once.
+    - Some rows may never appear in any test set.
+    - Each split is a new random draw, so runs differ unless random_state is set.
   key_settings:
     tier1:
-    - {name: n_splits, page: null}
-    - {name: test_size, page: null}
-    - {name: random_state, page: null}
+      - name: n_splits
+        page: null
+        controls: The number of reshuffle and split rounds. Default is 10.
+        effect: More rounds give more test scores, but mean more fits.
+      - name: test_size
+        page: null
+        controls: The share (a float) or number (an int) of rows held back. None uses the rest after train_size, or 0.1.
+        effect: A bigger test set scores more steadily, but leaves fewer rows to learn from.
+      - name: random_state
+        page: null
+        controls: The seed for the random draws. None gives new splits each run.
+        effect: A fixed int repeats the same splits, so runs can be compared.
     tier2:
-    - {name: train_size, page: null}
+      - name: train_size
+        page: null
+        controls: The share or number of rows for training. None uses the rest after test_size.
+        effect: With test_size also set, some rows can sit out of both pieces.
     tier3: []
   watch_it_work: {none: true}
-  intuition: {text: "Shuffle the rows and cut a new test slice each time, again and again."}
+  intuition:
+    idea: Shuffle the rows and cut a new test slice each time, again and again.
+    analogy: Drawing a fresh handful of cards from the same deck for each practice exam, so some cards repeat and some never come up.
+    animation: none
+    goal: Get several test scores from random holdouts of the same rows.
+    steps:
+      - Pass in the rows, then set n_splits, test_size and train_size.
+      - Work out n_test and n_train from those sizes.
+      - Start the random generator from random_state.
+      - Shuffle all the row positions.
+      - Take the first n_test positions as the test set.
+      - Take the next n_train positions as the training set.
+      - Yield the pair, then shuffle again for the next split.
+      - Repeat until n_splits pairs have been yielded.
+      - Fit on each training set, then average the test scores yourself.
+    math:
+      notation:
+        - {symbol: "N", meaning: "The number of rows you pass in."}
+        - {symbol: "f", meaning: "The test share, set by test_size when it is a float."}
+        - {symbol: "n_test", meaning: "The number of rows in each test set."}
+        - {symbol: "n_train", meaning: "The number of rows in each training set."}
+      equations:
+        - expression: "n_test = ceil(f × N)"
+          meaning: A float test_size becomes a row count, rounded up.
+        - expression: "n_train = N − n_test"
+          meaning: With train_size unset, every other row goes to training.
+      prediction: "Example: N = 10 and test_size = 0.25 give n_test = 3 and n_train = 7, as the output shows."
+    good_at: [several random holdouts, any row order]
+    bad_at: [time-ordered data, every row tested once]
+    vs_siblings:
+      - {page: train-test-split, note: "One random holdout, with no repeats."}
+      - {page: kfold, note: "Every row is tested once across the folds."}
+      - {page: repeatedkfold, note: "Repeated folds, so each row is tested in each repeat."}
+      - {page: stratifiedshufflesplit, note: "Random holdouts that keep class shares."}
+    read_more:
+      - Test sets can overlap, so some rows may never be tested.
+      - Each split draws a fresh random permutation, so splits differ.
   next: []

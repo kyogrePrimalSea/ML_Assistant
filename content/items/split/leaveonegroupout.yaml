@@ -38,20 +38,85 @@ slots:
       snippet: |
         # scikit-learn 1.9.1
         import numpy as np
-        from sklearn.datasets import make_regression
         from sklearn.model_selection import LeaveOneGroupOut
 
-        X, y = make_regression(n_samples=20, n_features=3, random_state=0)
-        groups = np.repeat(["north", "south", "east", "west"], 5)
+        X = np.arange(20).reshape(10, 2)  # made-up: 10 rows, 2 columns
+        y = np.arange(10) % 2             # made-up labels
+        groups = np.array(["a", "a", "b", "b", "b", "c", "c", "d", "d", "d"])
 
         logo = LeaveOneGroupOut()
-        for train_idx, test_idx in logo.split(X, y, groups=groups):
-            print("test group:", np.unique(groups[test_idx]))
+        for fold, (train_idx, test_idx) in enumerate(
+            logo.split(X, y, groups=groups)
+        ):
+            print("fold", fold)
+            print("  train rows:", train_idx)
+            print("  test rows:", test_idx)
+            print("  test group:", np.unique(groups[test_idx]))
+      output: |
+        fold 0
+          train rows: [2 3 4 5 6 7 8 9]
+          test rows: [0 1]
+          test group: ['a']
+        fold 1
+          train rows: [0 1 5 6 7 8 9]
+          test rows: [2 3 4]
+          test group: ['b']
+        fold 2
+          train rows: [0 1 2 3 4 7 8 9]
+          test rows: [5 6]
+          test group: ['c']
+        fold 3
+          train rows: [0 1 2 3 4 5 6]
+          test rows: [7 8 9]
+          test group: ['d']
   what_comes_out:
     items:
-      - {name: split, kind: method, task: null, shape: "generator of (train, test) indices", note: "One pair per group; test is that group."}
-      - {name: get_n_splits, kind: method, task: null, shape: "int", note: "Equals the number of groups."}
+      - name: split
+        kind: method
+        task: null
+        shape: "one pair per group"
+        object_type: "generator of (train, test) tuples"
+        example: "(array([2, 3, 4, 5]), array([0, 1]))"
+        shape_explanation: >-
+          A generator. Each step yields one pair: the train row numbers, then the test
+          row numbers. There is one pair per group, and the test piece is that whole
+          group. The example is one made-up pair with 4 train rows and 2 test rows.
+        note: "One pair per group; test is that group."
+      - name: get_n_splits
+        kind: method
+        task: null
+        shape: "int"
+        object_type: int
+        example: "4"
+        shape_explanation: >-
+          A single whole number, so it is a scalar with no rows or columns. The example
+          is 4, a made-up count of 4 groups. It needs groups= to be counted.
+        note: "Equals the number of groups."
     next_step: "Average the test scores across all the groups."
+    snippet: |
+      # scikit-learn 1.9.1
+      import numpy as np
+      from sklearn.model_selection import LeaveOneGroupOut
+
+      X = np.arange(20).reshape(10, 2)
+      y = np.arange(10) % 2
+      groups = np.array(["a", "a", "b", "b", "b", "c", "c", "d", "d", "d"])
+
+      logo = LeaveOneGroupOut()
+      print("get_n_splits:", logo.get_n_splits(X, y, groups))
+      pairs = list(logo.split(X, y, groups=groups))
+      print("pairs:", len(pairs))
+      print("test rows per fold:", [len(te) for _, te in pairs])
+      print(
+          "test group per fold:",
+          [np.unique(groups[te]).tolist() for _, te in pairs],
+      )
+    snippet_library: scikit-learn
+    output: |
+      get_n_splits: 4
+      pairs: 4
+      test rows per fold: [2, 3, 2, 3]
+      test group per fold: [['a'], ['b'], ['c'], ['d']]
     visual: null
   catch_outs:
     - Needs at least two groups, or it raises an error.
@@ -63,5 +128,33 @@ slots:
     tier3: []
   watch_it_work: {none: true}
   intuition:
-    text: Take each group out in turn, train on the rest, test on it.
+    idea: Take each group out in turn, train on the rest, and test on it.
+    analogy: Checking a new school by training on all the other schools, one school at a time.
+    animation: none
+    goal: Measure how well the model works on a group it has never seen.
+    steps:
+      - Find the distinct group labels in groups=.
+      - Pick the first group as the test piece.
+      - Put every row of every other group into the training piece.
+      - Fit on the training piece and score on the test piece.
+      - Move to the next group and repeat.
+      - Stop after every group has been the test piece once.
+    math:
+      notation:
+        - {symbol: "G", meaning: "The number of distinct group labels."}
+        - {symbol: "n_splits", meaning: "The number of folds, which equals G."}
+      equations:
+        - expression: "n_splits = G"
+          meaning: One fold is made for each group, so the fold count is the group count.
+      prediction: "Example: 4 groups (made-up a, b, c, d) give 4 folds, one per group."
+    good_at: [few groups, a whole-group test each time, no settings]
+    bad_at: [many groups, slow models, one group only]
+    vs_siblings:
+      - {page: leavepgroupsout, note: "Holds out p groups at once, not one."}
+      - {page: groupkfold, note: "Fewer folds, with several groups in each test piece."}
+      - {page: leaveoneout, note: "Holds out one row at a time, ignoring groups."}
+    read_more:
+      - Each group is the test piece exactly once.
+      - Each fold trains on every row except the rows of its test group.
+      - Use it when a per-group score matters more than a cheap fit.
   next: []

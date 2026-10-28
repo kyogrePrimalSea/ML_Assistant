@@ -39,30 +39,121 @@ slots:
       why_this_library: One object gives every repeat and fold.
       snippet: |
         # scikit-learn 1.9.1
-        from sklearn.datasets import load_breast_cancer
+        import numpy as np
         from sklearn.model_selection import RepeatedStratifiedKFold
 
-        X, y = load_breast_cancer(return_X_y=True)
-        rskf = RepeatedStratifiedKFold(n_splits=5, n_repeats=3, random_state=0)
+        # made-up labels: 8 rows of class 0, 4 rows of class 1
+        y = np.array([0] * 8 + [1] * 4)
+        X = np.arange(12).reshape(-1, 1)
 
-        print([len(test) for _, test in rskf.split(X, y)])
+        rskf = RepeatedStratifiedKFold(n_splits=4, n_repeats=2, random_state=0)
+        for i, (train, test) in enumerate(rskf.split(X, y)):
+            print(f"split {i}: test rows {test}")
+      output: |
+        split 0: test rows [2 5 9]
+        split 1: test rows [ 1  4 11]
+        split 2: test rows [ 6  7 10]
+        split 3: test rows [0 3 8]
+        split 4: test rows [1 5 9]
+        split 5: test rows [0 2 8]
+        split 6: test rows [ 3  4 11]
+        split 7: test rows [ 6  7 10]
   what_comes_out:
     items:
-      - {name: split, kind: method, task: classification, shape: "generator of (train, test) index arrays", note: "Yields n_splits x n_repeats index pairs."}
-      - {name: get_n_splits, kind: method, task: null, shape: "int", note: "5 folds x 10 repeats by default."}
-    next_step: Average the scores over all folds and repeats.
+      - name: split
+        kind: method
+        task: classification
+        shape: "generator of (train, test) index arrays"
+        object_type: generator of tuples
+        example: "([0, 1, 5], [2, 3])"
+        shape_explanation: >-
+          The generator yields one (train, test) pair for every fold of every repeat, so
+          n_splits x n_repeats pairs in total. Each pair holds two one-dimensional arrays
+          of row positions, written (n_train,) and (n_test,). The example pair has 3
+          training rows and 2 test rows. Made-up values.
+        note: "Yields n_splits x n_repeats pairs, one repeat after another."
+      - name: get_n_splits
+        kind: method
+        task: null
+        shape: "int"
+        object_type: int
+        example: "6"
+        shape_explanation: >-
+          A single whole number: n_splits x n_repeats. The example uses 2 folds and 3
+          repeats, so the value is 6. Made-up value.
+        note: "Folds times repeats. 50 by default."
+    next_step: null
+    snippet: |
+      # scikit-learn 1.9.1
+      import numpy as np
+      from sklearn.model_selection import RepeatedStratifiedKFold
+
+      y = np.array([0] * 8 + [1] * 4)
+      X = np.arange(12).reshape(-1, 1)
+
+      rskf = RepeatedStratifiedKFold(n_splits=4, n_repeats=2, random_state=0)
+      print("get_n_splits:", rskf.get_n_splits())
+      times_tested = np.zeros(len(y), dtype=int)
+      for _, test in rskf.split(X, y):
+          times_tested[test] += 1
+      print("times each row is tested:", times_tested)
+    snippet_library: scikit-learn
+    output: |
+      get_n_splits: 8
+      times each row is tested: [2 2 2 2 2 2 2 2 2 2 2 2]
     visual: null
   catch_outs:
-    - Repeats mean many more fits, so it runs longer.
+    - Repeats mean n_splits x n_repeats fits, so it runs longer.
+    - Each repeat reshuffles, so there is no shuffle setting to change.
     - Set random_state, or each run gives different repeats.
+    - Each row is tested once per repeat, so the same row counts in several scores.
   key_settings:
     tier1:
-      - {name: n_repeats, page: null}
-      - {name: n_splits, page: null}
+      - name: n_repeats
+        page: null
+        controls: How many times the whole k-fold split is run, each with new shuffles.
+        effect: More repeats steady the average, but multiply the number of fits.
+      - name: n_splits
+        page: null
+        controls: The number of folds in each repeat, at least 2.
+        effect: Each fold is one fit per repeat, so the total fit count is n_splits x n_repeats.
     tier2:
-      - {name: random_state, page: null}
+      - name: random_state
+        page: null
+        controls: The seed for the shuffles that make each repeat different. None gives new shuffles each run.
+        effect: A fixed int repeats the same set of splits, so scores can be compared.
     tier3: []
   watch_it_work: {none: true}
   intuition:
-    text: Run the class-balanced folds several times, then average the results.
+    idea: Run the class-balanced folds several times with fresh shuffles, then average the scores.
+    analogy: Marking a mock exam several times, each time with the papers in a new random order.
+    animation: none
+    goal: Get a steadier score by repeating the class-balanced folds.
+    steps:
+      - Shuffle the rows, class by class, and build one stratified set of folds.
+      - Use each fold once as the test piece, fitting and scoring on the rest.
+      - Start again with a new shuffle, and build a new set of folds.
+      - Repeat this n_repeats times in total.
+      - Each repeat tests every row once, so each row is tested n_repeats times.
+      - Average the scores over all n_splits x n_repeats folds.
+    math:
+      notation:
+        - {symbol: "n", meaning: "The number of folds in each repeat, set by n_splits."}
+        - {symbol: "r", meaning: "The number of repeats, set by n_repeats."}
+      equations:
+        - expression: "total splits = n x r"
+          meaning: Each repeat makes n folds, so r repeats make n x r splits.
+        - expression: "times each row is tested = r"
+          meaning: Each repeat tests every row once, so r repeats test it r times.
+      prediction: "Example: 5 folds and 3 repeats give 15 splits. Each row is tested 3 times."
+    good_at: [small data, imbalanced classes, a steadier average score]
+    bad_at: [large data, time-ordered data, one clean holdout]
+    vs_siblings:
+      - {page: stratifiedkfold, note: "One pass of the same class-balanced folds."}
+      - {page: repeatedkfold, note: "Repeats plain folds, with no class balance."}
+      - {page: stratifiedshufflesplit, note: "Random hold-outs that keep the class mix."}
+    read_more:
+      - Each repeat reshuffles, so random_state controls every repeat.
+      - Folds from different repeats overlap, so one row is seen in several test pieces.
+      - The total number of fits grows with both n_splits and n_repeats.
   next: []
