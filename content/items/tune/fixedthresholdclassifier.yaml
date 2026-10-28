@@ -45,34 +45,178 @@ slots:
       # scikit-learn 1.9.1
       from sklearn.datasets import load_breast_cancer
       from sklearn.linear_model import LogisticRegression
-      from sklearn.model_selection import FixedThresholdClassifier, train_test_split
+      from sklearn.model_selection import (
+          FixedThresholdClassifier,
+          train_test_split,
+      )
       from sklearn.pipeline import make_pipeline
       from sklearn.preprocessing import StandardScaler
 
       X, y = load_breast_cancer(return_X_y=True)
       X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
       model = FixedThresholdClassifier(
           make_pipeline(StandardScaler(), LogisticRegression(max_iter=5000)),
           threshold=0.8,
       )
       model.fit(X_train, y_train)
-      print(model.predict(X_test[:10]))
-      print(round(model.score(X_test, y_test), 3))
+      print("threshold:", model.threshold)
+      print("predict:", model.predict(X_test[:10]))
+      print("accuracy on test rows:", round(model.score(X_test, y_test), 3))
+    output: |
+      threshold: 0.8
+      predict: [0 1 1 1 1 1 1 1 1 1]
+      accuracy on test rows: 0.944
   what_comes_out:
     items:
-    - {name: fit, kind: method, task: null, shape: self, note: Fits the wrapped classifier.}
-    - {name: predict, kind: method, task: classification, shape: '(n_samples,)', note: Labels from your threshold on the probability.}
+    - name: fit
+      kind: method
+      task: null
+      shape: self
+      object_type: FixedThresholdClassifier
+      example: "FixedThresholdClassifier(estimator=Pipeline(...))"
+      shape_explanation: >-
+        fit returns the same object, not an array. It has no rows or columns.
+        The example is the fitted object itself, so its shape is self.
+      note: Fits a clone of the wrapped classifier. Does not learn a cut-off.
+    - name: predict
+      kind: method
+      task: classification
+      shape: "(n_samples,)"
+      object_type: numpy.ndarray
+      example: "[0, 1, 1]"
+      shape_explanation: >-
+        A one-dimensional array. n_samples is the number of rows being labelled.
+        Each row gets one class label. The trailing comma in (n_samples,) means
+        the array has one dimension. The example has 3 labels, so its concrete
+        shape is (3,).
+      note: Labels from your threshold on the score.
+    - name: predict_proba
+      kind: method
+      task: classification
+      shape: "(n_samples, n_classes)"
+      object_type: numpy.ndarray
+      example: "[[0.8, 0.2],\n [0.3, 0.7]]"
+      shape_explanation: >-
+        A two-dimensional table, written as (rows, columns). n_samples is the
+        number of rows being scored. n_classes is the number of classes. The
+        example has 2 rows and 2 classes, so its concrete shape is (2, 2).
+      note: Plain probabilities from estimator_, not cut by the threshold.
+    - name: estimator_
+      kind: attribute
+      task: null
+      shape: "fitted estimator"
+      object_type: sklearn estimator
+      example: "Pipeline(steps=[...])"
+      shape_explanation: >-
+        One fitted model object, not an array. It has no rows or columns. The
+        example is one Pipeline object, fitted on the training rows.
+      note: The wrapped classifier, fitted inside fit.
+    - name: classes_
+      kind: attribute
+      task: null
+      shape: "(n_classes,)"
+      object_type: numpy.ndarray
+      example: "[0, 1]"
+      shape_explanation: >-
+        A one-dimensional array with one label per class. n_classes is the
+        number of classes. Only two are allowed, so the example has 2 labels,
+        and its shape is (2,).
+      note: Class labels, in the order predict_proba columns use.
     next_step: Score on test rows, not the training rows.
+    snippet: |
+      # scikit-learn 1.9.1
+      import numpy as np
+      from sklearn.datasets import load_breast_cancer
+      from sklearn.linear_model import LogisticRegression
+      from sklearn.model_selection import (
+          FixedThresholdClassifier,
+          train_test_split,
+      )
+      from sklearn.pipeline import make_pipeline
+      from sklearn.preprocessing import StandardScaler
+
+      X, y = load_breast_cancer(return_X_y=True)
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+      model = FixedThresholdClassifier(
+          make_pipeline(StandardScaler(), LogisticRegression(max_iter=5000)),
+          threshold=0.8,
+          response_method="predict_proba",
+      ).fit(X_train, y_train)
+
+      y_pred = model.predict(X_test[:3])
+      y_proba = model.predict_proba(X_test[:3])
+      print("classes_:", model.classes_)
+      print("predict:", y_pred)
+      print("predict_proba:")
+      print(np.round(y_proba, 3))
+      print("estimator_:", type(model.estimator_).__name__)
+      print("n_features_in_:", model.n_features_in_)
+    snippet_library: scikit-learn
+    output: |
+      classes_: [0 1]
+      predict: [0 1 1]
+      predict_proba:
+      [[0.999 0.001]
+       [0.04  0.96 ]
+       [0.001 0.999]]
+      estimator_: Pipeline
+      n_features_in_: 30
     visual: null
-  catch_outs: [The threshold is yours. It is not tuned from data., Only for binary classifiers.]
+  catch_outs:
+  - The threshold is yours. It is not tuned from data.
+  - Only for binary classifiers.
+  - threshold='auto' gives 0.5 for probabilities, not a tuned cut-off.
   key_settings:
     tier1:
-    - {name: response_method, page: null}
-    - {name: threshold, page: null}
-    - {name: pos_label, page: null}
-    - {name: estimator, page: null}
+    - name: response_method
+      page: null
+      controls: Which model output the cut-off applies to, predict_proba or decision_function. auto tries predict_proba first.
+      effect: With auto, 0.5 applies to probabilities and 0 to decision scores.
+    - name: threshold
+      page: null
+      controls: The score a row must reach to be labelled positive. You set it, it is not learned.
+      effect: A higher cut-off gives fewer positive labels. A lower one gives more.
+    - name: pos_label
+      page: null
+      controls: Which class label counts as positive when scores become labels.
+      effect: Needed when labels are not 0 and 1, or -1 and 1, such as yes and no.
+    - name: estimator
+      page: null
+      controls: The binary classifier whose scores are cut. A Pipeline keeps scaling inside it.
+      effect: It needs predict_proba or decision_function, and only two classes are allowed.
     tier2: []
     tier3: []
   watch_it_work: {none: true}
-  intuition: {text: Use the cut-off you already decided on.}
+  intuition:
+    idea: Turn scores into yes or no at a cut-off you choose, without learning it from data.
+    analogy: A bouncer with a fixed height rule. Anyone at or over the line gets in.
+    animation: none
+    goal: Apply a fixed yes/no cut-off to a binary classifier's scores.
+    steps:
+      - Fit the wrapped classifier on the training rows.
+      - Read a score for each row, from predict_proba or decision_function.
+      - Compare each score with threshold.
+      - Label the row positive when its score is at least threshold.
+    math:
+      notation:
+        - {symbol: "i", meaning: "Index for one row being labelled."}
+        - {symbol: "s_i", meaning: "The positive-class score for row i, from predict_proba or decision_function."}
+        - {symbol: "t", meaning: "The fixed cut-off, set by threshold."}
+        - {symbol: "ŷ_i", meaning: "The label for row i. 1 is positive, 0 is negative."}
+      equations:
+        - expression: "ŷ_i = 1 if s_i ≥ t, otherwise 0"
+          meaning: A row is labelled positive when its score reaches the cut-off.
+        - expression: "t = 0.5 for probabilities, or 0 for decision scores, when threshold is 'auto'"
+          meaning: auto picks the default cut-off for the output it uses.
+      prediction: "predict applies t to the scores from estimator_. Example: at t = 0.8, a score of 0.85 is positive and 0.60 is negative."
+    good_at: [binary decisions, a cut-off you chose, any binary model]
+    bad_at: [more than two classes, finding the best cut-off]
+    vs_siblings:
+      - {page: tunedthresholdclassifiercv, note: "Searches for the cut-off with cross-validation instead of taking one."}
+    read_more:
+      - The threshold is never learned from the data.
+      - auto means 0.5 for probabilities and 0 for decision scores.
+      - fit clones the estimator, then fits the clone.
   next: []

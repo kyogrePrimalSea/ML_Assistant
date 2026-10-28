@@ -11,7 +11,7 @@ targets: [optuna.samplers.RandomSampler]
 pairs_with: []
 clashes: []
 source_urls: ['https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.RandomSampler.html']
-library_versions: {optuna: 5.0.0}
+library_versions: {optuna: 5.0.0, scikit-learn: 1.9.1}
 reviewed: false
 rules:
   task_types: []
@@ -61,7 +61,10 @@ slots:
             depth = trial.suggest_int("max_depth", 2, 12)
             leaf = trial.suggest_int("min_samples_leaf", 1, 10)
             model = RandomForestRegressor(
-                n_estimators=30, max_depth=depth, min_samples_leaf=leaf, random_state=0
+                n_estimators=30,
+                max_depth=depth,
+                min_samples_leaf=leaf,
+                random_state=0,
             )
             return cross_val_score(model, X, y, cv=3).mean()
 
@@ -69,17 +72,112 @@ slots:
         sampler = RandomSampler(seed=0)
         study = optuna.create_study(direction="maximize", sampler=sampler)
         study.optimize(objective, n_trials=20)
-        print(study.best_params, round(study.best_value, 3))
-  what_comes_out: {none: true}
+        print("best_params:", study.best_params)
+        print("best_value:", round(study.best_value, 3))
+      output: |
+        best_params: {'max_depth': 12, 'min_samples_leaf': 4}
+        best_value: 0.689
+  what_comes_out:
+    items:
+      - name: study.best_params
+        kind: return
+        task: null
+        shape: "dict"
+        object_type: dict
+        example: "{'max_depth': 6, 'min_samples_leaf': 2}"
+        shape_explanation: >-
+          A dictionary has no rows or columns. Each key is a setting name passed to a
+          suggest call. Each value is the best choice found for that setting. The example
+          has 2 keys, so it covers 2 settings.
+        note: "Best settings among completed trials. Read it after optimize."
+      - name: study.best_value
+        kind: return
+        task: null
+        shape: "scalar"
+        object_type: float
+        example: "0.689"
+        shape_explanation: >-
+          A scalar is one value, not an array. It has no rows or columns. The example is
+          the single number 0.689, so its shape is scalar.
+        note: "Objective value of the best trial. Direction comes from create_study."
+      - name: study.best_trial
+        kind: return
+        task: null
+        shape: "one trial object"
+        object_type: optuna.trial.FrozenTrial
+        example: "FrozenTrial(number=2, state=COMPLETE, value=0.0031)"
+        shape_explanation: >-
+          One trial record, not an array. It stores the trial's number, settings, score
+          and state. The example is a single trial, so it has no rows or columns.
+        note: "Use its number to find the trial in study.trials."
+    next_step: null
+    snippet: |
+      # optuna 5.0.0
+      import optuna
+      from optuna.samplers import RandomSampler
+
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+
+
+      def objective(trial):
+          x = trial.suggest_float("x", -10, 10)
+          return (x - 2) ** 2
+
+
+      sampler = RandomSampler(seed=0)
+      study = optuna.create_study(sampler=sampler)
+      study.optimize(objective, n_trials=30)
+      print("best_params:", study.best_params)
+      print("best_value:", round(study.best_value, 4))
+      print("best_trial number:", study.best_trial.number)
+      print("trials run:", len(study.trials))
+      print("best_trial state:", study.best_trial.state)
+    snippet_library: optuna
+    output: |
+      best_params: {'x': 2.055267521432878}
+      best_value: 0.0031
+      best_trial number: 2
+      trials run: 30
+      best_trial state: TrialState.COMPLETE
+    visual: null
   catch_outs:
     - Seed defaults to None, so each run differs.
     - Ignores past trials, so it never gets smarter.
     - Use it as a baseline to beat, not a final pick.
   key_settings:
     tier1:
-      - {name: seed, page: null}
+      - name: seed
+        page: null
+        controls: Seeds the random number generator. None picks a new seed each run.
+        effect: A fixed seed gives the same settings each run. None gives different settings each run.
     tier2: []
     tier3: []
   watch_it_work: {none: true}
-  intuition: {text: "Draw each setting from a hat. No memory of past draws."}
+  intuition:
+    idea: Each trial draws its settings at random, ignoring every past trial.
+    analogy: Draw each setting from a hat. No memory of past draws.
+    animation: none
+    goal: Get a wide first look at the search space, with no learning.
+    steps:
+      - Define each setting's range inside the objective.
+      - For each trial, draw one value per setting at random.
+      - Run the trial and record its score.
+      - Ignore past scores when drawing the next trial's settings.
+      - Keep the best trial at the end.
+    math:
+      notation:
+        - {symbol: "p", meaning: "The number of settings in the objective."}
+        - {symbol: "x_i", meaning: "The value drawn for setting i in one trial."}
+      equations:
+        - expression: "P(x_1, ..., x_p) = P(x_1) x ... x P(x_p)"
+          meaning: Each setting is drawn on its own, so one draw does not affect another.
+      prediction: "Each new trial draws fresh settings. Past scores do not change the next draw."
+    good_at: [baseline, wide first look]
+    bad_at: [learning from past trials, narrowing to a best area]
+    vs_siblings:
+      - {page: tpesampler, note: "Learns from past trials, so it narrows the search."}
+      - {page: gridsampler, note: "Tries values on a fixed grid, not at random."}
+    read_more:
+      - Independent sampling means no setting depends on past trials.
+      - Set seed to make a run repeatable.
   next: []

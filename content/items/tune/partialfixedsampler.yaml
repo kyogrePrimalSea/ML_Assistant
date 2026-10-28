@@ -11,7 +11,7 @@ targets: [optuna.samplers.PartialFixedSampler]
 pairs_with: []
 clashes: []
 source_urls: ['https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.PartialFixedSampler.html']
-library_versions: {optuna: 5.0.0}
+library_versions: {optuna: 5.0.0, scikit-learn: 1.9.1}
 reviewed: false
 rules:
   task_types: []
@@ -46,13 +46,18 @@ slots:
       why_this_library: Wraps a base sampler. Passed to create_study.
       snippet: |
         # optuna 5.0.0
+        import warnings
+
         import optuna
+        from optuna.exceptions import ExperimentalWarning
         from optuna.samplers import PartialFixedSampler, TPESampler
         from sklearn.datasets import make_regression
         from sklearn.ensemble import RandomForestRegressor
         from sklearn.model_selection import cross_val_score
 
         optuna.logging.set_verbosity(optuna.logging.WARNING)
+        # PartialFixedSampler is experimental and warns on every use.
+        warnings.filterwarnings("ignore", category=ExperimentalWarning)
         X, y = make_regression(n_samples=300, n_features=8, noise=15, random_state=0)
 
 
@@ -68,17 +73,64 @@ slots:
         sampler = PartialFixedSampler({"max_depth": 6}, TPESampler(seed=0))
         study = optuna.create_study(direction="maximize", sampler=sampler)
         study.optimize(objective, n_trials=20)
-        print(study.best_params, round(study.best_value, 3))
+        depths = sorted({t.params["max_depth"] for t in study.trials})
+        print("max_depth values tried:", depths)
+        print("best_params:", study.best_params)
+        print("best_value:", round(study.best_value, 3))
+      output: |
+        max_depth values tried: [6]
+        best_params: {'max_depth': 6, 'min_samples_leaf': 1}
+        best_value: 0.703
   what_comes_out: {none: true}
   catch_outs:
     - A fixed name the objective never suggests does nothing.
     - Fixed values are used as given, never searched.
+    - A fixed value outside the range is still used, with a warning.
+    - The sampler is experimental, so its interface can change.
   key_settings:
     tier1:
-      - {name: fixed_params, page: null}
-      - {name: base_sampler, page: null}
+      - name: fixed_params
+        page: null
+        controls: "A dictionary of setting names and the values to keep fixed."
+        effect: "Fixed settings leave the search, so fewer settings are searched."
+      - name: base_sampler
+        page: null
+        controls: "The sampler that picks every setting not in fixed_params."
+        effect: "Its own behaviour decides how the other settings are chosen."
     tier2: []
     tier3: []
   watch_it_work: {none: true}
-  intuition: {text: "Lock some dials, and let the search turn the rest."}
+  intuition:
+    idea: Fix some settings to values you choose, and let a sampler search the rest.
+    analogy: Lock some dials at set positions, and let the search turn the rest.
+    animation: none
+    goal: Keep some settings fixed while the search tunes the others.
+    steps:
+      - Write a dictionary of setting names and the values to fix.
+      - Pass that dictionary and a base sampler to PartialFixedSampler.
+      - Give the sampler to create_study.
+      - In each trial, fixed names take their set values.
+      - The base sampler picks values for every other name.
+      - The best trial reports its settings, fixed ones included.
+    math:
+      notation:
+        - {symbol: "F", meaning: "The set of names in fixed_params."}
+        - {symbol: "c_f", meaning: "The fixed value for setting f."}
+        - {symbol: "U", meaning: "The names not in F, which the base sampler picks."}
+        - {symbol: "x_f", meaning: "The value of setting f in one trial."}
+      equations:
+        - expression: "x_f = c_f, for every f in F"
+          meaning: A fixed setting takes its given value in every trial.
+        - expression: "x_u is chosen by the base sampler, for every u in U"
+          meaning: Every other setting is searched the way the base sampler searches it.
+      prediction: "Example: fixed_params {'max_depth': 6} puts max_depth at 6 in every trial. Only min_samples_leaf varies."
+    good_at: [keeping one known setting, searching the rest, re-searching after a first run]
+    bad_at: [settings you still want searched, a stable interface]
+    vs_siblings:
+      - {page: tpesampler, note: "Searches every setting, learning from past scores."}
+      - {page: randomsampler, note: "Searches every setting at random."}
+    read_more:
+      - Fixed values are never searched.
+      - Only names the objective suggests are affected.
+      - The sampler is experimental and may change.
   next: []

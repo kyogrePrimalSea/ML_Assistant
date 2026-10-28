@@ -58,6 +58,8 @@ slots:
 
         model = DecisionTreeRegressor(max_depth=5, random_state=0).fit(X, y)
         print(model.get_depth())  # never more than 5
+      output: |
+        5
     - library: xgboost
       target: xgboost.XGBRegressor
       why_this_library: Default depth is 6 (the booster default).
@@ -70,6 +72,8 @@ slots:
 
         model = XGBRegressor(max_depth=4, n_estimators=50).fit(X, y)
         print(model.get_params()["max_depth"])
+      output: |
+        4
     - library: lightgbm
       target: lightgbm.LGBMRegressor
       why_this_library: Pair with num_leaves; -1 means no limit.
@@ -83,11 +87,37 @@ slots:
         model = LGBMRegressor(max_depth=5, num_leaves=24, n_estimators=50, verbose=-1)
         model.fit(X, y)
         print(model.get_params()["max_depth"])
+      output: |
+        5
   what_comes_out:
     items:
-      - {name: estimators_, kind: attribute, task: null, shape: "(n_estimators, 1) for regression",
-         note: "GradientBoosting only. estimators_[0, 0].get_depth() gives one tree's depth."}
+      - name: estimators_
+        kind: attribute
+        task: null
+        shape: "(n_estimators, 1) for regression"
+        object_type: numpy.ndarray
+        example: "[[DecisionTreeRegressor], [DecisionTreeRegressor]]"
+        shape_explanation: >-
+          A two-dimensional array of trees. n_estimators is the number of boosting
+          rounds, so there is one row per round. The second dimension has length 1
+          for regression. The example has 2 rounds and 1 column, so its concrete
+          shape is (2, 1).
+        note: "GradientBoosting only. estimators_[0, 0].get_depth() gives one tree's depth."
     next_step: null
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import make_regression
+      from sklearn.ensemble import GradientBoostingRegressor
+
+      X, y = make_regression(n_samples=300, n_features=5, noise=20, random_state=0)
+      model = GradientBoostingRegressor(max_depth=4, n_estimators=3, random_state=0)
+      model.fit(X, y)
+      print(model.estimators_.shape)
+      print(model.estimators_[0, 0].get_depth())
+    output: |
+      (3, 1)
+      4
+    snippet_library: scikit-learn
     visual: null
   catch_outs:
     - Defaults differ a lot between libraries.

@@ -11,7 +11,7 @@ targets: [optuna.samplers.TPESampler]
 pairs_with: []
 clashes: []
 source_urls: ['https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.TPESampler.html']
-library_versions: {optuna: 5.0.0}
+library_versions: {optuna: 5.0.0, scikit-learn: 1.9.1}
 reviewed: false
 rules:
   task_types: []
@@ -61,7 +61,10 @@ slots:
             depth = trial.suggest_int("max_depth", 2, 12)
             leaf = trial.suggest_int("min_samples_leaf", 1, 10)
             model = RandomForestRegressor(
-                n_estimators=30, max_depth=depth, min_samples_leaf=leaf, random_state=0
+                n_estimators=30,
+                max_depth=depth,
+                min_samples_leaf=leaf,
+                random_state=0,
             )
             return cross_val_score(model, X, y, cv=3).mean()
 
@@ -69,23 +72,134 @@ slots:
         sampler = TPESampler(seed=0)
         study = optuna.create_study(direction="maximize", sampler=sampler)
         study.optimize(objective, n_trials=20)
-        print(study.best_params, round(study.best_value, 3))
-  what_comes_out: {none: true}
+        print("best_params:", study.best_params)
+        print("best_value:", round(study.best_value, 3))
+      output: |
+        best_params: {'max_depth': 12, 'min_samples_leaf': 1}
+        best_value: 0.725
+  what_comes_out:
+    items:
+      - name: study.best_params
+        kind: return
+        task: null
+        shape: "dict"
+        object_type: dict
+        example: "{'max_depth': 6, 'min_samples_leaf': 2}"
+        shape_explanation: >-
+          A dictionary has no rows or columns. Each key is a setting name passed to a
+          suggest call. Each value is the best choice found for that setting. The example
+          has 2 keys, so it covers 2 settings.
+        note: "Best settings among completed trials. Read it after optimize."
+      - name: study.best_value
+        kind: return
+        task: null
+        shape: "scalar"
+        object_type: float
+        example: "0.725"
+        shape_explanation: >-
+          A scalar is one value, not an array. It has no rows or columns. The example is
+          the single number 0.725, so its shape is scalar.
+        note: "Objective value of the best trial. Direction comes from create_study."
+      - name: study.best_trial
+        kind: return
+        task: null
+        shape: "one trial object"
+        object_type: optuna.trial.FrozenTrial
+        example: "FrozenTrial(number=2, state=COMPLETE, value=0.0031)"
+        shape_explanation: >-
+          One trial record, not an array. It stores the trial's number, settings, score
+          and state. The example is a single trial, so it has no rows or columns.
+        note: "Use its number to find the trial in study.trials."
+    next_step: null
+    snippet: |
+      # optuna 5.0.0
+      import optuna
+      from optuna.samplers import TPESampler
+
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+
+
+      def objective(trial):
+          x = trial.suggest_float("x", -10, 10)
+          return (x - 2) ** 2
+
+
+      sampler = TPESampler(seed=0, n_startup_trials=5)
+      study = optuna.create_study(sampler=sampler)
+      study.optimize(objective, n_trials=30)
+      print("best_params:", study.best_params)
+      print("best_value:", round(study.best_value, 4))
+      print("best_trial number:", study.best_trial.number)
+      print("trials run:", len(study.trials))
+      print("best_trial state:", study.best_trial.state)
+    snippet_library: optuna
+    output: |
+      best_params: {'x': 2.055267521432878}
+      best_value: 0.0031
+      best_trial number: 2
+      trials run: 30
+      best_trial state: TrialState.COMPLETE
+    visual: null
   catch_outs:
     - The first 10 trials are random by default.
     - Low trial counts give it little to learn from.
     - Seed it for repeatable runs.
   key_settings:
     tier1:
-      - {name: n_startup_trials, page: null}
-      - {name: n_ei_candidates, page: null}
+      - name: n_startup_trials
+        page: null
+        controls: Number of random trials before TPE starts to learn. Default is 10.
+        effect: Fewer means TPE learns sooner, from less data. More means more random trials first.
+      - name: n_ei_candidates
+        page: null
+        controls: Number of candidate values scored on each trial. Default is 24.
+        effect: More candidates search more finely, but each trial costs more to choose.
     tier2:
-      - {name: gamma, page: null}
-      - {name: multivariate, page: null}
-      - {name: seed, page: null}
+      - name: multivariate
+        page: null
+        controls: Whether TPE models the settings jointly, not one at a time.
+        effect: None picks True for one objective and False for several. Joint modelling can help one-objective searches.
+      - name: seed
+        page: null
+        controls: Seeds the random number generator.
+        effect: The same seed and the same trial results give the same settings again.
     tier3:
-      - {name: constant_liar, page: null}
-      - {name: constraints_func, page: null}
+      - name: constant_liar
+        page: null
+        controls: Penalises running trials, so new trials avoid nearby settings.
+        effect: Keeps parallel workers apart, and handles trials that stopped without finishing.
   watch_it_work: {none: true}
-  intuition: {text: "Guess where good settings are, then try there more."}
+  intuition:
+    idea: Split past trials into good and poor, then pick settings that look like the good ones.
+    analogy: Like choosing where to dig next, after seeing where the gold turned up before.
+    animation: none
+    goal: Find good settings in fewer trials than a blind search needs.
+    steps:
+      - Run the first few trials at random, as set by n_startup_trials.
+      - Split the past trials into a good group and a rest group.
+      - For each setting, fit one density to the good group and one to the rest.
+      - Draw candidate values from the good-group density.
+      - Score each candidate by the ratio of the good density to the rest density.
+      - Run the trial with the highest-scoring candidate.
+      - Repeat until the trial budget ends.
+    math:
+      notation:
+        - {symbol: "x", meaning: "One candidate value for one setting."}
+        - {symbol: "l(x)", meaning: "Density fitted to the settings of the good trials."}
+        - {symbol: "g(x)", meaning: "Density fitted to the settings of the other trials."}
+        - {symbol: "n_ei_candidates", meaning: "How many candidate values are scored each trial."}
+      equations:
+        - expression: "x* = argmax over candidates x of l(x) / g(x)"
+          meaning: Pick the candidate where the good density beats the other density the most.
+      prediction: "The next trial uses x*. Until n_startup_trials finish, settings are random."
+    good_at: [learns from past trials, most searches, moderate trial counts]
+    bad_at: [very few trials, random start]
+    vs_siblings:
+      - {page: randomsampler, note: "Ignores past trials. Use it as a baseline."}
+      - {page: gpsampler, note: "Models the score with a Gaussian process. Needs torch."}
+      - {page: cmaessampler, note: "Moves a cloud of guesses. Does not handle categorical settings."}
+    read_more:
+      - The TPESampler reference page links the original TPE papers.
+      - Each setting gets a density for good trials and one for the rest.
+      - Set seed to make a run repeatable.
   next: []

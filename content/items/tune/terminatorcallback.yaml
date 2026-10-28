@@ -11,7 +11,7 @@ targets: [optuna.terminator.TerminatorCallback]
 pairs_with: [terminator]
 clashes: []
 source_urls: ['https://optuna.readthedocs.io/en/stable/reference/generated/optuna.terminator.TerminatorCallback.html']
-library_versions: {optuna: 5.0.0}
+library_versions: {optuna: 5.0.0, scikit-learn: 1.9.1}
 reviewed: false
 rules:
   task_types: []
@@ -33,13 +33,13 @@ slots:
   prep:
     - step: {page: cross-validate}
       status: recommended
-      why: Terminator's error check reads cross-validation scores.
+      why: The default error check reads cross-validation scores.
       condition: null
       unless: null
   code:
     - library: optuna
       target: optuna.terminator.TerminatorCallback
-      why_this_library: Passed as a callback to optimize.
+      why_this_library: Passed as a callback to optimize, so the search stops itself.
       snippet: |
         # optuna 5.0.0
         import optuna
@@ -72,18 +72,56 @@ slots:
             direction="maximize",
             sampler=optuna.samplers.RandomSampler(seed=0),
         )
-        study.optimize(
-            objective, n_trials=100, callbacks=[TerminatorCallback(terminator)]
-        )
-        print(len(study.trials))
+        callback = TerminatorCallback(terminator)
+        study.optimize(objective, n_trials=100, callbacks=[callback])
+        print("trials run:", len(study.trials))
+      output: |
+        trials run: 20
   what_comes_out: {none: true}
   catch_outs:
     - Won't stop before min_n_trials trials (default 20).
+    - The whole optuna.terminator module is deprecated since 4.9.0 and is removed in 6.0.0.
+    - Creating a TerminatorCallback gives a FutureWarning. The snippet still runs.
+    - With no terminator given, the default needs torch after min_n_trials trials.
+    - The stop check runs after a trial, so that trial still finishes.
   key_settings:
     tier1:
-    - {name: terminator, page: null}
+    - name: terminator
+      page: terminator
+      controls: "The Terminator to ask after each trial. None uses a default Terminator()."
+      effect: "The default needs torch after min_n_trials trials. BestValueStagnationEvaluator needs no torch."
     tier2: []
     tier3: []
   watch_it_work: {none: true}
-  intuition: {text: Terminator run automatically. The search stops itself.}
+  intuition:
+    idea: Ask the Terminator after every trial, and stop the study when it says yes.
+    analogy: An automatic shut-off on the search. It checks each finished trial and switches the search off.
+    animation: none
+    goal: Stop the search at the right time, without someone watching it.
+    steps:
+      - Create a Terminator with the stop rules you want.
+      - Wrap it in a TerminatorCallback.
+      - Pass the callback to optimize with callbacks=[...].
+      - After each trial, the callback asks the Terminator whether to stop.
+      - If the answer is yes, the callback calls study.stop().
+      - The study ends after that trial. The n_trials limit still applies.
+    math:
+      notation:
+        - {symbol: "T", meaning: "The Terminator, which answers yes or no for a study."}
+        - {symbol: "n", meaning: "The number of trials finished so far."}
+      equations:
+        - expression: "after each trial: stop if T.should_terminate(study) is True"
+          meaning: The callback asks the Terminator once per finished trial.
+        - expression: "the study stops at the first n where the answer is True"
+          meaning: Later trials do not run, unless optimize has more trials left to run.
+      prediction: "The snippet allows 100 trials and stops at 20, so it prints 20."
+    good_at: [long unattended runs, no time to watch]
+    bad_at: [fewer than min_n_trials trials, custom stop points]
+    vs_siblings:
+      - {page: terminator, note: "The stop rule itself. Call it yourself in a custom loop."}
+      - {page: maxtrialscallback, note: "Stops at a fixed trial count instead."}
+    read_more:
+      - The callback wraps Terminator, so the stop rules live on that page.
+      - The constructor gives a FutureWarning, because the module is deprecated.
+      - The callback runs after each trial, not during one.
   next: []

@@ -58,6 +58,8 @@ slots:
         gb = GradientBoostingRegressor(n_estimators=50, random_state=0).fit(X, y)
         hgb = HistGradientBoostingRegressor(max_iter=50, random_state=0).fit(X, y)
         print(gb.n_estimators_, hgb.n_iter_)
+      output: |
+        50 50
     - library: xgboost
       target: xgboost.XGBRegressor
       why_this_library: Same name, same sklearn-style fit.
@@ -70,6 +72,8 @@ slots:
 
         model = XGBRegressor(n_estimators=50).fit(X, y)
         print(model.get_num_boosting_rounds())
+      output: |
+        50
     - library: lightgbm
       target: lightgbm.LGBMRegressor
       why_this_library: Same name. Fitted count is n_estimators_.
@@ -82,15 +86,58 @@ slots:
 
         model = LGBMRegressor(n_estimators=50, verbose=-1).fit(X, y)
         print(model.n_estimators_)
+      output: |
+        50
   what_comes_out:
     items:
-      - {name: n_estimators_, kind: attribute, task: null, shape: "int",
-         note: "GradientBoosting, LightGBM. Trees actually fitted; less if early stopping ran."}
-      - {name: n_iter_, kind: attribute, task: null, shape: "int",
-         note: "HistGradientBoosting. Rounds fitted; early stopping can make it less than max_iter."}
-      - {name: get_num_boosting_rounds, kind: method, task: null, shape: "int",
-         note: "XGBoost. Echoes n_estimators, even after early stopping cut training short."}
+      - name: n_estimators_
+        kind: attribute
+        task: null
+        shape: "scalar"
+        object_type: int
+        example: "47"
+        shape_explanation: >-
+          A scalar is one value, not an array. It has no rows or columns. The example
+          is the single integer 47, so its shape is scalar.
+        note: "GradientBoosting, LightGBM. Trees actually fitted; less if early stopping ran."
+      - name: n_iter_
+        kind: attribute
+        task: null
+        shape: "scalar"
+        object_type: int
+        example: "62"
+        shape_explanation: >-
+          A scalar is one value, not an array. It has no rows or columns. The example
+          is the single integer 62, so its shape is scalar.
+        note: "HistGradientBoosting. Rounds fitted; early stopping can make it less than max_iter."
+      - name: get_num_boosting_rounds
+        kind: method
+        task: null
+        shape: "scalar"
+        object_type: int
+        example: "100"
+        shape_explanation: >-
+          A scalar is one value, not an array. It has no rows or columns. The example
+          is the single integer 100, so its shape is scalar.
+        note: "XGBoost. Echoes n_estimators, even after early stopping cut training short."
     next_step: null
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import make_regression
+      from sklearn.ensemble import (
+          GradientBoostingRegressor,
+          HistGradientBoostingRegressor,
+      )
+
+      X, y = make_regression(n_samples=300, n_features=5, noise=20, random_state=0)
+      gb = GradientBoostingRegressor(n_estimators=50, random_state=0).fit(X, y)
+      hgb = HistGradientBoostingRegressor(max_iter=50, random_state=0).fit(X, y)
+      print("n_estimators_:", gb.n_estimators_)
+      print("n_iter_:", hgb.n_iter_)
+    output: |
+      n_estimators_: 50
+      n_iter_: 50
+    snippet_library: scikit-learn
     visual: null
   catch_outs:
     - In HistGradientBoosting the name is max_iter.

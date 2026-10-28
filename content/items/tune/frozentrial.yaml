@@ -11,7 +11,7 @@ targets: [optuna.trial.FrozenTrial]
 pairs_with: []
 clashes: []
 source_urls: ['https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.FrozenTrial.html']
-library_versions: {optuna: 5.0.0}
+library_versions: {optuna: 5.0.0, scikit-learn: 1.9.1}
 reviewed: false
 rules:
   task_types: []
@@ -43,6 +43,7 @@ slots:
       snippet: |
         # optuna 5.0.0
         import optuna
+        from optuna.samplers import TPESampler
         from sklearn.datasets import make_regression
         from sklearn.ensemble import RandomForestRegressor
         from sklearn.model_selection import cross_val_score
@@ -60,30 +61,183 @@ slots:
             return cross_val_score(model, X, y, cv=3).mean()
 
 
-        sampler = optuna.samplers.TPESampler(seed=0)
-        study = optuna.create_study(direction="maximize", sampler=sampler)
+        study = optuna.create_study(direction="maximize", sampler=TPESampler(seed=0))
         study.optimize(objective, n_trials=20)
         best = study.best_trial
-        print(best.number, best.state.name, round(best.value, 3), best.params)
+        print("number:", best.number)
+        print("state:", best.state.name)
+        print("value:", round(best.value, 3))
+        print("params:", best.params)
+        print("re-scored:", round(objective(best), 3))
+      output: |
+        number: 12
+        state: COMPLETE
+        value: 0.725
+        params: {'max_depth': 12, 'min_samples_leaf': 1}
+        re-scored: 0.725
   what_comes_out:
     items:
-      - {name: number, kind: attribute, task: null, shape: int, note: Position of the trial in the study.}
-      - {name: state, kind: attribute, task: null, shape: TrialState, note: Tells you whether the trial finished.}
-      - {name: value, kind: attribute, task: null, shape: "float or None", note: Objective score of the trial.}
-      - {name: params, kind: attribute, task: null, shape: dict, note: Settings the trial tried.}
+      - name: number
+        kind: attribute
+        task: null
+        shape: "scalar"
+        object_type: int
+        example: "4"
+        shape_explanation: >-
+          A single integer, not an array. It has no rows or columns. The example is the
+          integer 4, so its shape is scalar.
+        note: "Position of the trial in the study, from 0."
+      - name: state
+        kind: attribute
+        task: null
+        shape: "scalar, TrialState"
+        object_type: optuna.trial.TrialState
+        example: "TrialState.COMPLETE"
+        shape_explanation: >-
+          One status value, not an array. It has no rows or columns. The example is the
+          single status COMPLETE, so its shape is scalar. Read its name with state.name.
+        note: "Check this first. COMPLETE means the trial finished."
+      - name: value
+        kind: attribute
+        task: null
+        shape: "scalar or None"
+        object_type: float
+        example: "0.725"
+        shape_explanation: >-
+          One number, or None when no score was stored. It has no rows or columns. The
+          example is the single number 0.725, so its shape is scalar.
+        note: "Score from the objective. Can be None, so check state first."
+      - name: params
+        kind: attribute
+        task: null
+        shape: "dict"
+        object_type: dict
+        example: "{'max_depth': 12, 'min_samples_leaf': 1}"
+        shape_explanation: >-
+          A dictionary has no rows or columns. Each key is a setting name. Each value is
+          the setting this trial used. The example has 2 keys, so the trial used 2 settings.
+        note: "Settings this trial used, one entry per name."
+      - name: distributions
+        kind: attribute
+        task: null
+        shape: "dict"
+        object_type: dict
+        example: "{'max_depth': IntDistribution(...)}"
+        shape_explanation: >-
+          A dictionary has no rows or columns. Each key is a setting name, and each value
+          describes the range that name was drawn from. The example has 1 key, so it
+          describes 1 setting.
+        note: "The range or choices each setting was drawn from."
+      - name: intermediate_values
+        kind: attribute
+        task: null
+        shape: "dict"
+        object_type: dict
+        example: "{0: 0.61, 1: 0.64}"
+        shape_explanation: >-
+          A dictionary has no rows or columns. Each key is a step number and each value
+          is the score reported at that step. The example has 2 keys, so 2 steps were
+          reported.
+        note: "Scores reported step by step with report()."
+      - name: duration
+        kind: attribute
+        task: null
+        shape: "scalar"
+        object_type: datetime.timedelta
+        example: "0:00:02.410000"
+        shape_explanation: >-
+          A single length of time, not an array. It has no rows or columns. The example is
+          one time of about 2.4 seconds, so its shape is scalar.
+        note: "How long the trial took. Changes from run to run."
     next_step: null
+    snippet: |
+      # optuna 5.0.0
+      import optuna
+      from optuna.samplers import TPESampler
+
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+
+
+      def objective(trial):
+          x = trial.suggest_float("x", -1.0, 1.0)
+          trial.report(x**2, step=0)
+          return x**2
+
+
+      study = optuna.create_study(sampler=TPESampler(seed=0))
+      study.optimize(objective, n_trials=5)
+      trial = study.trials[0]
+      print("number:", trial.number)
+      print("state:", repr(trial.state))
+      print("value:", round(trial.value, 4))
+      print("params:", sorted(trial.params), round(trial.params["x"], 3))
+      print("distributions:", trial.distributions)
+      print("intermediate steps:", list(trial.intermediate_values))
+      print("user_attrs:", trial.user_attrs)
+    snippet_library: optuna
+    output: |
+      number: 0
+      state: <TrialState.COMPLETE: 1>
+      value: 0.0095
+      params: ['x'] 0.098
+      distributions: {'x': FloatDistribution(high=1.0, log=False, low=-1.0, step=None)}
+      intermediate steps: [0]
+      user_attrs: {}
     visual: null
   catch_outs:
     - Check state before you read value.
     - Reading a trial never changes the study.
   key_settings:
     tier1:
-      - {name: state, page: null}
-      - {name: value, page: null}
+      - name: state
+        page: null
+        controls: "The status of the trial, such as COMPLETE, PRUNED or FAIL."
+        effect: "Only a finished trial has a final result, so filter on it before you compare scores."
+      - name: value
+        page: null
+        controls: "The score the objective returned for this trial."
+        effect: "This is the number to compare. A pruned trial can still hold a value."
     tier2:
-      - {name: params, page: null}
-      - {name: distributions, page: null}
+      - name: params
+        page: null
+        controls: "The setting values this trial used."
+        effect: "Rerun the objective with these values to check or reuse the result."
+      - name: distributions
+        page: null
+        controls: "The range or choices each setting was drawn from."
+        effect: "Shows the search space, so you can tell what values were allowed."
     tier3: []
   watch_it_work: {none: true}
-  intuition: {text: "A photo of one finished trial, with its settings and score."}
+  intuition:
+    idea: A record of one finished trial, with its settings and score.
+    analogy: A receipt for one run, with the settings used, the score and the run number.
+    animation: none
+    goal: Read what one trial tried and how it scored.
+    steps:
+      - The study finishes a trial and stores its settings.
+      - The trial's state records how the trial ended.
+      - The objective's return value is stored as value.
+      - Reading best_trial or trials gives you these records.
+      - Calling the objective with a record reruns it with those settings.
+    math:
+      notation:
+        - {symbol: "p", meaning: "The settings stored in params for one trial."}
+        - {symbol: "f", meaning: "The objective function, which returns a score."}
+        - {symbol: "v", meaning: "The value stored on the trial."}
+        - {symbol: "*", meaning: "Marks the best trial."}
+      equations:
+        - expression: "v = f(p)"
+          meaning: The stored value is what the objective returned for those settings.
+        - expression: "f(p*) = v*, when the objective has no randomness"
+          meaning: For the best trial, rerunning the objective gives back its stored value.
+      prediction: "Example: a trial with max_depth 12 and value 0.725 reruns to 0.725."
+    good_at: [reading past results, checking the best trial, rescoring with the objective]
+    bad_at: [saving changes to a study, sampling new settings]
+    vs_siblings:
+      - {page: optuna-trial, note: "The live trial during a run. FrozenTrial is the finished record."}
+      - {page: optuna-study, note: "Holds all trials, and returns them as records."}
+    read_more:
+      - COMPLETE means the trial finished normally.
+      - Use study.best_trial to get the winning record.
+      - Rerun the objective with best.params to check a score.
   next: []

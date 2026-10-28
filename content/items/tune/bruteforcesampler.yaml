@@ -1,86 +1,227 @@
 id: bruteforcesampler
 plain_name: BruteForceSampler
 code_name: BruteForceSampler
-aliases: [exhaustive search, brute force]
+aliases:
+- exhaustive search
+- brute force
 stage: tune
 family: tune.optuna.sampler
-tracks: [standard, time-series]
+tracks:
+- standard
+- time-series
 archetype: tuning
-question_tags: [small search space, try everything]
-targets: [optuna.samplers.BruteForceSampler]
-pairs_with: [optuna-study]
+question_tags:
+- small search space
+- try everything
+targets:
+- optuna.samplers.BruteForceSampler
+pairs_with:
+- optuna-study
 clashes: []
-source_urls: ['https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.BruteForceSampler.html']
-library_versions: {optuna: 5.0.0, scikit-learn: "1.9.1"}
+source_urls:
+- https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.BruteForceSampler.html
+library_versions:
+  optuna: 5.0.0
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
   task_types: []
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: tuning, dims: 2, trials: 12}
+    hero:
+      kind: tuning
+      dims: 2
+      trials: 12
     line: Tries every combination in a small search space, once each.
   quick_facts:
     facts:
-      - {label: Search, value: "Every combination, once"}
-      - {label: Stops when, value: "All combinations tried"}
+    - label: Search
+      value: Every combination, once
+    - label: Floats
+      value: Need step=
+    - label: Strict stop
+      value: avoid_premature_stop
   use_avoid:
-    use_when: [small discrete space, tries everything once]
-    avoid_when: [continuous settings, large search space]
+    use_when:
+    - small discrete space
+    - tries everything once
+    avoid_when:
+    - continuous settings
+    - large search space
   prep:
-    - step: {page: train-test-split}
-      status: recommended
-      why: Keep a final test set the search never sees.
-      condition: null
-      unless: null
+  - step:
+      page: train-test-split
+    status: recommended
+    why: Keep a final test set the search never sees.
+    condition: null
+    unless: null
   code:
-    - library: optuna
-      target: optuna.samplers.BruteForceSampler
-      why_this_library: Optuna sampler. Pass it to create_study.
-      snippet: |
-        # optuna 5.0.0
-        import optuna
-        from sklearn.datasets import make_regression
-        from sklearn.linear_model import ElasticNet
-        from sklearn.model_selection import cross_val_score
+  - library: optuna
+    target: optuna.samplers.BruteForceSampler
+    why_this_library: Optuna sampler. Pass it to create_study.
+    snippet: |
+      # optuna 5.0.0
+      import optuna
+      from sklearn.datasets import make_regression
+      from sklearn.linear_model import ElasticNet
+      from sklearn.model_selection import cross_val_score
 
-        optuna.logging.set_verbosity(optuna.logging.WARNING)
-        X, y = make_regression(
-            n_samples=200, n_features=8, n_informative=3, noise=10, random_state=0
-        )
-        SCORING = "neg_mean_squared_error"
-        search_space = {"alpha": [0.01, 0.1, 1.0, 10.0], "l1_ratio": [0.1, 0.5, 0.9]}
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
 
-
-        def objective(trial):
-            alpha = trial.suggest_categorical("alpha", search_space["alpha"])
-            l1_ratio = trial.suggest_categorical("l1_ratio", search_space["l1_ratio"])
-            model = ElasticNet(alpha=alpha, l1_ratio=l1_ratio)
-            return -cross_val_score(model, X, y, cv=3, scoring=SCORING).mean()
+      X, y = make_regression(
+          n_samples=200, n_features=8, n_informative=3, noise=10, random_state=0
+      )
+      SCORING = "neg_mean_squared_error"
+      search_space = {"alpha": [0.01, 0.1, 1.0, 10.0], "l1_ratio": [0.1, 0.5, 0.9]}
 
 
-        sampler = optuna.samplers.BruteForceSampler(seed=0)
-        study = optuna.create_study(sampler=sampler, direction="minimize")
-        study.optimize(objective)
-        print(len(study.trials))
-        print({k: round(v, 3) for k, v in study.best_params.items()})
+      def objective(trial):
+          alpha = trial.suggest_categorical("alpha", search_space["alpha"])
+          l1_ratio = trial.suggest_categorical("l1_ratio", search_space["l1_ratio"])
+          model = ElasticNet(alpha=alpha, l1_ratio=l1_ratio)
+          return -cross_val_score(model, X, y, cv=3, scoring=SCORING).mean()
+
+
+      sampler = optuna.samplers.BruteForceSampler(seed=0)
+      study = optuna.create_study(sampler=sampler, direction="minimize")
+      study.optimize(objective)
+      print(len(study.trials))
+      print({k: round(v, 3) for k, v in study.best_params.items()})
+    output: |
+      12
+      {'alpha': 0.01, 'l1_ratio': 0.9}
   what_comes_out:
     items:
-      - {name: best_params, kind: return, task: null, shape: dict of settings, note: Best combination among those tried.}
+    - name: best_params
+      kind: return
+      task: null
+      shape: dict of settings
+      object_type: dict
+      example: '{''alpha'': 0.01, ''l1_ratio'': 0.9}'
+      shape_explanation: A dictionary has no rows or columns. Each key is a setting name from the objective. Each value is that setting in the best trial. The example has 2 keys, because the search has alpha and l1_ratio.
+      note: Best combination among those tried.
+    - name: best_value
+      kind: return
+      task: null
+      shape: scalar
+      object_type: float
+      example: '0.418'
+      shape_explanation: A scalar is one value, not an array. It has no rows or columns. The example is the single number 0.418, so its shape is scalar.
+      note: Objective value of the best combination.
+    - name: trials
+      kind: return
+      task: null
+      shape: (n_trials,)
+      object_type: list of FrozenTrial
+      example: '[FrozenTrial(number=0), FrozenTrial(number=1)]'
+      shape_explanation: A one-dimensional list with one entry per trial that ran. n_trials is the number of trials. The example has 2 entries, so its concrete shape is (2,).
+      note: Every trial run, in order, with its settings and value.
     next_step: null
+    snippet: |
+      # optuna 5.0.0
+      import optuna
+      from sklearn.datasets import make_regression
+      from sklearn.linear_model import ElasticNet
+      from sklearn.model_selection import cross_val_score
+
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+
+      X, y = make_regression(
+          n_samples=200, n_features=8, n_informative=3, noise=10, random_state=0
+      )
+      SCORING = "neg_mean_squared_error"
+      search_space = {"alpha": [0.01, 0.1, 1.0, 10.0], "l1_ratio": [0.1, 0.5, 0.9]}
+
+
+      def objective(trial):
+          alpha = trial.suggest_categorical("alpha", search_space["alpha"])
+          l1_ratio = trial.suggest_categorical("l1_ratio", search_space["l1_ratio"])
+          model = ElasticNet(alpha=alpha, l1_ratio=l1_ratio)
+          return -cross_val_score(model, X, y, cv=3, scoring=SCORING).mean()
+
+
+      sampler = optuna.samplers.BruteForceSampler(seed=0, avoid_premature_stop=True)
+      study = optuna.create_study(sampler=sampler, direction="minimize")
+      study.optimize(objective)
+
+      tried = {tuple(sorted(t.params.items())) for t in study.trials}
+      print("best_params:", {k: round(v, 3) for k, v in study.best_params.items()})
+      print("best_value:", round(study.best_value, 3))
+      print("trials:", len(study.trials))
+      print("distinct settings tried:", len(tried))
+    snippet_library: optuna
+    output: |
+      best_params: {'alpha': 0.01, 'l1_ratio': 0.9}
+      best_value: 106.537
+      trials: 12
+      distinct settings tried: 12
     visual: null
   catch_outs:
-    - Stops by itself once every combination is tried.
-    - Only worth it when the space is small and discrete.
+  - By default it may stop before covering every combination.
+  - avoid_premature_stop=True gives a strict sweep, with more repeated tries.
+  - Float settings need a step, because the space must be finite.
+  - Only worth it when the space is small and discrete.
   key_settings:
-    tier1: 
-      - {name: avoid_premature_stop, page: null}
-    tier2: 
-      - {name: seed, page: null}
+    tier1:
+    - name: avoid_premature_stop
+      page: null
+      controls: When True, runs a strict exhaustive sweep. False uses a looser stop rule.
+      effect: True covers every combination, but may repeat some tries.
+    tier2:
+    - name: seed
+      page: null
+      controls: Fixes a random order for trying the combinations.
+      effect: Not advised in distributed runs, since order cannot be ensured.
     tier3: []
-  watch_it_work: {none: true}
-  intuition: {text: "Try every box once, in order, then stop."}
+  watch_it_work:
+    none: true
+  intuition:
+    idea: Try every combination in a small, finite space, each one once.
+    analogy: Checking every drawer in a small cabinet, one drawer at a time.
+    animation: none
+    goal: Cover every combination in a small space, so none is missed.
+    steps:
+    - Name the choices inside the objective with suggest calls.
+    - Each distinct combination of choices becomes one trial.
+    - Trials run in a fixed order, shuffled when seed is set.
+    - Score each trial with the objective.
+    - Stop when the space is used up, or earlier under the default rule.
+    - Keep the trial with the lowest value.
+    math:
+      notation:
+      - symbol: n_1 ... n_p
+        meaning: How many choices each setting has.
+      - symbol: C
+        meaning: The number of combinations, one trial each.
+      - symbol: v_c
+        meaning: The value the objective returned for combination c.
+      - symbol: c*
+        meaning: The winning combination, stored as best_params.
+      equations:
+      - expression: C = n_1 × n_2 × ... × n_p
+        meaning: For a flat space of fixed choices, each extra choice multiplies the count.
+      - expression: c* = argmin over c of v_c
+        meaning: The winner is the combination with the smallest value.
+      prediction: 4 alpha choices x 3 l1_ratio choices = 12 trials.
+    good_at:
+    - small discrete spaces
+    - full coverage
+    bad_at:
+    - continuous settings
+    - large spaces
+    vs_siblings:
+    - page: gridsampler
+      note: Same full sweep, but you list the grid yourself.
+    - page: qmcsampler
+      note: Spreads a set number of tries over a range.
+    read_more:
+    - Each combination of choices is one trial.
+    - Trials run until the space is used up.
+    - avoid_premature_stop makes the sweep strict.
   next: []

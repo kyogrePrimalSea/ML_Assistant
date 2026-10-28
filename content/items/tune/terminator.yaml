@@ -11,7 +11,7 @@ targets: [optuna.terminator.Terminator]
 pairs_with: [terminatorcallback]
 clashes: []
 source_urls: ['https://optuna.readthedocs.io/en/stable/reference/generated/optuna.terminator.Terminator.html']
-library_versions: {optuna: 5.0.0}
+library_versions: {optuna: 5.0.0, scikit-learn: 1.9.1}
 reviewed: false
 rules:
   task_types: []
@@ -34,7 +34,7 @@ slots:
   prep:
     - step: {page: cross-validate}
       status: recommended
-      why: Terminator's error check reads cross-validation scores.
+      why: The default error check reads cross-validation scores.
       condition: null
       unless: null
   code:
@@ -73,23 +73,114 @@ slots:
                 max_stagnation_trials=5
             ),
         )
-        print(terminator.should_terminate(study))
+        print("complete trials:", len(study.trials))
+        print("best trial number:", study.best_trial.number)
+        print("should_terminate:", terminator.should_terminate(study))
+      output: |
+        complete trials: 30
+        best trial number: 5
+        should_terminate: True
   what_comes_out:
     items:
-    - {name: should_terminate, kind: method, task: null, shape: bool,
-       note: True means the study should stop.}
+    - name: should_terminate
+      kind: method
+      task: null
+      shape: bool
+      object_type: bool
+      example: "True"
+      shape_explanation: >-
+        A scalar is one value, not an array. It has no rows or columns. The example
+        is the single value True, so its shape is scalar. It is a yes or no answer.
+      note: "True means the study should stop. It needs the study as its only input."
     next_step: If True, stop the search. If False, run more trials.
+    snippet: |
+      # optuna 5.0.0
+      import optuna
+      from optuna.terminator import BestValueStagnationEvaluator
+      from optuna.terminator import Terminator
+
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+
+
+      def objective(trial):
+          x = trial.suggest_float("x", -1.0, 1.0)
+          return -((x - 0.5) ** 2)
+
+
+      study = optuna.create_study(
+          direction="maximize",
+          sampler=optuna.samplers.RandomSampler(seed=0),
+      )
+      terminator = Terminator(
+          improvement_evaluator=BestValueStagnationEvaluator(
+              max_stagnation_trials=5
+          ),
+      )
+      study.optimize(objective, n_trials=5)
+      print("after 5 trials:", terminator.should_terminate(study))
+      study.optimize(objective, n_trials=30)
+      result = terminator.should_terminate(study)
+      print("after 35 trials:", result, type(result).__name__)
+    snippet_library: optuna
+    output: |
+      after 5 trials: False
+      after 35 trials: False bool
     visual: null
   catch_outs:
-    - Returns False until min_n_trials (default 20) trials exist.
-    - Returns False while fewer than min_n_trials trials exist.
+    - The whole optuna.terminator module is deprecated since 4.9.0 and is removed in 6.0.0.
+    - Creating a Terminator gives a FutureWarning. The snippet still runs.
+    - Returns False until min_n_trials (default 20) completed trials exist.
+    - The default improvement check needs the torch package. BestValueStagnationEvaluator does not.
   key_settings:
     tier1:
-    - {name: improvement_evaluator, page: null}
-    - {name: error_evaluator, page: null}
-    - {name: min_n_trials, page: null}
+    - name: improvement_evaluator
+      page: null
+      controls: "How room for improvement is measured. None uses RegretBoundEvaluator, which bounds regret with a Gaussian process model."
+      effect: "The default needs the torch package. BestValueStagnationEvaluator needs nothing extra."
+    - name: error_evaluator
+      page: null
+      controls: "The statistical error the improvement must beat. None picks one that fits the improvement evaluator."
+      effect: "With BestValueStagnationEvaluator the error is zero, so any stall past the limit stops the search."
+    - name: min_n_trials
+      page: null
+      controls: "The completed trials needed before any stop can happen. It must be a positive integer. Default is 20."
+      effect: A lower value allows earlier stops, based on fewer finished trials.
     tier2: []
     tier3: []
   watch_it_work: {none: true}
-  intuition: {text: Asks whether another trial can still beat the best.}
+  intuition:
+    idea: Stop when the best value has stalled for too long, so more trials are unlikely to help.
+    analogy: A coach who pulls a player after too many games in a row with no new personal best.
+    animation: none
+    goal: Decide whether another trial can still help, using only the trials finished so far.
+    steps:
+      - Wait until min_n_trials completed trials exist.
+      - Measure the room left for improvement with the improvement evaluator.
+      - Measure the statistical error with the error evaluator.
+      - Stop when the room left is smaller than the error.
+      - With the stagnation evaluator, count completed trials since the best value was set.
+      - Stop when that count passes max_stagnation_trials.
+    math:
+      notation:
+        - {symbol: "I", meaning: "The room left for improvement, from the improvement evaluator."}
+        - {symbol: "E", meaning: "The statistical error, from the error evaluator."}
+        - {symbol: "d", meaning: "The completed trials finished since the best value was set."}
+        - {symbol: "M", meaning: "max_stagnation_trials, the allowed length of a stall."}
+      equations:
+        - expression: "stop when I < E"
+          meaning: The search stops when the room left is smaller than the error.
+        - expression: "I = M - d, and E = 0"
+          meaning: With the stagnation evaluator, the room left shrinks by one for each trial with no new best.
+        - expression: "stop when d > M"
+          meaning: The search stops once more than M completed trials pass with no new best.
+      prediction: "With max_stagnation_trials=5, the stop comes after six completed trials with no new best, once min_n_trials is reached."
+    good_at: [long tuning runs, gains are flattening]
+    bad_at: [fewer trials than min_n_trials, module removed in 6.0.0]
+    vs_siblings:
+      - {page: terminatorcallback, note: "Runs this check after each trial, so no loop is needed."}
+      - {page: maxtrialscallback, note: "Stops at a fixed trial count, with no estimate of gains."}
+    read_more:
+      - BestValueStagnationEvaluator needs no extra packages.
+      - The default error check reads scores sent with report_cross_validation_scores.
+      - The module is deprecated, so check the optuna release notes before you depend on it.
   next: [but-when-stop-search]

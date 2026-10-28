@@ -36,25 +36,116 @@ slots:
       why: Keep a final test set the search never sees.
       condition: null
       unless: null
-  code: []
+  code:
+    - library: optuna
+      target: optuna.samplers.GPSampler
+      why_this_library: "Passed to create_study as the sampler. Output below is made up: torch is not installed here, so this was not run."
+      snippet: |
+        # optuna 5.0.0
+        import optuna
+        from optuna.samplers import GPSampler
+
+        optuna.logging.set_verbosity(optuna.logging.WARNING)
+
+
+        def objective(trial):
+            x = trial.suggest_float("x", -10, 10)
+            y = trial.suggest_float("y", -10, 10)
+            return (x - 2) ** 2 + (y + 1) ** 2
+
+
+        sampler = GPSampler(seed=0)
+        study = optuna.create_study(sampler=sampler)
+        study.optimize(objective, n_trials=30)
+        print("best_params:", study.best_params)
+        print("best_value:", round(study.best_value, 3))
+      output: |
+        (made-up values, not run: torch is not installed here)
+        best_params: {'x': 1.98, 'y': -1.03}
+        best_value: 0.002
   what_comes_out:
     items:
-      - {name: best_params, kind: return, task: null, shape: dict of settings, note: Best combination among those tried.}
+      - name: study.best_params
+        kind: return
+        task: null
+        shape: "dict"
+        object_type: dict
+        example: "{'x': 1.2, 'depth': 4}"
+        shape_explanation: >-
+          A dictionary has no rows or columns. Each key is a setting name passed to a
+          suggest call. Each value is the best choice found for that setting. The example
+          has 2 keys, so it covers 2 settings.
+        note: "Best settings among completed trials. Read it after optimize."
+      - name: study.best_value
+        kind: return
+        task: null
+        shape: "scalar"
+        object_type: float
+        example: "0.91"
+        shape_explanation: >-
+          A scalar is one value, not an array. It has no rows or columns. The example is
+          the single number 0.91, so its shape is scalar.
+        note: "Objective value of the best trial. Direction comes from create_study."
     next_step: null
     visual: null
   catch_outs:
-    - Needs PyTorch installed.
+    - Needs torch and scipy installed.
+    - The code example output is made up. It was not run here.
     - Set deterministic_objective only when reruns give the same score.
     - Start-up trials are random before the model takes over.
   key_settings:
-    tier1: 
-      - {name: n_startup_trials, page: null}
-      - {name: deterministic_objective, page: null}
-      - {name: seed, page: null}
-    tier2: 
-      - {name: independent_sampler, page: null}
-      - {name: constraints_func, page: null}
+    tier1:
+      - name: n_startup_trials
+        page: null
+        controls: Number of random trials before the model starts. Default is 10.
+        effect: More random trials mean more trials pass before the model helps.
+      - name: deterministic_objective
+        page: null
+        controls: Fixes the model's noise variance at its minimum when True.
+        effect: Use only when the same settings always give the same score. Experimental.
+      - name: seed
+        page: null
+        controls: Seeds the internal random number generator. None picks a random seed.
+        effect: A fixed seed makes repeated runs match.
+    tier2:
+      - name: independent_sampler
+        page: null
+        controls: Sampler for startup trials and for conditional settings.
+        effect: The default is a random sampler with the same seed. Changing it changes the startup trials.
     tier3: []
   watch_it_work: {none: true}
-  intuition: {text: "Build a cheap model of the score, then test where it expects gains."}
+  intuition:
+    idea: Fit a smooth model of the score, then test the settings it expects to gain most.
+    analogy: Like a map-maker who draws the likely landscape from a few visits, then checks the most promising spot.
+    animation: none
+    goal: Reach a good score in few trials, by learning from every trial.
+    steps:
+      - Run the startup trials at random, as set by n_startup_trials.
+      - Fit a Gaussian process to the trials so far.
+      - Use a Matern kernel with a separate length scale for each setting.
+      - Tune the kernel settings by maximising the marginal likelihood.
+      - Score candidate settings with the acquisition function, logEI for one objective.
+      - Run the trial with the best acquisition score.
+      - Record its score and refit the model.
+    math:
+      notation:
+        - {symbol: "x", meaning: "A candidate set of settings."}
+        - {symbol: "f(x)", meaning: "The objective score at x, known only after the trial runs."}
+        - {symbol: "GP", meaning: "The Gaussian process fitted to past settings and scores."}
+        - {symbol: "a(x)", meaning: "The acquisition function, scoring how promising x is."}
+      equations:
+        - expression: "x_next = argmax over x of a(x)"
+          meaning: The next trial uses the candidate with the highest acquisition score.
+        - expression: "a(x) = logEI(x)  (one objective)"
+          meaning: Log expected improvement over the best score so far, for one objective.
+      prediction: "The next trial uses x_next. The model refits after each trial."
+    good_at: [few trials, learns from every trial]
+    bad_at: [many trials, needs torch and scipy]
+    vs_siblings:
+      - {page: tpesampler, note: "Uses density ratios, not a Gaussian process. Needs no torch."}
+      - {page: cmaessampler, note: "Uses the cmaes package. Suited to continuous settings."}
+      - {page: randomsampler, note: "Draws settings at random, with no model."}
+    read_more:
+      - The GPSampler reference page describes the kernel and acquisition functions.
+      - Set seed to make a run repeatable.
   next: []

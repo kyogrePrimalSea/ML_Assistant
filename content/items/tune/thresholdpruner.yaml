@@ -11,7 +11,7 @@ targets: [optuna.pruners.ThresholdPruner]
 pairs_with: []
 clashes: []
 source_urls: ['https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.ThresholdPruner.html']
-library_versions: {optuna: 5.0.0}
+library_versions: {optuna: 5.0.0, scikit-learn: 1.9.1}
 reviewed: false
 rules:
   task_types: []
@@ -27,6 +27,7 @@ slots:
     facts:
       - {label: Default lower, value: "None (off)"}
       - {label: Default upper, value: "None (off)"}
+      - {label: Needs, value: "lower or upper, at least one"}
   use_avoid:
     use_when: [known score limit, clearly bad scores]
     avoid_when: [no sensible limit, unknown score scale]
@@ -39,10 +40,11 @@ slots:
   code:
     - library: optuna
       target: optuna.pruners.ThresholdPruner
-      why_this_library: Used as pruner= in optuna.create_study.
+      why_this_library: Pass it as pruner= to optuna.create_study.
       snippet: |
         # optuna 5.0.0
         import optuna
+        from collections import Counter
         from sklearn.datasets import make_classification
         from sklearn.linear_model import SGDClassifier
         from sklearn.model_selection import train_test_split
@@ -71,26 +73,124 @@ slots:
             pruner=pruner,
         )
         study.optimize(objective, n_trials=20)
-        pruned = [t for t in study.trials if t.state.name == "PRUNED"]
-        print(len(pruned), "of", len(study.trials), "trials pruned")
+        states = Counter(t.state.name for t in study.trials)
+        print("states:", dict(sorted(states.items())))
+        print(states["PRUNED"], "of", len(study.trials), "trials pruned")
+      output: |
+        states: {'COMPLETE': 13, 'PRUNED': 7}
+        7 of 20 trials pruned
   what_comes_out:
     items:
-      - {name: prune, kind: method, task: null, shape: "bool", note: "Called by Optuna. Your code uses should_prune()."}
-    next_step: null
+      - name: prune
+        kind: method
+        task: null
+        shape: "scalar"
+        object_type: bool
+        example: "True"
+        shape_explanation: >-
+          A single True or False, not an array. Optuna calls prune() after each
+          report. True means the trial stops. The example is one True, so its
+          shape is scalar.
+        note: "Called by Optuna after each report. Your code uses should_prune()."
+      - name: trial.should_prune()
+        kind: return
+        task: null
+        shape: "scalar"
+        object_type: bool
+        example: "True"
+        shape_explanation: >-
+          A single True or False, not an array. It reads the pruner's answer for
+          the latest reported step. True means stop the trial. The example is one
+          True, so its shape is scalar.
+        note: "The pruner's answer for the latest reported step."
+      - name: trial.state
+        kind: return
+        task: null
+        shape: "scalar"
+        object_type: optuna.trial.TrialState
+        example: "TrialState.PRUNED"
+        shape_explanation: >-
+          One enum member, not an array. It names how a trial ended, such as
+          COMPLETE or PRUNED. The example is one member, so its shape is scalar.
+        note: "Read it on each trial in study.trials."
+    next_step: Count the states in study.trials to see what stopped early.
+    snippet: |
+      # optuna 5.0.0
+      import optuna
+
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+      pruner = optuna.pruners.ThresholdPruner(lower=0.5)
+      study = optuna.create_study(pruner=pruner)
+      trial = study.ask()
+      for step, value in enumerate([0.9, 0.7, 0.3]):
+          trial.report(value, step)
+          print("step", step, "value", value, "should_prune:", trial.should_prune())
+    snippet_library: optuna
+    output: |
+      step 0 value 0.9 should_prune: False
+      step 1 value 0.7 should_prune: False
+      step 2 value 0.3 should_prune: True
     visual: null
   catch_outs:
-    - Both lower and upper are off by default.
+    - At least one of lower or upper is needed, or the pruner raises TypeError.
+    - A lower limit above the upper limit raises ValueError.
+    - Only the latest reported value is checked, not the whole run.
     - A nan value also prunes the trial.
     - Pick limits on your metric's own scale.
   key_settings:
     tier1:
-      - {name: lower, page: null}
-      - {name: upper, page: null}
+      - name: lower
+        page: null
+        controls: "The smallest allowed score. A reported score below it stops the trial."
+        effect: "A higher lower limit stops more trials early, so it saves more time but may stop slow starters."
+      - name: upper
+        page: null
+        controls: "The largest allowed score. A reported score above it stops the trial."
+        effect: "Useful when a score should not climb past a known ceiling. Leave it None to switch this check off."
     tier2:
-      - {name: n_warmup_steps, page: null}
-      - {name: interval_steps, page: null}
+      - name: n_warmup_steps
+        page: null
+        controls: "Steps before any check runs. 0 means checks start at the first step."
+        effect: "A longer warm-up gives slow starters time, but a bad trial runs longer before it can stop."
+      - name: interval_steps
+        page: null
+        controls: "How often a check runs, in steps. 1 means a check at every step."
+        effect: "A larger value checks less often, so a bad trial can run further before it stops."
     tier3: []
   watch_it_work: {none: true}
   intuition:
-    text: Stop a trial as soon as its score goes past a line you set.
+    idea: Stop a trial as soon as one reported score crosses a fixed line.
+    analogy: A referee who stops a race as soon as a runner falls below a set pace.
+    animation: none
+    goal: Cut off trials with clearly bad scores, using limits you already know.
+    steps:
+      - Set lower, upper, or both, on the metric's own scale.
+      - Each trial reports a score at every step.
+      - Skip the check during warm-up steps and between checks.
+      - At a checked step, stop the trial if its score is nan, too low, or too high.
+      - Otherwise the trial continues to its next step.
+      - Trials that never cross a limit run to the end and complete.
+    math:
+      notation:
+        - {symbol: "s", meaning: "The latest step a trial reported, counting from 0."}
+        - {symbol: "v_s", meaning: "The score the trial reported at step s."}
+        - {symbol: "L", meaning: "The lower limit set by lower. Off when None."}
+        - {symbol: "U", meaning: "The upper limit set by upper. Off when None."}
+        - {symbol: "W", meaning: "The number of warm-up steps, set by n_warmup_steps."}
+      equations:
+        - expression: "prune = (v_s is nan) or (v_s < L) or (v_s > U)"
+          meaning: The trial stops if its latest score is nan, below the lower limit, or above the upper limit.
+        - expression: "check(s) = (s >= W) and (s starts a new interval)"
+          meaning: A check runs after warm-up, once in each block of interval_steps steps.
+      prediction: "With lower=0.93, a trial whose score drops to 0.91 at a checked step stops there. The snippet stopped 7 of 20 trials."
+    good_at: [known score limit, cheap to check]
+    bad_at: [unknown score scale, limits that are guesses]
+    vs_siblings:
+      - {page: patientpruner, note: "Waits for a stall in gains. No fixed line."}
+      - {page: medianpruner, note: "Uses the median stopping rule, not a fixed line."}
+      - {page: noppruner, note: "Never stops a trial. This one stops on a fixed line."}
+    read_more:
+      - Set lower or upper, and leave the other as None.
+      - Check the metric's scale before you choose a limit.
+      - The ThresholdPruner reference page lists the checks in full.
   next: []

@@ -11,7 +11,7 @@ targets: [optuna.visualization.plot_contour]
 pairs_with: []
 clashes: []
 source_urls: ['https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_contour.html']
-library_versions: {optuna: 5.0.0}
+library_versions: {optuna: 5.0.0, scikit-learn: 1.9.1}
 reviewed: false
 rules:
   task_types: []
@@ -39,7 +39,7 @@ slots:
   code:
     - library: optuna
       target: optuna.visualization.plot_contour
-      why_this_library: Draws the plot straight from a study.
+      why_this_library: "Draws the plot straight from a study. Output below is made up: plotly is not installed here, so this was not run."
       snippet: |
         # optuna 5.0.0
         import optuna
@@ -70,24 +70,107 @@ slots:
 
         fig = plot_contour(study, params=["max_depth", "min_samples_leaf"])
         print(study.best_params)
+        print("figure type:", type(fig).__name__)
+      output: |
+        (made-up values, not run: plotly is not installed here)
+        {'max_depth': 8, 'min_samples_leaf': 3}
+        figure type: Figure
   what_comes_out:
     items:
-      - {name: plot_contour, kind: return, task: null, shape: go.Figure, note: A plotly figure of the contour plot.}
+      - name: plot_contour
+        kind: return
+        task: null
+        shape: "plotly Figure"
+        object_type: plotly.graph_objects.Figure
+        example: "Figure(...)  (made-up example)"
+        shape_explanation: >-
+          A Figure object, not an array. It has no rows or columns. The docs say it is a
+          plotly figure of the parameter relationship as a contour plot. The example only
+          names the type, so its shape is one Figure.
+        note: "The plotly figure. Its colour bar shows the score."
     next_step: null
     visual: null
+    snippet: |
+      # optuna 5.0.0
+      import optuna
+      from optuna.visualization import plot_contour
+      from sklearn.datasets import make_regression
+      from sklearn.ensemble import RandomForestRegressor
+      from sklearn.model_selection import cross_val_score
+
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+      X, y = make_regression(n_samples=300, n_features=8, noise=15,
+                             random_state=0)
+
+
+      def objective(trial):
+          depth = trial.suggest_int("max_depth", 2, 12)
+          leaf = trial.suggest_int("min_samples_leaf", 1, 10)
+          model = RandomForestRegressor(
+              n_estimators=30, max_depth=depth, min_samples_leaf=leaf,
+              random_state=0,
+          )
+          return cross_val_score(model, X, y, cv=3).mean()
+
+
+      study = optuna.create_study(
+          direction="maximize", sampler=optuna.samplers.TPESampler(seed=0)
+      )
+      study.optimize(objective, n_trials=20)
+
+      fig = plot_contour(study, params=["max_depth", "min_samples_leaf"])
+      print("figure type:", type(fig).__name__)
+      print("trials in study:", len(study.trials))
+    snippet_library: optuna
+    output: |
+      (made-up values, not run: plotly is not installed here)
+      figure type: Figure
+      trials in study: 20
   catch_outs:
     - Needs plotly installed.
+    - The code example output is made up. It was not run here.
     - Plots the objective value unless target is set.
-    - Pass params to choose which two settings are plotted.
+    - A trial with no value for either setting is not plotted.
+    - The colour map is reversed when target is set or the study minimises.
+    - The docs do not say which colour means a low or high score.
   key_settings:
     tier1:
-      - {name: study, page: null}
-      - {name: params, page: null}
+      - name: params
+        page: null
+        controls: The settings to plot. None plots every setting in the study.
+        effect: Names the settings on the plot, and trials missing one of them are left out.
+      - name: target
+        page: null
+        controls: The value to colour the plot by. None uses the objective value for one objective.
+        effect: Needed for multi-objective studies, where the objective value alone is not enough.
     tier2:
-      - {name: target, page: null}
-      - {name: target_name, page: null}
+      - name: target_name
+        page: null
+        controls: The label shown on the colour bar.
+        effect: Changes the label only, not the colours.
     tier3: []
   watch_it_work: {none: true}
   intuition:
-    text: Two settings on the axes, the score shown as colour.
+    idea: "A two-setting map with contour lines of the score, and each trial shown as a dot."
+    analogy: "Like a weather map, where each line marks one level across two directions."
+    animation: none
+    goal: "See whether two settings change the score together, or one setting does the work alone."
+    steps:
+      - "The horizontal axis is the first setting you chose."
+      - "The vertical axis is the second setting you chose."
+      - "Each dot is one finished trial, placed at its two setting values."
+      - "The contour lines mark levels of the score across the two settings."
+      - "The colour bar tells you which score each colour stands for."
+      - "If the colour changes along only one axis, the score moves with that setting alone in this area."
+      - "Look for the region where the best-scoring dots gather."
+    good_at: ["two settings at once", "one-setting-only changes", "where trials sit"]
+    bad_at: ["more than two settings", "exact score values", "scores between the dots"]
+    vs_siblings:
+      - {page: plot-slice, note: "Shows each setting alone against the score."}
+      - {page: plot-rank, note: "Two settings again, with dots coloured by rank instead of a score map."}
+      - {page: plot-parallel-coordinate, note: "Shows every setting at once as lines through trials."}
+    read_more:
+      - "Read the plot_contour docs page linked in source_urls."
+      - "Note that the colour map reverses when the study minimises."
+      - "Use the colour bar label to check which score the colours show."
   next: []

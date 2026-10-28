@@ -11,7 +11,7 @@ targets: [optuna.visualization.plot_hypervolume_history]
 pairs_with: []
 clashes: []
 source_urls: ['https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_hypervolume_history.html']
-library_versions: {optuna: 5.0.0}
+library_versions: {optuna: 5.0.0, scikit-learn: 1.9.1}
 reviewed: false
 rules:
   task_types: []
@@ -25,7 +25,8 @@ slots:
     line: Shows whether the trade-offs are still improving.
   quick_facts:
     facts:
-      - {label: Reference point, value: "one value per goal"}
+    - {label: Reference point, value: one value per goal}
+    - {label: Goals needed, value: two or more}
   use_avoid:
     use_when: [several goals at once, checking trade-offs keep improving]
     avoid_when: [a single goal, no reference point known]
@@ -38,7 +39,7 @@ slots:
   code:
   - library: optuna
     target: optuna.visualization.plot_hypervolume_history
-    why_this_library: Plotly figure; you choose where to show it.
+    why_this_library: 'Draws a Plotly figure. Output below is made up: plotly is not installed here, so this was not run.'
     snippet: |
       # optuna 5.0.0
       import optuna
@@ -69,22 +70,97 @@ slots:
       fig = optuna.visualization.plot_hypervolume_history(
           study, reference_point=[0.0, 120.0]
       )
-      print(len(study.best_trials))
+      print(fig.layout.title.text)
+      print(len(fig.data))
+    output: |
+      (made-up values, not run: plotly is not installed here)
+      Hypervolume History Plot
+      1
   what_comes_out:
     items:
-    - {name: plot_hypervolume_history, kind: return, task: null, shape: plotly Figure, note: Figure of hypervolume over the search.}
-    next_step: null
+    - {name: plot_hypervolume_history, kind: return, task: null, shape: plotly Figure, object_type: plotly.graph_objects.Figure, example: 'made-up: a Figure with one line of 30 points', shape_explanation: 'A Figure is a container, not an array, so it has no rows or columns. It holds one line trace, with one point for each trial, and a layout with a title and axis labels. The example describes a made-up line with 30 points, so its size is not a shape.', note: 'One line of the covered area, with a point per trial.'}
+    next_step: A line still rising near the last trial means recent trials added area.
+    snippet: |
+      # optuna 5.0.0
+      import optuna
+      from sklearn.datasets import load_breast_cancer
+      from sklearn.ensemble import RandomForestClassifier
+      from sklearn.model_selection import cross_val_score
+
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+      X, y = load_breast_cancer(return_X_y=True)
+
+
+      def objective(trial):
+          n_trees = trial.suggest_int("n_estimators", 5, 100)
+          model = RandomForestClassifier(
+              n_estimators=n_trees,
+              max_depth=trial.suggest_int("max_depth", 2, 12),
+              random_state=0,
+          )
+          accuracy = cross_val_score(model, X, y, cv=3).mean()
+          return accuracy, n_trees
+
+
+      study = optuna.create_study(
+          directions=["maximize", "minimize"],
+          sampler=optuna.samplers.NSGAIISampler(seed=0),
+      )
+      study.optimize(objective, n_trials=30)
+      fig = optuna.visualization.plot_hypervolume_history(
+          study, reference_point=[0.0, 120.0]
+      )
+      print(fig.layout.yaxis.title.text)
+      print(fig.data[0].mode)
+    snippet_library: optuna
+    output: |
+      (made-up values, not run: plotly is not installed here)
+      Hypervolume
+      lines+markers
     visual: null
-  catch_outs:
-    - Trials worse than the reference point are left out.
-    - Needs plotly installed; it is not in the project requirements.
+  catch_outs: [A line still rising near the last trial means recent trials added area., A flat end means the last trials added no area., 'A trial dominated by an earlier trial adds no area, so the line stays flat.', Trials worse than the reference point on any goal add no area., 'Optuna flips the sign of maximize goals, so give the point in plain units.', Keep the same reference point across runs to compare them fairly., Needs two or more goals. A single goal raises an error., 'reference_point needs one value per goal, or the call raises an error.', Needs plotly installed; it is not in the project requirements., The code example output is made up. It was not run here.]
   key_settings:
     tier1:
-      - {name: study, page: null}
-      - {name: reference_point, page: null}
+    - {name: study, page: null, controls: The multi-goal study whose trials are measured., effect: 'A single-goal study raises an error, so use plot_optimization_history for it.'}
+    - {name: reference_point, page: null, controls: 'One value per goal, in the goals'' own units. The area is measured up to this point.', effect: A point that is too tight hides trials outside it. Keep it fixed when comparing runs.}
     tier2: []
     tier3: []
   watch_it_work: {none: true}
-  intuition: {text: "The area covered by the trials so far, against a reference point."}
-  next: []
-
+  intuition:
+    idea: A chart of the area the trials cover up to a reference point, after each trial.
+    analogy: Like painting a wall after each trial, where a trial that adds nothing paints nothing.
+    animation: none
+    goal: Did each new trial still add area to the trade-offs found so far?
+    steps:
+      - The horizontal axis is the trial number, starting from 0.
+      - The vertical axis is the hypervolume, the area covered up to the reference point.
+      - Each dot is one completed trial, joined to the next by a line.
+      - Each dot's height is the area covered by all trials up to that one.
+      - A rise from one dot to the next means that trial added new area.
+      - A flat stretch means those trials added no area.
+      - A line still rising at the last trial means the newest trials still added area.
+    math:
+      notation:
+        - {symbol: "k", meaning: "The number of goals. The reference point has one value per goal."}
+        - {symbol: "r", meaning: "The reference point, in the goals' own units."}
+        - {symbol: "v_i", meaning: "The goal values of trial i, with maximize goals negated so lower is better."}
+        - {symbol: "H_t", meaning: "The hypervolume after trial t, which is the height of its dot."}
+        - {symbol: "λ", meaning: "The volume of a region in k dimensions. It is an area when k is 2."}
+      equations:
+        - expression: "H_t = λ(union over trials i up to t of the region between v_i and r)"
+          meaning: "The space between the trial points and the reference point, counting overlaps once."
+        - expression: "H_t = H_(t-1) when trial t is beyond r or dominated by an earlier trial"
+          meaning: "Such a trial adds no area, so the line stays flat."
+      prediction: "The line never falls, because a trial can add area or add nothing."
+    good_at: [several goals over time, spotting stalled stretches, comparing runs with one reference]
+    bad_at: [which trial is best, which setting mattered, runs with different reference points]
+    vs_siblings:
+      - {page: plot-optimization-history, note: "Use it for one goal. This plot needs two or more."}
+      - {page: plot-pareto-front, note: "Shows the trials themselves, not the area they cover."}
+      - {page: plot-terminator-improvement, note: "Estimates room left to improve, not the area covered."}
+    read_more:
+      - Give one reference point value per goal, in plain goal units.
+      - Trials worse than the reference point on any goal add no area.
+      - Keep the same reference point when comparing runs.
+      - Only completed trials count toward the area.
+  next: [but-several-goals]

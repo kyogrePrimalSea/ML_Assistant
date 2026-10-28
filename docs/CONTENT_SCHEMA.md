@@ -86,6 +86,8 @@ from metadata, so it holds no data.
     equations: [{expression, meaning}], prediction}`. The rich fields are optional for the prototype.
     Other archetypes use `{text}` or none. Composer pages may use the rich model form when they
     explain a model or ensemble mechanism; legacy composer `{text}` remains valid.
+    Tuning and diagnostic pages may also use the rich form (to explain a search or how to read a plot);
+    `{text}` remains valid for both.
 12. **next**: question ids.
 
 ## Reviewed model-page template

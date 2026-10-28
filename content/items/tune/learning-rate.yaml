@@ -60,6 +60,10 @@ slots:
             )
             model.fit(X_train, y_train)
             print(lr, round(model.score(X_test, y_test), 3))
+      output: |
+        0.01 0.438
+        0.1 0.86
+        0.5 0.79
     - library: xgboost
       target: xgboost.XGBRegressor
       why_this_library: Default 0.3 (its eta). Higher than the others.
@@ -76,6 +80,10 @@ slots:
             model = XGBRegressor(learning_rate=lr, n_estimators=100)
             model.fit(X_train, y_train)
             print(lr, round(model.score(X_test, y_test), 3))
+      output: |
+        0.01 0.507
+        0.1 0.801
+        0.5 0.715
     - library: lightgbm
       target: lightgbm.LGBMRegressor
       why_this_library: Default 0.1.
@@ -92,6 +100,10 @@ slots:
             model = LGBMRegressor(learning_rate=lr, n_estimators=100, verbose=-1)
             model.fit(X_train, y_train)
             print(lr, round(model.score(X_test, y_test), 3))
+      output: |
+        0.01 0.513
+        0.1 0.883
+        0.5 0.848
   what_comes_out: {none: true}
   catch_outs:
     - XGBoost defaults to 0.3. The others default to 0.1.

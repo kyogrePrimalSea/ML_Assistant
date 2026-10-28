@@ -69,6 +69,8 @@ slots:
         )
         hgb.fit(X, y)
         print(gb.n_estimators_, hgb.n_iter_)
+      output: |
+        334 237
     - library: xgboost
       target: xgboost.XGBRegressor
       why_this_library: Set in the constructor. Pass eval_set to fit.
@@ -84,6 +86,8 @@ slots:
         model = XGBRegressor(n_estimators=500, early_stopping_rounds=10)
         model.fit(X_train, y_train, eval_set=[(X_val, y_val)], verbose=False)
         print(model.best_iteration)
+      output: |
+        57
     - library: lightgbm
       target: lightgbm.LGBMRegressor
       why_this_library: A callback passed to fit, not a constructor setting.
@@ -104,17 +108,75 @@ slots:
             callbacks=[lgb.early_stopping(10, verbose=False)],
         )
         print(model.best_iteration_)
+      output: |
+        152
   what_comes_out:
     items:
-      - {name: best_iteration, kind: attribute, task: null, shape: "int",
-         note: "XGBoost. Best round, counted from 0. Only set when early stopping runs."}
-      - {name: best_iteration_, kind: attribute, task: null, shape: "int",
-         note: "LightGBM. Best round from the early_stopping callback."}
-      - {name: n_iter_, kind: attribute, task: null, shape: "int",
-         note: "HistGradientBoosting. Rounds kept when early stopping ran. Otherwise max_iter."}
-      - {name: n_estimators_, kind: attribute, task: null, shape: "int",
-         note: "GradientBoosting. Trees kept when n_iter_no_change is set. Otherwise n_estimators."}
+      - name: best_iteration
+        kind: attribute
+        task: null
+        shape: "scalar"
+        object_type: int
+        example: "23"
+        shape_explanation: >-
+          A scalar is one value, not an array. It has no rows or columns. The example
+          is the single integer 23, so its shape is scalar.
+        note: "XGBoost. Best round, counted from 0. Only set when early stopping runs."
+      - name: best_iteration_
+        kind: attribute
+        task: null
+        shape: "scalar"
+        object_type: int
+        example: "23"
+        shape_explanation: >-
+          A scalar is one value, not an array. It has no rows or columns. The example
+          is the single integer 23, so its shape is scalar.
+        note: "LightGBM. Best round from the early_stopping callback."
+      - name: n_iter_
+        kind: attribute
+        task: null
+        shape: "scalar"
+        object_type: int
+        example: "237"
+        shape_explanation: >-
+          A scalar is one value, not an array. It has no rows or columns. The example
+          is the single integer 237, so its shape is scalar.
+        note: "HistGradientBoosting. Rounds kept when early stopping ran. Otherwise max_iter."
+      - name: n_estimators_
+        kind: attribute
+        task: null
+        shape: "scalar"
+        object_type: int
+        example: "334"
+        shape_explanation: >-
+          A scalar is one value, not an array. It has no rows or columns. The example
+          is the single integer 334, so its shape is scalar.
+        note: "GradientBoosting. Trees kept when n_iter_no_change is set. Otherwise n_estimators."
     next_step: null
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.datasets import make_regression
+      from sklearn.ensemble import (
+          GradientBoostingRegressor,
+          HistGradientBoostingRegressor,
+      )
+
+      X, y = make_regression(n_samples=500, n_features=8, noise=10, random_state=0)
+
+      gb = GradientBoostingRegressor(
+          n_estimators=500, n_iter_no_change=10, random_state=0
+      )
+      gb.fit(X, y)
+      hgb = HistGradientBoostingRegressor(
+          max_iter=500, early_stopping=True, n_iter_no_change=10, random_state=0
+      )
+      hgb.fit(X, y)
+      print("n_estimators_:", gb.n_estimators_)
+      print("n_iter_:", hgb.n_iter_)
+    output: |
+      n_estimators_: 334
+      n_iter_: 237
+    snippet_library: scikit-learn
     visual: null
   catch_outs:
     - XGBoost needs eval_set in fit. LightGBM needs eval_X and eval_y.

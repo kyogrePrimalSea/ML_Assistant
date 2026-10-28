@@ -11,7 +11,7 @@ targets: [optuna.TrialPruned]
 pairs_with: []
 clashes: []
 source_urls: ['https://optuna.readthedocs.io/en/stable/reference/generated/optuna.TrialPruned.html']
-library_versions: {optuna: 5.0.0}
+library_versions: {optuna: 5.0.0, scikit-learn: 1.9.1}
 reviewed: false
 rules:
   task_types: []
@@ -25,9 +25,9 @@ slots:
     line: Ends one trial early when our own rule says so.
   quick_facts:
     facts:
-    - {label: Raised from, value: Your objective function}
-    - {label: Takes, value: No arguments}
-    - {label: Trial state, value: PRUNED}
+      - {label: Raised from, value: Your objective function}
+      - {label: Takes, value: No arguments}
+      - {label: Trial state, value: PRUNED}
   use_avoid:
     use_when: [own stop rule, hopeless trials, custom checks]
     avoid_when: [built-in pruner is enough, no per-step scores]
@@ -44,13 +44,15 @@ slots:
       snippet: |
         # optuna 5.0.0
         import optuna
+        from collections import Counter
         from sklearn.datasets import make_regression
         from sklearn.linear_model import SGDRegressor
         from sklearn.model_selection import train_test_split
 
         optuna.logging.set_verbosity(optuna.logging.WARNING)
-        X, y = make_regression(n_samples=300, n_features=8, noise=15,
-                               random_state=0)
+        X, y = make_regression(
+            n_samples=300, n_features=8, noise=15, random_state=0
+        )
         X_train, X_val, y_train, y_val = train_test_split(
             X, y, random_state=0
         )
@@ -74,16 +76,52 @@ slots:
             pruner=optuna.pruners.NopPruner(),
         )
         study.optimize(objective, n_trials=20)
-        pruned = [t for t in study.trials if t.state.name == "PRUNED"]
-        print(f"{len(pruned)} of {len(study.trials)} trials pruned")
+        states = Counter(t.state.name for t in study.trials)
+        print("states:", dict(sorted(states.items())))
+        print(states["PRUNED"], "of", len(study.trials), "trials pruned")
+      output: |
+        states: {'COMPLETE': 13, 'PRUNED': 7}
+        7 of 20 trials pruned
   what_comes_out: {none: true}
   catch_outs:
-    - A pruned trial has no value, so it never wins.
-    - Returning early completes the trial instead of pruning it.
+    - A pruned trial keeps its last reported value, but best_trial ignores it.
+    - Returning normally makes the trial COMPLETE, even after a bad score.
+    - Pruned trials still appear in study.trials, with state PRUNED.
+    - Only your code can stop a trial when the pruner is NopPruner.
   key_settings:
     tier1: []
     tier2: []
     tier3: []
   watch_it_work: {none: true}
-  intuition: {text: Call time on a trial that is clearly losing.}
+  intuition:
+    idea: Raise TrialPruned from your own code to end a trial that is clearly losing.
+    analogy: A referee who stops one match early after a foul that breaks the rules.
+    animation: none
+    goal: Stop one trial on a rule you write, and let Optuna record it as PRUNED.
+    steps:
+      - Report the score for each step with trial.report.
+      - Check your own rule after each report.
+      - Use the raise when your rule says stop, or when should_prune() returns True.
+      - Raise optuna.TrialPruned() to end the trial early.
+      - Optuna marks the trial PRUNED and keeps its last reported value.
+      - Other trials carry on as normal.
+    math:
+      notation:
+        - {symbol: "s", meaning: "The step number, counting from 0."}
+        - {symbol: "v_s", meaning: "The score the trial reported at step s."}
+      equations:
+        - expression: "stop = (s == 0) and (v_0 < 0.5)"
+          meaning: This is the rule written in the snippet, not a setting of the library.
+        - expression: "state = PRUNED if TrialPruned is raised, else COMPLETE"
+          meaning: Raising ends the trial as pruned. Returning normally completes it.
+      prediction: "The snippet's rule stopped 7 of 20 trials at step 0. The rest ran all 10 steps and completed."
+    good_at: [own stop rule, hopeless starts]
+    bad_at: [built-in pruner is enough, no per-step scores]
+    vs_siblings:
+      - {page: thresholdpruner, note: "A built-in fixed line. Raise TrialPruned for any rule you write."}
+      - {page: patientpruner, note: "A built-in stall rule. This one is your own code."}
+      - {page: noppruner, note: "Stops nothing by itself, so your rule is the only stop."}
+    read_more:
+      - Call should_prune() when a built-in pruner is set, and raise on its answer.
+      - Return normally to keep a trial as COMPLETE.
   next: []

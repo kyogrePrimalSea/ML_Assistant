@@ -11,7 +11,7 @@ targets: [optuna.visualization.plot_optimization_history]
 pairs_with: []
 clashes: []
 source_urls: ['https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_optimization_history.html']
-library_versions: {optuna: 5.0.0}
+library_versions: {optuna: 5.0.0, scikit-learn: 1.9.1}
 reviewed: false
 rules:
   task_types: []
@@ -25,8 +25,8 @@ slots:
     line: Shows the best score as trials run.
   quick_facts:
     facts:
-      - {label: Default target_name, value: "Objective Value"}
-      - {label: Default error_bar, value: "False"}
+    - {label: Default target_name, value: Objective Value}
+    - {label: Default error_bar, value: 'False'}
   use_avoid:
     use_when: [checking search still improving, comparing searches]
     avoid_when: [no trials finished yet]
@@ -39,7 +39,7 @@ slots:
   code:
   - library: optuna
     target: optuna.visualization.plot_optimization_history
-    why_this_library: Plotly figure; you choose where to show it.
+    why_this_library: 'Draws a Plotly figure. Output below is made up: plotly is not installed here, so this was not run.'
     snippet: |
       # optuna 5.0.0
       import optuna
@@ -67,24 +67,98 @@ slots:
       )
       study.optimize(objective, n_trials=20)
       fig = optuna.visualization.plot_optimization_history(study)
-      print(round(study.best_value, 3))
+      print(fig.layout.title.text)
+      print(len(fig.data))
+    output: |
+      (made-up values, not run: plotly is not installed here)
+      Optimization History Plot
+      3
   what_comes_out:
     items:
-    - {name: plot_optimization_history, kind: return, task: null, shape: plotly Figure, note: Figure of trial values over the search.}
-    next_step: null
+    - {name: plot_optimization_history, kind: return, task: null, shape: plotly Figure, object_type: plotly.graph_objects.Figure, example: 'made-up: a Figure with 3 traces', shape_explanation: 'A Figure is a container, not an array, so it has no rows or columns. It holds traces, which are the drawn dots and lines, and a layout with a title and axis labels. The example describes a made-up Figure with 3 traces, so its size is not a shape.', note: 'Dots for trial scores, plus a best-so-far line.'}
+    next_step: Read the axis titles first, they name the score being plotted.
+    snippet: |
+      # optuna 5.0.0
+      import optuna
+      from sklearn.datasets import make_regression
+      from sklearn.ensemble import RandomForestRegressor
+      from sklearn.model_selection import cross_val_score
+
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+      X, y = make_regression(n_samples=300, n_features=8, noise=15, random_state=0)
+
+
+      def objective(trial):
+          model = RandomForestRegressor(
+              n_estimators=trial.suggest_int("n_estimators", 10, 80),
+              max_depth=trial.suggest_int("max_depth", 2, 12),
+              min_samples_leaf=trial.suggest_int("min_samples_leaf", 1, 10),
+              random_state=0,
+          )
+          return cross_val_score(model, X, y, cv=3, scoring="r2").mean()
+
+
+      study = optuna.create_study(
+          direction="maximize",
+          sampler=optuna.samplers.TPESampler(seed=0),
+      )
+      study.optimize(objective, n_trials=20)
+      fig = optuna.visualization.plot_optimization_history(study)
+      print(fig.layout.xaxis.title.text)
+      print(fig.layout.yaxis.title.text)
+      print([trace.name for trace in fig.data])
+    snippet_library: optuna
+    output: |
+      (made-up values, not run: plotly is not installed here)
+      Trial
+      Objective Value
+      ['Objective Value', 'Best Value', 'Infeasible Trial']
     visual: null
-  catch_outs:
-    - Shows the score, not which settings were tried.
-    - Needs plotly installed; it is not in the project requirements.
+  catch_outs: ['Read the Best Value line first: it rises for maximize and falls for minimize.', A flat stretch of the line means no new best trial came in that stretch., 'If the line still moves at the last trial, the last trial set a new best.', 'A dot off the line did not beat the best score so far.', Setting target removes the Best Value line., 'Only completed trials get a dot. Pruned and failed trials are left out.', 'Shows the score, not which settings were tried.', 'For several goals, set target, or the plot has no single score.', Needs plotly installed; it is not in the project requirements., The code example output is made up. It was not run here.]
   key_settings:
     tier1:
-      - {name: study, page: null}
-      - {name: target, page: null}
+    - {name: study, page: null, controls: 'The study to plot, or a list of studies to compare.', effect: 'Each study adds its own dots and best line, so the plot gets busier.'}
+    - {name: target, page: null, controls: A function that picks the value to plot from each trial., effect: Needed for several goals. Setting it also removes the Best Value line.}
     tier2:
-      - {name: target_name, page: null}
-      - {name: error_bar, page: null}
+    - {name: target_name, page: null, controls: The label on the vertical axis and in the legend., effect: 'Changes the label only, not the values plotted.'}
+    - {name: error_bar, page: null, controls: 'Shows the error bar when True. The docs give no more detail.', effect: 'The docs do not say what the bars measure, so do not read them as a confidence range.'}
     tier3: []
   watch_it_work: {none: true}
-  intuition: {text: "Plot the score of each trial in the order it ran."}
-  next: []
-
+  intuition:
+    idea: "Each dot is one completed trial's score, and a line tracks the best score so far."
+    analogy: "A race board with each lap time as a dot, and a line showing the fastest lap so far."
+    animation: none
+    goal: "See whether the search is still finding better scores, or has stopped improving."
+    steps:
+      - "The horizontal axis is the trial number, counted from 0 in the order the trials ran."
+      - "The vertical axis is the objective value, named by target_name."
+      - "Each dot is one completed trial, at its trial number and its score."
+      - "The line is the best value so far, updated after each trial."
+      - "The line only moves toward the better direction: down to minimize, up to maximize."
+      - "A flat stretch of the line means no new best trial came in that stretch."
+      - "A dot sitting on the line is a trial that set a new best."
+      - "If the line still moves at the last trial, the last trial set a new best."
+    math:
+      notation:
+        - {symbol: "t", meaning: "A trial number. The line is drawn at every trial number."}
+        - {symbol: "i", meaning: "A completed trial number, at or before t."}
+        - {symbol: "v_i", meaning: "The objective value of completed trial i."}
+        - {symbol: "b_t", meaning: "The best value so far after trial t. This is the line."}
+      equations:
+        - expression: "b_t = min of v_i over completed trials i <= t"
+          meaning: "For minimize, the best so far is the smallest completed value up to trial t."
+        - expression: "b_t = max of v_i over completed trials i <= t"
+          meaning: "For maximize, the best so far is the largest completed value up to trial t."
+      prediction: "The line only moves toward the better direction, down for minimize and up for maximize."
+    good_at: ["search progress over trials", "whether recent trials still improved", "comparing searches on one axis"]
+    bad_at: ["which settings each trial used", "pruned and failed trials", "how much each trial cost"]
+    vs_siblings:
+      - {page: plot-intermediate-values, note: "Shows steps inside each trial, not one score per trial."}
+      - {page: plot-timeline, note: "Shows when trials ran, not their scores."}
+      - {page: plot-edf, note: "Shows how completed scores are spread, not the order they ran in."}
+    read_more:
+      - "Trial numbers start at 0 and follow the order the trials ran."
+      - "Only completed trials get a dot."
+      - "Trials that break a constraint are left out of the best value line."
+      - "Setting target removes the best value line and plots the value you pick."
+  next: [but-when-stop-search]

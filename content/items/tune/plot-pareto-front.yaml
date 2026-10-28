@@ -11,7 +11,7 @@ targets: [optuna.visualization.plot_pareto_front]
 pairs_with: []
 clashes: []
 source_urls: ['https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_pareto_front.html']
-library_versions: {optuna: 5.0.0}
+library_versions: {optuna: 5.0.0, scikit-learn: 1.9.1}
 reviewed: false
 rules:
   task_types: []
@@ -25,8 +25,8 @@ slots:
     line: Shows the trade-off between two or more goals.
   quick_facts:
     facts:
-      - {label: Include dominated trials, value: "True"}
-      - {label: Default target_names, value: "None"}
+    - {label: Include dominated trials, value: 'True'}
+    - {label: Default target_names, value: None}
   use_avoid:
     use_when: [several goals at once, picking a trade-off]
     avoid_when: [a single goal, no trials finished yet]
@@ -39,7 +39,7 @@ slots:
   code:
   - library: optuna
     target: optuna.visualization.plot_pareto_front
-    why_this_library: Plotly figure; you choose where to show it.
+    why_this_library: 'Draws a Plotly figure. Output below is made up: plotly is not installed here, so this was not run.'
     snippet: |
       # optuna 5.0.0
       import optuna
@@ -70,25 +70,98 @@ slots:
       fig = optuna.visualization.plot_pareto_front(
           study, target_names=["accuracy", "n_estimators"]
       )
-      print(len(study.best_trials))
+      print(fig.layout.title.text)
+      print(len(fig.data))
+    output: |
+      (made-up values, not run: plotly is not installed here)
+      Pareto-front Plot
+      2
   what_comes_out:
     items:
-    - {name: plot_pareto_front, kind: return, task: null, shape: plotly Figure, note: Figure of trials across the goals.}
-    next_step: null
+    - {name: plot_pareto_front, kind: return, task: null, shape: plotly Figure, object_type: plotly.graph_objects.Figure, example: 'made-up: a Figure with 2 point groups', shape_explanation: 'A Figure is a container, not an array, so it has no rows or columns. It holds one point group for trials on the front and one for the other trials, plus a layout with a title and axis labels. The example describes a made-up Figure with 2 point groups, so its size is not a shape.', note: 'Dots for trials, with the front picked out.'}
+    next_step: Read the axis titles first, they name the two goals.
+    snippet: |
+      # optuna 5.0.0
+      import optuna
+      from sklearn.datasets import load_breast_cancer
+      from sklearn.ensemble import RandomForestClassifier
+      from sklearn.model_selection import cross_val_score
+
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+      X, y = load_breast_cancer(return_X_y=True)
+
+
+      def objective(trial):
+          n_trees = trial.suggest_int("n_estimators", 5, 100)
+          model = RandomForestClassifier(
+              n_estimators=n_trees,
+              max_depth=trial.suggest_int("max_depth", 2, 12),
+              random_state=0,
+          )
+          accuracy = cross_val_score(model, X, y, cv=3).mean()
+          return accuracy, n_trees
+
+
+      study = optuna.create_study(
+          directions=["maximize", "minimize"],
+          sampler=optuna.samplers.NSGAIISampler(seed=0),
+      )
+      study.optimize(objective, n_trials=30)
+      fig = optuna.visualization.plot_pareto_front(
+          study, target_names=["accuracy", "n_estimators"]
+      )
+      print(fig.layout.xaxis.title.text)
+      print(fig.layout.yaxis.title.text)
+    snippet_library: optuna
+    output: |
+      (made-up values, not run: plotly is not installed here)
+      accuracy
+      n_estimators
     visual: null
-  catch_outs:
-    - Dominated trials are shown unless include_dominated_trials is False.
-    - Needs plotly installed; it is not in the project requirements.
+  catch_outs: ['Each axis is one goal, so read the axis titles first.', 'Front trials are named Best Trial.', Dots off the front are beaten on the trade-off by another trial., Pick a dot on the front that balances the goals the way you need., 'The front is the best of the trials run so far, so it can still change.', Trials off the front are shown unless include_dominated_trials is False., Needs two or three goals unless targets is set., Needs plotly installed; it is not in the project requirements., The code example output is made up. It was not run here.]
   key_settings:
     tier1:
-      - {name: study, page: null}
-      - {name: target_names, page: null}
-      - {name: include_dominated_trials, page: null}
+    - {name: study, page: null, controls: The multi-goal study whose trials are plotted., effect: A single-goal study has no front to draw.}
+    - {name: target_names, page: null, controls: The label for each goal's axis., effect: 'Changes the labels only, not the points.'}
+    - {name: include_dominated_trials, page: null, controls: 'When True, trials off the front are drawn too.', effect: 'Adds context. With False, only the front is drawn.'}
     tier2:
-      - {name: targets, page: null}
-      - {name: constraints_func, page: null}
+    - {name: targets, page: null, controls: A function that returns the values to plot for each trial., effect: 'Needed when the study has four or more goals, or to plot other values.'}
     tier3: []
   watch_it_work: {none: true}
-  intuition: {text: "Trials that no other trial beats on every goal."}
-  next: []
-
+  intuition:
+    idea: Each dot is one trial, and the front is the dots that no other trial beats on the trade-off.
+    analogy: Like comparing phones on price and battery life, where the front holds the phones no other phone beats on both.
+    animation: none
+    goal: Which trials give the best balance between your goals?
+    steps:
+      - The horizontal axis is the first goal, named by its axis title.
+      - The vertical axis is the second goal, named by its axis title.
+      - Each dot is one completed trial.
+      - Dots in the Best Trial legend entry are on the front.
+      - Dots in the Trial legend entry are beaten by at least one other trial.
+      - No other trial is at least as good as a front dot on both goals.
+      - Moving along the front trades one goal against the other.
+    math:
+      notation:
+        - {symbol: "k", meaning: "The number of goals. Two or three are plotted unless targets is set."}
+        - {symbol: "v_a", meaning: "The goal values of trial a, with maximize goals negated so lower is better."}
+        - {symbol: "a ≻ b", meaning: "Trial a dominates trial b."}
+        - {symbol: "F", meaning: "The front, the trials that no other trial dominates."}
+      equations:
+        - expression: "a ≻ b when v_a,j <= v_b,j for every goal j, and v_a is not equal to v_b"
+          meaning: "Trial a is at least as good on every goal and differs from b, so it beats b."
+        - expression: "F = {b : there is no trial a with a ≻ b}"
+          meaning: "The front holds every trial that no other trial dominates."
+      prediction: "Every dot off the front has some trial that dominates it."
+    good_at: [two or three goals, seeing the front, dominated trials]
+    bad_at: [which goal matters more, how the front changed, which setting caused a trial]
+    vs_siblings:
+      - {page: plot-hypervolume-history, note: "Shows how the covered area grew over trials."}
+      - {page: plot-optimization-history, note: "The single-goal progress chart. It does not show trade-offs."}
+      - {page: plot-param-importances, note: "Ranks settings by importance rather than showing the trials."}
+    read_more:
+      - Set one direction per goal when you create the study.
+      - Use target_names so the axes name your goals.
+      - The front is found from the completed trials so far.
+      - Each goal is either maximized or minimized, and the front respects that.
+  next: [but-several-goals]

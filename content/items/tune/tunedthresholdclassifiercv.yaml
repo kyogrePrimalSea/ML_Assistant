@@ -54,35 +54,239 @@ slots:
 
       X, y = load_breast_cancer(return_X_y=True)
       X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
       model = TunedThresholdClassifierCV(
           make_pipeline(StandardScaler(), LogisticRegression(max_iter=5000)),
           scoring="balanced_accuracy",
           cv=5,
+          n_jobs=1,
       )
       model.fit(X_train, y_train)
-      print(round(model.best_threshold_, 3))
-      print(round(model.score(X_test, y_test), 3))
+      print("best_threshold_:", round(model.best_threshold_, 3))
+      print("best_score_:", round(model.best_score_, 3))
+      print("accuracy on test rows:", round(model.score(X_test, y_test), 3))
+    output: |
+      best_threshold_: 0.515
+      best_score_: 0.982
+      accuracy on test rows: 0.958
   what_comes_out:
     items:
-    - {name: fit, kind: method, task: null, shape: self, note: 'Tunes the cut-off, then refits.'}
-    - {name: predict, kind: method, task: classification, shape: '(n_samples,)', note: Labels using the tuned cut-off.}
-    - {name: best_threshold_, kind: attribute, task: null, shape: float, note: The cut-off chosen by cross-validation.}
-    - {name: best_score_, kind: attribute, task: null, shape: float or None, note: Best cross-validated score.}
-    - {name: cv_results_, kind: attribute, task: null, shape: dict or None, note: Only set when store_cv_results is True.}
-    next_step: Score on test rows, not the rows used to pick it.
+    - name: fit
+      kind: method
+      task: null
+      shape: self
+      object_type: TunedThresholdClassifierCV
+      example: "TunedThresholdClassifierCV(estimator=Pipeline(...))"
+      shape_explanation: >-
+        fit returns the same object, not an array. It has no rows or columns.
+        The example is the fitted object itself, so its shape is self.
+      note: Tunes the cut-off with cross-validation, then refits if refit is on.
+    - name: predict
+      kind: method
+      task: classification
+      shape: "(n_samples,)"
+      object_type: numpy.ndarray
+      example: "[0, 1, 1]"
+      shape_explanation: >-
+        A one-dimensional array. n_samples is the number of rows being labelled.
+        Each row gets one class label. The trailing comma in (n_samples,) means
+        the array has one dimension. The example has 3 labels, so its concrete
+        shape is (3,).
+      note: Labels using best_threshold_. Scores come from estimator_.
+    - name: predict_proba
+      kind: method
+      task: classification
+      shape: "(n_samples, n_classes)"
+      object_type: numpy.ndarray
+      example: "[[0.8, 0.2],\n [0.3, 0.7]]"
+      shape_explanation: >-
+        A two-dimensional table, written as (rows, columns). n_samples is the
+        number of rows being scored. n_classes is the number of classes. The
+        example has 2 rows and 2 classes, so its concrete shape is (2, 2).
+      note: Plain probabilities from estimator_, not cut by the threshold.
+    - name: best_threshold_
+      kind: attribute
+      task: null
+      shape: "scalar"
+      object_type: numpy.float64
+      example: "0.42"
+      shape_explanation: >-
+        A scalar is one value, not an array. It has no rows or columns. The
+        example is the single number 0.42, so its shape is scalar.
+      note: The cut-off chosen by cross-validation. Used by predict.
+    - name: best_score_
+      kind: attribute
+      task: null
+      shape: "scalar"
+      object_type: numpy.float64
+      example: "0.91"
+      shape_explanation: >-
+        A scalar is one value, not an array. It has no rows or columns. The
+        example is the single number 0.91, so its shape is scalar.
+      note: Mean cross-validated score at best_threshold_. Not a test score.
+    - name: cv_results_
+      kind: attribute
+      task: null
+      shape: "dict of (n_thresholds,) arrays"
+      object_type: dict
+      example: "{'thresholds': [0.2, 0.6],\n 'scores': [0.88, 0.91]}"
+      shape_explanation: >-
+        A dictionary with two keys, thresholds and scores. Each value is an
+        array with one entry per cut-off tried. n_thresholds is the number of
+        cut-offs tried. The example has 2 cut-offs, so each array has length 2.
+      note: Only set when store_cv_results is True.
+    - name: estimator_
+      kind: attribute
+      task: null
+      shape: "fitted estimator"
+      object_type: sklearn estimator
+      example: "Pipeline(steps=[...])"
+      shape_explanation: >-
+        One fitted model object, not an array. It has no rows or columns. The
+        example is one Pipeline object. With refit on, it was fitted on every
+        training row.
+      note: The model used by predict. Refit on all training rows.
+    - name: classes_
+      kind: attribute
+      task: null
+      shape: "(n_classes,)"
+      object_type: numpy.ndarray
+      example: "[0, 1]"
+      shape_explanation: >-
+        A one-dimensional array with one label per class. n_classes is the
+        number of classes. fit allows only two, so the example has 2 labels,
+        and its shape is (2,).
+      note: Class labels, in the order predict_proba columns use.
+    next_step: Score on test rows, not the rows used to pick the cut-off.
+    snippet: |
+      # scikit-learn 1.9.1
+      import numpy as np
+      from sklearn.datasets import load_breast_cancer
+      from sklearn.linear_model import LogisticRegression
+      from sklearn.model_selection import (
+          TunedThresholdClassifierCV,
+          train_test_split,
+      )
+      from sklearn.pipeline import make_pipeline
+      from sklearn.preprocessing import StandardScaler
+
+      X, y = load_breast_cancer(return_X_y=True)
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+      model = TunedThresholdClassifierCV(
+          make_pipeline(StandardScaler(), LogisticRegression(max_iter=5000)),
+          scoring="balanced_accuracy",
+          cv=5,
+          store_cv_results=True,
+          n_jobs=1,
+      ).fit(X_train, y_train)
+
+      y_pred = model.predict(X_test[:3])
+      y_proba = model.predict_proba(X_test[:3])
+      print("classes_:", model.classes_)
+      print("best_threshold_:", round(model.best_threshold_, 3))
+      print("best_score_:", round(model.best_score_, 3))
+      print("predict:", y_pred)
+      print("predict_proba:")
+      print(np.round(y_proba, 3))
+      print("cv_results_ keys:", sorted(model.cv_results_))
+      print("cv_results_ thresholds:", model.cv_results_["thresholds"].shape)
+      print("estimator_:", type(model.estimator_).__name__)
+    snippet_library: scikit-learn
+    output: |
+      classes_: [0 1]
+      best_threshold_: 0.515
+      best_score_: 0.982
+      predict: [0 1 1]
+      predict_proba:
+      [[0.999 0.001]
+       [0.04  0.96 ]
+       [0.001 0.999]]
+      cv_results_ keys: ['scores', 'thresholds']
+      cv_results_ thresholds: (100,)
+      estimator_: Pipeline
     visual: null
-  catch_outs: ['Score on test rows, not the rows used to pick the cut-off.', 'Default scoring is balanced_accuracy, not accuracy.']
+  catch_outs:
+  - Score on test rows, not the rows used to pick the cut-off.
+  - Default scoring is balanced_accuracy, not accuracy.
+  - score() reports accuracy at the tuned cut-off, not the balanced accuracy.
+  - Only two classes are allowed.
   key_settings:
     tier1:
-    - {name: cv, page: null}
-    - {name: response_method, page: null}
-    - {name: scoring, page: null}
-    - {name: refit, page: null}
+    - name: cv
+      page: null
+      controls: How training rows are split into folds. None means 5 stratified folds.
+      effect: More folds give a steadier cut-off, but each fold is one more fit.
+    - name: response_method
+      page: null
+      controls: Which model output is scored, predict_proba or decision_function. auto tries predict_proba first.
+      effect: Probabilities keep the cut-off between 0 and 1. Decision scores do not.
+    - name: scoring
+      page: null
+      controls: The metric to maximise when comparing cut-offs. Default is balanced_accuracy.
+      effect: The best cut-off changes with the metric, so pick the one you will report.
+    - name: refit
+      page: null
+      controls: Whether to refit the model on all training rows after the cut-off is chosen.
+      effect: On gives one extra fit. Off needs cv to be a single split, such as a float.
     tier2:
-    - {name: thresholds, page: null}
-    - {name: estimator, page: null}
-    - {name: store_cv_results, page: null}
+    - name: thresholds
+      page: null
+      controls: How many cut-offs to try, or an array of exact cut-offs to use.
+      effect: A finer grid can locate the peak more exactly, with no extra fits.
+    - name: estimator
+      page: null
+      controls: The binary classifier whose cut-off is tuned. A Pipeline keeps scaling inside each fold.
+      effect: It needs predict_proba or decision_function, and only two classes are allowed.
+    - name: store_cv_results
+      page: null
+      controls: Whether to keep every cut-off and its score in cv_results_.
+      effect: Lets you plot the score curve, but keeps extra arrays in memory.
     tier3: []
   watch_it_work: {none: true}
-  intuition: {text: Try many cut-offs with cross-validation and keep the best.}
-  next: []
+  intuition:
+    idea: Try many cut-offs with cross-validation, then keep the one that scores best.
+    analogy: A referee who tries many whistle points on past games, then keeps the fairest.
+    animation: none
+    goal: Pick the yes/no cut-off that scores best on rows the search did not train on.
+    steps:
+      - Split the training rows into cv folds.
+      - Build a grid of candidate cut-offs, 100 by default.
+      - Fit a copy of the classifier on all folds but one.
+      - Score the held-out fold with predict_proba or decision_function.
+      - Measure the metric at every cut-off on that fold.
+      - Repeat for every fold, then average each cut-off's scores.
+      - Keep the cut-off with the highest average as best_threshold_.
+      - Refit the classifier on all training rows when refit is True.
+      - Label new rows by comparing their scores with best_threshold_.
+    math:
+      notation:
+        - {symbol: "i", meaning: "Index for one row being labelled."}
+        - {symbol: "s_i", meaning: "The positive-class score for row i, from predict_proba or decision_function."}
+        - {symbol: "t", meaning: "One candidate cut-off from the grid."}
+        - {symbol: "ŷ_i(t)", meaning: "The label for row i when the cut-off is t. 1 is positive, 0 is negative."}
+        - {symbol: "K", meaning: "The number of cross-validation folds, set by cv."}
+        - {symbol: "k", meaning: "Index for one fold."}
+        - {symbol: "S_k(t)", meaning: "The metric on fold k at cut-off t, interpolated from that fold's cut-offs."}
+        - {symbol: "S(t)", meaning: "The mean of S_k(t) over all K folds."}
+        - {symbol: "Σ", meaning: "Add the following quantity over the shown index."}
+        - {symbol: "argmax", meaning: "The value of t that gives the largest S(t)."}
+        - {symbol: "t*", meaning: "The winning cut-off, stored as best_threshold_."}
+      equations:
+        - expression: "ŷ_i(t) = 1 if s_i ≥ t, otherwise 0"
+          meaning: A row is labelled positive when its score reaches the cut-off.
+        - expression: "S(t) = (1/K) Σ_k S_k(t)"
+          meaning: A cut-off's score is its average over the folds.
+        - expression: "t* = argmax_t S(t)"
+          meaning: The cut-off with the highest average score wins.
+      prediction: "predict labels a row positive when its estimator_ score reaches t*. Example: 5 folds plus 1 refit = 6 fits."
+    good_at: [binary decisions, a chosen metric, cross-validated cut-off]
+    bad_at: [more than two classes, models without scores]
+    vs_siblings:
+      - {page: fixedthresholdclassifier, note: "You set the cut-off. This one searches for it."}
+      - {page: precision-recall-curve, note: "Shows precision and recall at many cut-offs. Picks none."}
+    read_more:
+      - Cut-offs are tried on held-out folds, then averaged.
+      - Scoring defaults to balanced accuracy, not accuracy.
+      - refit=True trains the final model on all training rows.
+  next: [but-imbalanced-score]

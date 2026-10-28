@@ -29,6 +29,7 @@ slots:
     facts:
       - {label: Scores with, value: cross-validation}
       - {label: Combinations, value: "Product of every list length"}
+      - {label: Total fits, value: "Combinations x folds"}
   use_avoid:
     use_when: [few settings, few values each]
     avoid_when: [many settings, limited time]
@@ -38,53 +39,298 @@ slots:
       why: Keep a final test set the search never sees.
       condition: null
       unless: null
+    - step: {page: pipeline}
+      status: recommended
+      why: Scaling inside the search stays inside each fold.
+      condition: null
+      unless: null
+    - step: {page: timeseriessplit}
+      status: recommended
+      why: Pass it as cv so folds never train on future rows.
+      condition: {time_ordered: true}
+      unless: null
   code:
     - library: scikit-learn
       target: sklearn.model_selection.GridSearchCV
       why_this_library: Works with any scikit-learn model or Pipeline.
       snippet: |
         # scikit-learn 1.9.1
+        import pandas as pd
         from sklearn.datasets import make_regression
         from sklearn.ensemble import RandomForestRegressor
-        from sklearn.model_selection import GridSearchCV
+        from sklearn.model_selection import GridSearchCV, train_test_split
 
         X, y = make_regression(n_samples=300, n_features=8, noise=15, random_state=0)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
 
         search = GridSearchCV(
-            RandomForestRegressor(n_estimators=30, random_state=0),
+            RandomForestRegressor(n_estimators=30, n_jobs=1, random_state=0),
             param_grid={"max_depth": [3, 6, 9], "min_samples_leaf": [1, 5]},
             cv=3,
+            n_jobs=1,
         )
-        search.fit(X, y)
-        print(search.best_params_)
-        print(round(search.best_score_, 3))
+        search.fit(X_train, y_train)
+        y_pred = search.predict(X_test[:3])
+
+        print("best_params_:", search.best_params_)
+        print("best_score_:", round(search.best_score_, 3))
+        print("y_pred:", y_pred.round(1))
+        results = pd.DataFrame(search.cv_results_)
+        columns = [
+            "param_max_depth",
+            "param_min_samples_leaf",
+            "mean_test_score",
+            "rank_test_score",
+        ]
+        print(results[columns].round(3).to_string(index=False))
+      output: |
+        best_params_: {'max_depth': 9, 'min_samples_leaf': 1}
+        best_score_: 0.646
+        y_pred: [-113.2  -12.6  -43.7]
+         param_max_depth  param_min_samples_leaf  mean_test_score  rank_test_score
+                       3                       1            0.509                6
+                       3                       5            0.519                5
+                       6                       1            0.627                2
+                       6                       5            0.622                4
+                       9                       1            0.646                1
+                       9                       5            0.624                3
   what_comes_out:
     items:
-      - {name: fit, kind: method, task: null, shape: fitted search, note: Runs every combination with every fold.}
-      - {name: predict, kind: method, task: null, shape: one prediction per row, note: Uses the best estimator.}
-      - {name: best_params_, kind: attribute, task: null, shape: dict, note: Settings that scored best.}
-      - {name: best_score_, kind: attribute, task: null, shape: float, note: Mean cross-validated score of the best settings.}
-      - {name: best_estimator_, kind: attribute, task: null, shape: fitted estimator, note: Best settings refit on all rows.}
-      - {name: cv_results_, kind: attribute, task: null, shape: dict of arrays, note: Scores for each combination.}
-    next_step: Test the best estimator on the held-out test set.
+      - name: predict_proba
+        kind: method
+        task: classification
+        shape: "(n_samples, n_classes)"
+        object_type: numpy.ndarray
+        example: "[[0.82, 0.18],\n [0.27, 0.73]]"
+        shape_explanation: >-
+          A two-dimensional table. The shape is written as (rows, columns), in that order.
+          n_samples is the number of input rows or cases being predicted. n_classes is the
+          number of possible categories. The example has 2 cases and 2 classes, so its
+          concrete shape is (2, 2).
+        note: "From the best estimator. One column per class, in classes_ order."
+      - name: predict
+        kind: method
+        task: null
+        shape: "(n_samples,)"
+        object_type: numpy.ndarray
+        example: "[245000.0, 318500.0]"
+        shape_explanation: >-
+          A one-dimensional array. n_samples is the number of input rows or cases being
+          predicted. There is one prediction for each case: a class label for a classifier,
+          a number for a regressor. The trailing comma in (n_samples,) means the array has
+          one dimension. The example contains 2 predictions, so its concrete shape is (2,).
+        note: "Uses best_estimator_. Needs refit to stay on."
+      - name: best_params_
+        kind: attribute
+        task: null
+        shape: "dict"
+        object_type: dict
+        example: "{'max_depth': 6, 'min_samples_leaf': 5}"
+        shape_explanation: >-
+          A dictionary has no rows or columns. Each key is a setting name from param_grid.
+          Each value is the choice that scored best for that setting. The example has 2 keys,
+          because its grid had 2 settings.
+        note: "The winning combination. Pass it to a fresh model with set_params."
+      - name: best_score_
+        kind: attribute
+        task: null
+        shape: "scalar"
+        object_type: float
+        example: "0.646"
+        shape_explanation: >-
+          A scalar is one value, not an array. It has no rows or columns. The example is the
+          single number 0.646, so its shape is scalar.
+        note: "Mean cross-validated score of the best combination. Not a test score."
+      - name: best_estimator_
+        kind: attribute
+        task: null
+        shape: "fitted estimator"
+        object_type: sklearn estimator
+        example: "RandomForestRegressor(max_depth=6, min_samples_leaf=5)"
+        shape_explanation: >-
+          One fitted model object, not an array. It was refit on every training row using
+          best_params_. If you passed a Pipeline, this is the whole fitted Pipeline.
+        note: "Missing when refit=False."
+      - name: cv_results_
+        kind: attribute
+        task: null
+        shape: "dict of (n_candidates,) arrays"
+        object_type: dict
+        example: "{'mean_test_score': [0.51, 0.65],\n 'rank_test_score': [2, 1]}"
+        shape_explanation: >-
+          A dictionary of columns. Each key is a column name and each value is an array with
+          one entry per combination. n_candidates is the number of combinations tried. The
+          example has 2 combinations, so each array has length 2. Pass the dict to
+          pd.DataFrame to read it as a table.
+        note: "Scores for every combination and fold. Rank 1 is the best."
+      - name: best_index_
+        kind: attribute
+        task: null
+        shape: "scalar"
+        object_type: int
+        example: "4"
+        shape_explanation: >-
+          A scalar is one value, not an array. It is the row position of the best combination
+          in cv_results_. The example is the single integer 4, so its shape is scalar.
+        note: "Row of the winner in cv_results_. Counts from 0."
+      - name: n_splits_
+        kind: attribute
+        task: null
+        shape: "scalar"
+        object_type: int
+        example: "3"
+        shape_explanation: >-
+          A scalar is one value, not an array. It is the number of cross-validation folds
+          used for every combination. The example is the single integer 3, so its shape is
+          scalar.
+        note: "Folds per combination. Total fits are combinations times this."
+    next_step: null
+    guidance:
+      - task: classification
+        text: Read probabilities from search.predict_proba, then keep [:, 1] as y_score for ROC AUC and PR curves. Use search.predict for labels. Set scoring to match, such as roc_auc.
+      - task: regression
+        text: Read y_pred from search.predict. A negative score such as neg_mean_squared_error means higher is better, so flip its sign before reporting an error.
+    snippet: |
+      # scikit-learn 1.9.1
+      import numpy as np
+      from sklearn.datasets import load_breast_cancer
+      from sklearn.linear_model import LogisticRegression
+      from sklearn.model_selection import GridSearchCV, train_test_split
+      from sklearn.pipeline import make_pipeline
+      from sklearn.preprocessing import StandardScaler
+
+      X, y = load_breast_cancer(return_X_y=True)
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+      search = GridSearchCV(
+          make_pipeline(StandardScaler(), LogisticRegression(max_iter=1000)),
+          param_grid={"logisticregression__C": [0.01, 0.1, 1.0]},
+          scoring="roc_auc",
+          cv=3,
+          n_jobs=1,
+      ).fit(X_train, y_train)
+
+      y_proba = search.predict_proba(X_test[:3])
+      y_score = y_proba[:, 1]
+      y_pred = search.predict(X_test[:3])
+      print("best_params_:", search.best_params_)
+      print("best_score_:", round(search.best_score_, 3))
+      print("best_estimator_ steps:", list(search.best_estimator_.named_steps))
+      print("classes_:", search.classes_)
+      print("n_splits_:", search.n_splits_)
+      print("classification y_proba:")
+      print(np.round(y_proba, 3))
+      print("classification y_score:", np.round(y_score, 3))
+      print("classification y_pred:", y_pred)
+    snippet_library: scikit-learn
+    output: |
+      best_params_: {'logisticregression__C': 1.0}
+      best_score_: 0.994
+      best_estimator_ steps: ['standardscaler', 'logisticregression']
+      classes_: [0 1]
+      n_splits_: 3
+      classification y_proba:
+      [[0.999 0.001]
+       [0.04  0.96 ]
+       [0.001 0.999]]
+      classification y_score: [0.001 0.96  0.999]
+      classification y_pred: [0 1 1]
     visual: null
   catch_outs:
     - Only tries the values you list, never values in between.
     - The best score is from cross-validation, not a test set.
     - Fits grow with every list length, times the folds.
+    - Put a scaler outside the search and every fold sees the whole data.
+    - With refit=False there is no best_estimator_, so predict fails.
   key_settings:
     tier1:
-      - {name: param_grid, page: null}
-      - {name: cv, page: null}
-      - {name: scoring, page: null}
-      - {name: refit, page: null}
+      - name: param_grid
+        page: null
+        controls: The settings to try and the values to try for each.
+        effect: Longer lists search more finely, but multiply the number of fits.
+      - name: cv
+        page: null
+        controls: How the training rows are split into folds. None means 5 folds.
+        effect: More folds give steadier scores, but every combination takes longer.
+      - name: scoring
+        page: null
+        controls: The score used to rank combinations. None uses the model's own score.
+        effect: Pick the metric you will report, or the search may favour the wrong one.
+      - name: refit
+        page: null
+        controls: Whether the best combination is refit on all rows at the end.
+        effect: Leaving it on gives best_estimator_ and predict, for one extra fit.
     tier2:
-      - {name: estimator, page: null}
-      - {name: return_train_score, page: null}
+      - name: estimator
+        page: null
+        controls: The model or Pipeline whose settings are searched.
+        effect: A Pipeline keeps preprocessing inside each fold, using step__setting names.
+      - name: n_jobs
+        page: null
+        controls: How many fits run at the same time. None means 1.
+        effect: More jobs finish sooner, but use more memory and processor time.
+      - name: return_train_score
+        page: null
+        controls: Whether cv_results_ also stores scores on the training folds.
+        effect: A gap to the test score shows overfitting, but scoring takes extra time.
     tier3:
-      - {name: n_jobs, page: null}
-      - {name: pre_dispatch, page: null}
-      - {name: error_score, page: null}
+      - name: pre_dispatch
+        page: null
+        controls: How many fit jobs are queued ahead of the workers.
+        effect: A lower number saves memory when many jobs run in parallel.
+      - name: error_score
+        page: null
+        controls: The score recorded when one fit fails. The default is nan.
+        effect: Use raise to stop on the first failure, rather than hide it.
+      - name: verbose
+        page: null
+        controls: How much progress text is printed. 0 prints nothing.
+        effect: Higher values show timing per fit, but fill the output.
   watch_it_work: {none: true}
-  intuition: {text: "Check every box on the settings grid and keep the best."}
-  next: []
+  intuition:
+    idea: Try every combination on your list, score each with cross-validation, keep the best.
+    analogy: A taste test of every pairing on a menu, with three judges scoring each one.
+    animation: none
+    goal: Pick the combination of settings that scores best on rows the model was not trained on.
+    steps:
+      - List the values to try for each setting in param_grid.
+      - Build every combination of those values.
+      - Split the training rows into folds.
+      - For each combination, fit on all folds but one and score the one left out.
+      - Repeat until every fold has been left out once, then average the scores.
+      - Rank the combinations and keep the one with the highest average.
+      - Refit that combination on all training rows to make best_estimator_.
+    math:
+      notation:
+        - {symbol: "p", meaning: "The number of settings in param_grid."}
+        - {symbol: "n_1 ... n_p", meaning: "How many values you listed for each setting."}
+        - {symbol: "C", meaning: "The number of combinations to try."}
+        - {symbol: "K", meaning: "The number of cross-validation folds, set by cv."}
+        - {symbol: "c and k", meaning: "Indices for one combination and one fold."}
+        - {symbol: "s_ck", meaning: "The score of combination c when fold k is left out."}
+        - {symbol: "S_c", meaning: "The mean score of combination c over all K folds."}
+        - {symbol: "Σ", meaning: "Add the following quantity over the shown index."}
+        - {symbol: "argmax", meaning: "The choice of c that gives the largest S_c."}
+        - {symbol: "c*", meaning: "The winning combination, stored as best_params_."}
+      equations:
+        - expression: "C = n_1 × n_2 × ... × n_p"
+          meaning: Every extra value in any list multiplies the number of combinations.
+        - expression: "fits = C × K  (+ 1 refit)"
+          meaning: Each combination is fit once per fold, then the winner is fit once more.
+        - expression: "S_c = (1/K) Σ_k s_ck"
+          meaning: A combination's score is its average over the folds.
+        - expression: "c* = argmax_c S_c"
+          meaning: The search keeps the combination with the highest average score.
+      prediction: "With refit on, predict uses c*. Example: 3 depths x 2 leaf sizes = 6 combinations; 6 x 3 folds = 18 fits + 1 refit."
+    good_at: [few settings, small lists, reproducible search]
+    bad_at: [many settings, slow models, fine values between points]
+    vs_siblings:
+      - {page: randomizedsearchcv, note: "Samples some combinations, so cost does not grow with the grid."}
+      - {page: halvinggridsearchcv, note: "Same grid, but drops weak combinations early."}
+      - {page: parametergrid, note: "Lists the same combinations, but fits nothing."}
+    read_more:
+      - List a few values for each setting.
+      - Fit and score every combination on every fold.
+      - Average each combination's fold scores.
+      - Keep the best and refit it on all rows.
+  next: [but-slow-fits]

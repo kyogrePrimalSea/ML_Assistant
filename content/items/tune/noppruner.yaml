@@ -11,7 +11,7 @@ targets: [optuna.pruners.NopPruner]
 pairs_with: []
 clashes: []
 source_urls: ['https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.NopPruner.html']
-library_versions: {optuna: 5.0.0}
+library_versions: {optuna: 5.0.0, scikit-learn: 1.9.1}
 reviewed: false
 rules:
   task_types: []
@@ -26,6 +26,7 @@ slots:
   quick_facts:
     facts:
       - {label: Pruning, value: "Never. Every trial runs to the end."}
+      - {label: Takes, value: "No settings"}
   use_avoid:
     use_when: [baseline run, check pruning is not hurting]
     avoid_when: [costly trials, any real search]
@@ -38,10 +39,11 @@ slots:
   code:
     - library: optuna
       target: optuna.pruners.NopPruner
-      why_this_library: Used as pruner= in optuna.create_study.
+      why_this_library: Pass it as pruner= to optuna.create_study.
       snippet: |
         # optuna 5.0.0
         import optuna
+        from collections import Counter
         from sklearn.datasets import make_classification
         from sklearn.linear_model import SGDClassifier
         from sklearn.model_selection import train_test_split
@@ -70,21 +72,98 @@ slots:
             pruner=pruner,
         )
         study.optimize(objective, n_trials=20)
-        pruned = [t for t in study.trials if t.state.name == "PRUNED"]
-        print(len(pruned), "of", len(study.trials), "trials pruned")
+        states = Counter(t.state.name for t in study.trials)
+        print("states:", dict(sorted(states.items())))
+        print(states["PRUNED"], "of", len(study.trials), "trials pruned")
+      output: |
+        states: {'COMPLETE': 20}
+        0 of 20 trials pruned
   what_comes_out:
     items:
-      - {name: prune, kind: method, task: null, shape: "bool", note: "Called by Optuna. Your code uses should_prune()."}
-    next_step: null
+      - name: prune
+        kind: method
+        task: null
+        shape: "scalar"
+        object_type: bool
+        example: "False"
+        shape_explanation: >-
+          A single True or False, not an array. It is always False. Optuna calls
+          prune() after each report. The example is one False, so its shape is
+          scalar.
+        note: "Always False. Optuna calls it; your code uses should_prune()."
+      - name: trial.should_prune()
+        kind: return
+        task: null
+        shape: "scalar"
+        object_type: bool
+        example: "False"
+        shape_explanation: >-
+          A single True or False, not an array. It is always False, so no trial
+          stops here. The example is one False, so its shape is scalar.
+        note: "Always False, so the trial never stops here."
+      - name: trial.state
+        kind: return
+        task: null
+        shape: "scalar"
+        object_type: optuna.trial.TrialState
+        example: "TrialState.COMPLETE"
+        shape_explanation: >-
+          One enum member, not an array. With NopPruner it is COMPLETE for every
+          trial that finishes its steps. The example is one member, so its shape
+          is scalar.
+        note: "COMPLETE for every trial that runs all its steps."
+    next_step: Compare the state counts with a pruned run to see what pruning saved.
+    snippet: |
+      # optuna 5.0.0
+      import optuna
+
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+      study = optuna.create_study(pruner=optuna.pruners.NopPruner())
+      trial = study.ask()
+      for step, value in enumerate([0.1, 5.0, 1000.0]):
+          trial.report(value, step)
+          print("step", step, "value", value, "should_prune:", trial.should_prune())
+    snippet_library: optuna
+    output: |
+      step 0 value 0.1 should_prune: False
+      step 1 value 5.0 should_prune: False
+      step 2 value 1000.0 should_prune: False
     visual: null
   catch_outs:
-    - Same results as having no pruner.
-    - should_prune() always returns False.
+    - It is not the default. A study without a pruner uses MedianPruner.
+    - should_prune() always returns False, whatever the reported value.
+    - Every trial runs all its steps, so costly objectives take longer.
   key_settings:
     tier1: []
     tier2: []
     tier3: []
   watch_it_work: {none: true}
   intuition:
-    text: Let every trial finish, whatever it reports.
+    idea: Turn pruning off, so every trial runs all its steps.
+    analogy: A race with no cut-off, where every runner finishes even when far behind.
+    animation: none
+    goal: Give a clean baseline, to check whether pruning changes the results.
+    steps:
+      - Create the study with NopPruner.
+      - Each trial reports its score at every step, as usual.
+      - The pruner answers False at every step.
+      - Each trial runs to its last step and completes.
+      - Compare the state counts and best value with a pruned run.
+    math:
+      notation:
+        - {symbol: "s", meaning: "The step number, counting from 0."}
+        - {symbol: "p(s)", meaning: "The pruner's answer at step s, True to stop."}
+      equations:
+        - expression: "p(s) = False for every step s"
+          meaning: The pruner never asks for a stop, so every step is allowed to run.
+      prediction: "Every trial runs all its steps and completes. The snippet shows 20 COMPLETE and 0 PRUNED."
+    good_at: [baseline runs, checking pruning]
+    bad_at: [costly trials, long runs]
+    vs_siblings:
+      - {page: thresholdpruner, note: "Stops trials on a fixed line. This one stops none."}
+      - {page: patientpruner, note: "Stops stalled trials. This one stops none."}
+      - {page: trialpruned, note: "Lets your own code stop a trial, which this one does not."}
+    read_more:
+      - Compare the state counts with a pruned run of the same search.
+      - NopPruner takes no settings.
   next: []

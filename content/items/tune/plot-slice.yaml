@@ -11,7 +11,7 @@ targets: [optuna.visualization.plot_slice]
 pairs_with: []
 clashes: []
 source_urls: ['https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_slice.html']
-library_versions: {optuna: 5.0.0}
+library_versions: {optuna: 5.0.0, scikit-learn: 1.9.1}
 reviewed: false
 rules:
   task_types: []
@@ -22,7 +22,7 @@ slots:
   header: {}
   solves:
     hero: {kind: diagnostic, dataset: ames, chart: score against one setting at a time}
-    line: Shows the score against each setting, one at a time.
+    line: Shows each trial's score against one setting at a time.
   quick_facts:
     facts:
       - {label: Default label, value: Objective Value}
@@ -39,7 +39,7 @@ slots:
   code:
     - library: optuna
       target: optuna.visualization.plot_slice
-      why_this_library: Draws the plot straight from a study.
+      why_this_library: "Draws the plot straight from a study. Output below is made up: plotly is not installed here, so this was not run."
       snippet: |
         # optuna 5.0.0
         import optuna
@@ -70,24 +70,105 @@ slots:
 
         fig = plot_slice(study)
         print(study.best_params)
+        print("figure type:", type(fig).__name__)
+      output: |
+        (made-up values, not run: plotly is not installed here)
+        {'max_depth': 9, 'min_samples_leaf': 2}
+        figure type: Figure
   what_comes_out:
     items:
-      - {name: plot_slice, kind: return, task: null, shape: go.Figure, note: A plotly figure with one panel per setting.}
+      - name: plot_slice
+        kind: return
+        task: null
+        shape: "plotly Figure"
+        object_type: plotly.graph_objects.Figure
+        example: "Figure(...)  (made-up example)"
+        shape_explanation: >-
+          A Figure object, not an array. It has no rows or columns. The docs say it is a
+          plotly figure of the parameter relationship as a slice plot. The example only
+          names the type, so its shape is one Figure.
+        note: "The plotly figure. Pass params to choose the settings shown."
     next_step: null
     visual: null
+    snippet: |
+      # optuna 5.0.0
+      import optuna
+      from optuna.visualization import plot_slice
+      from sklearn.datasets import make_regression
+      from sklearn.ensemble import RandomForestRegressor
+      from sklearn.model_selection import cross_val_score
+
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+      X, y = make_regression(n_samples=300, n_features=8, noise=15,
+                             random_state=0)
+
+
+      def objective(trial):
+          depth = trial.suggest_int("max_depth", 2, 12)
+          model = RandomForestRegressor(
+              n_estimators=30, max_depth=depth, random_state=0,
+          )
+          return cross_val_score(model, X, y, cv=3).mean()
+
+
+      study = optuna.create_study(
+          direction="maximize", sampler=optuna.samplers.TPESampler(seed=0)
+      )
+      study.optimize(objective, n_trials=20)
+
+      fig = plot_slice(study, params=["max_depth"])
+      print("figure type:", type(fig).__name__)
+      print("trials in study:", len(study.trials))
+    snippet_library: optuna
+    output: |
+      (made-up values, not run: plotly is not installed here)
+      figure type: Figure
+      trials in study: 20
   catch_outs:
     - Needs plotly installed.
+    - The code example output is made up. It was not run here.
     - Plots the objective value unless target is set.
-    - Pass params to choose which settings are plotted.
+    - Dot colour follows the trial number, shown on the colour bar labelled Trial.
+    - Read the axis labels; target_name sets the score label.
+    - The docs do not say what a good or bad slice looks like.
   key_settings:
     tier1:
-      - {name: study, page: null}
-      - {name: params, page: null}
+      - name: params
+        page: null
+        controls: The settings to plot. None plots every setting in the study.
+        effect: Naming fewer settings shows only those, and trials missing one of them are left out.
+      - name: target
+        page: null
+        controls: The value to plot for each trial. None uses the objective value for one objective.
+        effect: Needed for multi-objective studies, where the objective value alone is not enough.
     tier2:
-      - {name: target, page: null}
-      - {name: target_name, page: null}
+      - name: target_name
+        page: null
+        controls: The label shown on the axis.
+        effect: Changes the label only, not the points.
     tier3: []
   watch_it_work: {none: true}
   intuition:
-    text: Each setting gets its own panel of trials against the score.
+    idea: "One small plot per setting, with each trial's score plotted at the value that trial used."
+    analogy: "Like testing one ingredient at a time and tasting the dish after each change."
+    animation: none
+    goal: "See how the score changes as each single setting moves across its range."
+    steps:
+      - "The horizontal axis of each small plot is one setting."
+      - "The vertical axis is the objective value, shared by all the small plots."
+      - "Each dot is one finished trial."
+      - "A dot sits at the value that trial used for that setting, at the height of its score."
+      - "Dot colour follows the trial number, read from the colour bar labelled Trial."
+      - "Look for the setting values where the best-scoring dots gather."
+      - "A flat spread of dots along a setting means no clear pattern in that setting here."
+    good_at: ["one setting at a time", "clear patterns within one setting", "scanning every setting quickly"]
+    bad_at: ["two settings together", "exact score values", "effects that need other settings"]
+    vs_siblings:
+      - {page: plot-contour, note: "Shows two settings together as a score map."}
+      - {page: plot-parallel-coordinate, note: "Shows every setting and score for each trial as lines."}
+      - {page: plot-rank, note: "Colours dots by the rank of their score across two settings."}
+    read_more:
+      - "Read the plot_slice docs page linked in source_urls."
+      - "Check the trial colour bar when you read the dots."
+      - "Compare with the importance plot to see which settings matter most."
   next: []

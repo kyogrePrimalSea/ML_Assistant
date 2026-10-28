@@ -14,6 +14,7 @@ source_urls:
   - https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html
 library_versions:
   scikit-learn: "1.9.1"
+  scipy: "1.18.1"
 reviewed: false
 rules:
   task_types: []
@@ -29,6 +30,7 @@ slots:
     facts:
       - {label: Default trials, value: "10 (n_iter)"}
       - {label: Scores with, value: cross-validation}
+      - {label: Total fits, value: "n_iter x folds"}
   use_avoid:
     use_when: [many settings, limited time]
     avoid_when: [one or two settings, need exhaustive]
@@ -37,6 +39,16 @@ slots:
       status: recommended
       why: Keep a final test set the search never sees.
       condition: null
+      unless: null
+    - step: {page: pipeline}
+      status: recommended
+      why: Scaling inside the search stays inside each fold.
+      condition: null
+      unless: null
+    - step: {page: timeseriessplit}
+      status: recommended
+      why: Pass it as cv so folds never train on future rows.
+      condition: {time_ordered: true}
       unless: null
   code:
     - library: scikit-learn
@@ -52,37 +64,241 @@ slots:
         X, y = make_regression(n_samples=300, n_features=8, noise=15, random_state=0)
 
         search = RandomizedSearchCV(
-            RandomForestRegressor(n_estimators=30, random_state=0),
+            RandomForestRegressor(n_estimators=30, n_jobs=1, random_state=0),
             param_distributions={
                 "max_depth": randint(2, 12),
                 "min_samples_leaf": randint(1, 10),
             },
             n_iter=8,
             cv=3,
+            n_jobs=1,
             random_state=0,
         )
         search.fit(X, y)
-        print(search.best_params_)
-        print(round(search.best_score_, 3))
-  what_comes_out: {none: true}
+
+        print("best_params_:", search.best_params_)
+        print("best_score_:", round(search.best_score_, 3))
+        print("n_splits_:", search.n_splits_)
+        print("cv_results_ rows:", len(search.cv_results_["params"]))
+      output: |
+        best_params_: {'max_depth': 10, 'min_samples_leaf': 2}
+        best_score_: 0.72
+        n_splits_: 3
+        cv_results_ rows: 8
+
+  what_comes_out:
+    items:
+      - name: predict_proba
+        kind: method
+        task: classification
+        shape: "(n_samples, n_classes)"
+        object_type: numpy.ndarray
+        example: "[[0.82, 0.18],\n [0.27, 0.73]]"
+        shape_explanation: >-
+          A two-dimensional table. The shape is written as (rows, columns), in that order.
+          n_samples is the number of input rows or cases being predicted. n_classes is the
+          number of possible categories. The example has 2 cases and 2 classes, so its
+          concrete shape is (2, 2).
+        note: "From best_estimator_. One column per class, in classes_ order."
+      - name: predict
+        kind: method
+        task: null
+        shape: "(n_samples,)"
+        object_type: numpy.ndarray
+        example: "[1, 0]"
+        shape_explanation: >-
+          A one-dimensional array. n_samples is the number of input rows or cases being
+          predicted. There is one prediction for each case: a class label for a classifier,
+          a number for a regressor. The trailing comma in (n_samples,) means the array has
+          one dimension. The example contains 2 predictions, so its concrete shape is (2,).
+        note: "Uses best_estimator_. Needs refit to stay on."
+      - name: best_params_
+        kind: attribute
+        task: null
+        shape: "dict"
+        object_type: dict
+        example: "{'max_depth': 5, 'min_samples_leaf': 2}"
+        shape_explanation: >-
+          A dictionary has no rows or columns. Each key is a setting name from
+          param_distributions. Each value is the draw that scored best for that setting.
+          The example has 2 keys, because the search sampled 2 settings.
+        note: "The winning draw. Pass it to a fresh model with set_params."
+      - name: best_score_
+        kind: attribute
+        task: null
+        shape: "scalar"
+        object_type: float
+        example: "0.971"
+        shape_explanation: >-
+          A scalar is one value, not an array. It has no rows or columns. The example is
+          the single number 0.971, so its shape is scalar.
+        note: "Mean cross-validated score of the best draw. Not a test score."
+      - name: best_estimator_
+        kind: attribute
+        task: null
+        shape: "fitted estimator"
+        object_type: sklearn estimator
+        example: "DecisionTreeClassifier(max_depth=5, min_samples_leaf=2)"
+        shape_explanation: >-
+          One fitted model object, not an array. It was refit on every training row using
+          best_params_. If you passed a Pipeline, this is the whole fitted Pipeline.
+        note: "Missing when refit=False."
+      - name: cv_results_
+        kind: attribute
+        task: null
+        shape: "dict of (n_candidates,) arrays"
+        object_type: dict
+        example: "{'mean_test_score': [0.91, 0.95],\n 'rank_test_score': [2, 1]}"
+        shape_explanation: >-
+          A dictionary of columns. Each key is a column name and each value is an array with
+          one entry per draw. n_candidates is the number of settings sampled, which equals
+          n_iter. The example has 2 draws, so each array has length 2. Pass the dict to
+          pd.DataFrame to read it as a table.
+        note: "Scores for every draw and fold. Rank 1 is the best."
+      - name: best_index_
+        kind: attribute
+        task: null
+        shape: "scalar"
+        object_type: int
+        example: "3"
+        shape_explanation: >-
+          A scalar is one value, not an array. It is the row position of the best draw in
+          cv_results_. The example is the single integer 3, so its shape is scalar.
+        note: "Row of the winner in cv_results_. Counts from 0."
+    next_step: Check cv_results_ before trusting the winner.
+    snippet: |
+      # scikit-learn 1.9.1
+      import numpy as np
+      from scipy.stats import randint
+      from sklearn.datasets import load_breast_cancer
+      from sklearn.model_selection import RandomizedSearchCV, train_test_split
+      from sklearn.tree import DecisionTreeClassifier
+
+      X, y = load_breast_cancer(return_X_y=True)
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+      search = RandomizedSearchCV(
+          DecisionTreeClassifier(random_state=0),
+          param_distributions={
+              "max_depth": randint(2, 12),
+              "min_samples_leaf": randint(1, 10),
+          },
+          n_iter=8,
+          scoring="roc_auc",
+          cv=3,
+          n_jobs=1,
+          random_state=0,
+      ).fit(X_train, y_train)
+
+      y_proba = search.predict_proba(X_test[:3])
+      y_score = y_proba[:, 1]
+      y_pred = search.predict(X_test[:3])
+      print("best_params_:", search.best_params_)
+      print("best_score_:", round(search.best_score_, 3))
+      print("best_index_:", search.best_index_)
+      print("best_estimator_:", search.best_estimator_)
+      print("classes_:", search.classes_)
+      print("n_splits_:", search.n_splits_)
+      print("cv_results_ rows:", len(search.cv_results_["params"]))
+      print("classification y_proba:")
+      print(np.round(y_proba, 3))
+      print("classification y_score:", np.round(y_score, 3))
+      print("classification y_pred:", y_pred)
+    snippet_library: scikit-learn
+    output: |
+      best_params_: {'max_depth': 8, 'min_samples_leaf': 9}
+      best_score_: 0.951
+      best_index_: 5
+      best_estimator_: DecisionTreeClassifier(max_depth=8, min_samples_leaf=9, random_state=0)
+      classes_: [0 1]
+      n_splits_: 3
+      cv_results_ rows: 8
+      classification y_proba:
+      [[1. 0.]
+       [0. 1.]
+       [0. 1.]]
+      classification y_score: [0. 1. 1.]
+      classification y_pred: [0 1 1]
+
+    visual: null
   catch_outs:
     - Set random_state or results change every run.
     - The best score is from cross-validation, not a test set.
+    - Only draws n_iter settings, so it can miss the best one.
     - Trials grow with n_iter times the number of folds.
   key_settings:
     tier1:
-      - {name: param_distributions, page: null}
-      - {name: n_iter, page: null}
-      - {name: cv, page: null}
+      - name: param_distributions
+        page: null
+        controls: "The settings to draw from. A list is sampled uniformly. A distribution must have an rvs method."
+        effect: Wider ranges explore more options, but a small n_iter covers them thinly.
+      - name: n_iter
+        page: null
+        controls: "How many random settings are drawn and scored. The default is 10."
+        effect: More draws can find better settings, but every extra draw costs fits.
+      - name: cv
+        page: null
+        controls: "How the training rows are split into folds. None means 5 folds."
+        effect: More folds give steadier scores, but every draw takes longer.
     tier2:
-      - {name: scoring, page: null}
-      - {name: random_state, page: null}
+      - name: scoring
+        page: null
+        controls: "The score used to rank draws. None uses the model's own score."
+        effect: Pick the metric you will report, or the search may favour the wrong one.
+      - name: random_state
+        page: null
+        controls: "The seed for the draws. An int gives the same draws every run."
+        effect: Without a seed, each run can pick different settings and a different winner.
     tier3:
-      - {name: n_jobs, page: null}
-      - {name: refit, page: null}
-  watch_it_work:
-    dataset: ames
-    control: {name: n_iter, min: 1, max: 50, step: 1, default: 10}
+      - name: n_jobs
+        page: null
+        controls: "How many fits run at the same time. None means 1."
+        effect: More jobs finish sooner, but use more memory and processor time.
+      - name: refit
+        page: null
+        controls: Whether the best draw is refit on all training rows at the end.
+        effect: On gives best_estimator_ and predict, for one extra fit.
+  watch_it_work: {none: true}
   intuition:
-    text: Throw darts at the settings grid; keep the best landing.
-  next: []
+    idea: Try a fixed number of random settings and keep the best one.
+    analogy: Pull a set number of cards from a deck of settings, then keep the best hand.
+    animation: none
+    goal: Find good settings without trying every combination.
+    steps:
+      - Set the range for each setting in param_distributions.
+      - Draw n_iter random combinations from those ranges.
+      - Split the training rows into folds.
+      - For each combination, fit on all folds but one and score the one left out.
+      - Repeat until every fold has been left out once, then average the scores.
+      - Rank the combinations and keep the one with the highest average.
+      - Refit that combination on all training rows to make best_estimator_.
+    math:
+      notation:
+        - {symbol: "N", meaning: "The number of random combinations drawn, set by n_iter."}
+        - {symbol: "K", meaning: "The number of cross-validation folds, set by cv."}
+        - {symbol: "c and k", meaning: "Indices for one drawn combination and one fold."}
+        - {symbol: "s_ck", meaning: "The score of combination c when fold k is left out."}
+        - {symbol: "S_c", meaning: "The mean score of combination c over all K folds."}
+        - {symbol: "Σ", meaning: "Add the following quantity over the shown index."}
+        - {symbol: "argmax", meaning: "The choice of c that gives the largest S_c."}
+        - {symbol: "c*", meaning: "The winning combination, stored as best_params_."}
+      equations:
+        - expression: "fits = N × K  (+ 1 refit)"
+          meaning: Each drawn combination is fit once per fold, then the winner is fit once more.
+        - expression: "S_c = (1/K) Σ_k s_ck"
+          meaning: A combination's score is its average over the folds.
+        - expression: "c* = argmax_c S_c"
+          meaning: The search keeps the combination with the highest average score.
+      prediction: "With refit on, predict uses c*. Example: 8 draws x 3 folds = 24 fits + 1 refit."
+    good_at: [many settings, limited time, wide ranges]
+    bad_at: [small grids, guaranteed best setting, rare sweet spots]
+    vs_siblings:
+      - {page: gridsearchcv, note: "Tries every combination, so cost grows with the grid."}
+      - {page: halvingrandomsearchcv, note: "Same random draws, but drops weak draws early."}
+      - {page: parametersampler, note: "Draws the same kind of settings, but fits nothing."}
+    read_more:
+      - Give each setting a list or a distribution.
+      - Draw n_iter combinations.
+      - Score each one on every fold.
+      - Keep the best and refit it on all rows.
+  next: [but-slow-fits]

@@ -11,7 +11,7 @@ targets: [optuna.trial.Trial]
 pairs_with: []
 clashes: []
 source_urls: ['https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.Trial.html']
-library_versions: {optuna: 5.0.0}
+library_versions: {optuna: 5.0.0, scikit-learn: 1.9.1}
 reviewed: false
 rules:
   task_types: []
@@ -69,19 +69,174 @@ slots:
         study = optuna.create_study(direction="maximize", sampler=sampler)
         study.optimize(objective, n_trials=20)
         print(study.best_params, round(study.best_value, 3))
+      output: |
+        {'max_depth': 12, 'min_samples_leaf': 1, 'max_features': 1.0} 0.725
   what_comes_out:
     items:
-      - {name: suggest_int, kind: method, task: null, shape: int, note: Picks a whole number in a range.}
-      - {name: suggest_categorical, kind: method, task: null, shape: one of the choices, note: Picks one value from a list.}
+      - name: suggest_int
+        kind: method
+        task: null
+        shape: "scalar"
+        object_type: int
+        example: "6"
+        shape_explanation: >-
+          A single whole number, not an array. It has no rows or columns. The example is
+          the single integer 6, so its shape is scalar.
+        note: "Picks a whole number in a range."
+      - name: suggest_float
+        kind: method
+        task: null
+        shape: "scalar"
+        object_type: float
+        example: "0.27"
+        shape_explanation: >-
+          A single decimal number, not an array. It has no rows or columns. The example is
+          the single number 0.27, so its shape is scalar.
+        note: "Picks a decimal number in a range."
+      - name: suggest_categorical
+        kind: method
+        task: null
+        shape: "scalar, one of the choices"
+        object_type: str
+        example: "'gini'"
+        shape_explanation: >-
+          One item taken from the list you passed in, returned as it was given. It has no
+          rows or columns. The example is the single string 'gini', so its shape is scalar.
+        note: "Picks one value from a list you give."
+      - name: report
+        kind: method
+        task: null
+        shape: "None"
+        object_type: NoneType
+        example: "None"
+        shape_explanation: >-
+          Nothing is returned. The call has no shape. It stores one value at a step, so
+          pruners can compare trials step by step.
+        note: "Stores a score at a step for pruners to read."
+      - name: should_prune
+        kind: method
+        task: null
+        shape: "scalar"
+        object_type: bool
+        example: "False"
+        shape_explanation: >-
+          A single true or false value, not an array. It has no rows or columns. The
+          example is False, so its shape is scalar.
+        note: "True when the pruner says to stop this trial."
+      - name: number
+        kind: attribute
+        task: null
+        shape: "scalar"
+        object_type: int
+        example: "3"
+        shape_explanation: >-
+          A single integer, not an array. It has no rows or columns. The example is the
+          integer 3, so its shape is scalar.
+        note: "Position of this trial, counting from 0."
+      - name: params
+        kind: attribute
+        task: null
+        shape: "dict"
+        object_type: dict
+        example: "{'n_leaves': 6, 'kind': 'gini'}"
+        shape_explanation: >-
+          A dictionary has no rows or columns. Each key is a name you suggested. Each value
+          is the setting chosen so far in this trial. The example has 2 keys, so 2 names
+          were suggested.
+        note: "Settings suggested so far in this trial."
     next_step: Return one score for the settings you were given.
+    snippet: |
+      # optuna 5.0.0
+      import optuna
+      from optuna.samplers import TPESampler
+
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+
+
+      def objective(trial):
+          print("trial number:", trial.number)
+          n = trial.suggest_int("n_leaves", 2, 10, step=2)
+          rate = trial.suggest_float("rate", 0.01, 1.0, log=True)
+          kind = trial.suggest_categorical("kind", ["gini", "entropy"])
+          print("params so far:", sorted(trial.params))
+          trial.report(abs(n - 6) + rate, step=0)
+          print("should_prune:", trial.should_prune())
+          return abs(n - 6) + rate
+
+
+      study = optuna.create_study(sampler=TPESampler(seed=0))
+      study.optimize(objective, n_trials=3)
+      print("kind of last trial:", study.trials[-1].params["kind"])
+    snippet_library: optuna
+    output: |
+      trial number: 0
+      params so far: ['kind', 'n_leaves', 'rate']
+      should_prune: False
+      trial number: 1
+      params so far: ['kind', 'n_leaves', 'rate']
+      should_prune: False
+      trial number: 2
+      params so far: ['kind', 'n_leaves', 'rate']
+      should_prune: False
+      kind of last trial: gini
     visual: null
   catch_outs:
     - Use the same name and range in every trial.
     - Each name you suggest becomes a search dimension.
+    - A reused name with a new range keeps the first range, with a warning.
+    - To limit trials with a rule, call set_constraint on the trial.
   key_settings:
-    tier1: []
-    tier2: []
+    tier1:
+      - name: low
+        page: null
+        controls: The lower end of the range a suggest call may return. It is included.
+        effect: Raising it narrows the search from below. With log on, it must be above 0.
+      - name: high
+        page: null
+        controls: The upper end of the range a suggest call may return. It is included.
+        effect: Lowering it narrows the search from above. It must be at least low.
+    tier2:
+      - name: log
+        page: null
+        controls: Whether values are drawn evenly on a log scale, not a linear one.
+        effect: Spreads tries across orders of magnitude. Cannot be combined with step.
+      - name: step
+        page: null
+        controls: The gap between allowed values.
+        effect: A larger gap leaves fewer values to search. Cannot be combined with log.
     tier3: []
   watch_it_work: {none: true}
-  intuition: {text: "Each trial asks for settings, runs them, and gets a score."}
+  intuition:
+    idea: Ask for settings, use them, and return one score.
+    analogy: A form the study hands out. You fill in each box and send back one score.
+    animation: none
+    goal: Turn each suggest call into one setting, so the study can score it.
+    steps:
+      - The study creates a trial and passes it to the objective.
+      - Each suggest call names a setting and its range or choices.
+      - The sampler returns one value for each name.
+      - The objective builds a model with those values.
+      - The objective returns one score.
+      - The study stores the trial and moves on.
+    math:
+      notation:
+        - {symbol: "low, high", meaning: "The smallest and largest values allowed. Both are included."}
+        - {symbol: "step", meaning: "The gap between neighbouring allowed values."}
+        - {symbol: "k", meaning: "A whole number that counts steps up from low."}
+        - {symbol: "x", meaning: "The value returned by one suggest call."}
+      equations:
+        - expression: "x = low + k × step, with low + k × step ≤ high"
+          meaning: A suggested value sits on a grid that starts at low and moves in steps of size step.
+        - expression: "step = 1 for suggest_int by default"
+          meaning: With step 1, the grid is every whole number from low to high.
+      prediction: "Example: suggest_int('n_leaves', 2, 10, step=2) can return 2, 4, 6, 8 or 10."
+    good_at: [custom ranges, log scales, choices from a list]
+    bad_at: [fixed settings only, values outside the range]
+    vs_siblings:
+      - {page: optuna-study, note: "Holds every trial. A trial is one of them."}
+      - {page: frozentrial, note: "The finished record of this trial, read afterwards."}
+    read_more:
+      - Pass a name and range to each suggest call.
+      - Use the same names in every trial.
+      - Return one score from the objective.
   next: []

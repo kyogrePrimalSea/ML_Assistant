@@ -11,7 +11,7 @@ targets: [optuna.visualization.plot_edf]
 pairs_with: []
 clashes: []
 source_urls: ['https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_edf.html']
-library_versions: {optuna: 5.0.0}
+library_versions: {optuna: 5.0.0, scikit-learn: 1.9.1}
 reviewed: false
 rules:
   task_types: []
@@ -25,7 +25,8 @@ slots:
     line: Shows how trial scores are spread out, or compares studies.
   quick_facts:
     facts:
-      - {label: Default target_name, value: "Objective Value"}
+    - {label: Default target_name, value: Objective Value}
+    - {label: Trials counted, value: Complete trials only}
   use_avoid:
     use_when: [comparing searches, spread of scores]
     avoid_when: [one score is enough, few trials]
@@ -38,7 +39,7 @@ slots:
   code:
   - library: optuna
     target: optuna.visualization.plot_edf
-    why_this_library: Plotly figure; you choose where to show it.
+    why_this_library: 'Draws a Plotly figure. Output below is made up: plotly is not installed here, so this was not run.'
     snippet: |
       # optuna 5.0.0
       import optuna
@@ -61,28 +62,104 @@ slots:
 
 
       study = optuna.create_study(
+          study_name="rf-search",
           direction="maximize",
           sampler=optuna.samplers.TPESampler(seed=0),
       )
       study.optimize(objective, n_trials=20)
       fig = optuna.visualization.plot_edf(study)
-      print(round(study.best_value, 3))
+      print(fig.layout.title.text)
+      print(len(fig.data))
+    output: |
+      (made-up values, not run: plotly is not installed here)
+      Empirical Distribution Function Plot
+      1
   what_comes_out:
     items:
-    - {name: plot_edf, kind: return, task: null, shape: plotly Figure, note: Figure of the spread of trial scores.}
-    next_step: null
+    - {name: plot_edf, kind: return, task: null, shape: plotly Figure, object_type: plotly.graph_objects.Figure, example: 'made-up: a Figure with 2 curves', shape_explanation: 'A Figure is a container, not an array, so it has no rows or columns. It holds one curve for each study passed in, and a layout with a title and axis labels. The example describes a made-up Figure with 2 curves, so its size is not a shape.', note: 'One rising curve per study, from 0 up to 1.'}
+    next_step: Read where the curve crosses 0.5 for a typical score.
+    snippet: |
+      # optuna 5.0.0
+      import optuna
+      from sklearn.datasets import make_regression
+      from sklearn.ensemble import RandomForestRegressor
+      from sklearn.model_selection import cross_val_score
+
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+      X, y = make_regression(n_samples=300, n_features=8, noise=15, random_state=0)
+
+
+      def objective(trial):
+          model = RandomForestRegressor(
+              n_estimators=trial.suggest_int("n_estimators", 10, 80),
+              max_depth=trial.suggest_int("max_depth", 2, 12),
+              min_samples_leaf=trial.suggest_int("min_samples_leaf", 1, 10),
+              random_state=0,
+          )
+          return cross_val_score(model, X, y, cv=3, scoring="r2").mean()
+
+
+      study = optuna.create_study(
+          study_name="rf-search",
+          direction="maximize",
+          sampler=optuna.samplers.TPESampler(seed=0),
+      )
+      study.optimize(objective, n_trials=20)
+      fig = optuna.visualization.plot_edf(study)
+      print(fig.layout.xaxis.title.text)
+      print(fig.layout.yaxis.title.text)
+      print([trace.name for trace in fig.data])
+    snippet_library: optuna
+    output: |
+      (made-up values, not run: plotly is not installed here)
+      Objective Value
+      Cumulative Probability
+      ['rf-search']
     visual: null
-  catch_outs:
-    - Shows scores only, not which settings were tried.
-    - Needs plotly installed; it is not in the project requirements.
+  catch_outs: [Only complete trials are counted. Pruned and failed trials are left out., A steep part means many scores sit close together., A flat part means few trials score in that range., 'Where the curve crosses 0.5 is a typical trial score, the median.', Draw one curve per study to compare two searches., 'Shows scores only, not which settings were tried.', Needs plotly installed; it is not in the project requirements., The code example output is made up. It was not run here.]
   key_settings:
     tier1:
-      - {name: study, page: null}
-      - {name: target, page: null}
-      - {name: target_name, page: null}
-    tier2: []
+    - {name: study, page: null, controls: 'The study to plot, or a list of studies to compare.', effect: 'Each study adds one curve, so several curves compare searches.'}
+    - {name: target, page: null, controls: A function that picks the value to plot from each trial., effect: 'Needed for several goals. Without it, the trial value is plotted.'}
+    tier2:
+    - {name: target_name, page: null, controls: The label on the horizontal axis., effect: 'Changes the label only, not the curve.'}
     tier3: []
   watch_it_work: {none: true}
-  intuition: {text: "How the scores of trials are spread out."}
+  intuition:
+    idea: "For each score, this shows the share of trials that scored that value or lower, as a rising curve."
+    analogy: "A class ranking chart: for any mark, how many students scored that mark or lower."
+    animation: none
+    goal: "See how spread out the trial scores are, and compare the spread of two searches."
+    steps:
+      - "The horizontal axis is the objective value, labelled with target_name."
+      - "The vertical axis is the cumulative probability, from 0 to 1, read as a share of trials."
+      - "Each line is one study. With two or more studies, the legend names each one."
+      - "Only complete trials are counted."
+      - "Pick a value on the horizontal axis, then go straight up to the curve."
+      - "The height of the curve there is the share of trials scoring that value or lower."
+      - "A steep part means many trials scored in a narrow range."
+      - "A flat part means few trials scored in that range."
+    math:
+      notation:
+        - {symbol: "n", meaning: "The number of complete trials in one study."}
+        - {symbol: "v_i", meaning: "The objective value of complete trial i."}
+        - {symbol: "x", meaning: "A point on the horizontal axis. The plot uses 100 evenly spaced points from the smallest to the largest value."}
+        - {symbol: "F(x)", meaning: "The share of trials with a value at or below x. This is the height of the curve."}
+      equations:
+        - expression: "F(x) = (number of i with v_i <= x) / n"
+          meaning: "Count the trials at or below x, then divide by the number of complete trials."
+        - expression: "F(largest value) = 1"
+          meaning: "At the largest value, every trial is at or below it, so the curve ends at 1."
+      prediction: "The curve never falls as x increases, and it ends at 1 at the largest value."
+    good_at: ["score spread across trials", "comparing two searches", "where most scores sit"]
+    bad_at: ["which settings gave each score", "pruned or failed trials", "the order trials ran in"]
+    vs_siblings:
+      - {page: plot-optimization-history, note: "Shows scores in run order, not as a spread."}
+      - {page: plot-intermediate-values, note: "Shows scores at each step, not final scores."}
+      - {page: plot-rank, note: "Ranks each trial, rather than showing the share below a value."}
+    read_more:
+      - "Only complete trials are counted. Pruned and failed trials are left out."
+      - "The optuna docstring says this plot is useful for analysing and improving search spaces."
+      - "The optuna docstring says the curve assumes objective values are spread uniformly over the objective space."
+      - "Pass several studies to compare their curves."
   next: []
-

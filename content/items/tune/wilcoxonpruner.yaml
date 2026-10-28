@@ -1,96 +1,255 @@
 id: wilcoxonpruner
 plain_name: WilcoxonPruner
 code_name: WilcoxonPruner
-aliases: [signed-rank pruning, Wilcoxon test]
+aliases:
+- signed-rank pruning
+- Wilcoxon test
 stage: tune
 family: tune.watch.prune-relative
-tracks: [standard, time-series]
+tracks:
+- standard
+- time-series
 archetype: tuning
-question_tags: [noisy scores, many folds or instances]
-targets: [optuna.pruners.WilcoxonPruner]
+question_tags:
+- noisy scores
+- many folds or instances
+targets:
+- optuna.pruners.WilcoxonPruner
 pairs_with: []
 clashes: []
-source_urls: ['https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.WilcoxonPruner.html']
-library_versions: {optuna: 5.0.0}
+source_urls:
+- https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.WilcoxonPruner.html
+library_versions:
+  optuna: 5.0.0
+  scikit-learn: "1.9.1"
 reviewed: false
 rules:
   task_types: []
   blocked_when: []
   fits_on_data: false
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: tuning, dims: 1, trials: 20}
+    hero:
+      kind: tuning
+      dims: 1
+      trials: 20
     line: Stops a setting once it is clearly worse than the best.
   quick_facts:
     facts:
-      - {label: Default p threshold, value: "0.1"}
-      - {label: Default startup steps, value: "2"}
+    - label: Default p threshold
+      value: '0.1'
+    - label: Default startup steps
+      value: '2'
   use_avoid:
-    use_when: [scores per fold or instance, costly per-instance scores]
-    avoid_when: [one score per trial, scipy not installed]
+    use_when:
+    - scores per fold or instance
+    - costly per-instance scores
+    avoid_when:
+    - one score per trial
+    - scipy not installed
   prep:
-    - step: {page: train-test-split}
-      status: recommended
-      why: Keep a final test set the search never sees.
-      condition: null
-      unless: null
+  - step:
+      page: optuna-study
+    status: required
+    why: A pruner is set on a study, so one must exist.
+    condition: null
+    unless: null
+  - step:
+      page: train-test-split
+    status: recommended
+    why: Keep a final test set the search never sees.
+    condition: null
+    unless: null
   code:
-    - library: optuna
-      target: optuna.pruners.WilcoxonPruner
-      why_this_library: Used as pruner= in optuna.create_study.
-      snippet: |
-        # optuna 5.0.0
-        import optuna
-        from sklearn.datasets import make_classification
-        from sklearn.linear_model import SGDClassifier
-        from sklearn.model_selection import KFold
+  - library: optuna
+    target: optuna.pruners.WilcoxonPruner
+    why_this_library: Passed to optuna.create_study as pruner=.
+    snippet: |
+      # optuna 5.0.0
+      import collections
 
-        optuna.logging.set_verbosity(optuna.logging.WARNING)
-        X, y = make_classification(n_samples=600, n_features=10, random_state=0)
-        folds = list(KFold(n_splits=10, shuffle=True, random_state=0).split(X))
+      import optuna
+      from sklearn.datasets import make_classification
+      from sklearn.linear_model import SGDClassifier
+      from sklearn.model_selection import KFold
 
-
-        def objective(trial):
-            alpha = trial.suggest_float("alpha", 1e-5, 1.0, log=True)
-            scores = []
-            for fold, (train, test) in enumerate(folds):
-                clf = SGDClassifier(alpha=alpha, random_state=0)
-                clf.fit(X[train], y[train])
-                scores.append(clf.score(X[test], y[test]))
-                trial.report(scores[-1], fold)
-                if trial.should_prune():
-                    break
-            return sum(scores) / len(scores)
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+      X, y = make_classification(n_samples=600, n_features=10, random_state=0)
+      folds = list(KFold(n_splits=10, shuffle=True, random_state=0).split(X))
 
 
-        pruner = optuna.pruners.WilcoxonPruner(p_threshold=0.1)
-        study = optuna.create_study(
-            direction="maximize",
-            sampler=optuna.samplers.TPESampler(seed=0),
-            pruner=pruner,
-        )
-        study.optimize(objective, n_trials=20)
-        steps = sum(len(t.intermediate_values) for t in study.trials)
-        print(steps, "of", 20 * len(folds), "fold scores run")
+      def objective(trial):
+          alpha = trial.suggest_float("alpha", 1e-5, 1.0, log=True)
+          scores = []
+          for fold, (train, test) in enumerate(folds):
+              clf = SGDClassifier(alpha=alpha, random_state=0)
+              clf.fit(X[train], y[train])
+              scores.append(clf.score(X[test], y[test]))
+              trial.report(scores[-1], fold)
+              if trial.should_prune():
+                  raise optuna.TrialPruned()
+          return sum(scores) / len(scores)
+
+
+      study = optuna.create_study(
+          direction="maximize",
+          sampler=optuna.samplers.TPESampler(seed=0),
+          pruner=optuna.pruners.WilcoxonPruner(p_threshold=0.1),
+      )
+      study.optimize(objective, n_trials=20)
+      counts = collections.Counter(t.state.name for t in study.trials)
+      print("trials:", len(study.trials))
+      print("states:", dict(sorted(counts.items())))
+      print("best_value:", round(study.best_value, 3))
+    output: |
+      trials: 20
+      states: {'COMPLETE': 9, 'PRUNED': 11}
+      best_value: 0.96
   what_comes_out:
     items:
-      - {name: prune, kind: method, task: null, shape: "bool", note: "Called by Optuna. Your code uses should_prune()."}
-    next_step: null
+    - name: prune
+      kind: method
+      task: null
+      shape: scalar
+      object_type: bool
+      example: 'True'
+      shape_explanation: A single true or false value, not an array. It has no rows or columns. True means stop the trial, False means let it continue. The example is True, so its shape is scalar.
+      note: Optuna calls this, not your code. Use should_prune() on the trial.
+    - name: study.trials
+      kind: return
+      task: null
+      shape: (n_trials,) list of FrozenTrial
+      object_type: list
+      example: '[FrozenTrial, FrozenTrial, FrozenTrial]'
+      shape_explanation: A one-dimensional list with one FrozenTrial for each trial, in trial-number order. The trailing comma in (n_trials,) means one dimension. n_trials is the number of trials run. The example has 3 trials, so its concrete shape is (3,).
+      note: 'Each trial has a state: COMPLETE, PRUNED or FAIL.'
+    - name: t.state
+      kind: return
+      task: null
+      shape: scalar
+      object_type: TrialState
+      example: TrialState.PRUNED
+      shape_explanation: A scalar is one value, not an array. It has no rows or columns. It names the outcome of one trial. The example is one state, so its shape is scalar.
+      note: Read it as t.state.name, for example COMPLETE or PRUNED.
+    - name: study.best_value
+      kind: return
+      task: null
+      shape: scalar
+      object_type: float
+      example: '0.91'
+      shape_explanation: A scalar is one value, not an array. It has no rows or columns. The example is the single number 0.91, so its shape is scalar.
+      note: Best of the COMPLETE trials. Pruned trials never set it.
+    next_step: Pass it to optuna.create_study as pruner=.
+    snippet: |
+      # optuna 5.0.0
+      import collections
+
+      import optuna
+      from sklearn.datasets import make_classification
+      from sklearn.linear_model import SGDClassifier
+      from sklearn.model_selection import KFold
+
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+      X, y = make_classification(n_samples=600, n_features=10, random_state=0)
+      folds = list(KFold(n_splits=10, shuffle=True, random_state=0).split(X))
+
+
+      def objective(trial):
+          alpha = trial.suggest_float("alpha", 1e-5, 1.0, log=True)
+          scores = []
+          for fold, (train, test) in enumerate(folds):
+              clf = SGDClassifier(alpha=alpha, random_state=0)
+              clf.fit(X[train], y[train])
+              scores.append(clf.score(X[test], y[test]))
+              trial.report(scores[-1], fold)
+              if trial.should_prune():
+                  raise optuna.TrialPruned()
+          return sum(scores) / len(scores)
+
+
+      study = optuna.create_study(
+          direction="maximize",
+          sampler=optuna.samplers.TPESampler(seed=0),
+          pruner=optuna.pruners.WilcoxonPruner(p_threshold=0.1),
+      )
+      study.optimize(objective, n_trials=20)
+      print("best_value:", round(study.best_value, 3))
+      for t in study.trials[:6]:
+          print(t.number, t.state.name, len(t.intermediate_values), "folds")
+    snippet_library: optuna
+    output: |
+      best_value: 0.96
+      0 COMPLETE 10 folds
+      1 PRUNED 8 folds
+      2 COMPLETE 10 folds
+      3 COMPLETE 10 folds
+      4 COMPLETE 10 folds
+      5 PRUNED 9 folds
     visual: null
   catch_outs:
-    - Report the same instance id for the same fold in every trial.
-    - Return the estimate instead of raising TrialPruned.
-    - Trials with infinity or nan are never pruned.
-    - Needs scipy installed.
+  - Report the same instance id for the same fold in every trial.
+  - Trials with infinity or nan are never pruned.
+  - The code also holds off pruning unless the best trial's average is better. The docs page does not say this.
+  - Needs scipy installed.
+  - Experimental since Optuna 3.6.0, so the interface may change.
   key_settings:
     tier1:
-      - {name: p_threshold, page: null}
-      - {name: n_startup_steps, page: null}
+    - name: p_threshold
+      page: null
+      controls: The p-value cut-off for stopping. Default is 0.1.
+      effect: A larger value prunes more aggressively.
+    - name: n_startup_steps
+      page: null
+      controls: Steps that must be available before any pruning. Default is 2.
+      effect: The first two steps are never pruned, and too few steps leave the test little to compare.
     tier2: []
     tier3: []
-  watch_it_work: {none: true}
+  watch_it_work:
+    none: true
   intuition:
-    text: Compare each setting fold by fold with the best so far.
+    idea: Compare a setting with the best one fold by fold, and stop it once the gap is clear.
+    analogy: Two students sitting the same set of questions, where one is clearly behind after each question.
+    animation: none
+    goal: Stop a setting early when its fold scores are clearly worse than the best setting's.
+    steps:
+    - Each trial scores the same folds, one at a time.
+    - Report each fold's score with its fold number.
+    - Pair the trial's scores with the best trial's scores, fold by fold.
+    - Run a Wilcoxon signed-rank test on those pairs.
+    - Prune the trial if the test says it is worse, with p below p_threshold.
+    - Otherwise, let the trial score the next fold.
+    math:
+      notation:
+      - symbol: i
+        meaning: The instance, here a fold, identified by the step number.
+      - symbol: p
+        meaning: The p-value from a Wilcoxon signed-rank test on paired scores.
+      - symbol: p_threshold
+        meaning: The p-value cut-off, set by the p_threshold argument.
+      equations:
+      - expression: prune t if p < p_threshold and t is worse than the best on average
+        meaning: A trial is stopped only when the test is sure enough and the average favours the best.
+      prediction: The check runs at each report. A trial stops at the first fold where both conditions hold.
+    good_at:
+    - per-fold scores
+    - costly folds or instances
+    - noisy scores
+    bad_at:
+    - one score per trial
+    - infinite or nan scores
+    vs_siblings:
+    - page: medianpruner
+      note: Compares steps with the median, not paired folds.
+    - page: successivehalvingpruner
+      note: Uses rung budgets, not a paired test.
+    - page: percentilepruner
+      note: Keeps a share of trials, not a test result.
+    read_more:
+    - Shuffle the fold order in each trial, as the reference advises.
+    - The reference page covers the sequential test and its error rate.
+    - Report the same fold id for the same fold in every trial.
   next: []

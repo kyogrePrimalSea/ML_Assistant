@@ -12,7 +12,7 @@ pairs_with: []
 clashes: []
 source_urls: ['https://optuna.readthedocs.io/en/stable/reference/generated/optuna.create_study.html',
   'https://optuna.readthedocs.io/en/stable/reference/generated/optuna.study.Study.html', 'https://optuna.readthedocs.io/en/stable/reference/generated/optuna.load_study.html']
-library_versions: {optuna: 5.0.0}
+library_versions: {optuna: 5.0.0, scikit-learn: 1.9.1}
 reviewed: false
 rules:
   task_types: []
@@ -61,36 +61,193 @@ slots:
             return cross_val_score(model, X, y, cv=3).mean()
 
 
-        sampler = TPESampler(seed=0)
         study = optuna.create_study(
-            study_name="rf-search", direction="maximize", sampler=sampler
+            study_name="rf-search",
+            direction="maximize",
+            sampler=TPESampler(seed=0),
         )
         study.optimize(objective, n_trials=20)
+
+        print("best_params:", study.best_params)
+        print("best_value:", round(study.best_value, 3))
+        print("best_trial number:", study.best_trial.number)
         df = study.trials_dataframe()
-        best = study.best_trial
-        print(len(df), best.number, round(study.best_value, 3))
+        print("trials_dataframe shape:", df.shape)
+        columns = ["number", "value", "params_max_depth", "params_min_samples_leaf"]
+        print(df[columns].head(3).round(3).to_string(index=False))
+      output: |
+        best_params: {'max_depth': 12, 'min_samples_leaf': 1}
+        best_value: 0.725
+        best_trial number: 12
+        trials_dataframe shape: (20, 9)
+         number  value  params_max_depth  params_min_samples_leaf
+              0  0.616                 8                        8
+              1  0.649                 8                        6
+              2  0.630                 6                        7
   what_comes_out:
     items:
-      - {name: trials_dataframe, kind: method, task: null, shape: "DataFrame, one row per trial", note: One row per trial with settings and score.}
-      - {name: optimize, kind: method, task: null, shape: None, note: Runs the objective over many trials.}
-      - {name: best_params, kind: attribute, task: null, shape: dict, note: Settings of the best trial.}
-      - {name: best_value, kind: attribute, task: null, shape: float, note: Score of the best trial.}
-      - {name: best_trial, kind: attribute, task: null, shape: FrozenTrial, note: The best trial as a record.}
+      - name: optimize
+        kind: method
+        task: null
+        shape: "None"
+        object_type: NoneType
+        example: "None"
+        shape_explanation: >-
+          Nothing is returned. The call has no shape. It runs the objective for n_trials
+          trials and stores each result on the study, so read results from the study.
+        note: "Runs the objective n_trials times. Results go into the study."
+      - name: trials_dataframe
+        kind: method
+        task: null
+        shape: "(n_trials, n_columns)"
+        object_type: pandas.DataFrame
+        example: "   number  value  params_max_depth\n0       0   0.62                 8\n1       1   0.65                 6"
+        shape_explanation: >-
+          A table with one row per trial. n_trials is the number of trials run. n_columns
+          counts the fields, such as number, value and one column for each setting. The
+          example has 2 trials and 3 columns, so its concrete shape is (2, 3).
+        note: "One row per trial, with settings and score."
+      - name: best_params
+        kind: attribute
+        task: null
+        shape: "dict"
+        object_type: dict
+        example: "{'max_depth': 6, 'min_samples_leaf': 2}"
+        shape_explanation: >-
+          A dictionary has no rows or columns. Each key is a setting name passed to a
+          suggest method. Each value is the choice made in the best trial. The example
+          has 2 keys, so the best trial set 2 settings.
+        note: "Settings of the best trial, not the whole search."
+      - name: best_value
+        kind: attribute
+        task: null
+        shape: "scalar"
+        object_type: float
+        example: "0.725"
+        shape_explanation: >-
+          A scalar is one value, not an array. It has no rows or columns. The example is
+          the single number 0.725, so its shape is scalar.
+        note: "Score of the best trial. Only for one objective."
+      - name: best_trial
+        kind: attribute
+        task: null
+        shape: "one FrozenTrial"
+        object_type: optuna.trial.FrozenTrial
+        example: "a record for trial 12, with value 0.725"
+        shape_explanation: >-
+          One record, not an array. It holds the number, state, value and params of the
+          best trial. The example describes a single record, so its shape is one
+          FrozenTrial.
+        note: "The best trial as a record. See FrozenTrial."
+      - name: trials
+        kind: attribute
+        task: null
+        shape: "(n_trials,) list of FrozenTrial"
+        object_type: list
+        example: "[FrozenTrial, FrozenTrial]"
+        shape_explanation: >-
+          A one-dimensional list with one FrozenTrial for each trial, ordered by trial
+          number. The trailing comma in (n_trials,) means one dimension. n_trials is the
+          number of trials run. The example has 2 trials, so its concrete shape is (2,).
+        note: "Every trial, in trial-number order."
     next_step: Read the trials table or the best settings.
+    snippet: |
+      # optuna 5.0.0
+      import optuna
+      from optuna.samplers import TPESampler
+
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+
+
+      def objective(trial):
+          x = trial.suggest_float("x", -1.0, 1.0)
+          return x**2
+
+
+      study = optuna.create_study(sampler=TPESampler(seed=0))
+      result = study.optimize(objective, n_trials=5)
+      print("optimize returns:", result)
+      print("trials:", type(study.trials).__name__, len(study.trials))
+      print("best_params:", {k: round(v, 3) for k, v in study.best_params.items()})
+      print("best_value:", round(study.best_value, 4))
+      print("best_trial:", type(study.best_trial).__name__)
+      df = study.trials_dataframe()
+      print("trials_dataframe:", type(df).__name__, df.shape)
+    snippet_library: optuna
+    output: |
+      optimize returns: None
+      trials: list 5
+      best_params: {'x': 0.09}
+      best_value: 0.0081
+      best_trial: FrozenTrial
+      trials_dataframe: DataFrame (5, 7)
     visual: null
   catch_outs:
     - Without storage, the study is lost when the session ends.
     - Reusing a study_name raises an error unless load_if_exists is True.
+    - Direction defaults to minimize, so set maximize for a score.
+    - trials_dataframe is empty when no trial has run yet.
   key_settings:
     tier1:
-      - {name: storage, page: null}
-      - {name: sampler, page: null}
-      - {name: pruner, page: null}
-      - {name: study_name, page: null}
+      - name: storage
+        page: null
+        controls: "None keeps the study in memory. A database URL such as sqlite:///file.db saves it."
+        effect: "A saved study can be reloaded later. Saving adds a database and its setup."
+      - name: sampler
+        page: null
+        controls: "Chooses how the next settings are picked. None uses TPESampler."
+        effect: "The default TPE uses earlier scores to pick later settings. Other samplers search differently."
+      - name: pruner
+        page: null
+        controls: "Decides which weak trials stop early. None uses MedianPruner."
+        effect: "Stops poor trials early and saves time, but only when the objective calls report."
+      - name: study_name
+        page: null
+        controls: "The name that identifies the study. None makes a unique name."
+        effect: "A fixed name lets load_study find the same study again."
     tier2:
-      - {name: direction, page: null}
-      - {name: load_if_exists, page: null}
+      - name: direction
+        page: null
+        controls: "minimize or maximize. None means minimize."
+        effect: "A wrong direction makes the search pick the worst trial."
+      - name: load_if_exists
+        page: null
+        controls: "False raises an error for a name already in storage. True reuses that study."
+        effect: "True keeps the old trials, so new trials add to them."
     tier3: []
   watch_it_work: {none: true}
-  intuition: {text: "The notebook for one search. It keeps every try and the best one."}
-  next: []
+  intuition:
+    idea: One object that holds every trial and the best one found so far.
+    analogy: A lab notebook for one experiment, with every run and the best result marked.
+    animation: none
+    goal: Keep every trial in one place, so you can read the best settings later.
+    steps:
+      - Create a study with a direction and a sampler.
+      - Call optimize with an objective and a number of trials.
+      - The sampler picks settings for each trial.
+      - The objective returns one score for those settings.
+      - The study stores each trial with its settings and score.
+      - Read best_params and best_value for the top trial.
+      - Read trials_dataframe for the full table.
+    math:
+      notation:
+        - {symbol: "t", meaning: "The number of one trial, counting from 0."}
+        - {symbol: "v_t", meaning: "The score of trial t, as returned by the objective."}
+        - {symbol: "T", meaning: "The set of all finished trials in the study."}
+        - {symbol: "t*", meaning: "The best trial."}
+      equations:
+        - expression: "t* = argmax over t in T of v_t"
+          meaning: The best trial is the one with the highest score, or the lowest for minimize.
+        - expression: "best_value = v_t*"
+          meaning: study.best_value is the score of that best trial.
+      prediction: "best_params holds the settings of trial t*. The captured output above shows trial 12 scored 0.725."
+    good_at: [keep every trial, reload a saved search, read results later]
+    bad_at: [one fit with no search, results kept after session ends]
+    vs_siblings:
+      - {page: optuna-trial, note: "One try inside the study, not the whole search."}
+      - {page: frozentrial, note: "The saved record of one finished try."}
+    read_more:
+      - Set a study_name and storage to save the search.
+      - Use load_study to reopen it in a new session.
+      - Check the direction before you read best_value.
+  next: [but-when-stop-search]

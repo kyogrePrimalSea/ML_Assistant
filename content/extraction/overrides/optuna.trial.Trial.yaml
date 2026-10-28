@@ -1,0 +1,44 @@
+source_url: https://optuna.readthedocs.io/en/stable/reference/generated/optuna.trial.Trial.html
+reason: Trial is built by Optuna, not by you, so its constructor lists only study and trial_id. The settings
+  you control are arguments of suggest_float and suggest_int, documented in their docstrings (optuna 5.0.0).
+  Added as documented-only parameters, with names and text taken from those docstrings.
+patches:
+- path: parameters
+  op: append
+  value:
+  - name: low
+    param_kind: documented_only
+    required: false
+    default: null
+    effective_default: null
+    type_doc: float or int
+    description: Lower endpoint of the range of suggested values, included in the range. Must be less than
+      or equal to high. If log is True, it must be larger than 0.
+    allowed: {intervals: [], options: [], source: override, types: []}
+  - name: high
+    param_kind: documented_only
+    required: false
+    default: null
+    effective_default: null
+    type_doc: float or int
+    description: Upper endpoint of the range of suggested values, included in the range. Must be greater
+      than or equal to low.
+    allowed: {intervals: [], options: [], source: override, types: []}
+  - name: step
+    param_kind: documented_only
+    required: false
+    default: null
+    effective_default: null
+    type_doc: float or int
+    description: A step of discretization. Cannot be used at the same time as log. The default is None for
+      suggest_float and 1 for suggest_int.
+    allowed: {intervals: [], options: [], source: override, types: []}
+  - name: log
+    param_kind: documented_only
+    required: false
+    default: 'False'
+    effective_default: null
+    type_doc: bool
+    description: Whether to sample the value from the log domain instead of the linear domain. Cannot be
+      used at the same time as step.
+    allowed: {intervals: [], options: [], source: override, types: []}

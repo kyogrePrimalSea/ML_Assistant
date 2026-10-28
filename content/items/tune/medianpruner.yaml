@@ -1,96 +1,267 @@
 id: medianpruner
 plain_name: MedianPruner
 code_name: MedianPruner
-aliases: [median stopping rule]
+aliases:
+- median stopping rule
 stage: tune
 family: tune.watch.prune-relative
-tracks: [standard, time-series]
+tracks:
+- standard
+- time-series
 archetype: tuning
-question_tags: [tune is slow, stop weak trials early]
-targets: [optuna.pruners.MedianPruner]
+question_tags:
+- tune is slow
+- stop weak trials early
+targets:
+- optuna.pruners.MedianPruner
 pairs_with: []
 clashes: []
-source_urls: ['https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.MedianPruner.html']
-library_versions: {optuna: 5.0.0}
+source_urls:
+- https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.MedianPruner.html
+library_versions:
+  optuna: 5.0.0
+  scikit-learn: "1.9.1"
 reviewed: false
 rules:
   task_types: []
   blocked_when: []
   fits_on_data: false
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: tuning, dims: 1, trials: 20}
+    hero:
+      kind: tuning
+      dims: 1
+      trials: 20
     line: Stops a trial that trails the median of earlier trials.
   quick_facts:
     facts:
-      - {label: Default startup trials, value: "5 (n_startup_trials)"}
-      - {label: Compares with, value: "Median of earlier trials, same step"}
+    - label: Default startup trials
+      value: 5 (n_startup_trials)
+    - label: Compares with
+      value: Median of earlier trials, same step
   use_avoid:
-    use_when: [each trial reports steps, many trials, costly fits]
-    avoid_when: [no step-wise reports, only a few trials]
+    use_when:
+    - each trial reports steps
+    - many trials
+    - costly fits
+    avoid_when:
+    - no step-wise reports
+    - only a few trials
   prep:
-    - step: {page: train-test-split}
-      status: recommended
-      why: Keep a final test set the search never sees.
-      condition: null
-      unless: null
+  - step:
+      page: optuna-study
+    status: required
+    why: A pruner is set on a study, so one must exist.
+    condition: null
+    unless: null
+  - step:
+      page: train-test-split
+    status: recommended
+    why: Keep a final test set the search never sees.
+    condition: null
+    unless: null
   code:
-    - library: optuna
-      target: optuna.pruners.MedianPruner
-      why_this_library: Used as pruner= in optuna.create_study.
-      snippet: |
-        # optuna 5.0.0
-        import optuna
-        from sklearn.datasets import make_classification
-        from sklearn.linear_model import SGDClassifier
-        from sklearn.model_selection import train_test_split
+  - library: optuna
+    target: optuna.pruners.MedianPruner
+    why_this_library: Passed to optuna.create_study as pruner=.
+    snippet: |
+      # optuna 5.0.0
+      import collections
 
-        optuna.logging.set_verbosity(optuna.logging.WARNING)
-        X, y = make_classification(n_samples=600, n_features=10, random_state=0)
-        X_train, X_val, y_train, y_val = train_test_split(X, y, random_state=0)
+      import optuna
+      from sklearn.datasets import make_classification
+      from sklearn.linear_model import SGDClassifier
+      from sklearn.model_selection import train_test_split
 
-
-        def objective(trial):
-            alpha = trial.suggest_float("alpha", 1e-5, 1.0, log=True)
-            clf = SGDClassifier(alpha=alpha, random_state=0)
-            for step in range(30):
-                clf.partial_fit(X_train, y_train, classes=[0, 1])
-                score = clf.score(X_val, y_val)
-                trial.report(score, step)
-                if trial.should_prune():
-                    raise optuna.TrialPruned()
-            return score
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+      X, y = make_classification(n_samples=600, n_features=10, random_state=0)
+      X_train, X_val, y_train, y_val = train_test_split(X, y, random_state=0)
 
 
-        pruner = optuna.pruners.MedianPruner()
-        study = optuna.create_study(
-            direction="maximize",
-            sampler=optuna.samplers.TPESampler(seed=0),
-            pruner=pruner,
-        )
-        study.optimize(objective, n_trials=20)
-        pruned = [t for t in study.trials if t.state.name == "PRUNED"]
-        print(len(pruned), "of", len(study.trials), "trials pruned")
+      def objective(trial):
+          alpha = trial.suggest_float("alpha", 1e-5, 1.0, log=True)
+          clf = SGDClassifier(alpha=alpha, random_state=0)
+          for step in range(30):
+              clf.partial_fit(X_train, y_train, classes=[0, 1])
+              score = clf.score(X_val, y_val)
+              trial.report(score, step)
+              if trial.should_prune():
+                  raise optuna.TrialPruned()
+          return score
+
+
+      pruner = optuna.pruners.MedianPruner()
+      study = optuna.create_study(
+          direction="maximize",
+          sampler=optuna.samplers.TPESampler(seed=0),
+          pruner=pruner,
+      )
+      study.optimize(objective, n_trials=20)
+      counts = collections.Counter(t.state.name for t in study.trials)
+      print("trials:", len(study.trials))
+      print("states:", dict(sorted(counts.items())))
+      print("best_value:", round(study.best_value, 3))
+    output: |
+      trials: 20
+      states: {'COMPLETE': 5, 'PRUNED': 15}
+      best_value: 0.967
   what_comes_out:
     items:
-      - {name: prune, kind: method, task: null, shape: "bool", note: "Called by Optuna. Your code uses should_prune()."}
-    next_step: null
+    - name: prune
+      kind: method
+      task: null
+      shape: scalar
+      object_type: bool
+      example: 'True'
+      shape_explanation: A single true or false value, not an array. It has no rows or columns. True means stop the trial, False means let it continue. The example is True, so its shape is scalar.
+      note: Optuna calls this, not your code. Use should_prune() on the trial.
+    - name: study.trials
+      kind: return
+      task: null
+      shape: (n_trials,) list of FrozenTrial
+      object_type: list
+      example: '[FrozenTrial, FrozenTrial, FrozenTrial]'
+      shape_explanation: A one-dimensional list with one FrozenTrial for each trial, in trial-number order. The trailing comma in (n_trials,) means one dimension. n_trials is the number of trials run. The example has 3 trials, so its concrete shape is (3,).
+      note: 'Each trial has a state: COMPLETE, PRUNED or FAIL.'
+    - name: t.state
+      kind: return
+      task: null
+      shape: scalar
+      object_type: TrialState
+      example: TrialState.PRUNED
+      shape_explanation: A scalar is one value, not an array. It has no rows or columns. It names the outcome of one trial. The example is one state, so its shape is scalar.
+      note: Read it as t.state.name, for example COMPLETE or PRUNED.
+    - name: study.best_value
+      kind: return
+      task: null
+      shape: scalar
+      object_type: float
+      example: '0.91'
+      shape_explanation: A scalar is one value, not an array. It has no rows or columns. The example is the single number 0.91, so its shape is scalar.
+      note: Best of the COMPLETE trials. Pruned trials never set it.
+    next_step: Pass it to optuna.create_study as pruner=.
+    snippet: |
+      # optuna 5.0.0
+      import collections
+
+      import optuna
+      from sklearn.datasets import make_classification
+      from sklearn.linear_model import SGDClassifier
+      from sklearn.model_selection import train_test_split
+
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+      X, y = make_classification(n_samples=600, n_features=10, random_state=0)
+      X_train, X_val, y_train, y_val = train_test_split(X, y, random_state=0)
+
+
+      def objective(trial):
+          alpha = trial.suggest_float("alpha", 1e-5, 1.0, log=True)
+          clf = SGDClassifier(alpha=alpha, random_state=0)
+          for step in range(30):
+              clf.partial_fit(X_train, y_train, classes=[0, 1])
+              score = clf.score(X_val, y_val)
+              trial.report(score, step)
+              if trial.should_prune():
+                  raise optuna.TrialPruned()
+          return score
+
+
+      pruner = optuna.pruners.MedianPruner()
+      study = optuna.create_study(
+          direction="maximize",
+          sampler=optuna.samplers.TPESampler(seed=0),
+          pruner=pruner,
+      )
+      study.optimize(objective, n_trials=20)
+      print("best_value:", round(study.best_value, 3))
+      for t in study.trials[:6]:
+          print(t.number, t.state.name, len(t.intermediate_values), "steps")
+    snippet_library: optuna
+    output: |
+      best_value: 0.967
+      0 COMPLETE 30 steps
+      1 COMPLETE 30 steps
+      2 COMPLETE 30 steps
+      3 COMPLETE 30 steps
+      4 COMPLETE 30 steps
+      5 PRUNED 1 steps
     visual: null
   catch_outs:
-    - Pruning waits until n_startup_trials trials have finished.
-    - Pruning is off until step n_warmup_steps.
-    - Your objective must call trial.report and should_prune.
+  - Pruning waits until n_startup_trials trials have finished.
+  - Pruning is off until step n_warmup_steps.
+  - Your objective must call trial.report and should_prune.
+  - Pruned trials are not the best; judge the finished ones.
   key_settings:
     tier1:
-      - {name: n_startup_trials, page: null}
-      - {name: n_warmup_steps, page: null}
+    - name: n_startup_trials
+      page: null
+      controls: Trials that must finish before any trial can be pruned. Default is 5.
+      effect: A higher number avoids judging on too few trials, but more trials run to the end.
+    - name: n_warmup_steps
+      page: null
+      controls: Steps at the start of each trial that are never pruned. Default is 0.
+      effect: Use it when early steps are noisy. Pruning cannot happen before this step.
     tier2:
-      - {name: interval_steps, page: null}
-      - {name: n_min_trials, page: null}
+    - name: interval_steps
+      page: null
+      controls: Steps between pruning checks, counted after the warmup. Default is 1.
+      effect: A larger interval checks less often, so a weak trial may run longer before it stops.
+    - name: n_min_trials
+      page: null
+      controls: Trials that must have reported at a step before a check runs. Default is 1.
+      effect: A higher number stops the check from judging against too few other trials.
     tier3: []
-  watch_it_work: {none: true}
+  watch_it_work:
+    none: true
   intuition:
-    text: Stop a trial that is behind the middle of the earlier trials.
-  next: []
+    idea: Stop a trial whose best result so far is below the median of earlier trials at that step.
+    analogy: A race where any runner behind the middle of the pack at the same lap is dropped.
+    animation: none
+    goal: Spend steps on settings that look promising, and stop the rest early.
+    steps:
+    - Run the first trials in full, as set by n_startup_trials.
+    - After each step, take the trial's best reported value so far.
+    - Find the median of the earlier trials' values at that same step.
+    - Prune the trial if its best value is below that median.
+    - Otherwise, let the trial run on to the next step.
+    - Record the trial as PRUNED, or as COMPLETE when it finishes.
+    math:
+      notation:
+      - symbol: s
+        meaning: The current step, counting from 0.
+      - symbol: t
+        meaning: The trial being checked.
+      - symbol: b_t(s)
+        meaning: Trial t's best reported value up to step s. Highest is best when maximizing.
+      - symbol: M(s)
+        meaning: The median of completed trials' reported values at step s.
+      equations:
+      - expression: prune t if b_t(s) < M(s)   (maximize)
+        meaning: A trial below the median at the same step is stopped.
+      - expression: M(s) = median of the values reported at step s by completed trials
+        meaning: The middle value among earlier trials at the same step. NaN values are ignored.
+      prediction: A pruned trial stops at step s with state PRUNED. A trial that stays above the median runs on.
+    good_at:
+    - many trials
+    - steps reported each time
+    - no tuning of the rule
+    bad_at:
+    - few trials
+    - noisy early steps
+    vs_siblings:
+    - page: percentilepruner
+      note: Same idea with a cut-off you choose, not the median.
+    - page: successivehalvingpruner
+      note: Judges trials at fixed rung steps, not every step.
+    - page: wilcoxonpruner
+      note: Compares fold by fold, for per-fold scores.
+    read_more:
+    - Report a value at each step with trial.report.
+    - Let should_prune decide, and raise optuna.TrialPruned when it returns True.
+    - The reference page lists every argument and the NaN rule.
+  next:
+  - but-slow-fits

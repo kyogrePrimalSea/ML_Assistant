@@ -42,6 +42,11 @@ slots:
     why: Trees split on order, not size.
     condition: null
     unless: null
+  - step: {page: timeseriessplit}
+    status: recommended
+    why: Pass it as cv so folds never train on future rows.
+    condition: {time_ordered: true}
+    unless: null
   code:
   - library: scikit-learn
     target: sklearn.model_selection.HalvingGridSearchCV
@@ -60,38 +65,250 @@ slots:
           param_grid={"max_depth": [2, 4, 6, 8], "min_samples_leaf": [1, 5, 10]},
           factor=2,
           cv=3,
+          n_jobs=1,
           random_state=0,
       )
       search.fit(X, y)
-      print(search.best_params_)
-      print(round(search.best_score_, 3))
+      print("best_params_:", search.best_params_)
+      print("best_score_:", round(search.best_score_, 3))
+      print("n_candidates_:", search.n_candidates_)
+      print("n_resources_:", search.n_resources_)
+    output: |
+      best_params_: {'max_depth': 6, 'min_samples_leaf': 5}
+      best_score_: 0.919
+      n_candidates_: [12, 6, 3, 2]
+      n_resources_: [71, 142, 284, 568]
+
   what_comes_out:
     items:
-    - {name: fit, kind: method, task: null, shape: self, note: Runs all halving rounds.}
-    - {name: predict, kind: method, task: null, shape: '(n_samples,)', note: Uses the best settings found.}
-    - {name: best_params_, kind: attribute, task: null, shape: dict, note: Winning settings.}
-    - {name: best_score_, kind: attribute, task: null, shape: float, note: Cross-validated score of the winner.}
-    - {name: best_estimator_, kind: attribute, task: null, shape: estimator, note: Refit on all rows when refit is True.}
-    - {name: cv_results_, kind: attribute, task: null, shape: dict of arrays, note: 'One column per setting, one row per candidate.'}
+      - name: predict_proba
+        kind: method
+        task: classification
+        shape: "(n_samples, n_classes)"
+        object_type: numpy.ndarray
+        example: "[[0.90, 0.10],\n [0.20, 0.80]]"
+        shape_explanation: >-
+          A two-dimensional table. The shape is written as (rows, columns), in that order.
+          n_samples is the number of input rows or cases being predicted. n_classes is the
+          number of possible categories. The example has 2 cases and 2 classes, so its
+          concrete shape is (2, 2).
+        note: "From best_estimator_. One column per class, in classes_ order."
+      - name: predict
+        kind: method
+        task: null
+        shape: "(n_samples,)"
+        object_type: numpy.ndarray
+        example: "[0, 1]"
+        shape_explanation: >-
+          A one-dimensional array. n_samples is the number of input rows or cases being
+          predicted. There is one prediction for each case: a class label for a classifier,
+          a number for a regressor. The trailing comma in (n_samples,) means the array has
+          one dimension. The example contains 2 predictions, so its concrete shape is (2,).
+        note: "Uses best_estimator_. Needs refit to stay on."
+      - name: n_candidates_
+        kind: attribute
+        task: null
+        shape: "(n_iterations,)"
+        object_type: list
+        example: "[12, 4, 2]"
+        shape_explanation: >-
+          A list with one whole number per round, not a table. n_iterations is the number
+          of rounds the search ran. The example has 3 rounds, so the list has 3 numbers.
+          Each number counts the candidates tried in that round.
+        note: "Candidates tried in each round, first round first."
+      - name: n_resources_
+        kind: attribute
+        task: null
+        shape: "(n_iterations,)"
+        object_type: list
+        example: "[50, 150, 450]"
+        shape_explanation: >-
+          A list with one whole number per round. Each number counts the resource, here
+          rows, that each candidate used in that round. The example has 3 rounds, so the
+          list has 3 numbers, and each round uses 3 times the rows of the one before.
+        note: "Rows each candidate used in each round."
+      - name: best_params_
+        kind: attribute
+        task: null
+        shape: "dict"
+        object_type: dict
+        example: "{'max_depth': 6, 'min_samples_leaf': 5}"
+        shape_explanation: >-
+          A dictionary has no rows or columns. Each key is a setting name from param_grid.
+          Each value is the choice that scored best for that setting. The example has 2 keys,
+          because its grid had 2 settings.
+        note: "The winning combination. Pass it to a fresh model with set_params."
+      - name: best_score_
+        kind: attribute
+        task: null
+        shape: "scalar"
+        object_type: float
+        example: "0.919"
+        shape_explanation: >-
+          A scalar is one value, not an array. It has no rows or columns. The example is
+          the single number 0.919, so its shape is scalar.
+        note: "Mean cross-validated score of the winner. Not a test score."
+      - name: best_estimator_
+        kind: attribute
+        task: null
+        shape: "fitted estimator"
+        object_type: sklearn estimator
+        example: "DecisionTreeClassifier(max_depth=6, min_samples_leaf=5)"
+        shape_explanation: >-
+          One fitted model object, not an array. It was refit on every training row using
+          best_params_. If you passed a Pipeline, this is the whole fitted Pipeline.
+        note: "Missing when refit=False."
+      - name: cv_results_
+        kind: attribute
+        task: null
+        shape: "dict of (n_rows,) arrays"
+        object_type: dict
+        example: "{'iter': [0, 0, 1],\n 'mean_test_score': [0.88, 0.91, 0.93]}"
+        shape_explanation: >-
+          A dictionary of columns. Each key is a column name, and each value is an array with
+          one entry per candidate in each round. n_rows counts all of those entries across
+          every round. The example has 3 rows, so each array has length 3. The iter column
+          gives the round number for each row.
+        note: "One row per candidate per round. Column iter gives the round."
     next_step: Check cv_results_ before trusting the winner.
+    snippet: |
+      # scikit-learn 1.9.1
+      import numpy as np
+      from sklearn.datasets import load_breast_cancer
+      from sklearn.experimental import enable_halving_search_cv  # noqa: F401
+      from sklearn.model_selection import HalvingGridSearchCV, train_test_split
+      from sklearn.tree import DecisionTreeClassifier
+
+      X, y = load_breast_cancer(return_X_y=True)
+      X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+      search = HalvingGridSearchCV(
+          DecisionTreeClassifier(random_state=0),
+          param_grid={"max_depth": [2, 4, 6, 8], "min_samples_leaf": [1, 5, 10]},
+          factor=2,
+          cv=3,
+          n_jobs=1,
+          random_state=0,
+      ).fit(X_train, y_train)
+
+      y_proba = search.predict_proba(X_test[:3])
+      y_pred = search.predict(X_test[:3])
+      print("best_params_:", search.best_params_)
+      print("best_score_:", round(search.best_score_, 3))
+      print("n_candidates_:", search.n_candidates_)
+      print("n_resources_:", search.n_resources_)
+      print("best_index_:", search.best_index_)
+      print("cv_results_ rows:", len(search.cv_results_["params"]))
+      print("classification y_proba:")
+      print(np.round(y_proba, 3))
+      print("classification y_pred:", y_pred)
+    snippet_library: scikit-learn
+    output: |
+      best_params_: {'max_depth': 8, 'min_samples_leaf': 1}
+      best_score_: 0.894
+      n_candidates_: [12, 6, 3, 2]
+      n_resources_: [53, 106, 212, 424]
+      best_index_: 22
+      cv_results_ rows: 23
+      classification y_proba:
+      [[1. 0.]
+       [0. 1.]
+       [0. 1.]]
+      classification y_pred: [0 1 1]
+
     visual: null
-  catch_outs: [Needs the experimental import line in scikit-learn 1.9.1., 'Early rounds use fewer rows, so scores are rougher.', 'Scores come from cross-validation, not a test set.']
+  catch_outs: ['The scikit-learn guide shows candidates divided by factor and rounded down, but the code rounds up.', Needs the experimental import line in scikit-learn 1.9.1., 'Early rounds use fewer rows, so scores are rougher.', 'Scores come from cross-validation, not a test set.', 'Only tries the settings you list, never values in between.']
   key_settings:
     tier1:
-    - {name: cv, page: null}
-    - {name: min_resources, page: null}
-    - {name: refit, page: null}
-    - {name: aggressive_elimination, page: null}
+    - name: cv
+      page: null
+      controls: "How the training rows are split into folds. The default is 5 folds."
+      effect: More folds give steadier scores, but every candidate costs more fits.
+    - name: min_resources
+      page: null
+      controls: "The rows each candidate gets in round one. 'exhaust' gives the last round the most rows."
+      effect: A small start, such as 'smallest', makes early rounds faster, but early scores are rougher.
+    - name: refit
+      page: null
+      controls: Whether the winner is refit on all training rows at the end.
+      effect: On gives best_estimator_ and predict, for one extra fit.
+    - name: aggressive_elimination
+      page: null
+      controls: "Replays the first round until few enough candidates remain for the last round."
+      effect: Keeps the last round small, but adds rounds, so more fits run.
     tier2:
-    - {name: return_train_score, page: null}
-    - {name: scoring, page: null}
-    - {name: resource, page: null}
-    - {name: param_grid, page: null}
+    - name: return_train_score
+      page: null
+      controls: "Whether cv_results_ also stores scores on the training folds. The default here is True."
+      effect: A gap to the test score shows overfitting, but scoring takes extra time.
+    - name: scoring
+      page: null
+      controls: "The score used to rank candidates. None uses the estimator's own score."
+      effect: Pick the metric you will report, or the search may favour the wrong one.
+    - name: resource
+      page: null
+      controls: "What grows each round. The default is the number of rows."
+      effect: Growing a model setting such as n_estimators needs max_resources set by hand.
+    - name: param_grid
+      page: null
+      controls: The settings to try and the values to try for each.
+      effect: Every extra value adds candidates to round one, so the first round costs more.
     tier3:
-    - {name: error_score, page: null}
-    - {name: factor, page: null}
-    - {name: max_resources, page: null}
-    - {name: estimator, page: null}
+    - name: error_score
+      page: null
+      controls: "The score recorded when one fit fails. The default is nan."
+      effect: "'raise' stops at the first failure instead of hiding it."
+    - name: factor
+      page: null
+      controls: "The share kept each round: one candidate in every factor."
+      effect: A bigger factor cuts faster and runs fewer rounds, but risks dropping a good candidate early.
+    - name: max_resources
+      page: null
+      controls: "The most rows any candidate can use. 'auto' means all rows when resource is n_samples."
+      effect: A lower cap makes each round cheaper, but the final scores use fewer rows.
+    - name: estimator
+      page: null
+      controls: The model or Pipeline whose settings are searched.
+      effect: A Pipeline keeps preprocessing inside each fold, using step__setting names.
   watch_it_work: {none: true}
-  intuition: {text: 'Give every option a small budget, keep the best few, give them more.'}
-  next: []
+  intuition:
+    idea: Give every setting a small share of the rows, then give the best ones more.
+    analogy: A cooking contest where weak dishes are cut after each tasting, and the rest get a bigger tasting.
+    animation: none
+    goal: Compare every setting in the grid, but spend most of the time on the strongest ones.
+    steps:
+      - Build every combination from param_grid.
+      - Give every combination a small share of the rows.
+      - Score each combination with cross-validation.
+      - Keep the best 1 in factor combinations.
+      - Give the survivors factor times as many rows.
+      - Repeat until the survivors have used the largest share of rows.
+      - Refit the winner on all training rows, when refit is on.
+    math:
+      notation:
+        - {symbol: "C", meaning: "The number of combinations in param_grid."}
+        - {symbol: "f", meaning: "The factor setting, such as 2 or 3."}
+        - {symbol: "i", meaning: "The round number, starting at 0."}
+        - {symbol: "n_i", meaning: "How many candidates are tried in round i."}
+        - {symbol: "r_i", meaning: "How many rows each candidate uses in round i."}
+        - {symbol: "⌈x⌉", meaning: "x rounded up to a whole number."}
+      equations:
+        - expression: "n_0 = C"
+          meaning: The first round tries every combination.
+        - expression: "n_(i+1) = ⌈n_i / f⌉"
+          meaning: Each round keeps about one candidate in every f.
+        - expression: "r_(i+1) = f × r_i"
+          meaning: Each survivor gets f times as many rows in the next round.
+      prediction: "With refit on, predict uses the winner. Example: 12 combinations with factor 2 leave 6, then 3, then 2."
+    good_at: [many settings, slow fits, a fast first pass]
+    bad_at: [tiny datasets, noisy early scores, very fast fits]
+    vs_siblings:
+      - {page: gridsearchcv, note: "Same grid, but every combination gets the full rows."}
+      - {page: halvingrandomsearchcv, note: "Same halving, but draws random settings."}
+      - {page: randomizedsearchcv, note: "Random draws, with full cross-validation on each."}
+    read_more:
+      - Try every setting on a small share of rows.
+      - Keep the best few and give them more rows.
+      - Stop when the survivors have the largest share.
+      - Check cv_results_ before trusting the winner.
+  next: [but-slow-fits]

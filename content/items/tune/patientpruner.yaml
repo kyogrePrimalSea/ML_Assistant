@@ -11,7 +11,7 @@ targets: [optuna.pruners.PatientPruner]
 pairs_with: [medianpruner]
 clashes: []
 source_urls: ['https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.PatientPruner.html']
-library_versions: {optuna: 5.0.0}
+library_versions: {optuna: 5.0.0, scikit-learn: 1.9.1}
 reviewed: false
 rules:
   task_types: []
@@ -25,8 +25,9 @@ slots:
     line: Waits for a run of steps with no gain before pruning.
   quick_facts:
     facts:
-      - {label: Wraps, value: "Another pruner (required)"}
+      - {label: Wraps, value: "Another pruner, or None"}
       - {label: Default min_delta, value: "0.0"}
+      - {label: Patience, value: "Required, counts steps"}
   use_avoid:
     use_when: [scores bounce around, gains come in slow steps]
     avoid_when: [scores improve every step, few steps per trial]
@@ -39,10 +40,11 @@ slots:
   code:
     - library: optuna
       target: optuna.pruners.PatientPruner
-      why_this_library: Used as pruner= in optuna.create_study.
+      why_this_library: Pass it as pruner= to optuna.create_study.
       snippet: |
         # optuna 5.0.0
         import optuna
+        from collections import Counter
         from sklearn.datasets import make_classification
         from sklearn.linear_model import SGDClassifier
         from sklearn.model_selection import train_test_split
@@ -65,7 +67,7 @@ slots:
 
 
         pruner = optuna.pruners.PatientPruner(
-            optuna.pruners.MedianPruner(), patience=3
+            optuna.pruners.MedianPruner(), patience=2
         )
         study = optuna.create_study(
             direction="maximize",
@@ -73,25 +75,124 @@ slots:
             pruner=pruner,
         )
         study.optimize(objective, n_trials=20)
-        pruned = [t for t in study.trials if t.state.name == "PRUNED"]
-        print(len(pruned), "of", len(study.trials), "trials pruned")
+        states = Counter(t.state.name for t in study.trials)
+        print("states:", dict(sorted(states.items())))
+        print(states["PRUNED"], "of", len(study.trials), "trials pruned")
+      output: |
+        states: {'COMPLETE': 19, 'PRUNED': 1}
+        1 of 20 trials pruned
   what_comes_out:
     items:
-      - {name: prune, kind: method, task: null, shape: "bool", note: "Called by Optuna. Your code uses should_prune()."}
-    next_step: null
+      - name: prune
+        kind: method
+        task: null
+        shape: "scalar"
+        object_type: bool
+        example: "True"
+        shape_explanation: >-
+          A single True or False, not an array. Optuna calls prune() after each
+          report. It asks the patience rule first, then the wrapped pruner. The
+          example is one True, so its shape is scalar.
+        note: "Called by Optuna after each report. Your code uses should_prune()."
+      - name: trial.should_prune()
+        kind: return
+        task: null
+        shape: "scalar"
+        object_type: bool
+        example: "True"
+        shape_explanation: >-
+          A single True or False, not an array. It reads the pruner's answer for
+          the latest reported step. True means stop the trial. The example is one
+          True, so its shape is scalar.
+        note: "The pruner's answer for the latest reported step."
+      - name: trial.state
+        kind: return
+        task: null
+        shape: "scalar"
+        object_type: optuna.trial.TrialState
+        example: "TrialState.PRUNED"
+        shape_explanation: >-
+          One enum member, not an array. It names how a trial ended, such as
+          COMPLETE or PRUNED. The example is one member, so its shape is scalar.
+        note: "Read it on each trial in study.trials."
+    next_step: Count the states in study.trials to see what stopped early.
+    snippet: |
+      # optuna 5.0.0
+      import optuna
+
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+      pruner = optuna.pruners.PatientPruner(None, patience=2)
+      study = optuna.create_study(direction="maximize", pruner=pruner)
+      trial = study.ask()
+      for step, value in enumerate([0.9, 0.8, 0.8, 0.8, 0.8]):
+          trial.report(value, step)
+          print("step", step, "value", value, "should_prune:", trial.should_prune())
+    snippet_library: optuna
+    output: |
+      step 0 value 0.9 should_prune: False
+      step 1 value 0.8 should_prune: False
+      step 2 value 0.8 should_prune: False
+      step 3 value 0.8 should_prune: True
+      step 4 value 0.8 should_prune: True
     visual: null
   catch_outs:
     - Patience counts steps, not trials.
-    - With no wrapped pruner, it prunes on its own.
-    - min_delta must be zero or more.
+    - It needs at least patience + 2 reported steps before it can prune.
+    - With no wrapped pruner, it prunes on patience alone.
+    - min_delta must be zero or more, or the pruner raises ValueError.
+    - PatientPruner is experimental, so Optuna prints an ExperimentalWarning.
   key_settings:
     tier1:
-      - {name: wrapped_pruner, page: null}
-      - {name: patience, page: null}
+      - name: wrapped_pruner
+        page: null
+        controls: "The pruner that makes the final call once patience has run out. None prunes on patience alone."
+        effect: "Patience only decides when to ask. The wrapped pruner decides whether the trial stops."
+      - name: patience
+        page: null
+        controls: "How many recent steps a trial may go without beating its earlier best."
+        effect: "Small values prune sooner. Large values let noisy trials run longer before they stop."
     tier2:
-      - {name: min_delta, page: null}
+      - name: min_delta
+        page: null
+        controls: "How far the recent best may fall short of the earlier best before it counts as no gain."
+        effect: "A larger value forgives small dips, so fewer trials are pruned."
     tier3: []
   watch_it_work: {none: true}
   intuition:
-    text: Give a trial a few steps to recover before it is judged.
+    idea: Let a trial go a few steps without a gain before a pruning rule is applied.
+    analogy: A coach who waits a few laps before pulling a runner who has stopped improving.
+    animation: none
+    goal: Stop a trial that has stalled, without reacting to one bad step.
+    steps:
+      - Read the scores reported at every step so far.
+      - Do nothing until the trial has more than patience + 1 scores.
+      - Split the scores into earlier steps and the last patience + 1 steps.
+      - Compare the best recent score with the best earlier score, allowing min_delta.
+      - If the recent best falls short by more than min_delta, flag the trial.
+      - A flagged trial goes to the wrapped pruner, or is pruned when none is set.
+      - Otherwise the trial continues.
+    math:
+      notation:
+        - {symbol: "P", meaning: "The number of patience steps, set by patience."}
+        - {symbol: "δ", meaning: "The tolerance, set by min_delta. Zero or more."}
+        - {symbol: "B", meaning: "The scores at the earlier steps, before the last P + 1."}
+        - {symbol: "A", meaning: "The scores at the last P + 1 steps."}
+      equations:
+        - expression: "check runs only when count(B) + count(A) > P + 1"
+          meaning: No decision is made until the trial has more than P + 1 scored steps.
+        - expression: "flag = (max(B) - δ > max(A))"
+          meaning: For a maximize study, the trial is flagged when its recent best falls more than δ short of its earlier best.
+        - expression: "flag = (min(B) + δ < min(A))"
+          meaning: For a minimize study, the same test is applied in the other direction.
+      prediction: "With patience=2 and maximize, scores of 0.9 then 0.8 flag the trial at step 3, and it stops there."
+    good_at: [noisy scores, slow gains]
+    bad_at: [scores that improve every step, very few steps]
+    vs_siblings:
+      - {page: thresholdpruner, note: "Uses a fixed line, not a stall in progress."}
+      - {page: medianpruner, note: "Often the wrapped pruner; PatientPruner adds the patience wait."}
+      - {page: noppruner, note: "Never stops a trial, so no patience wait is needed."}
+    read_more:
+      - Set patience to the number of steps you can wait.
+      - Wrap a MedianPruner, or pass None to prune on patience alone.
+      - The class is marked experimental, so it prints a warning.
   next: []

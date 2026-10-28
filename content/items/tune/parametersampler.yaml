@@ -11,7 +11,7 @@ targets: [sklearn.model_selection.ParameterSampler]
 pairs_with: []
 clashes: []
 source_urls: ['https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.ParameterSampler.html']
-library_versions: {scikit-learn: 1.9.1}
+library_versions: {scikit-learn: 1.9.1, scipy: 1.18.1}
 reviewed: false
 rules:
   task_types: []
@@ -63,18 +63,111 @@ slots:
           model = DecisionTreeClassifier(random_state=0, **params)
           score = cross_val_score(model, X, y, cv=3).mean()
           print(params, round(score, 3))
+    output: |
+      {'max_depth': 7, 'min_samples_leaf': 1} 0.898
+      {'max_depth': 5, 'min_samples_leaf': 4} 0.924
+      {'max_depth': 9, 'min_samples_leaf': 4} 0.914
+      {'max_depth': 7, 'min_samples_leaf': 3} 0.909
+
   what_comes_out:
     items:
-    - {name: ParameterSampler, kind: return, task: null, shape: one dict per draw, note: Yields n_iter dicts. Loop over it.}
+    - name: for params in sampler
+      kind: return
+      task: null
+      shape: "n_iter dicts"
+      object_type: dict
+      example: "{'max_depth': 7, 'min_samples_leaf': 3}"
+      shape_explanation: >-
+        Looping gives one dictionary per draw, with no rows or columns. n_iter is the number
+        of draws you asked for. The example is one dictionary, from a sampler set to 4 draws,
+        so the loop yields 4 dictionaries in total.
+      note: "One dict per draw. Loop over the sampler to reach each setting."
+    - name: len(sampler)
+      kind: return
+      task: null
+      shape: "scalar"
+      object_type: int
+      example: "4"
+      shape_explanation: >-
+        A scalar is one value, not an array. It counts the draws. The example is the single
+        integer 4, so its shape is scalar.
+      note: "Equals n_iter, the number of draws."
     next_step: Fit one model per dict and score it.
+    snippet: |
+      # scikit-learn 1.9.1
+      from scipy.stats import randint
+      from sklearn.model_selection import ParameterSampler
+
+      sampler = ParameterSampler(
+          {"max_depth": randint(2, 12), "min_samples_leaf": randint(1, 10)},
+          n_iter=4,
+          random_state=0,
+      )
+      print("len(sampler):", len(sampler))
+      for params in sampler:
+          print(params)
+    snippet_library: scikit-learn
+    output: |
+      len(sampler): 4
+      {'max_depth': 7, 'min_samples_leaf': 1}
+      {'max_depth': 5, 'min_samples_leaf': 4}
+      {'max_depth': 9, 'min_samples_leaf': 4}
+      {'max_depth': 7, 'min_samples_leaf': 3}
+
     visual: null
-  catch_outs: [Set random_state or the draws change each run., Samples settings only. It does not fit or score a model.]
+  catch_outs:
+    - Set random_state or the draws change each run.
+    - Samples settings only. It does not fit or score a model.
+    - Lists draw without repeats, but a distribution can repeat a value.
   key_settings:
     tier1:
-    - {name: param_distributions, page: null}
-    - {name: n_iter, page: null}
-    tier2: []
+    - name: param_distributions
+      page: null
+      controls: "The settings to draw from. A list is sampled uniformly. A distribution must have an rvs method."
+      effect: A list draws without replacement, while a distribution can repeat a draw.
+    - name: n_iter
+      page: null
+      controls: "How many settings are produced."
+      effect: More draws cover more of the range, but each one costs a fit when you score it.
+    tier2:
+    - name: random_state
+      page: null
+      controls: "The seed for the draws. An int gives the same draws every run."
+      effect: Without a seed, each run draws different settings.
     tier3: []
   watch_it_work: {none: true}
-  intuition: {text: Draw settings from distributions instead of listing them all.}
+  intuition:
+    idea: Draw random settings from ranges, instead of listing every one.
+    analogy: Drawing slips of paper from a hat, one slip for each trial.
+    animation: none
+    goal: Get a fixed number of random settings to try in your own loop.
+    steps:
+      - Give each setting a list of values or a distribution.
+      - Set n_iter, the number of draws.
+      - Draw one value for each setting, using the list or distribution.
+      - Yield one dictionary per draw.
+      - Fit and score each dictionary in your own loop.
+    math:
+      notation:
+        - {symbol: "N", meaning: "The number of draws, set by n_iter."}
+        - {symbol: "n_j", meaning: "How many values are listed for setting j, when it is a list."}
+        - {symbol: "x_j", meaning: "The value drawn for setting j in one draw."}
+      equations:
+        - expression: "draws = N"
+          meaning: The sampler yields exactly n_iter dictionaries.
+        - expression: "P(x_j = v) = 1 / n_j"
+          meaning: For a list, every listed value has the same chance of being drawn.
+        - expression: "x_j = rvs(distribution_j)"
+          meaning: For a distribution, each draw comes from the distribution's rvs method.
+      prediction: "Example: n_iter = 4 gives 4 dictionaries, and the loop fits 4 models."
+    good_at: [custom loops, random settings, wide ranges]
+    bad_at: [complete coverage, exhaustive checks, fitting models itself]
+    vs_siblings:
+      - {page: randomizedsearchcv, note: "Draws settings, then fits and scores them for you."}
+      - {page: parametergrid, note: "Lists every setting, with no random draws."}
+    read_more:
+      - Give each setting a list or a distribution.
+      - Draw n_iter settings.
+      - Loop over the draws and fit each one.
+      - Score each one yourself.
   next: []

@@ -58,17 +58,112 @@ slots:
           model = DecisionTreeClassifier(random_state=0, **params)
           score = cross_val_score(model, X, y, cv=3).mean()
           print(params, round(score, 3))
+    output: |
+      {'max_depth': 2, 'min_samples_leaf': 1} 0.912
+      {'max_depth': 2, 'min_samples_leaf': 10} 0.917
+      {'max_depth': 4, 'min_samples_leaf': 1} 0.921
+      {'max_depth': 4, 'min_samples_leaf': 10} 0.921
+      {'max_depth': 6, 'min_samples_leaf': 1} 0.914
+      {'max_depth': 6, 'min_samples_leaf': 10} 0.921
+
   what_comes_out:
     items:
-    - {name: ParameterGrid, kind: return, task: null, shape: one dict per setting, note: Each dict is one setting to try.}
+    - name: for params in grid
+      kind: return
+      task: null
+      shape: "n_settings dicts"
+      object_type: dict
+      example: "{'max_depth': 4, 'min_samples_leaf': 10}"
+      shape_explanation: >-
+        Looping gives one dictionary per setting, with no rows or columns. n_settings is the
+        product of the list lengths. The example is one dictionary, from a grid of 6 settings,
+        so the loop yields 6 dictionaries in total.
+      note: "Each dict is one setting to fit. Loop over the grid to reach them."
+    - name: len(grid)
+      kind: return
+      task: null
+      shape: "scalar"
+      object_type: int
+      example: "6"
+      shape_explanation: >-
+        A scalar is one value, not an array. It counts the settings in the grid. The example
+        is the single integer 6, so its shape is scalar.
+      note: "The product of the list lengths: 3 by 2 gives 6."
+    - name: grid[i]
+      kind: return
+      task: null
+      shape: "dict"
+      object_type: dict
+      example: "{'max_depth': 4, 'min_samples_leaf': 10}"
+      shape_explanation: >-
+        A dictionary has no rows or columns. Each key is a setting name from the grid. Each
+        value is one listed value for that setting. The example has 2 keys, because the grid
+        had 2 settings.
+      note: "Indexing gives one setting directly, counting from 0."
     next_step: Fit one model per dict and score it.
+    snippet: |
+      # scikit-learn 1.9.1
+      from sklearn.model_selection import ParameterGrid
+
+      grid = ParameterGrid({"max_depth": [2, 4, 6], "min_samples_leaf": [1, 10]})
+      print("len(grid):", len(grid))
+      print("grid[1]:", grid[1])
+      for params in grid:
+          print(params)
+    snippet_library: scikit-learn
+    output: |
+      len(grid): 6
+      grid[1]: {'min_samples_leaf': 10, 'max_depth': 2}
+      {'max_depth': 2, 'min_samples_leaf': 1}
+      {'max_depth': 2, 'min_samples_leaf': 10}
+      {'max_depth': 4, 'min_samples_leaf': 1}
+      {'max_depth': 4, 'min_samples_leaf': 10}
+      {'max_depth': 6, 'min_samples_leaf': 1}
+      {'max_depth': 6, 'min_samples_leaf': 10}
+
     visual: null
-  catch_outs: ['Each list multiplies the count: 3 by 2 gives 6.', Discrete values only. Use a sampler for ranges.]
+  catch_outs:
+    - 'Each list multiplies the count: 3 by 2 gives 6.'
+    - Discrete values only. Use a sampler for ranges.
+    - It only lists settings. It does not fit or score any model.
   key_settings:
     tier1:
-    - {name: param_grid, page: null}
+    - name: param_grid
+      page: null
+      controls: "The settings to try, and the list of values to try for each one."
+      effect: Every extra value multiplies the number of settings, so long lists grow fast.
     tier2: []
     tier3: []
   watch_it_work: {none: true}
-  intuition: {text: 'Write out every combination on a list, then try each one.'}
+  intuition:
+    idea: Write out every combination of your settings, one dictionary each.
+    analogy: A menu card that lists every meal you can build from the options on offer.
+    animation: none
+    goal: List every combination of settings, so you can try each one.
+    steps:
+      - List the values to try for each setting.
+      - Build every combination of those values.
+      - Give each combination back as one dictionary.
+      - Loop over the dictionaries and fit a model for each one.
+    math:
+      notation:
+        - {symbol: "p", meaning: "The number of settings in param_grid."}
+        - {symbol: "n_1 ... n_p", meaning: "How many values you listed for each setting."}
+        - {symbol: "C", meaning: "The number of combinations, which is the number of dictionaries."}
+      equations:
+        - expression: "C = n_1 × n_2 × ... × n_p"
+          meaning: Every extra value in any list multiplies the number of combinations.
+        - expression: "len(grid) = C"
+          meaning: The grid reports the same count as the product.
+      prediction: "Example: 3 depths x 2 leaf sizes = 6 dictionaries, so the loop runs 6 times."
+    good_at: [few settings, need every combination, custom loops]
+    bad_at: [many settings, continuous ranges, fitting models itself]
+    vs_siblings:
+      - {page: gridsearchcv, note: "Uses this grid, then fits and scores every combination for you."}
+      - {page: parametersampler, note: "Draws random settings instead of listing all of them."}
+    read_more:
+      - List a few values for each setting.
+      - Build every combination as one dictionary.
+      - Loop over the dictionaries and fit each model.
+      - Score each one yourself.
   next: []

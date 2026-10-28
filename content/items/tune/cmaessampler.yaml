@@ -36,27 +36,113 @@ slots:
       why: Keep a final test set the search never sees.
       condition: null
       unless: null
-  code: []
+  code:
+    - library: optuna
+      target: optuna.samplers.CmaEsSampler
+      why_this_library: "Passed to create_study as the sampler. Output below is made up: cmaes is not installed here, so this was not run."
+      snippet: |
+        # optuna 5.0.0
+        import optuna
+        from optuna.samplers import CmaEsSampler
+
+        optuna.logging.set_verbosity(optuna.logging.WARNING)
+
+
+        def objective(trial):
+            x = trial.suggest_float("x", -10, 10)
+            y = trial.suggest_float("y", -10, 10)
+            return (x - 2) ** 2 + (y + 1) ** 2
+
+
+        sampler = CmaEsSampler(seed=0)
+        study = optuna.create_study(sampler=sampler)
+        study.optimize(objective, n_trials=30)
+        print("best_params:", study.best_params)
+        print("best_value:", round(study.best_value, 3))
+      output: |
+        (made-up values, not run: cmaes is not installed here)
+        best_params: {'x': 1.98, 'y': -1.03}
+        best_value: 0.002
   what_comes_out:
     items:
-      - {name: best_params, kind: return, task: null, shape: dict of settings, note: Best combination among those tried.}
+      - name: study.best_params
+        kind: return
+        task: null
+        shape: "dict"
+        object_type: dict
+        example: "{'x': 0.4, 'y': -1}"
+        shape_explanation: >-
+          A dictionary has no rows or columns. Each key is a setting name passed to a
+          suggest call. Each value is the best choice found for that setting. The example
+          has 2 keys, so it covers 2 settings.
+        note: "Best settings among completed trials. Read it after optimize."
+      - name: study.best_value
+        kind: return
+        task: null
+        shape: "scalar"
+        object_type: float
+        example: "0.12"
+        shape_explanation: >-
+          A scalar is one value, not an array. It has no rows or columns. The example is
+          the single number 0.12, so its shape is scalar.
+        note: "Objective value of the best trial. Direction comes from create_study."
     next_step: null
     visual: null
   catch_outs:
     - Needs the cmaes package installed.
+    - The code example output is made up. It was not run here.
     - Warns when a setting falls back to independent sampling.
     - Few trials give it little to learn from.
   key_settings:
-    tier1: 
-      - {name: sigma0, page: null}
-      - {name: n_startup_trials, page: null}
-    tier2: 
-      - {name: x0, page: null}
-      - {name: independent_sampler, page: null}
-      - {name: seed, page: null}
-    tier3: 
-      - {name: popsize, page: null}
-      - {name: restart_strategy, page: null}
+    tier1:
+      - name: n_startup_trials
+        page: null
+        controls: Number of trials sampled independently before CMA-ES starts. Default is 1.
+        effect: More startup trials give CMA-ES more data first, at the cost of more random trials.
+    tier2:
+      - name: independent_sampler
+        page: null
+        controls: Sampler for settings that CMA-ES does not cover. Default is RandomSampler.
+        effect: Changes how settings outside the shared search space are drawn.
+      - name: seed
+        page: null
+        controls: Seeds the CMA-ES random number generator.
+        effect: A fixed seed makes repeated runs match.
+    tier3:
+      - name: popsize
+        page: null
+        controls: Number of settings sampled in each generation.
+        effect: More samples explore more per step, but each update needs more trials.
   watch_it_work: {none: true}
-  intuition: {text: "Learn the shape of the good area, then move the search toward it."}
+  intuition:
+    idea: Keep a bell-shaped cloud of guesses, and shift the cloud toward better trials.
+    analogy: Like a group of hikers spreading out and regrouping toward the best ground they have found.
+    animation: none
+    goal: Search continuous settings efficiently, with many trials.
+    steps:
+      - Run the startup trials with independent sampling.
+      - Set the cloud's centre and its step size.
+      - Sample a population of settings from the cloud, sized by popsize.
+      - Run the trials and record their scores.
+      - Update the cloud so it moves toward better trials.
+      - Repeat until the trial budget ends.
+    math:
+      notation:
+        - {symbol: "m", meaning: "Centre of the cloud. Starts at x0, or the middle of each range."}
+        - {symbol: "sigma", meaning: "Step size of the cloud, set by sigma0."}
+        - {symbol: "C", meaning: "Covariance matrix that sets the shape of the cloud."}
+        - {symbol: "x", meaning: "One sampled set of settings."}
+      equations:
+        - expression: "x ~ N(m, sigma^2 C)"
+          meaning: Each new set of settings is drawn from a multivariate normal distribution.
+      prediction: "After the startup trials, new settings are drawn from this distribution."
+    good_at: [continuous settings, many trials]
+    bad_at: [categorical settings, few trials]
+    vs_siblings:
+      - {page: tpesampler, note: "Handles categorical settings, and needs no cmaes package."}
+      - {page: gpsampler, note: "Uses a Gaussian process model. Needs torch and scipy."}
+      - {page: randomsampler, note: "Draws settings at random, with no model."}
+    read_more:
+      - The CmaEsSampler reference page links the CMA-ES papers.
+      - Set seed to make a run repeatable.
   next: []

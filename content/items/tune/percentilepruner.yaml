@@ -1,96 +1,271 @@
 id: percentilepruner
 plain_name: PercentilePruner
 code_name: PercentilePruner
-aliases: [top percent pruning, percentile stopping]
+aliases:
+- top percent pruning
+- percentile stopping
 stage: tune
 family: tune.watch.prune-relative
-tracks: [standard, time-series]
+tracks:
+- standard
+- time-series
 archetype: tuning
-question_tags: [tune is slow, keep top trials]
-targets: [optuna.pruners.PercentilePruner]
+question_tags:
+- tune is slow
+- keep top trials
+targets:
+- optuna.pruners.PercentilePruner
 pairs_with: []
 clashes: []
-source_urls: ['https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.PercentilePruner.html']
-library_versions: {optuna: 5.0.0}
+source_urls:
+- https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.PercentilePruner.html
+library_versions:
+  optuna: 5.0.0
+  scikit-learn: "1.9.1"
 reviewed: false
 rules:
   task_types: []
   blocked_when: []
   fits_on_data: false
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: tuning, dims: 1, trials: 20}
-    line: Stops trials that land in the bottom share you set.
+    hero:
+      kind: tuning
+      dims: 1
+      trials: 20
+    line: Stops trials that land outside the top share you set.
   quick_facts:
     facts:
-      - {label: Keeps, value: "Top share you set (percentile)"}
-      - {label: Default startup trials, value: "5 (n_startup_trials)"}
+    - label: Keeps
+      value: Top share you set (percentile)
+    - label: Default startup trials
+      value: 5 (n_startup_trials)
   use_avoid:
-    use_when: [many trials, costly fits, want a fixed share kept]
-    avoid_when: [only a few trials, no step-wise reports]
+    use_when:
+    - many trials
+    - costly fits
+    - want a fixed share kept
+    avoid_when:
+    - only a few trials
+    - no step-wise reports
   prep:
-    - step: {page: train-test-split}
-      status: recommended
-      why: Keep a final test set the search never sees.
-      condition: null
-      unless: null
+  - step:
+      page: optuna-study
+    status: required
+    why: A pruner is set on a study, so one must exist.
+    condition: null
+    unless: null
+  - step:
+      page: train-test-split
+    status: recommended
+    why: Keep a final test set the search never sees.
+    condition: null
+    unless: null
   code:
-    - library: optuna
-      target: optuna.pruners.PercentilePruner
-      why_this_library: Used as pruner= in optuna.create_study.
-      snippet: |
-        # optuna 5.0.0
-        import optuna
-        from sklearn.datasets import make_classification
-        from sklearn.linear_model import SGDClassifier
-        from sklearn.model_selection import train_test_split
+  - library: optuna
+    target: optuna.pruners.PercentilePruner
+    why_this_library: Passed to optuna.create_study as pruner=. At 75.0 it prunes less than MedianPruner does on the same objective.
+    snippet: |
+      # optuna 5.0.0
+      import collections
 
-        optuna.logging.set_verbosity(optuna.logging.WARNING)
-        X, y = make_classification(n_samples=600, n_features=10, random_state=0)
-        X_train, X_val, y_train, y_val = train_test_split(X, y, random_state=0)
+      import optuna
+      from sklearn.datasets import make_classification
+      from sklearn.linear_model import SGDClassifier
+      from sklearn.model_selection import train_test_split
 
-
-        def objective(trial):
-            alpha = trial.suggest_float("alpha", 1e-5, 1.0, log=True)
-            clf = SGDClassifier(alpha=alpha, random_state=0)
-            for step in range(30):
-                clf.partial_fit(X_train, y_train, classes=[0, 1])
-                score = clf.score(X_val, y_val)
-                trial.report(score, step)
-                if trial.should_prune():
-                    raise optuna.TrialPruned()
-            return score
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+      X, y = make_classification(n_samples=600, n_features=10, random_state=0)
+      X_train, X_val, y_train, y_val = train_test_split(X, y, random_state=0)
 
 
-        pruner = optuna.pruners.PercentilePruner(25.0)
-        study = optuna.create_study(
-            direction="maximize",
-            sampler=optuna.samplers.TPESampler(seed=0),
-            pruner=pruner,
-        )
-        study.optimize(objective, n_trials=20)
-        pruned = [t for t in study.trials if t.state.name == "PRUNED"]
-        print(len(pruned), "of", len(study.trials), "trials pruned")
+      def objective(trial):
+          alpha = trial.suggest_float("alpha", 1e-5, 1.0, log=True)
+          clf = SGDClassifier(alpha=alpha, random_state=0)
+          for step in range(30):
+              clf.partial_fit(X_train, y_train, classes=[0, 1])
+              score = clf.score(X_val, y_val)
+              trial.report(score, step)
+              if trial.should_prune():
+                  raise optuna.TrialPruned()
+          return score
+
+
+      pruner = optuna.pruners.PercentilePruner(75.0)
+      study = optuna.create_study(
+          direction="maximize",
+          sampler=optuna.samplers.TPESampler(seed=0),
+          pruner=pruner,
+      )
+      study.optimize(objective, n_trials=20)
+      counts = collections.Counter(t.state.name for t in study.trials)
+      print("trials:", len(study.trials))
+      print("states:", dict(sorted(counts.items())))
+      print("best_value:", round(study.best_value, 3))
+    output: |
+      trials: 20
+      states: {'COMPLETE': 7, 'PRUNED': 13}
+      best_value: 0.967
   what_comes_out:
     items:
-      - {name: prune, kind: method, task: null, shape: "bool", note: "Called by Optuna. Your code uses should_prune()."}
-    next_step: null
+    - name: prune
+      kind: method
+      task: null
+      shape: scalar
+      object_type: bool
+      example: 'True'
+      shape_explanation: A single true or false value, not an array. It has no rows or columns. True means stop the trial, False means let it continue. The example is True, so its shape is scalar.
+      note: Optuna calls this, not your code. Use should_prune() on the trial.
+    - name: study.trials
+      kind: return
+      task: null
+      shape: (n_trials,) list of FrozenTrial
+      object_type: list
+      example: '[FrozenTrial, FrozenTrial, FrozenTrial]'
+      shape_explanation: A one-dimensional list with one FrozenTrial for each trial, in trial-number order. The trailing comma in (n_trials,) means one dimension. n_trials is the number of trials run. The example has 3 trials, so its concrete shape is (3,).
+      note: 'Each trial has a state: COMPLETE, PRUNED or FAIL.'
+    - name: t.state
+      kind: return
+      task: null
+      shape: scalar
+      object_type: TrialState
+      example: TrialState.PRUNED
+      shape_explanation: A scalar is one value, not an array. It has no rows or columns. It names the outcome of one trial. The example is one state, so its shape is scalar.
+      note: Read it as t.state.name, for example COMPLETE or PRUNED.
+    - name: study.best_value
+      kind: return
+      task: null
+      shape: scalar
+      object_type: float
+      example: '0.91'
+      shape_explanation: A scalar is one value, not an array. It has no rows or columns. The example is the single number 0.91, so its shape is scalar.
+      note: Best of the COMPLETE trials. Pruned trials never set it.
+    next_step: Pass it to optuna.create_study as pruner=.
+    snippet: |
+      # optuna 5.0.0
+      import collections
+
+      import optuna
+      from sklearn.datasets import make_classification
+      from sklearn.linear_model import SGDClassifier
+      from sklearn.model_selection import train_test_split
+
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+      X, y = make_classification(n_samples=600, n_features=10, random_state=0)
+      X_train, X_val, y_train, y_val = train_test_split(X, y, random_state=0)
+
+
+      def objective(trial):
+          alpha = trial.suggest_float("alpha", 1e-5, 1.0, log=True)
+          clf = SGDClassifier(alpha=alpha, random_state=0)
+          for step in range(30):
+              clf.partial_fit(X_train, y_train, classes=[0, 1])
+              score = clf.score(X_val, y_val)
+              trial.report(score, step)
+              if trial.should_prune():
+                  raise optuna.TrialPruned()
+          return score
+
+
+      pruner = optuna.pruners.PercentilePruner(75.0)
+      study = optuna.create_study(
+          direction="maximize",
+          sampler=optuna.samplers.TPESampler(seed=0),
+          pruner=pruner,
+      )
+      study.optimize(objective, n_trials=20)
+      print("best_value:", round(study.best_value, 3))
+      for t in study.trials[:6]:
+          print(t.number, t.state.name, len(t.intermediate_values), "steps")
+    snippet_library: optuna
+    output: |
+      best_value: 0.967
+      0 COMPLETE 30 steps
+      1 COMPLETE 30 steps
+      2 COMPLETE 30 steps
+      3 COMPLETE 30 steps
+      4 COMPLETE 30 steps
+      5 PRUNED 1 steps
     visual: null
   catch_outs:
-    - Percentile has no default, so you must set it.
-    - Compares a trial with others at the same step.
-    - Your objective must call trial.report and should_prune.
+  - percentile has no default, so you must set it.
+  - Compares a trial with other trials at the same step.
+  - Pruning waits until n_startup_trials trials have finished.
+  - Your objective must call trial.report and should_prune.
   key_settings:
     tier1:
-      - {name: percentile, page: null}
-      - {name: n_startup_trials, page: null}
+    - name: percentile
+      page: null
+      controls: The share of trials to keep, from 0 to 100. Required, with no default.
+      effect: For maximize, 25.0 keeps about the top quarter. A lower number prunes more trials.
+    - name: n_startup_trials
+      page: null
+      controls: Trials that must finish before any trial can be pruned. Default is 5.
+      effect: A higher number avoids judging on too few trials, but more trials run to the end.
     tier2:
-      - {name: n_warmup_steps, page: null}
-      - {name: n_min_trials, page: null}
+    - name: n_warmup_steps
+      page: null
+      controls: Steps at the start of each trial that are never pruned. Default is 0.
+      effect: Use it when early steps are noisy. Pruning cannot happen before this step.
+    - name: n_min_trials
+      page: null
+      controls: Trials that must have reported at a step before a check runs. Default is 1.
+      effect: A higher number stops the check from judging against too few other trials.
     tier3: []
-  watch_it_work: {none: true}
+  watch_it_work:
+    none: true
   intuition:
-    text: Keep only the top share of trials at each step.
-  next: []
+    idea: Keep only the best share of trials at each step, and stop the rest.
+    analogy: A school that keeps the top quarter of a class after each test, and sends the rest home.
+    animation: none
+    goal: Keep a fixed share of trials running, and stop the ones below the cut-off at each step.
+    steps:
+    - Set the percentile you want to keep, such as 25.0.
+    - Run the first trials in full, as set by n_startup_trials.
+    - After each step, take the trial's best reported value so far.
+    - Find the cut-off that the other trials at that step set.
+    - Prune the trial if its best value is below the cut-off.
+    - Otherwise, let the trial run on to the next step.
+    - Record the trial as PRUNED, or as COMPLETE when it finishes.
+    math:
+      notation:
+      - symbol: p
+        meaning: The percentile to keep, from 0 to 100. For example, 25.0.
+      - symbol: s
+        meaning: The current step, counting from 0.
+      - symbol: t
+        meaning: The trial being checked.
+      - symbol: b_t(s)
+        meaning: Trial t's best reported value up to step s. Highest is best when maximizing.
+      - symbol: Q(s)
+        meaning: The cut-off at step s, set from completed trials' values at that step.
+      equations:
+      - expression: prune t if b_t(s) < Q(s)   (maximize)
+        meaning: A trial below the cut-off at the same step is stopped.
+      - expression: Q(s) = the (100 - p)th percentile of completed values at step s
+        meaning: The cut-off is set so that about p percent of trials sit at or above it.
+      prediction: With p = 25.0, a trial must stay near the top quarter at each step to keep running.
+    good_at:
+    - a fixed share kept
+    - many trials
+    - steps reported each time
+    bad_at:
+    - few trials
+    - no sensible share to pick
+    vs_siblings:
+    - page: medianpruner
+      note: The same test with the median as the cut-off.
+    - page: successivehalvingpruner
+      note: Judges trials at fixed rung steps, not every step.
+    - page: wilcoxonpruner
+      note: Compares fold by fold, for per-fold scores.
+    read_more:
+    - Report a value at each step with trial.report.
+    - Let should_prune decide, and raise optuna.TrialPruned when it returns True.
+    - The reference page lists every argument and the NaN rule.
+  next:
+  - but-slow-fits

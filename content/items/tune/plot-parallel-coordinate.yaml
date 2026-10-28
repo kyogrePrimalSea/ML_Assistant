@@ -11,7 +11,7 @@ targets: [optuna.visualization.plot_parallel_coordinate]
 pairs_with: []
 clashes: []
 source_urls: ['https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_parallel_coordinate.html']
-library_versions: {optuna: 5.0.0}
+library_versions: {optuna: 5.0.0, scikit-learn: 1.9.1}
 reviewed: false
 rules:
   task_types: []
@@ -39,7 +39,7 @@ slots:
   code:
     - library: optuna
       target: optuna.visualization.plot_parallel_coordinate
-      why_this_library: Draws the plot straight from a study.
+      why_this_library: "Draws the plot straight from a study. Output below is made up: plotly is not installed here, so this was not run."
       snippet: |
         # optuna 5.0.0
         import optuna
@@ -71,24 +71,107 @@ slots:
 
         fig = plot_parallel_coordinate(study)
         print(study.best_params)
+        print("figure type:", type(fig).__name__)
+      output: |
+        (made-up values, not run: plotly is not installed here)
+        {'max_depth': 10, 'min_samples_leaf': 1, 'max_features': 0.71}
+        figure type: Figure
   what_comes_out:
     items:
-      - {name: plot_parallel_coordinate, kind: return, task: null, shape: go.Figure, note: A plotly figure with one line per trial.}
+      - name: plot_parallel_coordinate
+        kind: return
+        task: null
+        shape: "plotly Figure"
+        object_type: plotly.graph_objects.Figure
+        example: "Figure(...)  (made-up example)"
+        shape_explanation: >-
+          A Figure object, not an array. It has no rows or columns. The docs say it is a
+          plotly figure of the high-dimensional parameter relationships. The example only
+          names the type, so its shape is one Figure.
+        note: "The plotly figure. Lines run through each chosen setting."
     next_step: null
     visual: null
+    snippet: |
+      # optuna 5.0.0
+      import optuna
+      from optuna.visualization import plot_parallel_coordinate
+      from sklearn.datasets import make_regression
+      from sklearn.ensemble import RandomForestRegressor
+      from sklearn.model_selection import cross_val_score
+
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+      X, y = make_regression(n_samples=300, n_features=8, noise=15,
+                             random_state=0)
+
+
+      def objective(trial):
+          depth = trial.suggest_int("max_depth", 2, 12)
+          leaf = trial.suggest_int("min_samples_leaf", 1, 10)
+          model = RandomForestRegressor(
+              n_estimators=30, max_depth=depth, min_samples_leaf=leaf,
+              random_state=0,
+          )
+          return cross_val_score(model, X, y, cv=3).mean()
+
+
+      study = optuna.create_study(
+          direction="maximize", sampler=optuna.samplers.TPESampler(seed=0)
+      )
+      study.optimize(objective, n_trials=20)
+
+      fig = plot_parallel_coordinate(study, params=["max_depth"])
+      print("figure type:", type(fig).__name__)
+      print("trials in study:", len(study.trials))
+    snippet_library: optuna
+    output: |
+      (made-up values, not run: plotly is not installed here)
+      figure type: Figure
+      trials in study: 20
   catch_outs:
     - Needs plotly installed.
-    - Plots the objective value unless target is set.
-    - Pass params to choose which settings are plotted.
+    - The code example output is made up. It was not run here.
+    - For one objective, plots the objective value unless target is set.
+    - A trial with no value for a setting is drawn to a None tick.
+    - With constraints, solid lines are feasible and dotted lines infeasible.
+    - The docs do not say what a good or bad picture looks like.
   key_settings:
     tier1:
-      - {name: study, page: null}
-      - {name: params, page: null}
+      - name: params
+        page: null
+        controls: The settings to draw as lines through. None draws every setting in the study.
+        effect: Only the named settings get a column. The others are left out.
+      - name: target
+        page: null
+        controls: The value each line is coloured by. None uses the objective value for one objective.
+        effect: With target None, a multi-objective study draws all objective values and colours lines by Pareto rank.
     tier2:
-      - {name: target, page: null}
-      - {name: target_name, page: null}
+      - name: target_name
+        page: null
+        controls: The label shown on the axis and the legend.
+        effect: Changes the label only, not the lines.
     tier3: []
   watch_it_work: {none: true}
   intuition:
-    text: Each trial is one line running through its settings.
+    idea: "One line per trial, passing through its value for each setting and its objective value."
+    analogy: "Like following each bus through several stops on one route diagram."
+    animation: none
+    goal: "See how the settings used by each trial line up with its score."
+    steps:
+      - "Each vertical line is one column: the objective value, then each setting."
+      - "The column names run along the bottom of the plot."
+      - "Each line that runs across the columns is one finished trial."
+      - "Each line crosses every column once, at a height for that trial."
+      - "Line colour follows the objective value, read from the colour bar."
+      - "Look for lines that bunch together in one column."
+      - "Look for groups of lines that stay together across several columns."
+    good_at: ["many settings at once", "groups of similar trials", "patterns across all settings"]
+    bad_at: ["exact setting values", "crowded plots with many trials", "reading one trial among many"]
+    vs_siblings:
+      - {page: plot-slice, note: "Shows one setting at a time, with one dot per trial."}
+      - {page: plot-rank, note: "Shows two settings at a time, with dots coloured by rank."}
+      - {page: plot-contour, note: "Shows two settings together as a score map."}
+    read_more:
+      - "Read the plot_parallel_coordinate docs page linked in source_urls."
+      - "Check the colour bar to see which objective value a colour stands for."
+      - "Use the params setting to show fewer columns."
   next: []

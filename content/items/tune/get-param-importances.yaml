@@ -11,7 +11,7 @@ targets: [optuna.importance.get_param_importances]
 pairs_with: []
 clashes: []
 source_urls: ['https://optuna.readthedocs.io/en/stable/reference/generated/optuna.importance.get_param_importances.html']
-library_versions: {optuna: 5.0.0}
+library_versions: {optuna: 5.0.0, scikit-learn: 1.9.1}
 reviewed: false
 rules:
   task_types: []
@@ -39,7 +39,7 @@ slots:
   code:
   - library: optuna
     target: optuna.importance.get_param_importances
-    why_this_library: Returns numbers; the plot page shows the same ranking.
+    why_this_library: Returns numbers. The plot page shows the same ranking as a chart.
     snippet: |
       # optuna 5.0.0
       import optuna
@@ -68,23 +68,138 @@ slots:
       study.optimize(objective, n_trials=30)
       importances = optuna.importance.get_param_importances(study)
       print({name: round(value, 2) for name, value in importances.items()})
+    output: |
+      {'min_samples_leaf': 0.65, 'n_estimators': 0.34, 'max_depth': 0.0}
   what_comes_out:
     items:
-    - {name: get_param_importances, kind: return, task: null, shape: dict of setting to float, note: Sorted from most to least important.}
-    next_step: null
+    - name: get_param_importances
+      kind: return
+      task: null
+      shape: dict of setting to float
+      object_type: dict
+      example: "{'max_depth': 0.6, 'min_samples_leaf': 0.4}"
+      shape_explanation: >-
+        A dictionary has no rows or columns. Each key is a setting name from the
+        study. Each value is an importance number, not a score. The example has 2
+        keys, so the study had 2 settings. Keys are sorted from most to least
+        important.
+      note: "Sorted from most to least important. Sums to 1 by default."
+    next_step: Read the keys from the top. The first key is the most important.
+    snippet: |
+      # optuna 5.0.0
+      import optuna
+      from optuna.importance import FanovaImportanceEvaluator
+      from optuna.importance import get_param_importances
+      from sklearn.datasets import make_regression
+      from sklearn.ensemble import RandomForestRegressor
+      from sklearn.model_selection import cross_val_score
+
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+      X, y = make_regression(n_samples=300, n_features=8, noise=15,
+                             random_state=0)
+
+
+      def objective(trial):
+          model = RandomForestRegressor(
+              n_estimators=trial.suggest_int("n_estimators", 10, 80),
+              max_depth=trial.suggest_int("max_depth", 2, 12),
+              min_samples_leaf=trial.suggest_int("min_samples_leaf", 1, 10),
+              random_state=0,
+          )
+          return cross_val_score(model, X, y, cv=3, scoring="r2").mean()
+
+
+      study = optuna.create_study(
+          direction="maximize",
+          sampler=optuna.samplers.TPESampler(seed=0),
+      )
+      study.optimize(objective, n_trials=30)
+      ped = get_param_importances(study)
+      fanova = get_param_importances(
+          study, evaluator=FanovaImportanceEvaluator(seed=0)
+      )
+      raw = get_param_importances(study, normalize=False)
+      only = get_param_importances(study, params=["max_depth"])
+      print("type:", type(ped).__name__)
+      print("ped order:", list(ped))
+      print("ped sum:", round(sum(ped.values()), 3))
+      print("fanova order:", list(fanova))
+      print("raw sum:", round(sum(raw.values()), 4))
+      print("params=['max_depth']:", only)
+    snippet_library: optuna
+    output: |
+      type: dict
+      ped order: ['min_samples_leaf', 'n_estimators', 'max_depth']
+      ped sum: 1.0
+      fanova order: ['max_depth', 'min_samples_leaf', 'n_estimators']
+      raw sum: 0.0314
+      params=['max_depth']: {'max_depth': 1.0}
     visual: null
   catch_outs:
     - Values sum to 1 unless normalize is False.
+    - Only completed trials are used to rank the settings.
+    - With no finished trials, the result is an empty dict.
+    - A name in params that no completed trial used raises a ValueError.
+    - The default PED-ANOVA evaluator includes conditional settings. Other evaluators leave them out.
   key_settings:
     tier1:
-      - {name: study, page: null}
-      - {name: evaluator, page: null}
-      - {name: params, page: null}
-      - {name: target, page: null}
+      - name: study
+        page: null
+        controls: "The study to read. Only its completed trials are used."
+        effect: Ranks only the settings that appear in those completed trials.
+      - name: evaluator
+        page: null
+        controls: "The method that scores each setting. None uses PedAnovaImportanceEvaluator."
+        effect: "FanovaImportanceEvaluator and MeanDecreaseImpurityImportanceEvaluator need the sklearn package. PED-ANOVA does not."
+      - name: params
+        page: null
+        controls: "The settings to rank. None ranks every setting found in the completed trials."
+        effect: Only the listed settings appear in the dict. The rest are left out.
+      - name: target
+        page: null
+        controls: "A function that turns each trial into the number to explain. None uses the objective value."
+        effect: The ranking then explains that number, not the score the objective returned.
     tier2:
-      - {name: normalize, page: null}
+      - name: normalize
+        page: null
+        controls: "True scales the values so they sum to 1. False keeps the raw importance values."
+        effect: "False gives values that do not sum to 1, and it prints an experimental-feature warning."
     tier3: []
   watch_it_work: {none: true}
-  intuition: {text: "The same ranking as the plot, as plain numbers."}
+  intuition:
+    idea: One number per setting for how much it matters to the score, sorted with the largest first.
+    analogy: Like splitting one pie between the settings, where a bigger slice means that setting mattered more.
+    animation: none
+    goal: Which settings changed the score the most, so you know which ones to keep tuning?
+    steps:
+      - Pass a finished study to get_param_importances.
+      - Only completed trials are used.
+      - Each key is a setting name, and each value is its importance.
+      - The dict is sorted from the largest value to the smallest.
+      - A higher value means that setting is more important.
+      - By default the values add to 1, so each one is a share of the whole.
+      - Different evaluators can rank the settings in a different order.
+    math:
+      notation:
+        - {symbol: "I_i", meaning: "The raw importance the evaluator gives setting i."}
+        - {symbol: "S", meaning: "The total of the raw importances of all settings."}
+        - {symbol: "n", meaning: "The number of settings in the returned dict."}
+        - {symbol: "p_i", meaning: "The value returned for setting i when normalize is True."}
+      equations:
+        - expression: "S = sum of I_j over all settings j"
+          meaning: "S adds up the raw importances of every setting."
+        - expression: "p_i = I_i / S when S is not 0"
+          meaning: "Each returned value is its share of the total, so the values add to 1."
+        - expression: "p_i = 1 / n when S = 0"
+          meaning: "If every raw importance is 0, the settings share the total equally."
+      prediction: "With normalize=False the values are the raw I_i, and they need not add to 1."
+    good_at: [ranking many settings, shares of the whole, numbers you can sort]
+    bad_at: [which direction helps, why a setting matters, settings seen in few trials]
+    vs_siblings:
+      - {page: plot-param-importances, note: "The same numbers, drawn as a bar chart."}
+    read_more:
+      - The default PED-ANOVA evaluator asks how much each setting matters for reaching the best trials.
+      - fANOVA fits a random forest to the trials, and needs sklearn.
+      - Mean decrease impurity also uses a random forest, and needs sklearn.
+      - normalize=False shows raw values and prints an experimental warning.
   next: []
-

@@ -11,7 +11,7 @@ targets: [optuna.visualization.plot_param_importances]
 pairs_with: []
 clashes: []
 source_urls: ['https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_param_importances.html']
-library_versions: {optuna: 5.0.0}
+library_versions: {optuna: 5.0.0, scikit-learn: 1.9.1}
 reviewed: false
 rules:
   task_types: []
@@ -22,7 +22,7 @@ slots:
   header: {}
   solves:
     hero: {kind: diagnostic, dataset: ames, chart: importance bar per setting}
-    line: Ranks the settings by how much they moved the score.
+    line: Ranks the settings by how important the evaluator judges them for the score.
   quick_facts:
     facts:
       - {label: Default evaluator, value: PedAnovaImportanceEvaluator}
@@ -39,7 +39,7 @@ slots:
   code:
     - library: optuna
       target: optuna.visualization.plot_param_importances
-      why_this_library: Draws the plot straight from a study.
+      why_this_library: "Draws the plot straight from a study. Output below is made up: plotly is not installed here, so this was not run."
       snippet: |
         # optuna 5.0.0
         import optuna
@@ -71,25 +71,123 @@ slots:
 
         fig = plot_param_importances(study)
         print(study.best_params)
+        print("figure type:", type(fig).__name__)
+      output: |
+        (made-up values, not run: plotly is not installed here)
+        {'max_depth': 11, 'min_samples_leaf': 1, 'max_features': 0.73}
+        figure type: Figure
   what_comes_out:
     items:
-      - {name: plot_param_importances, kind: return, task: null, shape: go.Figure, note: A plotly figure with one bar per setting.}
+      - name: plot_param_importances
+        kind: return
+        task: null
+        shape: "plotly Figure"
+        object_type: plotly.graph_objects.Figure
+        example: "Figure(...)  (made-up example)"
+        shape_explanation: >-
+          A Figure object, not an array. It has no rows or columns. The docs say it is a
+          plotly figure of the hyperparameter importances. The example only names the
+          type, so its shape is one Figure.
+        note: "The plotly figure. Its bars come from the chosen evaluator."
     next_step: null
     visual: null
+    snippet: |
+      # optuna 5.0.0
+      import optuna
+      from optuna.visualization import plot_param_importances
+      from sklearn.datasets import make_regression
+      from sklearn.ensemble import RandomForestRegressor
+      from sklearn.model_selection import cross_val_score
+
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+      X, y = make_regression(n_samples=300, n_features=8, noise=15,
+                             random_state=0)
+
+
+      def objective(trial):
+          depth = trial.suggest_int("max_depth", 2, 12)
+          leaf = trial.suggest_int("min_samples_leaf", 1, 10)
+          model = RandomForestRegressor(
+              n_estimators=30, max_depth=depth, min_samples_leaf=leaf,
+              random_state=0,
+          )
+          return cross_val_score(model, X, y, cv=3).mean()
+
+
+      study = optuna.create_study(
+          direction="maximize", sampler=optuna.samplers.TPESampler(seed=0)
+      )
+      study.optimize(objective, n_trials=30)
+
+      fig = plot_param_importances(study)
+      print("figure type:", type(fig).__name__)
+      print("trials in study:", len(study.trials))
+    snippet_library: optuna
+    output: |
+      (made-up values, not run: plotly is not installed here)
+      figure type: Figure
+      trials in study: 30
   catch_outs:
     - Needs plotly installed.
+    - The code example output is made up. It was not run here.
     - Plots the objective value unless target is set.
-    - Pass evaluator to change how importance is measured.
+    - The default evaluator is PedAnovaImportanceEvaluator; pass evaluator to change it.
+    - The bar lengths are the values that get_param_importances returns.
+    - The bars are never negative. By default they add up to 1.0.
+    - The docs give no fixed threshold for a big or small bar.
   key_settings:
     tier1:
-      - {name: study, page: null}
-      - {name: evaluator, page: null}
-      - {name: params, page: null}
+      - name: evaluator
+        page: null
+        controls: The algorithm that measures each setting's importance. None uses PedAnovaImportanceEvaluator.
+        effect: A different evaluator measures importance in its own way, so the bars can change.
+      - name: params
+        page: null
+        controls: The settings to assess. None assesses every setting in completed trials.
+        effect: With the default evaluator, conditional settings are included when params is None.
     tier2:
-      - {name: target, page: null}
-      - {name: target_name, page: null}
+      - name: target
+        page: null
+        controls: The value used to measure importance. None uses the objective value for one objective.
+        effect: With target None, a multi-objective study plots all objectives. A target plots one.
+      - name: target_name
+        page: null
+        controls: The name shown in the legend. Set metric names on the study override it when target is None.
+        effect: Changes the label only, not the bars.
     tier3: []
   watch_it_work: {none: true}
   intuition:
-    text: Each setting gets a bar; a longer bar means more impact on the score.
+    idea: "One bar per setting, with bar length showing how important the evaluator judges it for the score."
+    analogy: "Like a team ranking which ingredients changed the taste most, longest bar first."
+    animation: none
+    goal: "See which settings matter most for the score, so you know what to tune first."
+    math:
+      notation:
+        - {symbol: "J", meaning: "The number of settings in the plot."}
+        - {symbol: "p_j", meaning: "The importance of setting j, as the evaluator returns it."}
+        - {symbol: "Σ_j", meaning: "Add the following quantity over every setting j."}
+      equations:
+        - expression: "p_j ≥ 0"
+          meaning: "No importance is negative."
+        - expression: "Σ_j p_j = 1.0"
+          meaning: "By default the bars add up to one whole."
+      prediction: "Each bar's length is p_j, so the longest bar is the setting with the largest share."
+    steps:
+      - "The horizontal axis is importance, starting at zero."
+      - "The vertical axis lists one setting per row."
+      - "Each bar is one setting's importance, as the evaluator measures it."
+      - "A longer bar means a more important setting."
+      - "The bars are sorted, with the longest at the top."
+      - "The legend names the score the bars were measured on."
+      - "Compare the bars with each other, since the docs give no fixed scale."
+    good_at: ["ranking settings by importance", "choosing what to tune first", "one overview of all settings"]
+    bad_at: ["which value is better", "whether a higher value helps", "exact score effects"]
+    vs_siblings:
+      - {page: get-param-importances, note: "Returns the importance values behind these bars."}
+      - {page: plot-parallel-coordinate, note: "Shows every trial's settings and score as lines."}
+      - {page: plot-slice, note: "Shows each setting's pattern against the score."}
+    read_more:
+      - "Read the plot_param_importances docs page linked in source_urls."
+      - "Read the PedAnovaImportanceEvaluator docs to see how the default evaluator works."
+      - "Change the evaluator to see whether the bars change."
   next: []

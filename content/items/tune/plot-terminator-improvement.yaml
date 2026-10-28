@@ -11,7 +11,7 @@ targets: [optuna.visualization.plot_terminator_improvement]
 pairs_with: []
 clashes: []
 source_urls: ['https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_terminator_improvement.html']
-library_versions: {optuna: 5.0.0}
+library_versions: {optuna: 5.0.0, scikit-learn: 1.9.1}
 reviewed: false
 rules:
   task_types: []
@@ -39,7 +39,7 @@ slots:
   code:
     - library: optuna
       target: optuna.visualization.plot_terminator_improvement
-      why_this_library: Draws the plot straight from a study.
+      why_this_library: "Draws the plot straight from a study. Output below is made up: plotly is not installed here, so this was not run."
       snippet: |
         # optuna 5.0.0
         import optuna
@@ -70,24 +70,108 @@ slots:
 
         fig = plot_terminator_improvement(study)
         print(study.best_params)
+        print("figure type:", type(fig).__name__)
+      output: |
+        (made-up values, not run: plotly is not installed here)
+        {'max_depth': 9, 'min_samples_leaf': 2}
+        figure type: Figure
   what_comes_out:
     items:
-      - {name: plot_terminator_improvement, kind: return, task: null, shape: go.Figure, note: A plotly figure of the estimated room to improve.}
+      - name: plot_terminator_improvement
+        kind: return
+        task: null
+        shape: "plotly Figure"
+        object_type: plotly.graph_objects.Figure
+        example: "Figure(...)  (made-up example)"
+        shape_explanation: >-
+          A Figure object, not an array. It has no rows or columns. The docs say it is a
+          plotly figure of the objective improvement potentials. The example only names
+          the type, so its shape is one Figure.
+        note: "The plotly figure. Helps decide whether to keep searching."
     next_step: null
     visual: null
+    snippet: |
+      # optuna 5.0.0
+      import optuna
+      from optuna.visualization import plot_terminator_improvement
+      from sklearn.datasets import make_regression
+      from sklearn.ensemble import RandomForestRegressor
+      from sklearn.model_selection import cross_val_score
+
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+      X, y = make_regression(n_samples=300, n_features=8, noise=15,
+                             random_state=0)
+
+
+      def objective(trial):
+          depth = trial.suggest_int("max_depth", 2, 12)
+          model = RandomForestRegressor(
+              n_estimators=30, max_depth=depth, random_state=0,
+          )
+          return cross_val_score(model, X, y, cv=3).mean()
+
+
+      study = optuna.create_study(
+          direction="maximize", sampler=optuna.samplers.TPESampler(seed=0)
+      )
+      study.optimize(objective, n_trials=30)
+
+      fig = plot_terminator_improvement(study, plot_error=True)
+      print("figure type:", type(fig).__name__)
+      print("trials in study:", len(study.trials))
+    snippet_library: optuna
+    output: |
+      (made-up values, not run: plotly is not installed here)
+      figure type: Figure
+      trials in study: 30
   catch_outs:
-    - Needs plotly and torch installed.
+    - Needs plotly and torch installed; the default evaluator needs torch.
+    - The code example output is made up. It was not run here.
+    - The default RegretBoundEvaluator is experimental, and its interface may change.
     - Pass improvement_evaluator to change how improvement is estimated.
+    - Trials below min_n_trials are drawn in a lighter colour.
+    - The docs give no threshold for when to stop.
   key_settings:
     tier1:
-      - {name: study, page: null}
-      - {name: plot_error, page: null}
-      - {name: improvement_evaluator, page: null}
-      - {name: error_evaluator, page: null}
+      - name: improvement_evaluator
+        page: null
+        controls: The object that estimates the objective improvement. None uses RegretBoundEvaluator.
+        effect: A different evaluator gives different estimates. BestValueStagnationEvaluator returns trials left.
+      - name: plot_error
+        page: null
+        controls: Whether the error from error_evaluator is drawn as a line. Default is False.
+        effect: Adds a line next to the improvement, so the two can be read together.
     tier2:
-      - {name: min_n_trials, page: null}
+      - name: error_evaluator
+        page: null
+        controls: The object that estimates the error. None uses CrossValidationErrorEvaluator.
+        effect: Only drawn when plot_error is True.
+      - name: min_n_trials
+        page: null
+        controls: The minimum number of trials before stopping is considered. Default is 20.
+        effect: Improvements for trials below this count are drawn in a lighter colour.
     tier3: []
   watch_it_work: {none: true}
   intuition:
-    text: Estimates how much a longer search could still improve the score.
-  next: []
+    idea: An estimate of how much the best value could still improve, drawn after each trial.
+    analogy: Like asking whether another hour of hunting for a parking spot is likely to beat the one you already found.
+    animation: none
+    goal: Is more search still likely to improve the best setting found so far?
+    steps:
+      - The horizontal axis is the trial number.
+      - The vertical axis is the estimated improvement, as the improvement evaluator reports it.
+      - Each point is one trial, from the first completed trial onward.
+      - The first points, up to min_n_trials, are drawn faded.
+      - A line that drops over trials means the estimate of room left is shrinking.
+      - The plot sets no cut-off value, so the stop decision is yours.
+    good_at: [judging whether to keep searching, seeing the trend over trials, spotting a flat estimate]
+    bad_at: [an exact score, a stop or go threshold, the best setting itself]
+    vs_siblings:
+      - {page: plot-optimization-history, note: "Shows the best value found so far, not the room left."}
+      - {page: terminator, note: "The automatic stopping mechanism for the study."}
+    read_more:
+      - The default estimate uses RegretBoundEvaluator, which is experimental and needs torch.
+      - BestValueStagnationEvaluator counts the trials left before a stagnation limit.
+      - Passing plot_error=True adds a line from error_evaluator.
+      - min_n_trials sets how many early points are drawn faded.
+  next: [but-when-stop-search]

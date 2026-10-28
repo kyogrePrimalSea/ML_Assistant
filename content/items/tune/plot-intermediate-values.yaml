@@ -11,7 +11,7 @@ targets: [optuna.visualization.plot_intermediate_values]
 pairs_with: []
 clashes: []
 source_urls: ['https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_intermediate_values.html']
-library_versions: {optuna: 5.0.0}
+library_versions: {optuna: 5.0.0, scikit-learn: 1.9.1}
 reviewed: false
 rules:
   task_types: []
@@ -25,7 +25,7 @@ slots:
     line: Shows each trial's score at each step, for pruning.
   quick_facts:
     facts:
-      - {label: Needs, value: "trial.report calls in the objective"}
+    - {label: Needs, value: trial.report calls in the objective}
   use_avoid:
     use_when: [using pruning, comparing trial learning curves]
     avoid_when: [no steps reported]
@@ -43,7 +43,7 @@ slots:
   code:
   - library: optuna
     target: optuna.visualization.plot_intermediate_values
-    why_this_library: Plotly figure; you choose where to show it.
+    why_this_library: 'Draws a Plotly figure. Output below is made up: plotly is not installed here, so this was not run.'
     snippet: |
       # optuna 5.0.0
       import optuna
@@ -78,21 +78,92 @@ slots:
       )
       study.optimize(objective, n_trials=20)
       fig = optuna.visualization.plot_intermediate_values(study)
-      print(sum(t.state == optuna.trial.TrialState.PRUNED for t in study.trials))
+      print(fig.layout.title.text)
+      print(len(fig.data))
+    output: |
+      (made-up values, not run: plotly is not installed here)
+      Intermediate Values Plot
+      20
   what_comes_out:
     items:
-    - {name: plot_intermediate_values, kind: return, task: null, shape: plotly Figure, note: Figure of each trial's reported scores.}
-    next_step: null
+    - {name: plot_intermediate_values, kind: return, task: null, shape: plotly Figure, object_type: plotly.graph_objects.Figure, example: 'made-up: a Figure with one line per trial', shape_explanation: 'A Figure is a container, not an array, so it has no rows or columns. It holds one trace, which is one drawn line, for each trial that reported a step. The example describes a made-up Figure with 2 trials, so its size is not a shape.', note: 'One line per trial, from its first step to its last.'}
+    next_step: Compare lines at the same step, not at the last point.
+    snippet: |
+      # optuna 5.0.0
+      import optuna
+      from sklearn.datasets import make_regression
+      from sklearn.linear_model import SGDRegressor
+      from sklearn.metrics import r2_score
+      from sklearn.model_selection import train_test_split
+      from sklearn.preprocessing import StandardScaler
+
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+      X, y = make_regression(n_samples=300, n_features=8, noise=15, random_state=0)
+      X = StandardScaler().fit_transform(X)
+      X_tr, X_va, y_tr, y_va = train_test_split(X, y, random_state=0)
+
+
+      def objective(trial):
+          alpha = trial.suggest_float("alpha", 1e-5, 1e-1, log=True)
+          model = SGDRegressor(alpha=alpha, eta0=0.01, random_state=0)
+          for epoch in range(15):
+              model.partial_fit(X_tr, y_tr)
+              score = r2_score(y_va, model.predict(X_va))
+              trial.report(score, epoch)
+              if trial.should_prune():
+                  raise optuna.TrialPruned()
+          return score
+
+
+      study = optuna.create_study(
+          direction="maximize",
+          pruner=optuna.pruners.MedianPruner(n_warmup_steps=3),
+          sampler=optuna.samplers.TPESampler(seed=0),
+      )
+      study.optimize(objective, n_trials=20)
+      fig = optuna.visualization.plot_intermediate_values(study)
+      print(fig.layout.xaxis.title.text)
+      print(fig.layout.yaxis.title.text)
+      print(fig.data[0].name)
+      print(sum(t.state == optuna.trial.TrialState.PRUNED for t in study.trials))
+    snippet_library: optuna
+    output: |
+      (made-up values, not run: plotly is not installed here)
+      Step
+      Intermediate Value
+      Trial0
+      4
     visual: null
-  catch_outs:
-    - Trials only show the steps they reported.
-    - Needs plotly installed; it is not in the project requirements.
+  catch_outs: ['A line that stops early has fewer steps, which can mean a pruned trial or one still running.', 'A MedianPruner stops a trial whose best value so far is worse than the median of earlier trials at that step.', 'Compare lines at the same step, because trials end at different steps.', 'Failed trials are not drawn, even when they reported steps.', Trials only show the steps they reported., A trial that never reported a step has no line., Needs plotly installed; it is not in the project requirements., The code example output is made up. It was not run here.]
   key_settings:
     tier1:
-      - {name: study, page: null}
+    - {name: study, page: null, controls: 'The study whose trials are plotted, with their reported steps.', effect: Only trials that reported a step get a line. An empty study gives an empty plot.}
     tier2: []
     tier3: []
   watch_it_work: {none: true}
-  intuition: {text: "Each line is one trial's score at each reported step."}
-  next: []
-
+  intuition:
+    idea: "Each line is one trial's reported score at each step, so you can see where a trial stopped."
+    analogy: "Split times at each checkpoint for every runner, where some runners drop out early."
+    animation: none
+    goal: "See which trials were stopped early, and compare trials at the same step."
+    steps:
+      - "The horizontal axis is the step, the number passed to trial.report, counted from 0."
+      - "The vertical axis is the intermediate value, the score reported at that step."
+      - "Each line is one trial, labelled Trial followed by its number."
+      - "Each dot on a line is one step that trial reported."
+      - "A line that stops early has fewer steps than the others."
+      - "A pruned trial's line stops at the step where it was pruned."
+      - "Compare lines at the same step, because trials can end at different steps."
+      - "Failed trials are not drawn, even when they reported steps."
+    good_at: ["spotting trials stopped early", "comparing trials step by step", "scores at each step"]
+    bad_at: ["which settings each trial used", "trials that reported no steps", "failed trials, not drawn"]
+    vs_siblings:
+      - {page: plot-optimization-history, note: "One dot per completed trial, not one line per trial."}
+      - {page: plot-timeline, note: "Shows when trials ran, not their scores at each step."}
+      - {page: plot-edf, note: "Shows how completed scores are spread, not the steps."}
+    read_more:
+      - "Report a value at each step with trial.report, then check trial.should_prune."
+      - "Optuna's MedianPruner compares a trial with earlier trials at the same step."
+      - "A trial with no reported steps gets no line."
+      - "The legend lists one entry for each trial drawn."
+  next: [but-slow-fits]

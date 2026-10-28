@@ -11,7 +11,7 @@ targets: [optuna.study.MaxTrialsCallback]
 pairs_with: []
 clashes: []
 source_urls: ['https://optuna.readthedocs.io/en/stable/reference/generated/optuna.study.MaxTrialsCallback.html']
-library_versions: {optuna: 5.0.0}
+library_versions: {optuna: 5.0.0, scikit-learn: 1.9.1}
 reviewed: false
 rules:
   task_types: []
@@ -22,7 +22,7 @@ slots:
   header: {}
   solves:
     hero: {kind: tuning, dims: 1, trials: 10}
-    line: Stops the search after a set number of trials.
+    line: Stops the search after a set number of finished trials.
   quick_facts:
     facts:
     - {label: Counts, value: Completed trials by default}
@@ -35,7 +35,7 @@ slots:
   code:
     - library: optuna
       target: optuna.study.MaxTrialsCallback
-      why_this_library: Passed as a callback to optimize.
+      why_this_library: Passed as a callback to optimize, so it needs no extra setup.
       snippet: |
         # optuna 5.0.0
         import optuna
@@ -59,22 +59,65 @@ slots:
             direction="maximize",
             sampler=optuna.samplers.RandomSampler(seed=0),
         )
-        study.optimize(
-            objective,
-            n_trials=100,
-            callbacks=[MaxTrialsCallback(10, states=(TrialState.COMPLETE,))],
-        )
-        print(len(study.trials))
+        callback = MaxTrialsCallback(10, states=(TrialState.COMPLETE,))
+        study.optimize(objective, n_trials=100, callbacks=[callback])
+        complete = study.get_trials(states=(TrialState.COMPLETE,))
+        print("trials run:", len(study.trials))
+        print("complete trials:", len(complete))
+        print("best alpha:", round(study.best_params["alpha"], 4))
+      output: |
+        trials run: 10
+        complete trials: 10
+        best alpha: 0.3833
   what_comes_out: {none: true}
   catch_outs:
-    - Only completed trials count by default, so pruned ones don't.
+    - Only completed trials count by default, so pruned and failed trials do not.
     - Add TrialState.PRUNED to states to count pruned trials too.
+    - The count includes trials already stored in a reloaded study.
+    - The check runs after each trial, so the trial that reaches the limit still finishes.
+    - The optimize call still has its own n_trials, so the lower limit wins.
   key_settings:
     tier1:
-    - {name: n_trials, page: null}
-    - {name: states, page: null}
+    - name: n_trials
+      page: null
+      controls: The number of counted trials at which the study stops. It must be an integer.
+      effect: A lower limit ends the search sooner, even when optimize allows more trials.
+    - name: states
+      page: null
+      controls: "The trial states that count toward the limit. The default is (TrialState.COMPLETE,). None counts every state."
+      effect: Counting more states reaches the limit sooner, so the search ends sooner.
     tier2: []
     tier3: []
   watch_it_work: {none: true}
-  intuition: {text: A fixed budget that stops once enough trials finish.}
+  intuition:
+    idea: Count finished trials, and stop the study when the count reaches a fixed limit.
+    analogy: A kitchen timer for the search. It rings after a set number of finished tries, not after a set time.
+    animation: none
+    goal: Put a cap on the search by how many trials have finished.
+    steps:
+      - Set the limit with n_trials.
+      - Choose which trial states count, with states.
+      - Create the callback and pass it to optimize with callbacks=[...].
+      - After each trial, the callback counts the trials whose state is in states.
+      - When the count reaches n_trials, the callback calls study.stop().
+      - The study ends after the trial that reached the limit.
+    math:
+      notation:
+        - {symbol: "N", meaning: "The limit set by n_trials."}
+        - {symbol: "c", meaning: "The number of trials whose state is in states."}
+      equations:
+        - expression: "c = number of trials with a state in states"
+          meaning: By default only completed trials are counted.
+        - expression: "stop when c >= N"
+          meaning: The study stops once the count reaches the limit.
+      prediction: "The snippet sets a limit of 10 and every trial completes, so it runs 10 trials."
+    good_at: [fixed trial budget, shared compute limit]
+    bad_at: [stop on no progress, time-based limit]
+    vs_siblings:
+      - {page: terminatorcallback, note: "Stops when the search has stopped gaining, based on an estimate."}
+      - {page: optuna-study, note: "The n_trials of optimize counts every trial, not only completed ones."}
+    read_more:
+      - Pass the callback to optimize with callbacks=[...].
+      - Set states to choose which trial states count toward the limit.
+      - The count includes trials that were already stored in the study.
   next: []

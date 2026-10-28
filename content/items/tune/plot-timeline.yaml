@@ -11,7 +11,7 @@ targets: [optuna.visualization.plot_timeline]
 pairs_with: []
 clashes: []
 source_urls: ['https://optuna.readthedocs.io/en/stable/reference/visualization/generated/optuna.visualization.plot_timeline.html']
-library_versions: {optuna: 5.0.0}
+library_versions: {optuna: 5.0.0, scikit-learn: 1.9.1}
 reviewed: false
 rules:
   task_types: []
@@ -25,7 +25,8 @@ slots:
     line: Shows when each trial ran and how long it took.
   quick_facts:
     facts:
-      - {label: Default n_recent_trials, value: "None"}
+    - {label: Default n_recent_trials, value: 'None, all trials'}
+    - {label: Time axis, value: Datetime}
   use_avoid:
     use_when: [slow search, checking trial run times]
     avoid_when: [few trials, only scores matter]
@@ -38,7 +39,7 @@ slots:
   code:
   - library: optuna
     target: optuna.visualization.plot_timeline
-    why_this_library: Plotly figure; you choose where to show it.
+    why_this_library: 'Draws a Plotly figure. Output below is made up: plotly is not installed here, so this was not run.'
     snippet: |
       # optuna 5.0.0
       import optuna
@@ -66,22 +67,83 @@ slots:
       )
       study.optimize(objective, n_trials=20)
       fig = optuna.visualization.plot_timeline(study)
-      print(len(study.trials))
+      print(fig.layout.title.text)
+      print(len(fig.data))
+    output: |
+      (made-up values, not run: plotly is not installed here)
+      Timeline Plot
+      1
   what_comes_out:
     items:
-    - {name: plot_timeline, kind: return, task: null, shape: plotly Figure, note: Figure of trial run times.}
-    next_step: null
+    - {name: plot_timeline, kind: return, task: null, shape: plotly Figure, object_type: plotly.graph_objects.Figure, example: 'made-up: a Figure with bars for 2 states', shape_explanation: 'A Figure is a container, not an array, so it has no rows or columns. It holds one bar trace for each trial state that appears, and a layout with a title and axis labels. The example describes a made-up Figure with 2 states, so its size is not a shape.', note: 'One bar per trial, from its start time to its finish time.'}
+    next_step: Look for the longest bars first, they cost the most time.
+    snippet: |
+      # optuna 5.0.0
+      import optuna
+      from sklearn.datasets import make_regression
+      from sklearn.ensemble import RandomForestRegressor
+      from sklearn.model_selection import cross_val_score
+
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+      X, y = make_regression(n_samples=300, n_features=8, noise=15, random_state=0)
+
+
+      def objective(trial):
+          model = RandomForestRegressor(
+              n_estimators=trial.suggest_int("n_estimators", 10, 80),
+              max_depth=trial.suggest_int("max_depth", 2, 12),
+              min_samples_leaf=trial.suggest_int("min_samples_leaf", 1, 10),
+              random_state=0,
+          )
+          return cross_val_score(model, X, y, cv=3, scoring="r2").mean()
+
+
+      study = optuna.create_study(
+          direction="maximize",
+          sampler=optuna.samplers.TPESampler(seed=0),
+      )
+      study.optimize(objective, n_trials=20)
+      fig = optuna.visualization.plot_timeline(study)
+      print(fig.layout.xaxis.title.text)
+      print(fig.layout.yaxis.title.text)
+      print([trace.name for trace in fig.data])
+    snippet_library: optuna
+    output: |
+      (made-up values, not run: plotly is not installed here)
+      Datetime
+      Trial
+      ['COMPLETE']
     visual: null
-  catch_outs:
-    - Shows trial times, not the scores.
-    - Needs plotly installed; it is not in the project requirements.
+  catch_outs: ['Shows trial times, not the scores.', 'A long bar is a slow trial, and a short bar is a quick one.', 'Bars are coloured by state, such as COMPLETE, PRUNED or FAIL.', 'Bars sit on a date axis, so you can see when each trial ran.', 'n_recent_trials must be a positive number, or the call raises an error.', Needs plotly installed; it is not in the project requirements., The code example output is made up. It was not run here.]
   key_settings:
     tier1:
-      - {name: study, page: null}
-      - {name: n_recent_trials, page: null}
+    - {name: study, page: null, controls: The study whose trials are drawn as bars., effect: More trials make a taller plot with more bars to read.}
+    - {name: n_recent_trials, page: null, controls: Plots only the latest this many trials. None plots every trial., effect: 'Keeps a long search readable, but hides the earlier trials.'}
     tier2: []
     tier3: []
   watch_it_work: {none: true}
-  intuition: {text: "Shows when trials started and how long they ran."}
-  next: []
-
+  intuition:
+    idea: "One bar per trial, from when it started to when it finished, so you can see how long trials took."
+    analogy: "A timetable with one row per train, where each bar shows when it left and when it arrived."
+    animation: none
+    goal: "See which trials took the longest, and when the search spent its time."
+    steps:
+      - "The horizontal axis is the datetime, the clock time when trials ran."
+      - "The vertical axis is the trial number, with one row for each trial."
+      - "Each bar is one trial."
+      - "The left end of a bar is when the trial started."
+      - "The right end is when the trial finished, so bar length is how long it took."
+      - "Colour shows the trial's state, and the legend names each state shown."
+      - "Look for the longest bars first, because they took the most time."
+    good_at: ["how long each trial took", "slow trials in the search", "when trials ran"]
+    bad_at: ["scores of each trial", "which settings each trial used", "why a trial was slow"]
+    vs_siblings:
+      - {page: plot-optimization-history, note: "Shows scores over trials, not run times."}
+      - {page: plot-intermediate-values, note: "Shows scores at each step, not when trials ran."}
+      - {page: plot-edf, note: "Shows how scores are spread, not how long trials took."}
+    read_more:
+      - "Bar length is the finish time minus the start time."
+      - "n_recent_trials keeps only the last trials in trial order."
+      - "A running trial's bar ends at the latest finish time in the study, not at the present."
+      - "A study with no trials gives an empty plot."
+  next: [but-slow-fits]

@@ -1,88 +1,241 @@
 id: qmcsampler
 plain_name: QMCSampler
 code_name: QMCSampler
-aliases: [quasi Monte Carlo, low-discrepancy, Sobol]
+aliases:
+- quasi Monte Carlo
+- low-discrepancy
+- Sobol
 stage: tune
 family: tune.optuna.sampler
-tracks: [standard, time-series]
+tracks:
+- standard
+- time-series
 archetype: tuning
-question_tags: [cover the space, even spread]
-targets: [optuna.samplers.QMCSampler]
-pairs_with: [optuna-study]
+question_tags:
+- cover the space
+- even spread
+targets:
+- optuna.samplers.QMCSampler
+pairs_with:
+- optuna-study
 clashes: []
-source_urls: ['https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.QMCSampler.html']
-library_versions: {optuna: 5.0.0, scikit-learn: "1.9.1"}
+source_urls:
+- https://optuna.readthedocs.io/en/stable/reference/samplers/generated/optuna.samplers.QMCSampler.html
+library_versions:
+  optuna: 5.0.0
+  scikit-learn: 1.9.1
 reviewed: false
 rules:
   task_types: []
   blocked_when: []
   fits_on_data: true
-  shape_effect: {rows: same, columns: same}
+  shape_effect:
+    rows: same
+    columns: same
 slots:
   header: {}
   solves:
-    hero: {kind: tuning, dims: 2, trials: 30}
+    hero:
+      kind: tuning
+      dims: 2
+      trials: 16
     line: Spreads tries evenly across the space, tidier than random.
   quick_facts:
     facts:
-      - {label: Default sequence, value: "sobol"}
-      - {label: Scrambled by default, value: "no"}
+    - label: Default sequence
+      value: sobol
+    - label: Scrambled by default
+      value: 'no'
+    - label: Sequence options
+      value: sobol, halton
   use_avoid:
-    use_when: [cover the space evenly, continuous settings]
-    avoid_when: [learning from past trials]
+    use_when:
+    - cover the space evenly
+    - continuous settings
+    avoid_when:
+    - learning from past trials
   prep:
-    - step: {page: train-test-split}
-      status: recommended
-      why: Keep a final test set the search never sees.
-      condition: null
-      unless: null
+  - step:
+      page: train-test-split
+    status: recommended
+    why: Keep a final test set the search never sees.
+    condition: null
+    unless: null
   code:
-    - library: optuna
-      target: optuna.samplers.QMCSampler
-      why_this_library: Optuna sampler. Pass it to create_study.
-      snippet: |
-        # optuna 5.0.0
-        import optuna
-        from sklearn.datasets import make_regression
-        from sklearn.linear_model import ElasticNet
-        from sklearn.model_selection import cross_val_score
+  - library: optuna
+    target: optuna.samplers.QMCSampler
+    why_this_library: Optuna sampler. Pass it to create_study.
+    snippet: |
+      # optuna 5.0.0
+      import optuna
+      from sklearn.datasets import make_regression
+      from sklearn.linear_model import ElasticNet
+      from sklearn.model_selection import cross_val_score
 
-        optuna.logging.set_verbosity(optuna.logging.WARNING)
-        X, y = make_regression(
-            n_samples=200, n_features=8, n_informative=3, noise=10, random_state=0
-        )
-        SCORING = "neg_mean_squared_error"
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
 
-
-        def objective(trial):
-            alpha = trial.suggest_float("alpha", 0.01, 10.0)
-            l1_ratio = trial.suggest_float("l1_ratio", 0.0, 1.0)
-            model = ElasticNet(alpha=alpha, l1_ratio=l1_ratio)
-            return -cross_val_score(model, X, y, cv=3, scoring=SCORING).mean()
+      X, y = make_regression(
+          n_samples=200, n_features=8, n_informative=3, noise=10, random_state=0
+      )
+      SCORING = "neg_mean_squared_error"
 
 
-        sampler = optuna.samplers.QMCSampler(seed=0, scramble=True)
-        study = optuna.create_study(sampler=sampler, direction="minimize")
-        study.optimize(objective, n_trials=16)
-        print({k: round(v, 3) for k, v in study.best_params.items()})
-        print(round(study.best_value, 3))
+      def objective(trial):
+          alpha = trial.suggest_float("alpha", 0.01, 10.0)
+          l1_ratio = trial.suggest_float("l1_ratio", 0.0, 1.0)
+          model = ElasticNet(alpha=alpha, l1_ratio=l1_ratio)
+          return -cross_val_score(model, X, y, cv=3, scoring=SCORING).mean()
+
+
+      sampler = optuna.samplers.QMCSampler(seed=0, scramble=True)
+      study = optuna.create_study(sampler=sampler, direction="minimize")
+      study.optimize(objective, n_trials=16)
+      print({k: round(v, 3) for k, v in study.best_params.items()})
+      print(round(study.best_value, 3))
+    output: |
+      {'alpha': 1.054, 'l1_ratio': 0.983}
+      118.473
   what_comes_out:
     items:
-      - {name: best_params, kind: return, task: null, shape: dict of settings, note: Best combination among those tried.}
-    next_step: null
+    - name: best_params
+      kind: return
+      task: null
+      shape: dict of settings
+      object_type: dict
+      example: '{''alpha'': 2.5, ''l1_ratio'': 0.31}'
+      shape_explanation: A dictionary has no rows or columns. Each key is a setting name from the objective. Each value is that setting in the best trial. The example has 2 keys, because the search has alpha and l1_ratio.
+      note: Settings from the trial with the lowest value.
+    - name: best_value
+      kind: return
+      task: null
+      shape: scalar
+      object_type: float
+      example: '0.412'
+      shape_explanation: A scalar is one value, not an array. It has no rows or columns. The example is the single number 0.412, so its shape is scalar.
+      note: Objective value of the best trial. Lower is better here.
+    - name: trials
+      kind: return
+      task: null
+      shape: (n_trials,)
+      object_type: list of FrozenTrial
+      example: '[FrozenTrial(number=0), FrozenTrial(number=1)]'
+      shape_explanation: A one-dimensional list with one entry per trial that ran. n_trials is the number of trials. The example has 2 entries, so its concrete shape is (2,).
+      note: Every trial run, in order, with its settings and value.
+    next_step: Refit with ElasticNet(**best_params) to reuse the winning settings.
+    snippet: |
+      # optuna 5.0.0
+      import optuna
+      from sklearn.datasets import make_regression
+      from sklearn.linear_model import ElasticNet
+      from sklearn.model_selection import cross_val_score
+
+      optuna.logging.set_verbosity(optuna.logging.WARNING)
+
+      X, y = make_regression(
+          n_samples=200, n_features=8, n_informative=3, noise=10, random_state=0
+      )
+      SCORING = "neg_mean_squared_error"
+
+
+      def objective(trial):
+          alpha = trial.suggest_float("alpha", 0.01, 10.0)
+          l1_ratio = trial.suggest_float("l1_ratio", 0.0, 1.0)
+          model = ElasticNet(alpha=alpha, l1_ratio=l1_ratio)
+          return -cross_val_score(model, X, y, cv=3, scoring=SCORING).mean()
+
+
+      sampler = optuna.samplers.QMCSampler(seed=0, scramble=True)
+      study = optuna.create_study(sampler=sampler, direction="minimize")
+      study.optimize(objective, n_trials=16)
+
+      best = study.best_params
+      print("best_params:", {k: round(v, 3) for k, v in best.items()})
+      print("best_value:", round(study.best_value, 3))
+      print("trials:", len(study.trials))
+      refit = ElasticNet(**best).fit(X, y)
+      print("refit coef_ shape:", refit.coef_.shape)
+    snippet_library: optuna
+    output: |
+      best_params: {'alpha': 1.054, 'l1_ratio': 0.983}
+      best_value: 118.473
+      trials: 16
+      refit coef_ shape: (8,)
     visual: null
   catch_outs:
-    - Sobol is the default sequence.
-    - Turn scramble on for a randomised sequence.
-    - Set seed with scramble for repeatable tries.
+  - Sobol is the default sequence; it is most even when trials are a power of two.
+  - Turn scramble on for a randomised sequence.
+  - Set seed with scramble=True so repeated runs match.
+  - The first trial sets the search space, and it cannot change later.
+  - The first trial is sampled independently, not from the sequence.
   key_settings:
-    tier1: 
-      - {name: qmc_type, page: null}
-      - {name: scramble, page: null}
-      - {name: seed, page: null}
-    tier2: 
-      - {name: independent_sampler, page: null}
-    tier3: []
-  watch_it_work: {none: true}
-  intuition: {text: "Scatter tries evenly, so no corner of the space is missed."}
+    tier1:
+    - name: qmc_type
+      page: null
+      controls: 'Which sequence to use: sobol (the default) or halton.'
+      effect: Sobol is built for trial counts that are powers of two.
+    - name: scramble
+      page: null
+      controls: When True, randomises the sequence using seed.
+      effect: Off gives the same plain sequence every run, with no seed needed.
+    - name: seed
+      page: null
+      controls: The random seed for scrambling. Ignored when scramble is False.
+      effect: Parallel workers must share one seed, or the spread breaks down.
+    tier2:
+    - name: independent_sampler
+      page: null
+      controls: Sampler for the first trial and any setting outside the sequence. None uses RandomSampler.
+      effect: Settings sampled here lose the even spread of the sequence.
+    tier3:
+    - name: warn_independent_sampling
+      page: null
+      controls: Prints a warning when a setting is sampled by the independent sampler.
+      effect: Warnings flag settings that the sequence does not cover.
+  watch_it_work:
+    none: true
+  intuition:
+    idea: Place tries on a low-discrepancy sequence, so they spread evenly over the space.
+    analogy: Like pins on a map in an evenly spaced pattern, not dropped at random.
+    animation: none
+    goal: Try settings that spread across the space, so no corner is missed.
+    steps:
+    - 'Pick a sequence: sobol by default, or halton.'
+    - The first trial is sampled by an independent sampler, usually RandomSampler.
+    - The first trial sets the search space for later trials.
+    - Later trials take their values from the sequence, in order.
+    - Each trial is scored by the objective function.
+    - The study keeps the trial with the lowest value.
+    math:
+      notation:
+      - symbol: f
+        meaning: The objective function, which scores a set of settings.
+      - symbol: alpha_t, l1_ratio_t
+        meaning: The settings that trial t tried.
+      - symbol: v_t
+        meaning: The value the objective returned for trial t.
+      - symbol: T
+        meaning: The number of trials, set by n_trials.
+      - symbol: t*
+        meaning: The winning trial, read through best_params.
+      equations:
+      - expression: v_t = f(alpha_t, l1_ratio_t)
+        meaning: Each trial's value comes from the objective applied to its settings.
+      - expression: t* = argmin over t of v_t
+        meaning: The winning trial is the one with the smallest value.
+      prediction: With 16 trials, best_params holds the settings of whichever trial scored lowest.
+    good_at:
+    - even spread
+    - continuous settings
+    bad_at:
+    - learning from past trials
+    - focusing on one promising spot
+    vs_siblings:
+    - page: randomsampler
+      note: Random draws leave gaps that the sequence fills more evenly.
+    - page: gridsampler
+      note: A fixed grid of listed values, not a spread across a range.
+    read_more:
+    - qmc_type picks the sequence; sobol is the default.
+    - scramble adds randomness, and seed makes it repeatable.
+    - The first trial uses the independent sampler.
   next: []
