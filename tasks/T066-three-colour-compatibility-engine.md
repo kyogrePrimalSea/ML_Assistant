@@ -1,6 +1,6 @@
 # T066 — Three-colour compatibility engine
 
-**Status:** Backlog
+**Status:** Done
 
 ## Objective
 

@@ -1,6 +1,6 @@
 # T067 — Proposals with pros and cons
 
-**Status:** Backlog
+**Status:** Done
 
 ## Objective
 

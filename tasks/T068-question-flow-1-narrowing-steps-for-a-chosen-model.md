@@ -1,6 +1,6 @@
 # T068 — Question flow 1: narrowing steps for a chosen model
 
-**Status:** Backlog
+**Status:** Done
 
 ## Objective
 

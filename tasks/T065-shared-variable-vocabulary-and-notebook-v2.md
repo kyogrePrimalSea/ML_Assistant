@@ -1,6 +1,6 @@
 # T065 — Shared variable vocabulary and notebook v2
 
-**Status:** Backlog
+**Status:** Done
 
 ## Objective
 
