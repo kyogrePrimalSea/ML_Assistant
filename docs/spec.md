@@ -297,9 +297,11 @@ One content tree, three views (radial tree, constellation, route map), each for 
 - **Filtering dims, never moves.**
 - Library: force-graph (2D canvas), with positions precomputed and fixed.
 
-### 7.3 Route map — Build ("the pipeline I'm assembling") (A6)
+### 7.3 Route map — Build ("the pipeline I'm assembling") (A6, reversed by A11)
 
-The globe journey is removed. Build is a **flat route map**. Its job: show the pipeline I'm building, answer four questions at a glance, and let me edit it.
+**A11 (2026-10-29): the globe returns as the Build view and replaces the flat route map described below. Keep `globe.gl` and `three`. §8.1 is the current design. The route-map text in this section stays as the record of what the globe must still answer: the four questions, the stage statuses and the shape-after-stage numbers.**
+
+Build was a **flat route map**. Its job: show the pipeline I'm building, answer four questions at a glance, and let me edit it.
 
 1. What's left to pick?
 2. Does it all fit together?
@@ -334,7 +336,7 @@ The globe journey is removed. Build is a **flat route map**. Its job: show the p
 - Remove the encoder while the Passport says "has categories" → Blocked, unless the model handles categories natively (then a Tip).
 - Choose Early stopping with Random forest → Blocked: "Early stopping needs a boosting model", with a fix.
 
-Rules come from schema data (§8); the schema fields these behaviours need are recorded in `docs/CONTENT_SCHEMA.md`. Keyboard navigation works across stages and chips. `globe.gl` and `three` are removed from the bundle once the route map passes review.
+Rules come from schema data (§8); the schema fields these behaviours need are recorded in `docs/CONTENT_SCHEMA.md`. Keyboard navigation works across stages and chips. (A11: `globe.gl` and `three` now stay in the bundle.)
 
 ### 7.4 Desktop layout
 
@@ -361,6 +363,62 @@ Rules come from schema data (§8); the schema fields these behaviours need are r
 - **Optional stages** (e.g. Select) can be skipped; shown as fly-overs, never as missing.
 - **Override**: Warn and Tip can be dismissed; Block can be overridden with a one-line acknowledgement.
 - **Why did this fire**: every validation message links to the page that explains it.
+
+### 8.1 Globe build journey (A11)
+
+**Two entry flows**
+
+1. **I know my model.** Pick the model first. Then either:
+   - answer a short set of questions that narrows the pre- and post-processing steps, or
+   - click any steps directly from the full list.
+2. **I don't know my model.** Answer questions about the prediction wanted and about the data (more columns than rows, missing values, categories, time order, imbalance, size). The Passport fills as you answer, and the globe populates.
+
+**Narrowing, not deciding**
+
+- Questions narrow the choices; they never pick for the user.
+- Each stage then shows a short list of **proposals**. Every proposal carries pros and cons as a tooltip, and a click adds it to the journey.
+- A **"Choose from the full list"** button opens every item for that stage. Compatibility marks return in the full list.
+
+**Three-level compatibility**
+
+| Colour | Mark | Meaning | Rule severities |
+| --- | --- | --- | --- |
+| Green | tick | Compatible | none fired |
+| Yellow | ? | Works, but not recommended | Warn and Tip (the tooltip says which) |
+| Red | cross | Incompatible | Block |
+
+- Marks use icon plus label, never colour alone (§11).
+- Block can still be overridden with a one-line acknowledgement (§8).
+- Compatibility is checked against the model and against every other pick. It updates as you pick.
+
+**Journey side panel**
+
+- One **capsule** per branch of the journey (one per stage that holds a pick).
+- Expanding a capsule shows a short write-up of what the chosen steps do, with links to their pages.
+- A page link opens that page in a **second side panel**, next to the journey panel. Closing it returns to the journey.
+
+**Notebook (.ipynb)**
+
+- The steps run in stage order, and each step's output is the next step's input.
+- This holds because every cell uses one **shared variable vocabulary** (the table below). Templates read and write only these names, so cells chain without glue code.
+- The user brings their own data. The first cell holds the only user edits: the file path, the target column name and the column lists, each marked with a TODO comment that says what to call it.
+- Fixed templates stay deterministic (§8 Output).
+- Testing: the chaining is verified later by running notebooks on the toy datasets. This is not part of v1 delivery; the names alone are the v1 guarantee.
+
+| Name | Holds |
+| --- | --- |
+| `df` | the raw table as loaded |
+| `target` | name of the target column (string) |
+| `X`, `y` | features and target, after the cleaning stage |
+| `X_train`, `X_test`, `y_train`, `y_test` | the split |
+| `numeric_cols`, `categorical_cols` | column lists the user sets |
+| `preprocess` | the ColumnTransformer or Pipeline of transform steps |
+| `model` | the fitted or unfitted estimator |
+| `y_pred`, `y_proba` | predictions, class probabilities |
+| `cv` | the cross-validation splitter |
+| `scores` | cross-validation scores |
+
+The vocabulary grows in `docs/CONTENT_SCHEMA.md` terms: a name is added once and reused everywhere, never renamed per page.
 
 ### Validation rules (derived from schema data)
 
@@ -577,5 +635,6 @@ Amendments from design review round 1 (`docs/BRIEF_DESIGN_REVIEW_1.md`), applied
 | A8 | 2026-10-24 | JetBrains Mono for code only; numbers in text use Atkinson with tabular figures. Code soft-wraps. | §10.1, §10.8, §10.9 |
 | A9 | 2026-10-24 | Hide a stage badge that repeats the archetype badge; keep a stage-colour dot. | §5.1 |
 | A10 | 2026-10-24 | Key settings tiers "Most used / Also useful / Rarely changed"; effective defaults shown large. | §5.1 |
+| A11 | 2026-10-29 | The globe journey returns as the Build view and replaces the flat route map (reverses A6). Two entry flows, three-colour compatibility, proposals with pros and cons, a journey side panel, and a notebook built on one shared variable vocabulary. | §7.3, §8, §12 |
 
 Also decided 2026-10-24: the classification toy dataset is breast cancer (§9).

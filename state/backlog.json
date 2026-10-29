@@ -90,7 +90,7 @@
     "E13": {
       "title": "Rich learning-page prototype",
       "goal": "Prove the deeper shared page format on XGBoost: intuitive and mathematical explanation, meaningful setting guidance, and runnable prediction code with captured output, while preserving the existing 12-slot structure.",
-      "spec": "§5.1, §9, §13; user-approved content review direction 2026-10-26",
+      "spec": "\u00a75.1, \u00a79, \u00a713; user-approved content review direction 2026-10-26",
       "status": "Done",
       "dependencies": [
         "E05"
@@ -99,7 +99,7 @@
     "E14": {
       "title": "Rich model-page migration",
       "goal": "Migrate model pages in source-compatible family batches to the user-approved XGBoost page standard, using low-cost parallel writers and full primary-model review.",
-      "spec": "§5.1, §13.4; docs/CONTENT_SCHEMA.md Reviewed model-page template",
+      "spec": "\u00a75.1, \u00a713.4; docs/CONTENT_SCHEMA.md Reviewed model-page template",
       "status": "Done",
       "dependencies": [
         "E13"
@@ -140,6 +140,15 @@
       "status": "Backlog",
       "dependencies": [
         "E03"
+      ]
+    },
+    "E15": {
+      "title": "Globe build journey",
+      "goal": "Spec \u00a78.1: two entry flows, three-colour compatibility, proposals with pros and cons, journey side panel, notebook with shared variable vocabulary. Built beside the existing Journey view so the demo is untouched.",
+      "spec": "\u00a77.3, \u00a78.1",
+      "status": "Backlog",
+      "dependencies": [
+        "E04"
       ]
     }
   },
@@ -227,6 +236,14 @@
       "T062",
       "T063",
       "T064"
+    ],
+    "Sprint 11 (E15 globe build)": [
+      "T065",
+      "T066",
+      "T067",
+      "T068",
+      "T069",
+      "T070"
     ]
   },
   "tasks": {
@@ -829,6 +846,61 @@
         "T048"
       ],
       "epic": "E14"
+    },
+    "T065": {
+      "title": "Shared variable vocabulary and notebook v2",
+      "file": "tasks/T065-shared-variable-vocabulary-and-notebook-v2.md",
+      "status": "Backlog",
+      "dependencies": [],
+      "epic": "E15"
+    },
+    "T066": {
+      "title": "Three-colour compatibility engine",
+      "file": "tasks/T066-three-colour-compatibility-engine.md",
+      "status": "Backlog",
+      "dependencies": [],
+      "epic": "E15"
+    },
+    "T067": {
+      "title": "Proposals with pros and cons",
+      "file": "tasks/T067-proposals-with-pros-and-cons.md",
+      "status": "Backlog",
+      "dependencies": [
+        "T066"
+      ],
+      "epic": "E15"
+    },
+    "T068": {
+      "title": "Question flow 1: narrowing steps for a chosen model",
+      "file": "tasks/T068-question-flow-1-narrowing-steps-for-a-chosen-model.md",
+      "status": "Backlog",
+      "dependencies": [
+        "T066"
+      ],
+      "epic": "E15"
+    },
+    "T069": {
+      "title": "Question flow 2: recommend a model from data and goal",
+      "file": "tasks/T069-question-flow-2-recommend-a-model-from-data-and-goal.md",
+      "status": "Backlog",
+      "dependencies": [
+        "T066",
+        "T068"
+      ],
+      "epic": "E15"
+    },
+    "T070": {
+      "title": "Globe build view, capsules and second side panel",
+      "file": "tasks/T070-globe-build-view-capsules-and-second-side-panel.md",
+      "status": "Backlog",
+      "dependencies": [
+        "T065",
+        "T066",
+        "T067",
+        "T068",
+        "T069"
+      ],
+      "epic": "E15"
     }
   }
 }
