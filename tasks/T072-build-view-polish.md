@@ -1,6 +1,6 @@
 # T072 — Build view polish (globe labels, ranking, layout, wording)
 
-**Status:** Backlog
+**Status:** Done
 
 **Epic:** E15
 

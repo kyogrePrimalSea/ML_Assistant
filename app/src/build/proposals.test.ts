@@ -93,6 +93,28 @@ describe('proposeForStage', () => {
   })
 })
 
+describe('ranking by notebook template', () => {
+  it('at equal mark, a templated page outranks an untemplated one even when it is later in the list', () => {
+    const plain = rec('zzz-untemplated', 'transform', 'transform.scale.rescale')
+    const templated = rec('minmaxscaler', 'transform', 'transform.scale.rescale')
+    const out = proposeForStage('transform', [ridge()], profile, [plain.record, templated.record])
+    expect(out.map((p) => [p.id, p.mark])).toEqual([['minmaxscaler', 'green'], ['zzz-untemplated', 'green']])
+  })
+
+  it('a yellow templated page does not outrank a green untemplated page', () => {
+    const yellowTemplated = rec('minmaxscaler', 'transform', 'transform.scale.rescale')
+    const greenPlain = rec('zzz-untemplated', 'transform', 'transform.encode.features')
+    const out = proposeForStage('transform', [xgb()], withCategories, [yellowTemplated.record, greenPlain.record])
+    expect(out.map((p) => [p.id, p.mark])).toEqual([['zzz-untemplated', 'green'], ['minmaxscaler', 'yellow']])
+  })
+
+  it('templated ranking applies to the full list too', () => {
+    const plain = rec('aaa', 'transform', 'transform.encode.features')
+    const templated = rec('onehotencoder', 'transform', 'transform.encode.features')
+    expect(fullList('transform', [], profile, [plain.record, templated.record]).map((p) => p.id)).toEqual(['onehotencoder', 'aaa'])
+  })
+})
+
 describe('fullList', () => {
   it('returns every item of the stage with its mark, green before yellow, picked items included', () => {
     const picks = [xgb()]

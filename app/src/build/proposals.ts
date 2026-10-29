@@ -3,6 +3,7 @@
 // is written fresh here. A record with no such fields gets empty arrays, and the UI shows "no summary yet".
 import { markFor, type Mark, type MarkResult } from './compat.ts'
 import type { DataProfile, Issue, Pick } from './validate.ts'
+import { TEMPLATED_PAGE_IDS } from './notebookV2.ts'
 import type { ItemRecord, StageId } from '../content/types.ts'
 
 export interface Proposal {
@@ -17,6 +18,8 @@ export interface Proposal {
 
 const MAX_PROS_CONS = 3
 const MAX_PROPOSALS = 4
+
+const TEMPLATED: ReadonlySet<string> = new Set(TEMPLATED_PAGE_IDS)
 
 const MARK_RANK: Record<Mark, number> = { green: 0, yellow: 1, red: 2 }
 
@@ -53,6 +56,7 @@ function fit(r: ItemRecord, profile: DataProfile): number {
 interface Scored {
   proposal: Proposal
   fit: number
+  templated: boolean
 }
 
 function scoreAll(
@@ -69,14 +73,16 @@ function scoreAll(
       return {
         proposal: { id: r.id, name: r.plain_name, mark: result.mark, pros: prosOf(r), cons: consOf(r), reasons: result.reasons },
         fit: fit(r, profile),
+        templated: TEMPLATED.has(r.id),
       }
     })
-    // Stable sort: equal mark and fit keep the order of `records`.
-    .sort((a, b) => MARK_RANK[a.proposal.mark] - MARK_RANK[b.proposal.mark] || b.fit - a.fit)
+    // Mark first, then pages with a notebook template, then profile fit. Stable: ties keep the order of `records`.
+    .sort((a, b) =>
+      MARK_RANK[a.proposal.mark] - MARK_RANK[b.proposal.mark] || Number(b.templated) - Number(a.templated) || b.fit - a.fit)
 }
 
 /**
- * Up to 4 proposals for a stage: items not already picked, ranked green first, then by fit to the profile.
+ * Up to 4 proposals for a stage: items not already picked, ranked green first, then pages with a notebook template, then by fit to the profile.
  */
 export function proposeForStage(
   stage: StageId,

@@ -39,3 +39,28 @@
 .bld-capsule-head > .truncate { min-width: 0; }
 .bld-capsule-head .whitespace-nowrap { flex-shrink: 0; }
 .bld-capsule-body .inline-flex { white-space: normal; }
+
+/* Globe stage labels (Build only). Stage name only; stages without a pick are quieter and shrink when the globe is narrow. */
+.jg-region[data-state] { pointer-events: auto; font-size: 12px; }
+.jg-region[data-state]:focus-visible { outline: 2px solid var(--accent-strong); outline-offset: 2px; border-radius: 4px; }
+.jg-region[data-state="unpicked"], .jg-region[data-state="skipped"] { color: var(--text-muted); font-weight: 400; }
+.jg-region[data-state="skipped"] { text-decoration: line-through; }
+.jg-region-abbr { display: none; }
+.jg-host[data-compact="true"] .jg-region[data-state="unpicked"] .jg-region-full,
+.jg-host[data-compact="true"] .jg-region[data-state="skipped"] .jg-region-full { display: none; }
+.jg-host[data-compact="true"] .jg-region[data-state="unpicked"] .jg-region-abbr,
+.jg-host[data-compact="true"] .jg-region[data-state="skipped"] .jg-region-abbr { display: inline; }
+.jg-host[data-compact="true"] .jg-region svg { display: none; }
+.jg-host[data-compact="true"] .jg-region[data-state="picked"] svg { display: block; }
+/* Zoomed in there is room: show every full name again. */
+.jg-host[data-zoomed="true"] .jg-region .jg-region-full { display: inline !important; }
+.jg-host[data-zoomed="true"] .jg-region .jg-region-abbr { display: none !important; }
+
+/* Page panel: beside the journey panel when wide, over it when the build area is under 1200px (keeps globe and options wide). */
+.bld-root { position: relative; }
+@container build (max-width: 1199px) {
+  .bld-panel-overlay {
+    position: absolute; top: 0; right: 0; bottom: 0; z-index: 30; width: 380px;
+    box-shadow: -12px 0 24px rgb(0 0 0 / 0.25);
+  }
+}

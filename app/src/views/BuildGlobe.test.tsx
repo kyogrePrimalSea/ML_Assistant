@@ -154,6 +154,28 @@ describe('BuildGlobe entry and flow 1', () => {
   })
 })
 
+describe('BuildGlobe notebook tag and skipping', () => {
+  it('marks proposals with notebook code ready or a TODO cell, in words', async () => {
+    setup()
+    await knowModel('Ridge')
+    await userEvent.click(screen.getByRole('button', { name: /^Transform/ }))
+    const cards = screen.getAllByTestId('proposal')
+    for (const c of cards) expect(within(c).getByText('Notebook cell: TODO')).toBeInTheDocument()
+  })
+
+  it('offers Skip only for optional stages and lets the user undo it', async () => {
+    setup()
+    await knowModel('Ridge')
+    await userEvent.click(screen.getByRole('button', { name: /^Clean/ }))
+    await userEvent.click(screen.getByRole('button', { name: 'Skip Clean' }))
+    expect(screen.getByText('Skipped')).toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: 'Undo skip' }))
+    expect(screen.getByRole('button', { name: 'Skip Clean' })).toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: /^Transform/ }))
+    expect(screen.queryByRole('button', { name: /^Skip Transform/ })).not.toBeInTheDocument()
+  })
+})
+
 describe('BuildGlobe flow 2', () => {
   it('asks questions, recommends models with pros and cons, and continues into the stage steps', async () => {
     setup()

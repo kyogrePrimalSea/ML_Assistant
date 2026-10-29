@@ -11,7 +11,7 @@ import { nextQuestion as nextProfileQuestion, narrow, type ProfileAnswers } from
 import { nextQuestion as nextFlow2Question, profileOf, recommendModels, type Flow2Answers, type Flow2Proposal } from '@/build/flow2'
 import { buildJourney } from '@/build/journey'
 import { NOTEBOOK_FILENAME, toIpynb } from '@/build/notebook'
-import { buildNotebookV2 } from '@/build/notebookV2'
+import { buildNotebookV2, TEMPLATED_PAGE_IDS } from '@/build/notebookV2'
 import { fullList, proposeForStage, type Proposal } from '@/build/proposals'
 import { STAGE_ORDER, type DataProfile, type Pick } from '@/build/validate'
 import { familyNames } from '@/content/labels'
@@ -20,12 +20,16 @@ import type { ItemRecord, StageId, TaskType } from '@/content/types'
 import { useMediaQuery } from '@/shell/useMediaQuery'
 import { useShellState } from '@/shell/ShellState'
 import { answersFromFlow2, deriveProfile, overridesFromFlow2, type FlagField } from './buildModel'
-import { JourneyPanel, MarkChip, PageSidePanel, ProsCons } from './BuildPanel'
-import { JourneyGlobe, type GlobeHandle } from './JourneyGlobe'
+import { JourneyPanel, MarkChip, NotebookTag, PageSidePanel, ProsCons } from './BuildPanel'
+import { BuildGlobeCanvas } from './BuildGlobeCanvas'
+import type { GlobeHandle } from './JourneyGlobe'
 import './journey.css'
 import './BuildGlobe.css'
 
 const SELECT_ALTITUDE = 2.1
+const TEMPLATED: ReadonlySet<string> = new Set(TEMPLATED_PAGE_IDS)
+/** Stages the user may skip on purpose. The others are needed for a runnable pipeline. */
+const OPTIONAL_STAGES: StageId[] = ['explore', 'clean', 'select', 'tune', 'interpret']
 
 type Phase = 'entry' | 'model' | 'profile' | 'stages' | 'help'
 
@@ -62,7 +66,10 @@ function Card({
         <h4 className="m-0 min-w-0 flex-1 text-base">{p.name}</h4>
         <ProsCons name={p.name} pros={p.pros} cons={p.cons} reasons={p.reasons} />
       </div>
-      <MarkChip mark={p.mark} />
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+        <MarkChip mark={p.mark} />
+        <NotebookTag ready={TEMPLATED.has(p.id)} />
+      </div>
       {extra?.map((t) => <p key={t} className="m-0 text-sm text-text-muted">{t}</p>)}
       {picked ? (
         <div className="flex flex-wrap items-center gap-2 text-sm font-bold">
@@ -193,6 +200,7 @@ export default function BuildGlobe() {
   const [pageId, setPageId] = useState<string | null>(null)
   const [notebook, setNotebook] = useState(false)
   const [showNow, setShowNow] = useState(false)
+  const [skipped, setSkipped] = useState<ReadonlySet<StageId>>(new Set())
 
   const byId = useMemo(() => new Map((records ?? []).map((r) => [r.id, r])), [records])
   const picks: Pick[] = useMemo(() => pickIds.flatMap((id) => (byId.has(id) ? [{ record: byId.get(id)! }] : [])), [pickIds, byId])
@@ -224,6 +232,7 @@ export default function BuildGlobe() {
     const r = byId.get(id)
     setPickIds((ids) => [...ids.filter((x) => x !== id && !(r?.stage === 'model' && byId.get(x)?.stage === 'model')), id])
     setSelectedN(null)
+    if (r) setSkipped((s) => { if (!s.has(r.stage)) return s; const n = new Set(s); n.delete(r.stage); return n })
   }
   const removePick = (id: string) => {
     setPickIds((ids) => ids.filter((x) => x !== id))
@@ -232,7 +241,7 @@ export default function BuildGlobe() {
   }
   const reset = () => {
     setPhase('entry'); setPickIds([]); setAnswers1({}); setAnswers2({}); setOverrides({}); setStage('explore')
-    setFullOpen(false); setSearch(''); setSelectedN(null); setPageId(null); setNotebook(false); setShowNow(false)
+    setFullOpen(false); setSearch(''); setSelectedN(null); setPageId(null); setNotebook(false); setShowNow(false); setSkipped(new Set())
   }
   const chooseModel = (id: string, fromHelp: boolean) => {
     addPick(id)
@@ -258,6 +267,8 @@ export default function BuildGlobe() {
   const setFlag = (f: FlagField, v: boolean) =>
     setOverrides((o) => ({ ...o, [f]: v, ...(f === 'time_ordered' ? { track: v ? 'time-series' : 'standard' } : {}) }) as Partial<DataProfile>)
   const setTask = (t: TaskType) => setOverrides((o) => ({ ...o, task_type: t }))
+  const toggleSkip = (s: StageId) =>
+    setSkipped((cur) => { const n = new Set(cur); if (n.has(s)) n.delete(s); else n.add(s); return n })
   const toStage = (s: StageId) => { setStage(s); setFullOpen(false) }
 
   if (error) return <p role="alert" className="p-6 text-block-text">Could not load the pages: {error.message}</p>
@@ -360,7 +371,21 @@ export default function BuildGlobe() {
           })}
         </nav>
         <section aria-labelledby="bld-stage" className="grid gap-3">
-          <h2 id="bld-stage" className="m-0 text-xl">{STAGES[stage].label}</h2>
+          <div className="flex flex-wrap items-center gap-3">
+            <h2 id="bld-stage" className="m-0 text-xl">{STAGES[stage].label}</h2>
+            {OPTIONAL_STAGES.includes(stage) && !pickRecords.some((r) => r.stage === stage) ? (
+              skipped.has(stage) ? (
+                <>
+                  <span className="text-sm font-bold text-text-muted">Skipped</span>
+                  <Button size="sm" variant="ghost" onClick={() => toggleSkip(stage)}>Undo skip</Button>
+                </>
+              ) : (
+                <Button size="sm" variant="outline" onClick={() => toggleSkip(stage)} aria-label={`Skip ${STAGES[stage].label}`}>
+                  Skip {STAGES[stage].label}
+                </Button>
+              )
+            ) : null}
+          </div>
           {stage === 'model' ? (
             <div className="flex flex-wrap items-center gap-3">
               <p className="m-0">Your model is <span className="font-bold">{model.plain_name}</span>.</p>
@@ -437,10 +462,10 @@ export default function BuildGlobe() {
     <TooltipProvider>
       <div className="bld-root flex h-full min-w-0 overflow-hidden @container/build" data-testid="build">
         <div className="flex min-w-0 flex-1 flex-col">
-          <div className="relative min-h-[180px] flex-[4] overflow-hidden">
-            <JourneyGlobe ref={globe} journey={journey} selectedN={selectedN} onSelect={select} />
+          <div className="relative min-h-[260px] flex-[3] overflow-hidden">
+            <BuildGlobeCanvas ref={globe} journey={journey} selectedN={selectedN} onSelect={select} skipped={skipped} />
           </div>
-          <div className="min-h-0 flex-[5] overflow-y-auto border-t border-border bg-bg p-5" data-testid="build-workbench">
+          <div className="min-h-0 flex-[2] overflow-y-auto border-t border-border bg-bg p-5" data-testid="build-workbench">
             {body}
           </div>
         </div>

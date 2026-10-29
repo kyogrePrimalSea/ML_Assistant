@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import {
-  IconCheck, IconChevronDown, IconChevronRight, IconInfoCircle, IconNotebook, IconQuestionMark, IconTrash, IconX,
+  IconCheck, IconChevronDown, IconChevronRight, IconCode, IconInfoCircle, IconPencil, IconNotebook, IconQuestionMark, IconTrash, IconX,
 } from '@tabler/icons-react'
 import { PagePanel } from '@/page/PagePanel'
 import { STAGES } from '@/components/StageBadge'
@@ -28,6 +28,17 @@ export function MarkChip({ mark }: { mark: Mark }) {
     >
       <Icon className="size-3.5 shrink-0" aria-hidden />
       {MARK_LABEL[mark]}
+    </span>
+  )
+}
+
+/** Whether the notebook has fixed code for this page (icon plus text, never colour alone). */
+export function NotebookTag({ ready }: { ready: boolean }) {
+  const Icon = ready ? IconCode : IconPencil
+  return (
+    <span data-slot="notebook-tag" data-ready={ready} className="inline-flex w-fit items-center gap-1 text-xs text-text-muted">
+      <Icon className="size-3.5 shrink-0" aria-hidden />
+      {ready ? 'Notebook code ready' : 'Notebook cell: TODO'}
     </span>
   )
 }
@@ -247,7 +258,7 @@ export function PageSidePanel({ id, onClose, onNavigate }: { id: string; onClose
       <aside
         aria-label="Page panel"
         data-testid="build-page-panel"
-        className="bld-panel bld-panel-enter flex w-[380px] min-w-0 shrink-0 flex-col @[1200px]/build:w-[440px]"
+        className="bld-panel bld-panel-enter bld-panel-overlay flex w-[380px] min-w-0 shrink-0 flex-col @[1200px]/build:w-[440px]"
         onKeyDown={(e) => { if (e.key === 'Escape') onClose() }}
         onClick={(e) => {
           // Links inside the page open other pages in this same panel, so the journey stays where it is.

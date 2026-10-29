@@ -916,7 +916,7 @@
     "T072": {
       "title": "Build view polish",
       "file": "tasks/T072-build-view-polish.md",
-      "status": "Backlog",
+      "status": "Done",
       "dependencies": [
         "T070"
       ],

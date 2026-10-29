@@ -15,6 +15,9 @@ export const MARK_LABEL: Record<Mark, string> = {
   red: 'Incompatible',
 }
 
+/** The same three words for globe stops and legs, keyed by journey status (a tip reads as compatible). */
+export const STATUS_WORD = { valid: MARK_LABEL.green, tip: MARK_LABEL.green, warn: MARK_LABEL.yellow, block: MARK_LABEL.red } as const
+
 export const MARK_TO_SEVERITY = { green: 'valid', yellow: 'warn', red: 'block' } as const
 
 export type FlagField = 'has_categoricals' | 'has_missing' | 'time_ordered' | 'imbalanced'
