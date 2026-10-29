@@ -9,7 +9,7 @@ import { toIpynb, type Cell } from './notebook.ts'
 import { buildNotebookV2, TEMPLATED_PAGE_IDS, type Notebook } from './notebookV2.ts'
 import { DEMO_PROFILE } from './demoPipeline.ts'
 import { STAGE_ORDER, type DataProfile, type Pick } from './validate.ts'
-import { VOCAB, VOCAB_BY_NAME, VOCAB_NAMES } from './vocab.ts'
+import { producersOf, VOCAB, VOCAB_BY_NAME, VOCAB_NAMES } from './vocab.ts'
 import type { ItemRecord, StageId } from '../content/types.ts'
 
 // The page records (content/items/<stage>/<id>.yaml) that the templates were written from.
@@ -88,7 +88,7 @@ function chainProblems(nb: Notebook): string[] {
       for (const name of s.stores) {
         const v = VOCAB_BY_NAME.get(name)
         if (!v) problems.push(`${cell.label}: writes ${name}, which is not in the vocabulary`)
-        else if (v.producedBy !== stage) problems.push(`${cell.label}: writes ${name}, which vocab.ts assigns to ${v.producedBy}`)
+        else if (!producersOf(v).includes(stage!)) problems.push(`${cell.label}: writes ${name}, which vocab.ts assigns to ${producersOf(v).join(' or ')}`)
         defined.add(name)
       }
       for (const name of s.imports) defined.add(name)
@@ -187,9 +187,9 @@ describe('notebookV2', () => {
   it('uses only pages that have a fixed template as templated', () => {
     expect([...TEMPLATED_PAGE_IDS].sort()).toEqual([
       'accuracy-score', 'confusion-matrix', 'elastic-net', 'f1-score', 'gridsearchcv', 'hist-gradient-boosting',
-      'linear-regression', 'logistic-regression', 'mean-absolute-error', 'minmaxscaler', 'onehotencoder',
-      'ordinalencoder', 'permutation-importance', 'precision-score', 'r2-score', 'random-forest', 'ridge',
-      'robustscaler', 'roc-auc-score', 'root-mean-squared-error', 'selectkbest', 'targetencoder',
+      'iterativeimputer', 'knnimputer', 'linear-regression', 'logistic-regression', 'mean-absolute-error', 'minmaxscaler',
+      'onehotencoder', 'ordinalencoder', 'permutation-importance', 'precision-score', 'r2-score', 'random-forest', 'ridge',
+      'robustscaler', 'roc-auc-score', 'root-mean-squared-error', 'selectkbest', 'simpleimputer', 'targetencoder',
       'timeseriessplit', 'train-test-split', 'xgboost',
     ])
   })
@@ -280,5 +280,75 @@ describe('notebookV2 templates (T071)', () => {
     const split = nb.cells.find((c) => c.label === 'Stop 1: Split')?.source ?? ''
     expect(split).toContain('shuffle=False')
     expect(split).not.toContain('random_state')
+  })
+})
+
+describe('notebookV2 imputers (clean stage)', () => {
+  it.each(['simpleimputer', 'knnimputer', 'iterativeimputer'])('%s parses for both task types (python ast, not executed)', (id) => {
+    const sources = [DEMO_PROFILE, CLASSIFICATION].flatMap((profile) =>
+      buildNotebookV2([realPick(id)], profile).cells.filter((c) => c.kind === 'code').map((c) => c.source),
+    )
+    expect(analyse(sources)).toHaveLength(sources.length)
+  })
+
+  it('a clean imputer with no transform step builds the ColumnTransformer in the Clean cell', () => {
+    const nb = buildNotebookV2([realPick('knnimputer')], DEMO_PROFILE)
+    expect(nb.cells.map((c) => c.label)).toEqual(['Title', 'Setup', 'Stop 1: Clean'])
+    expect(nb.cells[2].source).toContain('("knnimputer", KNNImputer(n_neighbors=3, weights="distance"), numeric_cols),')
+    expect(nb.warnings).toEqual([])
+  })
+
+  it('imports IterativeImputer after the enable_iterative_imputer line it needs', () => {
+    const setup = buildNotebookV2([realPick('iterativeimputer')], DEMO_PROFILE).cells[1].source
+    expect(setup.indexOf('from sklearn.experimental import enable_iterative_imputer  # noqa: F401')).toBeGreaterThan(-1)
+    expect(setup.indexOf('from sklearn.experimental import enable_iterative_imputer')).toBeLessThan(
+      setup.indexOf('from sklearn.impute import IterativeImputer'),
+    )
+  })
+
+  // Realistic route with missing values: imputer (clean), scaler (transform), split, model, metric.
+  const MISSING_ROUTE = ['simpleimputer', 'robustscaler', 'train-test-split', 'ridge', 'r2-score'] as const
+
+  it('a route with missing values passes the chain check with no warnings and no gaps', () => {
+    const nb = buildNotebookV2(MISSING_ROUTE.map(realPick), DEMO_PROFILE)
+    expect(nb.gaps).toEqual([])
+    expect(nb.warnings).toEqual([])
+    expect(chainProblems(nb)).toEqual([])
+    expect(nb.cells.map((c) => c.label)).toEqual([
+      'Title', 'Setup', 'Stop 1: Clean', 'Stop 2: Transform', 'Stop 3: Split', 'Stop 4: Model', 'Stop 5: Evaluate',
+    ])
+  })
+
+  it('joins the imputer and the scaler into one ColumnTransformer entry, imputer first, in the Transform cell', () => {
+    const nb = buildNotebookV2(MISSING_ROUTE.map(realPick), DEMO_PROFILE)
+    const source = (label: string) => nb.cells.find((c) => c.label === label)?.source ?? ''
+    expect(source('Stop 1: Clean')).toContain('its steps join the ColumnTransformer in the Transform cell below')
+    expect(source('Stop 1: Clean')).not.toContain('ColumnTransformer(')
+    const transform = source('Stop 2: Transform')
+    expect(transform.match(/ColumnTransformer\(/g)).toHaveLength(1)
+    expect(transform).toContain(
+      '("numeric", Pipeline([("simpleimputer", SimpleImputer(strategy="median")), ("robustscaler", RobustScaler())]), numeric_cols),',
+    )
+    expect(source('Stop 4: Model')).toContain('("preprocess", preprocess),')
+    // The imputer is fitted inside the model Pipeline, which only sees the training rows.
+    expect(source('Stop 4: Model')).toContain('model.fit(X_train, y_train)')
+  })
+
+  it('gives the same output for the missing-values route in any order', () => {
+    const forward = MISSING_ROUTE.map(realPick)
+    const a = toIpynb(buildNotebookV2(forward, DEMO_PROFILE).cells)
+    expect(toIpynb(buildNotebookV2([...forward].reverse(), DEMO_PROFILE).cells)).toBe(a)
+    expect(toIpynb(buildNotebookV2([forward[2], forward[0], forward[4], forward[1], forward[3]], DEMO_PROFILE).cells)).toBe(a)
+  })
+
+  it.each([
+    ['knnimputer', ['knnimputer', 'minmaxscaler', 'train-test-split', 'linear-regression', 'mean-absolute-error']],
+    ['iterativeimputer', ['iterativeimputer', 'onehotencoder', 'train-test-split', 'logistic-regression', 'accuracy-score']],
+  ])('a %s route passes the chain check with no warnings and no gaps', (_, ids) => {
+    const profile = ids.includes('logistic-regression') ? CLASSIFICATION : DEMO_PROFILE
+    const nb = buildNotebookV2(ids.map(realPick), profile)
+    expect(nb.gaps).toEqual([])
+    expect(nb.warnings).toEqual([])
+    expect(chainProblems(nb)).toEqual([])
   })
 })

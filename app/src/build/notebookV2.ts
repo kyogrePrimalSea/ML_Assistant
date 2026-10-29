@@ -27,7 +27,7 @@ interface Ctx {
   record: ItemRecord
   /** Page ids in the pipeline, pipeline order. */
   ids: string[]
-  /** A transform template is in the route, so an earlier cell sets `preprocess`. */
+  /** A clean or transform template is in the route, so an earlier cell sets `preprocess`. */
   preprocess: boolean
   /** A select template is in the route, so an earlier cell sets `selector`. */
   selector: boolean
@@ -53,7 +53,7 @@ interface Part {
   reads: string[]
   /** Vocabulary names this cell sets. */
   writes: string[]
-  /** Transform steps are joined into one ColumnTransformer by the transform cell, not written directly. */
+  /** Clean and transform steps are joined into one ColumnTransformer by one cell, not written directly. */
   step?: Step
 }
 
@@ -79,7 +79,7 @@ model.fit(X_train, y_train)`,
   }
 }
 
-/** A transform step. The transform cell joins these into one ColumnTransformer (see transformCode). */
+/** A clean or transform step. One cell joins these into one ColumnTransformer (see transformCode). */
 const transformStep = (name: string, expr: string, cols: Step['cols'], imports: string[]): Part => ({
   imports,
   code: '',
@@ -101,6 +101,17 @@ const GRIDS: Record<string, string> = {
 
 /** Fixed templates per page, written in the shared vocabulary. Pages not listed here are gaps. */
 const TEMPLATES: Record<string, (ctx: Ctx) => Part> = {
+  // Clean: imputers fill gaps in number columns. Their steps run before the transform steps on the same columns.
+  simpleimputer: () =>
+    transformStep('simpleimputer', 'SimpleImputer(strategy="median")', 'numeric_cols', ['from sklearn.impute import SimpleImputer']),
+  knnimputer: () =>
+    transformStep('knnimputer', 'KNNImputer(n_neighbors=3, weights="distance")', 'numeric_cols', ['from sklearn.impute import KNNImputer']),
+  iterativeimputer: () =>
+    transformStep('iterativeimputer', 'IterativeImputer(max_iter=10, random_state=0)', 'numeric_cols', [
+      'from sklearn.experimental import enable_iterative_imputer  # noqa: F401',
+      'from sklearn.impute import IterativeImputer',
+    ]),
+
   // Transform: one ColumnTransformer entry per step.
   onehotencoder: () =>
     transformStep('onehotencoder', 'OneHotEncoder(handle_unknown="ignore")', 'categorical_cols', [
@@ -283,7 +294,7 @@ function gapPart(record: ItemRecord): Part {
   }
 }
 
-/** The transform cell: one ColumnTransformer, one entry per column group (steps on the same columns chain). */
+/** The ColumnTransformer cell: one entry per column group (steps on the same columns chain, in stage order). */
 function transformCode(steps: Step[]): { code: string; imports: string[] } {
   const groups = new Map<Step['cols'], Step[]>()
   for (const s of steps) groups.set(s.cols, [...(groups.get(s.cols) ?? []), s])
@@ -332,7 +343,7 @@ export function buildNotebookV2(picks: Pick[], profile: DataProfile): Notebook {
   const shared = {
     profile,
     ids,
-    preprocess: stageHas('transform'),
+    preprocess: stageHas('clean') || stageHas('transform'),
     selector: stageHas('select'),
     cv: ordered.some((p) => p.record.id === 'timeseriessplit' && templated(p)),
     search: stageHas('tune'),
@@ -343,17 +354,23 @@ export function buildNotebookV2(picks: Pick[], profile: DataProfile): Notebook {
     .filter((p) => !templated(p))
     .map((p) => ({ id: p.record.id, stage: p.record.stage, plain_name: p.record.plain_name }))
 
-  // One stop per stage that holds a pick. Transform steps are joined into one ColumnTransformer.
+  // One stop per stage that holds a pick. Clean and transform steps all join one ColumnTransformer, built in
+  // the last of those two stages that holds a step (transform when it has one), so clean steps come first.
+  const stepStages: StageId[] = ['clean', 'transform']
+  const joinedSteps = ordered.flatMap((p, j) => (stepStages.includes(p.record.stage) && parts[j].step ? [parts[j].step as Step] : []))
+  const joinStage = [...stepStages].reverse().find((s) => ordered.some((p, j) => p.record.stage === s && parts[j].step !== undefined))
   const stops = STAGE_ORDER.filter((s) => ordered.some((p) => p.record.stage === s)).map((s, i) => {
     const stagePicks = ordered.map((p, j) => ({ p, part: parts[j] })).filter(({ p }) => p.record.stage === s)
     const stagePartsList = stagePicks.map((x) => x.part)
-    const steps = stagePartsList.flatMap((part) => (part.step ? [part.step] : []))
     const codes = stagePartsList.filter((part) => !part.step).map((part) => part.code)
-    const extra = steps.length ? transformCode(steps) : undefined
+    const hasStep = stagePartsList.some((part) => part.step)
+    const isJoin = s === joinStage
+    const note = hasStep && !isJoin && joinStage ? [`# ${stageName(s)}: its steps join the ColumnTransformer in the ${stageName(joinStage)} cell below.`] : []
+    const extra = isJoin ? transformCode(joinedSteps) : undefined
     return {
       label: `Stop ${i + 1}: ${stageName(s)}`,
       parts: stagePartsList,
-      source: [...codes, ...(extra ? [extra.code] : [])].join('\n\n'),
+      source: [...codes, ...note, ...(extra ? [extra.code] : [])].join('\n\n'),
       extraImports: extra?.imports ?? [],
     }
   })
