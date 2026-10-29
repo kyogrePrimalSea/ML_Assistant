@@ -244,7 +244,8 @@
       "T068",
       "T069",
       "T070",
-      "T071"
+      "T071",
+      "T072"
     ]
   },
   "tasks": {
@@ -909,6 +910,15 @@
       "status": "Done",
       "dependencies": [
         "T065"
+      ],
+      "epic": "E15"
+    },
+    "T072": {
+      "title": "Build view polish",
+      "file": "tasks/T072-build-view-polish.md",
+      "status": "Backlog",
+      "dependencies": [
+        "T070"
       ],
       "epic": "E15"
     }
