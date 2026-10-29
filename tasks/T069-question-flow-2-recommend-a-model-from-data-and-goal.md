@@ -1,6 +1,6 @@
 # T069 — Question flow 2: recommend a model from data and goal
 
-**Status:** Backlog
+**Status:** Done
 
 ## Objective
 

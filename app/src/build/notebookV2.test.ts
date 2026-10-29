@@ -1,12 +1,30 @@
 import { execFileSync } from 'node:child_process'
+import { existsSync, readdirSync, readFileSync } from 'node:fs'
+import { dirname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { load } from 'js-yaml'
 import { describe, expect, it } from 'vitest'
 import { rec } from './fixtures.ts'
 import { toIpynb, type Cell } from './notebook.ts'
 import { buildNotebookV2, TEMPLATED_PAGE_IDS, type Notebook } from './notebookV2.ts'
 import { DEMO_PROFILE } from './demoPipeline.ts'
-import { STAGE_ORDER, type Pick } from './validate.ts'
+import { STAGE_ORDER, type DataProfile, type Pick } from './validate.ts'
 import { VOCAB, VOCAB_BY_NAME, VOCAB_NAMES } from './vocab.ts'
-import type { StageId } from '../content/types.ts'
+import type { ItemRecord, StageId } from '../content/types.ts'
+
+// The page records (content/items/<stage>/<id>.yaml) that the templates were written from.
+const ITEMS = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..', 'content', 'items')
+
+/** A pick built from the page's real record, so the test uses its own stage and snippet. */
+function realPick(id: string): Pick {
+  for (const stage of readdirSync(ITEMS)) {
+    const file = join(ITEMS, stage, `${id}.yaml`)
+    if (existsSync(file)) return { record: load(readFileSync(file, 'utf8')) as ItemRecord }
+  }
+  throw new Error(`no record for ${id}`)
+}
+
+const CLASSIFICATION: DataProfile = { ...DEMO_PROFILE, task_type: 'classification' }
 
 const picks = (): Pick[] => [
   rec('r2-score', 'evaluate', 'Regression metrics'),
@@ -167,15 +185,21 @@ describe('notebookV2', () => {
   })
 
   it('uses only pages that have a fixed template as templated', () => {
-    expect([...TEMPLATED_PAGE_IDS].sort()).toEqual(['onehotencoder', 'r2-score', 'train-test-split', 'xgboost'])
+    expect([...TEMPLATED_PAGE_IDS].sort()).toEqual([
+      'accuracy-score', 'confusion-matrix', 'elastic-net', 'f1-score', 'gridsearchcv', 'hist-gradient-boosting',
+      'linear-regression', 'logistic-regression', 'mean-absolute-error', 'minmaxscaler', 'onehotencoder',
+      'ordinalencoder', 'permutation-importance', 'precision-score', 'r2-score', 'random-forest', 'ridge',
+      'robustscaler', 'roc-auc-score', 'root-mean-squared-error', 'selectkbest', 'targetencoder',
+      'timeseriessplit', 'train-test-split', 'xgboost',
+    ])
   })
 })
 
 describe('vocab', () => {
-  it('lists the 16 spec names once each', () => {
+  it('lists the 16 spec names once each, plus selector and search (added by T071)', () => {
     expect(VOCAB.map((v) => v.name).sort()).toEqual([
       'X', 'X_test', 'X_train', 'categorical_cols', 'cv', 'df', 'model', 'numeric_cols',
-      'preprocess', 'scores', 'target', 'y', 'y_pred', 'y_proba', 'y_test', 'y_train',
+      'preprocess', 'scores', 'search', 'selector', 'target', 'y', 'y_pred', 'y_proba', 'y_test', 'y_train',
     ])
   })
 
@@ -184,5 +208,77 @@ describe('vocab', () => {
       expect(STAGE_ORDER).toContain(v.producedBy)
       for (const s of v.consumedBy) expect(STAGE_ORDER).toContain(s)
     }
+  })
+})
+
+describe('notebookV2 templates (T071)', () => {
+  it('has a page record in content/items for every templated page, with the same id', () => {
+    for (const id of TEMPLATED_PAGE_IDS) expect(realPick(id).record.id).toBe(id)
+  })
+
+  it('every template parses for both task types (python ast, not executed)', () => {
+    const sources: string[] = []
+    for (const profile of [DEMO_PROFILE, CLASSIFICATION]) {
+      for (const id of TEMPLATED_PAGE_IDS) {
+        const nb = buildNotebookV2([realPick(id)], profile)
+        sources.push(...nb.cells.filter((c) => c.kind === 'code').map((c) => c.source))
+      }
+    }
+    expect(analyse(sources)).toHaveLength(sources.length)
+  })
+
+  it.each([
+    ['regression', DEMO_PROFILE, ['onehotencoder', 'robustscaler', 'train-test-split', 'ridge', 'gridsearchcv', 'r2-score', 'root-mean-squared-error', 'permutation-importance']],
+    ['classification', CLASSIFICATION, ['onehotencoder', 'minmaxscaler', 'selectkbest', 'train-test-split', 'logistic-regression', 'accuracy-score', 'f1-score', 'roc-auc-score', 'confusion-matrix']],
+    ['time-ordered split', { ...DEMO_PROFILE, time_ordered: true }, ['minmaxscaler', 'timeseriessplit', 'train-test-split', 'linear-regression', 'gridsearchcv', 'mean-absolute-error']],
+  ])('the %s route passes the chain check with no warnings and no gaps', (_, profile, ids) => {
+    const nb = buildNotebookV2(ids.map(realPick), profile)
+    expect(nb.gaps).toEqual([])
+    expect(nb.warnings).toEqual([])
+    expect(chainProblems(nb)).toEqual([])
+  })
+
+  it('evaluates and interprets the tuned search when a tune step is in the route', () => {
+    const nb = buildNotebookV2(['ridge', 'gridsearchcv', 'r2-score', 'permutation-importance'].map(realPick), DEMO_PROFILE)
+    const source = (label: string) => nb.cells.find((c) => c.label === label)?.source ?? ''
+    expect(source('Stop 3: Evaluate')).toContain('y_pred = search.predict(X_test)')
+    expect(source('Stop 4: Interpret')).toContain('print(permutation_importance(search, X_test, y_test')
+    expect(source('Stop 2: Tune')).toContain('GridSearchCV(model, param_grid={"model__alpha": [0.1, 1.0, 10.0]}, cv=3)')
+    expect(source('Stop 1: Model')).toContain('("model", Ridge(alpha=1.0)),')
+  })
+
+  it('warns when a cell reads a name no earlier cell sets, and still builds the notebook', () => {
+    const nb = buildNotebookV2([realPick('linear-regression'), realPick('r2-score')], DEMO_PROFILE)
+    expect(nb.warnings).toContain('Stop 1: Model reads X_train, which no earlier cell sets')
+    expect(nb.warnings).toContain('Stop 1: Model reads y_train, which no earlier cell sets')
+    expect(nb.warnings).toContain('Stop 2: Evaluate reads X_test, which no earlier cell sets')
+    expect(nb.cells.map((c) => c.label)).toEqual(['Title', 'Setup', 'Stop 1: Model', 'Stop 2: Evaluate'])
+  })
+
+  it('has no warnings for the existing demo route', () => {
+    expect(buildNotebookV2(picks(), DEMO_PROFILE).warnings).toEqual([])
+  })
+
+  it('gives the same output for picks in any order within a stage', () => {
+    const forward = [realPick('robustscaler'), realPick('onehotencoder'), realPick('train-test-split'), realPick('ridge')]
+    const a = toIpynb(buildNotebookV2(forward, DEMO_PROFILE).cells)
+    expect(toIpynb(buildNotebookV2([...forward].reverse(), DEMO_PROFILE).cells)).toBe(a)
+    const swapped = [realPick('minmaxscaler'), realPick('robustscaler')]
+    expect(toIpynb(buildNotebookV2(swapped, DEMO_PROFILE).cells)).toBe(toIpynb(buildNotebookV2([...swapped].reverse(), DEMO_PROFILE).cells))
+  })
+
+  it('joins the transform steps into one ColumnTransformer, each on its own columns', () => {
+    const nb = buildNotebookV2([realPick('onehotencoder'), realPick('robustscaler')], DEMO_PROFILE)
+    const transform = nb.cells.find((c) => c.label === 'Stop 1: Transform')?.source ?? ''
+    expect(transform).toContain('("onehotencoder", OneHotEncoder(handle_unknown="ignore"), categorical_cols),')
+    expect(transform).toContain('("robustscaler", RobustScaler(), numeric_cols),')
+    expect(transform.match(/ColumnTransformer\(/g)).toHaveLength(1)
+  })
+
+  it('does not shuffle a time-ordered split', () => {
+    const nb = buildNotebookV2([realPick('train-test-split')], { ...DEMO_PROFILE, time_ordered: true })
+    const split = nb.cells.find((c) => c.label === 'Stop 1: Split')?.source ?? ''
+    expect(split).toContain('shuffle=False')
+    expect(split).not.toContain('random_state')
   })
 })

@@ -243,7 +243,8 @@
       "T067",
       "T068",
       "T069",
-      "T070"
+      "T070",
+      "T071"
     ]
   },
   "tasks": {
@@ -882,7 +883,7 @@
     "T069": {
       "title": "Question flow 2: recommend a model from data and goal",
       "file": "tasks/T069-question-flow-2-recommend-a-model-from-data-and-goal.md",
-      "status": "Backlog",
+      "status": "Done",
       "dependencies": [
         "T066",
         "T068"
@@ -899,6 +900,15 @@
         "T067",
         "T068",
         "T069"
+      ],
+      "epic": "E15"
+    },
+    "T071": {
+      "title": "Chainable cell templates per page",
+      "file": "tasks/T071-chainable-cell-templates.md",
+      "status": "Done",
+      "dependencies": [
+        "T065"
       ],
       "epic": "E15"
     }
