@@ -893,7 +893,7 @@
     "T070": {
       "title": "Globe build view, capsules and second side panel",
       "file": "tasks/T070-globe-build-view-capsules-and-second-side-panel.md",
-      "status": "Backlog",
+      "status": "Done",
       "dependencies": [
         "T065",
         "T066",

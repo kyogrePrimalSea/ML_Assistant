@@ -6,6 +6,7 @@ import { QuestionPanel } from '@/page/QuestionPanel'
 import Layout from '@/shell/Layout'
 import { ShellStateProvider, useShellState } from '@/shell/ShellState'
 import { ConnectionsProvider } from '@/views/connections'
+import BuildGlobe from '@/views/BuildGlobe'
 import Journey from '@/views/Journey'
 import RadialTree from '@/views/RadialTree'
 
@@ -21,6 +22,7 @@ function ComingSoon({ name }: { name: string }) {
 function Shell() {
   const id = useMatch('/page/:id')?.params.id
   const questionId = useMatch('/question/:id')?.params.id
+  const onBuild = useMatch('/build') !== null
   const navigate = useNavigate()
   const { view } = useShellState()
   const index = useIndex()
@@ -30,9 +32,11 @@ function Shell() {
       ? (index.data?.questions.find((q) => q.id === questionId)?.text ?? 'Question')
       : 'Page'
   return (
-    <ConnectionsProvider canDraw={view === 'tree'}>
-    <Layout panelTitle={panelTitle} panel={id ? <PagePanel id={id} /> : questionId ? <QuestionPanel id={questionId} /> : null} onClosePanel={() => navigate('/')} fill={view === 'tree' || view === 'journey'}>
-      {view === 'tree' ? (
+    <ConnectionsProvider canDraw={view === 'tree' && !onBuild}>
+    <Layout panelTitle={panelTitle} panel={id ? <PagePanel id={id} /> : questionId ? <QuestionPanel id={questionId} /> : null} onClosePanel={() => navigate('/')} fill={onBuild || view === 'tree' || view === 'journey'}>
+      {onBuild ? (
+        <BuildGlobe />
+      ) : view === 'tree' ? (
         <RadialTree activeId={id} />
       ) : view === 'constellation' ? (
         <ComingSoon name="Constellation" />

@@ -1,5 +1,6 @@
 import {
   IconBinaryTree2,
+  IconHammer,
   IconDeviceDesktop,
   IconMoon,
   IconRoute,
@@ -8,6 +9,7 @@ import {
   IconSun,
   IconTopologyStar3,
 } from '@tabler/icons-react'
+import { Link, useMatch, useNavigate } from 'react-router'
 import { useIndex } from '@/content/load'
 import { Button } from '@/components/ui/button'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
@@ -32,6 +34,8 @@ export function TopBar({ onSearch, onSettings }: { onSearch: () => void; onSetti
   const { data } = useIndex()
   const { goal, setGoal, labels, setLabels, view, setView } = useShellState()
   const { preference, setTheme } = useTheme()
+  const onBuild = useMatch('/build') !== null
+  const navigate = useNavigate()
 
   return (
     <header className="flex h-16 shrink-0 items-center gap-3 overflow-x-auto border-b border-border bg-surface-1 px-4">
@@ -81,8 +85,12 @@ export function TopBar({ onSearch, onSettings }: { onSearch: () => void; onSetti
       <ToggleGroup
         type="single"
         variant="outline"
-        value={view}
-        onValueChange={(v) => v && setView(v as ViewId)}
+        value={onBuild ? '' : view}
+        onValueChange={(v) => {
+          if (!v) return
+          setView(v as ViewId)
+          if (onBuild) navigate('/')
+        }}
         aria-label="View"
       >
         {VIEWS.map(({ id, label, Icon }) => (
@@ -92,6 +100,13 @@ export function TopBar({ onSearch, onSettings }: { onSearch: () => void; onSetti
           </ToggleGroupItem>
         ))}
       </ToggleGroup>
+
+      <Button asChild variant="outline" className="h-10 shrink-0 gap-2 px-2.5 min-[1200px]:px-3" title="Build (beta)">
+        <Link to="/build" aria-current={onBuild ? 'page' : undefined} aria-label="Build (beta)" className={onBuild ? 'border-accent bg-surface-2' : undefined}>
+          <IconHammer aria-hidden />
+          <span className="hidden min-[1200px]:inline">Build (beta)</span>
+        </Link>
+      </Button>
 
       <ToggleGroup
         type="single"

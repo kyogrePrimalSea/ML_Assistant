@@ -1,0 +1,41 @@
+/* Build (beta) view: cards, marks, stage steps and panels. Tokens only (spec 10); both themes. */
+.bld-root { font-family: var(--font-body); line-height: 1.6; letter-spacing: 0.01em; text-align: left; }
+.bld-card {
+  display: grid; gap: 8px; align-content: start; padding: 12px 16px; border-radius: 12px;
+  border: 1px solid var(--border); background: var(--surface-1);
+}
+.bld-card[data-mark="red"] { border-style: dashed; border-color: var(--block-text); }
+.bld-card[data-picked="true"] { border-color: var(--accent); }
+.bld-cards { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
+.bld-step {
+  display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 12px; border-radius: 999px;
+  border: 1px solid var(--border-strong); background: var(--surface-1); color: var(--text); font-weight: 700; font-size: 14px;
+  cursor: pointer;
+}
+.bld-step[aria-current="step"] { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent); }
+.bld-step svg { width: 16px; height: 16px; }
+.bld-step:focus-visible, .bld-info:focus-visible, .bld-capsule-head:focus-visible { outline: 2px solid var(--accent-strong); outline-offset: 2px; }
+.bld-info {
+  display: inline-grid; place-items: center; width: 32px; height: 32px; border-radius: 999px;
+  border: 1px solid var(--border-strong); background: var(--surface-2); color: var(--text); cursor: pointer;
+}
+.bld-tip { max-width: 320px; font-size: 14px; line-height: 1.5; text-align: left; }
+.bld-tip h4 { margin: 0; font-size: 14px; font-weight: 700; }
+.bld-tip ul { margin: 2px 0 8px; padding-left: 18px; }
+.bld-panel { background: var(--surface-1); border-left: 1px solid var(--border); }
+.bld-capsule { border: 1px solid var(--border); border-radius: 12px; background: var(--surface-1); }
+.bld-capsule-head {
+  display: flex; width: 100%; align-items: center; gap: 8px; padding: 8px 12px; text-align: left;
+  font-weight: 700; font-size: 14px; color: var(--text); background: none; border: 0; cursor: pointer; border-radius: 12px;
+}
+.bld-capsule-body { display: grid; gap: 12px; padding: 0 12px 12px; }
+.bld-writeup { max-width: 68ch; margin: 0; font-size: 14px; }
+@media (prefers-reduced-motion: no-preference) {
+  .bld-panel-enter { animation: bld-in var(--dur-panel, 240ms) var(--ease, ease) both; }
+}
+@keyframes bld-in { from { opacity: 0; transform: translateX(12px); } to { opacity: 1; transform: none; } }
+
+.bld-capsule { min-width: 0; }
+.bld-capsule-head > .truncate { min-width: 0; }
+.bld-capsule-head .whitespace-nowrap { flex-shrink: 0; }
+.bld-capsule-body .inline-flex { white-space: normal; }

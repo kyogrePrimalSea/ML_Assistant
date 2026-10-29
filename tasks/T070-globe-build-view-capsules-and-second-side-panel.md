@@ -1,6 +1,6 @@
 # T070 — Globe build view, capsules and second side panel
 
-**Status:** Backlog
+**Status:** Done
 
 ## Objective
 
